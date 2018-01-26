@@ -1,5 +1,5 @@
 ## Names Examination Team Principles
-The following is a list of principles that will help to guide our conduct and decisions as team throughout the Names Examination project.
+The following is a list of principles that will help to guide our conduct and decisions as a team throughout the Names Examination project.
 ### Leverage of the CSI Lab Community
 ### Contribute to the Community
 ### Blue Sky – Everything is on the table, be open to new ideas and approaches
