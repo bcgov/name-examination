@@ -1,4 +1,4 @@
-## Leverage of the CSI Lab Community
+### Leverage of the CSI Lab Community
 ## Contribute to the Community
 ## Blue Sky – Everything is on the table, be open to new ideas and approaches
 ## Scent-free Workspace
