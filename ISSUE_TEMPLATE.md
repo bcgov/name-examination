@@ -63,7 +63,7 @@
 ##### _**Acceptance Criteria**_
 
 ##### _**Definition of Done**_ (:one:-Mandatory to add to the Backlog, :two:-Mandatory to add to the Sprint Backlog)
-- [ ] Acceptance Criteria Complete :one:
+- [ ] Acceptance Criteria Defined :one:
 - [ ] Estimate :two:
 - [ ] Priority Label :one:
 - [ ] Task Label :one:
