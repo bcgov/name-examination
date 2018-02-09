@@ -1,58 +1,73 @@
-#### Epic
-##### Detailed Description
-##### Inputs
-##### Outputs
-##### Impacts
-##### Users
-##### Epic Definition of Done (any pipleine)
-- [ ] Detailed Description*
-- [ ] Rough Inputs*
-- [ ] Rough Outputs*
-- [ ] Impacts
-- [ ] Users
-- [ ] Priority Label
-- [ ] Attached Journey Map(s)
-- [ ] Attached Relevant Screen Shots from the Existing Application
 ----
+----
+#### **Epic**
+##### _**Detailed Description**_
 
-#### Story
-##### User Story (As a <user type> I want a <goal> so that <benefit>.)
-##### Inputs(Data)
-##### Outputs(Data)
-##### User Research Test Results
-##### Definition of Done (*-Mandatory to add to the Backlog, **-Mandatory to add to the Sprint Backlog)
-- [ ] User Story*
-- [ ] Priority Label*
-- [ ] Story Label*
-- [ ] Linked EPIC*
-- [ ] Linked Scenarios**
-- [ ] Inputs(Data)*
-- [ ] Outputs(Data)*
+##### _**Inputs**_
+
+##### _**Outputs**_
+
+##### _**Impacts**_
+
+##### _**Users**_
+
+#####  _**Definition of Done**_ (:one:-Mandatory to add to the Backlog, :two:-Mandatory to add to the Sprint Backlog)
+- [ ] Detailed Description :one:
+- [ ] Rough Inputs :two:
+- [ ] Rough Outputs :two:
+- [ ] Impacts :two:
+- [ ] Users :two::
+- [ ] Priority Label :one:
+- [ ] Attached Journey Map(s)
+- [ ] Attached Relevant Screen Shots from the Existing Application :two:
+----
+----
+#### **Story**
+##### _**Story Sentence**_ (As a "user type" I want a "goal" so that "benefit".)
+
+##### _**Inputs(Data)**_
+
+##### _**Outputs(Data)**_
+
+##### _**User Research Test Results**_
+
+##### _**Definition of Done**_ (:one:-Mandatory to add to the Backlog, :two:-Mandatory to add to the Sprint Backlog)
+- [ ] User Story :one:
+- [ ] Priority Label :one:
+- [ ] Story Label :one:
+- [ ] Linked EPIC :two:
+- [ ] Linked Scenarios :two:
+- [ ] Inputs(Data) :one:
+- [ ] Outputs(Data) :one:
 - [ ] Attached Sketch/Mock-up
 - [ ] User Research Test Results
-
 ----
+----
+#### **Scenario**
+##### BDD Pseudo-Code (GIVEN "context" ... AND "more context" ... WHEN "this action occurs" ... THEN ..."result")
 
-#### Scenario
-##### BDD Pseudo-Code (GIVEN <context> ... AND <more context> ... WHEN <this action occurs> ... THEN ...<result>)
-##### Definition of Done (*-Mandatory to add to the Backlog, **-Mandatory to add to the Sprint Backlog)
-- [ ] BDD Pseudo-Code**
-- [ ] Estimate**
-- [ ] Priority Label*
-- [ ] Scenario Label*
-- [ ] Assignee**
-- [ ] Linked Story*
+##### _**Definition of Done**_ (:one:-Mandatory to add to the Backlog, :two:-Mandatory to add to the Sprint Backlog)
+- [ ] BDD Pseudo-Code :two:
+- [ ] Estimate :two:
+- [ ] Priority Label :one:
+- [ ] Scenario Label :one:
+- [ ] Assignee :one:
+- [ ] Linked Story :one:
+----
+----
+#### **Task** (Use for Work not Directly related to a Story but supports the Sprint Goals)
+##### _**Detailed Description**_
 
----
+##### _**Sprint Goal**_
 
-#### Task(Use for Work not Directly related to a Story but supports the Sprint Goals)
-##### Detailed Description
-##### Sprint Goal
-##### Acceptance Criteria
-##### Definition of Done (*-Mandatory to add to the Backlog, **-Mandatory to add to the Sprint Backlog)
-- [ ] Acceptance Criteria Complete
-- [ ] Estimate
-- [ ] Priority Label
-- [ ] Task Label
-- [ ] Assignee
-- [ ] Sprint Goal (in line with the goal of the sprint)
+##### _**Acceptance Criteria**_
+
+##### _**Definition of Done**_ (:one:-Mandatory to add to the Backlog, :two:-Mandatory to add to the Sprint Backlog)
+- [ ] Acceptance Criteria Complete :one:
+- [ ] Estimate :two:
+- [ ] Priority Label :one:
+- [ ] Task Label :one:
+- [ ] Assignee :two:
+- [ ] Sprint Goal (in line with the goal of the sprint) :two:
+----
+----
