@@ -1,3 +1,6 @@
+def buildconfig-name='name-examination'
+def image-name='name-examination'
+
 node('maven') {
 
     stage('checkout') {
@@ -26,10 +29,10 @@ node('maven') {
 	
     stage('build') {
        echo "Building..."
-       openshiftBuild bldCfg: '<name>', showBuildLogs: 'true'
+	    openshiftBuild bldCfg: ${buildconfig-name}, showBuildLogs: 'true'
        echo ">>> Get Image Hash"
        IMAGE_HASH = sh (
-         script: 'oc get istag <name>:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
+	       script: 'oc get istag name-examination:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
  	          returnStdout: true).trim()
        echo ">> IMAGE_HASH: $IMAGE_HASH"
        openshiftTag destStream: '<name>', verbose: 'true', destTag: 'dev', srcStream: '<name>', srcTag: "${IMAGE_HASH}"
