@@ -62,7 +62,6 @@ node('maven') {
         }
 
 
-}
 
     // *** NOTE: Weird commenting in the bdd section because of a bunch of /* in the commands screwing up the comment nesting
 
