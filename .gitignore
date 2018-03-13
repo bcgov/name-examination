@@ -35,3 +35,28 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
+.idea/misc.xml
+.idea/modules.xml
+.idea/name-examination.iml
+.idea/vcs.xml
+.idea/workspace.xml
+
+# JS + Node files #
+######################
+node_modules/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/client/test/unit/coverage/
+/client/test/e2e/reports/
+selenium-debug.log
+package-lock.json
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
