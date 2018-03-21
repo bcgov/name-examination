@@ -7,7 +7,7 @@ The Names Examination project will redesign an existing mainframe application an
 
 ## Project Status
 
-## Documnentation
+## Documentation
 
 GitHub Pages (https://guides.github.com/features/pages/) are a neat way to document you application/project.
 
