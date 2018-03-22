@@ -8,7 +8,7 @@ def FE_INT_BUILDCFG_NAME ='namex-fe-build'  // TODO: rename build to "namex-fe-i
 def FE_INT_IMAGE_NAME = 'namex-front'       // TODO: rename image to "namex-fe-int-image"
 def FE_BUILDCFG_NAME ='namex-fe-web'        // TODO: rename build to "namex-fe-build"
 def FE_IMAGE_NAME = 'namex-front-caddy'     // TODO: rename image to "namex-fe-image"
-def FE_DEPLOYMENT_NAME = 'namex-fe-deploy'  // TODO: rename deployment to "namex-fe-deploy"
+def FE_DEPLOYMENT_NAME = 'namex-fe-web-caddy'  // TODO: rename deployment to "namex-fe-deploy"
 
 // **** Note: openshiftVerifyDeploy requires policy to be added:
 // oc policy add-role-to-user view system:serviceaccount:<project-prefix>-tools:jenkins -n <project-prefix>-dev
