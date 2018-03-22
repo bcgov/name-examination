@@ -38,7 +38,7 @@ containerTemplate(
                 openshiftBuild bldCfg: FE_INT_BUILDCFG_NAME, showBuildLogs: 'true'
             echo ">>> Get Intermediate Image Hash"
             IMAGE_HASH = sh (
-                script: 'oc get istag FE_INT_IMAGE_NAME:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
+                script: 'oc get istag "${FE_INT_IMAGE_NAME}":latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
                     returnStdout: true).trim()
             echo ">> INT_IMAGE_HASH: $INT_IMAGE_HASH"
             echo ">>> Intermediate Image Build Complete"
