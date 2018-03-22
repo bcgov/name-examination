@@ -33,29 +33,31 @@ containerTemplate(
   // Front-end chain build
   {
     node('jenkins-python3nodejs') {
-        stage('Intermediate build') {
-            echo ">>> Building Namex intermediate image..."
-                openshiftBuild bldCfg: FE_INT_BUILDCFG_NAME, showBuildLogs: 'true'
-            echo ">>> Get Intermediate Image Hash"
-            IMAGE_HASH = sh (
-                script: 'oc get istag FE_INT_IMAGE_NAME:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
-                    returnStdout: true).trim()
-            echo ">> INT_IMAGE_HASH: $INT_IMAGE_HASH"
-            echo ">>> Intermediate Image Build Complete"
+        stages {
+            stage('Intermediate build') {
+                echo ">>> Building Namex intermediate image..."
+                    openshiftBuild bldCfg: FE_INT_BUILDCFG_NAME, showBuildLogs: 'true'
+                echo ">>> Get Intermediate Image Hash"
+                IMAGE_HASH = sh (
+                    script: 'oc get istag FE_INT_IMAGE_NAME:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
+                        returnStdout: true).trim()
+                echo ">> INT_IMAGE_HASH: $INT_IMAGE_HASH"
+                echo ">>> Intermediate Image Build Complete"
 
-        }
-        stage ('Final image build') {
-            echo ">>> Building Namex final image..."
-            openshiftBuild bldCfg: FE_BUILDCFG_NAME, showBuildLogs: 'true'
-            echo ">>> Get Final Image Hash"
-            IMAGE_HASH = sh (
-                script: 'oc get istag "${FE_IMAGE_NAME}":latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
-                    returnStdout: true).trim()
-            echo ">>> IMAGE_HASH: $IMAGE_HASH"
-            openshiftTag destStream: FE_IMAGE_NAME, verbose: 'true', destTag: 'dev', srcStream: FE_IMAGE_NAME, srcTag: "${IMAGE_HASH}"
-            sleep 5
-            openshiftVerifyDeployment depCfg: FE_DEPLOYMENT_NAME, namespace: 'servicebc-ne-dev', replicaCount: 1, verbose: 'false', verifyReplicaCount: 'false'
-            echo ">>> Deployment Complete"
             }
+            stage ('Final image build') {
+                echo ">>> Building Namex final image..."
+                openshiftBuild bldCfg: FE_BUILDCFG_NAME, showBuildLogs: 'true'
+                echo ">>> Get Final Image Hash"
+                IMAGE_HASH = sh (
+                    script: 'oc get istag "${FE_IMAGE_NAME}":latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
+                        returnStdout: true).trim()
+                echo ">>> IMAGE_HASH: $IMAGE_HASH"
+                openshiftTag destStream: FE_IMAGE_NAME, verbose: 'true', destTag: 'dev', srcStream: FE_IMAGE_NAME, srcTag: "${IMAGE_HASH}"
+                sleep 5
+                openshiftVerifyDeployment depCfg: FE_DEPLOYMENT_NAME, namespace: 'servicebc-ne-dev', replicaCount: 1, verbose: 'false', verifyReplicaCount: 'false'
+                echo ">>> Deployment Complete"
+                }
+        }
     }
     }
