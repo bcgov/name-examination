@@ -40,7 +40,7 @@ containerTemplate(
             IMAGE_HASH = sh (
                 script: 'oc get istag namex-front:latest -o template --template="{{.image.dockerImageReference}}"|awk -F ":" \'{print $3}\'',
                     returnStdout: true).trim()
-            echo ">> INT_IMAGE_HASH: $INT_IMAGE_HASH"
+            echo ">>> IMAGE_HASH: $IMAGE_HASH"
             echo ">>> Intermediate Image Build Complete"
 
         }
