@@ -28,22 +28,19 @@
 <script>
 /* eslint-disable */
   export default {
-    computed: {
-      dbURL () {
-        return this.$store.state.dbConfig.dbURL
-      },
-      secKey () {
-        return this.$store.state.dbConfig.secKey
-      }
+    data() {
+      return(
+          dbUrl,
+          secKey
+      )
     },
     methods: {
-      onSubmit() {
+      onSubmit: function () {
         const formData = {
           dbURL: this.dbURL,
           secKey: this.secKey
         }
         this.$store.dispatch('dbConfigSetup', {dbURL: formData.dbURL, secKey: formData.secKey})
-
       }
     }
   }

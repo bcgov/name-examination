@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
   <div class="container-fluid">
     <nav class="navbar fixed-top navbar-dark navbar-expand-lg"
@@ -35,7 +36,7 @@
               Dropdown
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">Action</a>
+              <a class="dropdown-item" href="/searchResults">SearchResults</a>
               <a class="dropdown-item" href="#">Another action</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="#">Something else here</a>

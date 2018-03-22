@@ -9,6 +9,7 @@ const Settings = () => import(/* webpackChunkName: "settings" */'@/components/ap
 const Signup = () => import(/* webpackChunkName: "signup" */'@/components/landing/auth/Signup')
 const Signin = () => import(/* webpackChunkName: "signin" */'@/components/landing/auth/Signin')
 const MainPage = () => import(/* webpackChunkName: "mainPage" */'@/components/ApplicationPage')
+const ResultsPage = () => import(/* webpackChunkName: "resultsPage" */'@/components/dropdown/SearchResults')
 
 Vue.use(Router)
 Vue.use(Vuex)
@@ -40,6 +41,14 @@ let router = new Router({
       name: 'mainPage',
       component: MainPage,
       path: '/mainPage',
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      name: 'resultsPage',
+      component: ResultsPage,
+      path: '/searchResults',
       meta: {
         requiresAuth: true
       },

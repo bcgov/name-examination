@@ -29,7 +29,7 @@ export default new Vuex.Store({
     storeUser (state, user) {
       state.user = user
     },
-    storeDbConfig(state, configSetup){
+    storeDbConfig: function (state, configSetup) {
       state.dbConfig.dbURL = configSetup.dbURL
       state.dbConfig.secKey = configSetup.secKey
       globalAxios.defaults.baseURL = state.dbConfig.dbURL
@@ -65,10 +65,14 @@ export default new Vuex.Store({
     },
     dbConfigSetup ({commit, dispatch}, configSetup) {
       console.log('action: setting the DB Config')
-
       localStorage.setItem('dbURL', configSetup.dbURL)
       localStorage.setItem('secKey', configSetup.secKey)
       commit('storeDbConfig', configSetup)
+    },
+    storeActionPage ({commit, dispatch}, configSetup) {
+      console.log('action: saving test values from action page')
+      localStorage.setItem('t1', configSetup.t1)
+      localStorage.setItem('t2', configSetup.t2)
     },
     login ({commit, dispatch, state}, authData) {
         axios.post('/verifyPassword?key='+ state.dbConfig.secKey, {
