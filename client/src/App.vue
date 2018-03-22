@@ -1,10 +1,10 @@
+/* eslint-disable */
 <template>
   <div class="container-fluid">
     <div id="app">
-
-        <std-header></std-header>
-      <div class="row">
-        <router-view ></router-view>
+        <std-header />
+      <div>
+        <router-view />
       </div>
     </div>
   </div>
