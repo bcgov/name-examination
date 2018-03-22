@@ -26,11 +26,11 @@
 
 <script>
 /* eslint-disable */
-  import compnameview from '@/components/dropdown/search/compName.vue';
-  import compinfoview from '@/components/dropdown/search/compType.vue';
-  import compmatches from '@/components/dropdown/search/nameMatches.vue';
-  import matchissues from '@/components/dropdown/search/IssueInfo.vue';
-  import examinationmenu from '@/components/dropdown/search/examinationMenu.vue';
+  import compnameview from '@/components/dropdown/search/compname.vue';
+  import compinfoview from '@/components/dropdown/search/comptype.vue';
+  import compmatches from '@/components/dropdown/search/namematches.vue';
+  import matchissues from '@/components/dropdown/search/issueinfo.vue';
+  import examinationmenu from '@/components/dropdown/search/examinationmenu.vue';
 
   export default {
     name: "searchResults",
