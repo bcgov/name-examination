@@ -5,15 +5,18 @@
 
   <div class="container">
 
-    <div class="row mh1">
-      <div class="col-8"><compnameview /></div>
-      <div class="col"><compinfoview /></div>
+    <div class="row mh0" >
+      <div class="col-8"><requestinfoview /></div>
+    </div>
+
+    <div class="row mh1" >
+      <div class="col"><compnameview /></div>
     </div>
 
     <div class="row mh2">
-      <div class="col-5"><compmatches /></div>
-      <div class="col"><matchissues /></div>
-    </div>
+      <div class="col-3"><compmatches /></div>
+      <div class="col"><matchissues v-on:click="visble = !visble" /></div>
+     </div>
 
     <div class="row mh3">
       <div class="col"><examinationmenu /></div>
@@ -26,45 +29,38 @@
 
 <script>
 /* eslint-disable */
+  import requestinfoview from '@/components/dropdown/search/RequestInfo.vue';
   import compnameview from '@/components/dropdown/search/CompName.vue';
-  import compinfoview from '@/components/dropdown/search/CompType.vue';
   import compmatches from '@/components/dropdown/search/NameMatches.vue';
   import matchissues from '@/components/dropdown/search/IssueInfo.vue';
   import examinationmenu from '@/components/dropdown/search/ExaminationMenu.vue';
 
   export default {
-    name: "searchResults",
-
+    name: "SearchResults",
+    data:{
+      visble: true
+    },
     components: {
+      requestinfoview,
       compnameview,
-      compinfoview,
       compmatches,
       matchissues,
       examinationmenu
     },
-    methods: {
-      onClick: function () {
-
-      }
-    }
   }
-
-  function getIssueInfo(CID) {
-    // var info = getInfoFromCellID(CID);
-    var divCell = document.getElementById('ISSUE-INFO');
-    divCell.innerText="Issue Info Formatted";
-  }
-
 </script>
 
 <style scoped>
+  .mh0 div {
+    height: 25%; /* 30% of viewport height*/
+  }
   .mh1 div {
-    height: 30vh; /* 30% of viewport height*/
+    height: 30%; /* 30% of viewport height*/
   }
   .mh2 div {
-    height: 50vh; /* 50% of viewport height*/
+    height: 30%; /* 50% of viewport height*/
   }
   .mh3 div {
-    height: 20vh; /* 20% of viewport height*/
+    height: 15%; /* 20% of viewport height*/
   }
 </style>

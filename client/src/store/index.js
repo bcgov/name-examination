@@ -3,7 +3,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from '../axios-auth'
 import globalAxios from 'axios'
-
 import router from '@/router'
 
 Vue.use(Vuex)
@@ -17,7 +16,53 @@ export default new Vuex.Store({
     dbConfig:{
       dbURL: null,
       secKey:null
-    }
+    },
+    compInfo: {
+      nrNumber: null,
+      compNames: {
+        compName1: null,
+        compName2: null,
+        compName3: null
+      },
+      requestType: null,
+    },
+    applicantInfo: {
+      applicantname: {
+        firstName: null,
+        lastname: null
+      },
+      contactInfo: {
+        address: null,
+        contactName: null,
+        phone: null,
+        email: null,
+        fax: null
+      },
+    },
+    additionalCompInfo: {
+      jurisdiction: null,
+      natureOfBussiness: null,
+      nuans: null,
+      sk_name: null,
+      nr_status: null
+    },
+    examiner: null,
+    priority: null,
+    reSubmission: {
+      reSubmissionYN: null,
+      linkedNR: null
+    },
+    reservationCount: null,
+    expiryDate: null,
+    issues: {
+      issue1: "Issue1",
+      issue2: "Issue2",
+      issue3: "Issue3",
+      issue4: "Issue4",
+      issue5: "Issue5",
+      issue6: "Issue6"
+    },
+    issueText: null
   },
   mutations: {
     authUser (state, userData) {
@@ -37,7 +82,35 @@ export default new Vuex.Store({
     clearAuthData (state) {
       state.idToken = null
       state.userId = null
-    }
+    },
+    setIssueText (state,issue){
+      state.issueText = issue
+    },
+    loadCompanyInfo(state, dbcompanyInfo) {
+      state.compInfo.nrNumber = dbcompanyInfo.nrNumber
+      state.compInfo.compNames.compName1 = dbcompanyInfo.compName1
+      state.compInfo.compNames.compName2 = dbcompanyInfo.compName2
+      state.compInfo.compNames.compName3 = dbcompanyInfo.compName3
+      state.compInfo.requestType = dbcompanyInfo.requestType
+      state.applicantInfo.applicantname.firstName = dbcompanyInfo.firstName
+      state.applicantInfo.applicantname.lastname = dbcompanyInfo.lastName
+      state.applicantInfo.contactInfo.address = dbcompanyInfo.address
+      state.applicantInfo.contactInfo.contactName = dbcompanyInfo.contactName
+      state.applicantInfo.contactInfo.phone = dbcompanyInfo.phone
+      state.applicantInfo.contactInfo.email = dbcompanyInfo.email
+      state.applicantInfo.contactInfo.fax = dbcompanyInfo.fax
+      state.additionalCompInfo.jurisdiction = dbcompanyInfo.jurisdiction
+      state.additionalCompInfo.natureOfBussiness = dbcompanyInfo.natureOfBusiness
+      state.additionalCompInfo.nuans = dbcompanyInfo.nuans
+      state.additionalCompInfo.sk_name = dbcompanyInfo.sk_name
+      state.additionalCompInfo.nr_status = dbcompanyInfo.nr_status
+      state.examiner = dbcompanyInfo.examiner
+      state.priority = dbcompanyInfo.priority
+      state.reSubmission.reSubmissionYN = dbcompanyInfo.resubmissionYN
+      state.reSubmission.linkedNR = dbcompanyInfo.linkedNR
+      state.reservationCount = dbcompanyInfo.reservationCount
+      state.expiryDate = dbcompanyInfo.expiryDate
+    },
   },
   actions: {
     signup ({commit, dispatch, state}, authData) {
@@ -74,6 +147,22 @@ export default new Vuex.Store({
       localStorage.setItem('t1', configSetup.t1)
       localStorage.setItem('t2', configSetup.t2)
     },
+    selectNameIssue ({commit, dispatch, state}, divID) {
+      console.log('action: selected issue control:' + divID)
+      localStorage.setItem('issueText',divID )
+      commit('setIssueText', divID)
+    },
+    selectNextCompany ({commit, dispatch, state}) {
+      console.log('action: selected next company from DB')
+      globalAxios.defaults.baseURL = "https://namer-77fa5.firebaseio.com"
+      globalAxios.get('/CompanyInfo.json' + '?auth=' + state.idToken)
+        .then(res => {
+          console.log(res)
+          const data = res.data
+          commit('loadCompanyInfo',data)
+        })
+        .catch(error => console.log(error))
+    },
     login ({commit, dispatch, state}, authData) {
         axios.post('/verifyPassword?key='+ state.dbConfig.secKey, {
         email: authData.email,
@@ -98,7 +187,6 @@ export default new Vuex.Store({
       router.push('/mainPage')
     },
     tryAutoLogin ({commit}) {
-
       const dbURL = localStorage.getItem('dbURL')
       const secKey = localStorage.getItem('secKey')
       if (dbURL){
@@ -108,7 +196,6 @@ export default new Vuex.Store({
           secKey: secKey
         })
       }
-
       console.log('trying to load user')
       const token = localStorage.getItem('token')
       if (!token) {
@@ -164,15 +251,90 @@ export default new Vuex.Store({
     }
   },
   getters: {
-
-    user (state) {
+    user(state) {
       return state.user
     },
-    email (state) {
+    email(state) {
       return state.email
     },
-    isAuthenticated (state) {
+    issueText(state) {
+      return state.issueText
+    },
+    isAuthenticated(state) {
       return state.idToken !== null
+    },
+    nrNumber(state) {
+      return state.compInfo.nrNumber
+    },
+    compName1(state) {
+      //return "Company 1"
+     return state.compInfo.compNames.compName1
+    },
+    compName2(state) {
+      //return "Company 2"
+      return state.compInfo.compNames.compName2
+    },
+    compName3(state) {
+      //return "Company 3"
+      return state.compInfo.compNames.compName3
+    },
+    requestType(state) {
+      return state.compInfo.requestType
+    },
+    firstName(state) {
+      return state.applicantInfo.applicantname.firstName
+    },
+    lastName(state) {
+      return state.applicantInfo.applicantname.lastname
+    },
+    address(state) {
+      return "Here"
+      //return state.applicantInfo.contactInfo.address
+    },
+    conEmail(state) {
+      return  state.applicantInfo.contactInfo.email
+    },
+    contactName(state) {
+      return state.applicantInfo.contactInfo.contactName
+    },
+    phone(state) {
+      return state.applicantInfo.phone
+    },
+    fax(state) {
+      return state.applicantInfo.fax
+    },
+    jusisdiction(state) {
+      return  state.additionalCompInfo.jurisdiction
+    },
+    natureOfBusiness(state) {
+      return state.additionalCompInfo.natureOfBussiness
+    },
+    nuans(state) {
+      return additionalCompInfo.nuans
+    },
+    sk_name(state) {
+      return state.additionalCompInfo.sk_name
+    },
+    nr_status(state) {
+      return state.nr_status
+    },
+    examiner(state) {
+      return state.examiner
+    },
+    priority(state) {
+      return state.priority
+    },
+    reSubmissionYN(state) {
+      return state.reSubmission.reSubmissionYN
+    },
+    linkedNR(state) {
+      return state.reSubmission.linkedNR
+    },
+    reservationCount(state) {
+      return state.reservationCount
+    },
+    expiryDate(state) {
+      return state.expiryDate
     }
   }
 })

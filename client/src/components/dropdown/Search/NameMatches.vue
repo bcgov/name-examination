@@ -1,42 +1,42 @@
 /* eslint-disable */
 <template>
-  <div>
+  <div id="matches" >
     <div class="container">
       <div class="match-sect match-font">
 
-      <div id="M1" class="row match-part match-y">
+      <div id="M1" class="row match-part match-y" @click="clickIssueBox('M1')">
         <div class="col">
          1
         </div>
       </div>
 
-      <div id="M2" class="row match-part match-g">
+      <div id="M2" class="row match-part match-g" @click="clickIssueBox('M2')">
         <div class="col">
          2
         </div>
     </div>
 
-    <div id="M3" class="row match-part match-g">
+    <div id="M3" class="row match-part match-g" @click="clickIssueBox('M3')">
         <div class="col" >
          3
         </div>
      </div>
 
-    <div id="M4" class="row match-part match-g">
+    <div id="M4" class="row match-part match-g" @click="clickIssueBox('M4')">
       <div class="col" >
         4
       </div>
     </div>
 
-   <div id="M5" class="row match-part match-r">
+   <div id="M5" class="row match-part match-r" @click="clickIssueBox('M5')">
     <div class="col" >
       5
     </div>
     </div>
 
-   <div id="M6" class="row match-part match-g" onclick="getIssueInfo('M6')" >
-      <div id="M6C" class="col" >
-        6
+   <div id="M6" class="row match-part match-g" @click="clickIssueBox('M6')" >
+      <div class="col" >
+       6
       </div>
     </div>
 
@@ -46,6 +46,20 @@
 </template>
 
 <script>
+/* eslint-disable */
+export default {
+  name: 'matches',
+  data: {
+    mess: "Here"
+  },
+  methods: {
+    clickIssueBox(divID) {
+      const mDiv = document.getElementById(divID);
+      mDiv.innerText = "Div is: " + divID;
+      this.$store.dispatch('selectNameIssue',divID);
+    }
+  }
+};
 </script>
 
 <style scoped>

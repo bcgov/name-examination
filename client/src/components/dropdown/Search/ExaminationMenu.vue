@@ -4,8 +4,7 @@
     <div class="container">
       <div class="menu-sect">
       <div class="row">
-        <div class="col">
-         </div>
+        <div class="col"><button @click="getNextCompany()" >Get Next</button></div>
       </div>
       <div class="row">
         <div class="col">
@@ -22,6 +21,15 @@
 </template>
 
 <script>
+/* eslint-disable */
+  export default {
+    name: 'ExaminationMenu',
+    methods: {
+      getNextCompany() {
+        this.$store.dispatch('selectNextCompany');
+      }
+    }
+  }
 </script>
 
 <style scoped>
