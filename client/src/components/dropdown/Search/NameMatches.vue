@@ -1,7 +1,7 @@
 /* eslint-disable */
 <template>
-  <div id="matches" >
-    <div class="container">
+    <div id="matches">
+    <div class="container-fluid">
       <div class="match-sect match-font">
 
       <div id="M1" class="row match-part match-y" @click="clickIssueBox('M1')">
@@ -68,18 +68,15 @@ export default {
     border: 2px solid #eee;
     padding: 4px;
     box-shadow: 0 2px 3px #ccc;
-    height: 300px;
   }
   .match-font{
     font-size: large;
-    text-align: left;
   }
   .match-part {
     align-content: left;
     border: 2px solid #eee;
     padding: 4px;
     box-shadow: 0 2px 3px #ccc;
-    text-align: left;
   }
   .match-r{
     background-color: rgba(219, 30, 26, 0.91);

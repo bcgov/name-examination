@@ -1,7 +1,7 @@
 /* eslint-disable */
 <template>
   <div>
-    <div class="container">
+    <div class="container-fluid">
       <div class="issue-sect" >
       <div class="row" >
         Issue <br/>
@@ -12,6 +12,7 @@
       </div>
     </div>
   </div>
+
 </template>
 
 <script>

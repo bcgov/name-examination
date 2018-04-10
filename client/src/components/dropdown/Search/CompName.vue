@@ -1,7 +1,7 @@
 /* eslint-disable */
 <template>
   <div>
-    <div class="container">
+    <div class="container-fluid">
       <div class="name-sect">
         Names:<br />
         <div class="row">
@@ -57,15 +57,15 @@
     border: 2px solid #eee;
     padding: 4px;
     box-shadow: 0 2px 3px #ccc;
-    height: 120px;
     background-color: #FFFFFF;
+    z-index: 12;
   }
   .name1-font{
-    font-size: xx-large;
+    font-size: 2.2em;
     text-align: left;
   }
   .name2-font{
-    font-size:large;
+    font-size:1.2em;
     text-align: left;
   }
   .rtb {

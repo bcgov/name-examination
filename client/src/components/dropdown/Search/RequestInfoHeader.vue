@@ -4,61 +4,60 @@
     <div class="container-fluid">
       <div class="RequestInfo">
 
-        <div class="row name2-font">
+        <div class="row" >
 
-          <div class="col-lg-3">
-            <div class="row name2-font">
-              <div class="col">
-                <p>
+          <div class="col name2-font">
+              <p>
                 <label class="labelTxt">nrNumber</label><input id="nrNumber1" v-model="nrNumber"
-                       onclick="setBorder('nrNumber1')" class='rtb'>
-                </p>
-              </div>
-            </div>
-            <div class="row name2-font">
-              <div class="col">
-                <p>
-                <label class="labelTxt">requestType</label>
-                  <input id="requestType1" v-model="requestType"
-                       onclick="setBorder('requestType1')" class='rtb'>
-                </p>
-              </div>
-            </div>
-            <div class="row name2-font">
-              <div class="col">
-                <p>
-                <label class="labelTxt">firstName</label><input id="firstName1" v-model="firstName"
-                       onclick="setBorder('firstName1')" class='rtb'>
-                </p>
-              </div>
-            </div>
-            <div class="row name2-font">
-              <div class="col">
-                <p>
-                <label class="labelTxt">lastName</label><input id="lastName1" v-model="lastName"
-                       onclick="setBorder('lastName1')" class='rtb'>
-                </p>
-              </div>
-            </div>
-            <div class="row name2-font">
-              <div class="col">
-                <p>
-                <label class="labelTxt">address</label><input id="address1" v-model="address"
-                       onclick="setBorder('address1')" class='rtb'>
-                </p>
-              </div>
-            </div>
+                  onclick="setBorder('nrNumber1')" class='rtb'>
+              </p>
+              <p>
+                <label class="labelTxt">priority</label>
+                <input id="contactName1" v-model="contactName"
+                  onclick="setBorder('contactName1')" class='rtb'>
+              </p>
           </div>
 
-        </div>
+          <div class="col name2-font">
 
-        <div>
-          <ul id=menu>
-            <li><a href="#sliding">A sliding menu</a></li>
-            <li><a href="#details">Details</a></li>
-            <li><a href="#a11n">Accessibility</a></li>
-            <li><a href="#misc">Menus of unknown size</a></li>
-          </ul>
+              <p>
+                <label class="labelTxt">contactName</label>
+                  <input id="priority1" v-model="priority"
+                    onclick="setBorder('priority1')" class='rtb'>
+              </p>
+              <p>
+                <label class="labelTxt">phone</label>
+                <input id="phone1" v-model="phone"
+                  onclick="setBorder('phone1')" class='rtb'>
+              </p>
+          </div>
+
+          <div class="col name2-font">
+              <div>
+                <label class="labelTxt">requestType</label>
+                <input id="requestType1" v-model="requestType"
+                       onclick="setBorder('requestType1')" class='rtb'>
+              </div>
+              <div>
+                <label class="labelTxt">fax</label>
+                <input id="fax1" v-model="fax"
+                  onclick="setBorder('fax1')" class='rtb'>
+              </div>
+          </div>
+
+          <div class="col name2-font">
+              <p>
+                <label class="labelTxt">nr_status</label>
+                <input id="nr_status1" v-model="nr_status"
+                  onclick="setBorder('nr_status1')" class='rtb'>
+              </p>
+              <p>
+                <label class="labelTxt">conEmail</label>
+                <input id="email1" v-model="conEmail"
+                  onclick="setBorder('email1')" class='rtb'>
+              </p>
+          </div>
+
         </div>
 
       </div>
@@ -69,7 +68,7 @@
 <script>
 /* eslint-disable */
   export default {
-    name: 'RequestInfo',
+    name: 'RequestInfoHeader',
     computed: {
       nrNumber() {
         return  this.$store.getters.nrNumber;
@@ -132,7 +131,7 @@
         return  this.$store.getters.expiryDate;
       }
     },
-      methods: {
+    methods: {
       setBorder(id) {
         var tb = document.getElementById(id);
         tb.borderWidth = "1";
@@ -142,56 +141,41 @@
         myDiv.className = "expand";
       },
       contractDiv(id) {
-          var myDiv = document.getElementById(id);
-          myDiv.className = "contract";
-        }
+        var myDiv = document.getElementById(id);
+        myDiv.className = "contract";
       }
+    }
   }
 </script>
 
 <style scoped>
   .expand {
-    height: 120px;
+
   }
   .contract {
-    height: 0px;
+
   }
   .RequestInfo {
     align-content: left;
     border: 2px solid #eee;
     padding: 4px;
     box-shadow: 0 2px 3px #ccc;
-    height: 0px;
-  }
-  .name1-font{
-    font-size: xx-large;
-    text-align: left;
   }
   .name2-font{
-    font-size:large;
     text-align: right;
-    line-height: 20%;
+  }
+  .alignCol{
+    width: 25%;
+    webkit-align: center;
+    border: 2px solid #777;
   }
   .rtb {
     border: 0px;
-    background-color: #f1f1f1;
   }
   .labelTxt {
-    font-size: .65em;
+    font-size: 1.0em;
     text-align: left;
     margin-right: 10px;
   }
-  #menu {
-    position: fixed;
-    right: -8.5em;
-    top: 50%;
-    width: 8em;
-    background: hsla(80, 90%, 40%, 0.7);
-    color: white;
-    margin: -3em 0 0 0;
-    padding: 0.5em 0.5em 0.5em 2.5em;
-  }
-  #menu:hover { right: 0 }
-  #menu { transition: 0.2s }
 
 </style>

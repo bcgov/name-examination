@@ -267,15 +267,12 @@ export default new Vuex.Store({
       return state.compInfo.nrNumber
     },
     compName1(state) {
-      //return "Company 1"
      return state.compInfo.compNames.compName1
     },
     compName2(state) {
-      //return "Company 2"
       return state.compInfo.compNames.compName2
     },
     compName3(state) {
-      //return "Company 3"
       return state.compInfo.compNames.compName3
     },
     requestType(state) {
@@ -288,8 +285,8 @@ export default new Vuex.Store({
       return state.applicantInfo.applicantname.lastname
     },
     address(state) {
-      return "Here"
-      //return state.applicantInfo.contactInfo.address
+      //return "Here"
+      return state.applicantInfo.contactInfo.address
     },
     conEmail(state) {
       return  state.applicantInfo.contactInfo.email
@@ -310,7 +307,7 @@ export default new Vuex.Store({
       return state.additionalCompInfo.natureOfBussiness
     },
     nuans(state) {
-      return additionalCompInfo.nuans
+      return state.additionalCompInfo.nuans
     },
     sk_name(state) {
       return state.additionalCompInfo.sk_name
