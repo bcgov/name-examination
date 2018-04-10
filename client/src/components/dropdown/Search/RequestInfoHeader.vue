@@ -2,26 +2,24 @@
 <template>
   <div>
     <div class="container-fluid">
-      <div class="RequestInfo">
+      <div class="RequestInfoHeader">
 
         <div class="row" >
 
           <div class="col name2-font">
               <p>
-                <label class="labelTxt">nrNumber</label><input id="nrNumber1" v-model="nrNumber"
+                <label class="labelTxt">NR Number</label><input id="nrNumber1" v-model="nrNumber"
                   onclick="setBorder('nrNumber1')" class='rtb'>
               </p>
               <p>
-                <label class="labelTxt">priority</label>
+                <label class="labelTxt">Contact Name</label>
                 <input id="contactName1" v-model="contactName"
                   onclick="setBorder('contactName1')" class='rtb'>
               </p>
           </div>
-
           <div class="col name2-font">
-
               <p>
-                <label class="labelTxt">contactName</label>
+                <label class="labelTxt">priority</label>
                   <input id="priority1" v-model="priority"
                     onclick="setBorder('priority1')" class='rtb'>
               </p>
@@ -31,20 +29,18 @@
                   onclick="setBorder('phone1')" class='rtb'>
               </p>
           </div>
-
           <div class="col name2-font">
-              <div>
-                <label class="labelTxt">requestType</label>
+              <p>
+                <label class="labelTxt">Request Type</label>
                 <input id="requestType1" v-model="requestType"
                        onclick="setBorder('requestType1')" class='rtb'>
-              </div>
-              <div>
+              </p>
+              <p>
                 <label class="labelTxt">fax</label>
                 <input id="fax1" v-model="fax"
                   onclick="setBorder('fax1')" class='rtb'>
-              </div>
+              </p>
           </div>
-
           <div class="col name2-font">
               <p>
                 <label class="labelTxt">nr_status</label>
@@ -52,7 +48,7 @@
                   onclick="setBorder('nr_status1')" class='rtb'>
               </p>
               <p>
-                <label class="labelTxt">conEmail</label>
+                <label class="labelTxt">Contact Email</label>
                 <input id="email1" v-model="conEmail"
                   onclick="setBorder('email1')" class='rtb'>
               </p>
@@ -155,14 +151,16 @@
   .contract {
 
   }
-  .RequestInfo {
+  .RequestInfoHeader {
     align-content: left;
     border: 2px solid #eee;
     padding: 4px;
     box-shadow: 0 2px 3px #ccc;
   }
   .name2-font{
+    font-size:large;
     text-align: right;
+    line-height: 20%;
   }
   .alignCol{
     width: 25%;
@@ -171,9 +169,10 @@
   }
   .rtb {
     border: 0px;
+    background-color: #f1f1f1;
   }
   .labelTxt {
-    font-size: 1.0em;
+    font-size: .65em;
     text-align: left;
     margin-right: 10px;
   }

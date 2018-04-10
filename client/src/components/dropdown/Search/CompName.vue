@@ -51,6 +51,7 @@
   }
 </script>
 
+
 <style scoped>
   .name-sect {
     align-content: left;

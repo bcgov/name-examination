@@ -285,7 +285,6 @@ export default new Vuex.Store({
       return state.applicantInfo.applicantname.lastname
     },
     address(state) {
-      //return "Here"
       return state.applicantInfo.contactInfo.address
     },
     conEmail(state) {
@@ -295,12 +294,12 @@ export default new Vuex.Store({
       return state.applicantInfo.contactInfo.contactName
     },
     phone(state) {
-      return state.applicantInfo.phone
+      return state.applicantInfo.contactInfo.phone
     },
     fax(state) {
-      return state.applicantInfo.fax
+      return state.applicantInfo.contactInfo.fax
     },
-    jusisdiction(state) {
+    jurisdiction(state) {
       return  state.additionalCompInfo.jurisdiction
     },
     natureOfBusiness(state) {
@@ -313,7 +312,7 @@ export default new Vuex.Store({
       return state.additionalCompInfo.sk_name
     },
     nr_status(state) {
-      return state.nr_status
+      return state.additionalCompInfo.nr_status
     },
     examiner(state) {
       return state.examiner

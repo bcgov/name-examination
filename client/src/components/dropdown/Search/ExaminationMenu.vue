@@ -4,7 +4,7 @@
     <div class="container-fluid">
       <div class="menu-sect">
 
-      <div class="row">
+        <div class="row">
         <div class="col"><button @click="getNextCompany()" >Get Next</button></div>
       </div>
       <div class="row">

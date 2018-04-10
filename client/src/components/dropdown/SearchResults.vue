@@ -63,7 +63,7 @@
     height: 25%; /* 30% of viewport height*/
   }
   .mh1 div {
-    height: 0%; /* 30% of viewport height*/
+    height: 20%; /* 30% of viewport height*/
   }
   .mh2 div {
     height: 30%; /* 50% of viewport height*/

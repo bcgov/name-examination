@@ -4,53 +4,79 @@
     <div class="container-fluid">
       <div class="RequestInfo">
 
-        <div class="row name2-font">
+        <div class="row" >
 
-          <div class="col-lg-3">
-            <div class="row name2-font">
-              <div class="col">
+          <div class="col name2-font">
                 <p>
-                <label class="labelTxt">nrNumber</label><input id="nrNumber1" v-model="nrNumber"
-                       onclick="setBorder('nrNumber1')" class='rtb'>
-                </p>
-              </div>
-            </div>
-            <div class="row name2-font">
-              <div class="col">
-                <p>
-                <label class="labelTxt">requestType</label>
-                  <input id="requestType1" v-model="requestType"
-                       onclick="setBorder('requestType1')" class='rtb'>
-                </p>
-              </div>
-            </div>
-            <div class="row name2-font">
-              <div class="col">
-                <p>
-                <label class="labelTxt">firstName</label><input id="firstName1" v-model="firstName"
+                <label class="labelTxt">firstName</label>
+                  <input id="firstName1" v-model="firstName"
                        onclick="setBorder('firstName1')" class='rtb'>
                 </p>
-              </div>
-            </div>
-            <div class="row name2-font">
-              <div class="col">
                 <p>
-                <label class="labelTxt">lastName</label><input id="lastName1" v-model="lastName"
+                <label class="labelTxt">lastName</label>
+                  <input id="lastName1" v-model="lastName"
                        onclick="setBorder('lastName1')" class='rtb'>
                 </p>
-              </div>
-            </div>
-            <div class="row name2-font">
-              <div class="col">
                 <p>
-                <label class="labelTxt">address</label><input id="address1" v-model="address"
-                       onclick="setBorder('address1')" class='rtb'>
+                <label class="labelTxt">address</label>
+                  <input id="address1" v-model="address"
+                     onclick="setBorder('address1')" class='rtb'>
                 </p>
-              </div>
-            </div>
+          </div>
+          <div class="col name2-font">
+                <p>
+                <label class="labelTxt">natureOfBusiness</label>
+                  <input id="natureOfBusiness1" v-model="natureOfBusiness"
+                       onclick="setBorder('natureOfBusiness1')" class='rtb'>
+                </p>
+                <p>
+                <label class="labelTxt">jurisdiction</label>
+                  <input id="jurisdiction1" v-model="jurisdiction"
+                       onclick="setBorder('jurisdiction1')" class='rtb'>
+                </p>
+                <p>
+                <label class="labelTxt">nuans</label>
+                  <input id="nuans1" v-model="nuans"
+                       onclick="setBorder('nuans1')" class='rtb'>
+                </p>
+          </div>
+          <div class="col name2-font">
+            <p>
+              <label class="labelTxt">sk_name</label>
+              <input id="sk_name1" v-model="sk_name"
+                     onclick="setBorder('sk_name1')" class='rtb'>
+            </p>
+            <p>
+              <label class="labelTxt">resubmissionYN</label>
+              <input id="resubmissionYN1" v-model="resubmissionYN"
+                     onclick="setBorder('resubmissionYN1')" class='rtb'>
+            </p>
+            <p>
+              <label class="labelTxt">linkedNR</label>
+              <input id="linkedNR1" v-model="linkedNR"
+                     onclick="setBorder('linkedNR1')" class='rtb'>
+            </p>
+          </div>
+          <div class="col name2-font">
+            <p>
+              <label class="labelTxt">examiner</label>
+              <input id="examiner1" v-model="examiner"
+                     onclick="setBorder('examiner1')" class='rtb'>
+            </p>
+            <p>
+              <label class="labelTxt">reservationCount</label>
+              <input id="reservationCount1" v-model="reservationCount"
+                     onclick="setBorder('reservationCount1')" class='rtb'>
+            </p>
+            <p>
+              <label class="labelTxt">expiryDate</label>
+              <input id="expiryDate1" v-model="expiryDate"
+                     onclick="setBorder('expiryDate1')" class='rtb'>
+            </p>
           </div>
 
         </div>
+
 
         <div>
           <ul id=menu>
@@ -161,7 +187,7 @@
     border: 2px solid #eee;
     padding: 4px;
     box-shadow: 0 2px 3px #ccc;
-    height: 0px;
+    height: 120px;
   }
   .name1-font{
     font-size: xx-large;

@@ -3,7 +3,8 @@
   <div>
     <div class="container-fluid">
       <div class="issue-sect" >
-      <div class="row" >
+
+        <div class="row" >
         Issue <br/>
         <div id="ISSUEINFO" class="col issue-font" >
           <p>{{issueText}}</p>

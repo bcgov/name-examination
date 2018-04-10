@@ -1,10 +1,10 @@
 /* eslint-disable */
 <template>
-    <div id="matches">
+  <div id="matches">
     <div class="container-fluid">
       <div class="match-sect match-font">
 
-      <div id="M1" class="row match-part match-y" @click="clickIssueBox('M1')">
+        <div id="M1" class="row match-part match-y" @click="clickIssueBox('M1')">
         <div class="col">
          1
         </div>
