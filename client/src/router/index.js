@@ -58,6 +58,7 @@ let router = new Router({
 
 router.beforeResolve((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
+    console.log('Auth check')
     // this route requires auth,
     // if not Authenticated, redirect to login page.
     if (store.state.idToken === null) {
@@ -66,6 +67,7 @@ router.beforeResolve((to, from, next) => {
         path: '/'
       })
     } else {
+      console.log('Authorized')
       next()
     }
   } else {
