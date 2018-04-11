@@ -36,8 +36,8 @@
               Dropdown
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="/searchResults">SearchResults</a>
-              <a class="dropdown-item" href="#">Another action</a>
+              <router-link to="/searchresults" class="dropdown-item">Search Results</router-link>
+              <a class="dropdown-itePm" href="#">Another action</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="#">Something else here</a>
             </div>
