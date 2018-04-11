@@ -32,12 +32,12 @@
 
 <script>
 /* eslint-disable */
-  import requestinfoheaderview from '@/components/dropdown/search/RequestInfoHeader.vue';
-  import requestinfoview from '@/components/dropdown/search/RequestInfo.vue';
-  import compnameview from '@/components/dropdown/search/CompName.vue';
-  import compmatches from '@/components/dropdown/search/NameMatches.vue';
-  import matchissues from '@/components/dropdown/search/IssueInfo.vue';
-  import examinationmenu from '@/components/dropdown/search/ExaminationMenu.vue';
+  import requestinfoheaderview from '@/components/dropdown/Search/RequestInfoHeader.vue';
+  import requestinfoview from '@/components/dropdown/Search/RequestInfo.vue';
+  import compnameview from '@/components/dropdown/Search/CompName.vue';
+  import compmatches from '@/components/dropdown/Search/NameMatches.vue';
+  import matchissues from '@/components/dropdown/Search/IssueInfo.vue';
+  import examinationmenu from '@/components/dropdown/Search/ExaminationMenu.vue';
 
   export default {
     name: "SearchResults",
