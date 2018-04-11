@@ -6,38 +6,32 @@
 
         <div id="M1" class="row match-part match-y" @click="clickIssueBox('M1')">
         <div class="col">
-         1
+         Name Matches
         </div>
       </div>
 
       <div id="M2" class="row match-part match-g" @click="clickIssueBox('M2')">
         <div class="col">
-         2
+         Consent
         </div>
     </div>
 
     <div id="M3" class="row match-part match-g" @click="clickIssueBox('M3')">
         <div class="col" >
-         3
+         Trademarks
         </div>
      </div>
 
     <div id="M4" class="row match-part match-g" @click="clickIssueBox('M4')">
       <div class="col" >
-        4
+        History
       </div>
     </div>
 
    <div id="M5" class="row match-part match-r" @click="clickIssueBox('M5')">
     <div class="col" >
-      5
+      Format
     </div>
-    </div>
-
-   <div id="M6" class="row match-part match-g" @click="clickIssueBox('M6')" >
-      <div class="col" >
-       6
-      </div>
     </div>
 
         </div>
@@ -45,18 +39,40 @@
   </div>
 </template>
 
-<script>
+<script defer>
 /* eslint-disable */
 export default {
   name: 'matches',
   data: {
     mess: "Here"
   },
+  mounted() {
+    alert("here");
+    this.setOriginalBackgrnd();
+  },
+  updated() {
+    alert("here2");
+  },
   methods: {
     clickIssueBox(divID) {
-      const mDiv = document.getElementById(divID);
-      mDiv.innerText = "Div is: " + divID;
+      //const mDiv = document.getElementById(divID);
+      //mDiv.innerText = "Div is: " + divID;
+      //this.setOriginalBackgrnd();
+      //alert("Here");
       this.$store.dispatch('selectNameIssue',divID);
+    },
+    setOriginalBackgrnd() {
+     // alert("here2");
+      const mDiv1 = document.getElementById("M1");
+      mDiv1.className = "row match-part match-g";
+      const mDiv2 = document.getElementById("M2");
+      mDiv2.className = "row match-part match-g";
+      const mDiv3 = document.getElementById("M3");
+      mDiv3.className = "row match-part match-g";
+      const mDiv4 = document.getElementById("M4");
+      mDiv4.className = "row match-part match-g";
+      const mDiv5 = document.getElementById("M5");
+      mDiv5.className = "row match-part match-g";
     }
   }
 };

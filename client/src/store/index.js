@@ -54,15 +54,19 @@ export default new Vuex.Store({
     },
     reservationCount: null,
     expiryDate: null,
-    issues: {
-      issue1: "Issue1",
-      issue2: "Issue2",
-      issue3: "Issue3",
-      issue4: "Issue4",
-      issue5: "Issue5",
-      issue6: "Issue6"
-    },
-    issueText: null
+    issueText: null,
+    issue: {
+        issue_Match: null,
+        issue_Consent: null,
+        issue_TradeMark: null,
+        issue_History: null,
+        issue_Format: null,
+        issue_Match_Text: null,
+        issue_Consent_Text: null,
+        issue_TradeMark_Text: null,
+        issue_History_Text: null,
+        issue_Format_Text: null
+      }
   },
   mutations: {
     authUser (state, userData) {
@@ -83,8 +87,26 @@ export default new Vuex.Store({
       state.idToken = null
       state.userId = null
     },
-    setIssueText (state,issue){
-      state.issueText = issue
+    setIssueText (state,issue) {
+      switch (issue) {
+        case "M1":
+          state.issueText = state.issue.issue_Match_Text;
+          break;
+        case "M2":
+          state.issueText = state.issue.issue_Consent_Text;
+          break;
+        case "M3":
+          state.issueText = state.issue.issue_TradeMark_Text;
+          break;
+        case "M4":
+          state.issueText = state.issue.issue_History_Text;
+          break;
+        case "M5":
+          state.issueText = state.issue.issue_Format_Text;
+          break;
+        default:
+          state.issueText = state.issue.issue_Match_Text;
+      }
     },
     loadCompanyInfo(state, dbcompanyInfo) {
       state.compInfo.nrNumber = dbcompanyInfo.nrNumber
@@ -110,6 +132,16 @@ export default new Vuex.Store({
       state.reSubmission.linkedNR = dbcompanyInfo.linkedNR
       state.reservationCount = dbcompanyInfo.reservationCount
       state.expiryDate = dbcompanyInfo.expiryDate
+      state.issue.issue_Match = dbcompanyInfo.isue_Match
+      state.issue.issue_Match_Text = dbcompanyInfo.issue_Match_Text
+      state.issue.issue_Consent = dbcompanyInfo.issue_Consent
+      state.issue.issue_Consent_Text = dbcompanyInfo.issue_Consent_Text
+      state.issue.issue_TradeMark = dbcompanyInfo.issue_TradeMark
+      state.issue.issue_TradeMark_Text = dbcompanyInfo.issue_TradeMark_Text
+      state.issue.issue_History = dbcompanyInfo.issue_History
+      state.issue.issue_History_Text = dbcompanyInfo.issue_History_Text
+      state.issue.issue_Format = dbcompanyInfo.issue_Format
+      state.issue.issue_Format_Text = dbcompanyInfo.issue_Format_Text
     },
   },
   actions: {
@@ -331,6 +363,36 @@ export default new Vuex.Store({
     },
     expiryDate(state) {
       return state.expiryDate
+    },
+    issue_Match(state) {
+      return state.issue.issue_Match
+    },
+    issue_Match_Text(state) {
+      return state.issue.issue_Match_Text
+    },
+    issue_Consent(state) {
+      return state.issue.issue_Consent
+    },
+    issue_Consent_Text(state) {
+      return state.issue.issue_Consent_Text
+    },
+    issue_TradeMark(state) {
+      return state.issue.issue_TradeMark
+    },
+    issue_TradeMark_Text(state) {
+      return state.issue.issue_TradeMark_Text
+    },
+    issue_History(state) {
+      return state.issue.issue_History
+    },
+    issue_History_Text(state) {
+      return state.issue.issue_History_Text
+    },
+    issue_Format(state) {
+      return state.issue.issue_Format
+    },
+    issue_Format_Text(state) {
+      return state.issue.issue_Format_Text
     }
   }
 })

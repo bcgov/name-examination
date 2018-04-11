@@ -47,7 +47,7 @@
                      onclick="setBorder('sk_name1')" class='rtb'>
             </p>
             <p>
-              <label class="labelTxt">resubmissionYN</label>
+              <label class="labelTxt">resubmission Y/N</label>
               <input id="resubmissionYN1" v-model="resubmissionYN"
                      onclick="setBorder('resubmissionYN1')" class='rtb'>
             </p>
