@@ -18,9 +18,9 @@
                        onclick="setBorder('lastName1')" class='rtb'>
                 </p>
                 <p>
-                <label class="labelTxt">address</label>
+                  <label class="labelTxt">address</label>
                   <input id="address1" v-model="address"
-                     onclick="setBorder('address1')" class='rtb'>
+                       onclick="setBorder('address1')" class='rtb'>
                 </p>
           </div>
           <div class="col name2-font">

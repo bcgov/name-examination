@@ -47,7 +47,7 @@ export default {
     mess: "Here"
   },
   mounted() {
-    alert("here");
+    //alert("here");
     this.setOriginalBackgrnd();
   },
   updated() {
