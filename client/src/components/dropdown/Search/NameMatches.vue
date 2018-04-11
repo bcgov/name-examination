@@ -51,7 +51,7 @@ export default {
     this.setOriginalBackgrnd();
   },
   updated() {
-    alert("here2");
+    //alert("here2");
   },
   methods: {
     clickIssueBox(divID) {
