@@ -76,8 +76,6 @@
           </div>
 
         </div>
-
-
         <div>
           <ul id=menu>
             <li><a href="#sliding">A sliding menu</a></li>
