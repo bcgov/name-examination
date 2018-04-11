@@ -1,70 +1,77 @@
 /* eslint-disable */
 <template>
   <div>
-    <!--search-Results-view></search-Results-view -->
+    <div class="container-fluid">
+      <div class="namePage">
 
-  <div class="container">
+        <div class="row mh0" >
+          <div class="col" ><requestinfoheaderview /></div>
+        </div>
+        <div class="row mh1" >
+          <div class="col" ><requestinfoview /></div>
+        </div>
 
-    <div class="row mh1">
-      <div class="col-8"><compnameview /></div>
-      <div class="col"><compinfoview /></div>
+        <div class="row mh2" >
+          <div class="col"><compnameview /></div>
+        </div>
+
+        <div class="row mh3">
+          <div class="col-2"><compmatches /></div>
+          <div class="col"><matchissues /></div>
+        </div>
+
+        <div class="row mh4">
+          <div class="col" ><examinationmenu /></div>
+        </div>
+
+      </div>
     </div>
-
-    <div class="row mh2">
-      <div class="col-5"><compmatches /></div>
-      <div class="col"><matchissues /></div>
-    </div>
-
-    <div class="row mh3">
-      <div class="col"><examinationmenu /></div>
-    </div>
-
-  </div>
 
   </div>
 </template>
 
 <script>
 /* eslint-disable */
-  import compnameview from '@/components/dropdown/search/compName.vue';
-  import compinfoview from '@/components/dropdown/search/compType.vue';
-  import compmatches from '@/components/dropdown/search/nameMatches.vue';
+  import requestinfoheaderview from '@/components/dropdown/search/RequestInfoHeader.vue';
+  import requestinfoview from '@/components/dropdown/search/RequestInfo.vue';
+  import compnameview from '@/components/dropdown/search/CompName.vue';
+  import compmatches from '@/components/dropdown/search/NameMatches.vue';
   import matchissues from '@/components/dropdown/search/IssueInfo.vue';
-  import examinationmenu from '@/components/dropdown/search/examinationMenu.vue';
+  import examinationmenu from '@/components/dropdown/search/ExaminationMenu.vue';
 
   export default {
-    name: "searchResults",
-
+    name: "SearchResults",
+    data:{
+      visble: true
+    },
     components: {
+      requestinfoheaderview,
+      requestinfoview,
       compnameview,
-      compinfoview,
       compmatches,
       matchissues,
       examinationmenu
     },
-    methods: {
-      onClick: function () {
-
-      }
-    }
   }
-
-  function getIssueInfo(CID) {
-    // var info = getInfoFromCellID(CID);
-    var divCell = document.getElementById('ISSUE-INFO');
-    divCell.innerText="Issue Info Formatted";
-  }
-
 </script>
 
 <style scoped>
+  #namedPage {
+    height: 100%;
+  }
+  .mh0 div {
+    height: 25%; /* 30% of viewport height*/
+  }
   .mh1 div {
-    height: 30vh; /* 30% of viewport height*/
+    height: 20%; /* 30% of viewport height*/
   }
   .mh2 div {
-    height: 50vh; /* 50% of viewport height*/
+    height: 30%; /* 50% of viewport height*/
   }
   .mh3 div {
-    height: 20vh; /* 20% of viewport height*/
+    height: 30%; /* 20% of viewport height*/
+  }
+  .mh4 div {
+    height: 15%; /* 20% of viewport height*/
   }
 </style>
