@@ -64,15 +64,15 @@ export default {
     setOriginalBackgrnd() {
      // alert("here2");
       const mDiv1 = document.getElementById("M1");
-      mDiv1.className = "row match-part match-g";
+      mDiv1.className = "row match-part match-d";
       const mDiv2 = document.getElementById("M2");
-      mDiv2.className = "row match-part match-g";
+      mDiv2.className = "row match-part match-d";
       const mDiv3 = document.getElementById("M3");
-      mDiv3.className = "row match-part match-g";
+      mDiv3.className = "row match-part match-d";
       const mDiv4 = document.getElementById("M4");
-      mDiv4.className = "row match-part match-g";
+      mDiv4.className = "row match-part match-d";
       const mDiv5 = document.getElementById("M5");
-      mDiv5.className = "row match-part match-g";
+      mDiv5.className = "row match-part match-d";
     }
   }
 };
@@ -102,5 +102,8 @@ export default {
   }
   .match-y{
     background-color: rgba(249, 244, 42, 0.99);
+  }
+  .match-d{
+    background-color: rgba(169, 169, 169, 0.99);
   }
 </style>

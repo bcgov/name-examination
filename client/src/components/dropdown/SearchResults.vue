@@ -9,7 +9,7 @@
         </div>
 
         <div class="row mh1" >
-          <!--<div class="col" ><requestinfoview /></div>-->
+          <div class="col" ><requestinfoview /></div>
         </div>
 
         <div class="row mh2" >
