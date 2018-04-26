@@ -8,6 +8,7 @@ const LandingPage = () => import(/* webpackChunkName: "home" */'@/components/Lan
 const Settings = () => import(/* webpackChunkName: "settings" */'@/components/application/sections/Settings')
 const Signup = () => import(/* webpackChunkName: "signup" */'@/components/landing/auth/Signup')
 const Signin = () => import(/* webpackChunkName: "signin" */'@/components/landing/auth/Signin')
+const KeyCloak = () => import(/* webpackChunkName: "signin" */'@/components/landing/auth/keyCloak')
 const MainPage = () => import(/* webpackChunkName: "mainPage" */'@/components/ApplicationPage')
 const SearchResults = () => import(/* webpackChunkName: "searchresults" */'@/components/dropdown/SearchResults')
 
@@ -50,7 +51,15 @@ let router = new Router({
       component: SearchResults,
       path: '/searchresults',
       meta: {
-         requiresAuth: true
+        requiresAuth: true
+      }
+    },
+    {
+      name: 'keycloak',
+      component: KeyCloak,
+      path: '/keycloak',
+      meta: {
+        requiresAuth: false
       },
     }
   ]
