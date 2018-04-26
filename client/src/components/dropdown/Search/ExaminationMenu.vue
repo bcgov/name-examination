@@ -5,7 +5,9 @@
       <div class="menu-sect">
 
         <div class="row">
-        <div class="col"><button @click="getNextCompany()" >Get Next</button></div>
+        <div class="col"><button @click="nameApproved()" >Approved</button></div>
+          <div class="col"><button @click="nameDeclined()" >Decline</button></div>
+          <div class="col"><button @click="getNextCompany()" >Get Next</button></div>
       </div>
       <div class="row">
         <div class="col"></div>
@@ -26,7 +28,14 @@
     name: 'ExaminationMenu',
     methods: {
       getNextCompany() {
-        this.$store.dispatch('selectNextCompany');
+        //this.$store.dispatch('selectNextCompany');
+        this.$store.dispatch('getpostgrescomp');
+      },
+      nameApproved() {
+        this.$store.dispatch('nameApproved');
+      },
+      nameDeclined() {
+        this.$store.dispatch('nameDeclined');
       }
     }
   }

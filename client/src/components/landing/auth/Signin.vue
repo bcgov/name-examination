@@ -1,49 +1,50 @@
 /* eslint-disable */
 <template>
   <div id="signin">
-    <div class="signin-form">
-      <form @submit.prevent="onSubmit">
-        <div class="input">
-          <label for="email">Mail</label>
-          <input
-            type="email"
-            id="email"
-            v-model="email">
-        </div>
-        <div class="input">
-          <label for="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            v-model="password">
-        </div>
-        <div class="submit">
-          <button type="submit">Submit</button>
-        </div>
-      </form>
-    </div>
+      <div style="background-color: #ddd; border: 1px solid #ccc; padding:
+                  10px; word-wrap: break-word; white-space: pre-wrap;" id="output"></div>
   </div>
 </template>
 
 <script>
 /* eslint-disable */
-  export default {
+let keycloak = Keycloak('static/keycloakLocal.json');
+
+function authSuccess() {
+  this.$store.dispatch('kcauth',keycloak.tokenParsed);
+};
+
+export default {
     data() {
       return {
         email: '',
         password: ''
       }
     },
-    methods: {
-      onSubmit() {
-        const formData = {
-          email: this.email,
-          password: this.password,
-        }
-        this.$store.dispatch('login', {email: formData.email, password: formData.password})
+    mounted() {
+      // set callback function for authorization notification
+      //keycloak.onAuthSuccess = function() { authSuccess() }
+      console.log("Checking token");
+      if(keycloak.tokenParsed == null) {
+        this.logMeIn();
       }
+    },
+  methods: {
+    logMeIn() {
+      console.log("User logging in");
+      const cb = this;
+      keycloak.init({ onLoad: 'login-required'}).success(function(authenticated) {
+        cb.$store.dispatch('kcauth',keycloak.tokenParsed);
+      });
+    },
+    output(data) {
+      if (typeof data === 'object') {
+        data = JSON.stringify(data, null, '  ');
+      }
+      document.getElementById('output').innerHTML = data;
     }
   }
+}
 </script>
 
 <style scoped>

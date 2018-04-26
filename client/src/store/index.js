@@ -17,6 +17,9 @@ export default new Vuex.Store({
       dbURL: null,
       secKey:null
     },
+    kctoken: null,
+    user_role: null,
+    currentName: null,
     compInfo: {
       nrNumber: null,
       compNames: {
@@ -70,10 +73,11 @@ export default new Vuex.Store({
   },
   mutations: {
     authUser (state, userData) {
-      state.idToken = userData.token
-      state.userId = userData.userId
-      state.email = userData.email
-      state.user = userData.email
+      state.kctoken = userData
+      state.idToken = userData
+      //state.kctoken = userData.client_session
+      //state.userRole = userData.user_role
+      //state.idToken = userData.client_session
     },
     storeUser (state, user) {
       state.user = user
@@ -107,6 +111,9 @@ export default new Vuex.Store({
         default:
           state.issueText = state.issue.issue_Match_Text;
       }
+    },
+    loadpostgresinfo(state, postgresData) {
+        state.compInfo.nrNumber = postgresData.nameRequest
     },
     loadCompanyInfo(state, dbcompanyInfo) {
       state.compInfo.nrNumber = dbcompanyInfo.nrNumber
@@ -195,8 +202,46 @@ export default new Vuex.Store({
         })
         .catch(error => console.log(error))
     },
+    getpostgrescomp ({commit, dispatch, state}) {
+      console.log('action: select next company from postgres')
+      console.log('token ' + state.kctoken)
+      globalAxios.defaults.baseURL = 'https://namex-dev.pathfinder.gov.bc.ca'
+      const url = 'http://namex-dev.pathfinder.gov.bc.ca' + '/api/v1/requests/queues/@me/oldest'
+      const vm = this
+      return axios.get(url, {headers: {'Authorization': `Bearer ${state.kctoken}`}}).then(response => {
+        console.log(response)
+        vm.$store.state.message = response.data
+        var myStr = response.data
+        console.log('Response: ' + myStr)
+        //vm.$store.state.nr = myStr[‘nameRequest’]
+        vm.$store.state.nr = myStr.nameRequest
+        commit('loadpostgresinfo',response.data)
+      })
+
+      //globalAxios.defaults.headers({'Authorization':'Bearer ' + state.kctoken})
+      console.log('token ' + state.kctoken)
+      //globalAxios.get('/api/v1/requests/queues/@me/oldest')
+      //  .then(res => {
+      //    console.log(res)
+       //   const data = res.data
+        //  commit('loadpostgresinfo',data)
+       // })
+        //.catch(error => console.log(error))
+    },
+    nameApproved( {commit, dispatch, state}) {
+      console.log('Name Approved for ' + state.compInfo.nrNumber + ", " + state.currentName)
+      axios.patch('/verifyPassword?key='+ state.dbConfig.secKey, {
+        state: 'Approved'
+      })
+    },
+    nameDeclined() {
+      console.log('Name Rejected for NR #' + state.compInfo.nrNumber)
+      axios.patch('/verifyPassword?key='+ state.dbConfig.secKey, {
+        state: 'Reject'
+      })
+    },
     login ({commit, dispatch, state}, authData) {
-        axios.post('/verifyPassword?key='+ state.dbConfig.secKey, {
+       axios.post('/verifyPassword?key='+ state.dbConfig.secKey, {
         email: authData.email,
         password: authData.password,
         returnSecureToken: true
@@ -217,6 +262,22 @@ export default new Vuex.Store({
         })
         .catch(error => console.log(error))
       router.push('/mainPage')
+    },
+    kcauth ({commit, dispatch, state}, authData) {
+      state.kctoken = authData
+      console.log(authData)
+      state.user_role =  authData.realm_access.roles,
+      state.idToken = authData
+      localStorage.setItem('kctoken',state.kctoken)
+      localStorage.setItem('user_role',state.user_role)
+
+      if (state.kctoken){
+        console.log('KC Authorized user roles')
+        commit('authUser', {
+          //user_role: state.user_role,
+          kctoken: state.kctoken
+        })
+      }
     },
     tryAutoLogin ({commit}) {
       const dbURL = localStorage.getItem('dbURL')
