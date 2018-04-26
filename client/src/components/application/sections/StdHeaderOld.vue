@@ -24,10 +24,35 @@
             <router-link to="/mainPage" class="nav-link">Home</router-link>
           </li>
           <li class="nav-item active">
-            <router-link to="/searchresults" class="nav-link">Examine Names</router-link>
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle"
+               href="#" id="navbarDropdown"
+               role="button"
+               data-toggle="dropdown"
+               aria-haspopup="true"
+               aria-expanded="false">
+              Dropdown
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/searchresults">SearchResults</a>
+              <a class="dropdown-item" href="#">Another action</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Something else here</a>
+            </div>
+          </li>
+          <li class="nav-item active">
+            <router-link to="/searchresults" class="nav-link">Search Results</router-link>
+          </li>
+          <li class="nav-item active">
+            <router-link to="/keyCloak" class="nav-link">Key Cloak</router-link>
           </li>
           <li class="nav-item active">
             <router-link to="/settings" class="nav-link">Settings</router-link>
+          </li>
+          <li class="nav-item active" v-if="!auth">
+            <router-link to="/signup" class="nav-link">Sign Up</router-link>
           </li>
           <li class="nav-item active" v-if="!auth">
             <router-link to="/signin" class="nav-link">Login</router-link>
