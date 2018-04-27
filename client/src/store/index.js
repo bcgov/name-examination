@@ -206,13 +206,13 @@ export default new Vuex.Store({
       console.log('action: select next company from postgres')
       console.log('token ' + state.kctoken)
       globalAxios.defaults.baseURL = 'https://namex-dev.pathfinder.gov.bc.ca'
-      const url = 'http://namex-dev.pathfinder.gov.bc.ca' + '/api/v1/requests/queues/@me/oldest'
+      const url = 'https://namex-dev.pathfinder.gov.bc.ca' + '/api/v1/requests/queues/@me/oldest'
       const vm = this
       return axios.get(url, {headers: {'Authorization': `Bearer ${state.kctoken}`}}).then(response => {
-        console.log(response)
+        console.log('Response:' + response)
         vm.$store.state.message = response.data
         var myStr = response.data
-        console.log('Response: ' + myStr)
+        console.log('MyStr: ' + myStr)
         //vm.$store.state.nr = myStr[‘nameRequest’]
         vm.$store.state.nr = myStr.nameRequest
         commit('loadpostgresinfo',response.data)

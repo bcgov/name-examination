@@ -18,7 +18,6 @@
 
 <script>
 /* eslint-disable */
-
 //var keycloak = Keycloak('static/config.json')
 var keycloak = Keycloak('static/keycloakLocal.json')
 
