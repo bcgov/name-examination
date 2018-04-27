@@ -33,7 +33,7 @@ export default {
     logMeIn() {
       console.log("User logging in");
       const cb = this;
-      keycloak.init({ onLoad: 'login-required'},{redirect_uri: 'https://namex-dev.pathfinder.gov.bc.ca/signin'}).success(function(authenticated) {
+      keycloak.init({ onLoad: 'login-required'}).success(function(authenticated) {
         cb.$store.dispatch('kcauth',keycloak.tokenParsed);
       });
     },
