@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint-disable*/
 <template>
   <div id="signin">
       <div style="background-color: #ddd; border: 1px solid #ccc; padding:
@@ -8,42 +8,65 @@
 
 <script>
 /* eslint-disable */
-let keycloak = Keycloak('static/keycloak.json');
 
-function authSuccess() {
-  this.$store.dispatch('kcauth',keycloak.tokenParsed);
-};
+var authorized = localStorage.getItem("AUTHORIZED");
+if (!authorized) {
+let keycloak = Keycloak('static/keycloak.json');
+//  let keycloak = Keycloak('static/Local.json');
+  localStorage.setItem("AUTHORIZED",true);
+
+  var token = localStorage.getItem('KEYCLOAK_TOKEN');
+  keycloak.init({token: token, onLoad: 'login-required'}).success(function (authenticated) {
+    if (authenticated) {
+      localStorage.setItem('KEYCLOAK_TOKEN', keycloak.token);
+
+      // Get user profile
+      keycloak.loadUserProfile().success(function (userProfile) {
+        app.userName = userProfile.username;
+        localStorage.setItem('USERNAME', app.userName);
+        window.location.replace("/signin");
+      });
+
+    } else {
+      alert('not authenticated');
+    }
+  }).error(function () {
+    alert('failed to initialize');
+  });
+
+}
 
 export default {
     data() {
       return {
-        email: '',
-        password: ''
+        userName: ''
       }
-    },
-    mounted() {
+    }
+    /*mounted() {
       // set callback function for authorization notification
       //keycloak.onAuthSuccess = function() { authSuccess() }
       console.log("Checking token");
       if(keycloak.tokenParsed == null) {
         this.logMeIn();
       }
-    },
-  methods: {
+    },*/
+ /* methods: {
     logMeIn() {
       console.log("User logging in");
-      const cb = this;
-      keycloak.init({ onLoad: 'login-required'}).success(function(authenticated) {
-        cb.$store.dispatch('kcauth',keycloak.tokenParsed);
-      });
+
+
     },
     output(data) {
       if (typeof data === 'object') {
         data = JSON.stringify(data, null, '  ');
       }
       document.getElementById('output').innerHTML = data;
-    }
-  }
+    },
+    authSuccess() {
+      alert("HERE");
+      cb.$store.dispatch('kcauth',keycloak.tokenParsed);
+    },
+  }*/
 }
 </script>
 
