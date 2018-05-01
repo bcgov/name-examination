@@ -13,18 +13,18 @@ var authorized = localStorage.getItem("AUTHORIZED");
 if (!authorized) {
 let keycloak = Keycloak('static/keycloak.json');
 //let keycloak = Keycloak('static/Local.json');
-  localStorage.setItem("AUTHORIZED",true);
 
   var token = localStorage.getItem('KEYCLOAK_TOKEN');
   keycloak.init({token: token, onLoad: 'login-required'}).success(function (authenticated) {
     if (authenticated) {
       localStorage.setItem('KEYCLOAK_TOKEN', keycloak.token);
+      localStorage.setItem("AUTHORIZED",true);
 
       // Get user profile
       keycloak.loadUserProfile().success(function (userProfile) {
         app.userName = userProfile.username;
         localStorage.setItem('USERNAME', app.userName);
-        window.location.replace("/signin");
+        window.location.replace("/home");
       });
 
     } else {

@@ -85,3 +85,7 @@ router.beforeResolve((to, from, next) => {
 })
 
 export default router
+
+//router.get('/{vue_capture?}', function () {
+//  return view('pages.home');
+//}).where('vue_capture', '[\/\w\.-]*');
