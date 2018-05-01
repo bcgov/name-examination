@@ -8,7 +8,7 @@
 
 <script>
 /* eslint-disable */
-let keycloak = Keycloak('static/keycloakLocal.json');
+let keycloak = Keycloak('static/keycloak.json');
 
 function authSuccess() {
   this.$store.dispatch('kcauth',keycloak.tokenParsed);
