@@ -2,7 +2,7 @@
 <template>
   <div class="container-fluid">
     <div id="app">
-        <std-header> </std-header >
+        <std-header> </std-header>
       <div>
         <router-view></router-view>
       </div>
