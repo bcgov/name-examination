@@ -205,10 +205,12 @@ export default new Vuex.Store({
     getpostgrescomp ({commit, dispatch, state}) {
       console.log('action: select next company from postgres')
       console.log('token ' + state.kctoken)
-      globalAxios.defaults.baseURL = 'https://namex-dev.pathfinder.gov.bc.ca'
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+     //globalAxios.defaults.baseURL = 'https://namex-dev.pathfinder.gov.bc.ca'
       const url = 'https://namex-dev.pathfinder.gov.bc.ca' + '/api/v1/requests/queues/@me/oldest'
       const vm = this
-      return axios.get(url, {headers: {'Authorization': `Bearer ${state.kctoken}`}}).then(response => {
+      //return axios.get(url, {headers: {'Authorization': `Bearer ${state.kctoken}`}}).then(response => {
+      return axios.get(url, {headers: {'Authorization': `Bearer ${myToken}`}}).then(response => {
         console.log('Response:' + response)
         vm.$store.state.message = response.data
         var myStr = response.data
@@ -263,11 +265,13 @@ export default new Vuex.Store({
         .catch(error => console.log(error))
       router.push('/mainPage')
     },
-    kcauth ({commit, dispatch, state}, authData) {
-      state.kctoken = authData
-      console.log(authData)
-      state.user_role =  authData.realm_access.roles,
-      state.idToken = authData
+    kcauth ({commit, dispatch, state}) {
+      const kc = localStorage.getItem('KEYCLOAK_TOKEN')
+      state.kctoken = kc
+      //console.log(authData)
+      //state.user_role =  authData.realm_access.roles,
+      state.user_role = ''
+      state.idToken = kc
       localStorage.setItem('kctoken',state.kctoken)
       localStorage.setItem('user_role',state.user_role)
 
