@@ -2,7 +2,7 @@
 <template>
   <div>
   <std-header></std-header>
- <router-view ></router-view>
+  <router-view ></router-view>
     <p>main page</p>
   </div>
 </template>
