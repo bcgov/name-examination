@@ -1,98 +1,39 @@
 /* eslint-disable */
 <template>
-  <div>
     <div class="container-fluid">
-      <div class="RequestInfo">
+      <div class="row">
 
-        <div class="row" >
-
-          <div class="col name2-font">
-                <p>
-                <label class="labelTxt">firstName</label>
-                  <input id="firstName1" v-model="firstName"
-                       onclick="setBorder('firstName1')" class='rtb'>
-                </p>
-                <p>
-                <label class="labelTxt">lastName</label>
-                  <input id="lastName1" v-model="lastName"
-                       onclick="setBorder('lastName1')" class='rtb'>
-                </p>
-                <p>
-                  <label class="labelTxt">address</label>
-                  <input id="address1" v-model="address"
-                       onclick="setBorder('address1')" class='rtb'>
-                </p>
-          </div>
-          <div class="col name2-font">
-                <p>
-                <label class="labelTxt">natureOfBusiness</label>
-                  <input id="natureOfBusiness1" v-model="natureOfBusiness"
-                       onclick="setBorder('natureOfBusiness1')" class='rtb'>
-                </p>
-                <p>
-                <label class="labelTxt">jurisdiction</label>
-                  <input id="jurisdiction1" v-model="jurisdiction"
-                       onclick="setBorder('jurisdiction1')" class='rtb'>
-                </p>
-                <p>
-                <label class="labelTxt">nuans</label>
-                  <input id="nuans1" v-model="nuans"
-                       onclick="setBorder('nuans1')" class='rtb'>
-                </p>
-          </div>
-          <div class="col name2-font">
-            <p>
-              <label class="labelTxt">sk_name</label>
-              <input id="sk_name1" v-model="sk_name"
-                     onclick="setBorder('sk_name1')" class='rtb'>
-            </p>
-            <p>
-              <label class="labelTxt">resubmission Y/N</label>
-              <input id="resubmissionYN1" v-model="resubmissionYN"
-                     onclick="setBorder('resubmissionYN1')" class='rtb'>
-            </p>
-            <p>
-              <label class="labelTxt">linkedNR</label>
-              <input id="linkedNR1" v-model="linkedNR"
-                     onclick="setBorder('linkedNR1')" class='rtb'>
-            </p>
-          </div>
-          <div class="col name2-font">
-            <p>
-              <label class="labelTxt">examiner</label>
-              <input id="examiner1" v-model="examiner"
-                     onclick="setBorder('examiner1')" class='rtb'>
-            </p>
-            <p>
-              <label class="labelTxt">reservationCount</label>
-              <input id="reservationCount1" v-model="reservationCount"
-                     onclick="setBorder('reservationCount1')" class='rtb'>
-            </p>
-            <p>
-              <label class="labelTxt">expiryDate</label>
-              <input id="expiryDate1" v-model="expiryDate"
-                     onclick="setBorder('expiryDate1')" class='rtb'>
-            </p>
-          </div>
-
+        <div id='div1B' class="col-md-5 bb" >
+          <p class="bb3"><label class="labelTxt">INTERNAL COMMENTS</label></p>
+          <textarea id="internalComments1"
+                    v-model="internalComments"
+                    rows="7"
+                    cols="50%"
+                    @click="testClick()"
+                    class='txtArea'>
+                </textarea>
         </div>
-        <div>
-          <ul id=menu>
-            <li><a href="#sliding">A sliding menu</a></li>
-            <li><a href="#details">Details</a></li>
-            <li><a href="#a11n">Accessibility</a></li>
-            <li><a href="#misc">Menus of unknown size</a></li>
-          </ul>
+        <div id='div2B' class="col-md-3 bb">
+        </div>
+        <div id='div3B' class="col-md-3 bb">
+          <clientinfoview />
         </div>
 
       </div>
+
+      <div class="row bb1">
+        <div id='div4' class="col">
+          <span class="f1" @click="toggleDetails()">F1</span>
+        </div>
+      </div>
     </div>
-  </div>
 </template>
 
 <script>
 /* eslint-disable */
-  export default {
+import clientinfoview from '@/components/dropdown/Search/client/ClientInfo.vue';
+
+   export default {
     name: 'RequestInfo',
     computed: {
       nrNumber() {
@@ -156,20 +97,18 @@
         return  this.$store.getters.expiryDate;
       }
     },
-      methods: {
-      setBorder(id) {
-        var tb = document.getElementById(id);
-        tb.borderWidth = "1";
-      },
-      expandDiv(id) {
-        var myDiv = document.getElementById(id);
-        myDiv.className = "expand";
-      },
-      contractDiv(id) {
-          var myDiv = document.getElementById(id);
-          myDiv.className = "contract";
+    components: {
+      clientinfoview
+    },
+    methods: {
+        toggleDetails() {
+          this.$store.dispatch('setDetails')
+        },
+        setBorder(id) {
+          var tb = document.getElementById(id);
+          tb.borderWidth = "1";
         }
-      }
+    }
   }
 </script>
 
@@ -204,6 +143,15 @@
     font-size: .65em;
     text-align: left;
     margin-right: 10px;
+  }
+  .bb1 {
+    font-size: .95em;
+    text-align: right;
+    vertical-align: bottom;
+  }
+  .f1 {
+    border: 1px solid #000000;
+    padding: 2px;
   }
   #menu {
     position: fixed;

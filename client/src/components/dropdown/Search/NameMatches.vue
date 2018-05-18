@@ -6,7 +6,7 @@
 
         <div id="M1" class="row match-part match-y" @click="clickIssueBox('M1')">
         <div class="col">
-         Name Matches
+         Conflicts
         </div>
       </div>
 

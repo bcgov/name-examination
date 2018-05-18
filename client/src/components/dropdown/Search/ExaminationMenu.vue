@@ -29,13 +29,13 @@
     methods: {
       getNextCompany() {
         //this.$store.dispatch('selectNextCompany');
-        this.$store.dispatch('getpostgrescomp');
+        this.$store.dispatch('getpostgrescompNo');
       },
       nameApproved() {
         this.$store.dispatch('nameApproved');
       },
       nameDeclined() {
-        this.$store.dispatch('nameDeclined');
+        this.$store.dispatch('nameRejected');
       }
     }
   }

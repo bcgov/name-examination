@@ -4,24 +4,29 @@
     <div class="container-fluid">
       <div class="namePage">
 
-        <div class="row mh0" >
-          <div class="col" ><requestinfoheaderview /></div>
+        <div v-if="details" class="RequestInfoHeader">
+          <div class="row mh1" >
+            <div class="col" ><requestinfoheaderview /></div>
+          </div>
+          <div class="row mh1" >
+            <div class="col" ><requestinfoview /></div>
+          </div>
         </div>
-
-        <div class="row mh1" >
-          <div class="col" ><requestinfoview /></div>
+        <div v-else class="RequestInfoHeader">
+          <div class="row mh1" >
+            <div class="col" ><requestinfoheaderview /></div>
+          </div>
         </div>
-
-        <div class="row mh2" >
+        <div class="row mh3" >
           <div class="col"><compnameview /></div>
         </div>
 
-        <div class="row mh3">
-          <div class="col-2"><compmatches /></div>
+        <div class="row mh4">
+          <div class="col-2 mid"><compmatches /></div>
           <div class="col"><matchissues /></div>
         </div>
 
-        <div class="row mh4">
+        <div class="row mh5">
           <div class="col" ><examinationmenu /></div>
         </div>
       </div>
@@ -44,6 +49,11 @@
     data:{
       visble: true
     },
+    computed: {
+      details() {
+        return this.$store.getters.details;
+      }
+    },
     components: {
       requestinfoheaderview,
       requestinfoview,
@@ -57,21 +67,30 @@
 
 <style scoped>
   #namedPage {
-    height: 100%;
+    height: 150%;
   }
   .mh0 div {
-    height: 25%; /* 30% of viewport height*/
+    height: 0px; /* 30% of viewport height*/
   }
   .mh1 div {
     height: 20%; /* 30% of viewport height*/
   }
   .mh2 div {
-    height: 30%; /* 50% of viewport height*/
+    height: 40%; /* 50% of viewport height*/
   }
   .mh3 div {
-    height: 30%; /* 20% of viewport height*/
+    height: 20%; /* 20% of viewport height*/
   }
   .mh4 div {
+    height: 30%; /* 20% of viewport height*/
+  }
+  .mh5 div {
     height: 15%; /* 20% of viewport height*/
+  }
+  .RequestInfoHeader {
+    align-content: left;
+    border: 2px solid #eee;
+    padding: 1px;
+    box-shadow: 0 2px 3px #ccc;
   }
 </style>

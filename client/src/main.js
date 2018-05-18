@@ -12,7 +12,8 @@ import store from '@/store'
 Vue.use(Vuelidate)
 
 //axios.defaults.baseURL =  <-- set in setttings and auto login
-axios.defaults.headers.get['Accepts'] = 'application/json'
+axios.defaults.headers.get['Accept'] = 'application/json'
+axios.defaults.headers.put['Content-Type'] = 'application/json'
 
 Vue.config.productionTip = false;
 

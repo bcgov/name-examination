@@ -19,6 +19,7 @@
         <div class="row">
           <div class="col name2-font">
             <input id="cmp3" v-model="compName3" onclick="setBorder('cmp3')" class='rtb'>
+
           </div>
         </div>
 
@@ -29,6 +30,7 @@
 
 <script>
 /* eslint-disable */
+
   export default {
     name: 'CompName',
     computed: {
@@ -42,11 +44,17 @@
         return this.$store.getters.compName3;
       }
     },
+    mounted() {
+    },
     methods: {
-     setBorder(id) {
-        var tb = document.getElementById(id);
+      setBorder(id) {
+        const tb = document.getElementById(id);
         tb.borderWidth = "1";
-     }
+      },
+      setFocus(id) {
+        const ell = document.getElementById(id);
+        ell.focus();
+      }
     }
   }
 </script>
