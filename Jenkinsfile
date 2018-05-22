@@ -98,6 +98,25 @@ containerTemplate(
             checkout scm
         }
 
+        stage('dependency check') {
+          dir('owasp') {
+            // content of 
+            // http://dl.bintray.com/jeremy-long/owasp/dependency-check-3.1.2-release.zip'
+            // expected in git repo in owasp/
+            sh './dependency-check/bin/dependency-check.sh --project "MyApp" --scan ../package.json --enableExperimental --enableRetired'
+            sh 'rm -rf ./dependency-check/data/'
+            publishHTML (target: [
+                                allowMissing: false,
+                                alwaysLinkToLastBuild: false,
+                                keepAll: true,
+                                reportDir: './',
+                                reportFiles: 'dependency-check-report.html',
+                                reportName: "OWASP Dependency Check Report"
+                          ])
+            }
+        }
+
+
         stage('Intermediate build') {
             echo ">>> Building Namex intermediate image..."
                 openshiftBuild bldCfg: FE_INT_BUILDCFG_NAME, showBuildLogs: 'true'
@@ -127,10 +146,7 @@ containerTemplate(
 
 stage('deploy-test') {	
   timeout(time: 1, unit: 'DAYS') {
-      input {
-          message "Deploy to test?"
-          submitter "ljtrent,thorwolpert,rarmitag" 
-      }
+      input message: "Deploy to test?", submitter: 'thorwolpert'
   }
   node('master') {
 	  echo ">>> Tag ${TST_TAG_NAME} with ${TST_BCK_TAG_NAME}"
