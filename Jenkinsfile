@@ -10,13 +10,71 @@ def FE_BUILDCFG_NAME ='namex-fe-web'        // TODO: rename build to "namex-fe-b
 def FE_IMAGE_NAME = 'namex-front-caddy'     // TODO: rename image to "namex-fe-image"
 def FE_DEPLOYMENT_NAME = 'namex-fe-web-caddy'  // TODO: rename deployment to "namex-fe-deploy"
 
-// **** Note: openshiftVerifyDeploy requires policy to be added:
-// oc policy add-role-to-user view system:serviceaccount:<project-prefix>-tools:jenkins -n <project-prefix>-dev
-// oc policy add-role-to-user view system:serviceaccount:<project-prefix>-tools:jenkins -n <project-prefix>-test
-// oc policy add-role-to-user view system:serviceaccount:<project-prefix>-tools:jenkins -n <project-prefix>-prod
+// define constants
+def BUILDCFG_NAME ='namex-web'
+def IMAGE_NAME = 'namex-front-caddy'
+def DEV_DEPLOYMENT_NAME = 'namex-web-dev'
+def DEV_TAG_NAME = 'dev'
+def DEV_NS = 'servicebc-ne-dev'
+def TST_DEPLOYMENT_NAME = 'namex-web-test'
+def TST_TAG_NAME = 'test'
+def TST_BCK_TAG_NAME = 'test-previous'
+def TST_NS = 'servicebc-ne-test'
+def PROD_DEPLOYMENT_NAME = 'namex'
+def PROD_TAG_NAME = 'prod'
+def PROD_BCK_TAG_NAME = 'prod-previous'
+def PROD_NS = 'ocp-myapp-prod'
 
-//See https://github.com/jenkinsci/kubernetes-plugin
-// The "python3nodejs" has both Python and NodeJS6 so we can use it to build BE and FE
+// define groovy functions
+
+// send a msg to slack channel that deploy occured
+import groovy.json.JsonOutput
+def notifySlack(text, channel, url, attachments) {
+    def slackURL = url
+    def jenkinsIcon = 'https://wiki.jenkins-ci.org/download/attachments/2916393/logo.png'
+    def payload = JsonOutput.toJson([text: text,
+        channel: channel,
+        username: "Jenkins",
+        icon_url: jenkinsIcon,
+        attachments: attachments
+    ])
+    def encodedReq = URLEncoder.encode(payload, "UTF-8")
+    sh("curl -s -S -X POST " +
+            "--data \'payload=${encodedReq}\' ${slackURL}")    
+}
+
+// create a string listing commit msgs occured since last build
+@NonCPS
+def getChangeString() {
+  MAX_MSG_LEN = 512
+  def changeString = ""
+  def changeLogSets = currentBuild.changeSets
+  for (int i = 0; i < changeLogSets.size(); i++) {
+     def entries = changeLogSets[i].items
+     for (int j = 0; j < entries.length; j++) {
+         def entry = entries[j]
+         truncated_msg = entry.msg.take(MAX_MSG_LEN)
+         changeString += " - ${truncated_msg} [${entry.author}]\n"
+     }
+  }
+  if (!changeString) {
+     changeString = "No changes"
+  }
+  return changeString
+}
+
+// pipeline
+
+// Note: openshiftVerifyDeploy requires policy to be added:
+// oc policy add-role-to-user view system:serviceaccount:devex-platform-tools:jenkins -n devex-platform-dev
+// oc policy add-role-to-user view system:serviceaccount:devex-platform-tools:jenkins -n devex-platform-test
+// oc policy add-role-to-user view system:serviceaccount:devex-platform-tools:jenkins -n devex-platform-prod
+
+// define job properties - keep 10 builds only
+properties([[$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '10']]])
+
+// Part 1 - CI - Source code scanning, build, dev deploy
+
 podTemplate(label: 'jenkins-python3nodejs', name: 'jenkins-python3nodejs', serviceAccount: 'jenkins', cloud: 'openshift', containers: [
 containerTemplate(
     name: 'jnlp',
@@ -33,6 +91,13 @@ containerTemplate(
   // Front-end chain builds
   {
     node('jenkins-python3nodejs') {
+
+        stage('checkout') {
+            echo "checking out source"
+            echo "Build: ${BUILD_ID}"
+            checkout scm
+        }
+
         stage('Intermediate build') {
             echo ">>> Building Namex intermediate image..."
                 openshiftBuild bldCfg: FE_INT_BUILDCFG_NAME, showBuildLogs: 'true'
@@ -59,3 +124,19 @@ containerTemplate(
         }
     }
   }
+
+stage('deploy-test') {	
+  timeout(time: 1, unit: 'DAYS') {
+	  input message: "Deploy to test?", submitter: 'ljtrent,thorwolpert,rarmitag'
+  }
+  node('master') {
+	  echo ">>> Tag ${TST_TAG_NAME} with ${TST_BCK_TAG_NAME}"
+	  openshiftTag destStream: IMAGE_NAME, verbose: 'false', destTag: TST_BCK_TAG_NAME, srcStream: IMAGE_NAME, srcTag: TST_TAG_NAME
+          echo ">>> Tag ${IMAGE_HASH} with ${TST_TAG_NAME}"
+	  openshiftTag destStream: IMAGE_NAME, verbose: 'false', destTag: TST_TAG_NAME, srcStream: IMAGE_NAME, srcTag: "${IMAGE_HASH}"
+          sleep 5
+	  openshiftVerifyDeployment depCfg: TST_DEPLOYMENT_NAME, namespace: TST_NS, replicaCount: 1, verbose: 'false', verifyReplicaCount: 'false'
+	  echo ">>>> Deployment Complete"
+	  notifySlack("Test Deploy, changes:\n" + getChangeString(), "#builds", "https://hooks.slack.com/services/${SLACK_TOKEN}", [])
+  }
+}
