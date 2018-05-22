@@ -48,7 +48,7 @@ def PROD_TAG_NAME = 'prod'
 def PROD_BCK_TAG_NAME = 'prod-previous'
 def PROD_NS = 'ocp-myapp-prod'
 
-def SLACK_TOKEN = sRLVVwvJg3mOsfbNk0tXSgrn
+def SLACK_TOKEN = 'sRLVVwvJg3mOsfbNk0tXSgrn'
 
 // define groovy functions
 
