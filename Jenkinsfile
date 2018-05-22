@@ -127,7 +127,7 @@ containerTemplate(
 
 stage('deploy-test') {	
   timeout(time: 1, unit: 'DAYS') {
-	  input message: "Deploy to test?", submitter: 'ljtrent,thorwolpert,rarmitag'
+	  input message: "Deploy to test?", submitter: "ljtrent,thorwolpert,rarmitag"
   }
   node('master') {
 	  echo ">>> Tag ${TST_TAG_NAME} with ${TST_BCK_TAG_NAME}"
