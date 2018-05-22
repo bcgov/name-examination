@@ -1,7 +1,30 @@
-// FE = front-end code.  JS and VUE.js.
+//
+// Copyright © 2018 Province of British Columbia
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
 
-// FE requires a chained build: First buildconfig outputs an intermediate image that's then consumed by a second stage
-// (cont..) build that uses it to build the deploy-ready image
+//JENKINS DEPLOY ENVIRONMENT VARIABLES:
+// - JENKINS_JAVA_OVERRIDES  -Dhudson.model.DirectoryBrowserSupport.CSP= -Duser.timezone=America/Vancouver
+//   -> user.timezone : set the local timezone so logfiles report correxct time
+//   -> hudson.model.DirectoryBrowserSupport.CSP : removes restrictions on CSS file load, thus html pages of test reports are displayed pretty
+//   See: https://docs.openshift.com/container-platform/3.9/using_images/other_images/jenkins.html for a complete list of JENKINS env vars
+// - SLACK_TOKEN
+
+
+// This requires a chained build, which is a multi-staged build:
+// 1. first buildconfig outputs an intermediate image with the compiled final product
+// 2. a second stage build that copies the compiled product to a production image
 
 // Front-end definitions.  Extra because of the chained build.  "INT" = Intermediate.
 def FE_INT_BUILDCFG_NAME ='namex-fe-build'  // TODO: rename build to "namex-fe-int-build"
@@ -24,6 +47,8 @@ def PROD_DEPLOYMENT_NAME = 'namex'
 def PROD_TAG_NAME = 'prod'
 def PROD_BCK_TAG_NAME = 'prod-previous'
 def PROD_NS = 'ocp-myapp-prod'
+
+def SLACK_TOKEN = sRLVVwvJg3mOsfbNk0tXSgrn
 
 // define groovy functions
 
@@ -156,7 +181,7 @@ podTemplate(label: zappodlabel, name: zappodlabel, serviceAccount: 'jenkins', cl
 
 stage('deploy-test') {	
   timeout(time: 1, unit: 'DAYS') {
-      input message: "Deploy to test?", submitter: 'thorwolpert'
+      input message: "Deploy to test?", submitter: 'admin,ljtrent-admin,thorwolpert-admin,rarmitag-admin'
   }
   node('master') {
 	  echo ">>> Tag ${TST_TAG_NAME} with ${TST_BCK_TAG_NAME}"
