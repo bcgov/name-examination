@@ -98,25 +98,6 @@ containerTemplate(
             checkout scm
         }
 
-        stage('dependency check') {
-          dir('owasp') {
-            // content of 
-            // http://dl.bintray.com/jeremy-long/owasp/dependency-check-3.1.2-release.zip'
-            // expected in git repo in owasp/
-            sh './dependency-check/bin/dependency-check.sh --project "MyApp" --scan ../package.json --enableExperimental --enableRetired'
-            sh 'rm -rf ./dependency-check/data/'
-            publishHTML (target: [
-                                allowMissing: false,
-                                alwaysLinkToLastBuild: false,
-                                keepAll: true,
-                                reportDir: './',
-                                reportFiles: 'dependency-check-report.html',
-                                reportName: "OWASP Dependency Check Report"
-                          ])
-            }
-        }
-
-
         stage('Intermediate build') {
             echo ">>> Building Namex intermediate image..."
                 openshiftBuild bldCfg: FE_INT_BUILDCFG_NAME, showBuildLogs: 'true'
@@ -143,6 +124,35 @@ containerTemplate(
         }
     }
   }
+
+
+// Part 2 - Security scan of deployed app in dev
+
+// ensure pod labels/names are unique
+def zappodlabel = "myapp-zap-${UUID.randomUUID().toString()}"
+podTemplate(label: zappodlabel, name: zappodlabel, serviceAccount: 'jenkins', cloud: 'openshift', containers: [
+  containerTemplate(
+    name: 'jnlp',
+    image: '172.50.0.2:5000/openshift/jenkins-slave-zap',
+    resourceRequestCpu: '500m',
+    resourceLimitCpu: '1000m',
+    resourceRequestMemory: '3Gi',
+    resourceLimitMemory: '4Gi',
+    workingDir: '/home/jenkins',
+    command: '',
+    args: '${computer.jnlpmac} ${computer.name}'
+  )
+]) {
+     stage('ZAP Security Scan') {
+        node(zappodlabel) {
+          sleep 60
+          def retVal = sh returnStatus: true, script: '/zap/zap-baseline.py -r baseline.html -t http://namex-dev.pathfinder.gov.bc.ca'
+          publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: '/zap/wrk', reportFiles: 'baseline.html', reportName: 'ZAP Baseline Scan', reportTitles: 'ZAP Baseline Scan'])
+          echo "Return value is: ${retVal}"
+        }
+     }
+  }
+
 
 stage('deploy-test') {	
   timeout(time: 1, unit: 'DAYS') {
