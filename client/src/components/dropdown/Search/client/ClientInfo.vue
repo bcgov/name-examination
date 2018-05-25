@@ -1,46 +1,56 @@
 /* eslint-disable */
 <template>
-<div class="container-fluid">
-  <div class="row info">
-          <span>
-            <label class="labelTxt">Client</label>
-          </span>
-          <span>
-            <input id="firstName1" v-model="firstName"
-                   onclick="setBorder('firstName1')" >
-            <input id="lastName1" v-model="lastName"
-                   onclick="setBorder('lastName1')" >
-          </span>
+  <span class="ClientInfo">
+    <h3>Client</h3>
+    <span v-if="!is_editing">
+      <p>{{ firstName}} {{ lastName }}</p>
 
-          <span>
-            <label class="labelTxt">Applicant Info</label>
-          </span>
-          <span>
-            <input id="firstName1A" v-model="firstName"
-                   onclick="setBorder('firstName1')" >
-            <input id="lastName1A" v-model="lastName"
-                   onclick="setBorder('lastName1')" >
-          </span>
-          <span>
-              <input id="address1" v-model="address"
-                   onclick="setBorder('address1')" >
-          </span>
-          <span>
-               <label class="labelTxt">email:</label>
-                <input id="email1" v-model="conEmail"
-                  onclick="setBorder('email1')">
-          </span>
+      <h3>Applicant Info</h3>
+      <p>{{ firstName }} {{ middleName }} {{ lastName }}</p>
+      <p>{{ address }}</p>
 
-          <div class="divSpce">
-            <label class="labelTxt">Contact</label>
-            <input id="firstName1C" v-model="firstName"
-                   onclick="setBorder('firstName1')" >
-            <input id="lastName1C" v-model="lastName"
-                   onclick="setBorder('lastName1')" >
+      <h3>Email</h3>
+      <p>{{ conEmail }}</p>
+
+      <h3>Contact</h3>
+      <p>{{ firstName }} {{ lastName }}</p>
+
+    </span>
+    <span v-else>
+          <div class="form-row">
+            <div class="col">
+              <input type="text" class="form-control form-control-sm" id="firstName1"
+                     v-model="firstName" onclick="setBorder('firstName1')" >
+            </div>
+            <div class="col">
+              <input type="text" class="form-control form-control-sm" id="lastName1"
+                     v-model="lastName" onclick="setBorder('lastName1')" >
+            </div>
           </div>
 
-  </div>
-</div>
+           <h3>Applicant Info</h3>
+
+          <input id="firstName1A" class="form-control form-control-sm" v-model="firstName"
+                 onclick="setBorder('firstName1')" >
+          <input id="lastName1A" class="form-control form-control-sm" v-model="lastName"
+                 onclick="setBorder('lastName1')" >
+          <input id="address1" class="form-control form-control-sm" v-model="address"
+                 onclick="setBorder('address1')" >
+
+          <h3>email:</h3>
+          <input id="email1" class="form-control form-control-sm" v-model="conEmail"
+                 onclick="setBorder('email1')">
+
+          <h3>Contact</h3>
+          <input id="firstName1C" class="form-control form-control-sm" v-model="firstName"
+                 onclick="setBorder('firstName1')" >
+          <input id="lastName1C" class="form-control form-control-sm" v-model="lastName"
+                 onclick="setBorder('lastName1')" >
+
+
+    </span>
+  </span>
+
 </template>
 
 <script>
@@ -48,6 +58,9 @@
   export default {
     name: 'ClientInfo',
     computed: {
+      is_editing() {
+        return this.$store.getters.is_editing;
+      },
       nrNumber() {
         return  this.$store.getters.nrNumber;
       },
@@ -83,19 +96,6 @@
 </script>
 
 <style scoped>
-   .info {
-      background-color: #f1f1f1;
-      text-align: right;
-      border: 1px solid #eee;
-      padding: 0px;
-      box-shadow: 0 2px 3px #ccc;
-     height: 300px;
-  }
-  .labelTxt {
-  }
-  .divSpce {
-    padding: 3px;
-    align-items: right;
-  }
 </style>
+
 

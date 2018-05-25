@@ -9,19 +9,17 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    idToken: null,
+    nrNum: null,
+    authorized: null,
     userId: null,
-    user: null,
     email: null,
     kctoken: null,
     nr_conflict: null,
-    user_role: null,dbConfig:{
-      dbURL: null,
-      secKey:null
-    },
+    user_role: null,
     currentChoice: null,
     currentName: null,
     currentState: null,
+    is_editing: false,
     nrData: null,
     details: null,
    // formData: {
@@ -81,24 +79,13 @@ export default new Vuex.Store({
   mutations: {
     authUser (state, userData) {
       state.kctoken = userData
-      state.idToken = userData
       //state.kctoken = userData.client_session
       //state.userRole = userData.user_role
       //state.idToken = userData.client_session
     },
 
-    storeUser (state, user) {
-      state.user = user
-    },
-
-    storeDbConfig: function (state, configSetup) {
-      state.dbConfig.dbURL = configSetup.dbURL
-      state.dbConfig.secKey = configSetup.secKey
-      globalAxios.defaults.baseURL = state.dbConfig.dbURL
-    },
-
     clearAuthData (state) {
-      state.idToken = null
+      state.kcToken = null
       state.userId = null
     },
 
@@ -230,45 +217,91 @@ export default new Vuex.Store({
       //state.reservationCount = dbcompanyInfo.reservationCount
       state.nrData.expiryDate = state.expiryDate
     },
+
     saveDetail(state,detail){
       state.details = detail
     }
   },
 
   actions: {
+    kcauth ({commit, dispatch, state}) {
+      const kc = localStorage.getItem('KEYCLOAK_TOKEN')
+      state.kctoken = kc
+      //console.log(authData)
+      //state.user_role =  authData.realm_access.roles,
+      state.user_role = ''
+      state.idToken = kc
+      localStorage.setItem('kctoken',state.kctoken)
+      localStorage.setItem('user_role',state.user_role)
+
+      if (state.kctoken){
+        console.log('KC Authorized user roles')
+        commit('authUser', {
+          //user_role: state.user_role,
+          kctoken: state.kctoken
+        })
+      }
+    },
+
+    logout ({commit,state}) {
+
+      commit('clearAuthData')
+
+      localStorage.removeItem('expirationDate')
+      localStorage.removeItem('token')
+      localStorage.removeItem('user_role')
+      localStorage.removeItem('userId')
+      localStorage.removeItem('email')
+      localStorage.removeItem('COMPINFO')
+
+      localStorage.removeItem('kctoken')
+      localStorage.removeItem('KEYCLOAK_TOKEN')
+      localStorage.removeItem('AUTHORIZED')
+      localStorage.removeItem('USERNAME')
+
+    },
+
+    tryAutoLogin ({commit}) {
+    },
+
+    storeUser ({commit, state}, userData) {
+      if (!state.idToken) {
+        return
+      }
+      globalAxios.post('/users.json' + '?auth=' + state.idToken, userData)
+        .then(res => console.log(res))
+        .catch(error => console.log(error))
+    },
+
+    fetchUser ({commit, state}) {
+      if (!state.idToken) {
+        return
+      }
+      globalAxios.get('/users.json' + '?auth=' + state.idToken)
+        .then(res => {
+          console.log(res)
+          const data = res.data
+          const users = []
+          for (let key in data) {
+            const user = data[key]
+            user.id = key
+            users.push(user)
+          }
+          console.log(users)
+          commit('storeUser', users[0])
+        })
+        .catch(error => console.log(error))
+    },
+
     setDetails({commit, state}) {
      var detail = state.details?null:"1";
      commit('saveDetail',detail)
-    },
-    dbConfigSetup ({commit, dispatch}, configSetup) {
-      console.log('action: setting the DB Config')
-      localStorage.setItem('dbURL', configSetup.dbURL)
-      localStorage.setItem('secKey', configSetup.secKey)
-      commit('storeDbConfig', configSetup)
-    },
-
-    storeActionPage ({commit, dispatch}, configSetup) {
-      console.log('action: saving test values from action page')
-      localStorage.setItem('t1', configSetup.t1)
-      localStorage.setItem('t2', configSetup.t2)
     },
 
     selectNameIssue ({commit, dispatch, state}, divID) {
       console.log('action: selected issue control:' + divID)
       localStorage.setItem('issueText',divID )
       commit('setIssueText', divID)
-    },
-
-    OLDselectNextCompany ({commit, dispatch, state}) {
-      console.log('action: selected next company from DB')
-      globalAxios.defaults.baseURL = "https://namer-77fa5.firebaseio.com"
-      globalAxios.get('/CompanyInfo.json' + '?auth=' + state.idToken)
-        .then(res => {
-          console.log(res)
-          const data = res.data
-          commit('loadCompanyInfo',data)
-        })
-        .catch(error => console.log(error))
     },
 
     getpostgrescompNo ({commit, dispatch, state}) {
@@ -283,7 +316,7 @@ export default new Vuex.Store({
     },
 
     getpostgrescompInfo ({commit},nrNumber) {
-      console.log('Getting Data for company number: ' + nrNumber)
+      console.log('action: getting data for company number: ' + nrNumber + ' from postgres')
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + nrNumber
       console.log('URL:' + url)
@@ -332,125 +365,13 @@ export default new Vuex.Store({
               console.log('Name rejected for ' +  state.compInfo.nrNumber)
             })
             .catch(error => console.log('ERROR: ' + error))
-    },
-
-    login ({commit, dispatch, state}, authData) {
-       axios.post('/verifyPassword?key='+ state.dbConfig.secKey, {
-        email: authData.email,
-        password: authData.password,
-        returnSecureToken: true
-      })
-        .then(res => {
-          console.log(res)
-          const now = new Date()
-          const expirationDate = new Date(now.getTime() + res.data.expiresIn * 1000)
-          localStorage.setItem('token', res.data.idToken)
-          localStorage.setItem('userId', res.data.localId)
-          localStorage.setItem('expirationDate', expirationDate)
-          localStorage.setItem('email', authData.email)
-          commit('authUser', {
-            token: res.data.idToken,
-            userId: res.data.localId,
-            email:authData.email
-          })
-        })
-        .catch(error => console.log(error))
-      router.push('/mainPage')
-    },
-
-    kcauth ({commit, dispatch, state}) {
-      const kc = localStorage.getItem('KEYCLOAK_TOKEN')
-      state.kctoken = kc
-      //console.log(authData)
-      //state.user_role =  authData.realm_access.roles,
-      state.user_role = ''
-      state.idToken = kc
-      localStorage.setItem('kctoken',state.kctoken)
-      localStorage.setItem('user_role',state.user_role)
-
-      if (state.kctoken){
-        console.log('KC Authorized user roles')
-        commit('authUser', {
-          //user_role: state.user_role,
-          kctoken: state.kctoken
-        })
-      }
-    },
-
-    tryAutoLogin ({commit}) {
-      const dbURL = localStorage.getItem('dbURL')
-      const secKey = localStorage.getItem('secKey')
-      if (dbURL){
-        console.log('Autoloading dbConfig', dbURL)
-        commit('storeDbConfig', {
-          dbURL: dbURL,
-          secKey: secKey
-        })
-      }
-      console.log('trying to load user')
-      const token = localStorage.getItem('token')
-      if (!token) {
-        return
-      }
-      const expirationDate = localStorage.getItem('expirationDate')
-      const now = new Date()
-      if (now >= expirationDate) {
-        return
-      }
-      const userId = localStorage.getItem('userId')
-      const email = localStorage.getItem('email')
-      commit('authUser', {
-        token: token,
-        userId: userId,
-        email: email
-      })
-    },
-
-    logout ({commit}) {
-      commit('clearAuthData')
-      localStorage.removeItem('expirationDate')
-      localStorage.removeItem('token')
-      localStorage.removeItem('userId')
-      localStorage.removeItem('email')
-
-      localStorage.removeItem('kctoken')
-      localStorage.removeItem('KEYCLOAK_TOKEN')
-      localStorage.removeItem('AUTHORIZED')
-      localStorage.removeItem('USERNAME')
-      router.replace('/signin')
-    },
-
-    storeUser ({commit, state}, userData) {
-      if (!state.idToken) {
-        return
-      }
-      globalAxios.post('/users.json' + '?auth=' + state.idToken, userData)
-        .then(res => console.log(res))
-        .catch(error => console.log(error))
-    },
-
-    fetchUser ({commit, state}) {
-      if (!state.idToken) {
-        return
-      }
-      globalAxios.get('/users.json' + '?auth=' + state.idToken)
-        .then(res => {
-          console.log(res)
-          const data = res.data
-          const users = []
-          for (let key in data) {
-            const user = data[key]
-            user.id = key
-            users.push(user)
-          }
-          console.log(users)
-          commit('storeUser', users[0])
-        })
-        .catch(error => console.log(error))
     }
   },
 
   getters: {
+    is_editing(state) {
+      return state.is_editing
+    },
     user(state) {
       return state.user
     },
@@ -461,7 +382,7 @@ export default new Vuex.Store({
       return state.issueText
     },
     isAuthenticated(state) {
-      return state.idToken !== null
+      return localStorage.getItem("AUTHORIZED")
     },
     nrNumber(state) {
       return state.compInfo.nrNumber
@@ -565,26 +486,8 @@ export default new Vuex.Store({
     details(state) {
       return state.details
     },
-    myGetter(state) {
-      // this getter returns a function that takes a parameter: 'name'
-      // 'name' identifies a state object (possibly qualified by dot notation)
-      // and returns the value or reference
-      return (name) => {
-        return getValue(name, state)
-
-        function getValue(name, obj) {
-          var i = name.indexOf('.')
-          if (i !== -1) {
-            var part = name.substr(0, i)
-            return getValue(name.substr(i + 1), obj[part])
-          } else {
-            var t = typeof obj[name]
-            if (t === 'undefined') return false
-            return obj[name]
-          }
-        }
-      }
+    addInfo(state) {
+      return state.details
     }
-},
-}
-)
+  }
+})

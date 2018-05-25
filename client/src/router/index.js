@@ -6,10 +6,8 @@ import store from '@/store'
 
 const LandingPage = () => import(/* webpackChunkName: "home" */'@/components/LandingPage')
 const Settings = () => import(/* webpackChunkName: "settings" */'@/components/application/sections/Settings')
-const Signup = () => import(/* webpackChunkName: "signup" */'@/components/landing/auth/Signup')
 const Signin = () => import(/* webpackChunkName: "signin" */'@/components/landing/auth/Signin')
-const KeyCloak = () => import(/* webpackChunkName: "signin" */'@/components/landing/auth/keyCloak')
-const MainPage = () => import(/* webpackChunkName: "mainPage" */'@/components/ApplicationPage')
+const KeyCloak = () => import(/* webpackChunkName: "keycloak" */'@/components/landing/auth/keyCloak')
 const SearchResults = () => import(/* webpackChunkName: "searchresults" */'@/components/dropdown/SearchResults')
 
 Vue.use(Router)
@@ -29,19 +27,9 @@ let router = new Router({
       component: Signin
     },
     {
-      path: '/signup',
-      name: 'Signup',
-      component: Signup
-    },
-    {
       name: 'settings',
       component: Settings,
       path: '/settings',
-    },
-    {
-      name: 'mainPage',
-      component: MainPage,
-      path: '/mainPage',
       meta: {
         requiresAuth: true
       }
@@ -67,11 +55,11 @@ let router = new Router({
 
 router.beforeResolve((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    console.log('Auth check')
+    console.log('Auth check:' + store.state.kctoken)
     // this route requires auth,
     // if not Authenticated, redirect to login page.
-    if (store.state.idToken === null) {
-      console.log('redirect to /')
+    if (store.state.kctoken == null) {
+      console.log('Not authorized, redirect to /')
       next({
         path: '/'
       })

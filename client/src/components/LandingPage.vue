@@ -9,8 +9,6 @@
 /* eslint-disable */
 var authorized = localStorage.getItem("AUTHORIZED");
 
-//import StdHeader from '@/components/application/sections/StdHeader.vue'
-
   export default {
     name: 'LandingPage',
     data() {
