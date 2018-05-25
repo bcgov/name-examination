@@ -1,100 +1,111 @@
 /* eslint-disable */
 <template>
-     <div class="container-fluid">
-      <div class="row">
+  <span>
+    <div class="row">
 
-          <div id='div1' class="col-md-5 bb" >
-            <div class="row bb align-items-md-center">
-              <div class="col-md-3" >
-                <div v-if="priority">
-                  <span id="lblPriority" class="ISPRIORITY" >Priority</span>
-                </div>
-              </div>
-              <div class="col-md-9">
-                <textarea id="requestType1"
-                          v-model="requestType"
-                          rows="2"
-                          cols="59%"
-                          class='txtArea'>
-                </textarea>
-              </div>
+      <!-- details col 1 - priority, comments, etc -->
+      <div id='div1' class="col-md-5" >
+        <div class="row">
+          <div class="col-md-3" >
+            <span v-if="priority" id="lblPriority" class="ISPRIORITY" >Priority</span>
+            <span v-else></span>
+          </div>
+          <div class="col-md-9">
+            <p v-if="!is_editing">{{ requestType }}</p>
+            <textarea v-else
+                      id="requestType1"
+                      v-model="requestType"
+                      class="txtArea form-control">
+            </textarea>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-3" >
+            <p class="nr-number" v-bind:class="{ REDnrNum: priority }">{{ nrNumber }}</p>
+          </div>
+          <div class="col" >
+            <p v-if="!is_editing">{{ jurisdiction }}</p>
+            <input v-else v-model="jurisdiction" class="form-control" />
+          </div>
+          <div class="col">
+            <p v-if="!is_editing">{{ nuans }}</p>
+            <input v-else v-model="nuans" class="form-control" />
+          </div>
+          <div class="col">
+            <p v-if="!is_editing">{{ sk_name }}</p>
+            <input v-else v-model="sk_name" class="form-control" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col add-top-padding">
+            <div id="internalCommentsDisplay" v-if="!is_editing" style="display: none;">
+              <h3>INTERNAL COMMENTS</h3>
+              <p>{{ internalComments }}</p>
+            </div>
+            <div v-else>
+              <h3>INTERNAL COMMENTS</h3>
+              <textarea v-model="internalComments" class="form-control"></textarea>
             </div>
 
-            <div class="row">
-              <div class="col-md-3" >
-                <p></p>
-                <div v-if="priority">
-                  <input id="nrNumber1" v-model="nrNumber"
-                         onclick="setBorder('nrNumber1')" class="nrNum">
-                </div>
-                <div v-else>
-                  <input id="nrNumber2" v-model="nrNumber"
-                         onclick="setBorder('nrNumber2')" class="nrNum">
-                </div>
-              </div>
-              <div class="col-md-5 bb2" >
-                <p></p>
-                <input id="jurisdiction1" v-model="jurisdiction"
-                       onclick="setBorder('jurisdiction1')" class="nrNum">
-              </div>
-              <div class="col-md-3">
-                <p></p>
-                <div v-if="nuans">
-                  <span class="lblNuans">AB NUANS</span>
-                </div>
-                <div v-else>
-                </div>
-              </div>
-              <div class="col-md-1">
-                <p></p>
-                <div v-if="sk_name">
-                  <span class="lblSK">SK</span>
-                </div>
-                <div v-else>
-                </div>
-              </div>
-            </div>
           </div>
-
-          <div id='div2' class="col-md-4 bb">
-            <p class="bb3"><label class="labelTxt">NATURE OF BUSINESS</label></p>
-            <textarea id="natureOfBusiness1"
-                      v-model="natureOfBusiness"
-                      rows="4"
-                      cols="50%"
-                      @click="testClick()"
-                      class='txtArea'>
-                </textarea>
-          </div>
-
-          <div id='div3' class="col-md-3 bb">
-            <p class="bb3"><label class="labelTxt">ADDITIONAL INFORMATION</label></p>
-            <textarea id="addInfo1"
-                      v-model="addInfo"
-                      rows="4"
-                      cols="50%"
-                      @click="testClick()"
-                      class='txtArea'>
-                </textarea>
-          </div>
-
-      </div>
-      <div v-if="details" class="row">
-      </div>
-      <div v-else class="row bb2">
-        <div id='div4' class="col-md-12">
-          <span class="f1" @click="toggleDetails()">F1</span>
         </div>
       </div>
+
+      <!-- details col 2 - nature of business -->
+      <div id='div2' class="col-md-4">
+        <h3>NATURE OF BUSINESS</h3>
+        <p id="natureOfBusinessDisplay" v-if="!is_editing">{{ natureOfBusiness }}</p>
+        <textarea v-else v-model="natureOfBusiness" class="form-control"></textarea>
+
+      </div>
+
+      <!-- details col 3 - additional info, client details -->
+      <div id='div3' class="col-md-3">
+        <div class="row">
+          <div class="col">
+            <div class="row">
+              <div class="col">
+                <h3>ADDITIONAL INFORMATION</h3>
+                <p v-if="!is_editing">{{ addInfo }}</p>
+                <textarea v-else v-model="addInfo" class="form-control"></textarea>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col add-top-padding">
+                <clientinfoview />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
+    <!-- row 2 - buttons -->
+    <div class="row">
+      <div id='div4' class="col-md-12">
+        <span class="f1" @click="toggleDetails">F1</span>
+      </div>
+      <button v-if="!is_editing" class="btn btn-default" @click="edit">Edit</button>
+      <button v-else class="btn btn-default" @click="save">Save</button>
+    </div>
+
+  </span>
 </template>
 
 <script>
 /* eslint-disable */
+
+import clientinfoview from '@/components/dropdown/Search/client/ClientInfo.vue';
+
 export default {
     name: 'RequestInfoHeader',
     computed: {
+      is_editing() {
+        return  this.$store.getters.is_editing;
+      },
       nrNumber() {
         return  this.$store.getters.nrNumber;
       },
@@ -157,7 +168,22 @@ export default {
       },
       details() {
         return this.$store.getters.details;
+      },
+      internalComments() {
+        // TODO get actual data from $store
+        return 'Lorem ipsum dolor sit amet, at vix enim nominavi, ea dico case euismod mea, est cu ubique iuvaret. Vis ea rebum verear, salutandi posidonium signiferumque ut qui. Et inermis iudicabit sententiae his, tation facilisis eam id. Adhuc phaedrum inimicus cu sit.\n' +
+          '\n' +
+          'Ullum melius delicatissimi te sit, ut nullam lucilius rationibus has. Mei sonet moderatius at. Pro legere mentitum omittantur te, natum decore cu pro. Ei brute labores mea, ea assum omittantur nec. Ea per mnesarchum elaboraret necessitatibus, graece nemore id pri. Ut saepe salutatus intellegam sit, magna vivendo nam in, minimum lucilius qui ne. Mei ei quis verear vulputate, cu vis adipisci ullamcorper.\n' +
+          '\n' +
+          'Sed alterum convenire signiferumque an, quando omittam repudiandae vix id, nec oratio equidem ei. Ea nec tractatos periculis. Dolore pertinacia id mel, pro patrioque forensibus ea. Aperiri virtute sea et.\n' +
+          '\n' +
+          'Oportere electram in eos, volumus pericula mei cu. Ius suscipit vivendum scripserit in, ne graecis detraxit patrioque nec. Nec laudem aliquid et, hinc vitae nullam est eu. No errem oblique vix, sed no augue novum dicant, ne purto modus phaedrum sed. Inimicus accusamus mei cu. Qui an altera saperet, fierent percipitur ius no, ex mea ignota quaestio.\n' +
+          '\n' +
+          'Ea dictas omittam nam, in his fugit mediocrem, vim no invidunt indoctum. Veri audire ne eos. Vim everti fierent an, ad usu omnes adolescens honestatis, tempor detraxit at quo. Duo in zril soluta, vim ne ferri periculis theophrastus. Idque utamur quaeque in eam, te eam deleniti periculis.\n';
       }
+    },
+    components: {
+      clientinfoview
     },
     mounted(){
       this.setInterface();
@@ -187,15 +213,27 @@ export default {
       setNOB() {
       },
       toggleDetails() {
-        let res = this.details?10:4;
-        document.getElementById("natureOfBusiness1").rows = res
-        this.$store.dispatch('setDetails')
+        // KATIE - IN PROGRESS
+
+        // show internal comments
+        document.getElementById("internalCommentsDisplay").style.display = '';
+
+        // show complete nature of business, untruncated
+
+        // show client data
+        document.getElementsByClassName('RequestInfoHeader')[0].getElementsByClassName('ClientInfo')[0].style.display = 'inline';
 
       },
       setBorder(id) {
         var tb = document.getElementById(id);
         tb.borderWidth = "1";
       },
+      edit() {
+        this.$store.state.is_editing = true;
+      },
+      save() {
+        this.$store.state.is_editing = false;
+      }
     },
     watch: {
       nrNumber: function (val) {
@@ -207,86 +245,18 @@ export default {
 </script>
 
 <style scoped>
-  .expand {
-
-  }
-  .contract {
-
-  }
-  .nrNum {
+   .nrNum {
      width: 100%;
      background-color: #f1f1f1;
      border: 0px #fff;
      color: #ff0000;
-    font-size: 1.9em;
+     font-size: 1.9em;
    }
   .REDnrNum {
     width: 100%;
     background-color: #f1f1f1;
     color: #ff0000;
     border: 0px #fff;
-  }
-  .jur {
-    width: 100%;
-  }
-  .RequestInfoHeader1 {
-    align-content: left;
-    border: 2px solid #eee;
-    padding: 1px;
-    box-shadow: 0 2px 3px #ccc;
-  }
-  .name2-font {
-    font-size:large;
-    text-align: right;
-    line-height: 20%;
-  }
-  .alignCol {
-    width: 25%;
-    webkit-align: center;
-    border: 2px solid #777;
-  }
-  .txtArea {
-    border: 0px solid #000000;
-    vertical-align: top;
-    background-color: #f1f1f1;
-  }
-  .bb {
-   // border: 1px solid #000000;
-    vertical-align: middle;
-    text-align: left;
-  }
-  .bb1 {
-    //border: 1px solid #000000;
-    vertical-align: bottom;
-    ///padding: 2px;
-  }
-  .bb2 {
-    //border: 1px solid #000000;
-    text-align: right;
-  }
-  .bb3 {
-    //border: 1px solid #000000;
-   //padding: 2px;
-  }
-  .bb4 {
-    font-size:large;
-    border: 1px solid #000000;
-    text-align: left;
-    vertical-align: bottom;
-    height: 50%;
-  }
-  .f1 {
-    border: 1px solid #000000;
-    padding: 2px;
-  }
-  .rtb {
-    //border: 1px;
-    background-color: #777777;
-  }
-  .labelTxt {
-    font-size: .95em;
-    text-align: left;
-    margin-right: 10px;
   }
   .ISPRIORITY {
     padding-left: 28%;
@@ -298,14 +268,12 @@ export default {
     font-size: 1.25em;
     color: #ffffff;
   }
-  .NOTPRIORITY {
-    background-color: #f1f1f1;
-    color: #f1f1f1;
-    visible: false;
-    vertical-align: middle;
-  }
-  .v-center {
-    display: flex;
-    align-items: center;
-  }
-</style>
+   .f1 {
+     border: 1px solid #000000;
+     padding: 2px;
+   }
+   /* initially hide client info ONLY WITHIN HEADER (not everywhere the component is used */
+   .RequestInfoHeader .ClientInfo {
+     display: none;
+   }
+ </style>

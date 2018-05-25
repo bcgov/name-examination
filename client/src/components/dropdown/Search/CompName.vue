@@ -1,30 +1,28 @@
 /* eslint-disable */
 <template>
   <div>
-    <div class="container-fluid">
-      <div class="name-sect">
-        Names:<br />
-        <div class="row">
-          <div class="col name1-font">
-            <input id="cmp1" v-model="compName1" onclick="setBorder('cmp1')" class='rtb'>
-          </div>
+    <div class="name-sect">
+      Names:<br />
+      <div class="row">
+        <div class="col name1-font">
+          <input id="cmp1" v-model="compName1" onclick="setBorder('cmp1')" class='rtb'>
         </div>
+      </div>
 
-        <div class="row">
-          <div class="col name2-font">
-            <input id="cmp2" v-model="compName2" onclick="setBorder('cmp2')" class='rtb'>
-          </div>
+      <div class="row">
+        <div class="col name2-font">
+          <input id="cmp2" v-model="compName2" onclick="setBorder('cmp2')" class='rtb'>
         </div>
+      </div>
 
-        <div class="row">
-          <div class="col name2-font">
-            <input id="cmp3" v-model="compName3" onclick="setBorder('cmp3')" class='rtb'>
+      <div class="row">
+        <div class="col name2-font">
+          <input id="cmp3" v-model="compName3" onclick="setBorder('cmp3')" class='rtb'>
 
-          </div>
         </div>
+      </div>
 
-       </div>
-     </div>
+    </div>
   </div>
 </template>
 
@@ -62,12 +60,6 @@
 
 <style scoped>
   .name-sect {
-    align-content: left;
-    border: 2px solid #eee;
-    padding: 4px;
-    box-shadow: 0 2px 3px #ccc;
-    background-color: #FFFFFF;
-    z-index: 12;
   }
   .name1-font{
     font-size: 2.2em;

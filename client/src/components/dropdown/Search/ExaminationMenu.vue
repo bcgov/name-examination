@@ -1,12 +1,12 @@
 /* eslint-disable */
 <template>
   <div>
-    <div class="container-fluid">
+    <div>
       <div class="menu-sect">
 
         <div class="row">
         <div class="col"><button @click="nameApproved()" >Approved</button></div>
-          <div class="col"><button @click="nameDeclined()" >Decline</button></div>
+          <div class="col"><button @click="nameRejected()" >Reject</button></div>
           <div class="col"><button @click="getNextCompany()" >Get Next</button></div>
       </div>
       <div class="row">
@@ -34,7 +34,7 @@
       nameApproved() {
         this.$store.dispatch('nameApproved');
       },
-      nameDeclined() {
+      nameRejected() {
         this.$store.dispatch('nameRejected');
       }
     }
@@ -43,9 +43,5 @@
 
 <style scoped>
   .menu-sect {
-    align-content: center;
-    border: 2px solid #eee;
-    padding: 4px;
-    box-shadow: 0 2px 3px #ccc;
   }
 </style>
