@@ -1,49 +1,75 @@
 /* eslint-disable */
 <template>
   <div>
-    <div class="container">
-      <div class="name-sect">
-
-        <div class="row">
+    <div class="name-sect">
+      Names:<br />
+      <div class="row">
         <div class="col name1-font">
-          Name here 1
-        </div>
-      </div>
-
-        <div class="row">
-        <div class="col name2-font">
-          Name here 2
+          <input id="cmp1" v-model="compName1" onclick="setBorder('cmp1')" class='rtb'>
         </div>
       </div>
 
       <div class="row">
         <div class="col name2-font">
-          Name here 3
+          <input id="cmp2" v-model="compName2" onclick="setBorder('cmp2')" class='rtb'>
         </div>
       </div>
 
+      <div class="row">
+        <div class="col name2-font">
+          <input id="cmp3" v-model="compName3" onclick="setBorder('cmp3')" class='rtb'>
+
+        </div>
       </div>
-  </div>
+
+    </div>
   </div>
 </template>
 
 <script>
+/* eslint-disable */
+
+  export default {
+    name: 'CompName',
+    computed: {
+      compName1() {
+        return this.$store.getters.compName1;
+      },
+      compName2() {
+        return this.$store.getters.compName2;
+      },
+      compName3() {
+        return this.$store.getters.compName3;
+      }
+    },
+    mounted() {
+    },
+    methods: {
+      setBorder(id) {
+        const tb = document.getElementById(id);
+        tb.borderWidth = "1";
+      },
+      setFocus(id) {
+        const ell = document.getElementById(id);
+        ell.focus();
+      }
+    }
+  }
 </script>
+
 
 <style scoped>
   .name-sect {
-    align-content: left;
-    border: 2px solid #eee;
-    padding: 4px;
-    box-shadow: 0 2px 3px #ccc;
-    height: 120px;
   }
   .name1-font{
-    font-size: xx-large;
+    font-size: 2.2em;
     text-align: left;
   }
   .name2-font{
-    font-size:large;
+    font-size:1.2em;
     text-align: left;
+  }
+  .rtb {
+    border: 0px;
   }
 </style>

@@ -33,10 +33,6 @@ h2 {
 	font-size: 21px;
 }
 
-h3 {
-	font-size: 18px;
-}
-
 h4 {
 	font-size: 15px;
 }
@@ -54,13 +50,29 @@ th {
 	text-align: center;
 }
 
-.row {
-	margin: 0;
-}
-
 .table-responsive {
 	border: none;
 }
+
+/* override form-control style from bootstrap so we don't have to add form-control-sm to every form field */
+.form-control
+{
+  /* from form-control-sm */
+  padding: .25rem .5rem;
+  line-height: 1.5;
+  border-radius: .2rem;
+
+  /* additional styles for this application */
+  font-size: 11px;
+  margin-bottom: 2px;
+}
+
+
+
+#app {
+  margin-top: 60px;
+}
+
 
 #header {
 	width: 100%;
@@ -1564,10 +1576,7 @@ img.back-to-top:hover {
 	.container {
 		padding: 0;
 	}
-	.row {
-		/* 		height: 120px; */
-		padding: 15px;
-	}
+
 	.featureBoxes-3col>.featureBox {
 		display: block;
 		width: 100%
@@ -2243,4 +2252,72 @@ h5.twitterUserName a{
 
 .alert-danger {
     color: #d2322d;
+}
+
+/* bootstrap style overrides */
+ .btn
+ {
+   border-radius: 1px;
+ }
+.page-link
+{
+  color: #1a5a96;
+}
+/* end bootstrap overrides */
+
+.btn-fillin-success
+{
+  background-color: #28a74533;
+}
+.btn-fillin-danger
+{
+  background-color: #dc354533;
+}
+
+h2
+{
+  margin: 0;
+  font-weight: bold;
+  font-size: 14px;
+}
+h3
+{
+  margin: 0;
+  margin-top: 15px;
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #9c9cb9;
+  text-align: left;
+
+}
+h3:first-child
+{
+  margin-top: 0;
+}
+/* add top padding to element, used specifically where headings (h3) need more upper margin between
+it and element above, but because of grid layout and col's, it is hard to identify with css
+selectors. */
+.add-top-padding
+{
+  padding-top: 15px;
+}
+p
+{
+  margin-bottom: 0;
+  font-size: 11px;
+}
+
+.upper-section
+{
+  box-shadow: 0 0 10px 0px grey;
+  margin-top: -20px;
+  padding-top: 20px;
+}
+
+
+.lower-section
+{
+  margin-top: 10px;
+  background-color: white;
 }

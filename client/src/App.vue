@@ -1,10 +1,10 @@
 /* eslint-disable */
 <template>
-  <div class="container-fluid">
+  <div>
     <div id="app">
-        <std-header />
+        <std-header> </std-header>
       <div>
-        <router-view />
+        <router-view></router-view>
       </div>
     </div>
   </div>
@@ -18,7 +18,7 @@ import StdHeader from '@/components/application/sections/StdHeader.vue'
       StdHeader
     },
     created () {
-      this.$store.dispatch('tryAutoLogin')
+      //this.$store.dispatch('tryAutoLogin')
     }
   };
 </script>
@@ -28,8 +28,6 @@ import StdHeader from '@/components/application/sections/StdHeader.vue'
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-align: center;
     color: #2c3e50;
-    margin-top: 60px;
   }
 </style>

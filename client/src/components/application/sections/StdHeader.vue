@@ -17,36 +17,16 @@
               aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <router-link to="/mainPage" class="nav-link">Home</router-link>
+            <router-link to="/home" class="nav-link">Home</router-link>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle"
-               href="#" id="navbarDropdown"
-               role="button"
-               data-toggle="dropdown"
-               aria-haspopup="true"
-               aria-expanded="false">
-              Dropdown
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="/searchResults">SearchResults</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Something else here</a>
-            </div>
+            <router-link to="/searchresults" class="nav-link">Examine Names</router-link>
           </li>
           <li class="nav-item active">
             <router-link to="/settings" class="nav-link">Settings</router-link>
-          </li>
-          <li class="nav-item active" v-if="!auth">
-            <router-link to="/signup" class="nav-link">Sign Up</router-link>
           </li>
           <li class="nav-item active" v-if="!auth">
             <router-link to="/signin" class="nav-link">Login</router-link>
@@ -57,12 +37,12 @@
             </button>
           </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
+        <form class="form-inline my-2 my-lg-0" @submit.prevent="onSubmit">
           <input class="form-control mr-sm-2" type="search"
-                 placeholder="Search" aria-label="Search">
+                 placeholder="Search" aria-label="Search" v-model="nrNum">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
-        <p class="navbar-text">&nbsp;{{email}}</p>
+        <p class="navbar-text">&nbsp;{{userid}}</p>
       </div>
     </nav>
   </div>
@@ -72,9 +52,12 @@
 /* eslint-disable */
   export default {
     name: "std-header",
+    data() {
+      return nrNum
+    },
     computed: {
-      email() {
-        return this.$store.getters.email
+      userid() {
+        return this.$store.getters.userid
       },
       auth() {
         return this.$store.getters.isAuthenticated
@@ -83,6 +66,10 @@
     methods: {
       onLogout() {
         this.$store.dispatch('logout')
+        window.location.assign("/");
+      },
+      onSubmit() {
+        this.$store.dispatch('getpostgrescompInfo', this.nrNum);
       }
     }
   }

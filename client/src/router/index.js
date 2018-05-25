@@ -6,10 +6,9 @@ import store from '@/store'
 
 const LandingPage = () => import(/* webpackChunkName: "home" */'@/components/LandingPage')
 const Settings = () => import(/* webpackChunkName: "settings" */'@/components/application/sections/Settings')
-const Signup = () => import(/* webpackChunkName: "signup" */'@/components/landing/auth/Signup')
 const Signin = () => import(/* webpackChunkName: "signin" */'@/components/landing/auth/Signin')
-const MainPage = () => import(/* webpackChunkName: "mainPage" */'@/components/ApplicationPage')
-const ResultsPage = () => import(/* webpackChunkName: "resultsPage" */'@/components/dropdown/SearchResults')
+const KeyCloak = () => import(/* webpackChunkName: "keycloak" */'@/components/landing/auth/keyCloak')
+const SearchResults = () => import(/* webpackChunkName: "searchresults" */'@/components/dropdown/SearchResults')
 
 Vue.use(Router)
 Vue.use(Vuex)
@@ -28,29 +27,27 @@ let router = new Router({
       component: Signin
     },
     {
-      path: '/signup',
-      name: 'Signup',
-      component: Signup
-    },
-    {
       name: 'settings',
       component: Settings,
       path: '/settings',
-    },
-    {
-      name: 'mainPage',
-      component: MainPage,
-      path: '/mainPage',
       meta: {
         requiresAuth: true
       }
     },
     {
-      name: 'resultsPage',
-      component: ResultsPage,
-      path: '/searchResults',
+      name: 'searchresults',
+      component: SearchResults,
+      path: '/searchresults',
       meta: {
         requiresAuth: true
+      }
+    },
+    {
+      name: 'keycloak',
+      component: KeyCloak,
+      path: '/keycloak',
+      meta: {
+        requiresAuth: false
       },
     }
   ]
@@ -58,14 +55,16 @@ let router = new Router({
 
 router.beforeResolve((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
+    console.log('Auth check:' + store.state.kctoken)
     // this route requires auth,
     // if not Authenticated, redirect to login page.
-    if (store.state.idToken === null) {
-      console.log('redirect to /')
+    if (store.state.kctoken == null) {
+      console.log('Not authorized, redirect to /')
       next({
         path: '/'
       })
     } else {
+      console.log('Authorized')
       next()
     }
   } else {

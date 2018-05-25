@@ -1,15 +1,13 @@
 /* eslint-disable */
 <template>
   <div>
-
-     <!-- router-view ></router-view -->
     <h2>You should only see this page if you got here un-authenticated. Please login</h2>
   </div>
 </template>
 
 <script>
 /* eslint-disable */
-  import StdHeader from '@/components/application/sections/StdHeader.vue'
+var authorized = localStorage.getItem("AUTHORIZED");
 
   export default {
     name: 'LandingPage',
@@ -17,7 +15,16 @@
       return {}
     },
     components: {
-      StdHeader
+    //  StdHeader
+    },
+    mounted() {
+      if(authorized){
+        this.$store.dispatch('kcauth');
+      };
+    },
+    methods: {
+      getUserInfo(){
+      }
     }
   }
 </script>
