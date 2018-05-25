@@ -1,0 +1,40 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "namex-web-test",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "namex-web-test",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "namex-web-test",
+                    "template": "caddy-dc"
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "2015-tcp",
+                        "protocol": "TCP",
+                        "port": 2015,
+                        "targetPort": 2015
+                    }
+                ],
+                "selector": {
+                    "deploymentconfig": "namex-web-test"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        }
+    ]
+}
