@@ -20,8 +20,11 @@ export default new Vuex.Store({
     currentName: null,
     currentState: null,
     is_editing: false,
+    is_header_shown: false,
     nrData: null,
     details: null,
+    additionalInfo: null,
+    internalComments: null,
    // formData: {
       compInfo: {
         nrNumber: null,
@@ -35,7 +38,7 @@ export default new Vuex.Store({
       applicantInfo: {
         applicantname: {
           firstName: null,
-          lastname: null
+          lastName: null
         },
         contactInfo: {
           address: null,
@@ -77,6 +80,69 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    requestType (state, value) {
+      state.compInfo.requestType = value;
+    },
+    firstName (state, value) {
+      state.applicantInfo.applicantname.firstName = value;
+    },
+    lastName (state, value) {
+      state.applicantInfo.applicantname.lastName = value;
+    },
+    address (state, value) {
+      state.applicantInfo.contactInfo.address = value;
+    },
+    contactName (state, value) {
+      state.applicantInfo.contactInfo.contactName = value;
+    },
+    phone (state, value) {
+      state.applicantInfo.contactInfo.phone = value;
+    },
+    conEmail (state, value) {
+      state.applicantInfo.contactInfo.email = value;
+    },
+    fax (state, value) {
+      state.applicantInfo.contactInfo.fax = value;
+    },
+    jurisdiction (state, value) {
+      state.additionalCompInfo.jurisdiction = value;
+    },
+    natureOfBusiness (state, value) {
+      state.additionalCompInfo.natureOfBussiness = value;
+    },
+    nuans (state, value) {
+      state.additionalCompInfo.nuans = value;
+    },
+    sk_name (state, value) {
+      state.additionalCompInfo.sk_name = value;
+    },
+    nr_status (state, value) {
+      state.additionalCompInfo.nr_status = value;
+    },
+    priority (state, value) {
+      state.priority = value;
+    },
+    resubmissionYN (state, value) {
+      state.reSubmission.reSubmissionYN = value;
+    },
+    linkedNR (state, value) {
+      state.reSubmission.linkedNR = value;
+    },
+    reservationCount (state, value) {
+      state.reservationCount = value;
+    },
+    expiryDate (state, value) {
+      state.expiryDate = value;
+    },
+    details (state, value) {
+      state.details = value;
+    },
+    additionalInfo (state, value) {
+      state.additionalInfo = value;
+    },
+    internalComments (state, value) {
+      state.internalComments = value;
+    },
     authUser (state, userData) {
       state.kctoken = userData
       //state.kctoken = userData.client_session
@@ -144,7 +210,7 @@ export default new Vuex.Store({
 
       state.compInfo.requestType = dbcompanyInfo.requestTypeCd
       state.applicantInfo.applicantname.firstName = dbcompanyInfo.applicant
-      //state.applicantInfo.applicantname.lastname = dbcompanyInfo.lastName
+      //state.applicantInfo.applicantname.lastName = dbcompanyInfo.lastName
       //state.applicantInfo.contactInfo.address = dbcompanyInfo.address
       state.applicantInfo.contactInfo.contactName = dbcompanyInfo.contact
       state.applicantInfo.contactInfo.phone = dbcompanyInfo.phoneNumber
@@ -152,6 +218,9 @@ export default new Vuex.Store({
       //state.applicantInfo.contactInfo.fax = dbcompanyInfo.fax
       state.additionalCompInfo.jurisdiction = dbcompanyInfo.xproJurisdiction
       state.additionalCompInfo.natureOfBussiness = dbcompanyInfo.natureBusinessInfo
+      //state.details = dbcompanyInfo.details
+      state.additionalInfo = dbcompanyInfo.additionalInfo
+      state.internalComments = dbcompanyInfo.examComment
       state.additionalCompInfo.nuans = dbcompanyInfo.nuansNum
       state.additionalCompInfo.sk_name = dbcompanyInfo.skPartner
       state.additionalCompInfo.nr_status = dbcompanyInfo.state
@@ -199,7 +268,7 @@ export default new Vuex.Store({
 
       state.nrData.requestTypeCd = state.compInfo.requestType
       state.nrData.applicant = state.applicantInfo.applicantname.firstName
-      //state.applicantInfo.applicantname.lastname = dbcompanyInfo.lastName
+      //state.applicantInfo.applicantname.lastName = dbcompanyInfo.lastName
       //state.applicantInfo.contactInfo.address = dbcompanyInfo.address
       state.nrData.contact = state.applicantInfo.contactInfo.contactName
       state.nrData.phoneNumber =  state.applicantInfo.contactInfo.phone
@@ -207,6 +276,9 @@ export default new Vuex.Store({
       //state.applicantInfo.contactInfo.fax = dbcompanyInfo.fax
       state.nrData.xproJurisdiction = state.additionalCompInfo.jurisdiction
       state.nrData.natureBusinessInfo = state.additionalCompInfo.natureOfBussiness
+      state.nrData.details = state.details
+      state.nrData.additionalInfo = state.additionalInfo
+      state.nrData.examComment = state.internalComments
       state.nrData.nuansNum = state.additionalCompInfo.nuans
       state.nrData.skPartner = state.additionalCompInfo.sk_name
       //state.nrData.state =  state.additionalCompInfo.nr_status
@@ -365,12 +437,26 @@ export default new Vuex.Store({
               console.log('Name rejected for ' +  state.compInfo.nrNumber)
             })
             .catch(error => console.log('ERROR: ' + error))
+    },
+    updateRequest( {commit, state}) {
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      commit('update_nrData')
+      const url = '/api/v1/requests/' + state.compInfo.nrNumber
+      axios.put(url, state.nrData, {headers: {Authorization: `Bearer ${myToken}`}})
+           .then(function(response){
+              console.log('Request updated for ' + state.compInfo.nrNumber)
+           })
+           .catch(error => console.log('ERROR: ' + error))
     }
+
   },
 
   getters: {
     is_editing(state) {
       return state.is_editing
+    },
+    is_header_shown(state) {
+      return state.is_header_shown
     },
     user(state) {
       return state.user
@@ -403,7 +489,7 @@ export default new Vuex.Store({
       return state.applicantInfo.applicantname.firstName
     },
     lastName(state) {
-      return state.applicantInfo.applicantname.lastname
+      return state.applicantInfo.applicantname.lastName
     },
     address(state) {
       return state.applicantInfo.contactInfo.address
@@ -486,8 +572,11 @@ export default new Vuex.Store({
     details(state) {
       return state.details
     },
-    addInfo(state) {
-      return state.details
-    }
+    additionalInfo(state) {
+      return state.additionalInfo
+    },
+    internalComments(state) {
+      return state.internalComments
+    },
   }
 })
