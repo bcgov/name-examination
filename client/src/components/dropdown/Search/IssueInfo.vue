@@ -17,6 +17,8 @@
 /* eslint-disable */
 import conflictlistview from '@/components/dropdown/Search/conflicts/ConflictList.vue';
 import conflictinfoview from '@/components/dropdown/Search/conflicts/ConflictInfo.vue';
+
+// ClientInfo - read-only component
 import clientinfoview from '@/components/dropdown/Search/client/ClientInfo.vue';
 
 export default {

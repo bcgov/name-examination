@@ -1,70 +1,29 @@
 /* eslint-disable */
 <template>
-  <span v-if="show_extended_header">
+  <span>
     <h3>Client</h3>
-    <span v-if="!is_editing">
-      <p>{{ firstName}} {{ lastName }}</p>
+    <p>{{ firstName}} {{ lastName }}</p>
 
-      <h3>Applicant Info</h3>
-      <p>{{ firstName }} {{ middleName }} {{ lastName }}</p>
-      <p>{{ address }}</p>
+    <h3>Applicant Info</h3>
+    <p>{{ firstName }} {{ middleName }} {{ lastName }}</p>
+    <p>{{ address }}</p>
 
-      <div class="row">
-        <div v-if="phone" class="col add-top-padding">
-          <h3>Phone</h3>
-          <p>{{ phone }}</p>
-        </div>
-        <div v-if="fax" class="col add-top-padding">
-          <h3>Fax</h3>
-          <p>{{ fax }}</p>
-        </div>
+    <div class="row">
+      <div v-if="phone" class="col add-top-padding">
+        <h3>Phone</h3>
+        <p>{{ phone }}</p>
       </div>
+      <div v-if="fax" class="col add-top-padding">
+        <h3>Fax</h3>
+        <p>{{ fax }}</p>
+      </div>
+    </div>
 
-      <h3>Email</h3>
-      <p>{{ conEmail }}</p>
+    <h3>Email</h3>
+    <p>{{ conEmail }}</p>
 
-      <h3>Contact</h3>
-      <p>{{ contactName }}</p>
-
-    </span>
-    <span v-else>
-          <div class="form-row">
-            <div class="col">
-              <input type="text" class="form-control " id="firstName1"
-                     v-model="firstName" onclick="setBorder('firstName1')" >
-            </div>
-            <div class="col">
-              <input type="text" class="form-control " id="lastName1"
-                     v-model="lastName" onclick="setBorder('lastName1')" >
-            </div>
-          </div>
-
-           <h3>Applicant Info</h3>
-
-          <input id="firstName1A" class="form-control " v-model="firstName"
-                 onclick="setBorder('firstName1')" >
-          <input id="lastName1A" class="form-control " v-model="lastName" />
-          <input id="address1" class="form-control " v-model="address" />
-
-          <div class="form-row">
-            <div class="col add-top-padding">
-              <h3>Phone</h3>
-              <input type="text" class="form-control " v-model="phone" />
-            </div>
-            <div class="form-group col add-top-padding">
-              <h3>Fax</h3>
-              <input type="text" class="form-control " v-model="fax" />
-            </div>
-          </div>
-
-          <h3>email</h3>
-          <input id="email1" class="form-control " v-model="conEmail" />
-
-          <h3>Contact</h3>
-          <input id="firstName1C" class="form-control " v-model="contactName" />
-
-
-    </span>
+    <h3>Contact</h3>
+    <p>{{ contactName }}</p>
   </span>
 
 </template>
@@ -141,10 +100,6 @@
       },
     },
     methods: {
-      setBorder(id) {
-        var tb = document.getElementById(id);
-        tb.borderWidth = "1";
-      }
     }
   }
 </script>
