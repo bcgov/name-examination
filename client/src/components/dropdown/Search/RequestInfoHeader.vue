@@ -12,11 +12,13 @@
           </div>
           <div class="col-md-9">
             <p v-if="!is_editing">{{ requestType }}</p>
-            <textarea v-else
-                      id="requestType1"
-                      v-model="requestType"
-                      class="form-control">
-            </textarea>
+
+            <select v-else v-model="requestType">
+              <option v-for="opt in reqTypes" v-bind:key="opt.REQUEST_TYPE_CD">
+                {{ opt.FULL_DESC }}
+              </option>
+            </select>
+
           </div>
         </div>
 
@@ -99,14 +101,18 @@
 
   </span>
 </template>
-
+<script src="static/js/utils.js"></script>
 <script>
 /* eslint-disable */
-
-import clientinfoview from '@/components/dropdown/Search/client/ClientInfo.vue';
+import clientinfoview
+  from '@/components/dropdown/Search/client/ClientInfo.vue';
 
 export default {
     name: 'RequestInfoHeader',
+    data: function () {
+      return {
+      }
+    },
     computed: {
       is_editing() {
         return  this.$store.getters.is_editing;
@@ -251,6 +257,7 @@ export default {
     },
     methods: {
       setInterface(){
+        this.setRequestType()
         this.setNRNum()
         this.setPriority()
         this.setComp
@@ -258,6 +265,8 @@ export default {
         this.setSK()
         this.setNOB()
         this.setAddInfo()
+      },
+      setRequestType() {
       },
       setNRNum() {
       },
@@ -277,6 +286,7 @@ export default {
       toggleDetails() {
         if (this.$store.state.is_header_shown) this.$store.state.is_header_shown = false;
         else this.$store.state.is_header_shown = true;
+
       },
       setBorder(id) {
         var tb = document.getElementById(id);

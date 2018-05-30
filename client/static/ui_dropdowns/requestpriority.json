@@ -1,0 +1,25 @@
+﻿[
+	{
+		"PRIORITY_CD": "PQ",
+		"SHORT_DESC": "Priority Request",
+		"LONG_DESC": "Priority Request"
+	},
+	{
+		"PRIORITY_CD": "RJ",
+		"SHORT_DESC": "Regular Jump",
+		"LONG_DESC": "Regular Jump"
+	},
+	{
+		"PRIORITY_CD": "RQ",
+		"SHORT_DESC": "Regular Request",
+		"LONG_DESC": "Regular Request"
+	},
+	{
+		"PRIORITY_CD": "PJ",
+		"SHORT_DESC": "Priority Jump",
+		"LONG_DESC": "Priority Jump"
+	},
+	{
+		"PRIORITY_CD": ""
+	}
+]
