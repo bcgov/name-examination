@@ -27,6 +27,7 @@ export default new Vuex.Store({
     internalComments: null,
     listPriorities: null,
     listJurisdictions: null,
+    listRequestTypes: null,
    // formData: {
       compInfo: {
         nrNumber: null,
@@ -301,6 +302,9 @@ export default new Vuex.Store({
     listJurisdictions (state, value) {
       state.listJurisdictions = value;
     },
+    listRequestTypes (state, value) {
+      state.listRequestTypes = value;
+    },
   },
 
   actions: {
@@ -477,6 +481,12 @@ export default new Vuex.Store({
           });
         });
       }
+
+      // priorities
+      if (state.listRequestTypes === null) {
+        readJFile(json_files_path + 'requesttype.json', function (myArray) { commit('listRequestTypes', myArray);})
+      }
+
     }
 
   },
@@ -613,6 +623,9 @@ export default new Vuex.Store({
     },
     listJurisdictions(state) {
       return state.listJurisdictions
+    },
+    listRequestTypes(state) {
+      return state.listRequestTypes
     },
   }
 })

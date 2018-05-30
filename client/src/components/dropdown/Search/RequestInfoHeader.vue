@@ -18,21 +18,22 @@
             </select>
           </div>
           <div class="col">
-            <p v-if="!is_editing">{{ requestType }}</p>
-            <textarea v-else
-                      id="requestType1"
-                      v-model="requestType"
-                      class="form-control">
-            </textarea>
+            <p v-if="!is_editing" style="font-weight: bold;">{{ requestType_desc }}</p>
+            <select v-else v-model="requestType" class="form-control">
+              <option v-for="option in requestType_options" v-bind:value="option.value"
+                      v-bind:key="option.value">
+                {{ option.text }}
+              </option>
+            </select>
           </div>
         </div>
 
         <div class="row">
           <div class="col-md-4" >
-            <p class="nr-number" v-bind:class="{ REDnrNum: priority }">{{ nrNumber }}</p>
+            <div class="nrNum" v-bind:class="{ REDnrNum: priority}">{{ nrNumber }}</div>
           </div>
           <div class="col" >
-            <p v-if="!is_editing">{{ jurisdiction_desc }}</p>
+            <p v-if="!is_editing" style="font-weight: bold;">{{ jurisdiction_desc }}</p>
             <select v-else v-model="jurisdiction" class="form-control">
               <option v-for="option in jurisdiction_options" v-bind:value="option.value"
                       v-bind:key="option.value">
@@ -130,6 +131,9 @@ export default {
       jurisdiction_options() {
         return this.$store.getters.listJurisdictions;
       },
+      requestType_options() {
+        return this.$store.getters.listRequestTypes;
+      },
       is_editing() {
         return  this.$store.getters.is_editing;
       },
@@ -147,6 +151,13 @@ export default {
           this.$store.commit('requestType', value);
         }
       },
+      requestType_desc() {
+        try {
+          return getDescFromList(this.requestType_options, this.requestType);
+        } catch (err) {
+          return 'ERROR!!';
+        }
+      },
       jurisdiction: {
         get: function() {
           return this.$store.getters.jurisdiction;
@@ -159,7 +170,7 @@ export default {
         try {
           return getDescFromList(this.jurisdiction_options, this.jurisdiction);
         } catch (err) {
-          return 'ERROR!!';
+          return '';
         }
       },
       natureOfBusiness: {
@@ -223,7 +234,8 @@ export default {
         }
       },
       high_priority() {
-        return true;
+        if (this.priority == 'PQ' || this.priority == 'PJ') return true;
+        else return false;
       },
       resubmissionYN: {
         get: function() {
@@ -350,17 +362,13 @@ export default {
 <style scoped>
 
    .nrNum {
-     width: 100%;
-     background-color: #f1f1f1;
-     border: 0px #fff;
-     color: #ff0000;
-     font-size: 1.9em;
+     font-size: 1.5em;
+     font-weight: bold;
+     text-align: center;
+     margin-top: 10px;
    }
   .REDnrNum {
-    width: 100%;
-    background-color: #f1f1f1;
     color: #ff0000;
-    border: 0px #fff;
   }
   .priority {
     padding: 5px;
