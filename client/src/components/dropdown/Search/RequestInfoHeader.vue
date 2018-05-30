@@ -6,7 +6,7 @@
       <!-- details col 1 - priority, comments, etc -->
       <div id='div1' class="col-md-5" >
         <div class="row">
-          <div class="col-md-3" >
+          <div class="col-md-4" >
             <div v-if="!is_editing"
                   v-bind:class="{'priority-high': high_priority, 'priority': true}">
               {{ priority_desc }}</div>
@@ -17,7 +17,7 @@
               </option>
             </select>
           </div>
-          <div class="col-md-9">
+          <div class="col">
             <p v-if="!is_editing">{{ requestType }}</p>
             <textarea v-else
                       id="requestType1"
@@ -28,7 +28,7 @@
         </div>
 
         <div class="row">
-          <div class="col-md-3" >
+          <div class="col-md-4" >
             <p class="nr-number" v-bind:class="{ REDnrNum: priority }">{{ nrNumber }}</p>
           </div>
           <div class="col" >
@@ -348,22 +348,6 @@ export default {
 </script>
 
 <style scoped>
-  /* override form-control style from bootstrap so we don't have to add form-control-sm to every form field */
-  .RequestInfoHeader .form-control
-  {
-    /* from form-control-sm */
-    padding: .25rem .5rem;
-    line-height: 1.5;
-    border-radius: .2rem;
-
-    /* additional styles for this application */
-    font-size: 11px;
-    margin-bottom: 2px;
-  }
-
-  .RequestInfoHeader select.form-control {
-    height: auto !important; /* do not make selects (dropdowns) extra high */
-  }
 
    .nrNum {
      width: 100%;
