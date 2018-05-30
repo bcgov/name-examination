@@ -54,18 +54,6 @@ th {
 	border: none;
 }
 
-/* override form-control style from bootstrap so we don't have to add form-control-sm to every form field */
-.RequestInfoHeader .form-control
-{
-  /* from form-control-sm */
-  padding: .25rem .5rem;
-  line-height: 1.5;
-  border-radius: .2rem;
-
-  /* additional styles for this application */
-  font-size: 11px;
-  margin-bottom: 2px;
-}
 
 /* utility class to hide elements, and can be used with show/hide js functions */
 .hidden {

@@ -7,8 +7,15 @@
       <div id='div1' class="col-md-5" >
         <div class="row">
           <div class="col-md-3" >
-            <span v-if="priority" id="lblPriority" class="ISPRIORITY" >Priority</span>
-            <span v-else></span>
+            <div v-if="!is_editing"
+                  v-bind:class="{'priority-high': high_priority, 'priority': true}">
+              {{ priority_desc }}</div>
+            <select v-else v-model="priority" class="form-control">
+              <option v-for="option in priority_options" v-bind:value="option.value"
+                      v-bind:key="option.value">
+                {{ option.text }}
+              </option>
+            </select>
           </div>
           <div class="col-md-9">
             <p v-if="!is_editing">{{ requestType }}</p>
@@ -25,8 +32,13 @@
             <p class="nr-number" v-bind:class="{ REDnrNum: priority }">{{ nrNumber }}</p>
           </div>
           <div class="col" >
-            <p v-if="!is_editing">{{ jurisdiction }}</p>
-            <input v-else v-model="jurisdiction" class="form-control" />
+            <p v-if="!is_editing">{{ jurisdiction_desc }}</p>
+            <select v-else v-model="jurisdiction" class="form-control">
+              <option v-for="option in jurisdiction_options" v-bind:value="option.value"
+                      v-bind:key="option.value">
+                {{ option.text }}
+              </option>
+            </select>
           </div>
           <div class="col">
             <p v-if="!is_editing">{{ nuans }}</p>
@@ -91,10 +103,13 @@
     <!-- row 2 - buttons -->
     <div class="row">
       <div id='div4' class="col-md-12">
-        <span class="f1" @click="toggleDetails">F1</span>
+        <span v-if="!is_editing" class="f1" @click="toggleDetails">F1</span>
       </div>
       <button v-if="!is_editing" class="btn btn-default" @click="edit">Edit</button>
-      <button v-else class="btn btn-default" @click="save">Save</button>
+      <span v-else>
+        <button class="btn btn-default" @click="save">Save</button>
+        <button class="btn btn-default" @click="cancelSave">Cancel</button>
+      </span>
     </div>
 
   </span>
@@ -109,6 +124,12 @@ import clientinfoview from '@/components/dropdown/Search/client/ClientInfoHeader
 export default {
     name: 'RequestInfoHeader',
     computed: {
+      priority_options() {
+        return this.$store.getters.listPriorities;
+      },
+      jurisdiction_options() {
+        return this.$store.getters.listJurisdictions;
+      },
       is_editing() {
         return  this.$store.getters.is_editing;
       },
@@ -134,6 +155,13 @@ export default {
           this.$store.commit('jurisdiction', value);
         }
       },
+      jurisdiction_desc() {
+        try {
+          return getDescFromList(this.jurisdiction_options, this.jurisdiction);
+        } catch (err) {
+          return 'ERROR!!';
+        }
+      },
       natureOfBusiness: {
         get: function() {
           return  this.$store.getters.natureOfBusiness;
@@ -142,7 +170,7 @@ export default {
           this.$store.commit('natureOfBusiness', value);
         }
       },
-      natureOfBusinessTruncated: function() {
+      natureOfBusinessTruncated() {
         try {
           if (this.natureOfBusiness.length > 200) return this.natureOfBusiness.substr(0, 200) + '...';
           else return this.natureOfBusiness;
@@ -181,11 +209,21 @@ export default {
       },
       priority: {
         get: function() {
-          return this.$store.getters.priority;
+          return this.$store.getters.priority?this.$store.getters.priority:"null";
         },
         set: function(value) {
           this.$store.commit('priority', value);
         }
+      },
+      priority_desc: function () {
+        try {
+          return getDescFromList(this.priority_options, this.priority);
+        } catch (err) {
+          return '';
+        }
+      },
+      high_priority() {
+        return true;
       },
       resubmissionYN: {
         get: function() {
@@ -252,6 +290,7 @@ export default {
     },
     methods: {
       setInterface(){
+
         this.setNRNum()
         this.setPriority()
         this.setComp
@@ -293,7 +332,11 @@ export default {
         // show full header after editing so user can see everything they changed
         this.$store.state.is_header_shown = true;
 
-      }
+      },
+      cancelSave() {
+        this.$store.dispatch('getpostgrescompInfo',this.nrNumber)
+        this.$store.state.is_editing = false;
+      },
     },
     watch: {
       nrNumber: function (val) {
@@ -305,6 +348,23 @@ export default {
 </script>
 
 <style scoped>
+  /* override form-control style from bootstrap so we don't have to add form-control-sm to every form field */
+  .RequestInfoHeader .form-control
+  {
+    /* from form-control-sm */
+    padding: .25rem .5rem;
+    line-height: 1.5;
+    border-radius: .2rem;
+
+    /* additional styles for this application */
+    font-size: 11px;
+    margin-bottom: 2px;
+  }
+
+  .RequestInfoHeader select.form-control {
+    height: auto !important; /* do not make selects (dropdowns) extra high */
+  }
+
    .nrNum {
      width: 100%;
      background-color: #f1f1f1;
@@ -318,19 +378,20 @@ export default {
     color: #ff0000;
     border: 0px #fff;
   }
-  .ISPRIORITY {
-    padding-left: 28%;
-    padding-right: 28%;
-    padding-bottom: 6%;
-    padding-top: 6%;
-    border: 2px solid #777;
+  .priority {
+    padding: 5px;
+    text-align: center;
+    background-color: white;
+    color: black;
+  }
+  .priority-high{
     background-color: #cc0000;
-    font-size: 1.25em;
-    color: #ffffff;
+    color: white;
   }
    .f1 {
      border: 1px solid #000000;
      padding: 2px;
    }
+
 
  </style>

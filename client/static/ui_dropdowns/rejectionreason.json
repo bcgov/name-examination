@@ -1,17 +1,14 @@
 ﻿[
 	{
-		"REJECT_REASON_CD": "CONFLICT",
+		"value": "CONFLICT",
 		"SHORT_DESC": "Conflict name",
-		"FULL_DESC": "Conlicting name exists.",
+		"text": "Conlicting name exists.",
 		"HELPFUL_HINT": ""
 	},
 	{
-		"REJECT_REASON_CD": "CONV",
+		"value": "CONV",
 		"SHORT_DESC": "CONVERSION",
-		"FULL_DESC": "Unspecified reason before conversion",
+		"text": "Unspecified reason before conversion",
 		"HELPFUL_HINT": ""
-	},
-	{
-		"REJECT_REASON_CD": ""
 	}
 ]
