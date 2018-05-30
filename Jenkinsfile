@@ -123,17 +123,6 @@ containerTemplate(
             checkout scm
         }
         
-        stage('code quality check') {
-           SONARQUBE_URL = sh (
-               script: 'oc get routes -o wide --no-headers | awk \'/sonarqube/{ print match($0,/edge/) ?  "https://"$2 : "http://"$2 }\'',
-               returnStdout: true
-                  ).trim()
-           echo "SONARQUBE_URL: ${SONARQUBE_URL}"
-           dir('sonar-runner') {
-            sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.verbose=true --stacktrace --info -Dsonar.projectName=Name-Examination.Dev -Dsonar.branch=master -Dsonar.projectKey=sonarqube:servicebc-ne-dev -Dsonar.sources=.."
-           }
-        }
-
 
         stage('Intermediate build') {
             echo ">>> Building Namex intermediate image..."
