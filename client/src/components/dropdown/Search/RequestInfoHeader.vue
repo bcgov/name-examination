@@ -12,11 +12,13 @@
           </div>
           <div class="col-md-9">
             <p v-if="!is_editing">{{ requestType }}</p>
+
             <select v-else v-model="requestType">
               <option v-for="opt in reqTypes" v-bind:key="opt.REQUEST_TYPE_CD">
                 {{ opt.FULL_DESC }}
               </option>
             </select>
+
           </div>
         </div>
 
@@ -40,15 +42,16 @@
 
         <div class="row">
           <div class="col add-top-padding">
-            <div id="internalCommentsDisplay" v-if="!is_editing" style="display: none;">
-              <h3>INTERNAL COMMENTS</h3>
-              <p>{{ internalComments }}</p>
+            <div v-if="show_extended_header">
+              <div v-if="!is_editing">
+                <h3>INTERNAL COMMENTS</h3>
+                <p style="white-space: pre-line;">{{ internalComments }}</p>
+              </div>
+              <div v-else>
+                <h3>INTERNAL COMMENTS</h3>
+                <textarea v-model="internalComments" class="form-control" rows="10"></textarea>
+              </div>
             </div>
-            <div v-else>
-              <h3>INTERNAL COMMENTS</h3>
-              <textarea v-model="internalComments" class="form-control"></textarea>
-            </div>
-
           </div>
         </div>
       </div>
@@ -56,8 +59,12 @@
       <!-- details col 2 - nature of business -->
       <div id='div2' class="col-md-4">
         <h3>NATURE OF BUSINESS</h3>
-        <p id="natureOfBusinessDisplay" v-if="!is_editing">{{ natureOfBusiness }}</p>
-        <textarea v-else v-model="natureOfBusiness" class="form-control"></textarea>
+        <div v-if="show_extended_header">
+          <textarea v-if="is_editing" v-model="natureOfBusiness" class="form-control" rows="10">
+            </textarea>
+          <p v-else style="white-space: pre-line;">{{ natureOfBusiness }}</p>
+        </div>
+        <p v-else style="white-space: pre-line;">{{ natureOfBusinessTruncated }}</p>
 
       </div>
 
@@ -68,8 +75,8 @@
             <div class="row">
               <div class="col">
                 <h3>ADDITIONAL INFORMATION</h3>
-                <p v-if="!is_editing">{{ addInfo }}</p>
-                <textarea v-else v-model="addInfo" class="form-control"></textarea>
+                <p v-if="!is_editing" style="white-space: pre-line;">{{ additionalInfo }}</p>
+                <textarea v-else v-model="additionalInfo" class="form-control"></textarea>
               </div>
             </div>
             <div class="row">
@@ -110,72 +117,136 @@ export default {
       is_editing() {
         return  this.$store.getters.is_editing;
       },
+      show_extended_header() {
+        return this.is_editing || this.$store.state.is_header_shown;
+      },
       nrNumber() {
         return  this.$store.getters.nrNumber;
       },
-      requestType() {
-        return  this.$store.getters.requestType;
+      requestType: {
+        get: function() {
+          return this.$store.getters.requestType;
+        },
+        set: function(value) {
+          this.$store.commit('requestType', value);
+        }
       },
-      firstName() {
-        return  this.$store.getters.firstName;
+      jurisdiction: {
+        get: function() {
+          return this.$store.getters.jurisdiction;
+        },
+        set: function(value) {
+          this.$store.commit('jurisdiction', value);
+        }
       },
-      lastName() {
-        return  this.$store.getters.lastName;
+      natureOfBusiness: {
+        get: function() {
+          return  this.$store.getters.natureOfBusiness;
+        },
+        set: function(value) {
+          this.$store.commit('natureOfBusiness', value);
+        }
       },
-      address() {
-        return  this.$store.getters.address;
+      natureOfBusinessTruncated: function() {
+        try {
+          if (this.natureOfBusiness.length > 200) return this.natureOfBusiness.substr(0, 200) + '...';
+          else return this.natureOfBusiness;
+        } catch (err) {
+          return this.natureOfBusiness;
+        }
+        if (this.natureOfBusiness.length > 200) return this.natureOfBusiness.substr(0, 200) + '...';
+        else return this.natureOfBusiness;
       },
-      contactName() {
-        return  this.$store.getters.contactName;
+      nuans: {
+        get: function() {
+          return this.$store.getters.nuans;
+        },
+        set: function(value) {
+          this.$store.commit('nuans', value);
+        }
       },
-      phone() {
-        return  this.$store.getters.phone;
+      sk_name: {
+        get: function() {
+          return this.$store.getters.sk_name;
+        },
+        set: function(value) {
+          this.$store.commit('sk_name', value);
+        }
       },
-      conEmail() {
-        return  this.$store.getters.conEmail;
-      },
-      fax() {
-        return  this.$store.getters.fax;
-      },
-      jurisdiction() {
-        return  this.$store.getters.jurisdiction;
-      },
-      natureOfBusiness() {
-        return  this.$store.getters.natureOfBusiness;
-      },
-      nuans() {
-        return  this.$store.getters.nuans;
-      },
-      sk_name() {
-        return  this.$store.getters.sk_name;
-      },
-      nr_status() {
-        return  this.$store.getters.nr_status;
+      nr_status: {
+        get: function() {
+          return this.$store.getters.nr_status;
+        },
+        set: function(value) {
+          this.$store.commit('nr_status', value);
+        }
       },
       examiner() {
-        return  this.$store.getters.examiner;
+        return this.$store.getters.examiner;
       },
-      priority() {
-        return  this.$store.getters.firstName;
+      priority: {
+        get: function() {
+          return this.$store.getters.priority;
+        },
+        set: function(value) {
+          this.$store.commit('priority', value);
+        }
       },
-      resubmissionYN() {
-        return  this.$store.getters.resubmissionYN;
+      resubmissionYN: {
+        get: function() {
+          return this.$store.getters.resubmissionYN;
+        },
+        set: function(value) {
+          this.$store.commit('resubmissionYN', value);
+        }
       },
-      linkedNR() {
-        return  this.$store.getters.linkedNR;
+      linkedNR: {
+        get: function() {
+          return this.$store.getters.linkedNR;
+        },
+        set: function(value) {
+          this.$store.commit('linkedNR', value);
+        }
       },
-      reservationCount() {
-        return  this.$store.getters.reservationCount;
+      reservationCount: {
+        get: function() {
+          return this.$store.getters.reservationCount;
+        },
+        set: function(value) {
+          this.$store.commit('reservationCount', value);
+        }
       },
-      expiryDate() {
-        return  this.$store.getters.expiryDate;
+      expiryDate: {
+        get: function() {
+          return this.$store.getters.expiryDate;
+        },
+        set: function(value) {
+          this.$store.commit('expiryDate', value);
+        }
       },
-      details() {
-        return this.$store.getters.details;
+      details: {
+        get: function() {
+          return this.$store.getters.details;
+        },
+        set: function(value) {
+          this.$store.commit('details', value);
+        }
       },
-      internalComments() {
-        // TODO get actual data from $store
-        return 'Lorem ipsum dolor sit amet,'
+      additionalInfo: {
+        get: function() {
+          return this.$store.getters.additionalInfo;
+        },
+        set: function(value) {
+          this.$store.commit('additionalInfo', value);
+        }
+      },
+      internalComments: {
+        get: function() {
+          return this.$store.getters.internalComments;
+        },
+        set: function(value) {
+          this.$store.commit('internalComments', value);
+        }
       }
     },
     components: {
@@ -210,18 +281,11 @@ export default {
       setSK() {
       },
       setNOB() {
+        //this.$store.state.additionalCompInfo.natureOfBussiness = this.natureOfBusiness;
       },
       toggleDetails() {
-        // KATIE - IN PROGRESS
-
-        // show internal comments
-        document.getElementById("internalCommentsDisplay").style.display = '';
-
-        // show complete nature of business, untruncated
-
-        // show client data
-        document.getElementsByClassName('RequestInfoHeader')[0]
-          .getElementsByClassName('ClientInfo')[0].style.display = 'inline';
+        if (this.$store.state.is_header_shown) this.$store.state.is_header_shown = false;
+        else this.$store.state.is_header_shown = true;
 
       },
       setBorder(id) {
@@ -232,7 +296,12 @@ export default {
         this.$store.state.is_editing = true;
       },
       save() {
+        this.$store.dispatch('updateRequest');
         this.$store.state.is_editing = false;
+
+        // show full header after editing so user can see everything they changed
+        this.$store.state.is_header_shown = true;
+
       }
     },
     watch: {
@@ -272,8 +341,5 @@ export default {
      border: 1px solid #000000;
      padding: 2px;
    }
-   /* initially hide client info ONLY WITHIN HEADER (not everywhere the component is used */
-   .RequestInfoHeader .ClientInfo {
-     display: none;
-   }
+
  </style>
