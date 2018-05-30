@@ -1,0 +1,40 @@
+﻿[
+	{
+		"PARTNER_NAME_TYPE_CD": "NU",
+		"SHORT_DESC": "NUANS system corporation request type",
+		"FULL_DESC": "NUANS system corporation request type"
+	},
+	{
+		"PARTNER_NAME_TYPE_CD": "CO",
+		"SHORT_DESC": "Partner system corporation request type",
+		"FULL_DESC": "Partner system corporation request type"
+	},
+	{
+		"PARTNER_NAME_TYPE_CD": "AS",
+		"SHORT_DESC": "Partner system assumed name request type",
+		"FULL_DESC": "Partner system assumed name request type"
+	},
+	{
+		"PARTNER_NAME_TYPE_CD": "LP",
+		"SHORT_DESC": "Partner system limited partnership request type",
+		"FULL_DESC": "Partner system limited partnership request type"
+	},
+	{
+		"PARTNER_NAME_TYPE_CD": "LLP",
+		"SHORT_DESC": "Partner system limited liability partnership request type",
+		"FULL_DESC": "Partner system limited liability partnership request type"
+	},
+	{
+		"PARTNER_NAME_TYPE_CD": "NAS",
+		"SHORT_DESC": "Partner system numbered assumed name request type",
+		"FULL_DESC": "Partner system numbered assumed name request type"
+	},
+	{
+		"PARTNER_NAME_TYPE_CD": "CP",
+		"SHORT_DESC": "Partner system cooperative request type",
+		"FULL_DESC": "Partner system cooperative request type"
+	},
+	{
+		"PARTNER_NAME_TYPE_CD": ""
+	}
+]

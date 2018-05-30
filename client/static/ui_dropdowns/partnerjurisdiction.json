@@ -1,0 +1,15 @@
+﻿[
+	{
+		"PARTNER_JURISDICTION_TYPE_CD": "AB",
+		"SHORT_DESC": "Alberta",
+		"FULL_DESC": "Alberta"
+	},
+	{
+		"PARTNER_JURISDICTION_TYPE_CD": "SK",
+		"SHORT_DESC": "Saskatchewan",
+		"FULL_DESC": "Saskatchewan"
+	},
+	{
+		"PARTNER_JURISDICTION_TYPE_CD": ""
+	}
+]

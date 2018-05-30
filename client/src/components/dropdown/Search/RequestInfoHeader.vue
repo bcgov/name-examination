@@ -12,11 +12,11 @@
           </div>
           <div class="col-md-9">
             <p v-if="!is_editing">{{ requestType }}</p>
-            <textarea v-else
-                      id="requestType1"
-                      v-model="requestType"
-                      class="txtArea form-control">
-            </textarea>
+            <select v-else v-model="requestType">
+              <option v-for="opt in reqTypes" v-bind:key="opt.REQUEST_TYPE_CD">
+                {{ opt.FULL_DESC }}
+              </option>
+            </select>
           </div>
         </div>
 
@@ -94,14 +94,18 @@
 
   </span>
 </template>
-
+<script src="static/js/utils.js"></script>
 <script>
 /* eslint-disable */
-
-import clientinfoview from '@/components/dropdown/Search/client/ClientInfo.vue';
+import clientinfoview
+  from '@/components/dropdown/Search/client/ClientInfo.vue';
 
 export default {
     name: 'RequestInfoHeader',
+    data: function () {
+      return {
+      }
+    },
     computed: {
       is_editing() {
         return  this.$store.getters.is_editing;
@@ -171,15 +175,7 @@ export default {
       },
       internalComments() {
         // TODO get actual data from $store
-        return 'Lorem ipsum dolor sit amet, at vix enim nominavi, ea dico case euismod mea, est cu ubique iuvaret. Vis ea rebum verear, salutandi posidonium signiferumque ut qui. Et inermis iudicabit sententiae his, tation facilisis eam id. Adhuc phaedrum inimicus cu sit.\n' +
-          '\n' +
-          'Ullum melius delicatissimi te sit, ut nullam lucilius rationibus has. Mei sonet moderatius at. Pro legere mentitum omittantur te, natum decore cu pro. Ei brute labores mea, ea assum omittantur nec. Ea per mnesarchum elaboraret necessitatibus, graece nemore id pri. Ut saepe salutatus intellegam sit, magna vivendo nam in, minimum lucilius qui ne. Mei ei quis verear vulputate, cu vis adipisci ullamcorper.\n' +
-          '\n' +
-          'Sed alterum convenire signiferumque an, quando omittam repudiandae vix id, nec oratio equidem ei. Ea nec tractatos periculis. Dolore pertinacia id mel, pro patrioque forensibus ea. Aperiri virtute sea et.\n' +
-          '\n' +
-          'Oportere electram in eos, volumus pericula mei cu. Ius suscipit vivendum scripserit in, ne graecis detraxit patrioque nec. Nec laudem aliquid et, hinc vitae nullam est eu. No errem oblique vix, sed no augue novum dicant, ne purto modus phaedrum sed. Inimicus accusamus mei cu. Qui an altera saperet, fierent percipitur ius no, ex mea ignota quaestio.\n' +
-          '\n' +
-          'Ea dictas omittam nam, in his fugit mediocrem, vim no invidunt indoctum. Veri audire ne eos. Vim everti fierent an, ad usu omnes adolescens honestatis, tempor detraxit at quo. Duo in zril soluta, vim ne ferri periculis theophrastus. Idque utamur quaeque in eam, te eam deleniti periculis.\n';
+        return 'Lorem ipsum dolor sit amet,'
       }
     },
     components: {
@@ -190,6 +186,7 @@ export default {
     },
     methods: {
       setInterface(){
+        this.setRequestType()
         this.setNRNum()
         this.setPriority()
         this.setComp
@@ -197,6 +194,8 @@ export default {
         this.setSK()
         this.setNOB()
         this.setAddInfo()
+      },
+      setRequestType() {
       },
       setNRNum() {
       },
@@ -221,7 +220,8 @@ export default {
         // show complete nature of business, untruncated
 
         // show client data
-        document.getElementsByClassName('RequestInfoHeader')[0].getElementsByClassName('ClientInfo')[0].style.display = 'inline';
+        document.getElementsByClassName('RequestInfoHeader')[0]
+          .getElementsByClassName('ClientInfo')[0].style.display = 'inline';
 
       },
       setBorder(id) {

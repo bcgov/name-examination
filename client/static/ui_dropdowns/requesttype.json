@@ -1,0 +1,581 @@
+﻿[
+	{
+		"REQUEST_TYPE_CD": "AL",
+		"SHORT_DESC": "Extraprovincial Limited Liability Company",
+		"FULL_DESC": "LLC - Extraprovincial Assumed Name",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "AL",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "AS",
+		"SHORT_DESC": "Extraprovincial Registration",
+		"FULL_DESC": "Corporation (Foreign) - Extraprovincial Assumed Name",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "AS",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "ASO",
+		"SHORT_DESC": "Society",
+		"FULL_DESC": "Society - Amalgamation",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "SO",
+		"ADDITIONAL_INFO": "Amalgamation",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "CC",
+		"SHORT_DESC": "CCC - Inc/Amal ",
+		"FULL_DESC": "CCC - Incorporation/Amalgamation",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "CC",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "CCC",
+		"SHORT_DESC": "CCC - Change of Name",
+		"FULL_DESC": "CCC - Change of Name",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "CN",
+		"ADDITIONAL_INFO": "Change of Name",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "CCCT",
+		"SHORT_DESC": "CCC - Continuation In",
+		"FULL_DESC": "CCC - Continuation In",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "CI",
+		"ADDITIONAL_INFO": "Continuation In",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "CCP",
+		"SHORT_DESC": "Cooperative",
+		"FULL_DESC": "Cooperative - Change of Name",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "CP",
+		"ADDITIONAL_INFO": "Change of Name",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "CCR",
+		"SHORT_DESC": "B.C. Company",
+		"FULL_DESC": "B.C. Company - Change of Name",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "CR",
+		"ADDITIONAL_INFO": "Change of Name",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "CCV",
+		"SHORT_DESC": "CCC - BC to CCC Conversion",
+		"FULL_DESC": "CCC - BC to CCC Conversion",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "CN",
+		"ADDITIONAL_INFO": "Change of Name",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "CEM",
+		"SHORT_DESC": "Cemetery",
+		"FULL_DESC": "Cemetery",
+		"CLASS_TYPE_CD": "MISC",
+		"LEGACY_CD": "CEM",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "CFI",
+		"SHORT_DESC": "Financial Institution",
+		"FULL_DESC": "Financial Institution (BC) - Change of Name",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "FI",
+		"ADDITIONAL_INFO": "Change of Name",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "CFR",
+		"SHORT_DESC": "General Partnership/Proprietorship ",
+		"FULL_DESC": "Sole Proprietorship/General Partnership - Change of Name",
+		"CLASS_TYPE_CD": "FIRM",
+		"LEGACY_CD": "FR",
+		"ADDITIONAL_INFO": "Change of Name",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "CLC",
+		"SHORT_DESC": "Extraprovincial Limited Liability Company",
+		"FULL_DESC": "LLC - Extraprovincial Change of Name",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "LC",
+		"ADDITIONAL_INFO": "Change of Name",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "CLL",
+		"SHORT_DESC": "Limited Liability Partnership",
+		"FULL_DESC": "Limited Liability Partnership - Change of Name",
+		"CLASS_TYPE_CD": "FIRM",
+		"LEGACY_CD": "LL",
+		"ADDITIONAL_INFO": "Change of Name",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "CLP",
+		"SHORT_DESC": "Limited Partnership",
+		"FULL_DESC": "Limited Partnership - Change of Name",
+		"CLASS_TYPE_CD": "FIRM",
+		"LEGACY_CD": "FR",
+		"ADDITIONAL_INFO": "Change of Name",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "CP",
+		"SHORT_DESC": "Cooperative",
+		"FULL_DESC": "Cooperative - Incorporation/Amalgamation",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "CP",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "CR",
+		"SHORT_DESC": "B.C. Company",
+		"FULL_DESC": "B.C. Company - Incorporation/Amalgamation",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "CR",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "CSO",
+		"SHORT_DESC": "Society ",
+		"FULL_DESC": "Society - Change of Name",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "SO",
+		"ADDITIONAL_INFO": "Change of Name",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "CSSO",
+		"SHORT_DESC": "Society",
+		"FULL_DESC": "Society - Conversion of a Special Act",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "SO",
+		"ADDITIONAL_INFO": "Conversion",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "CT",
+		"SHORT_DESC": "B.C. Company",
+		"FULL_DESC": "B.C. Company - Continuation In",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "CR",
+		"ADDITIONAL_INFO": "Continuation In",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "CTC",
+		"SHORT_DESC": "Cooperative",
+		"FULL_DESC": "Cooperative - Continuation In",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "CP",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "CTSO",
+		"SHORT_DESC": "Society",
+		"FULL_DESC": "Society - Continuation In",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "SO",
+		"ADDITIONAL_INFO": "Continuation In",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "CUL",
+		"SHORT_DESC": "Unlimited Liability Company ",
+		"FULL_DESC": "Change of Name of Unlimited Liability Company",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "UL",
+		"ADDITIONAL_INFO": "Change of Name",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "FI",
+		"SHORT_DESC": "Financial Institution",
+		"FULL_DESC": "Financial Institution (BC) - Incorporation",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "FI",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "FR",
+		"SHORT_DESC": "General Partnership/Proprietorship ",
+		"FULL_DESC": "Sole Proprietorship/General Partnership - Registration",
+		"CLASS_TYPE_CD": "FIRM",
+		"LEGACY_CD": "FR",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "LC",
+		"SHORT_DESC": "Extraprovincial Limited Liability Company",
+		"FULL_DESC": "LLC - Extraprovincial Registration",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "LC",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "LIB",
+		"SHORT_DESC": "Library",
+		"FULL_DESC": "Library",
+		"CLASS_TYPE_CD": "MISC",
+		"LEGACY_CD": "LIB",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "LL",
+		"SHORT_DESC": "Limited Liability Partnership",
+		"FULL_DESC": "Limited Liability Partnership - Registration",
+		"CLASS_TYPE_CD": "FIRM",
+		"LEGACY_CD": "LL",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "LP",
+		"SHORT_DESC": "Limited Partnership",
+		"FULL_DESC": "Limited Partnership - Registration",
+		"CLASS_TYPE_CD": "FIRM",
+		"LEGACY_CD": "FR",
+		"ADDITIONAL_INFO": "Limited Partnership",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "NON",
+		"SHORT_DESC": "NON",
+		"FULL_DESC": "NON",
+		"CLASS_TYPE_CD": "MISC",
+		"LEGACY_CD": "NON",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "PA",
+		"SHORT_DESC": "Private Act",
+		"FULL_DESC": "Private Act",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "PA",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "PAR",
+		"SHORT_DESC": "Parish",
+		"FULL_DESC": "Parish",
+		"CLASS_TYPE_CD": "MISC",
+		"LEGACY_CD": "PAR",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "RCC",
+		"SHORT_DESC": "CCC - Restore",
+		"FULL_DESC": "CCC - Restore",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "CS",
+		"ADDITIONAL_INFO": "Restoration",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "RCP",
+		"SHORT_DESC": "Cooperative",
+		"FULL_DESC": "Cooperative - Restore",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "CP",
+		"ADDITIONAL_INFO": "Restoration",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "RCR",
+		"SHORT_DESC": "B.C. Company",
+		"FULL_DESC": "B.C. Company - Restore",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "CR",
+		"ADDITIONAL_INFO": "Restoration",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "RFI",
+		"SHORT_DESC": "Financial Institution",
+		"FULL_DESC": "Financial Institution (BC) - Restore",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "FI",
+		"ADDITIONAL_INFO": "Restoration",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "RLC",
+		"SHORT_DESC": "Extraprovincial Limited Liability Company",
+		"FULL_DESC": "LLC - Extraprovincial Reinstatement",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "LC",
+		"ADDITIONAL_INFO": "Reinstatement",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "RLY",
+		"SHORT_DESC": "Railway",
+		"FULL_DESC": "Railway",
+		"CLASS_TYPE_CD": "MISC",
+		"LEGACY_CD": "RLY",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "RSO",
+		"SHORT_DESC": "Society ",
+		"FULL_DESC": "Society - Restore",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "SO",
+		"ADDITIONAL_INFO": "Restoration",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "RUL",
+		"SHORT_DESC": "Unlimited Liability Company ",
+		"FULL_DESC": "ULC - Restore",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "UL",
+		"ADDITIONAL_INFO": "Restoration",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "SO",
+		"SHORT_DESC": "Society",
+		"FULL_DESC": "Society - Incorporation",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "SO",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "TMY",
+		"SHORT_DESC": "Tramway",
+		"FULL_DESC": "Tramway",
+		"CLASS_TYPE_CD": "MISC",
+		"LEGACY_CD": "TMY",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "UA",
+		"SHORT_DESC": "Extraprovincial ULC",
+		"FULL_DESC": "ULC - Extraprovincial Assumed Name",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "UA",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "UC",
+		"SHORT_DESC": "Unlimited Liability Company ",
+		"FULL_DESC": "BC to Unlimited Liability Company Conversion",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "UC",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "UL",
+		"SHORT_DESC": "Unlimited Liability Company ",
+		"FULL_DESC": "Unlimited Liability Company",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "UL",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "ULCT",
+		"SHORT_DESC": "ULC - Continuation In",
+		"FULL_DESC": "ULC - Continuation In",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "UL",
+		"ADDITIONAL_INFO": "Continuation In",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "XASO",
+		"SHORT_DESC": "Extraprovincial Non-Share Corporation",
+		"FULL_DESC": "Society - Extraprovincial Non-Share Corporation Assumed Name",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "AS",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "XCASO",
+		"SHORT_DESC": "Extraprovincial Non-Share Corporation",
+		"FULL_DESC": "Society - Extraprovincial Non-Share Corporation Change Assumed Name",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "AS",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "XCCP",
+		"SHORT_DESC": "Extraprovincial Cooperative",
+		"FULL_DESC": "Cooperative - Extraprovincial Change of Name",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "CP",
+		"ADDITIONAL_INFO": "Change of Name",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "XCCR",
+		"SHORT_DESC": "Extraprovincial Registration",
+		"FULL_DESC": "Corporation (Foreign) - Extraprovincial Change of Name",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "CR",
+		"ADDITIONAL_INFO": "Change of Name",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "XCLL",
+		"SHORT_DESC": "Extraprovincial Limited Liability Partnership",
+		"FULL_DESC": "Limited Liability Partnership - Extraprovincial Change of Name",
+		"CLASS_TYPE_CD": "FIRM",
+		"LEGACY_CD": "LL",
+		"ADDITIONAL_INFO": "Change of Name",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "XCLP",
+		"SHORT_DESC": "Extraprovincial Limited Partnership",
+		"FULL_DESC": "Limited Partnership - Extraprovincial Change of Name",
+		"CLASS_TYPE_CD": "FIRM",
+		"LEGACY_CD": "FR",
+		"ADDITIONAL_INFO": "Change of Name",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "XCP",
+		"SHORT_DESC": "Extraprovincial Cooperative",
+		"FULL_DESC": "Cooperative - Extraprovincial",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "CP",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "XCR",
+		"SHORT_DESC": "Extraprovincial Registration",
+		"FULL_DESC": "Corporation (Foreign) - Extraprovincial Registration/Amalgamation",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "CR",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "XCSO",
+		"SHORT_DESC": "Extraprovincial Non-Share Corporation",
+		"FULL_DESC": "Society - Extraprovincial Change of Name",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "SO",
+		"ADDITIONAL_INFO": "Change of Name",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "XCUL",
+		"SHORT_DESC": "Extraprovincial ULC",
+		"FULL_DESC": "Change of Name of Extrapro Unlimited Liability Company",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "UL",
+		"ADDITIONAL_INFO": "Change of Name",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "XLL",
+		"SHORT_DESC": "Extraprovincial Limited Liability Partnership",
+		"FULL_DESC": "Limited Liability Partnership - Extraprovincial Registration",
+		"CLASS_TYPE_CD": "FIRM",
+		"LEGACY_CD": "LL",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "XLP",
+		"SHORT_DESC": "Extraprovincial Limited Partnership",
+		"FULL_DESC": "Extraprovincial Limited Partnership",
+		"CLASS_TYPE_CD": "FIRM",
+		"LEGACY_CD": "FR",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "XRCP",
+		"SHORT_DESC": "Extraprovincial Cooperative",
+		"FULL_DESC": "Cooperative - Extraprovincial Restoration",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "CP",
+		"ADDITIONAL_INFO": "Restoration",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "XRCR",
+		"SHORT_DESC": "Extraprovincial Reinstatement",
+		"FULL_DESC": "Corporation (Foreign) - Extraprovincial Reinstatement",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "CR",
+		"ADDITIONAL_INFO": "Reinstatement",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "XRSO",
+		"SHORT_DESC": "Extraprovincial Non-Share Corporation",
+		"FULL_DESC": "Society - Extraprovincial Restoration",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "SO",
+		"ADDITIONAL_INFO": "Restoration",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "XRUL",
+		"SHORT_DESC": "Extraprovincial ULC",
+		"FULL_DESC": "ULC - Extraprovincial Reinstatement",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "UL",
+		"ADDITIONAL_INFO": "Reinstatement",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": "XSO",
+		"SHORT_DESC": "Extraprovincial Non-Share Corporation",
+		"FULL_DESC": "Society - Extraprovincial",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "SO",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": ""
+	},
+	{
+		"REQUEST_TYPE_CD": "XUL",
+		"SHORT_DESC": "Extraprovincial ULC",
+		"FULL_DESC": "ULC - Extraprovincial Registration",
+		"CLASS_TYPE_CD": "CORP",
+		"LEGACY_CD": "UL",
+		"ADDITIONAL_INFO": "",
+		"SOURCE_APPLICATION": "COLIN"
+	},
+	{
+		"REQUEST_TYPE_CD": ""
+	}
+]

@@ -58,15 +58,15 @@ export default {
     setOriginalBackgrnd() {
       // alert("here2");
       const mDiv1 = document.getElementById("M1");
-      mDiv1.className = "row match-part match-d";
+      //mDiv1.className = "row match-part match-d";
       const mDiv2 = document.getElementById("M2");
-      mDiv2.className = "row match-part match-d";
+      //mDiv2.className = "row match-part match-d";
       const mDiv3 = document.getElementById("M3");
-      mDiv3.className = "row match-part match-d";
+      //mDiv3.className = "row match-part match-d";
       const mDiv4 = document.getElementById("M4");
-      mDiv4.className = "row match-part match-d";
+      //mDiv4.className = "row match-part match-d";
       const mDiv5 = document.getElementById("M5");
-      mDiv5.className = "row match-part match-d";
+      //mDiv5.className = "row match-part match-d";
     }
   }
 };

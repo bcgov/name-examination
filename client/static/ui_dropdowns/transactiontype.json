@@ -1,0 +1,65 @@
+﻿[
+	{
+		"TRANSACTION_TYPE_CD": "NAME_EXAM",
+		"SHORT_DESC": "Name Exam",
+		"FULL_DESC": "Name Examination"
+	},
+	{
+		"TRANSACTION_TYPE_CD": "RESET",
+		"SHORT_DESC": "Reset Name Exam",
+		"FULL_DESC": "Reset (unapprove) Name Examination"
+	},
+	{
+		"TRANSACTION_TYPE_CD": "RESUBMIT",
+		"SHORT_DESC": "Resubmit Req",
+		"FULL_DESC": "Resubmit processed name request"
+	},
+	{
+		"TRANSACTION_TYPE_CD": "NRREQ",
+		"SHORT_DESC": "NR Request",
+		"FULL_DESC": "Create Name Reservation Request"
+	},
+	{
+		"TRANSACTION_TYPE_CD": "CANCL",
+		"SHORT_DESC": "Cancel",
+		"FULL_DESC": "Cancel existing NR Request"
+	},
+	{
+		"TRANSACTION_TYPE_CD": "CORRT",
+		"SHORT_DESC": "Correction",
+		"FULL_DESC": "Correct existing NR Request"
+	},
+	{
+		"TRANSACTION_TYPE_CD": "MODIF",
+		"SHORT_DESC": "Modify",
+		"FULL_DESC": "Modify existing NR Request"
+	},
+	{
+		"TRANSACTION_TYPE_CD": "UPDPR",
+		"SHORT_DESC": "Update Priority",
+		"FULL_DESC": "Update existing NR Request priority"
+	},
+	{
+		"TRANSACTION_TYPE_CD": "EXPIR",
+		"SHORT_DESC": "Expire",
+		"FULL_DESC": "Expire completed unconsumed request"
+	},
+	{
+		"TRANSACTION_TYPE_CD": "HISTORICAL",
+		"SHORT_DESC": "Historical",
+		"FULL_DESC": "Make existing NR request historical"
+	},
+	{
+		"TRANSACTION_TYPE_CD": "ADMIN",
+		"SHORT_DESC": "Staff Admin",
+		"FULL_DESC": "Staff Administration Transaction"
+	},
+	{
+		"TRANSACTION_TYPE_CD": "CONSUME",
+		"SHORT_DESC": "Consume NR",
+		"FULL_DESC": "Consume Name Request"
+	},
+	{
+		"TRANSACTION_TYPE_CD": ""
+	}
+]
