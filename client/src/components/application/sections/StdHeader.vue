@@ -39,8 +39,8 @@
         </ul>
         <form class="form-inline my-2 my-lg-0" @submit.prevent="onSubmit">
           <input class="form-control mr-sm-2" type="search"
-                 placeholder="Search" aria-label="Search" v-model="nrNum">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                 placeholder="NR Number" aria-label="Search" v-model="nrNum">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Load</button>
         </form>
         <p class="navbar-text">&nbsp;{{userid}}</p>
       </div>

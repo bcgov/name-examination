@@ -1,0 +1,3105 @@
+﻿[
+	{
+		"RSTCNDID": "307",
+		"WORDFRAS": "ABSTRACT"
+	},
+	{
+		"RSTCNDID": "231",
+		"WORDFRAS": "ACCESS BC"
+	},
+	{
+		"RSTCNDID": "231",
+		"WORDFRAS": "ACCESSBC"
+	},
+	{
+		"RSTCNDID": "280",
+		"WORDFRAS": "ACUPUNCTURE"
+	},
+	{
+		"RSTCNDID": "280",
+		"WORDFRAS": "ACUPUNCTURIST"
+	},
+	{
+		"RSTCNDID": "280",
+		"WORDFRAS": "ACUPUNCTURISTS"
+	},
+	{
+		"RSTCNDID": "17",
+		"WORDFRAS": "AGROLOGIST"
+	},
+	{
+		"RSTCNDID": "17",
+		"WORDFRAS": "AGROLOGISTS"
+	},
+	{
+		"RSTCNDID": "226",
+		"WORDFRAS": "AIBC"
+	},
+	{
+		"RSTCNDID": "148",
+		"WORDFRAS": "ALBERTA"
+	},
+	{
+		"RSTCNDID": "199",
+		"WORDFRAS": "ALFA ROMEO"
+	},
+	{
+		"RSTCNDID": "159",
+		"WORDFRAS": "ALRT"
+	},
+	{
+		"RSTCNDID": "16",
+		"WORDFRAS": "ALS"
+	},
+	{
+		"RSTCNDID": "16",
+		"WORDFRAS": "AMYOTROPHIC LATERAL SCLEROSIS"
+	},
+	{
+		"RSTCNDID": "18",
+		"WORDFRAS": "ANAVET"
+	},
+	{
+		"RSTCNDID": "18",
+		"WORDFRAS": "ANAVETS"
+	},
+	{
+		"RSTCNDID": "117",
+		"WORDFRAS": "ANIMAL CLINIC"
+	},
+	{
+		"RSTCNDID": "185",
+		"WORDFRAS": "ANIMAL CRUELTY"
+	},
+	{
+		"RSTCNDID": "117",
+		"WORDFRAS": "ANIMAL HOSPITAL"
+	},
+	{
+		"RSTCNDID": "265",
+		"WORDFRAS": "APOTHECAR"
+	},
+	{
+		"RSTCNDID": "232",
+		"WORDFRAS": "APOTHECARY"
+	},
+	{
+		"RSTCNDID": "226",
+		"WORDFRAS": "ARCH"
+	},
+	{
+		"RSTCNDID": "226",
+		"WORDFRAS": "ARCHITECT"
+	},
+	{
+		"RSTCNDID": "226",
+		"WORDFRAS": "ARCHITECTS"
+	},
+	{
+		"RSTCNDID": "226",
+		"WORDFRAS": "ARCHITECTURAL"
+	},
+	{
+		"RSTCNDID": "226",
+		"WORDFRAS": "ARCHITECTURE"
+	},
+	{
+		"RSTCNDID": "213",
+		"WORDFRAS": "ASSURANCE"
+	},
+	{
+		"RSTCNDID": "300",
+		"WORDFRAS": "ASSURANCES"
+	},
+	{
+		"RSTCNDID": "301",
+		"WORDFRAS": "ASSURANT"
+	},
+	{
+		"RSTCNDID": "300",
+		"WORDFRAS": "ASSURE"
+	},
+	{
+		"RSTCNDID": "301",
+		"WORDFRAS": "ASSUREUR"
+	},
+	{
+		"RSTCNDID": "179",
+		"WORDFRAS": "ASUNA"
+	},
+	{
+		"RSTCNDID": "282",
+		"WORDFRAS": "AUDIOLOGIST"
+	},
+	{
+		"RSTCNDID": "282",
+		"WORDFRAS": "AUDIOLOGY"
+	},
+	{
+		"RSTCNDID": "282",
+		"WORDFRAS": "AUDIOMETRIC"
+	},
+	{
+		"RSTCNDID": "282",
+		"WORDFRAS": "AUDIOMETRY"
+	},
+	{
+		"RSTCNDID": "134",
+		"WORDFRAS": "AUTHORITY"
+	},
+	{
+		"RSTCNDID": "269",
+		"WORDFRAS": "AUTHORIZED"
+	},
+	{
+		"RSTCNDID": "244",
+		"WORDFRAS": "AUTO BODY"
+	},
+	{
+		"RSTCNDID": "119",
+		"WORDFRAS": "B C"
+	},
+	{
+		"RSTCNDID": "119",
+		"WORDFRAS": "B C S"
+	},
+	{
+		"RSTCNDID": "157",
+		"WORDFRAS": "BALLET COMPANY"
+	},
+	{
+		"RSTCNDID": "22",
+		"WORDFRAS": "BANK"
+	},
+	{
+		"RSTCNDID": "22",
+		"WORDFRAS": "BANKER"
+	},
+	{
+		"RSTCNDID": "22",
+		"WORDFRAS": "BANKERS"
+	},
+	{
+		"RSTCNDID": "22",
+		"WORDFRAS": "BANKING"
+	},
+	{
+		"RSTCNDID": "132",
+		"WORDFRAS": "BANKRUPT"
+	},
+	{
+		"RSTCNDID": "132",
+		"WORDFRAS": "BANKRUPTCY"
+	},
+	{
+		"RSTCNDID": "22",
+		"WORDFRAS": "BANKS"
+	},
+	{
+		"RSTCNDID": "22",
+		"WORDFRAS": "BANX"
+	},
+	{
+		"RSTCNDID": "180",
+		"WORDFRAS": "BARRISTER"
+	},
+	{
+		"RSTCNDID": "198",
+		"WORDFRAS": "BARRISTERS"
+	},
+	{
+		"RSTCNDID": "133",
+		"WORDFRAS": "BBB"
+	},
+	{
+		"RSTCNDID": "119",
+		"WORDFRAS": "BC"
+	},
+	{
+		"RSTCNDID": "254",
+		"WORDFRAS": "BC BAR"
+	},
+	{
+		"RSTCNDID": "234",
+		"WORDFRAS": "BC GETAWAYS"
+	},
+	{
+		"RSTCNDID": "140",
+		"WORDFRAS": "BC HYDRO"
+	},
+	{
+		"RSTCNDID": "228",
+		"WORDFRAS": "BC ONLINE"
+	},
+	{
+		"RSTCNDID": "309",
+		"WORDFRAS": "BC ROYAL"
+	},
+	{
+		"RSTCNDID": "119",
+		"WORDFRAS": "BC S"
+	},
+	{
+		"RSTCNDID": "310",
+		"WORDFRAS": "BC TECH"
+	},
+	{
+		"RSTCNDID": "310",
+		"WORDFRAS": "BC TECHNOLOGY"
+	},
+	{
+		"RSTCNDID": "286",
+		"WORDFRAS": "BC 211"
+	},
+	{
+		"RSTCNDID": "181",
+		"WORDFRAS": "BCLS"
+	},
+	{
+		"RSTCNDID": "228",
+		"WORDFRAS": "BCONLINE"
+	},
+	{
+		"RSTCNDID": "119",
+		"WORDFRAS": "BCPROVINCE"
+	},
+	{
+		"RSTCNDID": "19",
+		"WORDFRAS": "BCR"
+	},
+	{
+		"RSTCNDID": "310",
+		"WORDFRAS": "BCTEC"
+	},
+	{
+		"RSTCNDID": "310",
+		"WORDFRAS": "BCTECH"
+	},
+	{
+		"RSTCNDID": "9",
+		"WORDFRAS": "BENCHMARK"
+	},
+	{
+		"RSTCNDID": "133",
+		"WORDFRAS": "BETTER BUSINESS BUREAU"
+	},
+	{
+		"RSTCNDID": "23",
+		"WORDFRAS": "BIG BROS"
+	},
+	{
+		"RSTCNDID": "23",
+		"WORDFRAS": "BIG BROTHERS"
+	},
+	{
+		"RSTCNDID": "23",
+		"WORDFRAS": "BIG SISTERS"
+	},
+	{
+		"RSTCNDID": "268",
+		"WORDFRAS": "BIKRAM"
+	},
+	{
+		"RSTCNDID": "268",
+		"WORDFRAS": "BIKRAMS"
+	},
+	{
+		"RSTCNDID": "246",
+		"WORDFRAS": "BINGO"
+	},
+	{
+		"RSTCNDID": "225",
+		"WORDFRAS": "BISHOP ALEXANDER CARTER CHARITABLE FUND"
+	},
+	{
+		"RSTCNDID": "75",
+		"WORDFRAS": "BLINDCRAFT"
+	},
+	{
+		"RSTCNDID": "134",
+		"WORDFRAS": "BOARD"
+	},
+	{
+		"RSTCNDID": "205",
+		"WORDFRAS": "BONDED"
+	},
+	{
+		"RSTCNDID": "20",
+		"WORDFRAS": "BRIC"
+	},
+	{
+		"RSTCNDID": "119",
+		"WORDFRAS": "BRITISH COLUMBIA"
+	},
+	{
+		"RSTCNDID": "254",
+		"WORDFRAS": "BRITISH COLUMBIA BAR"
+	},
+	{
+		"RSTCNDID": "254",
+		"WORDFRAS": "BRITISH COLUMBIA BAR ASSOCIATION"
+	},
+	{
+		"RSTCNDID": "119",
+		"WORDFRAS": "BRITISHCOLUMBIA"
+	},
+	{
+		"RSTCNDID": "43",
+		"WORDFRAS": "BUICK"
+	},
+	{
+		"RSTCNDID": "177",
+		"WORDFRAS": "BUILD BC"
+	},
+	{
+		"RSTCNDID": "134",
+		"WORDFRAS": "BUREAU"
+	},
+	{
+		"RSTCNDID": "262",
+		"WORDFRAS": "BVMS"
+	},
+	{
+		"RSTCNDID": "255",
+		"WORDFRAS": "C C I"
+	},
+	{
+		"RSTCNDID": "140",
+		"WORDFRAS": "C N R"
+	},
+	{
+		"RSTCNDID": "97",
+		"WORDFRAS": "C P"
+	},
+	{
+		"RSTCNDID": "140",
+		"WORDFRAS": "C P R"
+	},
+	{
+		"RSTCNDID": "255",
+		"WORDFRAS": "C T"
+	},
+	{
+		"RSTCNDID": "255",
+		"WORDFRAS": "C TERM"
+	},
+	{
+		"RSTCNDID": "26",
+		"WORDFRAS": "CA"
+	},
+	{
+		"RSTCNDID": "179",
+		"WORDFRAS": "CADILLAC"
+	},
+	{
+		"RSTCNDID": "124",
+		"WORDFRAS": "CANADA STANDARD"
+	},
+	{
+		"RSTCNDID": "234",
+		"WORDFRAS": "CANADAS WEST"
+	},
+	{
+		"RSTCNDID": "74",
+		"WORDFRAS": "CANADIAN INSTITUTE FOR THE BLIND"
+	},
+	{
+		"RSTCNDID": "96",
+		"WORDFRAS": "CANADIAN NATIONAL"
+	},
+	{
+		"RSTCNDID": "97",
+		"WORDFRAS": "CANADIAN PACIFIC"
+	},
+	{
+		"RSTCNDID": "224",
+		"WORDFRAS": "CARLSON WAGONLIT"
+	},
+	{
+		"RSTCNDID": "167",
+		"WORDFRAS": "CASINO"
+	},
+	{
+		"RSTCNDID": "167",
+		"WORDFRAS": "CASINOS"
+	},
+	{
+		"RSTCNDID": "300",
+		"WORDFRAS": "CASUALTY"
+	},
+	{
+		"RSTCNDID": "74",
+		"WORDFRAS": "CATERCORNER"
+	},
+	{
+		"RSTCNDID": "74",
+		"WORDFRAS": "CATERPLAN SERVICES"
+	},
+	{
+		"RSTCNDID": "140",
+		"WORDFRAS": "CBC"
+	},
+	{
+		"RSTCNDID": "298",
+		"WORDFRAS": "CCC"
+	},
+	{
+		"RSTCNDID": "107",
+		"WORDFRAS": "CDA"
+	},
+	{
+		"RSTCNDID": "97",
+		"WORDFRAS": "CDN PACIFIC"
+	},
+	{
+		"RSTCNDID": "5",
+		"WORDFRAS": "CENTURY XXI"
+	},
+	{
+		"RSTCNDID": "5",
+		"WORDFRAS": "CENTURY 21"
+	},
+	{
+		"RSTCNDID": "205",
+		"WORDFRAS": "CERTIFIED"
+	},
+	{
+		"RSTCNDID": "255",
+		"WORDFRAS": "CERTIFIED CONFERENCE INTERPRETER"
+	},
+	{
+		"RSTCNDID": "107",
+		"WORDFRAS": "CERTIFIED DENTAL ASSISTANT"
+	},
+	{
+		"RSTCNDID": "250",
+		"WORDFRAS": "CERTIFIED FINANCIAL PLANNER"
+	},
+	{
+		"RSTCNDID": "25",
+		"WORDFRAS": "CERTIFIED GENERAL ACCOUNTANT"
+	},
+	{
+		"RSTCNDID": "170",
+		"WORDFRAS": "CERTIFIED MANAGEMENT ACCOUNTANT"
+	},
+	{
+		"RSTCNDID": "78",
+		"WORDFRAS": "CERTIFIED MANAGEMENT CONSULTANT"
+	},
+	{
+		"RSTCNDID": "221",
+		"WORDFRAS": "CERTIFIED PROPERTY INSPECTOR"
+	},
+	{
+		"RSTCNDID": "255",
+		"WORDFRAS": "CERTIFIED TERMINOLOGIST"
+	},
+	{
+		"RSTCNDID": "255",
+		"WORDFRAS": "CERTIFIED TRANSLATOR"
+	},
+	{
+		"RSTCNDID": "205",
+		"WORDFRAS": "CERTIFY"
+	},
+	{
+		"RSTCNDID": "250",
+		"WORDFRAS": "CFP"
+	},
+	{
+		"RSTCNDID": "25",
+		"WORDFRAS": "CGA"
+	},
+	{
+		"RSTCNDID": "26",
+		"WORDFRAS": "CHARTERED ACCOUNTANT"
+	},
+	{
+		"RSTCNDID": "26",
+		"WORDFRAS": "CHARTERED ACCOUNTANTS"
+	},
+	{
+		"RSTCNDID": "26",
+		"WORDFRAS": "CHARTERED PROFESSIONAL ACCOUNTANT"
+	},
+	{
+		"RSTCNDID": "26",
+		"WORDFRAS": "CHARTERED PROFESSIONAL ACCOUNTANTS"
+	},
+	{
+		"RSTCNDID": "233",
+		"WORDFRAS": "CHEMIST"
+	},
+	{
+		"RSTCNDID": "179",
+		"WORDFRAS": "CHEV"
+	},
+	{
+		"RSTCNDID": "43",
+		"WORDFRAS": "CHEVROLET"
+	},
+	{
+		"RSTCNDID": "280",
+		"WORDFRAS": "CHINESE MEDICINE"
+	},
+	{
+		"RSTCNDID": "199",
+		"WORDFRAS": "CHRYSLER"
+	},
+	{
+		"RSTCNDID": "135",
+		"WORDFRAS": "CITIZENS ADVOCACY"
+	},
+	{
+		"RSTCNDID": "170",
+		"WORDFRAS": "CMA"
+	},
+	{
+		"RSTCNDID": "78",
+		"WORDFRAS": "CMC"
+	},
+	{
+		"RSTCNDID": "96",
+		"WORDFRAS": "CN"
+	},
+	{
+		"RSTCNDID": "74",
+		"WORDFRAS": "CNIB"
+	},
+	{
+		"RSTCNDID": "140",
+		"WORDFRAS": "CNR"
+	},
+	{
+		"RSTCNDID": "130",
+		"WORDFRAS": "CO OP"
+	},
+	{
+		"RSTCNDID": "131",
+		"WORDFRAS": "CO OPERATIVE"
+	},
+	{
+		"RSTCNDID": "130",
+		"WORDFRAS": "CO OPERATIVES"
+	},
+	{
+		"RSTCNDID": "155",
+		"WORDFRAS": "COLDWELL BANKER"
+	},
+	{
+		"RSTCNDID": "28",
+		"WORDFRAS": "COLIN LIAM BEECHINOR"
+	},
+	{
+		"RSTCNDID": "28",
+		"WORDFRAS": "COLIN SMILE"
+	},
+	{
+		"RSTCNDID": "28",
+		"WORDFRAS": "COLINS SMILE"
+	},
+	{
+		"RSTCNDID": "134",
+		"WORDFRAS": "COMMISSION"
+	},
+	{
+		"RSTCNDID": "136",
+		"WORDFRAS": "COMMONWEALTH"
+	},
+	{
+		"RSTCNDID": "137",
+		"WORDFRAS": "COMMONWEALTH SOCIETY"
+	},
+	{
+		"RSTCNDID": "68",
+		"WORDFRAS": "COMMUNITY CHEST"
+	},
+	{
+		"RSTCNDID": "298",
+		"WORDFRAS": "COMMUNITY CONTRIBUTION COMPANY"
+	},
+	{
+		"RSTCNDID": "138",
+		"WORDFRAS": "CONDO"
+	},
+	{
+		"RSTCNDID": "138",
+		"WORDFRAS": "CONDOMINIUM"
+	},
+	{
+		"RSTCNDID": "138",
+		"WORDFRAS": "CONDOMINIUMS"
+	},
+	{
+		"RSTCNDID": "138",
+		"WORDFRAS": "CONDOS"
+	},
+	{
+		"RSTCNDID": "139",
+		"WORDFRAS": "CONSERVATIVE"
+	},
+	{
+		"RSTCNDID": "33",
+		"WORDFRAS": "CONSULTING ENGINEER"
+	},
+	{
+		"RSTCNDID": "278",
+		"WORDFRAS": "CONTACT LENS FITTER"
+	},
+	{
+		"RSTCNDID": "278",
+		"WORDFRAS": "CONTACT LENS FITTERS"
+	},
+	{
+		"RSTCNDID": "130",
+		"WORDFRAS": "COOP"
+	},
+	{
+		"RSTCNDID": "131",
+		"WORDFRAS": "COOPERATIVE"
+	},
+	{
+		"RSTCNDID": "130",
+		"WORDFRAS": "COOPERATIVES"
+	},
+	{
+		"RSTCNDID": "253",
+		"WORDFRAS": "COQUIHALLA HIGHWAY"
+	},
+	{
+		"RSTCNDID": "178",
+		"WORDFRAS": "COSTCO"
+	},
+	{
+		"RSTCNDID": "134",
+		"WORDFRAS": "COUNCIL"
+	},
+	{
+		"RSTCNDID": "192",
+		"WORDFRAS": "COUNTRY WIDE"
+	},
+	{
+		"RSTCNDID": "192",
+		"WORDFRAS": "COUNTRYWIDE"
+	},
+	{
+		"RSTCNDID": "152",
+		"WORDFRAS": "COUNTY COURT"
+	},
+	{
+		"RSTCNDID": "97",
+		"WORDFRAS": "CP"
+	},
+	{
+		"RSTCNDID": "26",
+		"WORDFRAS": "CPA"
+	},
+	{
+		"RSTCNDID": "26",
+		"WORDFRAS": "CPAS"
+	},
+	{
+		"RSTCNDID": "221",
+		"WORDFRAS": "CPI"
+	},
+	{
+		"RSTCNDID": "95",
+		"WORDFRAS": "CPIC"
+	},
+	{
+		"RSTCNDID": "140",
+		"WORDFRAS": "CPR"
+	},
+	{
+		"RSTCNDID": "79",
+		"WORDFRAS": "CPRPM"
+	},
+	{
+		"RSTCNDID": "129",
+		"WORDFRAS": "CREDIT UNION"
+	},
+	{
+		"RSTCNDID": "55",
+		"WORDFRAS": "CRIME"
+	},
+	{
+		"RSTCNDID": "55",
+		"WORDFRAS": "CRIME STOPPER"
+	},
+	{
+		"RSTCNDID": "55",
+		"WORDFRAS": "CRIME STOPPERS"
+	},
+	{
+		"RSTCNDID": "55",
+		"WORDFRAS": "CRIMESTOPPER"
+	},
+	{
+		"RSTCNDID": "55",
+		"WORDFRAS": "CROOKSTOPPER"
+	},
+	{
+		"RSTCNDID": "156",
+		"WORDFRAS": "CROWN"
+	},
+	{
+		"RSTCNDID": "185",
+		"WORDFRAS": "CRUELTY TO ANIMALS"
+	},
+	{
+		"RSTCNDID": "129",
+		"WORDFRAS": "CU"
+	},
+	{
+		"RSTCNDID": "117",
+		"WORDFRAS": "D V M"
+	},
+	{
+		"RSTCNDID": "301",
+		"WORDFRAS": "DASSURANCES"
+	},
+	{
+		"RSTCNDID": "107",
+		"WORDFRAS": "DDS"
+	},
+	{
+		"RSTCNDID": "301",
+		"WORDFRAS": "DE FIDUCIE"
+	},
+	{
+		"RSTCNDID": "107",
+		"WORDFRAS": "DENTAL"
+	},
+	{
+		"RSTCNDID": "107",
+		"WORDFRAS": "DENTAL CLINIC"
+	},
+	{
+		"RSTCNDID": "257",
+		"WORDFRAS": "DENTAL HYGIENE"
+	},
+	{
+		"RSTCNDID": "257",
+		"WORDFRAS": "DENTAL HYGIENIST"
+	},
+	{
+		"RSTCNDID": "251",
+		"WORDFRAS": "DENTAL LAB"
+	},
+	{
+		"RSTCNDID": "251",
+		"WORDFRAS": "DENTAL LABORATORY"
+	},
+	{
+		"RSTCNDID": "252",
+		"WORDFRAS": "DENTAL MECHANIC"
+	},
+	{
+		"RSTCNDID": "251",
+		"WORDFRAS": "DENTAL STUDIO"
+	},
+	{
+		"RSTCNDID": "251",
+		"WORDFRAS": "DENTAL TECH"
+	},
+	{
+		"RSTCNDID": "251",
+		"WORDFRAS": "DENTAL TECHNICIAN"
+	},
+	{
+		"RSTCNDID": "107",
+		"WORDFRAS": "DENTIST"
+	},
+	{
+		"RSTCNDID": "107",
+		"WORDFRAS": "DENTISTRY"
+	},
+	{
+		"RSTCNDID": "306",
+		"WORDFRAS": "DENTISTS"
+	},
+	{
+		"RSTCNDID": "252",
+		"WORDFRAS": "DENTURE"
+	},
+	{
+		"RSTCNDID": "252",
+		"WORDFRAS": "DENTURES"
+	},
+	{
+		"RSTCNDID": "252",
+		"WORDFRAS": "DENTURIST"
+	},
+	{
+		"RSTCNDID": "213",
+		"WORDFRAS": "DEPOSIT"
+	},
+	{
+		"RSTCNDID": "141",
+		"WORDFRAS": "DETECTIVE"
+	},
+	{
+		"RSTCNDID": "266",
+		"WORDFRAS": "DISPENSARY"
+	},
+	{
+		"RSTCNDID": "278",
+		"WORDFRAS": "DISPENSING OPTICIAN"
+	},
+	{
+		"RSTCNDID": "278",
+		"WORDFRAS": "DISPENSING OPTICIANS"
+	},
+	{
+		"RSTCNDID": "109",
+		"WORDFRAS": "DOCTOR"
+	},
+	{
+		"RSTCNDID": "281",
+		"WORDFRAS": "DOCTOR OF PODIATRIC MEDICINE"
+	},
+	{
+		"RSTCNDID": "280",
+		"WORDFRAS": "DOCTOR OF TRADITIONAL CHINESE MEDICINE"
+	},
+	{
+		"RSTCNDID": "172",
+		"WORDFRAS": "DOCTORS"
+	},
+	{
+		"RSTCNDID": "199",
+		"WORDFRAS": "DODGE"
+	},
+	{
+		"RSTCNDID": "314",
+		"WORDFRAS": "DOMINION LENDING CENTRE"
+	},
+	{
+		"RSTCNDID": "314",
+		"WORDFRAS": "DOMINION LENDING CENTRES"
+	},
+	{
+		"RSTCNDID": "109",
+		"WORDFRAS": "DR"
+	},
+	{
+		"RSTCNDID": "172",
+		"WORDFRAS": "DRS"
+	},
+	{
+		"RSTCNDID": "232",
+		"WORDFRAS": "DRUG"
+	},
+	{
+		"RSTCNDID": "233",
+		"WORDFRAS": "DRUGGIST"
+	},
+	{
+		"RSTCNDID": "111",
+		"WORDFRAS": "DRUGLESS HEALER"
+	},
+	{
+		"RSTCNDID": "111",
+		"WORDFRAS": "DRUGLESS PHYSICIAN"
+	},
+	{
+		"RSTCNDID": "232",
+		"WORDFRAS": "DRUGS"
+	},
+	{
+		"RSTCNDID": "117",
+		"WORDFRAS": "DVM"
+	},
+	{
+		"RSTCNDID": "22",
+		"WORDFRAS": "E BANK"
+	},
+	{
+		"RSTCNDID": "227",
+		"WORDFRAS": "E COMM OR EMERGENCY COMMUNICATIONS"
+	},
+	{
+		"RSTCNDID": "296",
+		"WORDFRAS": "EARTH SCIENCE"
+	},
+	{
+		"RSTCNDID": "22",
+		"WORDFRAS": "EBANK"
+	},
+	{
+		"RSTCNDID": "142",
+		"WORDFRAS": "ECM"
+	},
+	{
+		"RSTCNDID": "31",
+		"WORDFRAS": "ELKS"
+	},
+	{
+		"RSTCNDID": "283",
+		"WORDFRAS": "EMERGENCY MEDICAL ASSISTANT"
+	},
+	{
+		"RSTCNDID": "30",
+		"WORDFRAS": "EMILY CARR"
+	},
+	{
+		"RSTCNDID": "164",
+		"WORDFRAS": "ENG"
+	},
+	{
+		"RSTCNDID": "33",
+		"WORDFRAS": "ENGINEER"
+	},
+	{
+		"RSTCNDID": "33",
+		"WORDFRAS": "ENGINEERING"
+	},
+	{
+		"RSTCNDID": "164",
+		"WORDFRAS": "ENGINEERS"
+	},
+	{
+		"RSTCNDID": "296",
+		"WORDFRAS": "ENVIRONMENTAL GEOLOGY"
+	},
+	{
+		"RSTCNDID": "296",
+		"WORDFRAS": "ENVIRONMENTAL GEOSCIENCE"
+	},
+	{
+		"RSTCNDID": "32",
+		"WORDFRAS": "ESSO"
+	},
+	{
+		"RSTCNDID": "142",
+		"WORDFRAS": "EUROPEAN COMMON MARKET"
+	},
+	{
+		"RSTCNDID": "63",
+		"WORDFRAS": "EVCC"
+	},
+	{
+		"RSTCNDID": "296",
+		"WORDFRAS": "EXPLORATION GEOSCIENE"
+	},
+	{
+		"RSTCNDID": "36",
+		"WORDFRAS": "FARMERS INSTITUTE"
+	},
+	{
+		"RSTCNDID": "313",
+		"WORDFRAS": "FCA"
+	},
+	{
+		"RSTCNDID": "313",
+		"WORDFRAS": "FCPA"
+	},
+	{
+		"RSTCNDID": "199",
+		"WORDFRAS": "FIAT"
+	},
+	{
+		"RSTCNDID": "301",
+		"WORDFRAS": "FIDUCIARE"
+	},
+	{
+		"RSTCNDID": "302",
+		"WORDFRAS": "FIDUCIE"
+	},
+	{
+		"RSTCNDID": "108",
+		"WORDFRAS": "FIT"
+	},
+	{
+		"RSTCNDID": "34",
+		"WORDFRAS": "FOLLOW THE BIRDS TO VICTORIA"
+	},
+	{
+		"RSTCNDID": "108",
+		"WORDFRAS": "FORESTER"
+	},
+	{
+		"RSTCNDID": "108",
+		"WORDFRAS": "FORESTER IN TRAINING"
+	},
+	{
+		"RSTCNDID": "263",
+		"WORDFRAS": "FORESTERS"
+	},
+	{
+		"RSTCNDID": "108",
+		"WORDFRAS": "FP"
+	},
+	{
+		"RSTCNDID": "246",
+		"WORDFRAS": "GAMBLE"
+	},
+	{
+		"RSTCNDID": "246",
+		"WORDFRAS": "GAMBLING"
+	},
+	{
+		"RSTCNDID": "294",
+		"WORDFRAS": "GAME"
+	},
+	{
+		"RSTCNDID": "294",
+		"WORDFRAS": "GAMES"
+	},
+	{
+		"RSTCNDID": "246",
+		"WORDFRAS": "GAMING"
+	},
+	{
+		"RSTCNDID": "302",
+		"WORDFRAS": "GARANTIE"
+	},
+	{
+		"RSTCNDID": "109",
+		"WORDFRAS": "GENERAL PRACTITIONER"
+	},
+	{
+		"RSTCNDID": "43",
+		"WORDFRAS": "GEO"
+	},
+	{
+		"RSTCNDID": "296",
+		"WORDFRAS": "GEOCHEMICAL"
+	},
+	{
+		"RSTCNDID": "296",
+		"WORDFRAS": "GEOCHEMISTRY"
+	},
+	{
+		"RSTCNDID": "299",
+		"WORDFRAS": "GEOLOGICAL"
+	},
+	{
+		"RSTCNDID": "299",
+		"WORDFRAS": "GEOLOGIST"
+	},
+	{
+		"RSTCNDID": "295",
+		"WORDFRAS": "GEOLOGY"
+	},
+	{
+		"RSTCNDID": "295",
+		"WORDFRAS": "GEOMORPHOLOGY"
+	},
+	{
+		"RSTCNDID": "295",
+		"WORDFRAS": "GEOPHYSICAL"
+	},
+	{
+		"RSTCNDID": "295",
+		"WORDFRAS": "GEOPHYSICS"
+	},
+	{
+		"RSTCNDID": "295",
+		"WORDFRAS": "GEOSCIENCE"
+	},
+	{
+		"RSTCNDID": "299",
+		"WORDFRAS": "GEOSCIENTIST"
+	},
+	{
+		"RSTCNDID": "179",
+		"WORDFRAS": "GM"
+	},
+	{
+		"RSTCNDID": "179",
+		"WORDFRAS": "GMC"
+	},
+	{
+		"RSTCNDID": "122",
+		"WORDFRAS": "GP"
+	},
+	{
+		"RSTCNDID": "98",
+		"WORDFRAS": "GRAND TRUNK"
+	},
+	{
+		"RSTCNDID": "103",
+		"WORDFRAS": "GST"
+	},
+	{
+		"RSTCNDID": "205",
+		"WORDFRAS": "GUARANTEE"
+	},
+	{
+		"RSTCNDID": "205",
+		"WORDFRAS": "GUARANTEED"
+	},
+	{
+		"RSTCNDID": "173",
+		"WORDFRAS": "HARBOUR"
+	},
+	{
+		"RSTCNDID": "42",
+		"WORDFRAS": "HBC"
+	},
+	{
+		"RSTCNDID": "282",
+		"WORDFRAS": "HEARING AID"
+	},
+	{
+		"RSTCNDID": "282",
+		"WORDFRAS": "HEARING INSTRUMENT PRACTITIONER"
+	},
+	{
+		"RSTCNDID": "200",
+		"WORDFRAS": "HIGH TEC"
+	},
+	{
+		"RSTCNDID": "200",
+		"WORDFRAS": "HIGH TECH"
+	},
+	{
+		"RSTCNDID": "200",
+		"WORDFRAS": "HIGH TEK"
+	},
+	{
+		"RSTCNDID": "102",
+		"WORDFRAS": "HIGHTEC"
+	},
+	{
+		"RSTCNDID": "102",
+		"WORDFRAS": "HIGHTECH"
+	},
+	{
+		"RSTCNDID": "102",
+		"WORDFRAS": "HITEC"
+	},
+	{
+		"RSTCNDID": "102",
+		"WORDFRAS": "HITECH"
+	},
+	{
+		"RSTCNDID": "102",
+		"WORDFRAS": "HITEK"
+	},
+	{
+		"RSTCNDID": "40",
+		"WORDFRAS": "HOMALCO"
+	},
+	{
+		"RSTCNDID": "8",
+		"WORDFRAS": "HOMELIFE"
+	},
+	{
+		"RSTCNDID": "9",
+		"WORDFRAS": "HOMELIFE BENCHMARK"
+	},
+	{
+		"RSTCNDID": "189",
+		"WORDFRAS": "HONDA"
+	},
+	{
+		"RSTCNDID": "41",
+		"WORDFRAS": "HONEYWELL"
+	},
+	{
+		"RSTCNDID": "211",
+		"WORDFRAS": "HOSPITAL"
+	},
+	{
+		"RSTCNDID": "273",
+		"WORDFRAS": "HOSPITALIST"
+	},
+	{
+		"RSTCNDID": "273",
+		"WORDFRAS": "HOSPITALISTS"
+	},
+	{
+		"RSTCNDID": "211",
+		"WORDFRAS": "HOSPITALS"
+	},
+	{
+		"RSTCNDID": "42",
+		"WORDFRAS": "HUDSONS BAY COMPANY"
+	},
+	{
+		"RSTCNDID": "296",
+		"WORDFRAS": "HYDROGEOLOGICAL"
+	},
+	{
+		"RSTCNDID": "295",
+		"WORDFRAS": "HYDROGEOLOGY"
+	},
+	{
+		"RSTCNDID": "102",
+		"WORDFRAS": "HYTEC"
+	},
+	{
+		"RSTCNDID": "102",
+		"WORDFRAS": "HYTECH"
+	},
+	{
+		"RSTCNDID": "102",
+		"WORDFRAS": "HYTEK"
+	},
+	{
+		"RSTCNDID": "212",
+		"WORDFRAS": "HYUNDAI"
+	},
+	{
+		"RSTCNDID": "240",
+		"WORDFRAS": "I P A"
+	},
+	{
+		"RSTCNDID": "240",
+		"WORDFRAS": "I S P"
+	},
+	{
+		"RSTCNDID": "101",
+		"WORDFRAS": "ICPO"
+	},
+	{
+		"RSTCNDID": "214",
+		"WORDFRAS": "IMASCO"
+	},
+	{
+		"RSTCNDID": "32",
+		"WORDFRAS": "IMPERIAL OIL"
+	},
+	{
+		"RSTCNDID": "302",
+		"WORDFRAS": "INDEMNITE"
+	},
+	{
+		"RSTCNDID": "213",
+		"WORDFRAS": "INDEMNITY"
+	},
+	{
+		"RSTCNDID": "240",
+		"WORDFRAS": "INFORMATICIEN PROFESSIONNEL AGREE DU CANADA"
+	},
+	{
+		"RSTCNDID": "240",
+		"WORDFRAS": "INFORMATION SYSTEMS PROFESSIONAL OF CANADA"
+	},
+	{
+		"RSTCNDID": "164",
+		"WORDFRAS": "ING"
+	},
+	{
+		"RSTCNDID": "33",
+		"WORDFRAS": "INGENIERE"
+	},
+	{
+		"RSTCNDID": "33",
+		"WORDFRAS": "INGENIEUR"
+	},
+	{
+		"RSTCNDID": "33",
+		"WORDFRAS": "INGENIEUR CONSIEL"
+	},
+	{
+		"RSTCNDID": "161",
+		"WORDFRAS": "INK"
+	},
+	{
+		"RSTCNDID": "74",
+		"WORDFRAS": "INSTITUTE FOR THE BLIND"
+	},
+	{
+		"RSTCNDID": "213",
+		"WORDFRAS": "INSURANCE"
+	},
+	{
+		"RSTCNDID": "64",
+		"WORDFRAS": "INSURANCES"
+	},
+	{
+		"RSTCNDID": "300",
+		"WORDFRAS": "INSURER"
+	},
+	{
+		"RSTCNDID": "300",
+		"WORDFRAS": "INSURERS"
+	},
+	{
+		"RSTCNDID": "45",
+		"WORDFRAS": "INTERMEDIATE CARE"
+	},
+	{
+		"RSTCNDID": "101",
+		"WORDFRAS": "INTERPOL"
+	},
+	{
+		"RSTCNDID": "190",
+		"WORDFRAS": "INTRAWEST"
+	},
+	{
+		"RSTCNDID": "240",
+		"WORDFRAS": "IPA"
+	},
+	{
+		"RSTCNDID": "240",
+		"WORDFRAS": "ISP"
+	},
+	{
+		"RSTCNDID": "43",
+		"WORDFRAS": "ISUZU"
+	},
+	{
+		"RSTCNDID": "143",
+		"WORDFRAS": "JAYCEE"
+	},
+	{
+		"RSTCNDID": "199",
+		"WORDFRAS": "JEEP"
+	},
+	{
+		"RSTCNDID": "118",
+		"WORDFRAS": "KHOWUTZUN"
+	},
+	{
+		"RSTCNDID": "248",
+		"WORDFRAS": "KIA"
+	},
+	{
+		"RSTCNDID": "194",
+		"WORDFRAS": "KIN"
+	},
+	{
+		"RSTCNDID": "194",
+		"WORDFRAS": "KINETTE"
+	},
+	{
+		"RSTCNDID": "156",
+		"WORDFRAS": "KING"
+	},
+	{
+		"RSTCNDID": "156",
+		"WORDFRAS": "KINGS"
+	},
+	{
+		"RSTCNDID": "195",
+		"WORDFRAS": "KINSMEN"
+	},
+	{
+		"RSTCNDID": "163",
+		"WORDFRAS": "KIWANIS"
+	},
+	{
+		"RSTCNDID": "100",
+		"WORDFRAS": "KKK"
+	},
+	{
+		"RSTCNDID": "100",
+		"WORDFRAS": "KLU KLUX KLAN"
+	},
+	{
+		"RSTCNDID": "160",
+		"WORDFRAS": "KNIGHTS OF MALTA"
+	},
+	{
+		"RSTCNDID": "32",
+		"WORDFRAS": "L IMPERIALE"
+	},
+	{
+		"RSTCNDID": "149",
+		"WORDFRAS": "LABRADOR"
+	},
+	{
+		"RSTCNDID": "197",
+		"WORDFRAS": "LADA"
+	},
+	{
+		"RSTCNDID": "181",
+		"WORDFRAS": "LAND SURVEY"
+	},
+	{
+		"RSTCNDID": "181",
+		"WORDFRAS": "LAND SURVEYING"
+	},
+	{
+		"RSTCNDID": "181",
+		"WORDFRAS": "LAND SURVEYOR"
+	},
+	{
+		"RSTCNDID": "181",
+		"WORDFRAS": "LAND SURVEYORS"
+	},
+	{
+		"RSTCNDID": "181",
+		"WORDFRAS": "LAND SURVEYS"
+	},
+	{
+		"RSTCNDID": "106",
+		"WORDFRAS": "LANDSCAPE ARCHITECT"
+	},
+	{
+		"RSTCNDID": "106",
+		"WORDFRAS": "LANDSCAPE ARCHITECTS"
+	},
+	{
+		"RSTCNDID": "106",
+		"WORDFRAS": "LANDSCAPE ARCHITECTURE"
+	},
+	{
+		"RSTCNDID": "302",
+		"WORDFRAS": "LASSURANCE"
+	},
+	{
+		"RSTCNDID": "302",
+		"WORDFRAS": "LASSUREUR"
+	},
+	{
+		"RSTCNDID": "180",
+		"WORDFRAS": "LAW"
+	},
+	{
+		"RSTCNDID": "180",
+		"WORDFRAS": "LAW CORPORATION"
+	},
+	{
+		"RSTCNDID": "55",
+		"WORDFRAS": "LAW ENFORCEMENT"
+	},
+	{
+		"RSTCNDID": "180",
+		"WORDFRAS": "LAWYER"
+	},
+	{
+		"RSTCNDID": "180",
+		"WORDFRAS": "LAWYERS"
+	},
+	{
+		"RSTCNDID": "259",
+		"WORDFRAS": "LEGAL"
+	},
+	{
+		"RSTCNDID": "289",
+		"WORDFRAS": "LEGAL EASE"
+	},
+	{
+		"RSTCNDID": "259",
+		"WORDFRAS": "LEGAL SERVICE"
+	},
+	{
+		"RSTCNDID": "259",
+		"WORDFRAS": "LEGAL SERVICES"
+	},
+	{
+		"RSTCNDID": "289",
+		"WORDFRAS": "LEGALEASE"
+	},
+	{
+		"RSTCNDID": "259",
+		"WORDFRAS": "LEGALSERVICE"
+	},
+	{
+		"RSTCNDID": "259",
+		"WORDFRAS": "LEGALSERVICES"
+	},
+	{
+		"RSTCNDID": "51",
+		"WORDFRAS": "LEGION"
+	},
+	{
+		"RSTCNDID": "300",
+		"WORDFRAS": "LIABILITY"
+	},
+	{
+		"RSTCNDID": "139",
+		"WORDFRAS": "LIBERAL"
+	},
+	{
+		"RSTCNDID": "205",
+		"WORDFRAS": "LICENCED"
+	},
+	{
+		"RSTCNDID": "205",
+		"WORDFRAS": "LICENSED"
+	},
+	{
+		"RSTCNDID": "114",
+		"WORDFRAS": "LICENSED GRADUATE NURSE"
+	},
+	{
+		"RSTCNDID": "279",
+		"WORDFRAS": "LICENSED GRADUATE PSYCHIATRIC NURSE"
+	},
+	{
+		"RSTCNDID": "112",
+		"WORDFRAS": "LICENSED PRACTICAL NURSE"
+	},
+	{
+		"RSTCNDID": "213",
+		"WORDFRAS": "LIFE"
+	},
+	{
+		"RSTCNDID": "311",
+		"WORDFRAS": "LIMITED LIABILITY CORPORATION"
+	},
+	{
+		"RSTCNDID": "162",
+		"WORDFRAS": "LIONESS"
+	},
+	{
+		"RSTCNDID": "162",
+		"WORDFRAS": "LIONS"
+	},
+	{
+		"RSTCNDID": "162",
+		"WORDFRAS": "LIONS CLUB"
+	},
+	{
+		"RSTCNDID": "144",
+		"WORDFRAS": "LLB"
+	},
+	{
+		"RSTCNDID": "311",
+		"WORDFRAS": "LLC"
+	},
+	{
+		"RSTCNDID": "167",
+		"WORDFRAS": "LOTO"
+	},
+	{
+		"RSTCNDID": "167",
+		"WORDFRAS": "LOTTERIES"
+	},
+	{
+		"RSTCNDID": "167",
+		"WORDFRAS": "LOTTERY"
+	},
+	{
+		"RSTCNDID": "167",
+		"WORDFRAS": "LOTTO"
+	},
+	{
+		"RSTCNDID": "16",
+		"WORDFRAS": "LOU GEHRIGS DISEASE"
+	},
+	{
+		"RSTCNDID": "112",
+		"WORDFRAS": "LPN"
+	},
+	{
+		"RSTCNDID": "158",
+		"WORDFRAS": "LRT"
+	},
+	{
+		"RSTCNDID": "167",
+		"WORDFRAS": "LTC"
+	},
+	{
+		"RSTCNDID": "186",
+		"WORDFRAS": "M B"
+	},
+	{
+		"RSTCNDID": "237",
+		"WORDFRAS": "MACDONALD REALT"
+	},
+	{
+		"RSTCNDID": "53",
+		"WORDFRAS": "MACK TRUCK"
+	},
+	{
+		"RSTCNDID": "53",
+		"WORDFRAS": "MACK TRUCKS"
+	},
+	{
+		"RSTCNDID": "148",
+		"WORDFRAS": "MANITOBA"
+	},
+	{
+		"RSTCNDID": "115",
+		"WORDFRAS": "MASSAGE PRACTITIONER"
+	},
+	{
+		"RSTCNDID": "115",
+		"WORDFRAS": "MASSAGE THERAPIST"
+	},
+	{
+		"RSTCNDID": "115",
+		"WORDFRAS": "MASSAGE THERAPY"
+	},
+	{
+		"RSTCNDID": "171",
+		"WORDFRAS": "MAZDA"
+	},
+	{
+		"RSTCNDID": "186",
+		"WORDFRAS": "MB"
+	},
+	{
+		"RSTCNDID": "109",
+		"WORDFRAS": "MD"
+	},
+	{
+		"RSTCNDID": "230",
+		"WORDFRAS": "MEC"
+	},
+	{
+		"RSTCNDID": "232",
+		"WORDFRAS": "MEDICINE"
+	},
+	{
+		"RSTCNDID": "232",
+		"WORDFRAS": "MEDICINES"
+	},
+	{
+		"RSTCNDID": "260",
+		"WORDFRAS": "MEDS"
+	},
+	{
+		"RSTCNDID": "285",
+		"WORDFRAS": "MIDWIFE"
+	},
+	{
+		"RSTCNDID": "285",
+		"WORDFRAS": "MIDWIFERY"
+	},
+	{
+		"RSTCNDID": "285",
+		"WORDFRAS": "MIDWIFES"
+	},
+	{
+		"RSTCNDID": "285",
+		"WORDFRAS": "MIDWIVE"
+	},
+	{
+		"RSTCNDID": "285",
+		"WORDFRAS": "MIDWIVES"
+	},
+	{
+		"RSTCNDID": "230",
+		"WORDFRAS": "MONARCH"
+	},
+	{
+		"RSTCNDID": "54",
+		"WORDFRAS": "MULTIPLE LISTING SERVICE"
+	},
+	{
+		"RSTCNDID": "74",
+		"WORDFRAS": "NATIONAL INSTITUTE FOR THE BLIND"
+	},
+	{
+		"RSTCNDID": "7",
+		"WORDFRAS": "NATIONAL REAL ESTATE SERVICE"
+	},
+	{
+		"RSTCNDID": "7",
+		"WORDFRAS": "NATIONAL REALESTATE SERVICE"
+	},
+	{
+		"RSTCNDID": "100",
+		"WORDFRAS": "NATIONALIST PARTY OF CANADA"
+	},
+	{
+		"RSTCNDID": "111",
+		"WORDFRAS": "NATURAL MEDICINE"
+	},
+	{
+		"RSTCNDID": "111",
+		"WORDFRAS": "NATUROPATH"
+	},
+	{
+		"RSTCNDID": "111",
+		"WORDFRAS": "NATUROPATHIC"
+	},
+	{
+		"RSTCNDID": "111",
+		"WORDFRAS": "NATUROPATHIC MEDICINE"
+	},
+	{
+		"RSTCNDID": "111",
+		"WORDFRAS": "NATUROPATHIC PHYSICIAN"
+	},
+	{
+		"RSTCNDID": "305",
+		"WORDFRAS": "ND"
+	},
+	{
+		"RSTCNDID": "55",
+		"WORDFRAS": "NEIGHBORHOOD WATCH"
+	},
+	{
+		"RSTCNDID": "55",
+		"WORDFRAS": "NEIGHBOURHOOD WATCH"
+	},
+	{
+		"RSTCNDID": "148",
+		"WORDFRAS": "NEW BRUNSWICK"
+	},
+	{
+		"RSTCNDID": "139",
+		"WORDFRAS": "NEW DEMOCRATIC"
+	},
+	{
+		"RSTCNDID": "149",
+		"WORDFRAS": "NEWFOUNDLAND"
+	},
+	{
+		"RSTCNDID": "235",
+		"WORDFRAS": "NIPIKA"
+	},
+	{
+		"RSTCNDID": "196",
+		"WORDFRAS": "NISSAN"
+	},
+	{
+		"RSTCNDID": "149",
+		"WORDFRAS": "NORTHWEST TERRITORITIES"
+	},
+	{
+		"RSTCNDID": "56",
+		"WORDFRAS": "NOTARIAL"
+	},
+	{
+		"RSTCNDID": "56",
+		"WORDFRAS": "NOTARIES"
+	},
+	{
+		"RSTCNDID": "56",
+		"WORDFRAS": "NOTARIES PUBLIC"
+	},
+	{
+		"RSTCNDID": "56",
+		"WORDFRAS": "NOTARY"
+	},
+	{
+		"RSTCNDID": "56",
+		"WORDFRAS": "NOTARY PUBLIC"
+	},
+	{
+		"RSTCNDID": "148",
+		"WORDFRAS": "NOVA SCOTIA"
+	},
+	{
+		"RSTCNDID": "114",
+		"WORDFRAS": "NP"
+	},
+	{
+		"RSTCNDID": "7",
+		"WORDFRAS": "NRS"
+	},
+	{
+		"RSTCNDID": "149",
+		"WORDFRAS": "NUNAVUT"
+	},
+	{
+		"RSTCNDID": "114",
+		"WORDFRAS": "NURSE"
+	},
+	{
+		"RSTCNDID": "114",
+		"WORDFRAS": "NURSES"
+	},
+	{
+		"RSTCNDID": "149",
+		"WORDFRAS": "NWT"
+	},
+	{
+		"RSTCNDID": "277",
+		"WORDFRAS": "OCCUPATIONAL THERAPIST"
+	},
+	{
+		"RSTCNDID": "277",
+		"WORDFRAS": "OCCUPATIONAL THERAPISTS"
+	},
+	{
+		"RSTCNDID": "277",
+		"WORDFRAS": "OCCUPATIONAL THERAPY"
+	},
+	{
+		"RSTCNDID": "58",
+		"WORDFRAS": "OD FELLOW"
+	},
+	{
+		"RSTCNDID": "58",
+		"WORDFRAS": "OD FELOW"
+	},
+	{
+		"RSTCNDID": "58",
+		"WORDFRAS": "ODD FELLOW"
+	},
+	{
+		"RSTCNDID": "58",
+		"WORDFRAS": "ODD FELOW"
+	},
+	{
+		"RSTCNDID": "58",
+		"WORDFRAS": "ODFELOW"
+	},
+	{
+		"RSTCNDID": "43",
+		"WORDFRAS": "OLDSMOBILE"
+	},
+	{
+		"RSTCNDID": "294",
+		"WORDFRAS": "OLYMPIC"
+	},
+	{
+		"RSTCNDID": "294",
+		"WORDFRAS": "OLYMPICS"
+	},
+	{
+		"RSTCNDID": "148",
+		"WORDFRAS": "ONTARIO"
+	},
+	{
+		"RSTCNDID": "270",
+		"WORDFRAS": "OPPORTUNITIES"
+	},
+	{
+		"RSTCNDID": "270",
+		"WORDFRAS": "OPPORTUNITY"
+	},
+	{
+		"RSTCNDID": "278",
+		"WORDFRAS": "OPTICIAN"
+	},
+	{
+		"RSTCNDID": "278",
+		"WORDFRAS": "OPTICIANS"
+	},
+	{
+		"RSTCNDID": "215",
+		"WORDFRAS": "OPTIMIST"
+	},
+	{
+		"RSTCNDID": "57",
+		"WORDFRAS": "OPTOMETRIC"
+	},
+	{
+		"RSTCNDID": "57",
+		"WORDFRAS": "OPTOMETRIC CORPORATION"
+	},
+	{
+		"RSTCNDID": "57",
+		"WORDFRAS": "OPTOMETRIST"
+	},
+	{
+		"RSTCNDID": "57",
+		"WORDFRAS": "OPTOMETRISTS"
+	},
+	{
+		"RSTCNDID": "57",
+		"WORDFRAS": "OPTOMETRY"
+	},
+	{
+		"RSTCNDID": "107",
+		"WORDFRAS": "ORAL"
+	},
+	{
+		"RSTCNDID": "121",
+		"WORDFRAS": "ORANGE LODGE"
+	},
+	{
+		"RSTCNDID": "121",
+		"WORDFRAS": "ORANGE LODGES"
+	},
+	{
+		"RSTCNDID": "160",
+		"WORDFRAS": "ORDER OF MALTA"
+	},
+	{
+		"RSTCNDID": "33",
+		"WORDFRAS": "P ENG"
+	},
+	{
+		"RSTCNDID": "304",
+		"WORDFRAS": "PA"
+	},
+	{
+		"RSTCNDID": "93",
+		"WORDFRAS": "PACIFIC PLACE"
+	},
+	{
+		"RSTCNDID": "17",
+		"WORDFRAS": "PAG"
+	},
+	{
+		"RSTCNDID": "154",
+		"WORDFRAS": "PARTNERSHIP"
+	},
+	{
+		"RSTCNDID": "59",
+		"WORDFRAS": "PAUQUACHIN"
+	},
+	{
+		"RSTCNDID": "12",
+		"WORDFRAS": "PCI"
+	},
+	{
+		"RSTCNDID": "12",
+		"WORDFRAS": "PCI REALTY"
+	},
+	{
+		"RSTCNDID": "180",
+		"WORDFRAS": "PERSONAL LAW"
+	},
+	{
+		"RSTCNDID": "262",
+		"WORDFRAS": "PET CLINIC"
+	},
+	{
+		"RSTCNDID": "117",
+		"WORDFRAS": "PET HOSPITAL"
+	},
+	{
+		"RSTCNDID": "295",
+		"WORDFRAS": "PETROLEUM GEOSCIENCE"
+	},
+	{
+		"RSTCNDID": "32",
+		"WORDFRAS": "PETROLIERE IMPERIALE"
+	},
+	{
+		"RSTCNDID": "233",
+		"WORDFRAS": "PHARM"
+	},
+	{
+		"RSTCNDID": "233",
+		"WORDFRAS": "PHARMA"
+	},
+	{
+		"RSTCNDID": "233",
+		"WORDFRAS": "PHARMACEUTICAL"
+	},
+	{
+		"RSTCNDID": "232",
+		"WORDFRAS": "PHARMACIST"
+	},
+	{
+		"RSTCNDID": "232",
+		"WORDFRAS": "PHARMACISTS"
+	},
+	{
+		"RSTCNDID": "232",
+		"WORDFRAS": "PHARMACY"
+	},
+	{
+		"RSTCNDID": "223",
+		"WORDFRAS": "PHYSICAL THERAPIST"
+	},
+	{
+		"RSTCNDID": "223",
+		"WORDFRAS": "PHYSICAL THERAPISTS"
+	},
+	{
+		"RSTCNDID": "109",
+		"WORDFRAS": "PHYSICIAN"
+	},
+	{
+		"RSTCNDID": "109",
+		"WORDFRAS": "PHYSICIANS"
+	},
+	{
+		"RSTCNDID": "312",
+		"WORDFRAS": "PHYSIO"
+	},
+	{
+		"RSTCNDID": "223",
+		"WORDFRAS": "PHYSIOTHERAPIST"
+	},
+	{
+		"RSTCNDID": "223",
+		"WORDFRAS": "PHYSIOTHERAPISTS"
+	},
+	{
+		"RSTCNDID": "223",
+		"WORDFRAS": "PHYSIOTHERAPY"
+	},
+	{
+		"RSTCNDID": "94",
+		"WORDFRAS": "PIC A FLIC"
+	},
+	{
+		"RSTCNDID": "94",
+		"WORDFRAS": "PICK A FLIC"
+	},
+	{
+		"RSTCNDID": "94",
+		"WORDFRAS": "PICK A FLICK"
+	},
+	{
+		"RSTCNDID": "94",
+		"WORDFRAS": "PIK A FLIC"
+	},
+	{
+		"RSTCNDID": "63",
+		"WORDFRAS": "PLEASE NOTE FORMAT BRACKETS MUST BE AROUND VCC SBVCC"
+	},
+	{
+		"RSTCNDID": "181",
+		"WORDFRAS": "PLS"
+	},
+	{
+		"RSTCNDID": "281",
+		"WORDFRAS": "PODIATRIC"
+	},
+	{
+		"RSTCNDID": "281",
+		"WORDFRAS": "PODIATRIC DOCTOR"
+	},
+	{
+		"RSTCNDID": "281",
+		"WORDFRAS": "PODIATRIC DR"
+	},
+	{
+		"RSTCNDID": "281",
+		"WORDFRAS": "PODIATRIST"
+	},
+	{
+		"RSTCNDID": "281",
+		"WORDFRAS": "PODIATRISTS"
+	},
+	{
+		"RSTCNDID": "281",
+		"WORDFRAS": "PODIATRY"
+	},
+	{
+		"RSTCNDID": "141",
+		"WORDFRAS": "POLICE"
+	},
+	{
+		"RSTCNDID": "141",
+		"WORDFRAS": "POLICING"
+	},
+	{
+		"RSTCNDID": "43",
+		"WORDFRAS": "PONTIAC"
+	},
+	{
+		"RSTCNDID": "173",
+		"WORDFRAS": "PORT"
+	},
+	{
+		"RSTCNDID": "146",
+		"WORDFRAS": "PORT OF PRINCE RUPERT"
+	},
+	{
+		"RSTCNDID": "146",
+		"WORDFRAS": "PORT OF VANCOUVER"
+	},
+	{
+		"RSTCNDID": "99",
+		"WORDFRAS": "POST OFFICE"
+	},
+	{
+		"RSTCNDID": "99",
+		"WORDFRAS": "POSTAL"
+	},
+	{
+		"RSTCNDID": "267",
+		"WORDFRAS": "PRESCRIPTION"
+	},
+	{
+		"RSTCNDID": "267",
+		"WORDFRAS": "PRESCRIPTIONS"
+	},
+	{
+		"RSTCNDID": "156",
+		"WORDFRAS": "PRINCE"
+	},
+	{
+		"RSTCNDID": "148",
+		"WORDFRAS": "PRINCE EDWARD ISLAND"
+	},
+	{
+		"RSTCNDID": "156",
+		"WORDFRAS": "PRINCESS"
+	},
+	{
+		"RSTCNDID": "26",
+		"WORDFRAS": "PROFESSIONAL ACCOUNTANT"
+	},
+	{
+		"RSTCNDID": "304",
+		"WORDFRAS": "PROFESSIONAL ACCOUNTANTS"
+	},
+	{
+		"RSTCNDID": "17",
+		"WORDFRAS": "PROFESSIONAL AGRICULTURIST"
+	},
+	{
+		"RSTCNDID": "33",
+		"WORDFRAS": "PROFESSIONAL ENGINEER"
+	},
+	{
+		"RSTCNDID": "108",
+		"WORDFRAS": "PROFESSIONAL FORESTER"
+	},
+	{
+		"RSTCNDID": "119",
+		"WORDFRAS": "PROVINCIAL"
+	},
+	{
+		"RSTCNDID": "152",
+		"WORDFRAS": "PROVINCIAL COURT"
+	},
+	{
+		"RSTCNDID": "60",
+		"WORDFRAS": "PSYCHOLOGICAL"
+	},
+	{
+		"RSTCNDID": "60",
+		"WORDFRAS": "PSYCHOLOGICAL ASSOCIATE"
+	},
+	{
+		"RSTCNDID": "60",
+		"WORDFRAS": "PSYCHOLOGIST"
+	},
+	{
+		"RSTCNDID": "60",
+		"WORDFRAS": "PSYCHOLOGISTS"
+	},
+	{
+		"RSTCNDID": "60",
+		"WORDFRAS": "PSYCHOLOGY"
+	},
+	{
+		"RSTCNDID": "205",
+		"WORDFRAS": "QUALIFIED"
+	},
+	{
+		"RSTCNDID": "295",
+		"WORDFRAS": "QUATERNARY GEOLOGY"
+	},
+	{
+		"RSTCNDID": "148",
+		"WORDFRAS": "QUEBEC"
+	},
+	{
+		"RSTCNDID": "156",
+		"WORDFRAS": "QUEEN"
+	},
+	{
+		"RSTCNDID": "156",
+		"WORDFRAS": "QUEENS"
+	},
+	{
+		"RSTCNDID": "216",
+		"WORDFRAS": "QUENEESH"
+	},
+	{
+		"RSTCNDID": "233",
+		"WORDFRAS": "R PHARM"
+	},
+	{
+		"RSTCNDID": "126",
+		"WORDFRAS": "R C M P"
+	},
+	{
+		"RSTCNDID": "219",
+		"WORDFRAS": "R H I"
+	},
+	{
+		"RSTCNDID": "233",
+		"WORDFRAS": "R PH"
+	},
+	{
+		"RSTCNDID": "256",
+		"WORDFRAS": "RA"
+	},
+	{
+		"RSTCNDID": "246",
+		"WORDFRAS": "RACINO"
+	},
+	{
+		"RSTCNDID": "246",
+		"WORDFRAS": "RAFFLE"
+	},
+	{
+		"RSTCNDID": "199",
+		"WORDFRAS": "RAM"
+	},
+	{
+		"RSTCNDID": "126",
+		"WORDFRAS": "RCMP"
+	},
+	{
+		"RSTCNDID": "85",
+		"WORDFRAS": "RCPP"
+	},
+	{
+		"RSTCNDID": "86",
+		"WORDFRAS": "RCT"
+	},
+	{
+		"RSTCNDID": "247",
+		"WORDFRAS": "RD STAR"
+	},
+	{
+		"RSTCNDID": "257",
+		"WORDFRAS": "RDH"
+	},
+	{
+		"RSTCNDID": "83",
+		"WORDFRAS": "RDN"
+	},
+	{
+		"RSTCNDID": "90",
+		"WORDFRAS": "RE"
+	},
+	{
+		"RSTCNDID": "308",
+		"WORDFRAS": "REALTOR"
+	},
+	{
+		"RSTCNDID": "308",
+		"WORDFRAS": "REALTORS"
+	},
+	{
+		"RSTCNDID": "220",
+		"WORDFRAS": "REALTY EXECUTIVES"
+	},
+	{
+		"RSTCNDID": "13",
+		"WORDFRAS": "REALTY WORLD"
+	},
+	{
+		"RSTCNDID": "302",
+		"WORDFRAS": "REASSURANCE"
+	},
+	{
+		"RSTCNDID": "302",
+		"WORDFRAS": "REASSURANCES"
+	},
+	{
+		"RSTCNDID": "15",
+		"WORDFRAS": "REEMARK"
+	},
+	{
+		"RSTCNDID": "80",
+		"WORDFRAS": "REG OT BC"
+	},
+	{
+		"RSTCNDID": "151",
+		"WORDFRAS": "REGIONAL BOARD"
+	},
+	{
+		"RSTCNDID": "151",
+		"WORDFRAS": "REGIONAL DISTRICT"
+	},
+	{
+		"RSTCNDID": "256",
+		"WORDFRAS": "REGISTERED AROMATHERAPIST"
+	},
+	{
+		"RSTCNDID": "89",
+		"WORDFRAS": "REGISTERED AUDIOLOGIST"
+	},
+	{
+		"RSTCNDID": "86",
+		"WORDFRAS": "REGISTERED CARDIOLOGY TECHNICIAN"
+	},
+	{
+		"RSTCNDID": "86",
+		"WORDFRAS": "REGISTERED CARDIOLOGY TECHNOLOGIST"
+	},
+	{
+		"RSTCNDID": "85",
+		"WORDFRAS": "REGISTERED CERTIFIED PROFESSIONAL PURCHASER"
+	},
+	{
+		"RSTCNDID": "85",
+		"WORDFRAS": "REGISTERED CERTIFIED PROFESSIONAL PURCHASER RCPP"
+	},
+	{
+		"RSTCNDID": "79",
+		"WORDFRAS": "REGISTERED CERTIFIED PROFESSIONAL RESIDENTIAL PROPERTY MANAG"
+	},
+	{
+		"RSTCNDID": "89",
+		"WORDFRAS": "REGISTERED COMMUNICATION DISORDERS SPECIALIST"
+	},
+	{
+		"RSTCNDID": "251",
+		"WORDFRAS": "REGISTERED DENTAL TECHNICIAN"
+	},
+	{
+		"RSTCNDID": "83",
+		"WORDFRAS": "REGISTERED DIETITIAN"
+	},
+	{
+		"RSTCNDID": "83",
+		"WORDFRAS": "REGISTERED DIETITIAN NUTRITIONISTS"
+	},
+	{
+		"RSTCNDID": "90",
+		"WORDFRAS": "REGISTERED ELECTROLOGIST"
+	},
+	{
+		"RSTCNDID": "88",
+		"WORDFRAS": "REGISTERED ENVIRONMENTAL HEALTH OFFICER"
+	},
+	{
+		"RSTCNDID": "219",
+		"WORDFRAS": "REGISTERED HOME INSPECTOR"
+	},
+	{
+		"RSTCNDID": "104",
+		"WORDFRAS": "REGISTERED INDUSTRIAL ACCOUNTANT"
+	},
+	{
+		"RSTCNDID": "81",
+		"WORDFRAS": "REGISTERED INTERIOR DESIGNER"
+	},
+	{
+		"RSTCNDID": "115",
+		"WORDFRAS": "REGISTERED MASSAGE PRACTICE"
+	},
+	{
+		"RSTCNDID": "115",
+		"WORDFRAS": "REGISTERED MASSAGE PRACTITIONER"
+	},
+	{
+		"RSTCNDID": "115",
+		"WORDFRAS": "REGISTERED MASSAGE THERAPIST"
+	},
+	{
+		"RSTCNDID": "115",
+		"WORDFRAS": "REGISTERED MASSAGE THERAPY"
+	},
+	{
+		"RSTCNDID": "77",
+		"WORDFRAS": "REGISTERED MEDICAL OFFICE ASSISTANT"
+	},
+	{
+		"RSTCNDID": "110",
+		"WORDFRAS": "REGISTERED MUSIC TEACHER"
+	},
+	{
+		"RSTCNDID": "114",
+		"WORDFRAS": "REGISTERED NURSE"
+	},
+	{
+		"RSTCNDID": "114",
+		"WORDFRAS": "REGISTERED NURSE PRACTITIONER"
+	},
+	{
+		"RSTCNDID": "83",
+		"WORDFRAS": "REGISTERED NUTRITIONIST"
+	},
+	{
+		"RSTCNDID": "80",
+		"WORDFRAS": "REGISTERED OCCUPATIONAL THERAPISTS BC"
+	},
+	{
+		"RSTCNDID": "223",
+		"WORDFRAS": "REGISTERED PHYSIOTHERAPIST"
+	},
+	{
+		"RSTCNDID": "84",
+		"WORDFRAS": "REGISTERED PLANNER"
+	},
+	{
+		"RSTCNDID": "87",
+		"WORDFRAS": "REGISTERED PROFESSIONAL BIOLOGIST"
+	},
+	{
+		"RSTCNDID": "239",
+		"WORDFRAS": "REGISTERED PROFESSIONAL CONSULTING ARCHAEOLOGIST"
+	},
+	{
+		"RSTCNDID": "279",
+		"WORDFRAS": "REGISTERED PSYCHIATRIC NURSE"
+	},
+	{
+		"RSTCNDID": "279",
+		"WORDFRAS": "REGISTERED PSYCHIATRIC NURSES"
+	},
+	{
+		"RSTCNDID": "60",
+		"WORDFRAS": "REGISTERED PSYCHOLOGICAL ASSOCIATE"
+	},
+	{
+		"RSTCNDID": "60",
+		"WORDFRAS": "REGISTERED PSYCHOLOGIST"
+	},
+	{
+		"RSTCNDID": "88",
+		"WORDFRAS": "REGISTERED PUBLIC HEALTH INSPECTOR"
+	},
+	{
+		"RSTCNDID": "223",
+		"WORDFRAS": "REGISTERED REMEDIAL GYMNAST"
+	},
+	{
+		"RSTCNDID": "76",
+		"WORDFRAS": "REGISTERED RESPIRATORY TECHNOLOGIST"
+	},
+	{
+		"RSTCNDID": "76",
+		"WORDFRAS": "REGISTERED RESPIRATORY TECHNOLOGIST RRT"
+	},
+	{
+		"RSTCNDID": "76",
+		"WORDFRAS": "REGISTERED RESPIRATORY THERAPISTS RRT"
+	},
+	{
+		"RSTCNDID": "76",
+		"WORDFRAS": "REGISTERED RESPIRATORY THERPISTS"
+	},
+	{
+		"RSTCNDID": "249",
+		"WORDFRAS": "REGISTERED SHIATSU THERAPIST"
+	},
+	{
+		"RSTCNDID": "116",
+		"WORDFRAS": "REGISTERED SOCIAL WORKER"
+	},
+	{
+		"RSTCNDID": "116",
+		"WORDFRAS": "REGISTERED SOCIAL WORKERS"
+	},
+	{
+		"RSTCNDID": "89",
+		"WORDFRAS": "REGISTERED SPEECH LANGUAGE PATHOLOGIST"
+	},
+	{
+		"RSTCNDID": "89",
+		"WORDFRAS": "REGISTERED SPEECH LANGUAGE THERAPIST"
+	},
+	{
+		"RSTCNDID": "89",
+		"WORDFRAS": "REGISTERED SPEECH PATHOLOGIST"
+	},
+	{
+		"RSTCNDID": "89",
+		"WORDFRAS": "REGISTERED SPEECH THERAPIST"
+	},
+	{
+		"RSTCNDID": "89",
+		"WORDFRAS": "REGISTERED VOICE THERAPIST"
+	},
+	{
+		"RSTCNDID": "88",
+		"WORDFRAS": "REHO"
+	},
+	{
+		"RSTCNDID": "213",
+		"WORDFRAS": "REINSURANCE"
+	},
+	{
+		"RSTCNDID": "300",
+		"WORDFRAS": "REINSURE"
+	},
+	{
+		"RSTCNDID": "300",
+		"WORDFRAS": "REINSURER"
+	},
+	{
+		"RSTCNDID": "6",
+		"WORDFRAS": "REMAX"
+	},
+	{
+		"RSTCNDID": "223",
+		"WORDFRAS": "REMEDIAL GYMNAST"
+	},
+	{
+		"RSTCNDID": "108",
+		"WORDFRAS": "RFT"
+	},
+	{
+		"RSTCNDID": "219",
+		"WORDFRAS": "RHI"
+	},
+	{
+		"RSTCNDID": "82",
+		"WORDFRAS": "RI BC"
+	},
+	{
+		"RSTCNDID": "104",
+		"WORDFRAS": "RIA"
+	},
+	{
+		"RSTCNDID": "287",
+		"WORDFRAS": "RICHMOND ASIA"
+	},
+	{
+		"RSTCNDID": "287",
+		"WORDFRAS": "RICHMOND ASIA PACIFIC"
+	},
+	{
+		"RSTCNDID": "81",
+		"WORDFRAS": "RID"
+	},
+	{
+		"RSTCNDID": "81",
+		"WORDFRAS": "RID CHARTER"
+	},
+	{
+		"RSTCNDID": "81",
+		"WORDFRAS": "RID FELLOW"
+	},
+	{
+		"RSTCNDID": "77",
+		"WORDFRAS": "RMOA"
+	},
+	{
+		"RSTCNDID": "110",
+		"WORDFRAS": "RMT"
+	},
+	{
+		"RSTCNDID": "114",
+		"WORDFRAS": "RN"
+	},
+	{
+		"RSTCNDID": "247",
+		"WORDFRAS": "ROAD STAR"
+	},
+	{
+		"RSTCNDID": "247",
+		"WORDFRAS": "ROADSTAR"
+	},
+	{
+		"RSTCNDID": "61",
+		"WORDFRAS": "ROBERTS BANK"
+	},
+	{
+		"RSTCNDID": "188",
+		"WORDFRAS": "ROTARACT"
+	},
+	{
+		"RSTCNDID": "188",
+		"WORDFRAS": "ROTARY"
+	},
+	{
+		"RSTCNDID": "156",
+		"WORDFRAS": "ROYAL"
+	},
+	{
+		"RSTCNDID": "309",
+		"WORDFRAS": "ROYAL BC"
+	},
+	{
+		"RSTCNDID": "309",
+		"WORDFRAS": "ROYAL CANADIAN"
+	},
+	{
+		"RSTCNDID": "74",
+		"WORDFRAS": "ROYAL CANADIAN INSTITUTE FOR THE BLIND"
+	},
+	{
+		"RSTCNDID": "51",
+		"WORDFRAS": "ROYAL CANADIAN LEGION"
+	},
+	{
+		"RSTCNDID": "126",
+		"WORDFRAS": "ROYAL CANADIAN MOUNTED POLICE"
+	},
+	{
+		"RSTCNDID": "11",
+		"WORDFRAS": "ROYAL LEPAGE"
+	},
+	{
+		"RSTCNDID": "87",
+		"WORDFRAS": "RP BIO"
+	},
+	{
+		"RSTCNDID": "239",
+		"WORDFRAS": "RPCA"
+	},
+	{
+		"RSTCNDID": "108",
+		"WORDFRAS": "RPF"
+	},
+	{
+		"RSTCNDID": "88",
+		"WORDFRAS": "RPHI"
+	},
+	{
+		"RSTCNDID": "279",
+		"WORDFRAS": "RPN"
+	},
+	{
+		"RSTCNDID": "76",
+		"WORDFRAS": "RRT"
+	},
+	{
+		"RSTCNDID": "249",
+		"WORDFRAS": "RST"
+	},
+	{
+		"RSTCNDID": "116",
+		"WORDFRAS": "RSW"
+	},
+	{
+		"RSTCNDID": "265",
+		"WORDFRAS": "RX"
+	},
+	{
+		"RSTCNDID": "111",
+		"WORDFRAS": "SANIPRACTIC"
+	},
+	{
+		"RSTCNDID": "148",
+		"WORDFRAS": "SASKATCHEWAN"
+	},
+	{
+		"RSTCNDID": "43",
+		"WORDFRAS": "SATURN"
+	},
+	{
+		"RSTCNDID": "264",
+		"WORDFRAS": "SAVING"
+	},
+	{
+		"RSTCNDID": "264",
+		"WORDFRAS": "SAVINGS"
+	},
+	{
+		"RSTCNDID": "128",
+		"WORDFRAS": "SAVINGS AND LOAN"
+	},
+	{
+		"RSTCNDID": "63",
+		"WORDFRAS": "SBVCC"
+	},
+	{
+		"RSTCNDID": "134",
+		"WORDFRAS": "SECRETARIAT"
+	},
+	{
+		"RSTCNDID": "141",
+		"WORDFRAS": "SERGEANT"
+	},
+	{
+		"RSTCNDID": "193",
+		"WORDFRAS": "SHINING LIGHT"
+	},
+	{
+		"RSTCNDID": "293",
+		"WORDFRAS": "SLAVE"
+	},
+	{
+		"RSTCNDID": "293",
+		"WORDFRAS": "SLAVE LABOUR"
+	},
+	{
+		"RSTCNDID": "167",
+		"WORDFRAS": "SLOT"
+	},
+	{
+		"RSTCNDID": "246",
+		"WORDFRAS": "SLOTS"
+	},
+	{
+		"RSTCNDID": "139",
+		"WORDFRAS": "SOCIAL CREDIT"
+	},
+	{
+		"RSTCNDID": "116",
+		"WORDFRAS": "SOCIAL WORKER"
+	},
+	{
+		"RSTCNDID": "180",
+		"WORDFRAS": "SOLICITOR"
+	},
+	{
+		"RSTCNDID": "180",
+		"WORDFRAS": "SOLICITORS"
+	},
+	{
+		"RSTCNDID": "302",
+		"WORDFRAS": "SOUSCRIPTION"
+	},
+	{
+		"RSTCNDID": "303",
+		"WORDFRAS": "SOUSCRIRE"
+	},
+	{
+		"RSTCNDID": "185",
+		"WORDFRAS": "SPCA"
+	},
+	{
+		"RSTCNDID": "282",
+		"WORDFRAS": "SPEECH"
+	},
+	{
+		"RSTCNDID": "282",
+		"WORDFRAS": "SPEECH LANGUAGE"
+	},
+	{
+		"RSTCNDID": "315",
+		"WORDFRAS": "SPEECHLANGUAGE"
+	},
+	{
+		"RSTCNDID": "138",
+		"WORDFRAS": "STRATA"
+	},
+	{
+		"RSTCNDID": "222",
+		"WORDFRAS": "SUBARU"
+	},
+	{
+		"RSTCNDID": "303",
+		"WORDFRAS": "SUCSRIPTEUR"
+	},
+	{
+		"RSTCNDID": "39",
+		"WORDFRAS": "SUMMER GAMES"
+	},
+	{
+		"RSTCNDID": "234",
+		"WORDFRAS": "SUPER NATURAL"
+	},
+	{
+		"RSTCNDID": "234",
+		"WORDFRAS": "SUPERHOST"
+	},
+	{
+		"RSTCNDID": "152",
+		"WORDFRAS": "SUPREME COURT"
+	},
+	{
+		"RSTCNDID": "303",
+		"WORDFRAS": "SURETE"
+	},
+	{
+		"RSTCNDID": "213",
+		"WORDFRAS": "SURETY"
+	},
+	{
+		"RSTCNDID": "109",
+		"WORDFRAS": "SURGEON"
+	},
+	{
+		"RSTCNDID": "109",
+		"WORDFRAS": "SURGEONS"
+	},
+	{
+		"RSTCNDID": "202",
+		"WORDFRAS": "SUSSEX GROUP"
+	},
+	{
+		"RSTCNDID": "10",
+		"WORDFRAS": "SUTTON GROUP"
+	},
+	{
+		"RSTCNDID": "217",
+		"WORDFRAS": "SUZUKI"
+	},
+	{
+		"RSTCNDID": "65",
+		"WORDFRAS": "TAHLTAN"
+	},
+	{
+		"RSTCNDID": "280",
+		"WORDFRAS": "TCM"
+	},
+	{
+		"RSTCNDID": "242",
+		"WORDFRAS": "TELUS"
+	},
+	{
+		"RSTCNDID": "1",
+		"WORDFRAS": "TEST"
+	},
+	{
+		"RSTCNDID": "108",
+		"WORDFRAS": "TFT"
+	},
+	{
+		"RSTCNDID": "75",
+		"WORDFRAS": "THE BLIND"
+	},
+	{
+		"RSTCNDID": "74",
+		"WORDFRAS": "THE BLIND INSTITUTE"
+	},
+	{
+		"RSTCNDID": "191",
+		"WORDFRAS": "THE BODY SHOP"
+	},
+	{
+		"RSTCNDID": "254",
+		"WORDFRAS": "THE BRITISH COLUMBIA BAR ASSOCIATION"
+	},
+	{
+		"RSTCNDID": "204",
+		"WORDFRAS": "THE MORTGAGE CENTRE"
+	},
+	{
+		"RSTCNDID": "193",
+		"WORDFRAS": "THE SHINING LIGHT"
+	},
+	{
+		"RSTCNDID": "157",
+		"WORDFRAS": "THEATRE COMPANY"
+	},
+	{
+		"RSTCNDID": "115",
+		"WORDFRAS": "THERAPEUTIC MASSAGE"
+	},
+	{
+		"RSTCNDID": "175",
+		"WORDFRAS": "TOYOTA"
+	},
+	{
+		"RSTCNDID": "280",
+		"WORDFRAS": "TRADITIONAL CHINESE MEDICINE HERBALIST"
+	},
+	{
+		"RSTCNDID": "280",
+		"WORDFRAS": "TRADITIONAL CHINESE MEDICINE PRACTITIONER"
+	},
+	{
+		"RSTCNDID": "153",
+		"WORDFRAS": "TREASURY"
+	},
+	{
+		"RSTCNDID": "134",
+		"WORDFRAS": "TREATY"
+	},
+	{
+		"RSTCNDID": "64",
+		"WORDFRAS": "TRUSCO"
+	},
+	{
+		"RSTCNDID": "64",
+		"WORDFRAS": "TRUST"
+	},
+	{
+		"RSTCNDID": "64",
+		"WORDFRAS": "TRUSTCO"
+	},
+	{
+		"RSTCNDID": "64",
+		"WORDFRAS": "TRUSTEE"
+	},
+	{
+		"RSTCNDID": "64",
+		"WORDFRAS": "TRUSTEES"
+	},
+	{
+		"RSTCNDID": "64",
+		"WORDFRAS": "TRUSTS"
+	},
+	{
+		"RSTCNDID": "64",
+		"WORDFRAS": "TRUSTY"
+	},
+	{
+		"RSTCNDID": "272",
+		"WORDFRAS": "TSAWWASSEN HOMEOWNERS"
+	},
+	{
+		"RSTCNDID": "271",
+		"WORDFRAS": "TSAWWASSEN HOMEOWNERS ASSOCIATION"
+	},
+	{
+		"RSTCNDID": "72",
+		"WORDFRAS": "U OF"
+	},
+	{
+		"RSTCNDID": "288",
+		"WORDFRAS": "ULC"
+	},
+	{
+		"RSTCNDID": "206",
+		"WORDFRAS": "UNBC"
+	},
+	{
+		"RSTCNDID": "301",
+		"WORDFRAS": "UNDERWRITER"
+	},
+	{
+		"RSTCNDID": "297",
+		"WORDFRAS": "UNDERWRITERS"
+	},
+	{
+		"RSTCNDID": "213",
+		"WORDFRAS": "UNDERWRITING"
+	},
+	{
+		"RSTCNDID": "14",
+		"WORDFRAS": "UNIGLOBE"
+	},
+	{
+		"RSTCNDID": "14",
+		"WORDFRAS": "UNIGLOBE TRAVEL"
+	},
+	{
+		"RSTCNDID": "68",
+		"WORDFRAS": "UNITED WAY"
+	},
+	{
+		"RSTCNDID": "72",
+		"WORDFRAS": "UNIV"
+	},
+	{
+		"RSTCNDID": "72",
+		"WORDFRAS": "UNIVERSITIES"
+	},
+	{
+		"RSTCNDID": "72",
+		"WORDFRAS": "UNIVERSITY"
+	},
+	{
+		"RSTCNDID": "72",
+		"WORDFRAS": "UNIVERSITY COLLEGE"
+	},
+	{
+		"RSTCNDID": "206",
+		"WORDFRAS": "UNIVERSITY OF NORTHERN BRITISH COLUMBIA"
+	},
+	{
+		"RSTCNDID": "236",
+		"WORDFRAS": "UNIVERSITY OF VICTORIA"
+	},
+	{
+		"RSTCNDID": "154",
+		"WORDFRAS": "UNLIMITED"
+	},
+	{
+		"RSTCNDID": "288",
+		"WORDFRAS": "UNLIMITED LIABILITY COMPANY"
+	},
+	{
+		"RSTCNDID": "154",
+		"WORDFRAS": "UNLTD"
+	},
+	{
+		"RSTCNDID": "236",
+		"WORDFRAS": "UVIC"
+	},
+	{
+		"RSTCNDID": "91",
+		"WORDFRAS": "VANCITY"
+	},
+	{
+		"RSTCNDID": "146",
+		"WORDFRAS": "VANCOUVER PORT"
+	},
+	{
+		"RSTCNDID": "209",
+		"WORDFRAS": "VARIETY"
+	},
+	{
+		"RSTCNDID": "209",
+		"WORDFRAS": "VARIETY CLUB"
+	},
+	{
+		"RSTCNDID": "63",
+		"WORDFRAS": "VCC"
+	},
+	{
+		"RSTCNDID": "262",
+		"WORDFRAS": "VET"
+	},
+	{
+		"RSTCNDID": "117",
+		"WORDFRAS": "VETERINARIAN"
+	},
+	{
+		"RSTCNDID": "117",
+		"WORDFRAS": "VETERINARIANS"
+	},
+	{
+		"RSTCNDID": "117",
+		"WORDFRAS": "VETERINARY"
+	},
+	{
+		"RSTCNDID": "296",
+		"WORDFRAS": "VOLCANOLOGY"
+	},
+	{
+		"RSTCNDID": "67",
+		"WORDFRAS": "VOLKS"
+	},
+	{
+		"RSTCNDID": "67",
+		"WORDFRAS": "VOLKSWAGEN"
+	},
+	{
+		"RSTCNDID": "92",
+		"WORDFRAS": "VSE"
+	},
+	{
+		"RSTCNDID": "301",
+		"WORDFRAS": "WARRANTIES"
+	},
+	{
+		"RSTCNDID": "301",
+		"WORDFRAS": "WARRANTY"
+	},
+	{
+		"RSTCNDID": "69",
+		"WORDFRAS": "WESTAR"
+	},
+	{
+		"RSTCNDID": "70",
+		"WORDFRAS": "WESTERN COMMAND"
+	},
+	{
+		"RSTCNDID": "75",
+		"WORDFRAS": "WHITE CANE"
+	},
+	{
+		"RSTCNDID": "39",
+		"WORDFRAS": "WINTER GAMES"
+	},
+	{
+		"RSTCNDID": "201",
+		"WORDFRAS": "WISE"
+	},
+	{
+		"RSTCNDID": "201",
+		"WORDFRAS": "WISE MART"
+	},
+	{
+		"RSTCNDID": "201",
+		"WORDFRAS": "WISE STORE"
+	},
+	{
+		"RSTCNDID": "201",
+		"WORDFRAS": "WISE STORES"
+	},
+	{
+		"RSTCNDID": "71",
+		"WORDFRAS": "YMCA"
+	},
+	{
+		"RSTCNDID": "71",
+		"WORDFRAS": "YMCAYWCA"
+	},
+	{
+		"RSTCNDID": "71",
+		"WORDFRAS": "YMYWCA"
+	},
+	{
+		"RSTCNDID": "71",
+		"WORDFRAS": "YWCA"
+	},
+	{
+		"RSTCNDID": "286",
+		"WORDFRAS": "211"
+	},
+	{
+		"RSTCNDID": "286",
+		"WORDFRAS": "211 BC"
+	},
+	{
+		"RSTCNDID": "286",
+		"WORDFRAS": "211 SERVICES"
+	},
+	{
+		"RSTCNDID": "286",
+		"WORDFRAS": "211 SOCIETY"
+	},
+	{
+		"RSTCNDID": "37",
+		"WORDFRAS": "4 H"
+	},
+	{
+		"RSTCNDID": "38",
+		"WORDFRAS": "4H"
+	},
+	{
+		"RSTCNDID": "0",
+		"WORDFRAS": ""
+	},
+	{
+		"RSTCNDID": ""
+	}
+]

@@ -1,0 +1,75 @@
+﻿[
+	{
+		"CAN_JUR_TYP_CD": "AB",
+		"SHORT_DESC": "AB",
+		"FULL_DESC": "ALBERTA"
+	},
+	{
+		"CAN_JUR_TYP_CD": "MB",
+		"SHORT_DESC": "MB",
+		"FULL_DESC": "MANITOBA"
+	},
+	{
+		"CAN_JUR_TYP_CD": "NB",
+		"SHORT_DESC": "NB",
+		"FULL_DESC": "NEW BRUNSWICK"
+	},
+	{
+		"CAN_JUR_TYP_CD": "NF",
+		"SHORT_DESC": "NF",
+		"FULL_DESC": "NEWFOUNDLAND AND LABRADOR"
+	},
+	{
+		"CAN_JUR_TYP_CD": "NT",
+		"SHORT_DESC": "NT",
+		"FULL_DESC": "NORTHWEST TERRITORIES"
+	},
+	{
+		"CAN_JUR_TYP_CD": "NS",
+		"SHORT_DESC": "NS",
+		"FULL_DESC": "NOVA SCOTIA"
+	},
+	{
+		"CAN_JUR_TYP_CD": "NU",
+		"SHORT_DESC": "NU",
+		"FULL_DESC": "NUNAVUT"
+	},
+	{
+		"CAN_JUR_TYP_CD": "ON",
+		"SHORT_DESC": "ON",
+		"FULL_DESC": "ONTARIO"
+	},
+	{
+		"CAN_JUR_TYP_CD": "PE",
+		"SHORT_DESC": "PE",
+		"FULL_DESC": "PRINCE EDWARD ISLAND"
+	},
+	{
+		"CAN_JUR_TYP_CD": "QC",
+		"SHORT_DESC": "QC",
+		"FULL_DESC": "QUEBEC"
+	},
+	{
+		"CAN_JUR_TYP_CD": "SK",
+		"SHORT_DESC": "SK",
+		"FULL_DESC": "SASKATCHEWAN"
+	},
+	{
+		"CAN_JUR_TYP_CD": "YT",
+		"SHORT_DESC": "YT",
+		"FULL_DESC": "YUKON"
+	},
+	{
+		"CAN_JUR_TYP_CD": "OT",
+		"SHORT_DESC": "OTHER",
+		"FULL_DESC": "OTHER"
+	},
+	{
+		"CAN_JUR_TYP_CD": "FD",
+		"SHORT_DESC": "FEDERAL",
+		"FULL_DESC": "FEDERAL"
+	},
+	{
+		"CAN_JUR_TYP_CD": ""
+	}
+]
