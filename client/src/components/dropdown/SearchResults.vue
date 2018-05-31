@@ -37,7 +37,6 @@
 <script>
 /* eslint-disable */
   import requestinfoheaderview from '@/components/dropdown/Search/RequestInfoHeader.vue';
-  import requestinfoview from '@/components/dropdown/Search/RequestInfo.vue';
   import compnameview from '@/components/dropdown/Search/CompName.vue';
   import compmatches from '@/components/dropdown/Search/NameMatches.vue';
   import matchissues from '@/components/dropdown/Search/IssueInfo.vue';
@@ -55,7 +54,6 @@
     },
     components: {
       requestinfoheaderview,
-      requestinfoview,
       compnameview,
       compmatches,
       matchissues,
