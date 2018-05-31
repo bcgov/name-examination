@@ -2,10 +2,9 @@
 <template>
   <div>
     <div class="name-sect">
-      Names:<br />
       <div class="row">
         <div class="col name1-font">
-          <p v-if="!is_editing">{{ compName1 }}</p>
+          <p v-shortkey.once="['f1']" @shortkey="runAlert()" v-if="!is_editing">{{ compName1 }}</p>
           <input v-else v-model="compName1" class="form-control" />
         </div>
       </div>
@@ -52,6 +51,9 @@
       setFocus(id) {
         const ell = document.getElementById(id);
         ell.focus();
+      },
+      runAlert(){
+        alert("Here")
       }
     }
   }
