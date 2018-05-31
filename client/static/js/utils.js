@@ -24,3 +24,13 @@ function readJFile(configUrl, cBack) {
 }
 
 
+function findArrValue(needle) {
+  // assumes the haystack is an object with attribute "value" to match to
+  return function (haystack) {
+    return needle == haystack.value;
+  }
+}
+
+function getDescFromList(haystack, needle) {
+  return haystack.filter(findArrValue(needle))[0].text
+}

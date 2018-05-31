@@ -1,1275 +1,1272 @@
 ﻿[
 	{
-		"COUNTRY_TYP_CD": "TM",
+		"value": "TM",
 		"SHORT_DESC": "TURKMENISTAN",
-		"FULL_DESC": "TURKMENISTAN"
+		"text": "TURKMENISTAN"
 	},
 	{
-		"COUNTRY_TYP_CD": "TC",
+		"value": "TC",
 		"SHORT_DESC": "TURKS AND CAICO",
-		"FULL_DESC": "TURKS AND CAICOS ISLANDS"
+		"text": "TURKS AND CAICOS ISLANDS"
 	},
 	{
-		"COUNTRY_TYP_CD": "TV",
+		"value": "TV",
 		"SHORT_DESC": "TUVALU",
-		"FULL_DESC": "TUVALU"
+		"text": "TUVALU"
 	},
 	{
-		"COUNTRY_TYP_CD": "UG",
+		"value": "UG",
 		"SHORT_DESC": "UGANDA",
-		"FULL_DESC": "UGANDA"
+		"text": "UGANDA"
 	},
 	{
-		"COUNTRY_TYP_CD": "UA",
+		"value": "UA",
 		"SHORT_DESC": "UKRAINE",
-		"FULL_DESC": "UKRAINE"
+		"text": "UKRAINE"
 	},
 	{
-		"COUNTRY_TYP_CD": "AE",
+		"value": "AE",
 		"SHORT_DESC": "UNITED ARAB EMI",
-		"FULL_DESC": "UNITED ARAB EMIRATES"
+		"text": "UNITED ARAB EMIRATES"
 	},
 	{
-		"COUNTRY_TYP_CD": "GB",
+		"value": "GB",
 		"SHORT_DESC": "UNITED KINGDOM",
-		"FULL_DESC": "UNITED KINGDOM"
+		"text": "UNITED KINGDOM"
 	},
 	{
-		"COUNTRY_TYP_CD": "UM",
+		"value": "UM",
 		"SHORT_DESC": "UNITED STATES M",
-		"FULL_DESC": "UNITED STATES MINOR OUTLYING ISLANDS"
+		"text": "UNITED STATES MINOR OUTLYING ISLANDS"
 	},
 	{
-		"COUNTRY_TYP_CD": "US",
+		"value": "US",
 		"SHORT_DESC": "UNITED STATES",
-		"FULL_DESC": "UNITED STATES"
+		"text": "UNITED STATES"
 	},
 	{
-		"COUNTRY_TYP_CD": "UY",
+		"value": "UY",
 		"SHORT_DESC": "URUGUAY",
-		"FULL_DESC": "URUGUAY"
+		"text": "URUGUAY"
 	},
 	{
-		"COUNTRY_TYP_CD": "ME",
+		"value": "ME",
 		"SHORT_DESC": "MONTENEGRO",
-		"FULL_DESC": "MONTENEGRO"
+		"text": "MONTENEGRO"
 	},
 	{
-		"COUNTRY_TYP_CD": "RS",
+		"value": "RS",
 		"SHORT_DESC": "SERBIA",
-		"FULL_DESC": "SERBIA"
+		"text": "SERBIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "IM",
+		"value": "IM",
 		"SHORT_DESC": "ISLE OF MAN",
-		"FULL_DESC": "ISLE OF MAN"
+		"text": "ISLE OF MAN"
 	},
 	{
-		"COUNTRY_TYP_CD": "GG",
+		"value": "GG",
 		"SHORT_DESC": "GUERNSEY",
-		"FULL_DESC": "GUERNSEY"
+		"text": "GUERNSEY"
 	},
 	{
-		"COUNTRY_TYP_CD": "JE",
+		"value": "JE",
 		"SHORT_DESC": "JERSEY",
-		"FULL_DESC": "JERSEY"
+		"text": "JERSEY"
 	},
 	{
-		"COUNTRY_TYP_CD": "BQ",
+		"value": "BQ",
 		"SHORT_DESC": "BONAIRE",
-		"FULL_DESC": "BONAIRE"
+		"text": "BONAIRE"
 	},
 	{
-		"COUNTRY_TYP_CD": "CW",
+		"value": "CW",
 		"SHORT_DESC": "CURACAO",
-		"FULL_DESC": "CURACAO"
+		"text": "CURACAO"
 	},
 	{
-		"COUNTRY_TYP_CD": "SX",
+		"value": "SX",
 		"SHORT_DESC": "ST MAAR DP",
-		"FULL_DESC": "SINT MAARTEN(DUTCH PART)"
+		"text": "SINT MAARTEN(DUTCH PART)"
 	},
 	{
-		"COUNTRY_TYP_CD": "SS",
+		"value": "SS",
 		"SHORT_DESC": "STH SUDAN",
-		"FULL_DESC": "SOUTH SUDAN"
+		"text": "SOUTH SUDAN"
 	},
 	{
-		"COUNTRY_TYP_CD": "MF",
+		"value": "MF",
 		"SHORT_DESC": "ST MART FP",
-		"FULL_DESC": "SAINT MARTIN(FRENCH PART)"
+		"text": "SAINT MARTIN(FRENCH PART)"
 	},
 	{
-		"COUNTRY_TYP_CD": "AX",
+		"value": "AX",
 		"SHORT_DESC": "ALAND ISLANDS",
-		"FULL_DESC": "ALAND ISLANDS"
+		"text": "ALAND ISLANDS"
 	},
 	{
-		"COUNTRY_TYP_CD": "BL",
+		"value": "BL",
 		"SHORT_DESC": "SAINT BARTHELEM",
-		"FULL_DESC": "SAINT BARTHELEMY"
+		"text": "SAINT BARTHELEMY"
 	},
 	{
-		"COUNTRY_TYP_CD": "FX",
+		"value": "FX",
 		"SHORT_DESC": "FRANCE",
-		"FULL_DESC": " METROPO"
+		"text": " METROPO"
 	},
 	{
-		"COUNTRY_TYP_CD": "TA",
+		"value": "TA",
 		"SHORT_DESC": "TRISTAN DA CUNH",
-		"FULL_DESC": "TRISTAN DA CUNHA"
+		"text": "TRISTAN DA CUNHA"
 	},
 	{
-		"COUNTRY_TYP_CD": "XZ",
+		"value": "XZ",
 		"SHORT_DESC": "KOSOVO",
-		"FULL_DESC": "KOSOVO"
+		"text": "KOSOVO"
 	},
 	{
-		"COUNTRY_TYP_CD": "UZ",
+		"value": "UZ",
 		"SHORT_DESC": "UZBEKISTAN",
-		"FULL_DESC": "UZBEKISTAN"
+		"text": "UZBEKISTAN"
 	},
 	{
-		"COUNTRY_TYP_CD": "VU",
+		"value": "VU",
 		"SHORT_DESC": "VANUATU",
-		"FULL_DESC": "VANUATU"
+		"text": "VANUATU"
 	},
 	{
-		"COUNTRY_TYP_CD": "VE",
+		"value": "VE",
 		"SHORT_DESC": "VENEZUELA",
-		"FULL_DESC": "VENEZUELA"
+		"text": "VENEZUELA"
 	},
 	{
-		"COUNTRY_TYP_CD": "VN",
+		"value": "VN",
 		"SHORT_DESC": "VIET NAM",
-		"FULL_DESC": "VIET NAM"
+		"text": "VIET NAM"
 	},
 	{
-		"COUNTRY_TYP_CD": "VG",
-		"SHORT_DESC": "VIRGIN ISLANDS",
-		"FULL_DESC": ""
+		"value": "VG",
+		"text": "VIRGIN ISLANDS",
+		"LONG_DESC": ""
 	},
 	{
-		"COUNTRY_TYP_CD": "VI",
-		"SHORT_DESC": "VIRGIN ISLANDS",
-		"FULL_DESC": ""
+		"value": "VI",
+		"text": "VIRGIN ISLANDS",
+		"LONG_DESC": ""
 	},
 	{
-		"COUNTRY_TYP_CD": "WF",
+		"value": "WF",
 		"SHORT_DESC": "WALLIS AND FUTU",
-		"FULL_DESC": "WALLIS AND FUTUNA"
+		"text": "WALLIS AND FUTUNA"
 	},
 	{
-		"COUNTRY_TYP_CD": "EH",
+		"value": "EH",
 		"SHORT_DESC": "WESTERN SAHARA",
-		"FULL_DESC": "WESTERN SAHARA"
+		"text": "WESTERN SAHARA"
 	},
 	{
-		"COUNTRY_TYP_CD": "YE",
+		"value": "YE",
 		"SHORT_DESC": "YEMEN",
-		"FULL_DESC": "YEMEN"
+		"text": "YEMEN"
 	},
 	{
-		"COUNTRY_TYP_CD": "YU",
+		"value": "YU",
 		"SHORT_DESC": "YUGOSLAVIA",
-		"FULL_DESC": "YUGOSLAVIA"
+		"text": "YUGOSLAVIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "ZM",
+		"value": "ZM",
 		"SHORT_DESC": "ZAMBIA",
-		"FULL_DESC": "ZAMBIA"
+		"text": "ZAMBIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "ZW",
+		"value": "ZW",
 		"SHORT_DESC": "ZIMBABWE",
-		"FULL_DESC": "ZIMBABWE"
+		"text": "ZIMBABWE"
 	},
 	{
-		"COUNTRY_TYP_CD": "AF",
+		"value": "AF",
 		"SHORT_DESC": "AFGHANISTAN",
-		"FULL_DESC": "AFGHANISTAN"
+		"text": "AFGHANISTAN"
 	},
 	{
-		"COUNTRY_TYP_CD": "AL",
+		"value": "AL",
 		"SHORT_DESC": "ALBANIA",
-		"FULL_DESC": "ALBANIA"
+		"text": "ALBANIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "DZ",
+		"value": "DZ",
 		"SHORT_DESC": "ALGERIA",
-		"FULL_DESC": "ALGERIA"
+		"text": "ALGERIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "AS",
+		"value": "AS",
 		"SHORT_DESC": "AMERICAN SAMOA",
-		"FULL_DESC": "AMERICAN SAMOA"
+		"text": "AMERICAN SAMOA"
 	},
 	{
-		"COUNTRY_TYP_CD": "AD",
+		"value": "AD",
 		"SHORT_DESC": "ANDORRA",
-		"FULL_DESC": "ANDORRA"
+		"text": "ANDORRA"
 	},
 	{
-		"COUNTRY_TYP_CD": "AO",
+		"value": "AO",
 		"SHORT_DESC": "ANGOLA",
-		"FULL_DESC": "ANGOLA"
+		"text": "ANGOLA"
 	},
 	{
-		"COUNTRY_TYP_CD": "AI",
+		"value": "AI",
 		"SHORT_DESC": "ANGUILLA",
-		"FULL_DESC": "ANGUILLA"
+		"text": "ANGUILLA"
 	},
 	{
-		"COUNTRY_TYP_CD": "AQ",
+		"value": "AQ",
 		"SHORT_DESC": "ANTARCTICA",
-		"FULL_DESC": "ANTARCTICA"
+		"text": "ANTARCTICA"
 	},
 	{
-		"COUNTRY_TYP_CD": "AG",
+		"value": "AG",
 		"SHORT_DESC": "ANTIGUA AND BAR",
-		"FULL_DESC": "ANTIGUA AND BARBUDA"
+		"text": "ANTIGUA AND BARBUDA"
 	},
 	{
-		"COUNTRY_TYP_CD": "AR",
+		"value": "AR",
 		"SHORT_DESC": "ARGENTINA",
-		"FULL_DESC": "ARGENTINA"
+		"text": "ARGENTINA"
 	},
 	{
-		"COUNTRY_TYP_CD": "AM",
+		"value": "AM",
 		"SHORT_DESC": "ARMENIA",
-		"FULL_DESC": "ARMENIA"
+		"text": "ARMENIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "AW",
+		"value": "AW",
 		"SHORT_DESC": "ARUBA",
-		"FULL_DESC": "ARUBA"
+		"text": "ARUBA"
 	},
 	{
-		"COUNTRY_TYP_CD": "AU",
+		"value": "AU",
 		"SHORT_DESC": "AUSTRALIA",
-		"FULL_DESC": "AUSTRALIA"
+		"text": "AUSTRALIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "AT",
+		"value": "AT",
 		"SHORT_DESC": "AUSTRIA",
-		"FULL_DESC": "AUSTRIA"
+		"text": "AUSTRIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "AZ",
+		"value": "AZ",
 		"SHORT_DESC": "AZERBAIJAN",
-		"FULL_DESC": "AZERBAIJAN"
+		"text": "AZERBAIJAN"
 	},
 	{
-		"COUNTRY_TYP_CD": "BS",
+		"value": "BS",
 		"SHORT_DESC": "BAHAMAS",
-		"FULL_DESC": "BAHAMAS"
+		"text": "BAHAMAS"
 	},
 	{
-		"COUNTRY_TYP_CD": "BH",
+		"value": "BH",
 		"SHORT_DESC": "BAHRAIN",
-		"FULL_DESC": "BAHRAIN"
+		"text": "BAHRAIN"
 	},
 	{
-		"COUNTRY_TYP_CD": "BD",
+		"value": "BD",
 		"SHORT_DESC": "BANGLADESH",
-		"FULL_DESC": "BANGLADESH"
+		"text": "BANGLADESH"
 	},
 	{
-		"COUNTRY_TYP_CD": "BB",
+		"value": "BB",
 		"SHORT_DESC": "BARBADOS",
-		"FULL_DESC": "BARBADOS"
+		"text": "BARBADOS"
 	},
 	{
-		"COUNTRY_TYP_CD": "BY",
+		"value": "BY",
 		"SHORT_DESC": "BELARUS",
-		"FULL_DESC": "BELARUS"
+		"text": "BELARUS"
 	},
 	{
-		"COUNTRY_TYP_CD": "BE",
+		"value": "BE",
 		"SHORT_DESC": "BELGIUM",
-		"FULL_DESC": "BELGIUM"
+		"text": "BELGIUM"
 	},
 	{
-		"COUNTRY_TYP_CD": "BZ",
+		"value": "BZ",
 		"SHORT_DESC": "BELIZE",
-		"FULL_DESC": "BELIZE"
+		"text": "BELIZE"
 	},
 	{
-		"COUNTRY_TYP_CD": "BJ",
+		"value": "BJ",
 		"SHORT_DESC": "BENIN",
-		"FULL_DESC": "BENIN"
+		"text": "BENIN"
 	},
 	{
-		"COUNTRY_TYP_CD": "BM",
+		"value": "BM",
 		"SHORT_DESC": "BERMUDA",
-		"FULL_DESC": "BERMUDA"
+		"text": "BERMUDA"
 	},
 	{
-		"COUNTRY_TYP_CD": "BT",
+		"value": "BT",
 		"SHORT_DESC": "BHUTAN",
-		"FULL_DESC": "BHUTAN"
+		"text": "BHUTAN"
 	},
 	{
-		"COUNTRY_TYP_CD": "BO",
+		"value": "BO",
 		"SHORT_DESC": "BOLIVIA",
-		"FULL_DESC": "BOLIVIA"
+		"text": "BOLIVIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "BA",
+		"value": "BA",
 		"SHORT_DESC": "BOSNIA AND HERZ",
-		"FULL_DESC": "BOSNIA AND HERZEGOVINA"
+		"text": "BOSNIA AND HERZEGOVINA"
 	},
 	{
-		"COUNTRY_TYP_CD": "BW",
+		"value": "BW",
 		"SHORT_DESC": "BOTSWANA",
-		"FULL_DESC": "BOTSWANA"
+		"text": "BOTSWANA"
 	},
 	{
-		"COUNTRY_TYP_CD": "BV",
+		"value": "BV",
 		"SHORT_DESC": "BOUVET ISLAND",
-		"FULL_DESC": "BOUVET ISLAND"
+		"text": "BOUVET ISLAND"
 	},
 	{
-		"COUNTRY_TYP_CD": "BR",
+		"value": "BR",
 		"SHORT_DESC": "BRAZIL",
-		"FULL_DESC": "BRAZIL"
+		"text": "BRAZIL"
 	},
 	{
-		"COUNTRY_TYP_CD": "IO",
+		"value": "IO",
 		"SHORT_DESC": "BRITISH INDIAN ",
-		"FULL_DESC": "BRITISH INDIAN OCEAN TERRITORY"
+		"text": "BRITISH INDIAN OCEAN TERRITORY"
 	},
 	{
-		"COUNTRY_TYP_CD": "BN",
+		"value": "BN",
 		"SHORT_DESC": "BRUNEI DARUSSAL",
-		"FULL_DESC": "BRUNEI DARUSSALAM"
+		"text": "BRUNEI DARUSSALAM"
 	},
 	{
-		"COUNTRY_TYP_CD": "BG",
+		"value": "BG",
 		"SHORT_DESC": "BULGARIA",
-		"FULL_DESC": "BULGARIA"
+		"text": "BULGARIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "BF",
+		"value": "BF",
 		"SHORT_DESC": "BURKINA FASO",
-		"FULL_DESC": "BURKINA FASO"
+		"text": "BURKINA FASO"
 	},
 	{
-		"COUNTRY_TYP_CD": "BI",
+		"value": "BI",
 		"SHORT_DESC": "BURUNDI",
-		"FULL_DESC": "BURUNDI"
+		"text": "BURUNDI"
 	},
 	{
-		"COUNTRY_TYP_CD": "KH",
+		"value": "KH",
 		"SHORT_DESC": "CAMBODIA",
-		"FULL_DESC": "CAMBODIA"
+		"text": "CAMBODIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "CM",
+		"value": "CM",
 		"SHORT_DESC": "CAMEROON",
-		"FULL_DESC": "CAMEROON"
+		"text": "CAMEROON"
 	},
 	{
-		"COUNTRY_TYP_CD": "CA",
+		"value": "CA",
 		"SHORT_DESC": "CANADA",
-		"FULL_DESC": "CANADA"
+		"text": "CANADA"
 	},
 	{
-		"COUNTRY_TYP_CD": "CV",
+		"value": "CV",
 		"SHORT_DESC": "CAPE VERDE",
-		"FULL_DESC": "CAPE VERDE"
+		"text": "CAPE VERDE"
 	},
 	{
-		"COUNTRY_TYP_CD": "KY",
+		"value": "KY",
 		"SHORT_DESC": "CAYMAN ISLANDS",
-		"FULL_DESC": "CAYMAN ISLANDS"
+		"text": "CAYMAN ISLANDS"
 	},
 	{
-		"COUNTRY_TYP_CD": "CF",
+		"value": "CF",
 		"SHORT_DESC": "CENTRAL AFRICAN",
-		"FULL_DESC": "CENTRAL AFRICAN REPUBLIC"
+		"text": "CENTRAL AFRICAN REPUBLIC"
 	},
 	{
-		"COUNTRY_TYP_CD": "TD",
+		"value": "TD",
 		"SHORT_DESC": "CHAD",
-		"FULL_DESC": "CHAD"
+		"text": "CHAD"
 	},
 	{
-		"COUNTRY_TYP_CD": "CL",
+		"value": "CL",
 		"SHORT_DESC": "CHILE",
-		"FULL_DESC": "CHILE"
+		"text": "CHILE"
 	},
 	{
-		"COUNTRY_TYP_CD": "CN",
+		"value": "CN",
 		"SHORT_DESC": "CHINA",
-		"FULL_DESC": "CHINA"
+		"text": "CHINA"
 	},
 	{
-		"COUNTRY_TYP_CD": "CX",
+		"value": "CX",
 		"SHORT_DESC": "CHRISTMAS ISLAN",
-		"FULL_DESC": "CHRISTMAS ISLAND"
+		"text": "CHRISTMAS ISLAND"
 	},
 	{
-		"COUNTRY_TYP_CD": "CC",
+		"value": "CC",
 		"SHORT_DESC": "COCOS (KEELING)",
-		"FULL_DESC": "COCOS (KEELING) ISLANDS"
+		"text": "COCOS (KEELING) ISLANDS"
 	},
 	{
-		"COUNTRY_TYP_CD": "CO",
+		"value": "CO",
 		"SHORT_DESC": "COLOMBIA",
-		"FULL_DESC": "COLOMBIA"
+		"text": "COLOMBIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "KM",
+		"value": "KM",
 		"SHORT_DESC": "COMOROS",
-		"FULL_DESC": "COMOROS"
+		"text": "COMOROS"
 	},
 	{
-		"COUNTRY_TYP_CD": "CG",
+		"value": "CG",
 		"SHORT_DESC": "CONGO",
-		"FULL_DESC": "CONGO"
+		"text": "CONGO"
 	},
 	{
-		"COUNTRY_TYP_CD": "CD",
+		"value": "CD",
 		"SHORT_DESC": "CONGO",
-		"FULL_DESC": " THE DEMO"
+		"text": " THE DEMO"
 	},
 	{
-		"COUNTRY_TYP_CD": "CK",
+		"value": "CK",
 		"SHORT_DESC": "COOK ISLANDS",
-		"FULL_DESC": "COOK ISLANDS"
+		"text": "COOK ISLANDS"
 	},
 	{
-		"COUNTRY_TYP_CD": "CR",
+		"value": "CR",
 		"SHORT_DESC": "COSTA RICA",
-		"FULL_DESC": "COSTA RICA"
+		"text": "COSTA RICA"
 	},
 	{
-		"COUNTRY_TYP_CD": "CI",
+		"value": "CI",
 		"SHORT_DESC": "COTE D''IVOIRE",
-		"FULL_DESC": "COTE D''IVOIRE"
+		"text": "COTE D''IVOIRE"
 	},
 	{
-		"COUNTRY_TYP_CD": "HR",
+		"value": "HR",
 		"SHORT_DESC": "CROATIA",
-		"FULL_DESC": "CROATIA"
+		"text": "CROATIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "CU",
+		"value": "CU",
 		"SHORT_DESC": "CUBA",
-		"FULL_DESC": "CUBA"
+		"text": "CUBA"
 	},
 	{
-		"COUNTRY_TYP_CD": "CY",
+		"value": "CY",
 		"SHORT_DESC": "CYPRUS",
-		"FULL_DESC": "CYPRUS"
+		"text": "CYPRUS"
 	},
 	{
-		"COUNTRY_TYP_CD": "CZ",
+		"value": "CZ",
 		"SHORT_DESC": "CZECH REPUBLIC",
-		"FULL_DESC": "CZECH REPUBLIC"
+		"text": "CZECH REPUBLIC"
 	},
 	{
-		"COUNTRY_TYP_CD": "DK",
+		"value": "DK",
 		"SHORT_DESC": "DENMARK",
-		"FULL_DESC": "DENMARK"
+		"text": "DENMARK"
 	},
 	{
-		"COUNTRY_TYP_CD": "DJ",
+		"value": "DJ",
 		"SHORT_DESC": "DJIBOUTI",
-		"FULL_DESC": "DJIBOUTI"
+		"text": "DJIBOUTI"
 	},
 	{
-		"COUNTRY_TYP_CD": "DM",
+		"value": "DM",
 		"SHORT_DESC": "DOMINICA",
-		"FULL_DESC": "DOMINICA"
+		"text": "DOMINICA"
 	},
 	{
-		"COUNTRY_TYP_CD": "DO",
+		"value": "DO",
 		"SHORT_DESC": "DOMINICAN REPUB",
-		"FULL_DESC": "DOMINICAN REPUBLIC"
+		"text": "DOMINICAN REPUBLIC"
 	},
 	{
-		"COUNTRY_TYP_CD": "EC",
+		"value": "EC",
 		"SHORT_DESC": "ECUADOR",
-		"FULL_DESC": "ECUADOR"
+		"text": "ECUADOR"
 	},
 	{
-		"COUNTRY_TYP_CD": "EG",
+		"value": "EG",
 		"SHORT_DESC": "EGYPT",
-		"FULL_DESC": "EGYPT"
+		"text": "EGYPT"
 	},
 	{
-		"COUNTRY_TYP_CD": "SV",
+		"value": "SV",
 		"SHORT_DESC": "EL SALVADOR",
-		"FULL_DESC": "EL SALVADOR"
+		"text": "EL SALVADOR"
 	},
 	{
-		"COUNTRY_TYP_CD": "GQ",
+		"value": "GQ",
 		"SHORT_DESC": "EQUATORIAL GUIN",
-		"FULL_DESC": "EQUATORIAL GUINEA"
+		"text": "EQUATORIAL GUINEA"
 	},
 	{
-		"COUNTRY_TYP_CD": "ER",
+		"value": "ER",
 		"SHORT_DESC": "ERITREA",
-		"FULL_DESC": "ERITREA"
+		"text": "ERITREA"
 	},
 	{
-		"COUNTRY_TYP_CD": "EE",
+		"value": "EE",
 		"SHORT_DESC": "ESTONIA",
-		"FULL_DESC": "ESTONIA"
+		"text": "ESTONIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "ET",
+		"value": "ET",
 		"SHORT_DESC": "ETHIOPIA",
-		"FULL_DESC": "ETHIOPIA"
+		"text": "ETHIOPIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "FK",
+		"value": "FK",
 		"SHORT_DESC": "FALKLAND ISLAND",
-		"FULL_DESC": "FALKLAND ISLANDS (MALVINAS)"
+		"text": "FALKLAND ISLANDS (MALVINAS)"
 	},
 	{
-		"COUNTRY_TYP_CD": "FO",
+		"value": "FO",
 		"SHORT_DESC": "FAROE ISLANDS",
-		"FULL_DESC": "FAROE ISLANDS"
+		"text": "FAROE ISLANDS"
 	},
 	{
-		"COUNTRY_TYP_CD": "FJ",
+		"value": "FJ",
 		"SHORT_DESC": "FIJI",
-		"FULL_DESC": "FIJI"
+		"text": "FIJI"
 	},
 	{
-		"COUNTRY_TYP_CD": "FI",
+		"value": "FI",
 		"SHORT_DESC": "FINLAND",
-		"FULL_DESC": "FINLAND"
+		"text": "FINLAND"
 	},
 	{
-		"COUNTRY_TYP_CD": "FR",
+		"value": "FR",
 		"SHORT_DESC": "FRANCE",
-		"FULL_DESC": "FRANCE"
+		"text": "FRANCE"
 	},
 	{
-		"COUNTRY_TYP_CD": "GF",
+		"value": "GF",
 		"SHORT_DESC": "FRENCH GUIANA",
-		"FULL_DESC": "FRENCH GUIANA"
+		"text": "FRENCH GUIANA"
 	},
 	{
-		"COUNTRY_TYP_CD": "PF",
+		"value": "PF",
 		"SHORT_DESC": "FRENCH POLYNESI",
-		"FULL_DESC": "FRENCH POLYNESIA"
+		"text": "FRENCH POLYNESIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "TF",
+		"value": "TF",
 		"SHORT_DESC": "FRENCH SOUTHERN",
-		"FULL_DESC": "FRENCH SOUTHERN TERRITORIES"
+		"text": "FRENCH SOUTHERN TERRITORIES"
 	},
 	{
-		"COUNTRY_TYP_CD": "GA",
+		"value": "GA",
 		"SHORT_DESC": "GABON",
-		"FULL_DESC": "GABON"
+		"text": "GABON"
 	},
 	{
-		"COUNTRY_TYP_CD": "GM",
+		"value": "GM",
 		"SHORT_DESC": "GAMBIA",
-		"FULL_DESC": "GAMBIA"
+		"text": "GAMBIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "GE",
+		"value": "GE",
 		"SHORT_DESC": "GEORGIA",
-		"FULL_DESC": "GEORGIA"
+		"text": "GEORGIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "DE",
+		"value": "DE",
 		"SHORT_DESC": "GERMANY",
-		"FULL_DESC": "GERMANY"
+		"text": "GERMANY"
 	},
 	{
-		"COUNTRY_TYP_CD": "GH",
+		"value": "GH",
 		"SHORT_DESC": "GHANA",
-		"FULL_DESC": "GHANA"
+		"text": "GHANA"
 	},
 	{
-		"COUNTRY_TYP_CD": "GI",
+		"value": "GI",
 		"SHORT_DESC": "GIBRALTAR",
-		"FULL_DESC": "GIBRALTAR"
+		"text": "GIBRALTAR"
 	},
 	{
-		"COUNTRY_TYP_CD": "GR",
+		"value": "GR",
 		"SHORT_DESC": "GREECE",
-		"FULL_DESC": "GREECE"
+		"text": "GREECE"
 	},
 	{
-		"COUNTRY_TYP_CD": "GL",
+		"value": "GL",
 		"SHORT_DESC": "GREENLAND",
-		"FULL_DESC": "GREENLAND"
+		"text": "GREENLAND"
 	},
 	{
-		"COUNTRY_TYP_CD": "GD",
+		"value": "GD",
 		"SHORT_DESC": "GRENADA",
-		"FULL_DESC": "GRENADA"
+		"text": "GRENADA"
 	},
 	{
-		"COUNTRY_TYP_CD": "GP",
+		"value": "GP",
 		"SHORT_DESC": "GUADELOUPE",
-		"FULL_DESC": "GUADELOUPE"
+		"text": "GUADELOUPE"
 	},
 	{
-		"COUNTRY_TYP_CD": "GU",
+		"value": "GU",
 		"SHORT_DESC": "GUAM",
-		"FULL_DESC": "GUAM"
+		"text": "GUAM"
 	},
 	{
-		"COUNTRY_TYP_CD": "GT",
+		"value": "GT",
 		"SHORT_DESC": "GUATEMALA",
-		"FULL_DESC": "GUATEMALA"
+		"text": "GUATEMALA"
 	},
 	{
-		"COUNTRY_TYP_CD": "GN",
+		"value": "GN",
 		"SHORT_DESC": "GUINEA",
-		"FULL_DESC": "GUINEA"
+		"text": "GUINEA"
 	},
 	{
-		"COUNTRY_TYP_CD": "GW",
+		"value": "GW",
 		"SHORT_DESC": "GUINEA-BISSAU",
-		"FULL_DESC": "GUINEA-BISSAU"
+		"text": "GUINEA-BISSAU"
 	},
 	{
-		"COUNTRY_TYP_CD": "GY",
+		"value": "GY",
 		"SHORT_DESC": "GUYANA",
-		"FULL_DESC": "GUYANA"
+		"text": "GUYANA"
 	},
 	{
-		"COUNTRY_TYP_CD": "HT",
+		"value": "HT",
 		"SHORT_DESC": "HAITI",
-		"FULL_DESC": "HAITI"
+		"text": "HAITI"
 	},
 	{
-		"COUNTRY_TYP_CD": "HM",
+		"value": "HM",
 		"SHORT_DESC": "HEARD ISLAND AN",
-		"FULL_DESC": "HEARD ISLAND AND MCDONALD ISLANDS"
+		"text": "HEARD ISLAND AND MCDONALD ISLANDS"
 	},
 	{
-		"COUNTRY_TYP_CD": "VA",
+		"value": "VA",
 		"SHORT_DESC": "HOLY SEE (VATIC",
-		"FULL_DESC": "HOLY SEE (VATICAN CITY STATE)"
+		"text": "HOLY SEE (VATICAN CITY STATE)"
 	},
 	{
-		"COUNTRY_TYP_CD": "HN",
+		"value": "HN",
 		"SHORT_DESC": "HONDURAS",
-		"FULL_DESC": "HONDURAS"
+		"text": "HONDURAS"
 	},
 	{
-		"COUNTRY_TYP_CD": "HK",
+		"value": "HK",
 		"SHORT_DESC": "HONG KONG",
-		"FULL_DESC": "HONG KONG"
+		"text": "HONG KONG"
 	},
 	{
-		"COUNTRY_TYP_CD": "HU",
+		"value": "HU",
 		"SHORT_DESC": "HUNGARY",
-		"FULL_DESC": "HUNGARY"
+		"text": "HUNGARY"
 	},
 	{
-		"COUNTRY_TYP_CD": "IS",
+		"value": "IS",
 		"SHORT_DESC": "ICELAND",
-		"FULL_DESC": "ICELAND"
+		"text": "ICELAND"
 	},
 	{
-		"COUNTRY_TYP_CD": "IN",
+		"value": "IN",
 		"SHORT_DESC": "INDIA",
-		"FULL_DESC": "INDIA"
+		"text": "INDIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "ID",
+		"value": "ID",
 		"SHORT_DESC": "INDONESIA",
-		"FULL_DESC": "INDONESIA"
+		"text": "INDONESIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "IR",
+		"value": "IR",
 		"SHORT_DESC": "IRAN",
-		"FULL_DESC": " ISLAMIC R"
+		"text": " ISLAMIC R"
 	},
 	{
-		"COUNTRY_TYP_CD": "IQ",
+		"value": "IQ",
 		"SHORT_DESC": "IRAQ",
-		"FULL_DESC": "IRAQ"
+		"text": "IRAQ"
 	},
 	{
-		"COUNTRY_TYP_CD": "IE",
+		"value": "IE",
 		"SHORT_DESC": "IRELAND",
-		"FULL_DESC": "IRELAND"
+		"text": "IRELAND"
 	},
 	{
-		"COUNTRY_TYP_CD": "IL",
+		"value": "IL",
 		"SHORT_DESC": "ISRAEL",
-		"FULL_DESC": "ISRAEL"
+		"text": "ISRAEL"
 	},
 	{
-		"COUNTRY_TYP_CD": "IT",
+		"value": "IT",
 		"SHORT_DESC": "ITALY",
-		"FULL_DESC": "ITALY"
+		"text": "ITALY"
 	},
 	{
-		"COUNTRY_TYP_CD": "JM",
+		"value": "JM",
 		"SHORT_DESC": "JAMAICA",
-		"FULL_DESC": "JAMAICA"
+		"text": "JAMAICA"
 	},
 	{
-		"COUNTRY_TYP_CD": "JP",
+		"value": "JP",
 		"SHORT_DESC": "JAPAN",
-		"FULL_DESC": "JAPAN"
+		"text": "JAPAN"
 	},
 	{
-		"COUNTRY_TYP_CD": "JO",
+		"value": "JO",
 		"SHORT_DESC": "JORDAN",
-		"FULL_DESC": "JORDAN"
+		"text": "JORDAN"
 	},
 	{
-		"COUNTRY_TYP_CD": "KZ",
+		"value": "KZ",
 		"SHORT_DESC": "KAZAKHSTAN",
-		"FULL_DESC": "KAZAKHSTAN"
+		"text": "KAZAKHSTAN"
 	},
 	{
-		"COUNTRY_TYP_CD": "KE",
+		"value": "KE",
 		"SHORT_DESC": "KENYA",
-		"FULL_DESC": "KENYA"
+		"text": "KENYA"
 	},
 	{
-		"COUNTRY_TYP_CD": "KI",
+		"value": "KI",
 		"SHORT_DESC": "KIRIBATI",
-		"FULL_DESC": "KIRIBATI"
+		"text": "KIRIBATI"
 	},
 	{
-		"COUNTRY_TYP_CD": "KP",
+		"value": "KP",
 		"SHORT_DESC": "KOREA",
-		"FULL_DESC": " DEMOCRAT"
+		"text": " DEMOCRAT"
 	},
 	{
-		"COUNTRY_TYP_CD": "KR",
+		"value": "KR",
 		"SHORT_DESC": "KOREA",
-		"FULL_DESC": " REPUBLIC"
+		"text": " REPUBLIC"
 	},
 	{
-		"COUNTRY_TYP_CD": "KW",
+		"value": "KW",
 		"SHORT_DESC": "KUWAIT",
-		"FULL_DESC": "KUWAIT"
+		"text": "KUWAIT"
 	},
 	{
-		"COUNTRY_TYP_CD": "KG",
+		"value": "KG",
 		"SHORT_DESC": "KYRGYZSTAN",
-		"FULL_DESC": "KYRGYZSTAN"
+		"text": "KYRGYZSTAN"
 	},
 	{
-		"COUNTRY_TYP_CD": "LA",
+		"value": "LA",
 		"SHORT_DESC": "LAOS",
-		"FULL_DESC": "LAO PEOPLE''S DEMOCRATIC REPUBLIC"
+		"text": "LAO PEOPLE''S DEMOCRATIC REPUBLIC"
 	},
 	{
-		"COUNTRY_TYP_CD": "LV",
+		"value": "LV",
 		"SHORT_DESC": "LATVIA",
-		"FULL_DESC": "LATVIA"
+		"text": "LATVIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "LB",
+		"value": "LB",
 		"SHORT_DESC": "LEBANON",
-		"FULL_DESC": "LEBANON"
+		"text": "LEBANON"
 	},
 	{
-		"COUNTRY_TYP_CD": "LS",
+		"value": "LS",
 		"SHORT_DESC": "LESOTHO",
-		"FULL_DESC": "LESOTHO"
+		"text": "LESOTHO"
 	},
 	{
-		"COUNTRY_TYP_CD": "LR",
+		"value": "LR",
 		"SHORT_DESC": "LIBERIA",
-		"FULL_DESC": "LIBERIA"
+		"text": "LIBERIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "LY",
+		"value": "LY",
 		"SHORT_DESC": "LIBYA",
-		"FULL_DESC": "LIBYA"
+		"text": "LIBYA"
 	},
 	{
-		"COUNTRY_TYP_CD": "LI",
+		"value": "LI",
 		"SHORT_DESC": "LIECHTENSTEIN",
-		"FULL_DESC": "LIECHTENSTEIN"
+		"text": "LIECHTENSTEIN"
 	},
 	{
-		"COUNTRY_TYP_CD": "LT",
+		"value": "LT",
 		"SHORT_DESC": "LITHUANIA",
-		"FULL_DESC": "LITHUANIA"
+		"text": "LITHUANIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "LU",
+		"value": "LU",
 		"SHORT_DESC": "LUXEMBOURG",
-		"FULL_DESC": "LUXEMBOURG"
+		"text": "LUXEMBOURG"
 	},
 	{
-		"COUNTRY_TYP_CD": "MO",
+		"value": "MO",
 		"SHORT_DESC": "MACAO",
-		"FULL_DESC": "MACAO"
+		"text": "MACAO"
 	},
 	{
-		"COUNTRY_TYP_CD": "MK",
+		"value": "MK",
 		"SHORT_DESC": "MACEDONIA",
-		"FULL_DESC": " THE "
+		"text": " THE "
 	},
 	{
-		"COUNTRY_TYP_CD": "MG",
+		"value": "MG",
 		"SHORT_DESC": "MADAGASCAR",
-		"FULL_DESC": "MADAGASCAR"
+		"text": "MADAGASCAR"
 	},
 	{
-		"COUNTRY_TYP_CD": "MW",
+		"value": "MW",
 		"SHORT_DESC": "MALAWI",
-		"FULL_DESC": "MALAWI"
+		"text": "MALAWI"
 	},
 	{
-		"COUNTRY_TYP_CD": "MY",
+		"value": "MY",
 		"SHORT_DESC": "MALAYSIA",
-		"FULL_DESC": "MALAYSIA"
+		"text": "MALAYSIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "MV",
+		"value": "MV",
 		"SHORT_DESC": "MALDIVES",
-		"FULL_DESC": "MALDIVES"
+		"text": "MALDIVES"
 	},
 	{
-		"COUNTRY_TYP_CD": "ML",
+		"value": "ML",
 		"SHORT_DESC": "MALI",
-		"FULL_DESC": "MALI"
+		"text": "MALI"
 	},
 	{
-		"COUNTRY_TYP_CD": "MT",
+		"value": "MT",
 		"SHORT_DESC": "MALTA",
-		"FULL_DESC": "MALTA"
+		"text": "MALTA"
 	},
 	{
-		"COUNTRY_TYP_CD": "MH",
+		"value": "MH",
 		"SHORT_DESC": "MARSHALL ISLAND",
-		"FULL_DESC": "MARSHALL ISLANDS"
+		"text": "MARSHALL ISLANDS"
 	},
 	{
-		"COUNTRY_TYP_CD": "MQ",
+		"value": "MQ",
 		"SHORT_DESC": "MARTINIQUE",
-		"FULL_DESC": "MARTINIQUE"
+		"text": "MARTINIQUE"
 	},
 	{
-		"COUNTRY_TYP_CD": "MR",
+		"value": "MR",
 		"SHORT_DESC": "MAURITANIA",
-		"FULL_DESC": "MAURITANIA"
+		"text": "MAURITANIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "MU",
+		"value": "MU",
 		"SHORT_DESC": "MAURITIUS",
-		"FULL_DESC": "MAURITIUS"
+		"text": "MAURITIUS"
 	},
 	{
-		"COUNTRY_TYP_CD": "YT",
+		"value": "YT",
 		"SHORT_DESC": "MAYOTTE",
-		"FULL_DESC": "MAYOTTE"
+		"text": "MAYOTTE"
 	},
 	{
-		"COUNTRY_TYP_CD": "MX",
+		"value": "MX",
 		"SHORT_DESC": "MEXICO",
-		"FULL_DESC": "MEXICO"
+		"text": "MEXICO"
 	},
 	{
-		"COUNTRY_TYP_CD": "FM",
+		"value": "FM",
 		"SHORT_DESC": "MICRONESIA",
-		"FULL_DESC": " FED"
+		"text": " FED"
 	},
 	{
-		"COUNTRY_TYP_CD": "MD",
+		"value": "MD",
 		"SHORT_DESC": "MOLDOVA",
-		"FULL_DESC": " REPUBL"
+		"text": " REPUBL"
 	},
 	{
-		"COUNTRY_TYP_CD": "MC",
+		"value": "MC",
 		"SHORT_DESC": "MONACO",
-		"FULL_DESC": "MONACO"
+		"text": "MONACO"
 	},
 	{
-		"COUNTRY_TYP_CD": "MN",
+		"value": "MN",
 		"SHORT_DESC": "MONGOLIA",
-		"FULL_DESC": "MONGOLIA"
+		"text": "MONGOLIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "MS",
+		"value": "MS",
 		"SHORT_DESC": "MONTSERRAT",
-		"FULL_DESC": "MONTSERRAT"
+		"text": "MONTSERRAT"
 	},
 	{
-		"COUNTRY_TYP_CD": "MA",
+		"value": "MA",
 		"SHORT_DESC": "MOROCCO",
-		"FULL_DESC": "MOROCCO"
+		"text": "MOROCCO"
 	},
 	{
-		"COUNTRY_TYP_CD": "MZ",
+		"value": "MZ",
 		"SHORT_DESC": "MOZAMBIQUE",
-		"FULL_DESC": "MOZAMBIQUE"
+		"text": "MOZAMBIQUE"
 	},
 	{
-		"COUNTRY_TYP_CD": "MM",
+		"value": "MM",
 		"SHORT_DESC": "MYANMAR",
-		"FULL_DESC": "MYANMAR"
+		"text": "MYANMAR"
 	},
 	{
-		"COUNTRY_TYP_CD": "NA",
+		"value": "NA",
 		"SHORT_DESC": "NAMIBIA",
-		"FULL_DESC": "NAMIBIA"
+		"text": "NAMIBIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "NR",
+		"value": "NR",
 		"SHORT_DESC": "NAURU",
-		"FULL_DESC": "NAURU"
+		"text": "NAURU"
 	},
 	{
-		"COUNTRY_TYP_CD": "NP",
+		"value": "NP",
 		"SHORT_DESC": "NEPAL",
-		"FULL_DESC": "NEPAL"
+		"text": "NEPAL"
 	},
 	{
-		"COUNTRY_TYP_CD": "AN",
+		"value": "AN",
 		"SHORT_DESC": "NETHERLANDS ANT",
-		"FULL_DESC": "NETHERLANDS ANTILLES"
+		"text": "NETHERLANDS ANTILLES"
 	},
 	{
-		"COUNTRY_TYP_CD": "NL",
+		"value": "NL",
 		"SHORT_DESC": "NETHERLANDS",
-		"FULL_DESC": "NETHERLANDS"
+		"text": "NETHERLANDS"
 	},
 	{
-		"COUNTRY_TYP_CD": "NC",
+		"value": "NC",
 		"SHORT_DESC": "NEW CALEDONIA",
-		"FULL_DESC": "NEW CALEDONIA"
+		"text": "NEW CALEDONIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "NZ",
+		"value": "NZ",
 		"SHORT_DESC": "NEW ZEALAND",
-		"FULL_DESC": "NEW ZEALAND"
+		"text": "NEW ZEALAND"
 	},
 	{
-		"COUNTRY_TYP_CD": "NI",
+		"value": "NI",
 		"SHORT_DESC": "NICARAGUA",
-		"FULL_DESC": "NICARAGUA"
+		"text": "NICARAGUA"
 	},
 	{
-		"COUNTRY_TYP_CD": "NE",
+		"value": "NE",
 		"SHORT_DESC": "NIGER",
-		"FULL_DESC": "NIGER"
+		"text": "NIGER"
 	},
 	{
-		"COUNTRY_TYP_CD": "NG",
+		"value": "NG",
 		"SHORT_DESC": "NIGERIA",
-		"FULL_DESC": "NIGERIA"
+		"text": "NIGERIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "NU",
+		"value": "NU",
 		"SHORT_DESC": "NIUE",
-		"FULL_DESC": "NIUE"
+		"text": "NIUE"
 	},
 	{
-		"COUNTRY_TYP_CD": "NF",
+		"value": "NF",
 		"SHORT_DESC": "NORFOLK ISLAND",
-		"FULL_DESC": "NORFOLK ISLAND"
+		"text": "NORFOLK ISLAND"
 	},
 	{
-		"COUNTRY_TYP_CD": "MP",
+		"value": "MP",
 		"SHORT_DESC": "NORTHERN MARIAN",
-		"FULL_DESC": "NORTHERN MARIANA ISLANDS"
+		"text": "NORTHERN MARIANA ISLANDS"
 	},
 	{
-		"COUNTRY_TYP_CD": "NO",
+		"value": "NO",
 		"SHORT_DESC": "NORWAY",
-		"FULL_DESC": "NORWAY"
+		"text": "NORWAY"
 	},
 	{
-		"COUNTRY_TYP_CD": "OM",
+		"value": "OM",
 		"SHORT_DESC": "OMAN",
-		"FULL_DESC": "OMAN"
+		"text": "OMAN"
 	},
 	{
-		"COUNTRY_TYP_CD": "PK",
+		"value": "PK",
 		"SHORT_DESC": "PAKISTAN",
-		"FULL_DESC": "PAKISTAN"
+		"text": "PAKISTAN"
 	},
 	{
-		"COUNTRY_TYP_CD": "PW",
+		"value": "PW",
 		"SHORT_DESC": "PALAU",
-		"FULL_DESC": "PALAU"
+		"text": "PALAU"
 	},
 	{
-		"COUNTRY_TYP_CD": "PS",
+		"value": "PS",
 		"SHORT_DESC": "PALESTINIAN TER",
-		"FULL_DESC": "PALESTINIAN TERRITORY"
+		"text": "PALESTINIAN TERRITORY"
 	},
 	{
-		"COUNTRY_TYP_CD": "PA",
+		"value": "PA",
 		"SHORT_DESC": "PANAMA",
-		"FULL_DESC": "PANAMA"
+		"text": "PANAMA"
 	},
 	{
-		"COUNTRY_TYP_CD": "PG",
+		"value": "PG",
 		"SHORT_DESC": "PAPUA NEW GUINE",
-		"FULL_DESC": "PAPUA NEW GUINEA"
+		"text": "PAPUA NEW GUINEA"
 	},
 	{
-		"COUNTRY_TYP_CD": "PY",
+		"value": "PY",
 		"SHORT_DESC": "PARAGUAY",
-		"FULL_DESC": "PARAGUAY"
+		"text": "PARAGUAY"
 	},
 	{
-		"COUNTRY_TYP_CD": "PE",
+		"value": "PE",
 		"SHORT_DESC": "PERU",
-		"FULL_DESC": "PERU"
+		"text": "PERU"
 	},
 	{
-		"COUNTRY_TYP_CD": "PH",
+		"value": "PH",
 		"SHORT_DESC": "PHILIPPINES",
-		"FULL_DESC": "PHILIPPINES"
+		"text": "PHILIPPINES"
 	},
 	{
-		"COUNTRY_TYP_CD": "PN",
+		"value": "PN",
 		"SHORT_DESC": "PITCAIRN",
-		"FULL_DESC": "PITCAIRN"
+		"text": "PITCAIRN"
 	},
 	{
-		"COUNTRY_TYP_CD": "PL",
+		"value": "PL",
 		"SHORT_DESC": "POLAND",
-		"FULL_DESC": "POLAND"
+		"text": "POLAND"
 	},
 	{
-		"COUNTRY_TYP_CD": "PT",
+		"value": "PT",
 		"SHORT_DESC": "PORTUGAL",
-		"FULL_DESC": "PORTUGAL"
+		"text": "PORTUGAL"
 	},
 	{
-		"COUNTRY_TYP_CD": "PR",
+		"value": "PR",
 		"SHORT_DESC": "PUERTO RICO",
-		"FULL_DESC": "PUERTO RICO"
+		"text": "PUERTO RICO"
 	},
 	{
-		"COUNTRY_TYP_CD": "QA",
+		"value": "QA",
 		"SHORT_DESC": "QATAR",
-		"FULL_DESC": "QATAR"
+		"text": "QATAR"
 	},
 	{
-		"COUNTRY_TYP_CD": "RE",
+		"value": "RE",
 		"SHORT_DESC": "REUNION",
-		"FULL_DESC": "REUNION"
+		"text": "REUNION"
 	},
 	{
-		"COUNTRY_TYP_CD": "RO",
+		"value": "RO",
 		"SHORT_DESC": "ROMANIA",
-		"FULL_DESC": "ROMANIA"
+		"text": "ROMANIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "RU",
+		"value": "RU",
 		"SHORT_DESC": "RUSSIAN FEDERAT",
-		"FULL_DESC": "RUSSIAN FEDERATION"
+		"text": "RUSSIAN FEDERATION"
 	},
 	{
-		"COUNTRY_TYP_CD": "RW",
+		"value": "RW",
 		"SHORT_DESC": "RWANDA",
-		"FULL_DESC": "RWANDA"
+		"text": "RWANDA"
 	},
 	{
-		"COUNTRY_TYP_CD": "SH",
+		"value": "SH",
 		"SHORT_DESC": "SAINT HELENA",
-		"FULL_DESC": "SAINT HELENA"
+		"text": "SAINT HELENA"
 	},
 	{
-		"COUNTRY_TYP_CD": "KN",
+		"value": "KN",
 		"SHORT_DESC": "SAINT KITTS AND",
-		"FULL_DESC": "SAINT KITTS AND NEVIS"
+		"text": "SAINT KITTS AND NEVIS"
 	},
 	{
-		"COUNTRY_TYP_CD": "LC",
+		"value": "LC",
 		"SHORT_DESC": "SAINT LUCIA",
-		"FULL_DESC": "SAINT LUCIA"
+		"text": "SAINT LUCIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "PM",
+		"value": "PM",
 		"SHORT_DESC": "SAINT PIERRE AN",
-		"FULL_DESC": "SAINT PIERRE AND MIQUELON"
+		"text": "SAINT PIERRE AND MIQUELON"
 	},
 	{
-		"COUNTRY_TYP_CD": "VC",
+		"value": "VC",
 		"SHORT_DESC": "SAINT VINCENT A",
-		"FULL_DESC": "SAINT VINCENT AND THE GRENADINES"
+		"text": "SAINT VINCENT AND THE GRENADINES"
 	},
 	{
-		"COUNTRY_TYP_CD": "WS",
+		"value": "WS",
 		"SHORT_DESC": "SAMOA",
-		"FULL_DESC": "SAMOA"
+		"text": "SAMOA"
 	},
 	{
-		"COUNTRY_TYP_CD": "SM",
+		"value": "SM",
 		"SHORT_DESC": "SAN MARINO",
-		"FULL_DESC": "SAN MARINO"
+		"text": "SAN MARINO"
 	},
 	{
-		"COUNTRY_TYP_CD": "ST",
+		"value": "ST",
 		"SHORT_DESC": "SAO TOME AND PR",
-		"FULL_DESC": "SAO TOME AND PRINCIPE"
+		"text": "SAO TOME AND PRINCIPE"
 	},
 	{
-		"COUNTRY_TYP_CD": "SA",
+		"value": "SA",
 		"SHORT_DESC": "SAUDI ARABIA",
-		"FULL_DESC": "SAUDI ARABIA"
+		"text": "SAUDI ARABIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "SN",
+		"value": "SN",
 		"SHORT_DESC": "SENEGAL",
-		"FULL_DESC": "SENEGAL"
+		"text": "SENEGAL"
 	},
 	{
-		"COUNTRY_TYP_CD": "SC",
+		"value": "SC",
 		"SHORT_DESC": "SEYCHELLES",
-		"FULL_DESC": "SEYCHELLES"
+		"text": "SEYCHELLES"
 	},
 	{
-		"COUNTRY_TYP_CD": "SL",
+		"value": "SL",
 		"SHORT_DESC": "SIERRA LEONE",
-		"FULL_DESC": "SIERRA LEONE"
+		"text": "SIERRA LEONE"
 	},
 	{
-		"COUNTRY_TYP_CD": "SG",
+		"value": "SG",
 		"SHORT_DESC": "SINGAPORE",
-		"FULL_DESC": "SINGAPORE"
+		"text": "SINGAPORE"
 	},
 	{
-		"COUNTRY_TYP_CD": "SK",
+		"value": "SK",
 		"SHORT_DESC": "SLOVAKIA",
-		"FULL_DESC": "SLOVAKIA"
+		"text": "SLOVAKIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "SI",
+		"value": "SI",
 		"SHORT_DESC": "SLOVENIA",
-		"FULL_DESC": "SLOVENIA"
+		"text": "SLOVENIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "SB",
+		"value": "SB",
 		"SHORT_DESC": "SOLOMON ISLANDS",
-		"FULL_DESC": "SOLOMON ISLANDS"
+		"text": "SOLOMON ISLANDS"
 	},
 	{
-		"COUNTRY_TYP_CD": "SO",
+		"value": "SO",
 		"SHORT_DESC": "SOMALIA",
-		"FULL_DESC": "SOMALIA"
+		"text": "SOMALIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "ZA",
+		"value": "ZA",
 		"SHORT_DESC": "SOUTH AFRICA",
-		"FULL_DESC": "SOUTH AFRICA"
+		"text": "SOUTH AFRICA"
 	},
 	{
-		"COUNTRY_TYP_CD": "GS",
+		"value": "GS",
 		"SHORT_DESC": "SOUTH GEORGIA A",
-		"FULL_DESC": "SOUTH GEORGIA AND THE SOUTH SANDWICH ISL"
+		"text": "SOUTH GEORGIA AND THE SOUTH SANDWICH ISL"
 	},
 	{
-		"COUNTRY_TYP_CD": "ES",
+		"value": "ES",
 		"SHORT_DESC": "SPAIN",
-		"FULL_DESC": "SPAIN"
+		"text": "SPAIN"
 	},
 	{
-		"COUNTRY_TYP_CD": "LK",
+		"value": "LK",
 		"SHORT_DESC": "SRI LANKA",
-		"FULL_DESC": "SRI LANKA"
+		"text": "SRI LANKA"
 	},
 	{
-		"COUNTRY_TYP_CD": "SD",
+		"value": "SD",
 		"SHORT_DESC": "SUDAN",
-		"FULL_DESC": "SUDAN"
+		"text": "SUDAN"
 	},
 	{
-		"COUNTRY_TYP_CD": "SR",
+		"value": "SR",
 		"SHORT_DESC": "SURINAME",
-		"FULL_DESC": "SURINAME"
+		"text": "SURINAME"
 	},
 	{
-		"COUNTRY_TYP_CD": "SJ",
+		"value": "SJ",
 		"SHORT_DESC": "SVALBARD AND JA",
-		"FULL_DESC": "SVALBARD AND JAN MAYEN"
+		"text": "SVALBARD AND JAN MAYEN"
 	},
 	{
-		"COUNTRY_TYP_CD": "SZ",
+		"value": "SZ",
 		"SHORT_DESC": "SWAZILAND",
-		"FULL_DESC": "SWAZILAND"
+		"text": "SWAZILAND"
 	},
 	{
-		"COUNTRY_TYP_CD": "SE",
+		"value": "SE",
 		"SHORT_DESC": "SWEDEN",
-		"FULL_DESC": "SWEDEN"
+		"text": "SWEDEN"
 	},
 	{
-		"COUNTRY_TYP_CD": "CH",
+		"value": "CH",
 		"SHORT_DESC": "SWITZERLAND",
-		"FULL_DESC": "SWITZERLAND"
+		"text": "SWITZERLAND"
 	},
 	{
-		"COUNTRY_TYP_CD": "SY",
+		"value": "SY",
 		"SHORT_DESC": "SYRIAN ARAB REP",
-		"FULL_DESC": "SYRIAN ARAB REPUBLIC"
+		"text": "SYRIAN ARAB REPUBLIC"
 	},
 	{
-		"COUNTRY_TYP_CD": "TW",
+		"value": "TW",
 		"SHORT_DESC": "TAIWAN",
-		"FULL_DESC": "TAIWAN"
+		"text": "TAIWAN"
 	},
 	{
-		"COUNTRY_TYP_CD": "TJ",
+		"value": "TJ",
 		"SHORT_DESC": "TAJIKISTAN",
-		"FULL_DESC": "TAJIKISTAN"
+		"text": "TAJIKISTAN"
 	},
 	{
-		"COUNTRY_TYP_CD": "TZ",
+		"value": "TZ",
 		"SHORT_DESC": "TANZANIA",
-		"FULL_DESC": " UNITE"
+		"text": " UNITE"
 	},
 	{
-		"COUNTRY_TYP_CD": "TH",
+		"value": "TH",
 		"SHORT_DESC": "THAILAND",
-		"FULL_DESC": "THAILAND"
+		"text": "THAILAND"
 	},
 	{
-		"COUNTRY_TYP_CD": "TL",
+		"value": "TL",
 		"SHORT_DESC": "TIMOR-LESTE",
-		"FULL_DESC": "TIMOR-LESTE"
+		"text": "TIMOR-LESTE"
 	},
 	{
-		"COUNTRY_TYP_CD": "TG",
+		"value": "TG",
 		"SHORT_DESC": "TOGO",
-		"FULL_DESC": "TOGO"
+		"text": "TOGO"
 	},
 	{
-		"COUNTRY_TYP_CD": "TK",
+		"value": "TK",
 		"SHORT_DESC": "TOKELAU",
-		"FULL_DESC": "TOKELAU"
+		"text": "TOKELAU"
 	},
 	{
-		"COUNTRY_TYP_CD": "TO",
+		"value": "TO",
 		"SHORT_DESC": "TONGA",
-		"FULL_DESC": "TONGA"
+		"text": "TONGA"
 	},
 	{
-		"COUNTRY_TYP_CD": "TT",
+		"value": "TT",
 		"SHORT_DESC": "TRINIDAD AND TO",
-		"FULL_DESC": "TRINIDAD AND TOBAGO"
+		"text": "TRINIDAD AND TOBAGO"
 	},
 	{
-		"COUNTRY_TYP_CD": "TN",
+		"value": "TN",
 		"SHORT_DESC": "TUNISIA",
-		"FULL_DESC": "TUNISIA"
+		"text": "TUNISIA"
 	},
 	{
-		"COUNTRY_TYP_CD": "TR",
+		"value": "TR",
 		"SHORT_DESC": "TURKEY",
-		"FULL_DESC": "TURKEY"
-	},
-	{
-		"COUNTRY_TYP_CD": ""
+		"text": "TURKEY"
 	}
 ]

@@ -4,11 +4,7 @@
     <div class="upper-section container-fluid">
       <div class="namePage">
 
-        <div v-if="details" class="RequestInfoHeader">
-          <requestinfoheaderview />
-          <requestinfoview />
-        </div>
-        <div v-else class="RequestInfoHeader">
+        <div class="RequestInfoHeader">
           <requestinfoheaderview />
         </div>
       </div>

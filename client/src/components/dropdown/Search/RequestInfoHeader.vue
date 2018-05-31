@@ -6,29 +6,40 @@
       <!-- details col 1 - priority, comments, etc -->
       <div id='div1' class="col-md-5" >
         <div class="row">
-          <div class="col-md-3" >
-            <span v-if="priority" id="lblPriority" class="ISPRIORITY" >Priority</span>
-            <span v-else></span>
-          </div>
-          <div class="col-md-9">
-            <p v-if="!is_editing">{{ requestType }}</p>
-
-            <select v-else v-model="requestType">
-              <option v-for="opt in reqTypes" v-bind:key="opt.REQUEST_TYPE_CD">
-                {{ opt.FULL_DESC }}
+          <div class="col-md-4" >
+            <div v-if="!is_editing"
+                  v-bind:class="{'priority-high': high_priority, 'priority': true}">
+              {{ priority_desc }}</div>
+            <select v-else v-model="priority" class="form-control">
+              <option v-for="option in priority_options" v-bind:value="option.value"
+                      v-bind:key="option.value">
+                {{ option.text }}
               </option>
             </select>
-
+          </div>
+          <div class="col">
+            <p v-if="!is_editing" style="font-weight: bold;">{{ requestType_desc }}</p>
+            <select v-else v-model="requestType" class="form-control">
+              <option v-for="option in requestType_options" v-bind:value="option.value"
+                      v-bind:key="option.value">
+                {{ option.text }}
+              </option>
+            </select>
           </div>
         </div>
 
         <div class="row">
-          <div class="col-md-3" >
-            <p class="nr-number" v-bind:class="{ REDnrNum: priority }">{{ nrNumber }}</p>
+          <div class="col-md-4" >
+            <div class="nrNum" v-bind:class="{ REDnrNum: priority}">{{ nrNumber }}</div>
           </div>
           <div class="col" >
-            <p v-if="!is_editing">{{ jurisdiction }}</p>
-            <input v-else v-model="jurisdiction" class="form-control" />
+            <p v-if="!is_editing" style="font-weight: bold;">{{ jurisdiction_desc }}</p>
+            <select v-else v-model="jurisdiction" class="form-control">
+              <option v-for="option in jurisdiction_options" v-bind:value="option.value"
+                      v-bind:key="option.value">
+                {{ option.text }}
+              </option>
+            </select>
           </div>
           <div class="col">
             <p v-if="!is_editing">{{ nuans }}</p>
@@ -93,27 +104,36 @@
     <!-- row 2 - buttons -->
     <div class="row">
       <div id='div4' class="col-md-12">
-        <span class="f1" @click="toggleDetails">F1</span>
+        <span v-if="!is_editing" class="f1" @click="toggleDetails">F1</span>
       </div>
       <button v-if="!is_editing" class="btn btn-default" @click="edit">Edit</button>
-      <button v-else class="btn btn-default" @click="save">Save</button>
+      <span v-else>
+        <button class="btn btn-default" @click="save">Save</button>
+        <button class="btn btn-default" @click="cancelSave">Cancel</button>
+      </span>
     </div>
 
   </span>
 </template>
-<script src="static/js/utils.js"></script>
+
 <script>
 /* eslint-disable */
-import clientinfoview
-  from '@/components/dropdown/Search/client/ClientInfo.vue';
+
+// ClientInfoHeader - editable component
+import clientinfoview from '@/components/dropdown/Search/client/ClientInfoHeader.vue';
 
 export default {
     name: 'RequestInfoHeader',
-    data: function () {
-      return {
-      }
-    },
     computed: {
+      priority_options() {
+        return this.$store.getters.listPriorities;
+      },
+      jurisdiction_options() {
+        return this.$store.getters.listJurisdictions;
+      },
+      requestType_options() {
+        return this.$store.getters.listRequestTypes;
+      },
       is_editing() {
         return  this.$store.getters.is_editing;
       },
@@ -131,12 +151,26 @@ export default {
           this.$store.commit('requestType', value);
         }
       },
+      requestType_desc() {
+        try {
+          return getDescFromList(this.requestType_options, this.requestType);
+        } catch (err) {
+          return 'ERROR!!';
+        }
+      },
       jurisdiction: {
         get: function() {
           return this.$store.getters.jurisdiction;
         },
         set: function(value) {
           this.$store.commit('jurisdiction', value);
+        }
+      },
+      jurisdiction_desc() {
+        try {
+          return getDescFromList(this.jurisdiction_options, this.jurisdiction);
+        } catch (err) {
+          return '';
         }
       },
       natureOfBusiness: {
@@ -147,7 +181,7 @@ export default {
           this.$store.commit('natureOfBusiness', value);
         }
       },
-      natureOfBusinessTruncated: function() {
+      natureOfBusinessTruncated() {
         try {
           if (this.natureOfBusiness.length > 200) return this.natureOfBusiness.substr(0, 200) + '...';
           else return this.natureOfBusiness;
@@ -186,11 +220,22 @@ export default {
       },
       priority: {
         get: function() {
-          return this.$store.getters.priority;
+          return this.$store.getters.priority?this.$store.getters.priority:"null";
         },
         set: function(value) {
           this.$store.commit('priority', value);
         }
+      },
+      priority_desc: function () {
+        try {
+          return getDescFromList(this.priority_options, this.priority);
+        } catch (err) {
+          return '';
+        }
+      },
+      high_priority() {
+        if (this.priority == 'PQ' || this.priority == 'PJ') return true;
+        else return false;
       },
       resubmissionYN: {
         get: function() {
@@ -257,7 +302,7 @@ export default {
     },
     methods: {
       setInterface(){
-        this.setRequestType()
+
         this.setNRNum()
         this.setPriority()
         this.setComp
@@ -265,8 +310,6 @@ export default {
         this.setSK()
         this.setNOB()
         this.setAddInfo()
-      },
-      setRequestType() {
       },
       setNRNum() {
       },
@@ -286,7 +329,6 @@ export default {
       toggleDetails() {
         if (this.$store.state.is_header_shown) this.$store.state.is_header_shown = false;
         else this.$store.state.is_header_shown = true;
-
       },
       setBorder(id) {
         var tb = document.getElementById(id);
@@ -302,7 +344,11 @@ export default {
         // show full header after editing so user can see everything they changed
         this.$store.state.is_header_shown = true;
 
-      }
+      },
+      cancelSave() {
+        this.$store.dispatch('getpostgrescompInfo',this.nrNumber)
+        this.$store.state.is_editing = false;
+      },
     },
     watch: {
       nrNumber: function (val) {
@@ -314,32 +360,30 @@ export default {
 </script>
 
 <style scoped>
+
    .nrNum {
-     width: 100%;
-     background-color: #f1f1f1;
-     border: 0px #fff;
-     color: #ff0000;
-     font-size: 1.9em;
+     font-size: 1.5em;
+     font-weight: bold;
+     text-align: center;
+     margin-top: 10px;
    }
   .REDnrNum {
-    width: 100%;
-    background-color: #f1f1f1;
     color: #ff0000;
-    border: 0px #fff;
   }
-  .ISPRIORITY {
-    padding-left: 28%;
-    padding-right: 28%;
-    padding-bottom: 6%;
-    padding-top: 6%;
-    border: 2px solid #777;
+  .priority {
+    padding: 5px;
+    text-align: center;
+    background-color: white;
+    color: black;
+  }
+  .priority-high{
     background-color: #cc0000;
-    font-size: 1.25em;
-    color: #ffffff;
+    color: white;
   }
    .f1 {
      border: 1px solid #000000;
      padding: 2px;
    }
+
 
  </style>

@@ -1,35 +1,32 @@
 ﻿[
 	{
-		"REQUEST_STATE_TYPE_CD": "D",
-		"SHORT_DESC": "Draft",
+		"value": "D",
+		"text": "Draft",
 		"FULL_DESC": "Draft"
 	},
 	{
-		"REQUEST_STATE_TYPE_CD": "C",
-		"SHORT_DESC": "Cancelled",
+		"value": "C",
+		"text": "Cancelled",
 		"FULL_DESC": "Cancelled"
 	},
 	{
-		"REQUEST_STATE_TYPE_CD": "H",
-		"SHORT_DESC": "Held",
+		"value": "H",
+		"text": "Held",
 		"FULL_DESC": "Under examination - not processed."
 	},
 	{
-		"REQUEST_STATE_TYPE_CD": "COMPLETED",
-		"SHORT_DESC": "Completed",
+		"value": "COMPLETED",
+		"text": "Completed",
 		"FULL_DESC": "Completed - accepted or rejected."
 	},
 	{
-		"REQUEST_STATE_TYPE_CD": "E",
-		"SHORT_DESC": "Expired.",
+		"value": "E",
+		"text": "Expired.",
 		"FULL_DESC": "Request name expired before being consumed."
 	},
 	{
-		"REQUEST_STATE_TYPE_CD": "HISTORICAL",
-		"SHORT_DESC": "Historical",
+		"value": "HISTORICAL",
+		"text": "Historical",
 		"FULL_DESC": "Historical"
-	},
-	{
-		"REQUEST_STATE_TYPE_CD": ""
 	}
 ]
