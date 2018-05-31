@@ -37,8 +37,10 @@
 /* eslint-disable */
 export default {
   name: 'matches',
-  data: {
-    mess: "Here"
+  data: function () {
+    return {
+      mess: "Here"
+    }
   },
   mounted() {
     //alert("here");

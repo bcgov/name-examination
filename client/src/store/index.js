@@ -41,12 +41,23 @@ export default new Vuex.Store({
         requestType: null,
       },
       applicantInfo: {
-        applicantname: {
+        clientName: {
           firstName: null,
-          lastName: null
+          lastName: null,
+        },
+        applicantName: {
+          firstName: null,
+          lastName: null,
+          middleName: null
         },
         contactInfo: {
-          address: null,
+          addressLine1: null,
+          addressLine2: null,
+          addressLine3: null,
+          city: null,
+          province: null,
+          postalCode: null,
+          country: null,
           contactName: null,
           phone: null,
           email: null,
@@ -92,14 +103,41 @@ export default new Vuex.Store({
     currentState(state, value) {
       state.currentState = value;
     },
+    clientFirstName (state, value) {
+      state.applicantInfo.clientName.firstName = value;
+    },
+    clientLastName(state, value) {
+      state.applicantInfo.clientName.lastName = value;
+    },
     firstName (state, value) {
-      state.applicantInfo.applicantname.firstName = value;
+      state.applicantInfo.applicantName.firstName = value;
+    },
+    middleName(state, value) {
+      state.applicantInfo.applicantName.middleName = value;
     },
     lastName (state, value) {
-      state.applicantInfo.applicantname.lastName = value;
+      state.applicantInfo.applicantName.lastName = value;
     },
-    address (state, value) {
-      state.applicantInfo.contactInfo.address = value;
+    addressLine1 (state, value) {
+      state.applicantInfo.contactInfo.addressLine1 = value;
+    },
+    addressLine2 (state, value) {
+      state.applicantInfo.contactInfo.addressLine2 = value;
+    },
+    addressLine3 (state, value) {
+      state.applicantInfo.contactInfo.addressLine3 = value;
+    },
+    city (state, value) {
+      state.applicantInfo.contactInfo.city = value;
+    },
+    province (state, value) {
+      state.applicantInfo.contactInfo.province = value;
+    },
+    country (state, value) {
+      state.applicantInfo.contactInfo.country = value;
+    },
+    postalCode (state, value) {
+      state.applicantInfo.contactInfo.postalCode = value;
     },
     contactName (state, value) {
       state.applicantInfo.contactInfo.contactName = value;
@@ -127,9 +165,6 @@ export default new Vuex.Store({
     },
     nr_status (state, value) {
       state.additionalCompInfo.nr_status = value;
-    },
-    priority (state, value) {
-      state.priority = value;
     },
     resubmissionYN (state, value) {
       state.reSubmission.reSubmissionYN = value;
@@ -217,15 +252,32 @@ export default new Vuex.Store({
         }
       }
 
+
       state.currentState = dbcompanyInfo.state;
       state.compInfo.requestType = dbcompanyInfo.requestTypeCd
-      state.applicantInfo.applicantname.firstName = dbcompanyInfo.applicant
-      //state.applicantInfo.applicantname.lastName = dbcompanyInfo.lastName
-      //state.applicantInfo.contactInfo.address = dbcompanyInfo.address
-      state.applicantInfo.contactInfo.contactName = dbcompanyInfo.contact
-      state.applicantInfo.contactInfo.phone = dbcompanyInfo.phoneNumber
-      //state.applicantInfo.contactInfo.email = dbcompanyInfo.email
-      //state.applicantInfo.contactInfo.fax = dbcompanyInfo.fax
+
+      var applicantInfo = dbcompanyInfo.applicants[0]
+      if (applicantInfo !== undefined) {
+        state.applicantInfo.clientName.firstName = applicantInfo.clientFirstName
+        state.applicantInfo.clientName.lastName = applicantInfo.clientLastName
+        state.applicantInfo.applicantName.firstName = applicantInfo.firstName
+        state.applicantInfo.applicantName.middleName = applicantInfo.middleName
+        state.applicantInfo.applicantName.lastName = applicantInfo.lastName
+        state.applicantInfo.contactInfo.addressLine1 = applicantInfo.addrLine1
+        state.applicantInfo.contactInfo.addressLine2 = applicantInfo.addrLine2
+        state.applicantInfo.contactInfo.addressLine3 = applicantInfo.addrLine3
+        state.applicantInfo.contactInfo.city = applicantInfo.city
+        state.applicantInfo.contactInfo.province = applicantInfo.stateProvinceCd
+        state.applicantInfo.contactInfo.postalCode = applicantInfo.postalCd
+        state.applicantInfo.contactInfo.country = applicantInfo.countryTypeCd
+        state.applicantInfo.contactInfo.contactName = applicantInfo.contact
+        state.applicantInfo.contactInfo.phone = applicantInfo.phoneNumber
+        state.applicantInfo.contactInfo.email = applicantInfo.emailAddress
+        state.applicantInfo.contactInfo.fax = applicantInfo.faxNumber
+      }
+
+
+
       state.additionalCompInfo.jurisdiction = dbcompanyInfo.xproJurisdiction
       state.additionalCompInfo.natureOfBussiness = dbcompanyInfo.natureBusinessInfo
       //state.details = dbcompanyInfo.details
@@ -278,13 +330,26 @@ export default new Vuex.Store({
       }
 
       state.nrData.requestTypeCd = state.compInfo.requestType
-      state.nrData.applicant = state.applicantInfo.applicantname.firstName
-      //state.applicantInfo.applicantname.lastName = dbcompanyInfo.lastName
-      //state.applicantInfo.contactInfo.address = dbcompanyInfo.address
-      state.nrData.contact = state.applicantInfo.contactInfo.contactName
-      state.nrData.phoneNumber =  state.applicantInfo.contactInfo.phone
-      //state.applicantInfo.contactInfo.email = dbcompanyInfo.email
-      //state.applicantInfo.contactInfo.fax = dbcompanyInfo.fax
+
+      var applicantInfo = {}
+      applicantInfo.clientFirstName = state.applicantInfo.clientName.firstName
+      applicantInfo.clientLastName = state.applicantInfo.clientName.lastName
+      applicantInfo.firstName = state.applicantInfo.applicantName.firstName
+      applicantInfo.lastName = state.applicantInfo.applicantName.lastName
+      applicantInfo.middleName = state.applicantInfo.applicantName.middleName
+      applicantInfo.addrLine1 = state.applicantInfo.contactInfo.addressLine1
+      applicantInfo.addrLine2 = state.applicantInfo.contactInfo.addressLine2
+      applicantInfo.addrLine3 = state.applicantInfo.contactInfo.addressLine3
+      applicantInfo.city = state.applicantInfo.contactInfo.city
+      applicantInfo.stateProvinceCd = state.applicantInfo.contactInfo.province
+      applicantInfo.postalCd = state.applicantInfo.contactInfo.postalCode
+      applicantInfo.countryTypeCd = state.applicantInfo.contactInfo.country
+      applicantInfo.contact = state.applicantInfo.contactInfo.contactName
+      applicantInfo.phoneNumber = state.applicantInfo.contactInfo.phone
+      applicantInfo.emailAddress = state.applicantInfo.contactInfo.email
+      applicantInfo.faxNumber = state.applicantInfo.contactInfo.fax
+      state.nrData.applicants = [applicantInfo]
+
       state.nrData.xproJurisdiction = state.additionalCompInfo.jurisdiction
       state.nrData.natureBusinessInfo = state.additionalCompInfo.natureOfBussiness
       state.nrData.details = state.details
@@ -406,9 +471,10 @@ export default new Vuex.Store({
       const url = '/api/v1/requests/queues/@me/oldest'
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        console.log('Comp No Response:' + response)
+        console.log('Comp No Response:');
+        //response.data.nameRequest = 'NR00000022'; // TODO - remove
+        console.log(response);
         commit('loadpostgresNo',response.data)
-        commit('is_my_current', true);
       })
     },
 
@@ -422,6 +488,7 @@ export default new Vuex.Store({
         console.log('Comp Info Response:' + response.data)
         localStorage.setItem('COMPINFO',response.data)
         commit('loadCompanyInfo',response.data)
+        commit('is_my_current', true);
       })
       .catch(error => console.log('ERROR: ' + error))
     },
@@ -479,11 +546,6 @@ export default new Vuex.Store({
     loadDropdowns( {commit, state} ) {
 
       var json_files_path = 'static/ui_dropdowns/';
-
-      // priorities
-      if (state.listPriorities === null) {
-        readJFile(json_files_path + 'requestpriority.json', function (myArray) { commit('listPriorities', myArray);})
-      }
 
       // jurisdictions - first list 1, then list 2
       if (state.listJurisdictions === null) {
@@ -548,14 +610,41 @@ export default new Vuex.Store({
     requestType(state) {
       return state.compInfo.requestType
     },
+    clientFirstName(state) {
+      return state.applicantInfo.clientName.firstName
+    },
+    clientLastName(state) {
+      return state.applicantInfo.clientName.lastName
+    },
     firstName(state) {
-      return state.applicantInfo.applicantname.firstName
+      return state.applicantInfo.applicantName.firstName
+    },
+    middleName(state) {
+      return state.applicantInfo.applicantName.middleName
     },
     lastName(state) {
-      return state.applicantInfo.applicantname.lastName
+      return state.applicantInfo.applicantName.lastName
     },
-    address(state) {
-      return state.applicantInfo.contactInfo.address
+    addressLine1(state) {
+      return state.applicantInfo.contactInfo.addressLine1
+    },
+    addressLine2(state) {
+      return state.applicantInfo.contactInfo.addressLine2
+    },
+    addressLine3(state) {
+      return state.applicantInfo.contactInfo.addressLine3
+    },
+    city(state) {
+      return state.applicantInfo.contactInfo.city
+    },
+    province(state) {
+      return state.applicantInfo.contactInfo.province
+    },
+    postalCode(state) {
+      return state.applicantInfo.contactInfo.postalCode
+    },
+    country(state) {
+      return state.applicantInfo.contactInfo.country
     },
     conEmail(state) {
       return  state.applicantInfo.contactInfo.email
@@ -588,7 +677,8 @@ export default new Vuex.Store({
       return state.examiner
     },
     priority(state) {
-      return state.priority
+      if (state.priority == 'Y') return true;
+      else return false;
     },
     reSubmissionYN(state) {
       return state.reSubmission.reSubmissionYN

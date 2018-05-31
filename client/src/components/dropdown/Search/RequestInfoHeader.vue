@@ -6,16 +6,8 @@
       <!-- details col 1 - priority, comments, etc -->
       <div id='div1' class="col-md-5" >
         <div class="row">
-          <div class="col-md-4" >
-            <div v-if="!is_editing"
-                  v-bind:class="{'priority-high': high_priority, 'priority': true}">
-              {{ priority_desc }}</div>
-            <select v-else v-model="priority" class="form-control">
-              <option v-for="option in priority_options" v-bind:value="option.value"
-                      v-bind:key="option.value">
-                {{ option.text }}
-              </option>
-            </select>
+          <div class="col-md-4" style="height: 30px;">
+            <div class="priority" v-if="priority">Priority</div>
           </div>
           <div class="col">
             <p v-if="!is_editing" style="font-weight: bold;">{{ requestType_desc }}</p>
@@ -129,9 +121,6 @@ import clientinfoview from '@/components/dropdown/Search/client/ClientInfoHeader
 export default {
     name: 'RequestInfoHeader',
     computed: {
-      priority_options() {
-        return this.$store.getters.listPriorities;
-      },
       jurisdiction_options() {
         return this.$store.getters.listJurisdictions;
       },
@@ -222,24 +211,8 @@ export default {
       examiner() {
         return this.$store.getters.examiner;
       },
-      priority: {
-        get: function() {
-          return this.$store.getters.priority?this.$store.getters.priority:"null";
-        },
-        set: function(value) {
-          this.$store.commit('priority', value);
-        }
-      },
-      priority_desc: function () {
-        try {
-          return getDescFromList(this.priority_options, this.priority);
-        } catch (err) {
-          return '';
-        }
-      },
-      high_priority() {
-        if (this.priority == 'PQ' || this.priority == 'PJ') return true;
-        else return false;
+      priority() {
+        return this.$store.getters.priority;
       },
       resubmissionYN: {
         get: function() {
@@ -306,37 +279,10 @@ export default {
     },
     methods: {
       setInterface(){
-
-        this.setNRNum()
-        this.setPriority()
-        this.setComp
-        this.setNuans()
-        this.setSK()
-        this.setNOB()
-        this.setAddInfo()
-      },
-      setNRNum() {
-      },
-      setPriority() {
-      },
-      setAddInfo() {
-      },
-      setComp() {
-      },
-      setNuans() {
-      },
-      setSK() {
-      },
-      setNOB() {
-        //this.$store.state.additionalCompInfo.natureOfBussiness = this.natureOfBusiness;
       },
       toggleDetails() {
         if (this.$store.state.is_header_shown) this.$store.state.is_header_shown = false;
         else this.$store.state.is_header_shown = true;
-      },
-      setBorder(id) {
-        var tb = document.getElementById(id);
-        tb.borderWidth = "1";
       },
       edit() {
         this.$store.state.is_editing = true;
@@ -377,10 +323,6 @@ export default {
   .priority {
     padding: 5px;
     text-align: center;
-    background-color: white;
-    color: black;
-  }
-  .priority-high{
     background-color: #cc0000;
     color: white;
   }
