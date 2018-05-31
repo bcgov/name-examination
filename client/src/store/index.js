@@ -21,10 +21,12 @@ export default new Vuex.Store({
     currentState: null,
     is_editing: false,
     is_header_shown: false,
+    is_my_current: false,
     nrData: null,
     details: null,
     additionalInfo: null,
     internalComments: null,
+    furnished: null,
     listPriorities: null,
     listJurisdictions: null,
     listRequestTypes: null,
@@ -65,6 +67,7 @@ export default new Vuex.Store({
         linkedNR: null
       },
       reservationCount: null,
+      submittedDate: null,
       expiryDate: null,
   //  },
     issueText: null,
@@ -85,6 +88,9 @@ export default new Vuex.Store({
   mutations: {
     requestType (state, value) {
       state.compInfo.requestType = value;
+    },
+    currentState(state, value) {
+      state.currentState = value;
     },
     firstName (state, value) {
       state.applicantInfo.applicantname.firstName = value;
@@ -211,6 +217,7 @@ export default new Vuex.Store({
         }
       }
 
+      state.currentState = dbcompanyInfo.state;
       state.compInfo.requestType = dbcompanyInfo.requestTypeCd
       state.applicantInfo.applicantname.firstName = dbcompanyInfo.applicant
       //state.applicantInfo.applicantname.lastName = dbcompanyInfo.lastName
@@ -233,6 +240,7 @@ export default new Vuex.Store({
       //state.reSubmission.linkedNR = dbcompanyInfo.linkedNR
       //state.reservationCount = dbcompanyInfo.reservationCount
       state.expiryDate = dbcompanyInfo.expiryDate
+      state.submittedDate = dbcompanyInfo.submittedDate
     },
 
     loadCompanyIssues(state, dbcompanyIssues) {
@@ -291,6 +299,7 @@ export default new Vuex.Store({
       //state.reSubmission.linkedNR = dbcompanyInfo.linkedNR
       //state.reservationCount = dbcompanyInfo.reservationCount
       state.nrData.expiryDate = state.expiryDate
+      state.nrData.submittedDate = state.submittedDate
     },
 
     saveDetail(state,detail){
@@ -304,6 +313,9 @@ export default new Vuex.Store({
     },
     listRequestTypes (state, value) {
       state.listRequestTypes = value;
+    },
+    is_my_current(state, value) {
+      state.is_my_current = value;
     },
   },
 
@@ -396,6 +408,7 @@ export default new Vuex.Store({
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         console.log('Comp No Response:' + response)
         commit('loadpostgresNo',response.data)
+        commit('is_my_current', true);
       })
     },
 
@@ -414,13 +427,14 @@ export default new Vuex.Store({
     },
 
     updateNRState ({state},nrState) {
-      console.log('Updating Examination state for number: ' + state.compInfo.nrNumber)
+      console.log('Updating Examination state for number ' + state.compInfo.nrNumber + ' to ' + nrState)
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + state.compInfo.nrNumber
 
       axios.patch(url,{headers: {Authorization: `Bearer ${myToken}`}},{"state": nrState} )
            .then(function(response){
-                console.log('state updated to ' + nrState + ' for ' + state.compInfo.nrNumber)
+                console.log('state updated to ' + nrState + ' for ' + state.compInfo.nrNumber);
+                commit('currentState', nrState); // TODO - need this?
             })
             .catch(error => console.log('ERROR: ' + error))
       },
@@ -482,7 +496,7 @@ export default new Vuex.Store({
         });
       }
 
-      // priorities
+      // request types
       if (state.listRequestTypes === null) {
         readJFile(json_files_path + 'requesttype.json', function (myArray) { commit('listRequestTypes', myArray);})
       }
@@ -498,11 +512,20 @@ export default new Vuex.Store({
     is_header_shown(state) {
       return state.is_header_shown
     },
+    is_my_current(state) {
+      return state.is_my_current
+    },
     user(state) {
       return state.user
     },
     email(state) {
       return state.email
+    },
+    currentState(state) {
+      return state.currentState;
+    },
+    currentName(state) {
+      return state.currentName;
     },
     issueText(state) {
       return state.issueText
@@ -578,6 +601,9 @@ export default new Vuex.Store({
     },
     expiryDate(state) {
       return state.expiryDate
+    },
+    submittedDate(state) {
+      return state.submittedDate;
     },
     issue_Match(state) {
       return state.issue.issue_Match

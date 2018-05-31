@@ -103,14 +103,18 @@
 
     <!-- row 2 - buttons -->
     <div class="row">
-      <div id='div4' class="col-md-12">
+      <div id='header-button-container' class="col-md-12">
         <span v-if="!is_editing" class="f1" @click="toggleDetails">F1</span>
+
+        <button v-if="!is_editing" class="btn btn-sm btn-default"
+                style="float: left;" @click="edit">Edit</button>
+        <span v-else>
+          <button class="btn btn-sm btn-default"
+                  style="float: left;" @click="save">Save</button>
+          <button class="btn btn-sm btn-default"
+                  style="float: left;" @click="cancelSave">Cancel</button>
+        </span>
       </div>
-      <button v-if="!is_editing" class="btn btn-default" @click="edit">Edit</button>
-      <span v-else>
-        <button class="btn btn-default" @click="save">Save</button>
-        <button class="btn btn-default" @click="cancelSave">Cancel</button>
-      </span>
     </div>
 
   </span>
@@ -380,10 +384,11 @@ export default {
     background-color: #cc0000;
     color: white;
   }
-   .f1 {
-     border: 1px solid #000000;
-     padding: 2px;
-   }
+  .f1 {
+    border: 1px solid #000000;
+    padding: 2px;
+    float: right;
+  }
 
 
  </style>

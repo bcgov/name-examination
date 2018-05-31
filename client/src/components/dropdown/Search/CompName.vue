@@ -22,6 +22,19 @@
         </div>
       </div>
 
+      <div class="row" id="top-buttons">
+        <div class="col">
+          <button class="btn btn-sm btn-secondary" @click="getNextCompany()" >Get Next</button>
+          <button class="btn btn-sm btn-primary" v-if="is_my_current" @click="nameApproved()">
+            Accept</button>
+          <button class="btn btn-sm btn-danger" v-if="is_my_current" @click="nameRejected()" >
+            Reject</button>
+          <button class="btn btn-sm btn-danger" v-if="is_complete" @click="reOpen()" >
+            Re-Open</button>
+        </div>
+      </div>
+
+
     </div>
   </div>
 </template>
@@ -40,6 +53,17 @@
       },
       compName3() {
         return this.$store.getters.compName3;
+      },
+      is_my_current() {
+        return this.$store.getters.is_my_current;
+      },
+      is_complete() {
+        // indicates a complete BUT REVERTABLE (not yet furnished) NR that can be re-opened.
+        if (this.$store.state.furnished) return false;
+        else {
+          if (['APPROVED', 'REJECTED', 'CONDITION'].indexOf(this.$store.getters.currentState) >= 0 ) return true;
+          else false;
+        }
       }
     },
     mounted() {
@@ -52,6 +76,18 @@
       setFocus(id) {
         const ell = document.getElementById(id);
         ell.focus();
+      },
+      getNextCompany() {
+        this.$store.dispatch('getpostgrescompNo');
+      },
+      nameApproved() {
+        this.$store.dispatch('nameApproved');
+      },
+      nameRejected() {
+        this.$store.dispatch('nameRejected');
+      },
+      reOpen() {
+        this.$store.dispatch('updateNRState', 'INPROGRESS');
       }
     }
   }
@@ -71,5 +107,10 @@
   }
   .rtb {
     border: 0px;
+  }
+
+  #top-buttons button {
+    float: right;
+    margin-left: 5px;
   }
 </style>

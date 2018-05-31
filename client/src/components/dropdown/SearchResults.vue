@@ -59,4 +59,7 @@
 </script>
 
 <style scoped>
+  .namePage > .row {
+    margin-top: 10px;
+  }
 </style>
