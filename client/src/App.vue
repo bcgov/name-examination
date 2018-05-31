@@ -1,4 +1,5 @@
 /* eslint-disable */
+
 <template>
   <div>
     <div id="app">
@@ -12,7 +13,8 @@
 <script>
 /* eslint-disable */
 import StdHeader from '@/components/application/sections/StdHeader.vue'
-  export default {
+
+export default {
     name: 'App',
     components:{
       StdHeader
@@ -21,7 +23,7 @@ import StdHeader from '@/components/application/sections/StdHeader.vue'
       //this.$store.dispatch('tryAutoLogin')
       this.$store.dispatch('loadDropdowns');
     }
-  };
+};
 </script>
 
 <style>

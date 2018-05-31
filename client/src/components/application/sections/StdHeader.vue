@@ -52,8 +52,10 @@
 /* eslint-disable */
   export default {
     name: "std-header",
-    data() {
-      return nrNum
+    data () {
+      return {
+        nrNum: ''
+      }
     },
     computed: {
       userid() {

@@ -2,10 +2,10 @@
 <template>
   <div>
     <div class="name-sect">
-      Names:<br />
       <div class="row">
         <div class="col name1-font">
-          <input id="cmp1" v-model="compName1" onclick="setBorder('cmp1')" class='rtb'>
+          <p v-shortkey.once="['f1']" @shortkey="runAlert()" v-if="!is_editing">{{ compName1 }}</p>
+          <input v-else v-model="compName1" class="form-control" />
         </div>
       </div>
 
@@ -18,7 +18,6 @@
       <div class="row">
         <div class="col name2-font">
           <input id="cmp3" v-model="compName3" onclick="setBorder('cmp3')" class='rtb'>
-
         </div>
       </div>
 
@@ -52,6 +51,9 @@
       setFocus(id) {
         const ell = document.getElementById(id);
         ell.focus();
+      },
+      runAlert(){
+        alert("Here")
       }
     }
   }

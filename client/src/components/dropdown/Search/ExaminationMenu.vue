@@ -28,8 +28,9 @@
     name: 'ExaminationMenu',
     methods: {
       getNextCompany() {
-        //this.$store.dispatch('selectNextCompany');
         this.$store.dispatch('getpostgrescompNo');
+        //this.$store.state.currentChoice = this.$store.state.currentChoice + 1
+        //this.$store.state.currentName =  this.$store.state.compNames[this.$store.state.currentChoice].compName
       },
       nameApproved() {
         this.$store.dispatch('nameApproved');
