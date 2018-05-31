@@ -25,6 +25,9 @@ export default new Vuex.Store({
     details: null,
     additionalInfo: null,
     internalComments: null,
+    listPriorities: null,
+    listJurisdictions: null,
+    listRequestTypes: null,
    // formData: {
       compInfo: {
         nrNumber: null,
@@ -225,7 +228,7 @@ export default new Vuex.Store({
       state.additionalCompInfo.sk_name = dbcompanyInfo.skPartner
       state.additionalCompInfo.nr_status = dbcompanyInfo.state
       state.examiner = dbcompanyInfo.userId
-      state.priority = dbcompanyInfo.priorityCD
+      state.priority = dbcompanyInfo.priorityCd
       //state.reSubmission.reSubmissionYN = dbcompanyInfo.resubmissionYN
       //state.reSubmission.linkedNR = dbcompanyInfo.linkedNR
       //state.reservationCount = dbcompanyInfo.reservationCount
@@ -283,7 +286,7 @@ export default new Vuex.Store({
       state.nrData.skPartner = state.additionalCompInfo.sk_name
       //state.nrData.state =  state.additionalCompInfo.nr_status
       state.nrData.userId = state.examiner
-      state.nrData.priorityCD = state.priority
+      state.nrData.priorityCd = state.priority
       //state.reSubmission.reSubmissionYN = dbcompanyInfo.resubmissionYN
       //state.reSubmission.linkedNR = dbcompanyInfo.linkedNR
       //state.reservationCount = dbcompanyInfo.reservationCount
@@ -292,7 +295,16 @@ export default new Vuex.Store({
 
     saveDetail(state,detail){
       state.details = detail
-    }
+    },
+    listPriorities (state, value) {
+      state.listPriorities = value;
+    },
+    listJurisdictions (state, value) {
+      state.listJurisdictions = value;
+    },
+    listRequestTypes (state, value) {
+      state.listRequestTypes = value;
+    },
   },
 
   actions: {
@@ -438,6 +450,7 @@ export default new Vuex.Store({
             })
             .catch(error => console.log('ERROR: ' + error))
     },
+
     updateRequest( {commit, state}) {
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       commit('update_nrData')
@@ -447,6 +460,33 @@ export default new Vuex.Store({
               console.log('Request updated for ' + state.compInfo.nrNumber)
            })
            .catch(error => console.log('ERROR: ' + error))
+    },
+
+    loadDropdowns( {commit, state} ) {
+
+      var json_files_path = 'static/ui_dropdowns/';
+
+      // priorities
+      if (state.listPriorities === null) {
+        readJFile(json_files_path + 'requestpriority.json', function (myArray) { commit('listPriorities', myArray);})
+      }
+
+      // jurisdictions - first list 1, then list 2
+      if (state.listJurisdictions === null) {
+        readJFile(json_files_path + 'jurisdiction 1.json', function (myArray) {
+          commit('listJurisdictions', myArray);
+
+          readJFile(json_files_path + 'jurisdiction 2.json', function (myArray) {
+            commit('listJurisdictions', state.listJurisdictions.concat(myArray));
+          });
+        });
+      }
+
+      // priorities
+      if (state.listRequestTypes === null) {
+        readJFile(json_files_path + 'requesttype.json', function (myArray) { commit('listRequestTypes', myArray);})
+      }
+
     }
 
   },
@@ -577,6 +617,15 @@ export default new Vuex.Store({
     },
     internalComments(state) {
       return state.internalComments
+    },
+    listPriorities(state) {
+      return state.listPriorities
+    },
+    listJurisdictions(state) {
+      return state.listJurisdictions
+    },
+    listRequestTypes(state) {
+      return state.listRequestTypes
     },
   }
 })

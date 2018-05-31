@@ -1,25 +1,22 @@
 ﻿[
 	{
-		"PRIORITY_CD": "PQ",
+		"value": "PQ",
 		"SHORT_DESC": "Priority Request",
-		"LONG_DESC": "Priority Request"
+		"text": "Priority Request"
 	},
 	{
-		"PRIORITY_CD": "RJ",
+		"value": "RJ",
 		"SHORT_DESC": "Regular Jump",
-		"LONG_DESC": "Regular Jump"
+		"text": "Regular Jump"
 	},
 	{
-		"PRIORITY_CD": "RQ",
+		"value": "RQ",
 		"SHORT_DESC": "Regular Request",
-		"LONG_DESC": "Regular Request"
+		"text": "Regular Request"
 	},
 	{
-		"PRIORITY_CD": "PJ",
+		"value": "PJ",
 		"SHORT_DESC": "Priority Jump",
-		"LONG_DESC": "Priority Jump"
-	},
-	{
-		"PRIORITY_CD": ""
+		"text": "Priority Jump"
 	}
 ]

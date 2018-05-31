@@ -1,25 +1,22 @@
 ﻿[
 	{
-		"NAME_STATE_TYPE_CD": "A",
-		"SHORT_DESC": "Approved",
+		"value": "A",
+		"text": "Approved",
 		"FULL_DESC": "Examined"
 	},
 	{
-		"NAME_STATE_TYPE_CD": "C",
-		"SHORT_DESC": "Cond. Appr.",
+		"value": "C",
+		"text": "Cond. Appr.",
 		"FULL_DESC": "Examined - Conditionally Approved"
 	},
 	{
-		"NAME_STATE_TYPE_CD": "R",
-		"SHORT_DESC": "Rejected",
+		"value": "R",
+		"text": "Rejected",
 		"FULL_DESC": "Examined and rejected"
 	},
 	{
-		"NAME_STATE_TYPE_CD": "NE",
-		"SHORT_DESC": "Not Examined",
+		"value": "NE",
+		"text": "Not Examined",
 		"FULL_DESC": "Not examined - in the queue or another choice approved"
-	},
-	{
-		"NAME_STATE_TYPE_CD": ""
 	}
 ]

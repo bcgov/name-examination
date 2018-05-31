@@ -1,15 +1,12 @@
 ﻿[
 	{
-		"PARTY_TYPE_CD": "APP",
-		"SHORT_DESC": "Applicant",
+		"value": "APP",
+		"text": "Applicant",
 		"FULL_DESC": "Applicant"
 	},
 	{
-		"PARTY_TYPE_CD": "CLN",
-		"SHORT_DESC": "Client",
+		"value": "CLN",
+		"text": "Client",
 		"FULL_DESC": "Client"
-	},
-	{
-		"PARTY_TYPE_CD": ""
 	}
 ]

@@ -19,6 +19,7 @@ import StdHeader from '@/components/application/sections/StdHeader.vue'
     },
     created () {
       //this.$store.dispatch('tryAutoLogin')
+      this.$store.dispatch('loadDropdowns');
     }
   };
 </script>

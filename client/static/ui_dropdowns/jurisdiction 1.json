@@ -1,75 +1,76 @@
 ﻿[
 	{
-		"CAN_JUR_TYP_CD": "AB",
+		"value": "AB",
 		"SHORT_DESC": "AB",
-		"FULL_DESC": "ALBERTA"
+		"text": "ALBERTA"
 	},
 	{
-		"CAN_JUR_TYP_CD": "MB",
+		"value": "MB",
 		"SHORT_DESC": "MB",
-		"FULL_DESC": "MANITOBA"
+		"text": "MANITOBA"
 	},
 	{
-		"CAN_JUR_TYP_CD": "NB",
+		"value": "NB",
 		"SHORT_DESC": "NB",
-		"FULL_DESC": "NEW BRUNSWICK"
+		"text": "NEW BRUNSWICK"
 	},
 	{
-		"CAN_JUR_TYP_CD": "NF",
+		"value": "NF",
 		"SHORT_DESC": "NF",
-		"FULL_DESC": "NEWFOUNDLAND AND LABRADOR"
+		"text": "NEWFOUNDLAND AND LABRADOR"
 	},
 	{
-		"CAN_JUR_TYP_CD": "NT",
+		"value": "NT",
 		"SHORT_DESC": "NT",
-		"FULL_DESC": "NORTHWEST TERRITORIES"
+		"text": "NORTHWEST TERRITORIES"
 	},
 	{
-		"CAN_JUR_TYP_CD": "NS",
+		"value": "NS",
 		"SHORT_DESC": "NS",
-		"FULL_DESC": "NOVA SCOTIA"
+		"text": "NOVA SCOTIA"
 	},
 	{
-		"CAN_JUR_TYP_CD": "NU",
+		"value": "NU",
 		"SHORT_DESC": "NU",
-		"FULL_DESC": "NUNAVUT"
+		"text": "NUNAVUT"
 	},
 	{
-		"CAN_JUR_TYP_CD": "ON",
+		"value": "ON",
 		"SHORT_DESC": "ON",
-		"FULL_DESC": "ONTARIO"
+		"text": "ONTARIO"
 	},
 	{
-		"CAN_JUR_TYP_CD": "PE",
+		"value": "PE",
 		"SHORT_DESC": "PE",
-		"FULL_DESC": "PRINCE EDWARD ISLAND"
+		"text": "PRINCE EDWARD ISLAND"
 	},
 	{
-		"CAN_JUR_TYP_CD": "QC",
+		"value": "QC",
 		"SHORT_DESC": "QC",
-		"FULL_DESC": "QUEBEC"
+		"text": "QUEBEC"
 	},
 	{
-		"CAN_JUR_TYP_CD": "SK",
+		"value": "SK",
 		"SHORT_DESC": "SK",
-		"FULL_DESC": "SASKATCHEWAN"
+		"text": "SASKATCHEWAN"
 	},
 	{
-		"CAN_JUR_TYP_CD": "YT",
+		"value": "YT",
 		"SHORT_DESC": "YT",
-		"FULL_DESC": "YUKON"
+		"text": "YUKON"
 	},
 	{
-		"CAN_JUR_TYP_CD": "OT",
+		"value": "OT",
 		"SHORT_DESC": "OTHER",
-		"FULL_DESC": "OTHER"
+		"text": "OTHER"
 	},
 	{
-		"CAN_JUR_TYP_CD": "FD",
+		"value": "FD",
 		"SHORT_DESC": "FEDERAL",
-		"FULL_DESC": "FEDERAL"
+		"text": "FEDERAL"
 	},
 	{
-		"CAN_JUR_TYP_CD": ""
+		"value": "",
+    "text": "----"
 	}
 ]
