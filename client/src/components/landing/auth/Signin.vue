@@ -9,7 +9,7 @@
   var authorized = localStorage.getItem("AUTHORIZED");
 
   if (!authorized) {
-    let keycloak = Keycloak('static/keycloak.json');
+    let keycloak = Keycloak('static/keycloak/keycloak.json');
    //var token = localStorage.getItem('KEYCLOAK_TOKEN');
     var token;
     keycloak.init({token: token, onLoad: 'login-required'}).success(function (authenticated) {

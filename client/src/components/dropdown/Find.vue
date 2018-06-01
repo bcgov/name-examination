@@ -14,7 +14,7 @@
 
 <script>
   /* eslint-disable */
-  import requestinfoheaderview from '@/components/dropdown/Find/findFilter.vue';
+  import findfilter from '@/components/dropdown/Find/findFilter.vue';
 
   export default {
     name: "find",
