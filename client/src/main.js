@@ -10,6 +10,7 @@ import router from '@/router'
 import store from '@/store'
 
 Vue.use(Vuelidate)
+Vue.use(require('vue-shortkey'))
 
 //axios.defaults.baseURL =  <-- set in setttings and auto login
 axios.defaults.headers.get['Accept'] = 'application/json'
