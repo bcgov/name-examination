@@ -16,7 +16,7 @@ export default new Vuex.Store({
     kctoken: null,
     nr_conflict: null,
     user_role: null,
-    currentChoice: null,
+    currentChoice: 1,
     currentName: null,
     currentState: null,
     is_editing: false,
