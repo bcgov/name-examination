@@ -30,6 +30,7 @@ export default new Vuex.Store({
     listPriorities: null,
     listJurisdictions: null,
     listRequestTypes: null,
+    applicantsOrigData: null,
    // formData: {
       compInfo: {
         nrNumber: null,
@@ -256,25 +257,26 @@ export default new Vuex.Store({
       state.currentState = dbcompanyInfo.state;
       state.compInfo.requestType = dbcompanyInfo.requestTypeCd
 
-      var applicantInfo = dbcompanyInfo.applicants[0]
-      if (applicantInfo !== undefined) {
-        state.applicantInfo.clientName.firstName = applicantInfo.clientFirstName
-        state.applicantInfo.clientName.lastName = applicantInfo.clientLastName
-        state.applicantInfo.applicantName.firstName = applicantInfo.firstName
-        state.applicantInfo.applicantName.middleName = applicantInfo.middleName
-        state.applicantInfo.applicantName.lastName = applicantInfo.lastName
-        state.applicantInfo.contactInfo.addressLine1 = applicantInfo.addrLine1
-        state.applicantInfo.contactInfo.addressLine2 = applicantInfo.addrLine2
-        state.applicantInfo.contactInfo.addressLine3 = applicantInfo.addrLine3
-        state.applicantInfo.contactInfo.city = applicantInfo.city
-        state.applicantInfo.contactInfo.province = applicantInfo.stateProvinceCd
-        state.applicantInfo.contactInfo.postalCode = applicantInfo.postalCd
-        state.applicantInfo.contactInfo.country = applicantInfo.countryTypeCd
-        state.applicantInfo.contactInfo.contactName = applicantInfo.contact
-        state.applicantInfo.contactInfo.phone = applicantInfo.phoneNumber
-        state.applicantInfo.contactInfo.email = applicantInfo.emailAddress
-        state.applicantInfo.contactInfo.fax = applicantInfo.faxNumber
-      }
+      // we keep the original data so that if fields exist that we do not use, we don't lose that
+      // data when we put new data
+      state.applicantOrigData = dbcompanyInfo.applicants
+      state.applicantInfo.clientName.firstName = dbcompanyInfo.applicants.clientFirstName
+      state.applicantInfo.clientName.lastName = dbcompanyInfo.applicants.clientLastName
+      state.applicantInfo.applicantName.firstName = dbcompanyInfo.applicants.firstName
+      state.applicantInfo.applicantName.middleName = dbcompanyInfo.applicants.middleName
+      state.applicantInfo.applicantName.lastName = dbcompanyInfo.applicants.lastName
+      state.applicantInfo.contactInfo.addressLine1 = dbcompanyInfo.applicants.addrLine1
+      state.applicantInfo.contactInfo.addressLine2 = dbcompanyInfo.applicants.addrLine2
+      state.applicantInfo.contactInfo.addressLine3 = dbcompanyInfo.applicants.addrLine3
+      state.applicantInfo.contactInfo.city = dbcompanyInfo.applicants.city
+      state.applicantInfo.contactInfo.province = dbcompanyInfo.applicants.stateProvinceCd
+      state.applicantInfo.contactInfo.postalCode = dbcompanyInfo.applicants.postalCd
+      state.applicantInfo.contactInfo.country = dbcompanyInfo.applicants.countryTypeCd
+      state.applicantInfo.contactInfo.contactName = dbcompanyInfo.applicants.contact
+      state.applicantInfo.contactInfo.phone = dbcompanyInfo.applicants.phoneNumber
+      state.applicantInfo.contactInfo.email = dbcompanyInfo.applicants.emailAddress
+      state.applicantInfo.contactInfo.fax = dbcompanyInfo.applicants.faxNumber
+
 
 
 
@@ -282,7 +284,7 @@ export default new Vuex.Store({
       state.additionalCompInfo.natureOfBussiness = dbcompanyInfo.natureBusinessInfo
       //state.details = dbcompanyInfo.details
       state.additionalInfo = dbcompanyInfo.additionalInfo
-      state.internalComments = dbcompanyInfo.examComment
+      state.internalComments = dbcompanyInfo.comments
       state.additionalCompInfo.nuans = dbcompanyInfo.nuansNum
       state.additionalCompInfo.sk_name = dbcompanyInfo.skPartner
       state.additionalCompInfo.nr_status = dbcompanyInfo.state
@@ -331,30 +333,29 @@ export default new Vuex.Store({
 
       state.nrData.requestTypeCd = state.compInfo.requestType
 
-      var applicantInfo = {}
-      applicantInfo.clientFirstName = state.applicantInfo.clientName.firstName
-      applicantInfo.clientLastName = state.applicantInfo.clientName.lastName
-      applicantInfo.firstName = state.applicantInfo.applicantName.firstName
-      applicantInfo.lastName = state.applicantInfo.applicantName.lastName
-      applicantInfo.middleName = state.applicantInfo.applicantName.middleName
-      applicantInfo.addrLine1 = state.applicantInfo.contactInfo.addressLine1
-      applicantInfo.addrLine2 = state.applicantInfo.contactInfo.addressLine2
-      applicantInfo.addrLine3 = state.applicantInfo.contactInfo.addressLine3
-      applicantInfo.city = state.applicantInfo.contactInfo.city
-      applicantInfo.stateProvinceCd = state.applicantInfo.contactInfo.province
-      applicantInfo.postalCd = state.applicantInfo.contactInfo.postalCode
-      applicantInfo.countryTypeCd = state.applicantInfo.contactInfo.country
-      applicantInfo.contact = state.applicantInfo.contactInfo.contactName
-      applicantInfo.phoneNumber = state.applicantInfo.contactInfo.phone
-      applicantInfo.emailAddress = state.applicantInfo.contactInfo.email
-      applicantInfo.faxNumber = state.applicantInfo.contactInfo.fax
-      state.nrData.applicants = [applicantInfo]
+      state.applicantOrigData.clientFirstName = state.applicantInfo.clientName.firstName
+      state.applicantOrigData.clientLastName = state.applicantInfo.clientName.lastName
+      state.applicantOrigData.firstName = state.applicantInfo.applicantName.firstName
+      state.applicantOrigData.lastName = state.applicantInfo.applicantName.lastName
+      state.applicantOrigData.middleName = state.applicantInfo.applicantName.middleName
+      state.applicantOrigData.addrLine1 = state.applicantInfo.contactInfo.addressLine1
+      state.applicantOrigData.addrLine2 = state.applicantInfo.contactInfo.addressLine2
+      state.applicantOrigData.addrLine3 = state.applicantInfo.contactInfo.addressLine3
+      state.applicantOrigData.city = state.applicantInfo.contactInfo.city
+      state.applicantOrigData.stateProvinceCd = state.applicantInfo.contactInfo.province
+      state.applicantOrigData.postalCd = state.applicantInfo.contactInfo.postalCode
+      state.applicantOrigData.countryTypeCd = state.applicantInfo.contactInfo.country
+      state.applicantOrigData.contact = state.applicantInfo.contactInfo.contactName
+      state.applicantOrigData.phoneNumber = state.applicantInfo.contactInfo.phone
+      state.applicantOrigData.emailAddress = state.applicantInfo.contactInfo.email
+      state.applicantOrigData.faxNumber = state.applicantInfo.contactInfo.fax
+      state.nrData.applicants = state.applicantOrigData
 
       state.nrData.xproJurisdiction = state.additionalCompInfo.jurisdiction
       state.nrData.natureBusinessInfo = state.additionalCompInfo.natureOfBussiness
       state.nrData.details = state.details
       state.nrData.additionalInfo = state.additionalInfo
-      state.nrData.examComment = state.internalComments
+      state.nrData.comments = state.internalComments
       state.nrData.nuansNum = state.additionalCompInfo.nuans
       state.nrData.skPartner = state.additionalCompInfo.sk_name
       //state.nrData.state =  state.additionalCompInfo.nr_status
@@ -472,7 +473,7 @@ export default new Vuex.Store({
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         console.log('Comp No Response:');
-        //response.data.nameRequest = 'NR00000022'; // TODO - remove
+        response.data.nameRequest = 'NR00000022'; // TODO - remove
         console.log(response);
         commit('loadpostgresNo',response.data)
       })
