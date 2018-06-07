@@ -70,14 +70,39 @@
 
       <!-- details col 2 - nature of business -->
       <div id='div2' class="col-md-4">
-        <h3>NATURE OF BUSINESS</h3>
-        <div v-if="show_extended_header">
-          <textarea v-if="is_editing" v-model="natureOfBusiness" class="form-control" rows="10">
-            </textarea>
-          <p v-else style="white-space: pre-line;">{{ natureOfBusiness }}</p>
-        </div>
-        <p v-else style="white-space: pre-line;">{{ natureOfBusinessTruncated }}</p>
+        <div class="row">
+          <div class="col">
+            <h3>NATURE OF BUSINESS</h3>
+            <div v-if="show_extended_header">
+              <textarea v-if="is_editing" v-model="natureOfBusiness" class="form-control" rows="10">
+                </textarea>
+              <p v-else style="white-space: pre-line;">{{ natureOfBusiness }}</p>
+            </div>
+            <p v-else style="white-space: pre-line;">{{ natureOfBusinessTruncated }}</p>
 
+          </div>
+
+        </div>
+        <div class="row" v-if="is_editing">
+          <div class="col add-top-padding">
+            <h3>Name Choices</h3>
+
+            <table style="width: 100%;">
+              <tr>
+                <td>1.</td>
+                <td><input v-model="compName1" class="form-control" /></td>
+              </tr>
+              <tr>
+                <td>2.</td>
+                <td><input v-model="compName2" class="form-control" /></td>
+              </tr>
+              <tr>
+                <td>3.</td>
+                <td><input v-model="compName3" class="form-control" /></td>
+              </tr>
+            </table>
+          </div>
+        </div>
       </div>
 
       <!-- details col 3 - additional info, client details -->
@@ -149,6 +174,30 @@ export default {
       },
       nrNumber() {
         return  this.$store.getters.nrNumber;
+      },
+      compName1: {
+        get: function() {
+          return this.$store.getters.compName1;
+        },
+        set: function(value) {
+          this.$store.commit('compName1', value);
+        }
+      },
+      compName2: {
+        get: function() {
+          return this.$store.getters.compName2;
+        },
+        set: function(value) {
+          this.$store.commit('compName2', value);
+        }
+      },
+      compName3: {
+        get: function() {
+          return this.$store.getters.compName3;
+        },
+        set: function(value) {
+          this.$store.commit('compName3', value);
+        }
       },
       requestType: {
         get: function() {

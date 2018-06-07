@@ -3,26 +3,26 @@
   <div>
     <div class="name-sect">
       <div class="row">
-        <div class="col name1-font">
-          <p v-shortkey.once="['f1']" @shortkey="runAlert()" v-if="!is_editing">{{ compName1 }}</p>
-          <input v-else v-model="compName1" class="form-control" />
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col name2-font">
-          <input id="cmp2" v-model="compName2" onclick="setBorder('cmp2')" class='rtb'>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col name2-font">
-          <input id="cmp3" v-model="compName3" onclick="setBorder('cmp3')" class='rtb'>
-        </div>
-      </div>
-
-      <div class="row" id="top-buttons">
         <div class="col">
+          <table>
+            <tr class="name-option"
+                  v-bind:class="{'active-name-option': currentChoice==1}">
+              <td>1.</td>
+              <td v-shortkey.once="['f1']" @shortkey="runAlert()" >{{ compName1 }}</td>
+            </tr>
+            <tr class="name-option"
+                  v-bind:class="{'active-name-option': currentChoice==2}">
+              <td>2.</td>
+              <td>{{ compName2 }}</td>
+            </tr>
+            <tr class="name-option"
+                  v-bind:class="{'active-name-option': currentChoice==3}">
+              <td>3.</td>
+              <td>{{ compName3 }}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="col" id="top-buttons">
           <button class="btn btn-sm btn-secondary" @click="getNextCompany()" >Get Next</button>
           <button class="btn btn-sm btn-primary" v-if="is_my_current" @click="nameApproved()">
             Accept</button>
@@ -44,6 +44,12 @@
   export default {
     name: 'CompName',
     computed: {
+      is_editing() {
+        return  this.$store.getters.is_editing;
+      },
+      currentChoice() {
+        return this.$store.getters.currentChoice;
+      },
       compName1() {
         return this.$store.getters.compName1;
       },
@@ -68,14 +74,6 @@
     mounted() {
     },
     methods: {
-      setBorder(id) {
-        const tb = document.getElementById(id);
-        tb.borderWidth = "1";
-      },
-      setFocus(id) {
-        const ell = document.getElementById(id);
-        ell.focus();
-      },
       getNextCompany() {
         this.$store.dispatch('getpostgrescompNo');
       },
@@ -99,18 +97,13 @@
 <style scoped>
   .name-sect {
   }
-  .name1-font{
-    font-size: 2.2em;
-    text-align: left;
-  }
-  .name2-font{
+  .name-option {
     font-size:1.2em;
     text-align: left;
   }
-  .rtb {
-    border: 0px;
+  .active-name-option{
+    font-weight: bold;
   }
-
   #top-buttons button {
     float: right;
     margin-left: 5px;

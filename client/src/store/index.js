@@ -104,6 +104,15 @@ export default new Vuex.Store({
     currentState(state, value) {
       state.currentState = value;
     },
+    compName1(state, value) {
+      state.compInfo.compNames.compName1 = value;
+    },
+    compName2(state, value) {
+      state.compInfo.compNames.compName2 = value;
+    },
+    compName3(state, value) {
+      state.compInfo.compNames.compName3 = value;
+    },
     clientFirstName (state, value) {
       state.applicantInfo.clientName.firstName = value;
     },
@@ -322,10 +331,10 @@ export default new Vuex.Store({
               state.nrData.names[0].name = state.compInfo.compNames.compName1
               break;
             case 2:
-              state.nrData.names[0].name = state.compInfo.compNames.compName2
+              state.nrData.names[1].name = state.compInfo.compNames.compName2
               break;
             case 3:
-              state.nrData.names[0].name = state.compInfo.compNames.compName3
+              state.nrData.names[2].name = state.compInfo.compNames.compName3
               break;
           }
         }
@@ -583,6 +592,9 @@ export default new Vuex.Store({
     },
     email(state) {
       return state.email
+    },
+    currentChoice(state) {
+      return state.currentChoice;
     },
     currentState(state) {
       return state.currentState;
