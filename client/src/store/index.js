@@ -482,7 +482,6 @@ export default new Vuex.Store({
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         console.log('Comp No Response:');
-        response.data.nameRequest = 'NR00000022'; // TODO - remove
         console.log(response);
         commit('loadpostgresNo',response.data)
       })
