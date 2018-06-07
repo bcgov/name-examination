@@ -6,7 +6,11 @@
 
         <p>
           <label class="labelTxt">Conflicting Names</label>
-
+          <select v-model="selected">
+          <option v-for="option in conflictData" v-bind:key="option.value">
+            {{ option.text }}
+          </option>
+          </select>
         </p>
 
       </div>
@@ -26,7 +30,11 @@
       },
       name() {
         return  this.$store.getters.firstName;
+      },
+      conflictData() {
+        return  this.$store.conflictData;
       }
+
     },
     methods: {
       setBorder(id) {

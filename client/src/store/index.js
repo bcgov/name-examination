@@ -9,27 +9,32 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    nrNum: null,
+    //user data
     authorized: null,
     userId: null,
     email: null,
     kctoken: null,
-    nr_conflict: null,
     user_role: null,
+
+    //interface settings
+    maxChoices: 0,
     currentChoice: 1,
     currentName: null,
     currentState: null,
     is_editing: false,
     is_header_shown: false,
+    listPriorities: null,
+    listJurisdictions: null,
+    listRequestTypes: null,
+
+    //Name examination data
+    nrNum: null,
+    nr_conflict: null,
     nrData: null,
     details: null,
     additionalInfo: null,
     internalComments: null,
-    listPriorities: null,
-    listJurisdictions: null,
-    listRequestTypes: null,
-   // formData: {
-      compInfo: {
+    compInfo: {
         nrNumber: null,
         compNames: {
           compName1: null,
@@ -64,10 +69,12 @@ export default new Vuex.Store({
         reSubmissionYN: null,
         linkedNR: null
       },
-      reservationCount: null,
-      expiryDate: null,
-  //  },
+    reservationCount: null,
+    expiryDate: null,
     issueText: null,
+    //TODO
+    conflictJSon: null,
+    conflictList: null,
     issue: {
         issue_Match: null,
         issue_Consent: null,
@@ -193,6 +200,7 @@ export default new Vuex.Store({
         console.log('Error, No company names found')
         return
       } else {
+        state.maxChoices = dbcompanyInfo.names.length
         for (let record of dbcompanyInfo.names) {
           switch (record.choice) {
             case 1:
@@ -236,16 +244,6 @@ export default new Vuex.Store({
     },
 
     loadCompanyIssues(state, dbcompanyIssues) {
-      //state.issue.issue_Match = dbcompanyIssues.isue_Match
-      //state.issue.issue_Match_Text = dbcompanyIssues.issue_Match_Text
-      //state.issue.issue_Consent = dbcompanyIssues.issue_Consent
-      //state.issue.issue_Consent_Text = dbcompanyIssues.issue_Consent_Text
-      //state.issue.issue_TradeMark = dbcompanyIssues.issue_TradeMark
-      //state.issue.issue_TradeMark_Text = dbcompanyIssues.issue_TradeMark_Text
-      //state.issue.issue_History = dbcompanyIssues.issue_History
-      //state.issue.issue_History_Text = dbcompanyIssues.issue_History_Text
-      //state.issue.issue_Format = dbcompanyIssues.issue_Format
-      //state.issue.issue_Format_Text = dbcompanyIssues.issue_Format_Text
     },
 
     update_nrData(state){
@@ -296,15 +294,39 @@ export default new Vuex.Store({
     saveDetail(state,detail){
       state.details = detail
     },
+
     listPriorities (state, value) {
       state.listPriorities = value;
     },
+
     listJurisdictions (state, value) {
       state.listJurisdictions = value;
     },
+
     listRequestTypes (state, value) {
       state.listRequestTypes = value;
     },
+
+    setConfig(state,cnfgArr) {
+      //TODO - Mutations: interate thru json file to set parameters
+
+    },
+
+    setConflicts(state,conflictJSon) {
+      //TODO - Mutations: interate thru list of conflicts
+      state.solrConflicts = conflictJSon
+
+      state.conflictHighLights = conflictJSon['highlights']
+      state.conflictNames = conflictJSon['names']
+      state.conflictRepsonse = conflictJSon['response']
+
+
+      for( var k in state.conflictNames) {
+        conflictList[k.id] = state.conflictHighLights[k.id]
+      }
+
+    }
+
   },
 
   actions: {
@@ -486,6 +508,35 @@ export default new Vuex.Store({
       if (state.listRequestTypes === null) {
         readJFile(json_files_path + 'requesttype.json', function (myArray) { commit('listRequestTypes', myArray);})
       }
+
+    },
+
+    loadConfig( {commit, state}) {
+      //TODO - Actions: finish loading config values
+      if(state.config===null) {
+        readJFile('static/config/config.json', function (myArray) {
+          commit('setConfig', myArray);
+        });
+      }
+    },
+
+    checkConflicts( {commit, state} ) {
+      //TODO - Actions: finish loading conflict list
+      console.log('action: getting conflicts for company number: ' + nrNumber + ' from solr')
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const url = '/api/v1/requests/' + nrNumber + '/analysis/' + currentChoice + '/conflicts'
+      console.log('URL:' + url)
+      const vm = this
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        console.log('Comp Info Response:' + response.data)
+        commit('setConflicts',response.data)
+      })
+        .catch(error => console.log('ERROR: ' + error))
+    },
+
+    setNextChoice({commit, state}) {
+          var currNum = state.currentChoice + 1
+          if(currNum>state.maxChoices){currNum = 1}
 
     }
 

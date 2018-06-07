@@ -3,21 +3,30 @@
   <div>
     <div class="name-sect">
       <div class="row">
-        <div class="col name1-font">
-          <p v-shortkey.once="['f1']" @shortkey="runAlert()" v-if="!is_editing">{{ compName1 }}</p>
-          <input v-else v-model="compName1" class="form-control" />
+        <div id="name1Col" class="col name1-font">
+          <p v-shortkey.once="['arrowdown']" @shortkey="moveDown()">{{ compName1 }}</p>
+          <input v-model="compName1" class="form-control" />
         </div>
       </div>
 
       <div class="row">
-        <div class="col name2-font">
-          <input id="cmp2" v-model="compName2" onclick="setBorder('cmp2')" class='rtb'>
+        <div id="name2Col" class="col name2-font">
+          <p v-shortkey.once="['arrowdown']" @shortkey="moveDown()">{{ compName2 }}</p>
+          <input v-model="compName2" class="form-control" />
         </div>
       </div>
 
       <div class="row">
-        <div class="col name2-font">
-          <input id="cmp3" v-model="compName3" onclick="setBorder('cmp3')" class='rtb'>
+        <div id="name3Col" class="col name2-font">
+          <p v-shortkey.once="['arrowdown']" @shortkey="moveDown()">{{ compName3 }}</p>
+          <input v-model="compName3" class="form-control" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div id="name4Col" class="col">
+          <input v-model="currentName" class="form-control" />
+          <button>Manual Search</button>
         </div>
       </div>
 
@@ -39,9 +48,17 @@
       },
       compName3() {
         return this.$store.getters.compName3;
+      },
+      currentName() {
+        return this.$store.currentName;
+      },
+      choiceNum() {
+        return this.$store.currentChoice;
       }
     },
     mounted() {
+      this.$store.dispatch('getpostgrescompNo');
+      this.runRecipe()
     },
     methods: {
       setBorder(id) {
@@ -52,8 +69,22 @@
         const ell = document.getElementById(id);
         ell.focus();
       },
-      runAlert(){
+      moveDown(){
         alert("Here")
+        this.$store.dispatch('setNextChoice');
+        setFontClassForNames()
+        setFocus("name" + choiceNum )
+        this.runRecipe()
+      },
+      runRecipe() {
+        this.$store.dispatch('checkConflicts');
+        //this.$store.dispatch('checkTradmarks');
+        //this.$store.dispatch('checkConsent');
+        //this.$store.dispatch('checkHistory');
+        //this.$store.dispatch('checkFormat');
+      },
+      setFontClassForNames(){
+
       }
     }
   }
