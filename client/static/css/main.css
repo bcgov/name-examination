@@ -2330,3 +2330,11 @@ p
 .RequestInfoHeader select.form-control {
   height: auto !important; /* do not make selects (dropdowns) extra high */
 }
+
+
+.pagination .page-item:first-child .page-link,
+.pagination .page-item:last-child .page-link
+{
+	border-radius: 0;
+}
+

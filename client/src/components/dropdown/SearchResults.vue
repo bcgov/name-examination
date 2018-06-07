@@ -40,8 +40,11 @@
 
   export default {
     name: "SearchResults",
-    data:{
-      visble: true
+    data: function ()
+    {
+      return {
+        visible: true
+      }
     },
     computed: {
       details() {
@@ -59,4 +62,7 @@
 </script>
 
 <style scoped>
+  .namePage > .row {
+    margin-top: 10px;
+  }
 </style>

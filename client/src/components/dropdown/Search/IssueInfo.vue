@@ -1,15 +1,21 @@
 /* eslint-disable */
 <template>
   <div class="container-fluid">
-    <div class="issue-sects" >
+
 
       <div class="row" >
-        <div class="col"><conflictlistview /></div>
+        <div class="col" style="padding-left: 0;"><conflictlistview /></div>
         <div class="col"><conflictinfoview /></div>
-        <div class="col"><clientinfoview /></div>
+        <div class="col client-info-view">
+          <h2>{{ currentName }}</h2>
+          <div class="add-top-padding">
+            <h3>Submitted</h3>
+            <p>{{ submittedDate }}</p>
+          </div>
+          <div class="add-top-padding"><clientinfoview /></div>
+        </div>
       </div>
 
-    </div>
   </div>
 </template>
 
@@ -26,6 +32,12 @@ export default {
   computed: {
     issueText() {
       return this.$store.getters.issueText;
+    },
+    currentName() {
+      return this.$store.getters.currentName;
+    },
+    submittedDate() {
+      return this.$store.getters.submittedDate;
     }
   },
   components: {
@@ -38,5 +50,10 @@ export default {
 
 <style scoped>
   .issue-sects {
+  }
+
+  .client-info-view {
+    background-color: #efefef;
+    padding: 10px;
   }
 </style>

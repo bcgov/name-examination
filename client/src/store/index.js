@@ -21,13 +21,16 @@ export default new Vuex.Store({
     currentState: null,
     is_editing: false,
     is_header_shown: false,
+    is_my_current: false,
     nrData: null,
     details: null,
     additionalInfo: null,
     internalComments: null,
+    furnished: null,
     listPriorities: null,
     listJurisdictions: null,
     listRequestTypes: null,
+    applicantsOrigData: null,
    // formData: {
       compInfo: {
         nrNumber: null,
@@ -39,12 +42,23 @@ export default new Vuex.Store({
         requestType: null,
       },
       applicantInfo: {
-        applicantname: {
+        clientName: {
           firstName: null,
-          lastName: null
+          lastName: null,
+        },
+        applicantName: {
+          firstName: null,
+          lastName: null,
+          middleName: null
         },
         contactInfo: {
-          address: null,
+          addressLine1: null,
+          addressLine2: null,
+          addressLine3: null,
+          city: null,
+          province: null,
+          postalCode: null,
+          country: null,
           contactName: null,
           phone: null,
           email: null,
@@ -65,6 +79,7 @@ export default new Vuex.Store({
         linkedNR: null
       },
       reservationCount: null,
+      submittedDate: null,
       expiryDate: null,
   //  },
     issueText: null,
@@ -86,14 +101,53 @@ export default new Vuex.Store({
     requestType (state, value) {
       state.compInfo.requestType = value;
     },
+    currentState(state, value) {
+      state.currentState = value;
+    },
+    compName1(state, value) {
+      state.compInfo.compNames.compName1 = value;
+    },
+    compName2(state, value) {
+      state.compInfo.compNames.compName2 = value;
+    },
+    compName3(state, value) {
+      state.compInfo.compNames.compName3 = value;
+    },
+    clientFirstName (state, value) {
+      state.applicantInfo.clientName.firstName = value;
+    },
+    clientLastName(state, value) {
+      state.applicantInfo.clientName.lastName = value;
+    },
     firstName (state, value) {
-      state.applicantInfo.applicantname.firstName = value;
+      state.applicantInfo.applicantName.firstName = value;
+    },
+    middleName(state, value) {
+      state.applicantInfo.applicantName.middleName = value;
     },
     lastName (state, value) {
-      state.applicantInfo.applicantname.lastName = value;
+      state.applicantInfo.applicantName.lastName = value;
     },
-    address (state, value) {
-      state.applicantInfo.contactInfo.address = value;
+    addressLine1 (state, value) {
+      state.applicantInfo.contactInfo.addressLine1 = value;
+    },
+    addressLine2 (state, value) {
+      state.applicantInfo.contactInfo.addressLine2 = value;
+    },
+    addressLine3 (state, value) {
+      state.applicantInfo.contactInfo.addressLine3 = value;
+    },
+    city (state, value) {
+      state.applicantInfo.contactInfo.city = value;
+    },
+    province (state, value) {
+      state.applicantInfo.contactInfo.province = value;
+    },
+    country (state, value) {
+      state.applicantInfo.contactInfo.country = value;
+    },
+    postalCode (state, value) {
+      state.applicantInfo.contactInfo.postalCode = value;
     },
     contactName (state, value) {
       state.applicantInfo.contactInfo.contactName = value;
@@ -121,9 +175,6 @@ export default new Vuex.Store({
     },
     nr_status (state, value) {
       state.additionalCompInfo.nr_status = value;
-    },
-    priority (state, value) {
-      state.priority = value;
     },
     resubmissionYN (state, value) {
       state.reSubmission.reSubmissionYN = value;
@@ -211,19 +262,38 @@ export default new Vuex.Store({
         }
       }
 
+
+      state.currentState = dbcompanyInfo.state;
       state.compInfo.requestType = dbcompanyInfo.requestTypeCd
-      state.applicantInfo.applicantname.firstName = dbcompanyInfo.applicant
-      //state.applicantInfo.applicantname.lastName = dbcompanyInfo.lastName
-      //state.applicantInfo.contactInfo.address = dbcompanyInfo.address
-      state.applicantInfo.contactInfo.contactName = dbcompanyInfo.contact
-      state.applicantInfo.contactInfo.phone = dbcompanyInfo.phoneNumber
-      //state.applicantInfo.contactInfo.email = dbcompanyInfo.email
-      //state.applicantInfo.contactInfo.fax = dbcompanyInfo.fax
+
+      // we keep the original data so that if fields exist that we do not use, we don't lose that
+      // data when we put new data
+      state.applicantOrigData = dbcompanyInfo.applicants
+      state.applicantInfo.clientName.firstName = dbcompanyInfo.applicants.clientFirstName
+      state.applicantInfo.clientName.lastName = dbcompanyInfo.applicants.clientLastName
+      state.applicantInfo.applicantName.firstName = dbcompanyInfo.applicants.firstName
+      state.applicantInfo.applicantName.middleName = dbcompanyInfo.applicants.middleName
+      state.applicantInfo.applicantName.lastName = dbcompanyInfo.applicants.lastName
+      state.applicantInfo.contactInfo.addressLine1 = dbcompanyInfo.applicants.addrLine1
+      state.applicantInfo.contactInfo.addressLine2 = dbcompanyInfo.applicants.addrLine2
+      state.applicantInfo.contactInfo.addressLine3 = dbcompanyInfo.applicants.addrLine3
+      state.applicantInfo.contactInfo.city = dbcompanyInfo.applicants.city
+      state.applicantInfo.contactInfo.province = dbcompanyInfo.applicants.stateProvinceCd
+      state.applicantInfo.contactInfo.postalCode = dbcompanyInfo.applicants.postalCd
+      state.applicantInfo.contactInfo.country = dbcompanyInfo.applicants.countryTypeCd
+      state.applicantInfo.contactInfo.contactName = dbcompanyInfo.applicants.contact
+      state.applicantInfo.contactInfo.phone = dbcompanyInfo.applicants.phoneNumber
+      state.applicantInfo.contactInfo.email = dbcompanyInfo.applicants.emailAddress
+      state.applicantInfo.contactInfo.fax = dbcompanyInfo.applicants.faxNumber
+
+
+
+
       state.additionalCompInfo.jurisdiction = dbcompanyInfo.xproJurisdiction
       state.additionalCompInfo.natureOfBussiness = dbcompanyInfo.natureBusinessInfo
       //state.details = dbcompanyInfo.details
       state.additionalInfo = dbcompanyInfo.additionalInfo
-      state.internalComments = dbcompanyInfo.examComment
+      state.internalComments = dbcompanyInfo.comments
       state.additionalCompInfo.nuans = dbcompanyInfo.nuansNum
       state.additionalCompInfo.sk_name = dbcompanyInfo.skPartner
       state.additionalCompInfo.nr_status = dbcompanyInfo.state
@@ -233,6 +303,7 @@ export default new Vuex.Store({
       //state.reSubmission.linkedNR = dbcompanyInfo.linkedNR
       //state.reservationCount = dbcompanyInfo.reservationCount
       state.expiryDate = dbcompanyInfo.expiryDate
+      state.submittedDate = dbcompanyInfo.submittedDate
     },
 
     loadCompanyIssues(state, dbcompanyIssues) {
@@ -260,28 +331,40 @@ export default new Vuex.Store({
               state.nrData.names[0].name = state.compInfo.compNames.compName1
               break;
             case 2:
-              state.nrData.names[0].name = state.compInfo.compNames.compName2
+              state.nrData.names[1].name = state.compInfo.compNames.compName2
               break;
             case 3:
-              state.nrData.names[0].name = state.compInfo.compNames.compName3
+              state.nrData.names[2].name = state.compInfo.compNames.compName3
               break;
           }
         }
       }
 
       state.nrData.requestTypeCd = state.compInfo.requestType
-      state.nrData.applicant = state.applicantInfo.applicantname.firstName
-      //state.applicantInfo.applicantname.lastName = dbcompanyInfo.lastName
-      //state.applicantInfo.contactInfo.address = dbcompanyInfo.address
-      state.nrData.contact = state.applicantInfo.contactInfo.contactName
-      state.nrData.phoneNumber =  state.applicantInfo.contactInfo.phone
-      //state.applicantInfo.contactInfo.email = dbcompanyInfo.email
-      //state.applicantInfo.contactInfo.fax = dbcompanyInfo.fax
+
+      state.applicantOrigData.clientFirstName = state.applicantInfo.clientName.firstName
+      state.applicantOrigData.clientLastName = state.applicantInfo.clientName.lastName
+      state.applicantOrigData.firstName = state.applicantInfo.applicantName.firstName
+      state.applicantOrigData.lastName = state.applicantInfo.applicantName.lastName
+      state.applicantOrigData.middleName = state.applicantInfo.applicantName.middleName
+      state.applicantOrigData.addrLine1 = state.applicantInfo.contactInfo.addressLine1
+      state.applicantOrigData.addrLine2 = state.applicantInfo.contactInfo.addressLine2
+      state.applicantOrigData.addrLine3 = state.applicantInfo.contactInfo.addressLine3
+      state.applicantOrigData.city = state.applicantInfo.contactInfo.city
+      state.applicantOrigData.stateProvinceCd = state.applicantInfo.contactInfo.province
+      state.applicantOrigData.postalCd = state.applicantInfo.contactInfo.postalCode
+      state.applicantOrigData.countryTypeCd = state.applicantInfo.contactInfo.country
+      state.applicantOrigData.contact = state.applicantInfo.contactInfo.contactName
+      state.applicantOrigData.phoneNumber = state.applicantInfo.contactInfo.phone
+      state.applicantOrigData.emailAddress = state.applicantInfo.contactInfo.email
+      state.applicantOrigData.faxNumber = state.applicantInfo.contactInfo.fax
+      state.nrData.applicants = state.applicantOrigData
+
       state.nrData.xproJurisdiction = state.additionalCompInfo.jurisdiction
       state.nrData.natureBusinessInfo = state.additionalCompInfo.natureOfBussiness
       state.nrData.details = state.details
       state.nrData.additionalInfo = state.additionalInfo
-      state.nrData.examComment = state.internalComments
+      state.nrData.comments = state.internalComments
       state.nrData.nuansNum = state.additionalCompInfo.nuans
       state.nrData.skPartner = state.additionalCompInfo.sk_name
       //state.nrData.state =  state.additionalCompInfo.nr_status
@@ -291,6 +374,7 @@ export default new Vuex.Store({
       //state.reSubmission.linkedNR = dbcompanyInfo.linkedNR
       //state.reservationCount = dbcompanyInfo.reservationCount
       state.nrData.expiryDate = state.expiryDate
+      state.nrData.submittedDate = state.submittedDate
     },
 
     saveDetail(state,detail){
@@ -304,6 +388,9 @@ export default new Vuex.Store({
     },
     listRequestTypes (state, value) {
       state.listRequestTypes = value;
+    },
+    is_my_current(state, value) {
+      state.is_my_current = value;
     },
   },
 
@@ -394,7 +481,9 @@ export default new Vuex.Store({
       const url = '/api/v1/requests/queues/@me/oldest'
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        console.log('Comp No Response:' + response)
+        console.log('Comp No Response:');
+        response.data.nameRequest = 'NR00000022'; // TODO - remove
+        console.log(response);
         commit('loadpostgresNo',response.data)
       })
     },
@@ -409,18 +498,20 @@ export default new Vuex.Store({
         console.log('Comp Info Response:' + response.data)
         localStorage.setItem('COMPINFO',response.data)
         commit('loadCompanyInfo',response.data)
+        commit('is_my_current', true);
       })
       .catch(error => console.log('ERROR: ' + error))
     },
 
     updateNRState ({state},nrState) {
-      console.log('Updating Examination state for number: ' + state.compInfo.nrNumber)
+      console.log('Updating Examination state for number ' + state.compInfo.nrNumber + ' to ' + nrState)
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + state.compInfo.nrNumber
 
       axios.patch(url,{headers: {Authorization: `Bearer ${myToken}`}},{"state": nrState} )
            .then(function(response){
-                console.log('state updated to ' + nrState + ' for ' + state.compInfo.nrNumber)
+                console.log('state updated to ' + nrState + ' for ' + state.compInfo.nrNumber);
+                commit('currentState', nrState); // TODO - need this?
             })
             .catch(error => console.log('ERROR: ' + error))
       },
@@ -466,11 +557,6 @@ export default new Vuex.Store({
 
       var json_files_path = 'static/ui_dropdowns/';
 
-      // priorities
-      if (state.listPriorities === null) {
-        readJFile(json_files_path + 'requestpriority.json', function (myArray) { commit('listPriorities', myArray);})
-      }
-
       // jurisdictions - first list 1, then list 2
       if (state.listJurisdictions === null) {
         readJFile(json_files_path + 'jurisdiction 1.json', function (myArray) {
@@ -482,7 +568,7 @@ export default new Vuex.Store({
         });
       }
 
-      // priorities
+      // request types
       if (state.listRequestTypes === null) {
         readJFile(json_files_path + 'requesttype.json', function (myArray) { commit('listRequestTypes', myArray);})
       }
@@ -498,11 +584,23 @@ export default new Vuex.Store({
     is_header_shown(state) {
       return state.is_header_shown
     },
+    is_my_current(state) {
+      return state.is_my_current
+    },
     user(state) {
       return state.user
     },
     email(state) {
       return state.email
+    },
+    currentChoice(state) {
+      return state.currentChoice;
+    },
+    currentState(state) {
+      return state.currentState;
+    },
+    currentName(state) {
+      return state.currentName;
     },
     issueText(state) {
       return state.issueText
@@ -525,14 +623,41 @@ export default new Vuex.Store({
     requestType(state) {
       return state.compInfo.requestType
     },
+    clientFirstName(state) {
+      return state.applicantInfo.clientName.firstName
+    },
+    clientLastName(state) {
+      return state.applicantInfo.clientName.lastName
+    },
     firstName(state) {
-      return state.applicantInfo.applicantname.firstName
+      return state.applicantInfo.applicantName.firstName
+    },
+    middleName(state) {
+      return state.applicantInfo.applicantName.middleName
     },
     lastName(state) {
-      return state.applicantInfo.applicantname.lastName
+      return state.applicantInfo.applicantName.lastName
     },
-    address(state) {
-      return state.applicantInfo.contactInfo.address
+    addressLine1(state) {
+      return state.applicantInfo.contactInfo.addressLine1
+    },
+    addressLine2(state) {
+      return state.applicantInfo.contactInfo.addressLine2
+    },
+    addressLine3(state) {
+      return state.applicantInfo.contactInfo.addressLine3
+    },
+    city(state) {
+      return state.applicantInfo.contactInfo.city
+    },
+    province(state) {
+      return state.applicantInfo.contactInfo.province
+    },
+    postalCode(state) {
+      return state.applicantInfo.contactInfo.postalCode
+    },
+    country(state) {
+      return state.applicantInfo.contactInfo.country
     },
     conEmail(state) {
       return  state.applicantInfo.contactInfo.email
@@ -565,7 +690,8 @@ export default new Vuex.Store({
       return state.examiner
     },
     priority(state) {
-      return state.priority
+      if (state.priority == 'Y') return true;
+      else return false;
     },
     reSubmissionYN(state) {
       return state.reSubmission.reSubmissionYN
@@ -578,6 +704,9 @@ export default new Vuex.Store({
     },
     expiryDate(state) {
       return state.expiryDate
+    },
+    submittedDate(state) {
+      return state.submittedDate;
     },
     issue_Match(state) {
       return state.issue.issue_Match

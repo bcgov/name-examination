@@ -1,6 +1,6 @@
 /* eslint-disable */
 <template>
-  <div class="col-xs-2">
+  <div class="col-2">
 
     <!-- NOTE - these are hardcoded styles right now - will need to control red/yellow/green
     programmatically -->
@@ -37,8 +37,10 @@
 /* eslint-disable */
 export default {
   name: 'matches',
-  data: {
-    mess: "Here"
+  data: function () {
+    return {
+      mess: "Here"
+    }
   },
   mounted() {
     //alert("here");
