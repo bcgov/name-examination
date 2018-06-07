@@ -6,16 +6,8 @@
       <!-- details col 1 - priority, comments, etc -->
       <div id='div1' class="col-md-5" >
         <div class="row">
-          <div class="col-md-4" >
-            <div v-if="!is_editing"
-                  v-bind:class="{'priority-high': high_priority, 'priority': true}">
-              {{ priority_desc }}</div>
-            <select v-else v-model="priority" class="form-control">
-              <option v-for="option in priority_options" v-bind:value="option.value"
-                      v-bind:key="option.value">
-                {{ option.text }}
-              </option>
-            </select>
+          <div class="col-md-4" style="height: 30px;">
+            <div class="priority" v-if="priority">Priority</div>
           </div>
           <div class="col">
             <p v-if="!is_editing" style="font-weight: bold;">{{ requestType_desc }}</p>
@@ -54,13 +46,22 @@
         <div class="row">
           <div class="col add-top-padding">
             <div v-if="show_extended_header">
-              <div v-if="!is_editing">
+              <div>
                 <h3>INTERNAL COMMENTS</h3>
-                <p style="white-space: pre-line;">{{ internalComments }}</p>
+                <div class="comment" v-for="comment in internalComments"
+                     v-bind:key="comment.timestamp">
+                  <p>
+                    <span class="comment-examiner">{{ comment.examiner }}</span>
+                    -
+                    <span class="comment-timestamp">{{ comment.timestamp }}</span>
+                  </p>
+                  <p class="comment-text">{{ comment.comment }}</p>
+
+                </div>
               </div>
-              <div v-else>
-                <h3>INTERNAL COMMENTS</h3>
-                <textarea v-model="internalComments" class="form-control" rows="10"></textarea>
+              <div v-if="is_editing">
+                <h3>add comment</h3>
+                <textarea v-model="newComment" class="form-control" rows="5"></textarea>
               </div>
             </div>
           </div>
@@ -69,14 +70,39 @@
 
       <!-- details col 2 - nature of business -->
       <div id='div2' class="col-md-4">
-        <h3>NATURE OF BUSINESS</h3>
-        <div v-if="show_extended_header">
-          <textarea v-if="is_editing" v-model="natureOfBusiness" class="form-control" rows="10">
-            </textarea>
-          <p v-else style="white-space: pre-line;">{{ natureOfBusiness }}</p>
-        </div>
-        <p v-else style="white-space: pre-line;">{{ natureOfBusinessTruncated }}</p>
+        <div class="row">
+          <div class="col">
+            <h3>NATURE OF BUSINESS</h3>
+            <div v-if="show_extended_header">
+              <textarea v-if="is_editing" v-model="natureOfBusiness" class="form-control" rows="10">
+                </textarea>
+              <p v-else style="white-space: pre-line;">{{ natureOfBusiness }}</p>
+            </div>
+            <p v-else style="white-space: pre-line;">{{ natureOfBusinessTruncated }}</p>
 
+          </div>
+
+        </div>
+        <div class="row" v-if="is_editing">
+          <div class="col add-top-padding">
+            <h3>Name Choices</h3>
+
+            <table style="width: 100%;">
+              <tr>
+                <td>1.</td>
+                <td><input v-model="compName1" class="form-control" /></td>
+              </tr>
+              <tr>
+                <td>2.</td>
+                <td><input v-model="compName2" class="form-control" /></td>
+              </tr>
+              <tr>
+                <td>3.</td>
+                <td><input v-model="compName3" class="form-control" /></td>
+              </tr>
+            </table>
+          </div>
+        </div>
       </div>
 
       <!-- details col 3 - additional info, client details -->
@@ -128,10 +154,12 @@ import clientinfoview from '@/components/dropdown/Search/client/ClientInfoHeader
 
 export default {
     name: 'RequestInfoHeader',
+    data: function () {
+      return {
+        newComment: null,
+      }
+    },
     computed: {
-      priority_options() {
-        return this.$store.getters.listPriorities;
-      },
       jurisdiction_options() {
         return this.$store.getters.listJurisdictions;
       },
@@ -146,6 +174,30 @@ export default {
       },
       nrNumber() {
         return  this.$store.getters.nrNumber;
+      },
+      compName1: {
+        get: function() {
+          return this.$store.getters.compName1;
+        },
+        set: function(value) {
+          this.$store.commit('compName1', value);
+        }
+      },
+      compName2: {
+        get: function() {
+          return this.$store.getters.compName2;
+        },
+        set: function(value) {
+          this.$store.commit('compName2', value);
+        }
+      },
+      compName3: {
+        get: function() {
+          return this.$store.getters.compName3;
+        },
+        set: function(value) {
+          this.$store.commit('compName3', value);
+        }
       },
       requestType: {
         get: function() {
@@ -222,24 +274,8 @@ export default {
       examiner() {
         return this.$store.getters.examiner;
       },
-      priority: {
-        get: function() {
-          return this.$store.getters.priority?this.$store.getters.priority:"null";
-        },
-        set: function(value) {
-          this.$store.commit('priority', value);
-        }
-      },
-      priority_desc: function () {
-        try {
-          return getDescFromList(this.priority_options, this.priority);
-        } catch (err) {
-          return '';
-        }
-      },
-      high_priority() {
-        if (this.priority == 'PQ' || this.priority == 'PJ') return true;
-        else return false;
+      priority() {
+        return this.$store.getters.priority;
       },
       resubmissionYN: {
         get: function() {
@@ -306,44 +342,24 @@ export default {
     },
     methods: {
       setInterface(){
-
-        this.setNRNum()
-        this.setPriority()
-        this.setComp
-        this.setNuans()
-        this.setSK()
-        this.setNOB()
-        this.setAddInfo()
-      },
-      setNRNum() {
-      },
-      setPriority() {
-      },
-      setAddInfo() {
-      },
-      setComp() {
-      },
-      setNuans() {
-      },
-      setSK() {
-      },
-      setNOB() {
-        //this.$store.state.additionalCompInfo.natureOfBussiness = this.natureOfBusiness;
       },
       toggleDetails() {
         if (this.$store.state.is_header_shown) this.$store.state.is_header_shown = false;
         else this.$store.state.is_header_shown = true;
       },
-      setBorder(id) {
-        var tb = document.getElementById(id);
-        tb.borderWidth = "1";
-      },
       edit() {
         this.$store.state.is_editing = true;
       },
       save() {
+
+        // save new comment
+        this.addNewComment();
+
         this.$store.dispatch('updateRequest');
         this.$store.state.is_editing = false;
+
+        // get updated data fresh from server
+        this.$store.dispatch('getpostgrescompInfo',this.nrNumber)
 
         // show full header after editing so user can see everything they changed
         this.$store.state.is_header_shown = true;
@@ -353,6 +369,18 @@ export default {
         this.$store.dispatch('getpostgrescompInfo',this.nrNumber)
         this.$store.state.is_editing = false;
       },
+      addNewComment() {
+
+        // create new comment object with just text, and add it to list of comments in data structure
+        var newCommentData = {
+          comment: this.newComment,
+          examiner: this.$store.state.examiner
+        };
+        this.internalComments = this.internalComments.concat(newCommentData);
+
+        // clear newComment field for next comment added in this session
+        this.newComment = null;
+      }
     },
     watch: {
       nrNumber: function (val) {
@@ -377,10 +405,6 @@ export default {
   .priority {
     padding: 5px;
     text-align: center;
-    background-color: white;
-    color: black;
-  }
-  .priority-high{
     background-color: #cc0000;
     color: white;
   }
@@ -389,6 +413,23 @@ export default {
     padding: 2px;
     float: right;
   }
+
+  .comment {
+    padding: 10px 0px;
+    border-bottom: 1px solid #ccc;
+  }
+  .comment:last-child {
+    border-bottom: none;
+  }
+
+  .comment-text {
+    white-space: pre-line;
+  }
+
+  .comment-timestamp, .comment-examiner {
+    font-style: italic;
+  }
+
 
 
  </style>
