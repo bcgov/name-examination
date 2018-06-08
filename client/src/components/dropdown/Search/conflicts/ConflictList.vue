@@ -52,5 +52,6 @@
     padding: 0px;
     box-shadow: 0 2px 3px #ccc;
     height: 300px;
+    background-color: white;
   }
 </style>
