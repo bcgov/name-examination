@@ -21,9 +21,9 @@
           <div class="col"><matchissues /></div>
         </div>
 
-        <div class="row">
+       <!-- <div class="row">
           <div class="col" ><examinationmenu /></div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
