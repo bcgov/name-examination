@@ -4,14 +4,12 @@
     <div class="container-fluid">
       <div class="row ConflictList">
 
-        <p>
-          <label class="labelTxt">Conflicting Names</label>
-          <select v-model="selected">
-          <option v-for="option in conflictData" v-bind:key="option.value">
-            {{ option.text }}
-          </option>
+          <select v-model="nrNumberMatch" class="form-control" size="15" >
+            <option v-for="option in conflictData" v-bind:value="option.nrNumber"
+                    v-bind:key="option.nrNumber">
+              {{ option.text }}
+            </option>
           </select>
-        </p>
 
       </div>
 
@@ -25,33 +23,27 @@
   export default {
     name: 'ConflictList',
     computed: {
-      nrNumber() {
-        return  this.$store.getters.nrNumber;
-      },
       name() {
         return  this.$store.getters.firstName;
       },
       conflictData() {
-        return  this.$store.conflictData;
-      }
+        return  this.$store.getters.conflictList;
+      },
+      nrNumberMatch: {
+        get: function() {
+          return this.$store.getters.nrNumberMatch;
+        },
+        set: function(value) {
+          console.log("match:" + value)
+          this.$store.commit('nrNumberMatch', value);
+        }
+      },
 
     },
     methods: {
-      setBorder(id) {
-        var tb = document.getElementById(id);
-        tb.borderWidth = "1";
-      }
     }
   }
 </script>
 
 <style scoped>
-  .ConflictList {
-    align-content: left;
-    border: 2px solid #eee;
-    padding: 0px;
-    box-shadow: 0 2px 3px #ccc;
-    height: 300px;
-    background-color: white;
-  }
 </style>

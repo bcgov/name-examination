@@ -4,10 +4,14 @@
     <div class="container-fluid">
       <div class="row ConflictInfo">
 
-        <p>
-          <label class="labelTxt">Conflicting Info</label>
-        </p>
-
+          <div class="col client-info-view">
+            <h2>{{ currentName }}</h2>
+            <div class="add-top-padding">
+              <h3>NR Number</h3>
+              <p>{{ nrNumberMatch }}</p>
+            </div>
+            <div class="add-top-padding"><clientinfomatch /></div>
+          </div>
 
       </div>
     </div>
@@ -17,28 +21,39 @@
 
 <script>
 /* eslint-disable */
+
+import clientinfomatch from '@/components/dropdown/Search/client/ClientInfoMatch.vue';
+
   export default {
     name: 'ConflictInfo',
-    computed: {
-      nrNumber() {
-        return  this.$store.getters.nrNumber;
-      }
+    components: {
+      clientinfomatch
     },
-    methods: {
-      setBorder(id) {
-        var tb = document.getElementById(id);
-        tb.borderWidth = "1";
+    computed: {
+        name() {
+          return  this.$store.getters.firstName;
+        },
+        nrNumberMatch: {
+          get: function() {
+            return this.$store.getters.nrNumberMatch;
+          },
+          set: function(value) {
+            console.log("match:" + value)
+            this.$store.commit('nrNumberMatch', value);
+          }
+        },
+      },
+      watch: {
+        nrNumberMatch: function (val) {
+          this.$store.dispatch('getMatchedConflictInfo', this.nrNumberMatch)
+        }
       }
-    }
   }
 </script>
 
 <style scoped>
-  .ConflictInfo {
-    align-content: left;
-    border: 2px solid #eee;
-    padding: 0px;
-    box-shadow: 0 2px 3px #ccc;
-    height: 300px;
+  .client-info-view {
+    background-color: #efefef;
+    padding: 10px;
   }
 </style>

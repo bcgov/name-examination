@@ -337,12 +337,7 @@ export default {
     components: {
       clientinfoview
     },
-    mounted(){
-      this.setInterface();
-    },
     methods: {
-      setInterface(){
-      },
       toggleDetails() {
         if (this.$store.state.is_header_shown) this.$store.state.is_header_shown = false;
         else this.$store.state.is_header_shown = true;
@@ -385,7 +380,6 @@ export default {
     watch: {
       nrNumber: function (val) {
         this.$store.dispatch('getpostgrescompInfo',this.nrNumber)
-        this.setInterface();
       }
     }
 }
