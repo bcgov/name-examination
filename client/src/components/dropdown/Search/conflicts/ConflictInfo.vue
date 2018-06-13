@@ -5,10 +5,10 @@
       <div class="row ConflictInfo">
 
           <div class="col client-info-view">
-            <h2>{{ currentName }}</h2>
+            <h2>{{ currentConflictName }}</h2>
             <div class="add-top-padding">
               <h3>NR Number</h3>
-              <p>{{ nrNumberMatch }}</p>
+              <p>{{ currentConflictNumber }}</p>
             </div>
             <div class="add-top-padding"><clientinfomatch /></div>
           </div>
@@ -22,7 +22,7 @@
 <script>
 /* eslint-disable */
 
-import clientinfomatch from '@/components/dropdown/Search/client/ClientInfoMatch.vue';
+import clientinfomatch from '@/components/dropdown/Search/conflicts/conflictInfoType/namesMatch.vue';
 
   export default {
     name: 'ConflictInfo',
@@ -30,24 +30,14 @@ import clientinfomatch from '@/components/dropdown/Search/client/ClientInfoMatch
       clientinfomatch
     },
     computed: {
-        name() {
-          return  this.$store.getters.firstName;
+      currentConflictName() {
+          return  this.$store.getters.currentConflictName;
         },
-        nrNumberMatch: {
-          get: function() {
-            return this.$store.getters.nrNumberMatch;
-          },
-          set: function(value) {
-            console.log("match:" + value)
-            this.$store.commit('nrNumberMatch', value);
-          }
-        },
-      },
-      watch: {
-        nrNumberMatch: function (val) {
-          this.$store.dispatch('getMatchedConflictInfo', this.nrNumberMatch)
+      currentConflictNumber() {
+            return this.$store.getters.currentConflictNumber;
         }
-      }
+
+    }
   }
 </script>
 

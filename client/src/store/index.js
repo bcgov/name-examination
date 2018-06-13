@@ -19,8 +19,12 @@ export default new Vuex.Store({
     //Interface settings
     currentChoice: 1,
     currentName: null, // CURRENT NAME BEING EXAMINED
-    currentMatch: null, //nrNumber of the conflict name currently in focus
     currentState: null, // APPROVED, REJECTED, INPROGRESS ETC...
+
+    currentConflictNumber: null, // nrNumber of the conflict name currently in focus
+    currentConflictName: null, // name of the current conflict
+    currentConflictSource: null, // the type of nr; corps or names
+
     is_editing: false,
     is_header_shown: false,
     is_my_current: false,
@@ -30,21 +34,86 @@ export default new Vuex.Store({
     listRequestTypes: null, // DROP LIST
 
     //Names Data
-    //nrNum: null,
-    nr_conflict: null,
+    //nr_conflict: null,
     details: null,
     additionalInfo: null,
     internalComments: null,
     applicantsOrigData: null,
     nrData: null,
-       compInfo: {
-        nrNumber: null,
-        compNames: {
-          compName1: null,
-          compName2: null,
-          compName3: null
-        },
-        requestType: null,
+    compInfo: {
+      nrNumber: null,
+      compNames: {
+        compName1: null,
+        compName2: null,
+        compName3: null
+      },
+      requestType: null,
+    },
+    applicantInfo: {
+      clientName: {
+        firstName: null,
+        lastName: null,
+      },
+      applicantName: {
+        firstName: null,
+        lastName: null,
+        middleName: null
+      },
+      contactInfo: {
+        addressLine1: null,
+        addressLine2: null,
+        addressLine3: null,
+        city: null,
+        province: null,
+        postalCode: null,
+        country: null,
+        contactName: null,
+        phone: null,
+        email: null,
+        fax: null
+      },
+    },
+    additionalCompInfo: {
+      jurisdiction: null,
+      natureOfBussiness: null,
+      nuans: null,
+      sk_name: null,
+      nr_status: null
+    },
+    examiner: null,
+    priority: null,
+    reSubmission: {
+      reSubmissionYN: null,
+      linkedNR: null
+    },
+    reservationCount: null,
+    submittedDate: null,
+    expiryDate: null,
+    issueText: null,
+
+    //TODO
+    conflictList: null,
+    conflictHighlighting: null,
+    conflictNames: null,
+    conflictResponse: null,
+    issue: {
+      issue_Match: null,
+      issue_Consent: null,
+      issue_TradeMark: null,
+      issue_History: null,
+      issue_Format: null,
+      issue_Match_Text: null,
+      issue_Consent_Text: null,
+      issue_TradeMark_Text: null,
+      issue_History_Text: null,
+      issue_Format_Text: null
+    },
+    CONFLICT: {
+      nrNumber: null,
+      compNames: {
+        compName1: null,
+        compName2: null,
+        compName3: null
       },
       applicantInfo: {
         clientName: {
@@ -71,40 +140,11 @@ export default new Vuex.Store({
         },
       },
       additionalCompInfo: {
-        jurisdiction: null,
         natureOfBussiness: null,
-        nuans: null,
-        sk_name: null,
         nr_status: null
-      },
-      examiner: null,
-      priority: null,
-      reSubmission: {
-        reSubmissionYN: null,
-        linkedNR: null
-      },
-      reservationCount: null,
-      submittedDate: null,
-      expiryDate: null,
-    issueText: null,
-
-    //TODO
-    conflictList: null,
-    conflictHighlighting: null,
-    conflictNames: null,
-    conflictResponse: null,
-    issue: {
-        issue_Match: null,
-        issue_Consent: null,
-        issue_TradeMark: null,
-        issue_History: null,
-        issue_Format: null,
-        issue_Match_Text: null,
-        issue_Consent_Text: null,
-        issue_TradeMark_Text: null,
-        issue_History_Text: null,
-        issue_Format_Text: null
       }
+    },
+    corpConflictInfo: null
   },
 
   mutations: {
@@ -207,9 +247,6 @@ export default new Vuex.Store({
     internalComments (state, value) {
       state.internalComments = value;
     },
-    nrNumberMatch(state,value){
-
-    },
     authUser (state, userData) {
       state.kctoken = userData
       //state.kctoken = userData.client_session
@@ -295,6 +332,59 @@ export default new Vuex.Store({
       //state.reservationCount = dbcompanyInfo.reservationCount
       state.expiryDate = dbcompanyInfo.expiryDate
       state.submittedDate = dbcompanyInfo.submittedDate
+    },
+
+    loadNamesConflictInfo(state,conflictInfoData){
+      console.log('Loading conflict Info into state')
+      'CONFLICT'
+      if (conflictInfoData.names.length == 0) {
+        console.log('Error, No conflict data found')
+        return
+      } else {
+        //USE STATE TO DETERMINE WHICH NAME IS VALID
+        state.currentState = conflictInfoData.state;
+        for (let record of conflictInfoData.names) {
+          switch (record.choice) {
+            case 1:
+              state.CONFLICT.compInfo.compNames.compName1 = record.name
+              break;
+            case 2:
+              state.CONFLICT.compInfo.compNames.compName2 = record.name
+              break;
+            case 3:
+              state.CONFLICT.compInfo.compNames.compName3 = record.name
+              break;
+            default:
+              console.log('Error with company name structure')
+              return
+          }
+        }
+      }
+
+      state.CONFLICT.applicantInfo.clientName.firstName = conflictInfoData.applicants.clientFirstName
+      state.CONFLICT.applicantInfo.clientName.lastName = conflictInfoData.applicants.clientLastName
+      state.CONFLICT.applicantInfo.applicantName.firstName = conflictInfoData.applicants.firstName
+      state.CONFLICT.applicantInfo.applicantName.middleName = conflictInfoData.applicants.middleName
+      state.CONFLICT.applicantInfo.applicantName.lastName = conflictInfoData.applicants.lastName
+      state.CONFLICT.applicantInfo.contactInfo.addressLine1 = conflictInfoData.applicants.addrLine1
+      state.CONFLICT.applicantInfo.contactInfo.addressLine2 = conflictInfoData.applicants.addrLine2
+      state.CONFLICT.applicantInfo.contactInfo.addressLine3 = conflictInfoData.applicants.addrLine3
+      state.CONFLICT.applicantInfo.contactInfo.city = conflictInfoData.applicants.city
+      state.CONFLICT.applicantInfo.contactInfo.province = conflictInfoData.applicants.stateProvinceCd
+      state.CONFLICT.applicantInfo.contactInfo.postalCode = conflictInfoData.applicants.postalCd
+      state.CONFLICT.applicantInfo.contactInfo.country = conflictInfoData.applicants.countryTypeCd
+      state.CONFLICT.applicantInfo.contactInfo.contactName = conflictInfoData.applicants.contact
+      state.CONFLICT.applicantInfo.contactInfo.phone = conflictInfoData.applicants.phoneNumber
+      state.CONFLICT.applicantInfo.contactInfo.email = conflictInfoData.applicants.emailAddress
+      state.CONFLICT.applicantInfo.contactInfo.fax = conflictInfoData.applicants.faxNumber
+      state.CONFLICT.additionalCompInfo.natureOfBussiness = conflictInfoData.natureBusinessInfo
+
+    },
+
+    loadCorpConflictInfo(state,conflictInfoData){
+      console.log('Loading conflict Info into state')
+      'CONFLICT'
+      state.corpConflictInfo = conflictInfoData
     },
 
     update_nrData(state){
@@ -401,10 +491,16 @@ export default new Vuex.Store({
       state.conflictList = new Array()
       for( k in state.conflictNames) {
         var mID = state.conflictNames[c].id
+        //Iterate through the list of names to create a new object that has the fields needed
         //state.conflictList.push({nrNumber: mID, text: conflictJSon['highlighting'][mID]['name'][0]})
-        state.conflictList.push({nrNumber: mID, text: state.conflictNames[c].name})
+        state.conflictList.push({nrNumber: mID, text: state.conflictNames[c].name, source: state.conflictNames[c].source})
         c++
       }
+    },
+
+    currentMatch(state,value){
+      state.currentConflictNumber = value.value
+      state.currentConflictName = value.text
     }
 
   },
@@ -617,9 +713,41 @@ export default new Vuex.Store({
       commit('setNextChoice',{value,currName})
     },
 
-    getMatchedConflictInfo({commit, state},value) {
-      console.log('getMatchedConflictInfo:' + value)
-    }
+
+    getConflictInfo ({state,commit}) {
+      console.log('Getting Conflict Info')
+      if(state.currentConflictSource == "corp" ){
+          this.dispatch('getNamesConflict')
+      }else{
+          this.dispatch('getCorpConflict')
+      }
+    },
+
+    getNamesConflict ({state,commit}) {
+      console.log('action: getting data for company number: ' + state.currentConflictNumber + ' from postgres')
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const url = '/api/v1/requests/' + state.currentConflictNumber
+      const vm = this
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        console.log('Names Conflict Info:' + response.data)
+        commit('loadNamesConflictInfo',response.data)
+      })
+        .catch(error => console.log('ERROR: ' + error))
+    },
+
+
+    getCorpConflict ({state,commit}) {
+      console.log('action: getting data for company number: ' + state.currentConflictNumber + ' from postgres')
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const url = '/api/v1/requests/' + state.currentConflictNumber
+      const vm = this
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        console.log('Corp Conflict Info:' + response.data)
+        commit('loadCorpConflictInfo',response.data)
+      })
+        .catch(error => console.log('ERROR: ' + error))
+    },
+
   },
 
   getters: {
@@ -804,8 +932,62 @@ export default new Vuex.Store({
     conflictList(state) {
       return state.conflictList
     },
-    nrNumberMatch(state) {
-      return state.currentMatch
+    currentConflictNumber(state) {
+      return state.currentConflictNumber
+    },
+    currentConflictName(state) {
+      return state.currentConflictName
+    },
+    CONFLICTclientFirstName(state) {
+      return state.CONFLICT.applicantInfo.clientName.firstName
+    },
+    CONFLICTclientLastName(state) {
+      return state.CONFLICT.applicantInfo.clientName.lastName
+    },
+    CONFLICTfirstName(state) {
+      return state.CONFLICT.applicantInfo.applicantName.firstName
+    },
+    CONFLICTmiddleName(state) {
+      return state.CONFLICT.applicantInfo.applicantName.middleName
+    },
+    CONFLICTlastName(state) {
+      return state.CONFLICT.applicantInfo.applicantName.lastName
+    },
+    CONFLICTaddressLine1(state) {
+      return state.CONFLICT.applicantInfo.contactInfo.addressLine1
+    },
+    CONFLICTaddressLine2(state) {
+      return state.CONFLICT.applicantInfo.contactInfo.addressLine2
+    },
+    CONFLICTaddressLine3(state) {
+      return state.CONFLICT.applicantInfo.contactInfo.addressLine3
+    },
+    CONFLICTcity(state) {
+      return state.CONFLICT.applicantInfo.contactInfo.city
+    },
+    CONFLICTprovince(state) {
+      return state.CONFLICT.applicantInfo.contactInfo.province
+    },
+    CONFLICTpostalCode(state) {
+      return state.CONFLICT.applicantInfo.contactInfo.postalCode
+    },
+    CONFLICTcountry(state) {
+      return state.CONFLICT.applicantInfo.contactInfo.country
+    },
+    CONFLICTconEmail(state) {
+      return  state.CONFLICT.applicantInfo.contactInfo.email
+    },
+    CONFLICTcontactName(state) {
+      return state.CONFLICT.applicantInfo.contactInfo.contactName
+    },
+    CONFLICTphone(state) {
+      return state.CONFLICT.applicantInfo.contactInfo.phone
+    },
+    CONFLICTfax(state) {
+      return state.CONFLICT.applicantInfo.contactInfo.fax
+    },
+    CONFLICTnatureOfBusiness(state) {
+      return state.additionalCompInfo.natureOfBussiness
     }
   }
 })

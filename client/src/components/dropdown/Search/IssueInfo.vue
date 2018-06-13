@@ -30,9 +30,6 @@ import clientinfoview from '@/components/dropdown/Search/client/ClientInfo.vue';
 export default {
   name: 'IssueInfo',
   computed: {
-    issueText() {
-      return this.$store.getters.issueText;
-    },
     currentName() {
       return this.$store.getters.currentName;
     },
