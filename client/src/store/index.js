@@ -22,6 +22,7 @@ export default new Vuex.Store({
     currentMatch: null, //nrNumber of the conflict name currently in focus
     currentState: null, // APPROVED, REJECTED, INPROGRESS ETC...
     is_editing: false,
+    is_making_decision: false,
     is_header_shown: false,
     is_my_current: false,
     furnished: null,
@@ -35,9 +36,18 @@ export default new Vuex.Store({
     details: null,
     additionalInfo: null,
     internalComments: null,
+    furnished: null,
+    listPriorities: null,
+    listJurisdictions: null,
+    listRequestTypes: null,
+    listRestrictedWords: null,
+    listRestrictedWordsReasons: null,
     applicantsOrigData: null,
     nrData: null,
-       compInfo: {
+    conflicts: null, // complete conflict data from API call
+    consent: null, // complete consent data from API call
+   // formData: {
+      compInfo: {
         nrNumber: null,
         compNames: {
           compName1: null,
@@ -110,6 +120,9 @@ export default new Vuex.Store({
   mutations: {
     requestType (state, value) {
       state.compInfo.requestType = value;
+    },
+    is_making_decision(state, value) {
+      state.is_making_decision = value;
     },
     currentState(state, value) {
       state.currentState = value;
@@ -295,6 +308,28 @@ export default new Vuex.Store({
       //state.reservationCount = dbcompanyInfo.reservationCount
       state.expiryDate = dbcompanyInfo.expiryDate
       state.submittedDate = dbcompanyInfo.submittedDate
+
+      // TODO - remove this stub data
+      state.conflicts = [
+        {
+          name: 'Conflict #1',
+        },
+        {
+          name: 'Conflict #2',
+        }
+      ]
+      // TODO - remove this stub data
+      state.consent = [
+        {
+          word: 'Doctor',
+        },
+        {
+          word: 'B.C.',
+        },
+        {
+          word: 'Realtors',
+        }
+      ]
     },
 
     update_nrData(state){
@@ -369,6 +404,12 @@ export default new Vuex.Store({
     },
     listRequestTypes (state, value) {
       state.listRequestTypes = value;
+    },
+    listRestrictedWords (state, value) {
+      state.listRestrictedWords = value;
+    },
+    listRestrictedWordsReasons (state, value) {
+      state.listRestrictedWordsReasons = value;
     },
     is_my_current(state, value) {
       state.is_my_current = value;
@@ -586,6 +627,14 @@ export default new Vuex.Store({
         readJFile(json_files_path + 'requesttype.json', function (myArray) { commit('listRequestTypes', myArray);})
       }
 
+      // restricted words and reasons
+      if (state.listRestrictedWords === null) {
+        readJFile(json_files_path + 'restrictedwords.json', function (myArray) { commit('listRestrictedWords', myArray);})
+      }
+      if (state.listRestrictedWordsReasons === null) {
+        readJFile(json_files_path + 'requestedwordconditions.json', function (myArray) { commit('listRestrictedWordsReasons', myArray);})
+      }
+
     },
 
     loadConfig( {commit, state}) {
@@ -625,6 +674,9 @@ export default new Vuex.Store({
   getters: {
     is_editing(state) {
       return state.is_editing
+    },
+    is_making_decision(state) {
+      return state.is_making_decision
     },
     is_header_shown(state) {
       return state.is_header_shown
@@ -800,6 +852,18 @@ export default new Vuex.Store({
     },
     listRequestTypes(state) {
       return state.listRequestTypes
+    },
+    listRestrictedWords(state) {
+      return state.listRestrictedWords
+    },
+    listRestrictedWordsReasons(state) {
+      return state.listRestrictedWordsReasons
+    },
+    conflicts(state) {
+      return state.conflicts;
+    },
+    consent(state) {
+      return state.consent;
     },
     conflictList(state) {
       return state.conflictList

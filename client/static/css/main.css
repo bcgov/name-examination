@@ -2315,8 +2315,8 @@ p
 }
 
 /* override form-control style from bootstrap so we don't have to add form-control-sm to every form field */
-.RequestInfoHeader .form-control
-{
+.upper-section .form-control,
+.lower-section .form-control {
   /* from form-control-sm */
   padding: .25rem .5rem;
   line-height: 1.5;
@@ -2327,7 +2327,8 @@ p
   margin-bottom: 2px;
 }
 
-.RequestInfoHeader select.form-control {
+.upper-section select.form-control,
+.lower-section select.form-control {
   height: auto !important; /* do not make selects (dropdowns) extra high */
 }
 
