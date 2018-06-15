@@ -16,18 +16,24 @@ export default new Vuex.Store({
     kctoken: null,
     user_role: null,
 
+    consent: null, // complete consent data from API call - stubbed
+
     //Interface settings
     currentChoice: 1,
     currentName: null, // CURRENT NAME BEING EXAMINED
     currentMatch: null, //nrNumber of the conflict name currently in focus
     currentState: null, // APPROVED, REJECTED, INPROGRESS ETC...
     is_editing: false,
+    is_making_decision: false,
     is_header_shown: false,
     is_my_current: false,
     furnished: null,
     listPriorities: null, // DROP LIST
     listJurisdictions: null, // DROP LIST
     listRequestTypes: null, // DROP LIST
+    listRestrictedWords: null,
+    listRestrictedWordsReasons: null,
+    listDecisionReasons: null,
 
     //Names Data
     //nrNum: null,
@@ -37,7 +43,7 @@ export default new Vuex.Store({
     internalComments: null,
     applicantsOrigData: null,
     nrData: null,
-       compInfo: {
+      compInfo: {
         nrNumber: null,
         compNames: {
           compName1: null,
@@ -110,6 +116,9 @@ export default new Vuex.Store({
   mutations: {
     requestType (state, value) {
       state.compInfo.requestType = value;
+    },
+    is_making_decision(state, value) {
+      state.is_making_decision = value;
     },
     currentState(state, value) {
       state.currentState = value;
@@ -295,6 +304,19 @@ export default new Vuex.Store({
       //state.reservationCount = dbcompanyInfo.reservationCount
       state.expiryDate = dbcompanyInfo.expiryDate
       state.submittedDate = dbcompanyInfo.submittedDate
+
+      // TODO - remove this stub data
+      state.consent = [
+        {
+          word: 'Doctor',
+        },
+        {
+          word: 'B.C.',
+        },
+        {
+          word: 'Realtors',
+        }
+      ]
     },
 
     update_nrData(state){
@@ -369,6 +391,15 @@ export default new Vuex.Store({
     },
     listRequestTypes (state, value) {
       state.listRequestTypes = value;
+    },
+    listRestrictedWords (state, value) {
+      state.listRestrictedWords = value;
+    },
+    listRestrictedWordsReasons (state, value) {
+      state.listRestrictedWordsReasons = value;
+    },
+    listDecisionReasons (state, value) {
+      state.listDecisionReasons = value;
     },
     is_my_current(state, value) {
       state.is_my_current = value;
@@ -586,6 +617,25 @@ export default new Vuex.Store({
         readJFile(json_files_path + 'requesttype.json', function (myArray) { commit('listRequestTypes', myArray);})
       }
 
+      // restricted words and reasons
+      if (state.listRestrictedWords === null) {
+        readJFile(json_files_path + 'restrictedwords.json', function (myArray) { commit('listRestrictedWords', myArray);})
+      }
+      if (state.listRestrictedWordsReasons === null) {
+        readJFile(json_files_path + 'requestedwordconditions.json', function (myArray) { commit('listRestrictedWordsReasons', myArray);})
+      }
+
+      // decision reasons
+      if (state.listDecisionReasons === null) {
+        console.log('action: get decision reasons list from API')
+        const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+        const url = '/api/v1/decisionreasons'
+        return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+          console.log(response);
+          commit('listDecisionReasons',response.data)
+        })
+      }
+
     },
 
     loadConfig( {commit, state}) {
@@ -625,6 +675,9 @@ export default new Vuex.Store({
   getters: {
     is_editing(state) {
       return state.is_editing
+    },
+    is_making_decision(state) {
+      return state.is_making_decision
     },
     is_header_shown(state) {
       return state.is_header_shown
@@ -800,6 +853,18 @@ export default new Vuex.Store({
     },
     listRequestTypes(state) {
       return state.listRequestTypes
+    },
+    listRestrictedWords(state) {
+      return state.listRestrictedWords
+    },
+    listRestrictedWordsReasons(state) {
+      return state.listRestrictedWordsReasons
+    },
+    listDecisionReasons(state) {
+      return state.listDecisionReasons
+    },
+    consent(state) {
+      return state.consent;
     },
     conflictList(state) {
       return state.conflictList

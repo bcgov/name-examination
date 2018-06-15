@@ -31,6 +31,22 @@ function findArrValue(needle) {
   }
 }
 
+function findArrText(needle) {
+  // assumes the haystack is an object with attribute "text" to match to
+  return function (haystack) {
+    return needle == haystack.text;
+  }
+}
+
 function getDescFromList(haystack, needle) {
   return haystack.filter(findArrValue(needle))[0].text
+}
+
+function getValueFromText(haystack, needle) {
+  return haystack.filter(findArrText(needle))[0].value
+}
+
+function getTextFromValueMultiple(haystack, needle) {
+  // return array of matches, not just single value
+  return haystack.filter(findArrValue(needle));
 }
