@@ -24,7 +24,7 @@
                 {{ compName3 }}</td>
             </tr>
           </table>
-          <div>
+          <div v-if="!is_making_decision">
           <p>
             <input v-model="currentName" class="form-control"  />
             <button @click="runManualSearch()">Manual Search</button>

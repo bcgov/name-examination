@@ -3,40 +3,63 @@
   <span>
 
     <div class="row">
-      <div class="col add-top-padding">
+      <div class="col-6 add-top-padding">
         <h3>Consent Required</h3>
-        <select multiple class="form-control" v-model="consent_selected"
-                :disabled="customer_message_override">
-          <option v-for="message in consent_bodies" :value="message.full_message"
-                  :key="message.message">
-            {{ message.full_message }}
-          </option>
-        </select>
+        <div>
+        <multiselect
+          v-model="consent_selected"
+          :options="consent_bodies"
+          :multiple="true"
+          label="full_message"
+          name="message"
+          track-by="full_message"
+          :close-on-select="true"
+          deselectLabel=""
+          selectLabel=""
+          selectedLabel=""
+          placeholder=""
+          :disabled="customer_message_override"
+        />
+        </div>
       </div>
-      <div class="col add-top-padding">
+      <div class="col-6 add-top-padding">
         <h3>Conflicts</h3>
-        <select multiple class="form-control" v-model="conflicts_selected"
-                :disabled="customer_message_override">
-          <option v-for="conflict in conflictList" :value="conflict.text"
-                  :key="conflict.nrNumber + conflict.text">
-            {{ conflict.text }}
-          </option>
-        </select>
+        <multiselect
+          v-model="conflicts_selected"
+          :options="conflictList"
+          :multiple="true"
+          label="text"
+          track-by="nrNumber"
+          :max="3"
+          :close-on-select="true"
+          deselectLabel=""
+          selectLabel=""
+          selectedLabel=""
+          placeholder=""
+          :disabled="customer_message_override"
+        />
       </div>
     </div>
 
     <div class="row">
-      <div class="col add-top-padding">
+      <div class="col-6 add-top-padding">
         <h3>Generic Rejection Reason (label TBD)</h3>
-        <select multiple class="form-control" v-model="decision_reasons_selected"
-                :disabled="customer_message_override">
-          <option v-for="reason in listDecisionReasons" :value="reason.reason"
-                  :key="reason.name">{{ reason.name }}</option>
-        </select>
+        <multiselect
+          v-model="decision_reasons_selected"
+          :options="listDecisionReasons"
+          :multiple="true"
+          label="name"
+          track-by="name"
+          :close-on-select="true"
+          deselectLabel=""
+          selectLabel=""
+          selectedLabel=""
+          placeholder=""
+          :disabled="customer_message_override"
+        />
       </div>
-      <div class="col">
+      <div class="col-6 add-top-padding">
         <h3>Trademarks</h3>
-
       </div>
     </div>
 
@@ -85,9 +108,17 @@
 /* eslint-disable */
 
   import internalcomments from "@/components/dropdown/Search/InternalComments.vue";
+  import Multiselect from 'vue-multiselect';
+
+  const myMixin = {
+    created(){
+      console.log("It works!")
+    }
+  }
 
   export default {
     name: "Decision",
+    mixins: [myMixin],
     data: function ()
     {
       return {
@@ -95,6 +126,11 @@
         conflicts_selected: [],
         decision_reasons_selected: [],
         customer_message_override: null,
+        common_multiselect_options: {
+          deselectLabel: "",
+          selectLabel: "",
+          disabled: "customer_message_override",
+        },
       }
     },
     computed: {
@@ -164,12 +200,12 @@
 
         // CONFLICTS
         for (var i = 0; i < this.conflicts_selected.length; i++) {
-          retval.push('Rejected due to conflict with ' + this.conflicts_selected[i]);
+          retval.push('Rejected due to conflict with ' + this.conflicts_selected[i].text);
         }
 
         // CONSENT
         for (var i = 0; i < this.consent_selected.length; i++) {
-          retval.push('Consent Required: ' + this.consent_selected[i]);
+          retval.push('Consent Required: ' + this.consent_selected[i].full_message);
         }
 
         // TRADEMARKS
@@ -177,7 +213,7 @@
 
         // GENERIC DECISION REASONS
         for (var i = 0; i < this.decision_reasons_selected.length; i++) {
-          retval.push(this.decision_reasons_selected[i]);
+          retval.push(this.decision_reasons_selected[i].reason);
         }
 
         return retval;
@@ -218,6 +254,7 @@
     },
     components: {
       internalcomments,
+      Multiselect,
     },
     methods: {
       clearCustomerMessagOverride() {
@@ -240,6 +277,8 @@
 
 
 </script>
+
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style scoped>
 
@@ -264,5 +303,22 @@
 
   .customer-msg-box pre {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    white-space: pre-line;
   }
+
+</style>
+
+<!-- unscoped styles -->
+<style>
+
+  .multiselect, .multiselect__input, .multiselect__single {
+    font-size: 12px;
+  }
+
+  .multiselect__option {
+    min-height: inherit;
+    padding: 5px;
+  }
+
+
 </style>

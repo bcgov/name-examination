@@ -16,6 +16,8 @@ export default new Vuex.Store({
     kctoken: null,
     user_role: null,
 
+    consent: null, // complete consent data from API call - stubbed
+
     //Interface settings
     currentChoice: 1,
     currentName: null, // CURRENT NAME BEING EXAMINED
@@ -29,6 +31,9 @@ export default new Vuex.Store({
     listPriorities: null, // DROP LIST
     listJurisdictions: null, // DROP LIST
     listRequestTypes: null, // DROP LIST
+    listRestrictedWords: null,
+    listRestrictedWordsReasons: null,
+    listDecisionReasons: null,
 
     //Names Data
     //nrNum: null,
@@ -36,17 +41,8 @@ export default new Vuex.Store({
     details: null,
     additionalInfo: null,
     internalComments: null,
-    furnished: null,
-    listPriorities: null,
-    listJurisdictions: null,
-    listRequestTypes: null,
-    listRestrictedWords: null,
-    listRestrictedWordsReasons: null,
     applicantsOrigData: null,
     nrData: null,
-    conflicts: null, // complete conflict data from API call
-    consent: null, // complete consent data from API call
-   // formData: {
       compInfo: {
         nrNumber: null,
         compNames: {
@@ -310,15 +306,6 @@ export default new Vuex.Store({
       state.submittedDate = dbcompanyInfo.submittedDate
 
       // TODO - remove this stub data
-      state.conflicts = [
-        {
-          name: 'Conflict #1',
-        },
-        {
-          name: 'Conflict #2',
-        }
-      ]
-      // TODO - remove this stub data
       state.consent = [
         {
           word: 'Doctor',
@@ -410,6 +397,9 @@ export default new Vuex.Store({
     },
     listRestrictedWordsReasons (state, value) {
       state.listRestrictedWordsReasons = value;
+    },
+    listDecisionReasons (state, value) {
+      state.listDecisionReasons = value;
     },
     is_my_current(state, value) {
       state.is_my_current = value;
@@ -633,6 +623,17 @@ export default new Vuex.Store({
       }
       if (state.listRestrictedWordsReasons === null) {
         readJFile(json_files_path + 'requestedwordconditions.json', function (myArray) { commit('listRestrictedWordsReasons', myArray);})
+      }
+
+      // decision reasons
+      if (state.listDecisionReasons === null) {
+        console.log('action: get decision reasons list from API')
+        const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+        const url = '/api/v1/decisionreasons'
+        return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+          console.log(response);
+          commit('listDecisionReasons',response.data)
+        })
       }
 
     },
@@ -859,8 +860,8 @@ export default new Vuex.Store({
     listRestrictedWordsReasons(state) {
       return state.listRestrictedWordsReasons
     },
-    conflicts(state) {
-      return state.conflicts;
+    listDecisionReasons(state) {
+      return state.listDecisionReasons
     },
     consent(state) {
       return state.consent;
