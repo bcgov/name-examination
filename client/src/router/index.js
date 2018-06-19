@@ -8,8 +8,8 @@ const LandingPage = () => import(/* webpackChunkName: "home" */'@/components/Lan
 const Settings = () => import(/* webpackChunkName: "settings" */'@/components/application/sections/Settings')
 const Signin = () => import(/* webpackChunkName: "signin" */'@/components/landing/auth/Signin')
 const KeyCloak = () => import(/* webpackChunkName: "keycloak" */'@/components/landing/auth/keyCloak')
-const SearchResults = () => import(/* webpackChunkName: "searchresults" */'@/components/dropdown/SearchResults')
-const Find = () => import(/* webpackChunkName: "find" */'@/components/dropdown/Find')
+const NameExamination = () => import(/* webpackChunkName: "nameexamination" */'@/components/application/NameExamination')
+const Find = () => import(/* webpackChunkName: "find" */'@/components/application/Find')
 
 Vue.use(Router)
 Vue.use(Vuex)
@@ -36,9 +36,9 @@ let router = new Router({
       }
     },
     {
-      name: 'searchresults',
-      component: SearchResults,
-      path: '/searchresults',
+      name: 'nameexamination',
+      component: NameExamination,
+      path: '/nameExamination',
       meta: {
         requiresAuth: true
       }
