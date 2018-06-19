@@ -4,13 +4,13 @@
     <div class="container-fluid">
       <div class="row ConflictInfo">
 
-          <div class="col client-info-view">
-            <h2>{{ currentName }}</h2>
+          <div class="col conflict-info-view">
+            <h2>{{ currentConflictName }}</h2>
             <div class="add-top-padding">
               <h3>NR Number</h3>
-              <p>{{ nrNumberMatch }}</p>
+              <p>{{ currentConflictNumber }}</p>
             </div>
-            <div class="add-top-padding"><clientinfomatch /></div>
+            <div class="add-top-padding"><namesMatch /></div>
           </div>
 
       </div>
@@ -22,38 +22,30 @@
 <script>
 /* eslint-disable */
 
-import clientinfomatch from '@/components/dropdown/Search/client/ClientInfoMatch.vue';
+import namesMatch from '@/components/dropdown/Search/conflicts/conflictInfoType/namesMatch.vue';
+import corpMatch from '@/components/dropdown/Search/conflicts/conflictInfoType/corpMatch.vue';
 
   export default {
     name: 'ConflictInfo',
     components: {
-      clientinfomatch
+      namesMatch,
+      corpMatch
     },
     computed: {
-        name() {
-          return  this.$store.getters.firstName;
+      currentConflictName() {
+          return  this.$store.getters.currentConflictName;
         },
-        nrNumberMatch: {
-          get: function() {
-            return this.$store.getters.nrNumberMatch;
-          },
-          set: function(value) {
-            console.log("match:" + value)
-            this.$store.commit('nrNumberMatch', value);
-          }
-        },
-      },
-      watch: {
-        nrNumberMatch: function (val) {
-          this.$store.dispatch('getMatchedConflictInfo', this.nrNumberMatch)
+      currentConflictNumber() {
+            return this.$store.getters.currentConflictNumber;
         }
-      }
+
+    }
   }
 </script>
 
 <style scoped>
-  .client-info-view {
-    background-color: #efefef;
+  .conflict-info-view {
+    background-color: #00000;
     padding: 10px;
   }
 </style>

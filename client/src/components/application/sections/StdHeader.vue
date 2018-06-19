@@ -26,8 +26,11 @@
             <router-link to="/searchresults" class="nav-link">Examine Names</router-link>
           </li>
           <li class="nav-item active">
-            <router-link to="/settings" class="nav-link">Settings</router-link>
+            <router-link to="/find" class="nav-link">Search</router-link>
           </li>
+          <!--<li class="nav-item active">
+            <router-link to="/settings" class="nav-link">Settings</router-link>
+          </li>-->
           <li class="nav-item active" v-if="!auth">
             <router-link to="/signin" class="nav-link">Login</router-link>
           </li>

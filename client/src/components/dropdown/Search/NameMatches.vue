@@ -8,25 +8,30 @@
          aria-orientation="vertical">
 
       <div class="icon icon-fail"><i class="fa fa-times"></i></div>
-      <a class="nav-link active" data-toggle="pill" href="#" @click="clickIssueBox('M1')">
+      <a class="nav-link active" data-toggle="pill" href="#"
+         @click="clickRecipeCard('Conflicts')">
         Conflicts
       </a>
       <div class="arrow-right"></div>
 
       <div class="icon icon-concern"><i class="fa fa-exclamation"></i></div>
-      <a class="nav-link" data-toggle="pill" href="#" @click="clickIssueBox('M2')">Consent</a>
+      <a class="nav-link" data-toggle="pill" href="#"
+         @click="clickRecipeCard('Consent')">Consent</a>
       <div class="arrow-right"></div>
 
       <div class="icon icon-pass"><i class="fa fa-check"></i></div>
-      <a class="nav-link" data-toggle="pill" href="#" @click="clickIssueBox('M3')">Trademarks</a>
+      <a class="nav-link" data-toggle="pill" href="#"
+         @click="clickRecipeCard('Trademarks')">Trademarks &reg;</a>
       <div class="arrow-right"></div>
 
       <div class="icon icon-pass"><i class="fa fa-check"></i></div>
-      <a class="nav-link" data-toggle="pill" href="#" @click="clickIssueBox('M4')">History</a>
+      <a class="nav-link" data-toggle="pill" href="#"
+         @click="clickRecipeCard('History')">History</a>
       <div class="arrow-right"></div>
 
       <div class="icon icon-pass"><i class="fa fa-check"></i></div>
-      <a class="nav-link" data-toggle="pill" href="#" @click="clickIssueBox('M5')">Format</a>
+      <a class="nav-link" data-toggle="pill" href="#"
+         @click="clickRecipeCard('Format')">Format</a>
       <div class="arrow-right"></div>
     </div>
   </div>
@@ -37,41 +42,26 @@
 /* eslint-disable */
 export default {
   name: 'matches',
-  data: function () {
-    return {
-      mess: "Here"
-    }
-  },
   mounted() {
-    //alert("here");
-    this.setOriginalBackgrnd();
+    // set checks here
+    this.currentRecipeCard = "Conflicts"
   },
-  updated() {
-    //alert("here2");
+  computed: {
+    currentRecipeCard: {
+      get: function () {
+        return this.$store.getters.currentRecipeCard;
+      },
+      set: function (value) {
+        this.$store.commit('currentRecipeCard', value);
+      }
+    }
   },
   methods: {
-    clickIssueBox(divID) {
-      //const mDiv = document.getElementById(divID);
-      //mDiv.innerText = "Div is: " + divID;
-      //this.setOriginalBackgrnd();
-      //alert("Here");
-      this.$store.dispatch('selectNameIssue',divID);
-    },
-    setOriginalBackgrnd() {
-      // alert("here2");
-      const mDiv1 = document.getElementById("M1");
-      //mDiv1.className = "row match-part match-d";
-      const mDiv2 = document.getElementById("M2");
-      //mDiv2.className = "row match-part match-d";
-      const mDiv3 = document.getElementById("M3");
-      //mDiv3.className = "row match-part match-d";
-      const mDiv4 = document.getElementById("M4");
-      //mDiv4.className = "row match-part match-d";
-      const mDiv5 = document.getElementById("M5");
-      //mDiv5.className = "row match-part match-d";
+    clickRecipeCard(recipeCard) {
+      this.currentRecipeCard = recipeCard
     }
   }
-};
+}
 </script>
 
 <style scoped>

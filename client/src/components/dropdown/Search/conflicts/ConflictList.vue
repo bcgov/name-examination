@@ -4,12 +4,13 @@
     <div class="container-fluid">
       <div class="row ConflictList">
 
-          <select v-model="nrNumberMatch" class="form-control" size="15" >
-            <option v-for="option in conflictData" v-bind:value="option.nrNumber"
-                    v-bind:key="option.nrNumber">
-              {{ option.text }}
-            </option>
-          </select>
+        <select v-model="conflictMatch" class="form-control" size="17" border="0"
+                @change="setConflictInfo()">
+          <option v-for="option in conflictData" :key="option.value"
+                  v-bind:value="{value: option.nrNumber, text: option.text, source: option.source}">
+            {{ option.text }}
+          </option>
+        </select>
 
       </div>
 
@@ -29,18 +30,20 @@
       conflictData() {
         return  this.$store.getters.conflictList;
       },
-      nrNumberMatch: {
+      conflictMatch:  {
         get: function() {
-          return this.$store.getters.nrNumberMatch;
+          return '';
         },
         set: function(value) {
-          console.log("match:" + value)
-          this.$store.commit('nrNumberMatch', value);
+          this.$store.commit('currentMatch', value);
         }
-      },
-
+      }
     },
     methods: {
+      setConflictInfo() {
+        console.log('setConflictInfo')
+        this.$store.dispatch('getConflictInfo')
+      }
     }
   }
 </script>

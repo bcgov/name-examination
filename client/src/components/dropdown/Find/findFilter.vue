@@ -1,9 +1,6 @@
 /* eslint-disable */
 <template>
     <div class="row">
-
-
-
     </div>
 </template>
 
@@ -18,6 +15,6 @@ export default {
 </script>
 
 <style scoped>
-  .findfiltert {
+  .findfilter {
   }
  </style>

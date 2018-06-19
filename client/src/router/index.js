@@ -9,6 +9,7 @@ const Settings = () => import(/* webpackChunkName: "settings" */'@/components/ap
 const Signin = () => import(/* webpackChunkName: "signin" */'@/components/landing/auth/Signin')
 const KeyCloak = () => import(/* webpackChunkName: "keycloak" */'@/components/landing/auth/keyCloak')
 const SearchResults = () => import(/* webpackChunkName: "searchresults" */'@/components/dropdown/SearchResults')
+const Find = () => import(/* webpackChunkName: "find" */'@/components/dropdown/Find')
 
 Vue.use(Router)
 Vue.use(Vuex)
@@ -38,6 +39,14 @@ let router = new Router({
       name: 'searchresults',
       component: SearchResults,
       path: '/searchresults',
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      name: 'find',
+      component: Find,
+      path: '/find',
       meta: {
         requiresAuth: true
       }
