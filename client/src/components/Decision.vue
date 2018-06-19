@@ -107,7 +107,7 @@
 <script>
 /* eslint-disable */
 
-  import internalcomments from "@/components/dropdown/Search/InternalComments.vue";
+  import internalcomments from "@/components/application/Examine/InternalComments.vue";
   import Multiselect from 'vue-multiselect';
 
   const myMixin = {

@@ -23,7 +23,7 @@
             <router-link to="/home" class="nav-link">Home</router-link>
           </li>
           <li class="nav-item active">
-            <router-link to="/searchresults" class="nav-link">Examine Names</router-link>
+            <router-link to="/nameExamination" class="nav-link">Examine Names</router-link>
           </li>
           <li class="nav-item active">
             <router-link to="/find" class="nav-link">Search</router-link>

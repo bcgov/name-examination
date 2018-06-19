@@ -47,15 +47,13 @@ export default new Vuex.Store({
     internalComments: null,
     applicantsOrigData: null,
     nrData: null,
-      compInfo: {
-        nrNumber: null,
+    compInfo: {
+      nrNumber: null,
         compNames: {
           compName1: null,
           compName2: null,
           compName3: null
         },
-        requestType: null,
-      },
       requestType: null,
     },
     applicantInfo: {
@@ -122,9 +120,8 @@ export default new Vuex.Store({
     namesConflictJSON: null,
     trademarksJSON: null,
     historiesJSON: null
-  },
-
-  mutations: {
+},
+mutations: {
     requestType (state, value) {
       state.compInfo.requestType = value;
     },
