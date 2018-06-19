@@ -8,27 +8,25 @@
             <tr class="name-option"
                   v-bind:class="{'active-name-option': currentChoice==1}">
               <td>1.</td>
-              <td id="name1" v-shortkey.once="['arrowdown']" @shortkey="nextChoice('2')" >
+              <td id="name1" >
                 {{ compName1 }}</td>
             </tr>
             <tr class="name-option"
                   v-bind:class="{'active-name-option': currentChoice==2}">
               <td>2.</td>
-              <td id="name2" v-shortkey.once="['arrowdown']" @shortkey="nextChoice('3')" >
+              <td id="name2" >
                 {{ compName2 }}</td>
             </tr>
             <tr class="name-option"
                   v-bind:class="{'active-name-option': currentChoice==3}">
               <td>3.</td>
-              <td id="name3" v-shortkey.once="['arrowdown']" @shortkey="nextChoice('1')" >
+              <td id="name3" >
                 {{ compName3 }}</td>
             </tr>
           </table>
           <div>
-          <p>
-            <input v-model="currentName" class="form-control"  />
+            <input v-model="currentName" class="form-control" />
             <button @click="runManualSearch()">Manual Search</button>
-          </p>
           </div>
         </div>
 
@@ -55,6 +53,7 @@
       is_editing() {
         return  this.$store.getters.is_editing;
       },
+      // current choice 1,2 or 3
       currentChoice() {
         return this.$store.getters.currentChoice;
       },
@@ -70,6 +69,14 @@
       currentName() {
         return this.$store.getters.currentName;
       },
+      currentChoice: {
+        get: function () {
+          return this.$store.getters.currentChoice
+        },
+        set: function (value) {
+          this.$store.commit('currentChoice', value);
+        }
+      },
       is_my_current() {
         return this.$store.getters.is_my_current;
       },
@@ -84,12 +91,12 @@
       }
     },
     mounted() {
-      //console.log('Get Next nr Number')
+      console.log('Set current choice to 1')
+      this.currentChoice = 1
+      console.log('Get next nrNumber data')
       this.$store.dispatch('getpostgrescompNo');
-      //console.log('Set current choices')
-      //this.$store.dispatch('nextChoice',1);
-      //console.log('Run Recipe')
-      //this.runRecipe()
+      console.log('Set current name to names[1]')
+      this.$store.dispatch('setCurrentNameFromIndex',1)
     },
     methods: {
       getNextCompany() {
@@ -100,32 +107,41 @@
       },
       nameRejected() {
         this.$store.dispatch('nameRejected');
+        alert("here")
       },
       reOpen() {
         this.$store.dispatch('updateNRState', 'INPROGRESS');
       },
-      nextChoice(choiceNum){
-        console.log('running nextChoice ' + choiceNum)
-        //alert("Here")
-        this.$store.dispatch('nextChoice',choiceNum);
-        //setFocus("name" + choiceNum )
+      nextChoice(){
+        console.log('running nextChoice ' )
+        if(this.currentChoice == 1){
+          this.currentChoice = 2
+        }else if(this.currentChoice == 2){
+          this.currentChoice = 3
+        }else{
+          this.currentChoice = 1
+        }
+        //check if current name is null - move on to next choice if it is - stop if current choice is 1
+        if(this.currentName == null) {
+          if(this.currentChoice != 1) {
+            this.nextChoice()
+          }
+        }
         this.runRecipe()
       },
       runRecipe() {
         console.log('Running Recipe')
         this.$store.dispatch('checkConflicts');
-        //this.$store.dispatch('checkTradmarks');
+        //this.$store.dispatch('checkTrademarks');
         //this.$store.dispatch('checkConsent');
-        //this.$store.dispatch('checkHistory');
+        //this.$store.dispatch('checkHistories');
         //this.$store.dispatch('checkFormat');
-      },
-      setFontClassForNames(){
       }
     },
     watch: {
       compName1: function (val) {
         console.log('watcher fired:' + val)
-        this.nextChoice(1)
+        this.runRecipe()
       }
     }
   }

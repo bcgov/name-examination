@@ -13,7 +13,7 @@
 </template>
 
 <script>
-  /* eslint-disable */
+/* eslint-disable */
   import findfilter from '@/components/dropdown/Find/findFilter.vue';
 
   export default {

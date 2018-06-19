@@ -4,7 +4,7 @@
     <div class="container-fluid">
       <div class="row ConflictList">
 
-        <select v-model="conflictMatch" class="form-control" size="15" border="0"
+        <select v-model="conflictMatch" class="form-control" size="17" border="0"
                 @change="setConflictInfo()">
           <option v-for="option in conflictData" :key="option.value"
                   v-bind:value="{value: option.nrNumber, text: option.text, source: option.source}">

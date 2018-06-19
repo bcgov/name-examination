@@ -2,34 +2,34 @@
 <template>
   <span>
       <h3>Client</h3>
-      <p>{{ CONFLICTclientFirstName }} {{ CONFLICTclientLastName}}</p>
+      <p>{{ clientFirstName }} {{ clientLastName}}</p>
 
       <h3>Applicant Info</h3>
-      <p>{{ CONFLICTfirstName }} {{ CONFLICTmiddleName }} {{ CONFLICTlastName }}</p>
-      <p>{{ CONFLICTaddressLine1 }}</p>
-      <p>{{ CONFLICTaddressLine2 }}</p>
-      <p>{{ CONFLICTaddressLine3 }}</p>
-      <p>{{ CONFLICTcity }}, {{ CONFLICTprovince }}</p>
-      <p>{{ CONFLICTpostalCode }}</p>
-      <p>{{ CONFLICTcountry }}</p>
+      <p>{{ firstName }} {{ middleName }} {{ lastName }}</p>
+      <p>{{ addressLine1 }}</p>
+      <p>{{ addressLine2 }}</p>
+      <p>{{ addressLine3 }}</p>
+      <p>{{ city }}, {{ CONFLICTprovince }}</p>
+      <p>{{ postalCode }}</p>
+      <p>{{ country }}</p>
 
       <div class="row">
-        <div v-if="CONFLICTphone" class="col add-top-padding">
+        <div v-if="phone" class="col add-top-padding">
           <h3>Phone</h3>
-          <p>{{ CONFLICTphone }}</p>
+          <p>{{ phone }}</p>
         </div>
-        <div v-if="CONFLICTfax" class="col add-top-padding">
+        <div v-if="fax" class="col add-top-padding">
           <h3>Fax</h3>
-          <p>{{ CONFLICTfax }}</p>
+          <p>{{ fax }}</p>
         </div>
       </div>
 
       <h3>Email</h3>
-      <p>{{ CONFLICTconEmail }}</p>
+      <p>{{ conEmail }}</p>
 
       <h3>Contact</h3>
-      <p>{{ CONFLICTcontactName }}</p>
-      <input type="hidden" v-model="currentMatch" />
+      <p>{{ contactName }}</p>
+
   </span>
 
 </template>
@@ -37,138 +37,92 @@
 <script>
 /* eslint-disable */
   export default {
-    name: 'ClientInfo',
+    name: 'namesMatch',
     computed: {
-      CONFLICTclientFirstName: {
-        get: function() {
-          return this.$store.getters.clientFirstName;
-        },
-        set: function(value) {
-          this.$store.commit('clientFirstName', value);
-        }
+      clientFirstName() {
+
+          return this.namesConflictInfo.applicants.clientFirstName
+
       },
-      CONFLICTclientLastName: {
-        get: function() {
-          return this.$store.getters.clientLastName;
-        },
-        set: function(value) {
-          this.$store.commit('clientLastName', value);
-        }
+      clientLastName() {
+          return this.namesConflictInfo.applicants.clientLastName
       },
-      CONFLICTfirstName: {
-        get: function() {
-          return this.$store.getters.firstName;
-        },
-        set: function(value) {
-          this.$store.commit('firstName', value);
-        }
+      firstName() {
+
+          return this.namesConflictInfo.applicants.firstName
+
       },
-      CONFLICTmiddleName: {
-        get: function() {
-          return this.$store.getters.middleName;
-        },
-        set: function(value) {
-          this.$store.commit('middleName', value);
-        }
+      middleName() {
+
+          return this.namesConflictInfo.applicants.middleName
+
       },
-      CONFLICTlastName: {
-        get: function() {
-          return this.$store.getters.lastName;
-        },
-        set: function(value) {
-          this.$store.commit('lastName', value);
-        }
+      lastName() {
+
+          return this.namesConflictInfo.applicants.lastName
+
       },
-      CONFLICTaddressLine1: {
-        get: function() {
-          return this.$store.getters.addressLine1;
-        },
-        set: function(value) {
-          this.$store.commit('addressLine1', value);
-        }
+      addressLine1() {
+
+          return this.namesConflictInfo.applicants.addrLine1
+
       },
-      CONFLICTaddressLine2: {
-        get: function() {
-          return this.$store.getters.addressLine2;
-        },
-        set: function(value) {
-          this.$store.commit('addressLine2', value);
-        }
+      addressLine2() {
+
+          return this.namesConflictInfo.applicants.addrLine2
+
       },
-      CONFLICTaddressLine3: {
-        get: function() {
-          return this.$store.getters.addressLine3;
-        },
-        set: function(value) {
-          this.$store.commit('addressLine3', value);
-        }
+      addressLine3() {
+
+          return this.namesConflictInfo.applicants.addrLine3
+
       },
-      CONFLICTcity: {
-        get: function() {
-          return this.$store.getters.city;
-        },
-        set: function(value) {
-          this.$store.commit('city', value);
-        }
+      city() {
+
+          return this.namesConflictInfo.applicants.city
+
       },
-      CONFLICTprovince: {
-        get: function() {
-          return this.$store.getters.province;
-        },
-        set: function(value) {
-          this.$store.commit('province', value);
-        }
+      province() {
+
+          return this.namesConflictInfo.applicants.statePprovinceCd
+
       },
-      CONFLICTcountry: {
-        get: function() {
-          return this.$store.getters.country;
-        },
-        set: function(value) {
-          this.$store.commit('country', value);
-        }
+      country() {
+
+          return this.namesConflictInfo.applicants.countryTypeCd
+
       },
-      CONFLICTpostalCode: {
-        get: function() {
-          return this.$store.getters.postalCode;
-        },
-        set: function(value) {
-          this.$store.commit('postalCode', value);
-        }
+      postalCode() {
+
+        return this.namesConflictInfo.applicants.postalCd
+
       },
-      CONFLICTcontactName: {
-        get: function() {
-          return this.$store.getters.contactName;
-        },
-        set: function(value) {
-          this.$store.commit('contactName', value);
-        }
+      contactName() {
+
+          return this.namesConflictInfo.applicants.contact
+
       },
-      CONFLICTphone: {
-        get: function() {
-          return this.$store.getters.phone;
-        },
-        set: function(value) {
-          this.$store.commit('phone', value);
-        }
+      phone() {
+
+          return this.namesConflictInfo.applicants.phoneNumber
+
       },
-      CONFLICTconEmail: {
-        get: function() {
-          return this.$store.getters.conEmail;
-        },
-        set: function(value) {
-          this.$store.commit('conEmail', value);
-        }
+      conEmail() {
+
+          return this.namesConflictInfo.applicants.emailAddress
+
       },
-      CONFLICTfax: {
-        get: function() {
-          return this.$store.getters.fax;
-        },
-        set: function(value) {
-          this.$store.commit('fax', value);
-        }
+      fax() {
+
+          return this.namesConflictInfo.applicants.faxNumber
+
       },
-      currentMatch() {
-        return this.$store.getters.currentMatch;
+      namesConflictInfo() {
+        let tmp = this.$store.getters.namesConflictJSON
+        if(tmp == null){
+          tmp = this.$store.getters.nrData
+        }
+        return tmp
       }
     },
     methods: {

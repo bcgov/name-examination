@@ -17,7 +17,7 @@ export default new Vuex.Store({
     user_role: null,
 
     //Interface settings
-    currentChoice: 1,
+    currentChoice: null,
     currentName: null, // CURRENT NAME BEING EXAMINED
     currentState: null, // APPROVED, REJECTED, INPROGRESS ETC...
 
@@ -25,6 +25,7 @@ export default new Vuex.Store({
     currentConflictName: null, // name of the current conflict
     currentConflictSource: null, // the type of nr; corps or names
 
+    currentRecipeCard: null,
     is_editing: false,
     is_header_shown: false,
     is_my_current: false,
@@ -90,12 +91,6 @@ export default new Vuex.Store({
     submittedDate: null,
     expiryDate: null,
     issueText: null,
-
-    //TODO
-    conflictList: null,
-    conflictHighlighting: null,
-    conflictNames: null,
-    conflictResponse: null,
     issue: {
       issue_Match: null,
       issue_Consent: null,
@@ -108,43 +103,17 @@ export default new Vuex.Store({
       issue_History_Text: null,
       issue_Format_Text: null
     },
-    CONFLICT: {
-      nrNumber: null,
-      compNames: {
-        compName1: null,
-        compName2: null,
-        compName3: null
-      },
-      applicantInfo: {
-        clientName: {
-          firstName: null,
-          lastName: null,
-        },
-        applicantName: {
-          firstName: null,
-          lastName: null,
-          middleName: null
-        },
-        contactInfo: {
-          addressLine1: null,
-          addressLine2: null,
-          addressLine3: null,
-          city: null,
-          province: null,
-          postalCode: null,
-          country: null,
-          contactName: null,
-          phone: null,
-          email: null,
-          fax: null
-        },
-      },
-      additionalCompInfo: {
-        natureOfBussiness: null,
-        nr_status: null
-      }
-    },
-    corpConflictInfo: null
+
+    //TODO
+    conflictList: null,
+    conflictHighlighting: null,
+    conflictNames: null,
+    conflictResponse: null,
+
+    corpConflictJSON: null,
+    namesConflictJSON: null,
+    trademarksJSON: null,
+    historiesJSON: null
   },
 
   mutations: {
@@ -290,7 +259,6 @@ export default new Vuex.Store({
         }
       }
 
-
       state.currentState = dbcompanyInfo.state;
       state.compInfo.requestType = dbcompanyInfo.requestTypeCd
 
@@ -334,57 +302,25 @@ export default new Vuex.Store({
       state.submittedDate = dbcompanyInfo.submittedDate
     },
 
-    loadNamesConflictInfo(state,conflictInfoData){
-      console.log('Loading conflict Info into state')
-      'CONFLICT'
-      if (conflictInfoData.names.length == 0) {
-        console.log('Error, No conflict data found')
-        return
-      } else {
-        //USE STATE TO DETERMINE WHICH NAME IS VALID
-        state.currentState = conflictInfoData.state;
-        for (let record of conflictInfoData.names) {
-          switch (record.choice) {
-            case 1:
-              state.CONFLICT.compInfo.compNames.compName1 = record.name
-              break;
-            case 2:
-              state.CONFLICT.compInfo.compNames.compName2 = record.name
-              break;
-            case 3:
-              state.CONFLICT.compInfo.compNames.compName3 = record.name
-              break;
-            default:
-              console.log('Error with company name structure')
-              return
-          }
-        }
-      }
-
-      state.CONFLICT.applicantInfo.clientName.firstName = conflictInfoData.applicants.clientFirstName
-      state.CONFLICT.applicantInfo.clientName.lastName = conflictInfoData.applicants.clientLastName
-      state.CONFLICT.applicantInfo.applicantName.firstName = conflictInfoData.applicants.firstName
-      state.CONFLICT.applicantInfo.applicantName.middleName = conflictInfoData.applicants.middleName
-      state.CONFLICT.applicantInfo.applicantName.lastName = conflictInfoData.applicants.lastName
-      state.CONFLICT.applicantInfo.contactInfo.addressLine1 = conflictInfoData.applicants.addrLine1
-      state.CONFLICT.applicantInfo.contactInfo.addressLine2 = conflictInfoData.applicants.addrLine2
-      state.CONFLICT.applicantInfo.contactInfo.addressLine3 = conflictInfoData.applicants.addrLine3
-      state.CONFLICT.applicantInfo.contactInfo.city = conflictInfoData.applicants.city
-      state.CONFLICT.applicantInfo.contactInfo.province = conflictInfoData.applicants.stateProvinceCd
-      state.CONFLICT.applicantInfo.contactInfo.postalCode = conflictInfoData.applicants.postalCd
-      state.CONFLICT.applicantInfo.contactInfo.country = conflictInfoData.applicants.countryTypeCd
-      state.CONFLICT.applicantInfo.contactInfo.contactName = conflictInfoData.applicants.contact
-      state.CONFLICT.applicantInfo.contactInfo.phone = conflictInfoData.applicants.phoneNumber
-      state.CONFLICT.applicantInfo.contactInfo.email = conflictInfoData.applicants.emailAddress
-      state.CONFLICT.applicantInfo.contactInfo.fax = conflictInfoData.applicants.faxNumber
-      state.CONFLICT.additionalCompInfo.natureOfBussiness = conflictInfoData.natureBusinessInfo
-
+    loadNamesConflictJSON(state,conflictInfoData){
+      console.log('Loading names conflict Info into state')
+      //state.namesConflictJSON = conflictInfoData
+      state.namesConflictJSON = state.nrData
     },
 
-    loadCorpConflictInfo(state,conflictInfoData){
-      console.log('Loading conflict Info into state')
-      'CONFLICT'
-      state.corpConflictInfo = conflictInfoData
+    loadCorpConflictJSON(state,conflictInfoData){
+      console.log('Loading corp conflict Info into state')
+      state.corpConflictJSON = conflictInfoData
+    },
+
+    loadHistoriesJSON(state,conflictInfoData){
+      console.log('Loading corp conflict Info into state')
+      state.historiesJSON = conflictInfoData
+    },
+
+    loadTrademarksJSON(state,conflictInfoData){
+      console.log('Loading corp conflict Info into state')
+      state.trademarksJSON = conflictInfoData
     },
 
     update_nrData(state){
@@ -463,11 +399,15 @@ export default new Vuex.Store({
     is_my_current(state, value) {
       state.is_my_current = value;
     },
-
-    setNextChoice(state,values){
-      console.log('Setting Next choice values')
-      state.currentChoice = values.value
-      state.currentName = state.nrData.names[state.currentChoice-1].name
+    currentRecipeCard(state,value){
+      state.currentRecipeCard = value
+    },
+    currentChoice(state,value){
+      console.log('Setting current choice to ' + value)
+      state.currentChoice = value
+    },
+    currentName(state,value){
+      state.currentName = value
     },
 
     setConfig(state,configValues) {
@@ -578,12 +518,6 @@ export default new Vuex.Store({
     setDetails({commit, state}) {
      var detail = state.details?null:"1";
      commit('saveDetail',detail)
-    },
-
-    selectNameIssue ({commit, dispatch, state}, divID) {
-      console.log('action: selected issue control:' + divID)
-      localStorage.setItem('issueText',divID )
-      commit('setIssueText', divID)
     },
 
     getpostgrescompNo ({commit, dispatch, state}) {
@@ -701,25 +635,24 @@ export default new Vuex.Store({
       console.log('URL:' + url)
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        console.log('Comp Info Response:' + response.data)
+        console.log('Conflicts Info Response:' + response.data)
         commit('setConflicts',response.data)
       })
         .catch(error => console.log('ERROR: ' + error))
     },
 
-    nextChoice({commit, state},value) {
-      console.log('Getting next choice values')
-      var currName = state.nrData.names[value-1].name
-      commit('setNextChoice',{value,currName})
-    },
-
+    //nextChoice({commit, state},value) {
+    //  console.log('Getting next choice values')
+    //  var currName = state.nrData.names[value-1].name
+    //  commit('setNextChoice',{value,currName})
+    //},
 
     getConflictInfo ({state,commit}) {
       console.log('Getting Conflict Info')
-      if(state.currentConflictSource == "corp" ){
-          this.dispatch('getNamesConflict')
-      }else{
+      if(state.currentConflictSource == "CORP" ){
           this.dispatch('getCorpConflict')
+      }else{
+          this.dispatch('getNamesConflict')
       }
     },
 
@@ -730,24 +663,56 @@ export default new Vuex.Store({
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         console.log('Names Conflict Info:' + response.data)
-        commit('loadNamesConflictInfo',response.data)
+        commit('loadNamesConflictJSON',response.data)
       })
         .catch(error => console.log('ERROR: ' + error))
     },
-
 
     getCorpConflict ({state,commit}) {
       console.log('action: getting data for company number: ' + state.currentConflictNumber + ' from postgres')
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/requests/' + state.currentConflictNumber
+      const url = '/api/v1/corporations/' + state.currentConflictNumber
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         console.log('Corp Conflict Info:' + response.data)
-        commit('loadCorpConflictInfo',response.data)
+        commit('loadCorpConflictJSON',response.data)
       })
         .catch(error => console.log('ERROR: ' + error))
     },
 
+    checkHistories( {commit, state} ) {
+      //TODO - Actions: finish loading conflict list
+
+      console.log('action: getting history for company number: ' + state.compInfo.nrNumber + ' from solr')
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/analysis/' + state.currentChoice + '/histories'
+      console.log('URL:' + url)
+      const vm = this
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        console.log('Histories Info Response:' + response.data)
+        commit('loadHistoriesJSON',response.data)
+      })
+        .catch(error => console.log('ERROR: ' + error))
+    },
+
+    checkTrademarks( {commit, state} ) {
+      //TODO - Actions: finish loading conflict list
+
+      console.log('action: getting trademarks for company number: ' + state.compInfo.nrNumber + ' from solr')
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/analysis/' + state.currentChoice + '/trademarks'
+      console.log('URL:' + url)
+      const vm = this
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        console.log('Trademarks Info Response:' + response.data)
+        commit('loadTrademarksJSON',response.data)
+      })
+        .catch(error => console.log('ERROR: ' + error))
+    },
+
+    setCurrentNameFromIndex({commit, state},value ) {
+     state.currentName = state.nrData.names[value].name
+    }
   },
 
   getters: {
@@ -938,56 +903,23 @@ export default new Vuex.Store({
     currentConflictName(state) {
       return state.currentConflictName
     },
-    CONFLICTclientFirstName(state) {
-      return state.CONFLICT.applicantInfo.clientName.firstName
+    corpConflictJSON(state) {
+     return state.corpConflictJSON
     },
-    CONFLICTclientLastName(state) {
-      return state.CONFLICT.applicantInfo.clientName.lastName
+    namesConflictJSON(state) {
+      return state.namesConflictJSON
     },
-    CONFLICTfirstName(state) {
-      return state.CONFLICT.applicantInfo.applicantName.firstName
+    historiesJSON(state) {
+      return state.historiesJSON
     },
-    CONFLICTmiddleName(state) {
-      return state.CONFLICT.applicantInfo.applicantName.middleName
+    trademarksJSON(state) {
+      return state.trademarksJSON
     },
-    CONFLICTlastName(state) {
-      return state.CONFLICT.applicantInfo.applicantName.lastName
+    currentRecipeCard(state) {
+      return state.currentRecipeCard
     },
-    CONFLICTaddressLine1(state) {
-      return state.CONFLICT.applicantInfo.contactInfo.addressLine1
+    nrData(state) {
+      return state.nrData
     },
-    CONFLICTaddressLine2(state) {
-      return state.CONFLICT.applicantInfo.contactInfo.addressLine2
-    },
-    CONFLICTaddressLine3(state) {
-      return state.CONFLICT.applicantInfo.contactInfo.addressLine3
-    },
-    CONFLICTcity(state) {
-      return state.CONFLICT.applicantInfo.contactInfo.city
-    },
-    CONFLICTprovince(state) {
-      return state.CONFLICT.applicantInfo.contactInfo.province
-    },
-    CONFLICTpostalCode(state) {
-      return state.CONFLICT.applicantInfo.contactInfo.postalCode
-    },
-    CONFLICTcountry(state) {
-      return state.CONFLICT.applicantInfo.contactInfo.country
-    },
-    CONFLICTconEmail(state) {
-      return  state.CONFLICT.applicantInfo.contactInfo.email
-    },
-    CONFLICTcontactName(state) {
-      return state.CONFLICT.applicantInfo.contactInfo.contactName
-    },
-    CONFLICTphone(state) {
-      return state.CONFLICT.applicantInfo.contactInfo.phone
-    },
-    CONFLICTfax(state) {
-      return state.CONFLICT.applicantInfo.contactInfo.fax
-    },
-    CONFLICTnatureOfBusiness(state) {
-      return state.additionalCompInfo.natureOfBussiness
-    }
   }
 })
