@@ -24,18 +24,26 @@
                 {{ compName3 }}</td>
             </tr>
           </table>
-          <div>
-            <input v-model="currentName" class="form-control" />
+          <div v-if="!is_making_decision">
+          <p>
+            <input v-model="currentName" class="form-control"  />
             <button @click="runManualSearch()">Manual Search</button>
           </div>
         </div>
 
         <div class="col" id="top-buttons">
-          <button class="btn btn-sm btn-secondary" @click="getNextCompany()" >Get Next</button>
-          <button class="btn btn-sm btn-primary" v-if="is_my_current" @click="nameApproved()">
-            Accept</button>
-          <button class="btn btn-sm btn-danger" v-if="is_my_current" @click="nameRejected()" >
-            Reject</button>
+          <button class="btn btn-sm btn-secondary" v-if="!is_making_decision"
+                  @click="getNextCompany()" >Get Next</button>
+          <button class="btn btn-sm btn-primary" v-if="!is_making_decision"
+                  @click="startDecision()" >Approve/Reject...</button>
+
+          <button class="btn btn-sm btn-primary" v-if="is_my_current && is_making_decision"
+                  @click="nameApproved()">Accept</button>
+          <button class="btn btn-sm btn-danger" v-if="is_my_current && is_making_decision"
+                  @click="nameRejected()" >Reject</button>
+          <button class="btn btn-sm btn-secondary" v-if="is_my_current && is_making_decision"
+                  @click="is_making_decision=false">Cancel</button>
+
           <button class="btn btn-sm btn-danger" v-if="is_complete" @click="reOpen()" >
             Re-Open</button>
         </div>
@@ -53,7 +61,14 @@
       is_editing() {
         return  this.$store.getters.is_editing;
       },
-      // current choice 1,2 or 3
+      is_making_decision: {
+        get: function() {
+          return this.$store.getters.is_making_decision;
+        },
+        set: function(value) {
+          this.$store.commit('is_making_decision', value);
+        }
+      },
       currentChoice() {
         return this.$store.getters.currentChoice;
       },
@@ -101,6 +116,9 @@
     methods: {
       getNextCompany() {
         this.$store.dispatch('getpostgrescompNo');
+      },
+      startDecision() {
+        this.$store.state.is_making_decision = true;
       },
       nameApproved() {
         this.$store.dispatch('nameApproved');

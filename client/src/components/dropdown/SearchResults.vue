@@ -16,7 +16,8 @@
           <div class="col"><compnameview /></div>
         </div>
 
-        <div class="row">
+        <decision v-if="is_making_decision" />
+        <div class="row" v-else>
           <compmatches />
           <div class="col"><matchissues /></div>
         </div>
@@ -36,7 +37,7 @@
   import compnameview from '@/components/dropdown/Search/CompName.vue';
   import compmatches from '@/components/dropdown/Search/NameMatches.vue';
   import matchissues from '@/components/dropdown/Search/IssueInfo.vue';
-  import examinationmenu from '@/components/dropdown/Search/ExaminationMenu.vue';
+  import decision from "@/components/Decision";
 
   export default {
     name: "SearchResults",
@@ -49,6 +50,9 @@
     computed: {
       details() {
         return this.$store.getters.details;
+      },
+      is_making_decision() {
+        return this.$store.getters.is_making_decision;
       }
     },
     components: {
@@ -56,7 +60,7 @@
       compnameview,
       compmatches,
       matchissues,
-      examinationmenu
+      decision,
     },
   }
 </script>
