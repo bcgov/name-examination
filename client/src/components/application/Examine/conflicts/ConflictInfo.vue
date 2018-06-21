@@ -8,7 +8,7 @@
             <h2>{{ currentConflictName }}</h2>
             <div class="add-top-padding">
               <h3>NR Number</h3>
-              <p>{{ currentConflictNumber }}</p>
+              <p>{{ currentConflictNumber}}</p>
             </div>
             <div class="add-top-padding"><namesMatch /></div>
           </div>
@@ -32,12 +32,17 @@ import corpMatch from '@/components/application/Examine/conflicts/conflictInfoTy
       corpMatch
     },
     computed: {
+      currentConflict() {
+        return  this.$store.getters.currentConflict;
+      },
       currentConflictName() {
-          return  this.$store.getters.currentConflictName;
-        },
+        if (this.currentConflict !== null) return this.currentConflict.text;
+        else return null;
+      },
       currentConflictNumber() {
-            return this.$store.getters.currentConflictNumber;
-        }
+        if (this.currentConflict !== null) return this.currentConflict.nrNumber;
+        else return null;
+      },
 
     }
   }

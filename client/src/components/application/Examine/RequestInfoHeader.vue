@@ -90,15 +90,15 @@
             <table style="width: 100%;">
               <tr>
                 <td>1.</td>
-                <td><input v-model="compName1" class="form-control" /></td>
+                <td><input v-model="compName1.name" class="form-control" /></td>
               </tr>
               <tr>
                 <td>2.</td>
-                <td><input v-model="compName2" class="form-control" /></td>
+                <td><input v-model="compName2.name" class="form-control" /></td>
               </tr>
               <tr>
                 <td>3.</td>
-                <td><input v-model="compName3" class="form-control" /></td>
+                <td><input v-model="compName3.name" class="form-control" /></td>
               </tr>
             </table>
           </div>

@@ -19,19 +19,19 @@ export default new Vuex.Store({
     consent: null, // complete consent data from API call - stubbed
 
     //Interface settings
-    currentChoice: null,
-    currentName: null, // CURRENT NAME BEING EXAMINED
-    currentState: null, // APPROVED, REJECTED, INPROGRESS ETC...
+    currentChoice: null, // CURRENT NAME BEING EXAMINED (choice number)
+    currentName: null, // CURRENT NAME BEING EXAMINED (string)
+    currentNameObj: { // CURRENT NAME BEING EXAMINED (complete object)
+      name: null,
+    },
+    currentState: null, // NR - APPROVED, REJECTED, INPROGRESS ETC...
 
-    currentConflictNumber: null, // nrNumber of the conflict name currently in focus
-    currentConflictName: null, // name of the current conflict
-    currentConflictSource: null, // the type of nr; corps or names
+    currentConflict: null, // the conflict name currently in focus
 
     currentRecipeCard: null,
     is_editing: false,
     is_making_decision: false,
     is_header_shown: false,
-    is_my_current: false,
     furnished: null,
     listPriorities: null, // DROP LIST
     listJurisdictions: null, // DROP LIST
@@ -49,11 +49,35 @@ export default new Vuex.Store({
     nrData: null,
     compInfo: {
       nrNumber: null,
-        compNames: {
-          compName1: null,
-          compName2: null,
-          compName3: null
+      compNames: {
+        compName1: {
+          name: null,
+          state: null,
+          consumptionDate: null,
+          conflict1: null,
+          conflict2: null,
+          conflict3: null,
+          decision_text: null,
         },
+        compName2: {
+          name: null,
+          state: null,
+          consumptionDate: null,
+          conflict1: null,
+          conflict2: null,
+          conflict3: null,
+          decision_text: null,
+        },
+        compName3: {
+          name: null,
+          state: null,
+          consumptionDate: null,
+          conflict1: null,
+          conflict2: null,
+          conflict3: null,
+          decision_text: null,
+        },
+      },
       requestType: null,
     },
     applicantInfo: {
@@ -248,24 +272,67 @@ mutations: {
       if (dbcompanyInfo.names.length == 0) {
         console.log('Error, No company names found')
         return
-      } else {
-        for (let record of dbcompanyInfo.names) {
-          switch (record.choice) {
-            case 1:
-              state.compInfo.compNames.compName1 = record.name
-              break;
-            case 2:
-              state.compInfo.compNames.compName2 = record.name
-              break;
-            case 3:
-              state.compInfo.compNames.compName3 = record.name
-              break;
-            default:
-              console.log('Error with company name structure')
-              return
-          }
+      }
+
+      for (let record of dbcompanyInfo.names) {
+        switch (record.choice) {
+          case 1:
+            state.compInfo.compNames.compName1.name = record.name
+            state.compInfo.compNames.compName1.state = record.state
+            state.compInfo.compNames.compName1.consumptionDate = record.consumptionDate
+            state.compInfo.compNames.compName1.conflict1 = record.conflict1
+            state.compInfo.compNames.compName1.conflict2 = record.conflict2
+            state.compInfo.compNames.compName1.conflict3 = record.conflict3
+            state.compInfo.compNames.compName1.decision_text = record.decision_text
+
+            // if this name is not yet examined, set it as current name
+            if (record.state == 'NE') {
+              console.log('Set current name to name #1');
+              this.dispatch('setCurrentName',record);
+            }
+
+            break;
+          case 2:
+            state.compInfo.compNames.compName2.name = record.name
+            state.compInfo.compNames.compName2.state = record.state
+            state.compInfo.compNames.compName2.consumptionDate = record.consumptionDate
+            state.compInfo.compNames.compName2.conflict1 = record.conflict1
+            state.compInfo.compNames.compName2.conflict2 = record.conflict2
+            state.compInfo.compNames.compName2.conflict3 = record.conflict3
+            state.compInfo.compNames.compName2.decision_text = record.decision_text
+
+            // if this name is not yet examined, set it as current name
+            if (record.state == 'NE' &&
+              (record.choice < state.currentChoice || state.currentChoice == null)
+            ) {
+              console.log('Set current name to name #2');
+              this.dispatch('setCurrentName',record);
+            }
+
+            break;
+          case 3:
+            state.compInfo.compNames.compName3.name = record.name
+            state.compInfo.compNames.compName3.state = record.state
+            state.compInfo.compNames.compName3.consumptionDate = record.consumptionDate
+            state.compInfo.compNames.compName3.conflict1 = record.conflict1
+            state.compInfo.compNames.compName3.conflict2 = record.conflict2
+            state.compInfo.compNames.compName3.conflict3 = record.conflict3
+            state.compInfo.compNames.compName3.decision_text = record.decision_text
+
+            // if this name is not yet examined, set it as current name
+            if (record.state == 'NE' &&
+              (record.choice < state.currentChoice || state.currentChoice == null)
+            ) {
+              this.dispatch('setCurrentName',record);
+            }
+
+            break;
+          default:
+            console.log('Error with company name structure')
+            return
         }
       }
+
 
       state.currentState = dbcompanyInfo.state;
       state.compInfo.requestType = dbcompanyInfo.requestTypeCd
@@ -353,13 +420,13 @@ mutations: {
         for (let record of state.nrData.names) {
           switch (record.choice) {
             case 1:
-              state.nrData.names[0].name = state.compInfo.compNames.compName1
+              state.nrData.names[0] = state.compInfo.compNames.compName1;
               break;
             case 2:
-              state.nrData.names[1].name = state.compInfo.compNames.compName2
+              state.nrData.names[1] = state.compInfo.compNames.compName2;
               break;
             case 3:
-              state.nrData.names[2].name = state.compInfo.compNames.compName3
+              state.nrData.names[2] = state.compInfo.compNames.compName3;
               break;
           }
         }
@@ -426,20 +493,22 @@ mutations: {
     listDecisionReasons (state, value) {
       state.listDecisionReasons = value;
     },
-    is_my_current(state, value) {
-      state.is_my_current = value;
-    },
     currentRecipeCard(state,value){
       state.currentRecipeCard = value
     },
     currentChoice(state,value){
       console.log('Setting current choice to ' + value)
       state.currentChoice = value
+
+      // also set in currentName
+      state.currentName.choice = value
     },
     currentName(state,value){
       state.currentName = value
-    },
 
+      // also set in currentName
+      state.currentName.name = value
+    },
     setConfig(state,configValues) {
     },
 
@@ -469,8 +538,7 @@ mutations: {
     },
 
     currentMatch(state,value){
-      state.currentConflictNumber = value.value
-      state.currentConflictName = value.text
+      state.currentConflict = value
     }
 
   },
@@ -572,7 +640,6 @@ mutations: {
         console.log('Comp Info Response:' + response.data)
         localStorage.setItem('COMPINFO',response.data)
         commit('loadCompanyInfo',response.data)
-        commit('is_my_current', true);
       })
       .catch(error => console.log('ERROR: ' + error))
     },
@@ -585,7 +652,7 @@ mutations: {
       axios.patch(url,{headers: {Authorization: `Bearer ${myToken}`}},{"state": nrState} )
            .then(function(response){
                 console.log('state updated to ' + nrState + ' for ' + state.compInfo.nrNumber);
-                commit('currentState', nrState); // TODO - need this?
+                commit('currentState', nrState);
             })
             .catch(error => console.log('ERROR: ' + error))
       },
@@ -627,6 +694,22 @@ mutations: {
            })
            .catch(error => console.log('ERROR: ' + error))
     },
+
+    revertLastDecision({state}) {
+      // TODO - RE-EVALUATE IN TERMS OF 'UNDO' VS 'REVERT'
+      console.log('Revert last decision');
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN');
+      const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/names/' + nameNumber;
+
+      axios.put(url, {headers: {Authorization: `Bearer ${myToken}`}},{"name": nameData} )
+           .then(function(response){
+             console.log(response);
+
+             // get full NR from scratch
+             this.getpostgrescompInfo(state.compInfo.nrNumber);
+            })
+            .catch(error => console.log('ERROR: ' + error))
+      },
 
     loadDropdowns( {commit, state} ) {
       var json_files_path = 'static/ui_dropdowns/';
@@ -698,7 +781,7 @@ mutations: {
 
     getConflictInfo ({state,commit}) {
       console.log('Getting Conflict Info')
-      if(state.currentConflictSource == "CORP" ){
+      if(state.currentConflict.source == "CORP" ){
           this.dispatch('getCorpConflict')
       }else{
           this.dispatch('getNamesConflict')
@@ -706,9 +789,9 @@ mutations: {
     },
 
     getNamesConflict ({state,commit}) {
-      console.log('action: getting data for company number: ' + state.currentConflictNumber + ' from postgres')
+      console.log('action: getting data for company number: ' + state.currentConflict.nrNumber + ' from postgres')
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/requests/' + state.currentConflictNumber
+      const url = '/api/v1/requests/' + state.currentConflict.nrNumber
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         console.log('Names Conflict Info:' + response.data)
@@ -718,9 +801,9 @@ mutations: {
     },
 
     getCorpConflict ({state,commit}) {
-      console.log('action: getting data for company number: ' + state.currentConflictNumber + ' from postgres')
+      console.log('action: getting data for company number: ' + state.currentConflict.nrNumber + ' from postgres')
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/corporations/' + state.currentConflictNumber
+      const url = '/api/v1/corporations/' + state.currentConflict.nrNumber
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         console.log('Corp Conflict Info:' + response.data)
@@ -759,8 +842,10 @@ mutations: {
         .catch(error => console.log('ERROR: ' + error))
     },
 
-    setCurrentNameFromIndex({commit, state},value ) {
-     state.currentName = state.nrData.names[value].name
+    setCurrentName({commit, state},objName ) {
+      state.currentNameObj = objName;
+      state.currentName = objName.name;
+      state.currentChoice = objName.choice;
     }
   },
 
@@ -773,9 +858,6 @@ mutations: {
     },
     is_header_shown(state) {
       return state.is_header_shown
-    },
-    is_my_current(state) {
-      return state.is_my_current
     },
     user(state) {
       return state.user
@@ -802,13 +884,16 @@ mutations: {
       return state.compInfo.nrNumber
     },
     compName1(state) {
-     return state.compInfo.compNames.compName1
+      console.log('compName1 getter');
+      return state.compInfo.compNames.compName1;
     },
     compName2(state) {
-      return state.compInfo.compNames.compName2
+      console.log('compName2 getter');
+      return state.compInfo.compNames.compName2;
     },
     compName3(state) {
-      return state.compInfo.compNames.compName3
+      console.log('compName3 getter');
+      return state.compInfo.compNames.compName3;
     },
     requestType(state) {
       return state.compInfo.requestType
@@ -961,11 +1046,8 @@ mutations: {
     conflictList(state) {
       return state.conflictList
     },
-    currentConflictNumber(state) {
-      return state.currentConflictNumber
-    },
-    currentConflictName(state) {
-      return state.currentConflictName
+    currentConflict(state) {
+      return state.currentConflict
     },
     corpConflictJSON(state) {
      return state.corpConflictJSON
