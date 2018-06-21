@@ -10,7 +10,8 @@
               <h3>NR Number</h3>
               <p>{{ currentConflictNumber }}</p>
             </div>
-            <div class="add-top-padding"><namesMatch /></div>
+            <div v-if="is_corp" class="add-top-padding"><corpMatch /></div>
+            <div v-else class="add-top-padding"><namesMatch /></div>
           </div>
 
       </div>
@@ -34,11 +35,24 @@ import corpMatch from '@/components/application/Examine/conflicts/conflictInfoTy
     computed: {
       currentConflictName() {
           return  this.$store.getters.currentConflictName;
-        },
+      },
       currentConflictNumber() {
-            return this.$store.getters.currentConflictNumber;
+          return this.$store.getters.currentConflictNumber;
+      },
+      is_corp() {
+        console.log('Checking if data is corp or names')
+        if(this.$store.getters.currentConflictSource == 'CORP'){
+          return true
+        }else{
+          return false
         }
-
+      }
+    },
+    watch: {
+      currentConflictName: function (val) {
+        console.log('watcher fired:' + val)
+        this.runRecipe()
+      }
     }
   }
 </script>

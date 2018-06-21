@@ -24,9 +24,6 @@
   export default {
     name: 'ConflictList',
     computed: {
-      name() {
-        return  this.$store.getters.firstName;
-      },
       conflictData() {
         return  this.$store.getters.conflictList;
       },

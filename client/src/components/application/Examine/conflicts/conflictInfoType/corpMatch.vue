@@ -1,37 +1,53 @@
 /* eslint-disable */
 <template>
-  <span>
-      <h3>Client</h3>
-      <p>{{ clientFirstName }} {{ clientLastName}}</p>
+   <span v-if="is_xpro">
+      <h3>XPRO Corporation</h3>
 
-      <h3>Applicant Info</h3>
-      <p>{{ firstName }} {{ middleName }} {{ lastName }}</p>
-      <p>{{ addressLine1 }}</p>
-      <p>{{ addressLine2 }}</p>
-      <p>{{ addressLine3 }}</p>
-      <p>{{ city }}, {{ CONFLICTprovince }}</p>
-      <p>{{ postalCode }}</p>
-      <p>{{ country }}</p>
+      <h3>Attorneys</h3>
+      <p>{{ attorney }}</p>
 
-      <div class="row">
-        <div v-if="phone" class="col add-top-padding">
-          <h3>Phone</h3>
-          <p>{{ phone }}</p>
-        </div>
-        <div v-if="fax" class="col add-top-padding">
-          <h3>Fax</h3>
-          <p>{{ fax }}</p>
-        </div>
-      </div>
+      <h3>Directors</h3>
+      <p>{{ director }}</p>
 
-      <h3>Email</h3>
-      <p>{{ conEmail }}</p>
+      <h3>Head Office</h3>
+      <p>{{ head_office }}</p>
 
-      <h3>Contact</h3>
-      <p>{{ contactName }}</p>
+      <h3>Incorporation Number</h3>
+      <p>{{ incorpNum }}</p>
 
+      <h3>Incorporation Date</h3>
+      <p>{{ incorporated }}</p>
+
+      <h3>Jurisdiction</h3>
+      <p>{{ jurisdiction }}</p>
+
+      <h3>Nature Of Business</h3>
+      <p>{{ natureOfBusiness }}</p>
+   </span>
+   <span v-else>
+      <h3>BC Corporation</h3>
+
+      <h3>Directors</h3>
+      <p>{{ director }}</p>
+
+      <h3>Incorporation Number</h3>
+      <p>{{ incorpNum }}</p>
+
+      <h3>Incorporation Date</h3>
+      <p>{{ incorporated }}</p>
+
+      <h3>Jurisdiction</h3>
+      <p>{{ jurisdiction }}</p>
+
+      <h3>Nature Of Business</h3>
+      <p>{{ natureOfBusiness }}</p>
+
+      <h3>Records Office Delivery Address</h3>
+      <p>{{ records_office_delivery_address }}</p>
+
+      <h3>Registered Office Delivery Address</h3>
+      <p>{{ registered_office_delivery_address }}</p>
   </span>
-
 </template>
 
 <script>
@@ -39,98 +55,45 @@
   export default {
     name: 'namesMatch',
     computed: {
-      clientFirstName() {
-
-        return this.corpConflictInfo.applicants.clientFirstName
-
+      attorneys() {
+        return this.corpConflictInfo['attorney names']
       },
-      clientLastName() {
-
-        return this.corpConflictInfo.applicants.clientLastName
-
+      directors() {
+        return this.corpConflictInfo['directors']
       },
-      firstName() {
-
-        return this.corpConflictInfo.applicants.firstName
-
+      head_office(){
+        return this.corpConflictInfo['head office']
       },
-      middleName() {
-
-        return this.corpConflictInfo.applicants.middleName
-
+      incorpNum () {
+        return this.corpConflictInfo['incorp #']
       },
-      lastName() {
-
-        return this.corpConflictInfo.applicants.lastName
-
+      incorporated() {
+        return this.corpConflictInfo['incorporated']
       },
-      addressLine1() {
-
-        return this.corpConflictInfo.applicants.addressLine1
-
+      jurisidiction() {
+        return this.corpConflictInfo['jurisidiction']
       },
-      addressLine2() {
-
-        return this.corpConflictInfo.applicants.addressLine2
-
+      natureOfBusiness() {
+        return this.corpConflictInfo['nature of business']
       },
-      addressLine3() {
-
-        return this.corpConflictInfo.applicants.addressLine3
-
+      records_office_delivery_address() {
+        return this.corpConflictInfo['records office delivery address']
       },
-      city() {
-
-        return this.corpConflictInfo.applicants.city
-
+      registered_office_delivery_address() {
+        return this.corpConflictInfo['registered office delivery address']
       },
-      province() {
-
-        return this.corpConflictInfo.applicants.statePprovinceCd
-
-      },
-      country() {
-
-        return this.corpConflictInfo.applicants.countryTypeCd
-
-      },
-      postalCode() {
-
-        return this.corpConflictInfo.applicants.postalCd
-
-      },
-      contactName() {
-
-        return this.corpConflictInfo.applicants.contact
-
-      },
-      phone() {
-
-        return this.corpConflictInfo.applicants.phoneNumber
-
-      },
-      conEmail() {
-
-        return this.corpConflictInfo.applicants.emailAddress
-
-      },
-      fax() {
-
-        return this.corpConflictInfo.applicants.faxNumber
-
+      is_xpro(){
+        if(corpConflictInfo['attorney names'] == null){
+          return false
+        }else{
+          return true
+        }
       },
       corpConflictInfo() {
-        let tmp = this.$store.getters.corpConflictJSON
-        if(tmp == null){
-          // show this for testing
-          tmp = this.$store.getters.nrData
-        }
-        return tmp
+        return this.$store.getters.corpConflictJSON
       }
-    },
-    methods: {
-    },
-  }
+    }
+ }
 </script>
 
 <style scoped>

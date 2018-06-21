@@ -1,15 +1,19 @@
 /* eslint-disable */
 <template>
-    <div class="row">
-    </div>
+    <span>
+        <datatable v-bind="searchData" />
+    </span>
 </template>
 
 <script defer>
 /* eslint-disable */
+
 export default {
   name: 'findfilter',
-  data: {
-    mess: ""
+  computed: {
+    searchData() {
+      return this.$store.getters.searchData
+    }
   }
 }
 </script>

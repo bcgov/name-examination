@@ -9,7 +9,7 @@
       <p>{{ addressLine1 }}</p>
       <p>{{ addressLine2 }}</p>
       <p>{{ addressLine3 }}</p>
-      <p>{{ city }}, {{ CONFLICTprovince }}</p>
+      <p>{{ city }}, {{ province }}</p>
       <p>{{ postalCode }}</p>
       <p>{{ country }}</p>
 
@@ -119,10 +119,6 @@
       },
       namesConflictInfo() {
         let tmp = this.$store.getters.namesConflictJSON
-        if(tmp == null){
-          tmp = this.$store.getters.nrData
-        }
-        return tmp
       }
     },
     methods: {

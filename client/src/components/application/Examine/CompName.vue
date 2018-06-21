@@ -4,6 +4,7 @@
     <div class="name-sect">
       <div class="row">
         <div class="col">
+
           <table>
             <tr class="name-option"
                   v-bind:class="{'active-name-option': currentChoice==1}">
@@ -25,7 +26,7 @@
             </tr>
           </table>
           <div v-if="!is_making_decision">
-            <input v-model="currentName" class="form-control"  />
+            <input v-model="currentName" class="form-control" onChange="runRecipe"/>
             <button @click="runManualSearch()">Manual Search</button>
           </div>
         </div>
@@ -156,7 +157,7 @@
       }
     },
     watch: {
-      compName1: function (val) {
+      currentName: function (val) {
         console.log('watcher fired:' + val)
         this.runRecipe()
       }
