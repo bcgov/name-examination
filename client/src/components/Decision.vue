@@ -28,7 +28,7 @@
           v-model="conflicts_selected"
           :options="conflictList"
           :multiple="true"
-          label="text"
+          label="display_string"
           track-by="nrNumber"
           :max="3"
           :close-on-select="true"
@@ -126,11 +126,6 @@
         conflicts_selected: [],
         decision_reasons_selected: [],
         customer_message_override: null,
-        common_multiselect_options: {
-          deselectLabel: "",
-          selectLabel: "",
-          disabled: "customer_message_override",
-        },
       }
     },
     computed: {
@@ -143,7 +138,30 @@
         }
       },
       conflictList() {
-        return this.$store.getters.conflictList;
+        // augment conflict list with a display string for dropdown
+        var conflict_list = this.$store.getters.conflictList;
+        $.each(conflict_list, function()
+        {
+          this.display_string = this.text + ' - ' + this.nrNumber;
+        });
+        return conflict_list;
+      },
+      currentConflict() {
+
+        if (this.$store.getters.currentConflict !== null) {
+          var conflict = Object.assign({}, this.$store.getters.currentConflict); // copy not reference
+          console.log(this.$store.getters.currentConflict);
+
+          // Somewhere, nrNumber is being replaced with value. So switch it back to nrNumber so
+          // objects match and can be found in conflictList.
+          conflict.nrNumber = conflict.value;
+          delete conflict.value;
+
+          // augment conflict with a display string for dropdown
+          conflict.display_string = conflict.text + ' - ' + conflict.nrNumber;
+          return conflict;
+        }
+        else return null;
       },
       listDecisionReasons() {
         return this.$store.getters.listDecisionReasons;
@@ -192,6 +210,7 @@
 
       },
       customer_message() {
+        console.log('customer_message computed');
         /*
         Build customer message based on selected consent, conflicts, trademarks, and format.
          */
@@ -255,6 +274,15 @@
     components: {
       internalcomments,
       Multiselect,
+    },
+    mounted: function () {
+      // pre-select the conflict from the display screen
+      if (this.currentConflict !== null && this.currentConflict !== undefined) {
+        this.conflicts_selected.push(this.currentConflict);
+      }
+
+      // pre-select the consent/condition from the display screen TODO
+
     },
     methods: {
       clearCustomerMessagOverride() {

@@ -9,19 +9,28 @@
                   v-bind:class="{'active-name-option': currentChoice==1}">
               <td>1.</td>
               <td id="name1" >
-                {{ compName1 }}</td>
+                {{ compName1.name }}
+                <span class="name-state-icon" v-html="setIcon(compName1.state)"></span>
+                {{ compName1.decision_text }}
+              </td>
             </tr>
             <tr class="name-option"
                   v-bind:class="{'active-name-option': currentChoice==2}">
               <td>2.</td>
               <td id="name2" >
-                {{ compName2 }}</td>
+                {{ compName2.name }}
+                <span class="name-state-icon" v-html="setIcon(compName2.state)"></span>
+                {{ compName2.decision_text }}
+              </td>
             </tr>
             <tr class="name-option"
                   v-bind:class="{'active-name-option': currentChoice==3}">
               <td>3.</td>
               <td id="name3" >
-                {{ compName3 }}</td>
+                {{ compName3.name }}
+                <span class="name-icon" v-html="setIcon(compName3.state)"></span>
+                {{ compName3.decision_text }}
+              </td>
             </tr>
           </table>
           <div v-if="!is_making_decision">
@@ -36,11 +45,11 @@
           <button class="btn btn-sm btn-primary" v-if="!is_making_decision"
                   @click="startDecision()" >Approve/Reject...</button>
 
-          <button class="btn btn-sm btn-primary" v-if="is_my_current && is_making_decision"
+          <button class="btn btn-sm btn-primary" v-if="is_making_decision"
                   @click="nameApproved()">Accept</button>
-          <button class="btn btn-sm btn-danger" v-if="is_my_current && is_making_decision"
+          <button class="btn btn-sm btn-danger" v-if="is_making_decision"
                   @click="nameRejected()" >Reject</button>
-          <button class="btn btn-sm btn-secondary" v-if="is_my_current && is_making_decision"
+          <button class="btn btn-sm btn-secondary" v-if="is_making_decision"
                   @click="is_making_decision=false">Cancel</button>
 
           <button class="btn btn-sm btn-danger" v-if="is_complete" @click="reOpen()" >
@@ -91,9 +100,6 @@
           this.$store.commit('currentChoice', value);
         }
       },
-      is_my_current() {
-        return this.$store.getters.is_my_current;
-      },
       is_complete() {
         // indicates a complete BUT REVERTABLE (not yet furnished) NR that can be re-opened.
         if (this.$store.state.furnished) return false;
@@ -105,12 +111,7 @@
       }
     },
     mounted() {
-      console.log('Set current choice to 1')
-      this.currentChoice = 1
-      console.log('Get next nrNumber data')
       this.$store.dispatch('getpostgrescompNo');
-      console.log('Set current name to names[1]')
-      this.$store.dispatch('setCurrentNameFromIndex',1)
     },
     methods: {
       getNextCompany() {
@@ -153,10 +154,19 @@
         //this.$store.dispatch('checkConsent');
         //this.$store.dispatch('checkHistories');
         //this.$store.dispatch('checkFormat');
-      }
+      },
+      setIcon(name_state) {
+        if (name_state == 'R') {
+          return '<i class="fa fa-times icon-rejected"></i>';
+        }
+        else if (name_state == 'A') {
+          return '<i class="fa fa-check icon-accepted"></i>';
+        }
+        else return '';
+      },
     },
     watch: {
-      compName1: function (val) {
+      currentChoice: function (val) {
         console.log('watcher fired:' + val)
         this.runRecipe()
       }
@@ -178,5 +188,17 @@
   #top-buttons button {
     float: right;
     margin-left: 5px;
+  }
+
+</style>
+
+<!-- not scoped -->
+<style>
+
+  .name-state-icon .icon-rejected {
+    color: #c00;
+  }
+  .name-state-icon .icon-accepted {
+    color: #38761d;
   }
 </style>
