@@ -22,8 +22,8 @@
 
 <script>
 /* eslint-disable */
-import conflictlistview from '@/components/application/Examine/conflicts/ConflictList.vue';
-import conflictinfoview from '@/components/application/Examine/conflicts/ConflictInfo.vue';
+import conflictlistview from '@/components/application/Examine/Recipe/conflicts/ConflictList.vue';
+import conflictinfoview from '@/components/application/Examine/Recipe/conflicts/ConflictInfo.vue';
 
 // ClientInfo - read-only component
 import clientinfoview from '@/components/application/Examine/client/ClientInfo.vue';
