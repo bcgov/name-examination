@@ -23,6 +23,7 @@ export default new Vuex.Store({
     currentName: null, // CURRENT NAME BEING EXAMINED (string)
     currentNameObj: { // CURRENT NAME BEING EXAMINED (complete object)
       name: null,
+      choice: null,
     },
     currentState: null, // NR - APPROVED, REJECTED, INPROGRESS ETC...
 
@@ -31,6 +32,7 @@ export default new Vuex.Store({
     currentRecipeCard: null,
     is_editing: false,
     is_making_decision: false,
+    decision_made: null,
     is_header_shown: false,
     furnished: null,
     listPriorities: null, // DROP LIST
@@ -500,18 +502,25 @@ mutations: {
     currentRecipeCard(state,value){
       state.currentRecipeCard = value
     },
+    currentNameObj(state,value){
+      state.currentNameObj = value
+
+      // also set currentName and currentChoice
+      state.currentName = value.name;
+      state.currentChoice = value.choice;
+    },
     currentChoice(state,value){
       console.log('Setting current choice to ' + value)
       state.currentChoice = value
 
-      // also set in currentName
-      state.currentName.choice = value
+      // also set in currentNameObj
+      state.currentNameObj.choice = value
     },
     currentName(state,value){
       state.currentName = value
 
-      // also set in currentName
-      state.currentName.name = value
+      // also set in currentNameObj
+      state.currentNameObj.name = value
     },
     setConfig(state,configValues) {
     },
@@ -859,9 +868,7 @@ mutations: {
     //},
 
     setCurrentName({commit, state},objName ) {
-      state.currentNameObj = objName;
-      state.currentName = objName.name;
-      state.currentChoice = objName.choice;
+      commit('currentNameObj', objName);
     }
 
   },
@@ -881,6 +888,9 @@ mutations: {
     },
     email(state) {
       return state.email
+    },
+    currentNameObj(state) {
+      return state.currentNameObj;
     },
     currentChoice(state) {
       return state.currentChoice;
