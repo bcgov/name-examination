@@ -7,7 +7,7 @@
         <select v-model="conflictMatch" class="form-control" size="17" border="0"
                 @change="setConflictInfo()">
           <option v-for="option in conflictData" :key="option.value"
-                  v-bind:value="{value: option.nrNumber, text: option.text, source: option.source}">
+            v-bind:value="{nrNumber: option.nrNumber, text: option.text, source: option.source}">
             {{ option.text }}
           </option>
         </select>
@@ -23,6 +23,9 @@
 /* eslint-disable */
   export default {
     name: 'ConflictList',
+    data: {
+      tmp: null,
+    },
     computed: {
       conflictData() {
         return  this.$store.getters.conflictList;
@@ -33,13 +36,14 @@
         },
         set: function(value) {
           this.$store.commit('currentMatch', value);
+          this.tmp = value
         }
       }
     },
     methods: {
       setConflictInfo() {
         console.log('setConflictInfo')
-        this.$store.dispatch('getConflictInfo')
+        this.$store.dispatch('getConflictInfo', this.tmp)
       }
     }
   }

@@ -5,11 +5,7 @@
       <div class="row ConflictInfo">
 
           <div class="col conflict-info-view">
-            <h2>{{ currentConflictName }}</h2>
-            <div class="add-top-padding">
-              <h3>NR Number</h3>
-              <p>{{ currentConflictNumber}}</p>
-            </div>
+
             <div v-if="is_corp" class="add-top-padding"><corpMatch /></div>
             <div v-else class="add-top-padding"><namesMatch /></div>
           </div>
@@ -23,8 +19,8 @@
 <script>
 /* eslint-disable */
 
-import namesMatch from '@/components/application/Examine/conflicts/conflictInfoType/namesMatch.vue';
-import corpMatch from '@/components/application/Examine/conflicts/conflictInfoType/corpMatch.vue';
+import namesMatch from '@/components/application/Examine/Recipe/conflicts/conflictInfoType/namesMatch.vue';
+import corpMatch from '@/components/application/Examine/Recipe/conflicts/conflictInfoType/corpMatch.vue';
 
   export default {
     name: 'ConflictInfo',
@@ -36,14 +32,15 @@ import corpMatch from '@/components/application/Examine/conflicts/conflictInfoTy
       currentConflict() {
         return  this.$store.getters.currentConflict;
       },
-      currentConflictName() {
-        if (this.currentConflict !== null) return this.currentConflict.text;
-        else return null;
-      },
-      currentConflictNumber() {
-        if (this.currentConflict !== null) return this.currentConflict.nrNumber;
-        else return null;
-      },
+      is_corp() {
+        if (this.currentConflict !== null){
+          if( this.currentConflict.source == 'CORP') {
+            return true
+          }
+        }else{
+          return false
+        }
+      }
     }
   }
 </script>

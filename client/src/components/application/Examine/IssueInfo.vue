@@ -3,18 +3,12 @@
   <div class="container-fluid">
 
       <div class="row" >
+        <div class="col"><conditionRecipe /></div>
+        <!--<div v-if="is_Conflict" class="col"><conflictRecipe /></div>
+        <div v-if="is_Condition" class="col"><conditionRecipe /></div>
+        <div v-if="is_Trademarks" class="col"><trademarksRecipe /></div>
+        <div v-if="is_History" class="col"><historyRecipe /></div>-->
 
-        <div class="col" style="padding-left: 0;"><conflictlistview /></div>
-        <div class="col"><conflictinfoview /></div>
-
-        <div class="col client-info-view">
-          <h2>{{ currentName }}</h2>
-          <div class="add-top-padding">
-            <h3>Submitted</h3>
-            <p>{{ submittedDate }}</p>
-          </div>
-          <div class="add-top-padding"><clientinfoview /></div>
-        </div>
       </div>
 
   </div>
@@ -22,27 +16,20 @@
 
 <script>
 /* eslint-disable */
-import conflictlistview from '@/components/application/Examine/conflicts/ConflictList.vue';
-import conflictinfoview from '@/components/application/Examine/conflicts/ConflictInfo.vue';
-
-// ClientInfo - read-only component
-import clientinfoview from '@/components/application/Examine/client/ClientInfo.vue';
+import conflictRecipe from '@/components/application/Examine/Recipe/conflictRecipe.vue';
+import conditionRecipe from '@/components/application/Examine/Recipe/conditionRecipe.vue';
+import trademarksRecipe from '@/components/application/Examine/Recipe/trademarksRecipe.vue';
+import historyRecipe from '@/components/application/Examine/Recipe/historyRecipe.vue';
 
 export default {
   name: 'IssueInfo',
   computed: {
-    currentName() {
-      return this.$store.getters.currentName;
-    },
-    submittedDate() {
-      return this.$store.getters.submittedDate;
-    },
     is_Conflict() {
       if(this.currentRecipeCard == 'Conflicts') { return true }
       return false
     },
-    is_Consent() {
-      if(this.currentRecipeCard == 'Consent') { return true }
+    is_Condition() {
+      if(this.currentRecipeCard == 'Condition') { return true }
       return false
     },
     is_Trademarks() {
@@ -62,19 +49,13 @@ export default {
     }
   },
   components: {
-    conflictlistview,
-    conflictinfoview,
-    clientinfoview
+    conflictRecipe,
+    conditionRecipe,
+    historyRecipe,
+    trademarksRecipe
   }
 }
 </script>
 
 <style scoped>
-  .issue-sects {
-  }
-
-  .client-info-view {
-    background-color: #efefef;
-    padding: 10px;
-  }
 </style>

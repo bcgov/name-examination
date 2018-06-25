@@ -52,7 +52,7 @@
             </tr>
           </table>
           <div v-if="!is_making_decision">
-            <input v-model="currentName" class="form-control"  />
+            <input v-model="currentName" class="form-control" onChange="runRecipe"/>
             <button @click="runManualSearch()">Manual Search</button>
           </div>
 

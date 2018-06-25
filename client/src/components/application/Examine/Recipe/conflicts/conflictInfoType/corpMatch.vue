@@ -1,13 +1,14 @@
 /* eslint-disable */
 <template>
+
    <span v-if="is_xpro">
       <h3>XPRO Corporation</h3>
 
       <h3>Attorneys</h3>
-      <p>{{ attorney }}</p>
+      <p v-for="attorney in attorneys" v-bind:key="attorney">{{ attorney }}</p>
 
       <h3>Directors</h3>
-      <p>{{ director }}</p>
+      <p v-for="director in directors" v-bind:key="director">{{ director }}</p>
 
       <h3>Head Office</h3>
       <p>{{ head_office }}</p>
@@ -28,7 +29,7 @@
       <h3>BC Corporation</h3>
 
       <h3>Directors</h3>
-      <p>{{ director }}</p>
+      <p v-for="director in directors" v-bind:key="director">{{ director }}</p>
 
       <h3>Incorporation Number</h3>
       <p>{{ incorpNum }}</p>
@@ -55,6 +56,17 @@
   export default {
     name: 'namesMatch',
     computed: {
+      currentConflict() {
+        return  this.$store.getters.currentConflict;
+      },
+      currentConflictName() {
+        if (this.currentConflict !== null) return this.currentConflict.text;
+        else return null;
+      },
+      currentConflictNumber() {
+        if (this.currentConflict !== null) return this.currentConflict.nrNumber;
+        else return null;
+      },
       attorneys() {
         return this.corpConflictInfo['attorney names']
       },
@@ -83,7 +95,7 @@
         return this.corpConflictInfo['registered office delivery address']
       },
       is_xpro(){
-        if(corpConflictInfo['attorney names'] == null){
+        if(this.corpConflictInfo['attorney names'] == null){
           return false
         }else{
           return true

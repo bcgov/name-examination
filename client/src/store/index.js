@@ -142,6 +142,7 @@ export default new Vuex.Store({
     conflictNames: null,
     conflictResponse: null,
 
+    searchDataJSON: null,
     corpConflictJSON: null,
     namesConflictJSON: null,
     trademarksJSON: null,
@@ -397,27 +398,30 @@ mutations: {
 
     loadNamesConflictJSON(state,conflictInfoData){
       console.log('Loading names conflict Info into state')
-      //state.namesConflictJSON = conflictInfoData
-      state.namesConflictJSON = state.nrData
+      state.namesConflictJSON = conflictInfoData
     },
 
-    loadCorpConflictJSON(state,conflictInfoData){
+    loadCorpConflictJSON(state,corpData){
       console.log('Loading corp conflict Info into state')
-      state.corpConflictJSON = conflictInfoData
+      state.corpConflictJSON = corpData
     },
 
-    loadHistoriesJSON(state,conflictInfoData){
-      console.log('Loading corp conflict Info into state')
-      state.historiesJSON = conflictInfoData
+    loadHistoriesJSON(state,historiesData){
+      console.log('Loading histories Data into state')
+      state.historiesJSON = historiesData
     },
 
-    loadTrademarksJSON(state,conflictInfoData){
-      console.log('Loading corp conflict Info into state')
-      state.trademarksJSON = conflictInfoData
+    loadTrademarksJSON(state,trademarksData){
+      console.log('Loading trademarks data into state')
+      state.trademarksJSON = trademarksData
     },
 
-    update_nrData(state){
+    loadSearchDataJSON(State,searchData){
+      console.log('Loading search Data into state')
+      state.trademarksJSON = searchData
+    },
 
+    update_nrData(state) {
       if(state.nrData.names.length == 0) {
         console.log('Error, No company names found')
         return
@@ -775,43 +779,42 @@ mutations: {
         .catch(error => console.log('ERROR: ' + error))
     },
 
-    //nextChoice({commit, state},value) {
-    //  console.log('Getting next choice values')
-    //  var currName = state.nrData.names[value-1].name
-    //  commit('setNextChoice',{value,currName})
-    //},
-
-    getConflictInfo ({state,commit}) {
+    getConflictInfo ({state,commit},value) {
       console.log('Getting Conflict Info')
-      if(state.currentConflict.source == "CORP" ){
-          this.dispatch('getCorpConflict')
+      if(value.source == "CORP" ){
+          state.corpConflictJSON = null
+          this.dispatch('getCorpConflict',value)
       }else{
-          this.dispatch('getNamesConflict')
+        console.log('Getting NAMES Conflict Info -' + value.source )
+        state.namesConflictJSON = null
+        this.dispatch('getNamesConflict',value)
       }
     },
 
-    getNamesConflict ({state,commit}) {
-      console.log('action: getting data for company number: ' + state.currentConflict.nrNumber + ' from postgres')
+    getNamesConflict ({state,commit},value) {
+      console.log('action: getting data for company number: ' + value.nrNumber)
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/requests/' + state.currentConflict.nrNumber
+      const url = '/api/v1/requests/' + value.nrNumber
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        console.log('Names Conflict Info:' + response.data)
-        commit('loadNamesConflictJSON',response.data)
+        console.log('Names Conflict response:' + response.data)
+        commit('loadNamesConflictJSON',response.data )
+        commit('currentMatch', value);
       })
-        .catch(error => console.log('ERROR: ' + error))
+        .catch(error => console.log('ERROR: getNamesConflict' + error))
     },
 
-    getCorpConflict ({state,commit}) {
-      console.log('action: getting data for company number: ' + state.currentConflict.nrNumber + ' from postgres')
+    getCorpConflict ({state,commit},value) {
+      console.log('action: getting data for company number: ' + value.nrNumber )
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/corporations/' + state.currentConflict.nrNumber
+      const url = '/api/v1/corporations/' + value.nrNumber
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        console.log('Corp Conflict Info:' + response.data)
+        console.log('Corp Conflict response:' + response.data)
         commit('loadCorpConflictJSON',response.data)
+        commit('currentMatch', value);
       })
-        .catch(error => console.log('ERROR: ' + error))
+        .catch(error => console.log('ERROR: getCorpConflict ' + error))
     },
 
     checkHistories( {commit, state} ) {
@@ -844,9 +847,23 @@ mutations: {
         .catch(error => console.log('ERROR: ' + error))
     },
 
+    //getSearchDataJSON( {commit, state} ) {
+    //  console.log('action: get search Data')
+    //  const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+    //  const url = '/api/v1/requests/'
+    //  console.log('URL:' + url)
+    //  const vm = this
+    //  return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+    //    console.log('Search Data Response:' + response.data)
+    //    commit('loadSearchDataJSON',response.data)
+    //  })
+    //    .catch(error => console.log('ERROR: ' + error))
+    //},
+
     setCurrentName({commit, state},objName ) {
       commit('currentNameObj', objName);
     }
+
   },
 
   getters: {
@@ -1073,5 +1090,8 @@ mutations: {
     nrData(state) {
       return state.nrData
     },
+    searchDataJSON(state) {
+      return state.searchDataJSON
+    }
   }
 })
