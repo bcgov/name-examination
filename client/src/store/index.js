@@ -154,6 +154,9 @@ mutations: {
     is_making_decision(state, value) {
       state.is_making_decision = value;
     },
+    decision_made(state, value) {
+      state.decision_made = value;
+    },
     currentState(state, value) {
       state.currentState = value;
     },
@@ -666,30 +669,20 @@ mutations: {
             .catch(error => console.log('ERROR: ' + error))
       },
 
-    nameApproved( {commit, state}) {
-      console.log('Name Approved for ' + state.compInfo.nrNumber + ", " + state.currentName)
+    nameAcceptReject( {commit, state}) {
+      console.log('Name Accepted/Rejected for ' + state.compInfo.nrNumber + ", " + state.currentName)
+      console.log(state.currentNameObj);
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
-      state.nrData.state = 'APPROVED'
-      commit('update_nrData')
-      const url = '/api/v1/requests/' + state.compInfo.nrNumber
-      axios.put(url, state.nrData, {headers: {Authorization: `Bearer ${myToken}`}})
+      const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/names/' + state.currentChoice;
+      axios.put(url, state.currentNameObj, {headers: {Authorization: `Bearer ${myToken}`}})
            .then(function(response){
-              console.log('Name approved for ' + state.compInfo.nrNumber)
+              console.log('Name ' + state.currentChoice + ' accepted/rejected for ' + state.compInfo.nrNumber);
+              dispatch('getpostgrescompInfo');
            })
-           .catch(error => console.log('ERROR: ' + error))
-    },
-
-    nameRejected({commit, state}) {
-      console.log('Name Rejected for NR #' + state.compInfo.nrNumber)
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
-      state.nrData.state = 'REJECTED'
-      commit('update_nrData')
-      const url = '/api/v1/requests/' + state.compInfo.nrNumber
-      axios.put(url,state.nrData, {headers: {Authorization: `Bearer ${myToken}`}})
-           .then(function(response){
-              console.log('Name rejected for ' +  state.compInfo.nrNumber)
-            })
-            .catch(error => console.log('ERROR: ' + error))
+           .catch(error => {
+             console.log('ERROR: ' + error);
+             this.dispatch('getpostgrescompInfo', this.getters.nrNumber);
+           })
     },
 
     //updates the names data, throught the api, into the database
@@ -862,6 +855,9 @@ mutations: {
     },
     is_making_decision(state) {
       return state.is_making_decision
+    },
+    decision_made(state) {
+      return state.decision_made;
     },
     is_header_shown(state) {
       return state.is_header_shown
