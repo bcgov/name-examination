@@ -4,6 +4,24 @@
     <div class="name-sect">
       <div class="row">
         <div class="col">
+
+          <div id="top-buttons">
+            <button class="btn btn-sm btn-secondary" v-if="!is_making_decision"
+                    @click="getNextCompany()" >Get Next</button>
+            <button class="btn btn-sm btn-primary" v-if="!is_making_decision"
+                    @click="startDecision()" >Approve/Reject...</button>
+
+            <button class="btn btn-sm btn-primary" v-if="is_making_decision"
+                    @click="nameApproved()">Accept</button>
+            <button class="btn btn-sm btn-danger" v-if="is_making_decision"
+                    @click="nameRejected()" >Reject</button>
+            <button class="btn btn-sm btn-secondary" v-if="is_making_decision"
+                    @click="is_making_decision=false">Cancel</button>
+
+            <button class="btn btn-sm btn-danger" v-if="is_complete" @click="reOpen()" >
+              Re-Open</button>
+          </div>
+
           <table>
             <tr class="name-option"
                   v-bind:class="{'active-name-option': currentChoice==1}">
@@ -11,7 +29,7 @@
               <td id="name1" >
                 {{ compName1.name }}
                 <span class="name-state-icon" v-html="setIcon(compName1.state)"></span>
-                {{ compName1.decision_text }}
+                <span class="decision-text">{{ compName1.decision_text }}</span>
               </td>
             </tr>
             <tr class="name-option"
@@ -20,7 +38,7 @@
               <td id="name2" >
                 {{ compName2.name }}
                 <span class="name-state-icon" v-html="setIcon(compName2.state)"></span>
-                {{ compName2.decision_text }}
+                <span class="decision-text">{{ compName2.decision_text }}</span>
               </td>
             </tr>
             <tr class="name-option"
@@ -29,7 +47,7 @@
               <td id="name3" >
                 {{ compName3.name }}
                 <span class="name-icon" v-html="setIcon(compName3.state)"></span>
-                {{ compName3.decision_text }}
+                <span class="decision-text">{{ compName3.decision_text }}</span>
               </td>
             </tr>
           </table>
@@ -37,24 +55,9 @@
             <input v-model="currentName" class="form-control"  />
             <button @click="runManualSearch()">Manual Search</button>
           </div>
+
         </div>
 
-        <div class="col" id="top-buttons">
-          <button class="btn btn-sm btn-secondary" v-if="!is_making_decision"
-                  @click="getNextCompany()" >Get Next</button>
-          <button class="btn btn-sm btn-primary" v-if="!is_making_decision"
-                  @click="startDecision()" >Approve/Reject...</button>
-
-          <button class="btn btn-sm btn-primary" v-if="is_making_decision"
-                  @click="nameApproved()">Accept</button>
-          <button class="btn btn-sm btn-danger" v-if="is_making_decision"
-                  @click="nameRejected()" >Reject</button>
-          <button class="btn btn-sm btn-secondary" v-if="is_making_decision"
-                  @click="is_making_decision=false">Cancel</button>
-
-          <button class="btn btn-sm btn-danger" v-if="is_complete" @click="reOpen()" >
-            Re-Open</button>
-        </div>
       </div>
 
     </div>
@@ -89,6 +92,9 @@
       compName3() {
         return this.$store.getters.compName3;
       },
+      currentNameObj() {
+        return this.$store.getters.currentNameObj;
+      },
       currentName() {
         return this.$store.getters.currentName;
       },
@@ -121,7 +127,8 @@
         this.$store.state.is_making_decision = true;
       },
       nameApproved() {
-        this.$store.dispatch('nameApproved');
+        //this.$store.dispatch('nameApproved');
+        this.$store.state.decision_made = 'A';
       },
       nameRejected() {
         this.$store.dispatch('nameRejected');
@@ -185,9 +192,27 @@
   .active-name-option{
     font-weight: bold;
   }
+
+  #top-buttons {
+    float: right;
+    margin: 10px 0 10px 10px;
+  }
   #top-buttons button {
     float: right;
     margin-left: 5px;
+  }
+
+  .name-option > td {
+    vertical-align: top;
+  }
+  .decision-text {
+    font-size: 11px;
+    width: 600px;
+    position: relative;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
 </style>
