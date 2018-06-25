@@ -18,7 +18,7 @@
           selectLabel=""
           selectedLabel=""
           placeholder=""
-          :disabled="customer_message_override"
+          :disabled="customer_message_override !== null"
         />
         </div>
       </div>
@@ -36,7 +36,7 @@
           selectLabel=""
           selectedLabel=""
           placeholder=""
-          :disabled="customer_message_override"
+          :disabled="customer_message_override !== null"
         />
       </div>
     </div>
@@ -55,7 +55,7 @@
           selectLabel=""
           selectedLabel=""
           placeholder=""
-          :disabled="customer_message_override"
+          :disabled="customer_message_override !== null"
         />
       </div>
       <div class="col-6 add-top-padding">
@@ -139,10 +139,10 @@
       },
       decision_made: {
         get: function () {
-          return this.$store.state.decision_made;
+          return this.$store.getters.decision_made;
         },
         set: function (value) {
-          this.$store.state.decision_made = value;
+          this.$store.commit('decision_made', value);
         }
       },
       conflictList() {
@@ -297,7 +297,8 @@
     },
     watch: {
       decision_made: function() {
-        this.accept();
+        console.log('got to decision_made watcher, with value ' + this.decision_made);
+        this.nameAcceptReject();
       },
     },
     methods: {
@@ -311,30 +312,27 @@
 
         $('#edit-customer-message-modal').modal('hide');
       },
-      accept() {
+      nameAcceptReject() {
 
         // save decision text, state, and up to three conflicts
         this.currentNameObj.decision_text = this.customer_message_display;
-        this.currentNameObj.state = 'A'; // OR CA conditionally approved?
+        if (this.decision_made == 'A') {
+          if (this.consent_selected.length > 0) this.currentNameObj.state = 'CA'; // conditionally accepted
+          else this.currentNameObj.state = 'A'; // accepted
+        }
+        else {
+          this.currentNameObj.state = 'R';
+        }
         for (var i = 0; i < this.conflicts_selected.length; i++) {
-          console.log(conflicts_selected[i]);
+          if (i == 0) this.currentNameObj.conflict1 = this.conflicts_selected[i].text;
+          if (i == 1) this.currentNameObj.conflict2 = this.conflicts_selected[i].text;
+          if (i == 2) this.currentNameObj.conflict3 = this.conflicts_selected[i].text;
         }
 
-
-
-        //this.$store.dispatch('saveName');
-        //this.$store.state.is_making_decision = false;
-
-        // get updated data fresh from server
-        //this.$store.dispatch('getpostgrescompInfo',this.$store.getters.nrNumber)
-
-      },
-      reject() {
-
-      },
-      addInternalComment() {
-        // function not needed but I might need to remember this syntax for calling component method
-        //this.$refs.decisioncomments.addNewComment();
+        // send decision to API and reset flags
+        this.$store.dispatch('nameAcceptReject');
+        this.decision_made = null;
+        this.is_making_decision = false;
       },
     }
   }

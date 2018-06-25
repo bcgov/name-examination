@@ -12,9 +12,9 @@
                     @click="startDecision()" >Approve/Reject...</button>
 
             <button class="btn btn-sm btn-primary" v-if="is_making_decision"
-                    @click="nameApproved()">Accept</button>
+                    @click="nameAccept()">Accept</button>
             <button class="btn btn-sm btn-danger" v-if="is_making_decision"
-                    @click="nameRejected()" >Reject</button>
+                    @click="nameReject()" >Reject</button>
             <button class="btn btn-sm btn-secondary" v-if="is_making_decision"
                     @click="is_making_decision=false">Cancel</button>
 
@@ -80,9 +80,6 @@
           this.$store.commit('is_making_decision', value);
         }
       },
-      currentChoice() {
-        return this.$store.getters.currentChoice;
-      },
       compName1() {
         return this.$store.getters.compName1;
       },
@@ -92,8 +89,13 @@
       compName3() {
         return this.$store.getters.compName3;
       },
-      currentNameObj() {
-        return this.$store.getters.currentNameObj;
+      currentNameObj: {
+        get: function() {
+          return this.$store.getters.currentNameObj;
+        },
+        set: function (value) {
+          this.$store.getters.currentNameObj(value);
+        }
       },
       currentName() {
         return this.$store.getters.currentName;
@@ -126,13 +128,11 @@
       startDecision() {
         this.$store.state.is_making_decision = true;
       },
-      nameApproved() {
-        //this.$store.dispatch('nameApproved');
-        this.$store.state.decision_made = 'A';
+      nameAccept() {
+        this.$store.commit('decision_made', 'A');
       },
-      nameRejected() {
-        this.$store.dispatch('nameRejected');
-        alert("here")
+      nameReject() {
+        this.$store.commit('decision_made', 'R');
       },
       reOpen() {
         this.$store.dispatch('updateNRState', 'INPROGRESS');
