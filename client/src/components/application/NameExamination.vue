@@ -10,21 +10,21 @@
       </div>
     </div>
 
-    <div class="lower-section container-fluid">
-      <div class="namePage">
-        <div class="row" >
-          <div class="col"><compnameview /></div>
-        </div>
+     <div class="lower-section container-fluid">
+     <div class="namePage">
+       <div class="row" >
+         <div class="col"><compnameview /></div>
+       </div>
 
-        <decision v-if="is_making_decision" />
-        <div class="row" v-else>
-          <compmatches />
-          <div class="col"><matchissues /></div>
-        </div>
+       <decision v-if="is_making_decision" />
+       <div class="row" v-else>
+         <compmatches />
+         <div class="col"><matchissues /></div>
+       </div>
 
-       <!-- <div class="row">
-          <div class="col" ><examinationmenu /></div>
-        </div> -->
+       <!-- <div="row">
+         <div class="col" ><examinationmenu /></div>
+       </div> -->
       </div>
     </div>
   </div>
