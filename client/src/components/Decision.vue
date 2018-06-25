@@ -137,6 +137,14 @@
           this.$store.commit('is_making_decision', value);
         }
       },
+      decision_made: {
+        get: function () {
+          return this.$store.state.decision_made;
+        },
+        set: function (value) {
+          this.$store.state.decision_made = value;
+        }
+      },
       conflictList() {
         // augment conflict list with a display string for dropdown
         var conflict_list = this.$store.getters.conflictList;
@@ -147,7 +155,6 @@
         return conflict_list;
       },
       currentConflict() {
-
         if (this.$store.getters.currentConflict !== null) {
           var conflict = Object.assign({}, this.$store.getters.currentConflict); // copy not reference
           console.log(this.$store.getters.currentConflict);
@@ -162,6 +169,14 @@
           return conflict;
         }
         else return null;
+      },
+      currentNameObj: {
+        get: function () {
+          return this.$store.getters.currentNameObj;
+        },
+        set: function (value) {
+          this.$store.dispatch('currentNameObj', value);
+        }
       },
       listDecisionReasons() {
         return this.$store.getters.listDecisionReasons;
@@ -206,11 +221,7 @@
         }
 
       },
-      format_selection() {
-
-      },
       customer_message() {
-        console.log('customer_message computed');
         /*
         Build customer message based on selected consent, conflicts, trademarks, and format.
          */
@@ -284,6 +295,11 @@
       // pre-select the consent/condition from the display screen TODO
 
     },
+    watch: {
+      decision_made: function() {
+        this.accept();
+      },
+    },
     methods: {
       clearCustomerMessagOverride() {
         this.customer_message_override = null;
@@ -294,6 +310,27 @@
         this.customer_message_override = $('#edit-customer-message-textarea').val();
 
         $('#edit-customer-message-modal').modal('hide');
+      },
+      accept() {
+
+        // save decision text, state, and up to three conflicts
+        this.currentNameObj.decision_text = this.customer_message_display;
+        this.currentNameObj.state = 'A'; // OR CA conditionally approved?
+        for (var i = 0; i < this.conflicts_selected.length; i++) {
+          console.log(conflicts_selected[i]);
+        }
+
+
+
+        //this.$store.dispatch('saveName');
+        //this.$store.state.is_making_decision = false;
+
+        // get updated data fresh from server
+        //this.$store.dispatch('getpostgrescompInfo',this.$store.getters.nrNumber)
+
+      },
+      reject() {
+
       },
       addInternalComment() {
         // function not needed but I might need to remember this syntax for calling component method
