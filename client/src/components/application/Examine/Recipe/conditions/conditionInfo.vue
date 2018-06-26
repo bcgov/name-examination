@@ -18,14 +18,19 @@
 
 <script>
 /* eslint-disable */
-  //import conditionInfo from '@/components/application/Examine/Recipe/conflicts/ConflictList.vue';
 
   export default {
     name: 'conditionInfo',
     computed: {
 
       testWord() {
-        return 'testW';
+        var conditions = this.$store.getters.conditionsJSON
+        if (conditions != null) {
+          return conditions;
+        }
+        else {
+          return 'no rws';
+        }
       },
       testAU() {
         return 'Y';
