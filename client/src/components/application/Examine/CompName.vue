@@ -158,7 +158,7 @@
         console.log('Running Recipe')
         this.$store.dispatch('checkConflicts');
         //this.$store.dispatch('checkTrademarks');
-        //this.$store.dispatch('checkConsent');
+        this.$store.dispatch('checkConditions');
         //this.$store.dispatch('checkHistories');
         //this.$store.dispatch('checkFormat');
       },

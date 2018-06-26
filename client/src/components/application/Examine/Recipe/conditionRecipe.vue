@@ -2,10 +2,8 @@
 <template>
   <div class="container-fluid">
 
-    <div class="row" >
-      here
-      <!-- rename the "conflictlistview"  to the component that handles this reciped-->
-      <!--<div class="col" style="padding-left: 0;"><conflictlistview /></div>-->
+    <div id="condition" class="row" >
+      <div class="col"><conditionInfo /></div>
 
     </div>
 
@@ -14,16 +12,18 @@
 
 <script>
 /* eslint-disable */
-  //import conflictlistview from '@/components/application/Examine/Recipe/conflicts/ConflictList.vue';
+  import conditionInfo from '@/components/application/Examine/Recipe/conditions/conditionInfo.vue';
 
   export default {
     name: 'conditionRecipe',
-    computed: {
-    },
     components: {
+      conditionInfo
     }
   }
 </script>
 
 <style scoped>
+  #condition {
+    margin: 20px;
+  }
 </style>
