@@ -146,7 +146,8 @@ export default new Vuex.Store({
     corpConflictJSON: null,
     namesConflictJSON: null,
     trademarksJSON: null,
-    historiesJSON: null
+    historiesJSON: null,
+    conditionsJSON: null
 },
 mutations: {
     requestType (state, value) {
@@ -404,6 +405,11 @@ mutations: {
     loadCorpConflictJSON(state,corpData){
       console.log('Loading corp conflict Info into state')
       state.corpConflictJSON = corpData
+    },
+
+    loadConditionsJSON(state,conditionsData){
+      console.log('Loading conditions Info into state')
+      state.conditionsJSON = conditionsData
     },
 
     loadHistoriesJSON(state,historiesData){
@@ -817,6 +823,20 @@ mutations: {
         .catch(error => console.log('ERROR: getCorpConflict ' + error))
     },
 
+    checkConditions( {commit, state} ) {
+
+      console.log('action: getting restricted words and conditions for company number: ' + state.compInfo.nrNumber + ' from solr')
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/analysis/' + state.currentChoice + '/restricted_words'
+      console.log('URL:' + url)
+      const vm = this
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        console.log('Conditions Info Response:' + response.data)
+        commit('loadConditionsJSON',response.data)
+      })
+        .catch(error => console.log('ERROR: ' + error))
+    },
+
     checkHistories( {commit, state} ) {
       //TODO - Actions: finish loading conflict list
 
@@ -1077,6 +1097,9 @@ mutations: {
     },
     namesConflictJSON(state) {
       return state.namesConflictJSON
+    },
+    conditionsJSON(state) {
+      return state.conditionsJSON
     },
     historiesJSON(state) {
       return state.historiesJSON
