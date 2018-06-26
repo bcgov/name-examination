@@ -317,16 +317,27 @@
         // save decision text, state, and up to three conflicts
         this.currentNameObj.decision_text = this.customer_message_display;
         if (this.decision_made == 'A') {
-          if (this.consent_selected.length > 0) this.currentNameObj.state = 'CA'; // conditionally accepted
+          if (this.consent_selected.length > 0) this.currentNameObj.state = 'C'; // conditionally accepted
           else this.currentNameObj.state = 'A'; // accepted
         }
         else {
           this.currentNameObj.state = 'R';
         }
         for (var i = 0; i < this.conflicts_selected.length; i++) {
-          if (i == 0) this.currentNameObj.conflict1 = this.conflicts_selected[i].text;
-          if (i == 1) this.currentNameObj.conflict2 = this.conflicts_selected[i].text;
-          if (i == 2) this.currentNameObj.conflict3 = this.conflicts_selected[i].text;
+          if (i == 0) {
+            this.currentNameObj.conflict1 = this.conflicts_selected[i].text;
+            this.currentNameObj.conflict1_num = this.conflicts_selected[i].nrNumber;
+          }
+          if (i == 1) {
+            this.currentNameObj.conflict2 = this.conflicts_selected[i].text;
+            this.currentNameObj.conflict2_num = this.conflicts_selected[i].nrNumber;
+
+          }
+          if (i == 2) {
+            this.currentNameObj.conflict3 = this.conflicts_selected[i].text;
+            this.currentNameObj.conflict3_num = this.conflicts_selected[i].nrNumber;
+
+          }
         }
 
         // send decision to API and reset flags
@@ -334,7 +345,7 @@
         this.decision_made = null;
         this.is_making_decision = false;
       },
-    }
+    },
   }
 
 
