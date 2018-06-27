@@ -8,7 +8,7 @@
           <div id="top-buttons">
             <button class="btn btn-sm btn-secondary" v-if="!is_making_decision"
                     @click="getNextCompany()" >Get Next</button>
-            <button class="btn btn-sm btn-primary" v-if="!is_making_decision"
+            <button class="btn btn-sm btn-primary" v-if="!is_making_decision && !is_complete"
                     @click="startDecision()" >Approve/Reject...</button>
 
             <button class="btn btn-sm btn-primary" v-if="is_making_decision"
@@ -46,7 +46,7 @@
               <td>3.</td>
               <td id="name3" >
                 {{ compName3.name }}
-                <span class="name-icon" v-html="setIcon(compName3.state)"></span>
+                <span class="name-state-icon" v-html="setIcon(compName3.state)"></span>
                 <span class="decision-text">{{ compName3.decision_text }}</span>
               </td>
             </tr>
@@ -158,8 +158,8 @@
         console.log('Running Recipe')
         this.$store.dispatch('checkConflicts');
         this.$store.dispatch('checkTrademarks');
-        //this.$store.dispatch('checkCondition');
-        this.$store.dispatch('checkHistories');
+        this.$store.dispatch('checkConditions');
+        this.$store.dispatch('checkHistories');        
       },
       setIcon(name_state) {
         if (name_state == 'R') {

@@ -146,7 +146,8 @@ export default new Vuex.Store({
     corpConflictJSON: null,
     namesConflictJSON: null,
     trademarksJSON: null,
-    historiesJSON: null
+    historiesJSON: null,
+    conditionsJSON: null
 },
 mutations: {
     requestType (state, value) {
@@ -343,6 +344,11 @@ mutations: {
       state.currentState = dbcompanyInfo.state;
       state.compInfo.requestType = dbcompanyInfo.requestTypeCd
 
+
+      // if the current state is not INPROGRESS, clear any existing name record in currentNameObj
+      if (state.currentState !== 'INPROGRESS') this.dispatch('setCurrentName',{});
+
+
       // we keep the original data so that if fields exist that we do not use, we don't lose that
       // data when we put new data
       state.applicantOrigData = dbcompanyInfo.applicants
@@ -404,6 +410,11 @@ mutations: {
     loadCorpConflictJSON(state,corpData){
       console.log('Loading corp conflict Info into state')
       state.corpConflictJSON = corpData
+    },
+
+    loadConditionsJSON(state,conditionsData){
+      console.log('Loading conditions Info into state')
+      state.conditionsJSON = conditionsData
     },
 
     loadHistoriesJSON(state,historiesData){
@@ -660,33 +671,67 @@ mutations: {
       .catch(error => console.log('ERROR: ' + error))
     },
 
-    updateNRState ({state},nrState) {
+    updateNRState ({commit, state, dispatch},nrState) {
       console.log('Updating Examination state for number ' + state.compInfo.nrNumber + ' to ' + nrState)
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + state.compInfo.nrNumber
 
-      axios.patch(url,{headers: {Authorization: `Bearer ${myToken}`}},{"state": nrState} )
+      axios.patch(url,{"state": nrState} ,{headers: {Authorization: `Bearer ${myToken}`}})
            .then(function(response){
                 console.log('state updated to ' + nrState + ' for ' + state.compInfo.nrNumber);
                 commit('currentState', nrState);
+                dispatch('getpostgrescompInfo', state.compInfo.nrNumber);
+
             })
             .catch(error => console.log('ERROR: ' + error))
       },
 
-    nameAcceptReject( {commit, state}) {
+    nameAcceptReject( {commit, dispatch, state}) {
       console.log('Name Accepted/Rejected for ' + state.compInfo.nrNumber + ", " + state.currentName)
       console.log(state.currentNameObj);
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/names/' + state.currentChoice;
       axios.put(url, state.currentNameObj, {headers: {Authorization: `Bearer ${myToken}`}})
-           .then(function(response){
-              console.log('Name ' + state.currentChoice + ' accepted/rejected for ' + state.compInfo.nrNumber);
-              dispatch('getpostgrescompInfo');
-           })
-           .catch(error => {
-             console.log('ERROR: ' + error);
-             this.dispatch('getpostgrescompInfo', this.getters.nrNumber);
-           })
+        .then(function(response){
+          console.log('Name ' + state.currentChoice + ' accepted/rejected for ' + state.compInfo.nrNumber);
+
+          // Was this an accept? If so complete the NR
+          if (state.currentNameObj.state == 'A') {
+            dispatch('updateNRState', 'APPROVED');
+          }
+          // was this a conditional accept? If so complete the NR
+          else if (state.currentNameObj.state == 'C') {
+            dispatch('updateNRState', 'CONDITIONAL');
+          }
+          // This was a reject? If so check whether there are any more names
+          else {
+
+            if (state.currentChoice == 1) {
+              if (state.compInfo.compNames.compName2.state == null || state.compInfo.compNames.compName2.state !== 'NE') {
+                dispatch('updateNRState', 'REJECTED');
+              } else {
+                // we'e got another choice to move on to so move to the next
+                commit('currentNameObj', state.compInfo.compNames.compName2);
+              }
+            } else if (state.currentChoice == 2) {
+              if (state.compInfo.compNames.compName3.state == null || state.compInfo.compNames.compName3.state !== 'NE') {
+                dispatch('updateNRState', 'REJECTED');
+              } else {
+                // we'e got another choice to move on to so move to the next
+                commit('currentNameObj', state.compInfo.compNames.compName3);
+              }
+            } else {
+              // this is choice 3 so we're definitely done, there are no more names to examine
+              dispatch('updateNRState', 'REJECTED');
+            }
+          }
+
+          dispatch('getpostgrescompInfo', state.compInfo.nrNumber);
+        })
+        .catch(error => {
+          console.log('ERROR: ' + error);
+          dispatch('getpostgrescompInfo', state.compInfo.nrNumber);
+        })
     },
 
     //updates the names data, throught the api, into the database
@@ -747,7 +792,7 @@ mutations: {
       if (state.listDecisionReasons === null) {
         console.log('action: get decision reasons list from API')
         const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
-        const url = '/api/v1/decisionreasons'
+        const url = '/api/v1/requests/decisionreasons'
         return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
           console.log(response);
           commit('listDecisionReasons',response.data)
@@ -815,6 +860,20 @@ mutations: {
         commit('currentMatch', value);
       })
         .catch(error => console.log('ERROR: getCorpConflict ' + error))
+    },
+
+    checkConditions( {commit, state} ) {
+
+      console.log('action: getting restricted words and conditions for company number: ' + state.compInfo.nrNumber + ' from solr')
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/analysis/' + state.currentChoice + '/restricted_words'
+      console.log('URL:' + url)
+      const vm = this
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        console.log('Conditions Info Response:' + response.data)
+        commit('loadConditionsJSON',response.data)
+      })
+        .catch(error => console.log('ERROR: ' + error))
     },
 
     checkHistories( {commit, state} ) {
@@ -907,15 +966,12 @@ mutations: {
       return state.compInfo.nrNumber
     },
     compName1(state) {
-      console.log('compName1 getter');
       return state.compInfo.compNames.compName1;
     },
     compName2(state) {
-      console.log('compName2 getter');
       return state.compInfo.compNames.compName2;
     },
     compName3(state) {
-      console.log('compName3 getter');
       return state.compInfo.compNames.compName3;
     },
     requestType(state) {
@@ -1077,6 +1133,9 @@ mutations: {
     },
     namesConflictJSON(state) {
       return state.namesConflictJSON
+    },
+    conditionsJSON(state) {
+      return state.conditionsJSON
     },
     historiesJSON(state) {
       return state.historiesJSON
