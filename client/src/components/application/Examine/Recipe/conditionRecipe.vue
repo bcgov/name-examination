@@ -4,7 +4,6 @@
 
     <div id="condition" class="row" >
       <div class="col"><conditionInfo /></div>
-
     </div>
 
   </div>

@@ -157,10 +157,9 @@
       runRecipe() {
         console.log('Running Recipe')
         this.$store.dispatch('checkConflicts');
-        //this.$store.dispatch('checkTrademarks');
+        this.$store.dispatch('checkTrademarks');
         this.$store.dispatch('checkConditions');
-        //this.$store.dispatch('checkHistories');
-        //this.$store.dispatch('checkFormat');
+        this.$store.dispatch('checkHistories');        
       },
       setIcon(name_state) {
         if (name_state == 'R') {
