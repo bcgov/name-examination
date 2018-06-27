@@ -3,7 +3,7 @@
   <div class="container-fluid">
 
     <div class="row" >
-
+      Trademarks
       <!-- rename the "conflictlistview"  to the component that handles this reciped-->
       <!--<div class="col" style="padding-left: 0;"><conflictlistview /></div>-->
 

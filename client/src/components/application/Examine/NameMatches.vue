@@ -7,32 +7,37 @@
     <div class="nav flex-column nav-pills recipe-steps" id="v-pills-tab" role="tablist"
          aria-orientation="vertical">
 
-      <div class="icon icon-fail"><i class="fa fa-times"></i></div>
+      <div id="Conflict1" class="icon icon-fail">
+        <i id="Conflict2" class="fa fa-times"></i></div>
       <a class="nav-link active" data-toggle="pill" href="#"
          @click="clickRecipeCard('Conflicts')">
         Conflicts
       </a>
       <div class="arrow-right"></div>
 
-      <div class="icon icon-concern"><i class="fa fa-exclamation"></i></div>
+      <div id="Condition1" class="icon icon-concern">
+        <i id="Condition2" class="fa fa-exclamation"></i></div>
       <a class="nav-link" data-toggle="pill" href="#"
-         @click="clickRecipeCard('Consent')">Consent</a>
+         @click="clickRecipeCard('Condition')">Condition</a>
       <div class="arrow-right"></div>
 
-      <div class="icon icon-pass"><i class="fa fa-check"></i></div>
+      <div id="Trademarks1" class="icon icon-pass">
+        <i id="Trademarks2" class="fa fa-check"></i></div>
       <a class="nav-link" data-toggle="pill" href="#"
          @click="clickRecipeCard('Trademarks')">Trademarks &reg;</a>
       <div class="arrow-right"></div>
 
-      <div class="icon icon-pass"><i class="fa fa-check"></i></div>
+      <div id="History1" class="icon icon-pass">
+        <i id="History2" class="fa fa-check"></i></div>
       <a class="nav-link" data-toggle="pill" href="#"
          @click="clickRecipeCard('History')">History</a>
       <div class="arrow-right"></div>
 
-      <div class="icon icon-pass"><i class="fa fa-check"></i></div>
+      <!--<div class="icon icon-pass"><i class="fa fa-check"></i></div>
       <a class="nav-link" data-toggle="pill" href="#"
          @click="clickRecipeCard('Format')">Format</a>
-      <div class="arrow-right"></div>
+      <div class="arrow-right"></div>-->
+
     </div>
   </div>
 
@@ -43,10 +48,25 @@
 export default {
   name: 'matches',
   mounted() {
-    // set checks here
     this.currentRecipeCard = "Conflicts"
   },
   computed: {
+    exists_Conflicts() {
+      if(this.$store.getters.conflictsJSON != null){ return true }
+      return false
+    },
+    exists_Conditions() {
+      if(this.$store.getters.conditionsJSON != null){ return true }
+      return false
+    },
+    exists_Trademarks() {
+      if(this.$store.getters.trademarksJSON != null){ return true }
+      return false
+    },
+    exists_Histories() {
+      if(this.$store.getters.historiesJSON != null){ return true }
+      return false
+    },
     currentRecipeCard: {
       get: function () {
         return this.$store.getters.currentRecipeCard;
@@ -59,7 +79,14 @@ export default {
   methods: {
     clickRecipeCard(recipeCard) {
       this.currentRecipeCard = recipeCard
-    }
+    },
+    setFail(val){
+
+    },
+    setConcern(val){
+
+    },
+
   }
 }
 </script>

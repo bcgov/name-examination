@@ -3,12 +3,10 @@
   <div class="container-fluid">
 
       <div class="row" >
-        <div class="col"><conditionRecipe /></div>
-        <!--<div v-if="is_Conflict" class="col"><conflictRecipe /></div>
+        <div v-if="is_Conflict" class="col"><conflictRecipe /></div>
         <div v-if="is_Condition" class="col"><conditionRecipe /></div>
         <div v-if="is_Trademarks" class="col"><trademarksRecipe /></div>
-        <div v-if="is_History" class="col"><historyRecipe /></div>-->
-
+        <div v-if="is_History" class="col"><historyRecipe /></div>
       </div>
 
   </div>
@@ -38,10 +36,6 @@ export default {
     },
     is_History() {
       if(this.currentRecipeCard == 'History') { return true }
-      return false
-    },
-    is_Format() {
-      if(this.currentRecipeCard == 'Format') { return true }
       return false
     },
     currentRecipeCard() {
