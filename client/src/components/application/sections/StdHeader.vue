@@ -74,6 +74,7 @@
         window.location.assign("/");
       },
       onSubmit() {
+        this.$store.commit('nrNumber',this.nrNum);
         this.$store.dispatch('getpostgrescompInfo', this.nrNum);
       }
     }
