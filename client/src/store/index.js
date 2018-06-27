@@ -346,7 +346,7 @@ mutations: {
 
 
       // if the current state is not INPROGRESS, clear any existing name record in currentNameObj
-      //if (state.currentState !== 'INPROGRESS') this.dispatch('setCurrentName',{});
+      if (state.currentState !== 'INPROGRESS') this.dispatch('setCurrentName',{});
 
 
       // we keep the original data so that if fields exist that we do not use, we don't lose that
