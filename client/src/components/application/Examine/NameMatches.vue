@@ -56,8 +56,36 @@ export default {
       return false
     },
     exists_Conditions() {
-      if(this.$store.getters.conditionsJSON != null){ return true }
-      return false
+      console.log('exists_conditions1');
+      var conditionInfo = this.$store.getters.conditionsJSON.restricted_words_conditions;
+      if(conditionInfo.length != 0){
+
+        var fail = false;
+        var wIter;
+        var cIter;
+
+        for (wIter=0;wIter<conditionInfo.length;wIter++) {
+          var tmpF = true;
+          for (cIter=0;cIter<conditionInfo[wIter].cnd_info.length;cIter++) {
+            if (conditionInfo[wIter].cnd_info[cIter].allow_use == 'Y') {
+              tmpF = false;
+            }
+          }
+          if (tmpF) {
+            fail = true;
+            break;
+          }
+        }
+
+        if (fail) {
+          this.setFail('condition');
+        } else {
+          this.setConcern('condition');
+        }
+
+      } else {
+        this.setPass('condition');
+      }
     },
     exists_Trademarks() {
       if(this.$store.getters.trademarksJSON != null){ return true }
@@ -81,11 +109,14 @@ export default {
       this.currentRecipeCard = recipeCard
     },
     setFail(val){
-
+      console.log('fail');
     },
     setConcern(val){
-
+      console.log('concern');
     },
+    setPass(val){
+      console.log('pass');
+    }
 
   }
 }

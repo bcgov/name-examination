@@ -566,6 +566,10 @@ mutations: {
 
     currentMatch(state,value){
       state.currentConflict = value
+    },
+
+    nrNumber(state,value) {
+      state.compInfo.nrNumber = value;
     }
 
   },
@@ -651,6 +655,7 @@ mutations: {
       const url = '/api/v1/requests/queues/@me/oldest'
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        //response.data.nameRequest = 'NR 8270105';
         console.log('Comp No Response:');
         console.log(response);
         commit('loadpostgresNo',response.data)

@@ -159,7 +159,7 @@
         this.$store.dispatch('checkConflicts');
         this.$store.dispatch('checkTrademarks');
         this.$store.dispatch('checkConditions');
-        this.$store.dispatch('checkHistories');        
+        this.$store.dispatch('checkHistories');
       },
       setIcon(name_state) {
         if (name_state == 'R') {
@@ -173,7 +173,11 @@
     },
     watch: {
       currentChoice: function (val) {
-        console.log('watcher fired:' + val)
+        console.log('currentChoice watcher fired:' + val)
+        this.runRecipe()
+      },
+      nrNumber: function (val) {
+        console.log('nrNumber watcher fired:' + val)
         this.runRecipe()
       }
     }
