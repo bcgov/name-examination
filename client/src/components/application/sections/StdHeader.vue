@@ -77,7 +77,6 @@
         window.location.assign("/");
       },
       onSubmit() {
-
         // reset the store values to null
         console.log('nrNumbner updated to ' + this.nrNum)
         this.$store.dispatch('resetValues')
