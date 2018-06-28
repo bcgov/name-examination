@@ -119,7 +119,10 @@
       }
     },
     mounted() {
-      this.$store.dispatch('getpostgrescompNo');
+      if(this.$store.getters.nrNumber == null){
+        console.log('Mounted->get next NR number')
+        this.$store.dispatch('getpostgrescompNo');
+      }
     },
     methods: {
       getNextCompany() {
@@ -137,29 +140,8 @@
       reOpen() {
         this.$store.dispatch('updateNRState', 'INPROGRESS');
       },
-      nextChoice(){
-        console.log('running nextChoice ' )
-        if(this.currentChoice == 1){
-          this.currentChoice = 2
-        }else if(this.currentChoice == 2){
-          this.currentChoice = 3
-        }else{
-          this.currentChoice = 1
-        }
-        //check if current name is null - move on to next choice if it is - stop if current choice is 1
-        if(this.currentName == null) {
-          if(this.currentChoice != 1) {
-            this.nextChoice()
-          }
-        }
-        this.runRecipe()
-      },
-      runRecipe() {
-        console.log('Running Recipe')
-        this.$store.dispatch('checkConflicts');
-        this.$store.dispatch('checkTrademarks');
-        this.$store.dispatch('checkConditions');
-        this.$store.dispatch('checkHistories');        
+      runRecipe(){
+        this.$store.dispatch('runRecipe')
       },
       setIcon(name_state) {
         if (name_state == 'R') {
@@ -173,7 +155,7 @@
     },
     watch: {
       currentChoice: function (val) {
-        console.log('watcher fired:' + val)
+        console.log('currentChoice watcher fired:' + val)
         this.runRecipe()
       }
     }

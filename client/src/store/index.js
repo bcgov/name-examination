@@ -427,7 +427,7 @@ mutations: {
       state.trademarksJSON = trademarksData
     },
 
-    loadSearchDataJSON(State,searchData){
+    loadSearchDataJSON(state,searchData){
       console.log('Loading search Data into state')
       state.trademarksJSON = searchData
     },
@@ -537,6 +537,9 @@ mutations: {
       state.currentNameObj.name = value
     },
     setConfig(state,configValues) {
+    },
+    nrNumber(state,value){
+      state.compInfo.nrNumber = value
     },
 
     setConflicts(state,conflictJSon) {
@@ -826,6 +829,7 @@ mutations: {
 
     getConflictInfo ({state,commit},value) {
       console.log('Getting Conflict Info')
+      commit('currentMatch', value);
       if(value.source == "CORP" ){
           state.corpConflictJSON = null
           this.dispatch('getCorpConflict',value)
@@ -844,7 +848,6 @@ mutations: {
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         console.log('Names Conflict response:' + response.data)
         commit('loadNamesConflictJSON',response.data )
-        commit('currentMatch', value);
       })
         .catch(error => console.log('ERROR: getNamesConflict' + error))
     },
@@ -857,7 +860,6 @@ mutations: {
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         console.log('Corp Conflict response:' + response.data)
         commit('loadCorpConflictJSON',response.data)
-        commit('currentMatch', value);
       })
         .catch(error => console.log('ERROR: getCorpConflict ' + error))
     },
@@ -921,10 +923,28 @@ mutations: {
 
     setCurrentName({commit, state},objName ) {
       commit('currentNameObj', objName);
-    }
+    },
+
+    runRecipe({dispatch,state}) {
+      console.log('Running Recipe')
+      if( state.currentChoice != null) {
+        this.dispatch('checkConflicts')
+        this.dispatch('checkTrademarks')
+        this.dispatch('checkConditions')
+        this.dispatch('checkHistories')
+      }
+    },
+
+    resetValues({commit}){
+      commit('loadNamesConflictJSON',null)
+      commit('loadCorpConflictJSON',null)
+      commit('loadConditionsJSON',null)
+      commit('loadHistoriesJSON',null)
+      commit('loadTrademarksJSON',null)
+      commit('loadSearchDataJSON',null)
+    },
 
   },
-
   getters: {
     is_editing(state) {
       return state.is_editing

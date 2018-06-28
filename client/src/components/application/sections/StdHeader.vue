@@ -66,7 +66,10 @@
       },
       auth() {
         return this.$store.getters.isAuthenticated
-      }
+      },
+      currentChoice() {
+        return this.$store.getters.listJurisdictions;
+      },
     },
     methods: {
       onLogout() {
@@ -74,7 +77,15 @@
         window.location.assign("/");
       },
       onSubmit() {
-        this.$store.dispatch('getpostgrescompInfo', this.nrNum);
+
+        // reset the store values to null
+        console.log('nrNumbner updated to ' + this.nrNum)
+        this.$store.dispatch('resetValues')
+
+        console.log('nrNumbner updated to ' + this.nrNum)
+        // By setting the NR number, this should trigger the watcher located on the RequestInfoHeader.vue component to fire
+        this.$store.commit('nrNumber',this.nrNum)
+
       }
     }
   }

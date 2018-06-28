@@ -3,10 +3,8 @@
   <div class="container-fluid">
 
     <div class="row" >
-      History
-      <!-- rename the "conflictlistview"  to the component that handles this reciped-->
-      <!--<div class="col" style="padding-left: 0;"><conflictlistview /></div>-->
-
+      <div class="col"><historyListview /></div>
+      <div class="col"><historyInfoview /></div>
     </div>
 
   </div>
@@ -14,13 +12,16 @@
 
 <script>
 /* eslint-disable */
-  //import conflictlistview from '@/components/application/Examine/Recipe/conflicts/ConflictList.vue';
+  import historyInfoview from '@/components/application/Examine/Recipe/history/historyInfo.vue';
+  import historyListview from '@/components/application/Examine/Recipe/history/historyList.vue';
 
   export default {
     name: 'historyRecipe',
     computed: {
     },
     components: {
+      historyInfoview,
+      historyListview
     }
   }
 </script>

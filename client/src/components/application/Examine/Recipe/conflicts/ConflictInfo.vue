@@ -7,7 +7,7 @@
           <div class="col conflict-info-view">
 
             <div v-if="is_corp" class="add-top-padding"><corpMatch /></div>
-            <div v-else class="add-top-padding"><namesMatch /></div>
+            <div v-else-if="is_names" class="add-top-padding"><namesMatch /></div>
           </div>
 
       </div>
@@ -30,17 +30,20 @@ import corpMatch from '@/components/application/Examine/Recipe/conflicts/conflic
     },
     computed: {
       currentConflict() {
-        return  this.$store.getters.currentConflict;
+        return this.$store.getters.currentConflict;
       },
       is_corp() {
-        if (this.currentConflict !== null){
-          if( this.currentConflict.source == 'CORP') {
-            return true
-          }
-        }else{
+        if (this.currentConflict !== null) {
+          if (this.currentConflict.source == 'CORP') return true;
           return false
         }
-      }
+      },
+      is_names() {
+        if (this.currentConflict !== null) {
+          if (this.currentConflict.source == 'NR') return true;
+          return false
+        }
+      },
     }
   }
 </script>
