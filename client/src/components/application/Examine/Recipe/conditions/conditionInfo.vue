@@ -28,12 +28,19 @@
       this.data = dataList;
     },
     methods: {
+      //goes through the JSON with conditions info and returns each restricted word and their conditions in a list
         createDataList(conditionsInfo){
+
+          // looping through each word and its list of conditions
           var data = [];
           var wordIter;
           for (wordIter=0;wordIter<conditionsInfo.restricted_words_conditions.length; wordIter++) {
+
+            // looping through the list of conditions for each word (some words have more than 1 possible condition)
             var cndIter;
             for (cndIter=0;cndIter<conditionsInfo.restricted_words_conditions[wordIter].cnd_info.length; cndIter++) {
+
+              // these params are the ones being displayed in the conditions table
               var word = '';
               var allowUse;
               var consentReq;
@@ -52,6 +59,7 @@
               });
             }
           }
+          // returns a list of json-like params for the datatable -> each element in the list is a row
           return data;
         }
     }

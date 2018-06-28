@@ -56,35 +56,40 @@ export default {
       return false
     },
     exists_Conditions() {
-      console.log('exists_conditions1');
-      var conditionInfo = this.$store.getters.conditionsJSON.restricted_words_conditions;
-      if(conditionInfo.length != 0){
+      console.log('enter exists_conditions');
+      var conditionInfo = this.$store.getters.conditionsJSON
+      if (conditionInfo != null) {
+        conditionInfo = this.$store.getters.conditionsJSON.restricted_words_conditions;
+        if (conditionInfo.length != 0) {
 
-        var fail = false;
-        var wIter;
-        var cIter;
+          var fail = false;
+          var wIter;
+          var cIter;
 
-        for (wIter=0;wIter<conditionInfo.length;wIter++) {
-          var tmpF = true;
-          for (cIter=0;cIter<conditionInfo[wIter].cnd_info.length;cIter++) {
-            if (conditionInfo[wIter].cnd_info[cIter].allow_use == 'Y') {
-              tmpF = false;
+          for (wIter = 0; wIter < conditionInfo.length; wIter++) {
+            var tmpF = true;
+            for (cIter = 0; cIter < conditionInfo[wIter].cnd_info.length; cIter++) {
+              if (conditionInfo[wIter].cnd_info[cIter].allow_use == 'Y') {
+                tmpF = false;
+              }
+            }
+            if (tmpF) {
+              fail = true;
+              break;
             }
           }
-          if (tmpF) {
-            fail = true;
-            break;
+
+          if (fail) {
+            this.setFail('condition');
+          } else {
+            this.setConcern('condition');
           }
-        }
 
-        if (fail) {
-          this.setFail('condition');
         } else {
-          this.setConcern('condition');
+          this.setPass('condition');
         }
-
       } else {
-        this.setPass('condition');
+        console.log('error: exists_conditions run before conditionsJSON was set.')
       }
     },
     exists_Trademarks() {
