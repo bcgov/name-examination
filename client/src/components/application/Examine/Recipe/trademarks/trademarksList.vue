@@ -23,8 +23,10 @@
 /* eslint-disable */
   export default {
     name: 'trademarksList',
-    data: {
-      tmp: null,
+    data: function () {
+      return {
+        tmp: null,
+      }
     },
     computed: {
       conflictData() {
