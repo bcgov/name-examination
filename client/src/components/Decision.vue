@@ -4,15 +4,15 @@
 
     <div class="row">
       <div class="col-6 add-top-padding">
-        <h3>Consent Required</h3>
+        <h3>Conditions</h3>
         <div>
         <multiselect
-          v-model="consent_selected"
-          :options="consent_bodies"
+          v-model="conditions_selected"
+          :options="conditions"
           :multiple="true"
-          label="full_message"
-          name="message"
-          track-by="full_message"
+          label="display_string"
+          name="phrase"
+          track-by="display_string"
           :close-on-select="true"
           deselectLabel=""
           selectLabel=""
@@ -60,6 +60,22 @@
       </div>
       <div class="col-6 add-top-padding">
         <h3>Trademarks</h3>
+        <div>
+        <multiselect
+          v-model="trademarks_selected"
+          :options="trademarks"
+          :multiple="true"
+          label="name"
+          name="name"
+          track-by="name"
+          :close-on-select="true"
+          deselectLabel=""
+          selectLabel=""
+          selectedLabel=""
+          placeholder=""
+          :disabled="customer_message_override !== null"
+        />
+        </div>
       </div>
     </div>
 
@@ -69,6 +85,18 @@
         <div class="customer-msg-box">
           <pre>{{ customer_message_display }}</pre>
         </div>
+
+        <!-- character count warning -->
+        <div v-bind:class="{ 'warning': customer_message_display.length > 955,
+                              'character_count': true }">
+          Character count: {{ customer_message_display.length }}
+          <span v-if="customer_message_display.length > 955" style="color: red;">
+            <i class="fa fa-warning"></i>
+            The message will be cut off at 955 characters.
+          </span>
+        </div>
+
+
         <a href="#" id="edit-customer-message-link" data-toggle="modal"
            data-target="#edit-customer-message-modal">Edit...</a>
         <a href="#" id="clear-customer-message-link" v-if="customer_message_override"
@@ -122,9 +150,10 @@
     data: function ()
     {
       return {
-        consent_selected: [],
+        conditions_selected: [],
         conflicts_selected: [],
         decision_reasons_selected: [],
+        trademarks_selected: [],
         customer_message_override: null,
       }
     },
@@ -145,6 +174,14 @@
           this.$store.commit('decision_made', value);
         }
       },
+      currentNameObj: {
+        get: function () {
+          return this.$store.getters.currentNameObj;
+        },
+        set: function (value) {
+          this.$store.dispatch('currentNameObj', value);
+        }
+      },
       conflictList() {
         // augment conflict list with a display string for dropdown
         var conflict_list = this.$store.getters.conflictList;
@@ -159,71 +196,72 @@
           var conflict = Object.assign({}, this.$store.getters.currentConflict); // copy not reference
           console.log(this.$store.getters.currentConflict);
 
-          // Somewhere, nrNumber is being replaced with value. So switch it back to nrNumber so
-          // objects match and can be found in conflictList.
-          conflict.nrNumber = conflict.value;
-          delete conflict.value;
-
           // augment conflict with a display string for dropdown
           conflict.display_string = conflict.text + ' - ' + conflict.nrNumber;
           return conflict;
         }
         else return null;
       },
-      currentNameObj: {
-        get: function () {
-          return this.$store.getters.currentNameObj;
-        },
-        set: function (value) {
-          this.$store.dispatch('currentNameObj', value);
-        }
-      },
       listDecisionReasons() {
         return this.$store.getters.listDecisionReasons;
       },
-      consent() {
-        return this.$store.getters.consent;
-      },
-      consent_bodies() {
-        // get list of consent bodies for all words in consent list
-        console.log('got into consent_bodies()');
+      conditions() {
+        /* Re-arrange the fields in object to be easier to use in dropdowns.
 
-        var retval = [];
+        In the case of multiple conditions per word, break each condition into its own row for the
+        dropdown (the nested for loops below). At time of development there is no data that actually
+        has multiple conditions per word.
 
-        for (var i = 0; i < this.consent.length; i++) {
-          try {
-            var word = this.consent[i].word;
-            var word_code = getValueFromText(this.$store.getters.listRestrictedWords, word.toUpperCase());
-            try {
-              var messages = this.$store.getters.listRestrictedWordsReasons.filter(findArrValue(word_code));
+        Note: in the case where a word does not have any conditions (ie: nothing in the conditions
+        xref table) we never get to the point where we create the revised_match_object, and never
+        push it to the array. It is as if they were not returned.
+        */
 
-              for (var j = 0; j < messages.length; j++) {
-                construct_retval(word, messages[j].text);
-              }
+        try {
+          if (this.$store.getters.conditionsJSON.restricted_words_conditions !== undefined) {
+            var condition_matches = this.$store.getters.conditionsJSON.restricted_words_conditions;
+            var retval = []
 
-            } catch (err) {
-              construct_retval(word, '<Could not find word or reason in list of restricted words>');
+            for (let wordmatch of condition_matches) {
+             for (let condition of wordmatch.cnd_info) {
+               var revised_match_object = {};
+               revised_match_object.id = wordmatch.word_info.id;
+               revised_match_object.phrase = wordmatch.word_info.phrase;
+               revised_match_object.allow_use = (condition.allow_use == 'Y')?true:false;
+               revised_match_object.consent_required = (condition.consent_required == 'Y')?true:false;
+               revised_match_object.consenting_body = condition.consenting_body;
+               revised_match_object.instructions = condition.instructions;
+               revised_match_object.text = condition.text;
+
+               // display string for dropdown
+               revised_match_object.display_string = revised_match_object.phrase + ' - '
+                 + revised_match_object.text + ' ' + revised_match_object.consenting_body;
+
+               retval.push(revised_match_object);
+             }
             }
-          } catch (err) {
-            construct_retval(word, '<Could not find word or reason in list of restricted words>');
+
+            return retval;
+
           }
+          else return []
+        } catch (err) {
+          return [];
         }
-
-        return retval;
-
-        // helper function to cut down on duplicate code
-        function construct_retval(word, message) {
-          retval.push({
-            word: word,
-            message: message,
-            full_message: word + ' - ' + message,
-          })
+      },
+      trademarks() {
+        try {
+          if (this.$store.getters.trademarksJSON !== null) {
+            return this.$store.getters.trademarksJSON.names;
+          }
+          else return []
+        } catch (err) {
+          return [];
         }
-
       },
       customer_message() {
         /*
-        Build customer message based on selected consent, conflicts, trademarks, and format.
+        Build customer message based on selected conditions, conflicts, trademarks, and format.
          */
 
         var retval = [];
@@ -233,13 +271,16 @@
           retval.push('Rejected due to conflict with ' + this.conflicts_selected[i].text);
         }
 
-        // CONSENT
-        for (var i = 0; i < this.consent_selected.length; i++) {
-          retval.push('Consent Required: ' + this.consent_selected[i].full_message);
+        // CONDITIONS
+        for (var i = 0; i < this.conditions_selected.length; i++) {
+          retval.push(this.conditions_selected[i].display_string + '\n\n' + this.conditions_selected[i].instructions);
         }
 
         // TRADEMARKS
-        // TODO
+        for (var i = 0; i < this.trademarks_selected.length; i++) {
+          retval.push('Trademark: ' + this.trademarks_selected[i].name + '\n'
+            + 'Require a letter of consent from trademark holder or franchisor.  Please email to consent.letters@gov.bc.ca');
+        }
 
         // GENERIC DECISION REASONS
         for (var i = 0; i < this.decision_reasons_selected.length; i++) {
@@ -292,7 +333,10 @@
         this.conflicts_selected.push(this.currentConflict);
       }
 
-      // pre-select the consent/condition from the display screen TODO
+      // pre-select the condition from the display screen TODO
+
+
+      // pre-select the trademark from the display screen TODO
 
     },
     watch: {
@@ -315,9 +359,9 @@
       nameAcceptReject() {
 
         // save decision text, state, and up to three conflicts
-        this.currentNameObj.decision_text = this.customer_message_display;
+        this.currentNameObj.decision_text = this.customer_message_display.substr(0,955);
         if (this.decision_made == 'A') {
-          if (this.consent_selected.length > 0) this.currentNameObj.state = 'C'; // conditionally accepted
+          if (this.conditions_selected.length > 0) this.currentNameObj.state = 'C'; // conditionally accepted
           else this.currentNameObj.state = 'A'; // accepted
         }
         else {
@@ -392,6 +436,14 @@
   .multiselect__option {
     min-height: inherit;
     padding: 5px;
+  }
+
+  .character_count {
+    float: left;
+    padding: 5px;
+  }
+  .character_count.warning {
+    background-color: #ffa;
   }
 
 
