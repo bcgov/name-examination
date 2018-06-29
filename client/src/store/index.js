@@ -16,8 +16,6 @@ export default new Vuex.Store({
     kctoken: null,
     user_role: null,
 
-    consent: null, // complete consent data from API call - stubbed
-
     //Interface settings
     currentChoice: null, // CURRENT NAME BEING EXAMINED (choice number)
     currentName: null, // CURRENT NAME BEING EXAMINED (string)
@@ -38,8 +36,6 @@ export default new Vuex.Store({
     listPriorities: null, // DROP LIST
     listJurisdictions: null, // DROP LIST
     listRequestTypes: null, // DROP LIST
-    listRestrictedWords: null,
-    listRestrictedWordsReasons: null,
     listDecisionReasons: null,
 
     //Names Data
@@ -388,18 +384,6 @@ mutations: {
       state.expiryDate = dbcompanyInfo.expiryDate
       state.submittedDate = dbcompanyInfo.submittedDate
 
-      // TODO - remove this stub data
-      state.consent = [
-        {
-          word: 'Doctor',
-        },
-        {
-          word: 'B.C.',
-        },
-        {
-          word: 'Realtors',
-        }
-      ]
     },
 
     loadNamesConflictJSON(state,conflictInfoData){
@@ -503,12 +487,6 @@ mutations: {
     },
     listRequestTypes (state, value) {
       state.listRequestTypes = value;
-    },
-    listRestrictedWords (state, value) {
-      state.listRestrictedWords = value;
-    },
-    listRestrictedWordsReasons (state, value) {
-      state.listRestrictedWordsReasons = value;
     },
     listDecisionReasons (state, value) {
       state.listDecisionReasons = value;
@@ -769,6 +747,7 @@ mutations: {
 
     loadDropdowns( {commit, state} ) {
       var json_files_path = 'static/ui_dropdowns/';
+
       // jurisdictions - first list 1, then list 2
       if (state.listJurisdictions === null) {
         readJFile(json_files_path + 'jurisdiction 1.json', function (myArray) {
@@ -783,14 +762,6 @@ mutations: {
       // request types
       if (state.listRequestTypes === null) {
         readJFile(json_files_path + 'requesttype.json', function (myArray) { commit('listRequestTypes', myArray);})
-      }
-
-      // restricted words and reasons
-      if (state.listRestrictedWords === null) {
-        readJFile(json_files_path + 'restrictedwords.json', function (myArray) { commit('listRestrictedWords', myArray);})
-      }
-      if (state.listRestrictedWordsReasons === null) {
-        readJFile(json_files_path + 'requestedwordconditions.json', function (myArray) { commit('listRestrictedWordsReasons', myArray);})
       }
 
       // decision reasons
@@ -1115,17 +1086,8 @@ mutations: {
     listRequestTypes(state) {
       return state.listRequestTypes
     },
-    listRestrictedWords(state) {
-      return state.listRestrictedWords
-    },
-    listRestrictedWordsReasons(state) {
-      return state.listRestrictedWordsReasons
-    },
     listDecisionReasons(state) {
       return state.listDecisionReasons
-    },
-    consent(state) {
-      return state.consent;
     },
     conflictList(state) {
       return state.conflictList
