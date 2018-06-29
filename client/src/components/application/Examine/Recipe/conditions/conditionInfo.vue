@@ -11,11 +11,14 @@
   export default {
     name: 'conditionInfo',
     data: () => ({
+      fixHeaderAndSetBodyMaxHeight: 300,
+      tblStyle: 'table-layout: fixed',
+      tblClass: 'table-bordered',
       columns: [
-        {title: 'Restricted Word', field: 'word', label: 'Word', sortable: false, visible: true},
-        {title: 'Allow Use', field: 'allowUse', label: 'Allow', sortable: false, visible: true},
-        {title: 'Consent Required', field: 'consentReq', label: 'Consent', sortable: false, visible: true},
-        {title: 'Text', field: 'text', label: 'text', sortable: false, visible: true},
+        {title: 'Restricted Word', field: 'word', label: 'Word', thStyle: {background: '#fffae6'},colStyle: {width:'150px'}, sortable: false, visible: true},
+        {title: 'Allow Use', field: 'allowUse', label: 'Allow', thStyle: {background: '#fffae6'}, colStyle: {width:'75px'}, sortable: false, visible: true},
+        {title: 'Consent Required', field: 'consentReq', label: 'Consent', thStyle: {background: '#fffae6'}, colStyle: {width:'75px'}, sortable: false, visible: true},
+        {title: 'Text', field: 'text', label: 'text', thStyle: {background: '#fffae6'}, colStyle: {width:'300px'}, sortable: false, visible: true},
       ],
       pageSizeOptions: [5, 10, 15, 20],
       data: [],
@@ -25,6 +28,7 @@
     mounted() {
       var conditionsInfo = this.$store.getters.conditionsJSON;
       var dataList = this.createDataList(conditionsInfo);
+      if (dataList.length == 0) {dataList.push()}
       this.data = dataList;
     },
     methods: {
@@ -67,5 +71,8 @@
 </script>
 
 <style scoped>
-
+  .small {
+    color: #c69500;
+    width: 50px;
+  }
 </style>

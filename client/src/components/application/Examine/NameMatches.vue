@@ -15,7 +15,7 @@
       </a>
       <div class="arrow-right"></div>
 
-      <div id="Condition1" class="icon icon-concern">
+      <div v-if = 'set_Conditions' id="Condition1" class="icon icon-concern">
         <i id="Condition2" class="fa fa-exclamation"></i></div>
       <a class="nav-link" data-toggle="pill" href="#"
          @click="clickRecipeCard('Condition')">Condition</a>
@@ -55,8 +55,11 @@ export default {
       if(this.$store.getters.conflictsJSON != null){ return true }
       return false
     },
-    exists_Conditions() {
-      console.log('enter exists_conditions');
+    set_Conditions() {
+      // if no restricted words -> call setPass
+      // else if any word has all possible conditions with allow us as 'N' -> call setFail
+      // else -> call setConcern
+      console.log('enter set_conditions');
       var conditionInfo = this.$store.getters.conditionsJSON
       if (conditionInfo != null) {
         conditionInfo = this.$store.getters.conditionsJSON.restricted_words_conditions;
@@ -65,32 +68,35 @@ export default {
           var fail = false;
           var wIter;
           var cIter;
-
+          // loop through restricted words and their list of conditions
           for (wIter = 0; wIter < conditionInfo.length; wIter++) {
             var tmpF = true;
+
+            // loop through list of condition info and grab 'allow_use' info for each one
             for (cIter = 0; cIter < conditionInfo[wIter].cnd_info.length; cIter++) {
               if (conditionInfo[wIter].cnd_info[cIter].allow_use == 'Y') {
                 tmpF = false;
               }
             }
+            // if true then all conditions for this word had 'allow_use' = 'N'
             if (tmpF) {
               fail = true;
               break;
             }
           }
-
+          // if true then at least 1 word had 'allow_use' = 'N' for every condition
           if (fail) {
-            this.setFail('condition');
+            this.setFail('Condition');
           } else {
-            this.setConcern('condition');
+            this.setConcern('Condition');
           }
-
         } else {
-          this.setPass('condition');
+          this.setPass('Condition');
         }
       } else {
         console.log('error: exists_conditions run before conditionsJSON was set.')
       }
+      return true;
     },
     exists_Trademarks() {
       if(this.$store.getters.trademarksJSON != null){ return true }
@@ -115,12 +121,30 @@ export default {
     },
     setFail(val){
       console.log('fail');
+      var val1 = val+'1';
+      var val2 = val+'2';
+
+      document.getElementById(val1).className = "icon icon-fail";
+      console.log(document.getElementById(val1).className);
+      document.getElementById(val2).className = "fa fa-times";
     },
     setConcern(val){
       console.log('concern');
+      var val1 = val+'1';
+      var val2 = val+'2';
+
+      document.getElementById(val1).className = "icon icon-concern";
+      console.log(document.getElementById(val1).className);
+      document.getElementById(val2).className = "fa fa-exclamation";
     },
     setPass(val){
       console.log('pass');
+      var val1 = val+'1';
+      var val2 = val+'2';
+
+      document.getElementById(val1).className = "icon icon-pass";
+      console.log(document.getElementById(val1).className);
+      document.getElementById(val2).className = "fa fa-check";
     }
 
   }
