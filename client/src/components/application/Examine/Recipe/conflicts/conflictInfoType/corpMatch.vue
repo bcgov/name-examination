@@ -54,7 +54,7 @@
 <script>
 /* eslint-disable */
   export default {
-    name: 'namesMatch',
+    name: 'corpMatch',
     computed: {
       currentConflict() {
         return  this.$store.getters.currentConflict;

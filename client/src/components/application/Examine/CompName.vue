@@ -142,7 +142,7 @@
       },
       runRecipe(){
         this.$store.dispatch('runRecipe')
-      },      
+      },
       setIcon(name_state) {
         if (name_state == 'R') {
           return '<i class="fa fa-times icon-rejected"></i>';
@@ -155,12 +155,12 @@
     },
     watch: {
       currentChoice: function (val) {
-        console.log('currentChoice watcher fired:' + val)
-        this.runRecipe()
+        console.log('CompName.currentChoice watcher fired:' + val)
+        if(val != undefined ) { this.runRecipe() }
       },
       nrNumber: function (val) {
-        console.log('nrNumber watcher fired:' + val)
-        this.runRecipe()
+        console.log('CompName.nrNumber watcher fired:' + val)
+        if(val != null){ this.runRecipe()}
       }
     }
   }

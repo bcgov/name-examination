@@ -28,6 +28,7 @@ export default new Vuex.Store({
     currentState: null, // NR - APPROVED, REJECTED, INPROGRESS ETC...
 
     currentConflict: null, // the conflict name currently in focus
+    currentHistory: null,  //NR number of history name selected
 
     currentRecipeCard: null,
     is_editing: false,
@@ -142,11 +143,12 @@ export default new Vuex.Store({
     conflictNames: null,
     conflictResponse: null,
 
-    searchDataJSON: null,
+    conflictsJSON: null,
     corpConflictJSON: null,
     namesConflictJSON: null,
     trademarksJSON: null,
     historiesJSON: null,
+    searchDataJSON: null,
     conditionsJSON: null
 },
 mutations: {
@@ -402,6 +404,11 @@ mutations: {
       ]
     },
 
+    loadConflictsJSON(state,conflictData){
+      console.log('Loading conflictsJSON into state')
+      state.conflictsJSON = conflictData
+    },
+
     loadNamesConflictJSON(state,conflictInfoData){
       console.log('Loading names conflict Info into state')
       state.namesConflictJSON = conflictInfoData
@@ -423,13 +430,13 @@ mutations: {
     },
 
     loadTrademarksJSON(state,trademarksData){
-      console.log('Loading trademarks data into state')
+     console.log('Loading trademarks data into state')
       state.trademarksJSON = trademarksData
     },
 
     loadSearchDataJSON(state,searchData){
       console.log('Loading search Data into state')
-      state.trademarksJSON = searchData
+      state.searchDataJSON = searchData
     },
 
     update_nrData(state) {
@@ -545,15 +552,14 @@ mutations: {
     setConflicts(state,conflictJSon) {
       console.log('setting conflict values')
       //TODO - Mutations: interate thru list of conflicts
-      state.solrConflicts = conflictJSon
 
       //3 sections from the solr json array :
       // Highlights : used for colouring results
       // Names : the actual names found that might be conflicting
       // Response : statistics on the results found; max score; number of conflicts found;
-      state.conflictHighlighting =  state.solrConflicts['highlighting']
-      state.conflictNames =  state.solrConflicts['names']
-      state.conflictResponse =  state.solrConflicts['response']
+      state.conflictHighlighting =  conflictJSon['highlighting']
+      state.conflictNames =  conflictJSon['names']
+      state.conflictResponse =  conflictJSon['response']
 
       var k
       var c = 0
@@ -567,8 +573,12 @@ mutations: {
       }
     },
 
-    currentMatch(state,value){
+    currentConflict(state,value){
       state.currentConflict = value
+    },
+
+    historyMatch(state,value){
+      state.currentHistory = value
     },
 
     nrNumber(state,value) {
@@ -827,6 +837,7 @@ mutations: {
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         console.log('Conflicts Info Response:' + response.data)
+        commit('loadConflictsJSON',response.data)
         commit('setConflicts',response.data)
       })
         .catch(error => console.log('ERROR: ' + error))
@@ -834,7 +845,7 @@ mutations: {
 
     getConflictInfo ({state,commit},value) {
       console.log('Getting Conflict Info')
-      commit('currentMatch', value);
+      commit('currentConflict', value);
       if(value.source == "CORP" ){
           state.corpConflictJSON = null
           this.dispatch('getCorpConflict',value)
@@ -869,6 +880,18 @@ mutations: {
         .catch(error => console.log('ERROR: getCorpConflict ' + error))
     },
 
+    getHistoryInfo ({state,commit},value) {
+      console.log('action: getting HistoryInfo for company number: ' + value.nrNumber)
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const url = '/api/v1/requests/' + value.nrNumber
+      const vm = this
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        console.log('Names Conflict response:' + response.data)
+        commit('loadHistoryInfoJSON',response.data )
+      })
+        .catch(error => console.log('ERROR: getNamesConflict' + error))
+    },
+
     checkConditions( {commit, state} ) {
 
       console.log('action: getting restricted words and conditions for company number: ' + state.compInfo.nrNumber + ' from solr')
@@ -884,8 +907,6 @@ mutations: {
     },
 
     checkHistories( {commit, state} ) {
-      //TODO - Actions: finish loading conflict list
-
       console.log('action: getting history for company number: ' + state.compInfo.nrNumber + ' from solr')
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/analysis/' + state.currentChoice + '/histories'
@@ -899,8 +920,6 @@ mutations: {
     },
 
     checkTrademarks( {commit, state} ) {
-      //TODO - Actions: finish loading conflict list
-
       console.log('action: getting trademarks for company number: ' + state.compInfo.nrNumber + ' from solr')
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/analysis/' + state.currentChoice + '/trademarks'
@@ -1150,8 +1169,11 @@ mutations: {
     conflictList(state) {
       return state.conflictList
     },
-    currentConflict(state) {
-      return state.currentConflict
+    currentHistory(state) {
+      return state.currentHistory
+    },
+    conflictsJSON(state) {
+      return state.conflictsJSON
     },
     corpConflictJSON(state) {
      return state.corpConflictJSON

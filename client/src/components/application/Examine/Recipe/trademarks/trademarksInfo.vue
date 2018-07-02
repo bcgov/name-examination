@@ -1,45 +1,62 @@
 /* eslint-disable */
 <template>
-  <div>
-    <div class="container-fluid">
-      <div class="row ConflictInfo">
-
-          <div class="col conflict-info-view">
-
-            <div v-if="is_corp" class="add-top-padding"><corpMatch /></div>
-            <div v-else class="add-top-padding"><namesMatch /></div>
-          </div>
-
-      </div>
-    </div>
-
-  </div>
+   <span>
+     <p v-if='has_trademarks'><datatable v-bind="$data" /></p>
+  </span>
 </template>
 
 <script>
 /* eslint-disable */
 
-import namesMatch from '@/components/application/Examine/Recipe/conflicts/conflictInfoType/namesMatch.vue';
-import corpMatch from '@/components/application/Examine/Recipe/conflicts/conflictInfoType/corpMatch.vue';
-
   export default {
-    name: 'trademarksInfo',
-    components: {
-      namesMatch,
-      corpMatch
+    name: 'trademarkInfo',
+    data: () => ({
+      columns: [
+        {title: 'Trademark', field: 'name', label: 'Name', sortable: false, visible: true},
+        {title: 'Description', field: 'description', label: 'Description', sortable: false, visible: true},
+        {title: 'Status', field: 'status', label: 'Status', sortable: false, visible: true},
+        //{title: 'Text', field: 'text', label: 'text', sortable: false, visible: true},
+      ],
+      pageSizeOptions: [5, 10, 15, 20],
+      data: [],
+      total: 0,
+      query: {}
+    }),
+    mounted() {
+      this.data = this.createDataList(this.trademarksJSON);
     },
-    computed: {
-      currentConflict() {
-        return  this.$store.getters.currentConflict;
+    computed:{
+      trademarksJSON() {
+        return this.$store.getters.trademarksJSON;
       },
-      is_corp() {
-        if (this.currentConflict !== null){
-          if( this.currentConflict.source == 'CORP') {
-            return true
-          }
-        }else{
-          return false
+      has_trademarks() {
+        if(this.trademarksJSON != null) return true;
+        return false;
+      }
+    },
+    methods: {
+      createDataList(trademarksInfo){
+        if(trademarksInfo == null) {
+          console.log("trademarksJSON is null")
+          return null;
         }
+
+        var data = [];
+        var wordIter;
+        for (var cndIter=0;cndIter<trademarksInfo["names"].length; cndIter++) {
+            var name = trademarksInfo["names"][cndIter].name;
+            var description = trademarksInfo["names"][cndIter].description;
+            var status = trademarksInfo["names"][cndIter].status;
+            var application_number = trademarksInfo["names"][cndIter].application_number;
+
+            data.push({
+              name: name,
+              description: description,
+              status: status,
+              application_number: application_number
+            });
+        }
+        return data;
       }
     }
   }

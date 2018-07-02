@@ -78,10 +78,8 @@
       },
       onSubmit() {
         // reset the store values to null
-        console.log('nrNumbner updated to ' + this.nrNum)
+        console.log('nrNumber updated to ' + this.nrNum)
         this.$store.dispatch('resetValues')
-
-        console.log('nrNumbner updated to ' + this.nrNum)
         // By setting the NR number, this should trigger the watcher located on the RequestInfoHeader.vue component to fire
         this.$store.commit('nrNumber',this.nrNum)
 
