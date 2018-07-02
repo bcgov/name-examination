@@ -379,7 +379,15 @@ export default {
     },
     watch: {
       nrNumber: function (val) {
+        console.log('RequestInfoHeader.nrNumber watcher fired:' )
         this.$store.dispatch('getpostgrescompInfo',this.nrNumber)
+        if( this.$store.getters.currentChoice == null || this.$store.getters.currentChoice == 1 ){
+          console.log('RequestInfoHeader.watch runRecipe:' + val)
+          this.$store.dispatch('runRecipe')
+        } else {
+          console.log('RequestInfoHeader.watch set currentChoice to 1')
+          this.$store.commit('currentChoice',1)
+        }
       }
     }
 }

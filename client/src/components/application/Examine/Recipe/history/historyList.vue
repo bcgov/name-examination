@@ -4,10 +4,10 @@
     <div class="container-fluid">
       <div class="row ConflictList">
 
-        <select v-model="conflictMatch" class="form-control" size="17" border="0"
-                @change="setConflictInfo()">
-          <option v-for="option in conflictData" :key="option.value"
-            v-bind:value="{nrNumber: option.nrNumber, text: option.text, source: option.source}">
+        <select v-model="historyMatch" class="form-control" size="17" border="0"
+                @change="setHistoryInfo()">
+          <option v-for="option in historyList" :key="option.value"
+            v-bind:value="{nrNumber: option.nrNumber, text: option.text}">
             {{ option.text }}
           </option>
         </select>
@@ -23,29 +23,49 @@
 /* eslint-disable */
   export default {
     name: 'historyList',
-    data: function () {
-      return {
-        tmp: null,
-      }
-    },
     computed: {
-      conflictData() {
-        return  this.$store.getters.conflictList;
+      historyJSON() {
+        return this.$store.getters.historiesJSON;
       },
-      conflictMatch:  {
-        get: function() {
+      historyData() {
+            return this.historyList
+      },
+      historyMatch: {
+        get: function () {
           return '';
         },
-        set: function(value) {
-          this.$store.commit('currentMatch', value);
+        set: function (value) {
+          this.$store.commit('historyMatch', value);
           this.tmp = value
         }
       }
     },
+    mounted() {
+      console.log('HistoryInfo mounted')
+      var historyList = this.makeHistoryList(this.historyJSON);
+    },
     methods: {
-      setConflictInfo() {
-        console.log('setConflictInfo')
-        this.$store.dispatch('getConflictInfo', this.tmp)
+      setHistoryInfo() {
+        console.log('setHistoryInfo')
+        this.$store.dispatch('getHistoryInfo', this.tmp)
+      },
+      makeHistoryList(historyInfo) {
+        console.log('makeHistoryList')
+        //var highlighting =  historyInfo["highlighting"]
+        //var response =  historyInfo["response"]
+        var names =  historyInfo["names"]
+        console.log('makeHistoryList names array=' + names)
+
+        var k = 0
+        this.historyList = new Array()
+        for (var histName in names) {
+          this.historyList.push({
+            nrNumber: histName.nr_num,
+            text: histName.name
+          })
+          k++
+        }
+        console.log('makeHistoryList finished ' + k)
       }
     }
   }

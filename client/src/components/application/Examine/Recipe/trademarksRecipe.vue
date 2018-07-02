@@ -3,10 +3,7 @@
   <div class="container-fluid">
 
     <div class="row" >
-      Trademarks
-      <!-- rename the "conflictlistview"  to the component that handles this reciped-->
-      <!--<div class="col" style="padding-left: 0;"><conflictlistview /></div>-->
-
+      <div class="col"><trademarksInfoview /></div>
     </div>
 
   </div>
@@ -14,13 +11,14 @@
 
 <script>
 /* eslint-disable */
-  //import conflictlistview from '@/components/application/Examine/Recipe/conflicts/ConflictList.vue';
+  import trademarksInfoview from '@/components/application/Examine/Recipe/trademarks/trademarksInfo.vue';
 
   export default {
     name: 'trademarksRecipe',
     computed: {
     },
     components: {
+      trademarksInfoview
     }
   }
 </script>
