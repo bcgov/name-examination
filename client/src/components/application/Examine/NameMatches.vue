@@ -120,6 +120,7 @@ export default {
       this.currentRecipeCard = recipeCard
     },
     setFail(val){
+      return true;
       console.log('fail');
       var val1 = val+'1';
       var val2 = val+'2';
@@ -129,6 +130,7 @@ export default {
       document.getElementById(val2).className = "fa fa-times";
     },
     setConcern(val){
+      return true;
       console.log('concern');
       var val1 = val+'1';
       var val2 = val+'2';
@@ -138,6 +140,7 @@ export default {
       document.getElementById(val2).className = "fa fa-exclamation";
     },
     setPass(val){
+      return true;
       console.log('pass');
       var val1 = val+'1';
       var val2 = val+'2';
