@@ -29,6 +29,8 @@
               <td id="name1" >
                 {{ compName1.name }}
                 <span class="name-state-icon" v-html="setIcon(compName1.state)"></span>
+                <button class="btn btn-undo" v-if="is_undoable_1"
+                        v-on:click="undoDecision(1)">Undo Decision</button>
                 <span class="decision-text">{{ compName1.decision_text }}</span>
               </td>
             </tr>
@@ -38,6 +40,8 @@
               <td id="name2" >
                 {{ compName2.name }}
                 <span class="name-state-icon" v-html="setIcon(compName2.state)"></span>
+                <button class="btn btn-undo" v-if="is_undoable_2"
+                        v-on:click="undoDecision(2)">Undo Decision</button>
                 <span class="decision-text">{{ compName2.decision_text }}</span>
               </td>
             </tr>
@@ -47,6 +51,8 @@
               <td id="name3" >
                 {{ compName3.name }}
                 <span class="name-state-icon" v-html="setIcon(compName3.state)"></span>
+                <button class="btn btn-undo" v-if="is_undoable_3"
+                        v-on:click="undoDecision(3)">Undo Decision</button>
                 <span class="decision-text">{{ compName3.decision_text }}</span>
               </td>
             </tr>
@@ -69,6 +75,9 @@
   export default {
     name: 'CompName',
     computed: {
+      currentState() {
+        return this.$store.getters.currentState;
+      },
       is_editing() {
         return  this.$store.getters.is_editing;
       },
@@ -94,7 +103,7 @@
           return this.$store.getters.currentNameObj;
         },
         set: function (value) {
-          this.$store.getters.currentNameObj(value);
+          this.$store.commit('currentNameObj', value);
         }
       },
       currentName() {
@@ -116,7 +125,45 @@
                indexOf(this.$store.getters.currentState) >= 0 ) return true;
           else false;
         }
-      }
+      },
+      is_undoable_1() {
+
+        // first test generic reasons why a name would or wouldn't be undoable
+        var undoable = this.is_undoable(this.compName1);
+
+        if (undoable) {
+          // if name choices 2 and 3 have not been decided, then 1 is undoable
+          if ((this.compName2.state == 'NE' || this.compName2.state == null) &&
+              (this.compName3.state == 'NE' || this.compName3.state == null)) {
+            undoable = true;
+          }
+          else undoable = false;
+        }
+
+        return undoable;
+      },
+      is_undoable_2() {
+
+        // first test generic reasons why a name would or wouldn't be undoable
+        var undoable = this.is_undoable(this.compName2);
+
+        if (undoable) {
+          // if name choice 3 has not been decided, then 2 is undoable
+          if (this.compName3.state == 'NE' || this.compName3.state == null) {
+            undoable = true;
+          }
+          else undoable = false;
+        }
+
+        return undoable;
+      },
+      is_undoable_3() {
+
+        // first test generic reasons why a name would or wouldn't be undoable
+        var undoable = this.is_undoable(this.compName3);
+
+        return undoable;
+      },
     },
     mounted() {
       this.$store.dispatch('getpostgrescompNo');
@@ -169,6 +216,30 @@
           return '<i class="fa fa-check icon-accepted"></i>';
         }
         else return '';
+      },
+      undoDecision(name_number) {
+        console.log(name_number);
+        this.$store.dispatch('undoDecision', name_number);
+
+        // set the undone name choice to the current (actionable) choice
+        if (name_number == 1) this.currentNameObj = this.compName1;
+        if (name_number == 2) this.currentNameObj = this.compName2;
+        if (name_number == 3) this.currentNameObj = this.compName3;
+
+      },
+      is_undoable(name) {
+
+        // if the NR is closed in any way, a name is not undoable - the NR will have to be
+        // re-opened first.
+        if (this.currentState != 'INPROGRESS') return false;
+
+        // if the NR is furnished, nothing is undoable
+        if (this.$store.state.furnished)  return false;
+
+        // if this name is complete (ie: anything other than NE) it's undoable
+        if (name.state == 'NE' || name.state == null) return false;
+
+        return true;
       },
     },
     watch: {
@@ -228,5 +299,10 @@
   }
   .name-state-icon .icon-accepted {
     color: #38761d;
+  }
+
+  .btn-undo {
+    padding: 2px 5px;
+    font-size: 11px;
   }
 </style>

@@ -49,6 +49,7 @@ export default new Vuex.Store({
       nrNumber: null,
       compNames: {
         compName1: {
+          choice: null,
           name: null,
           state: null,
           consumptionDate: null,
@@ -58,6 +59,7 @@ export default new Vuex.Store({
           decision_text: null,
         },
         compName2: {
+          choice: null,
           name: null,
           state: null,
           consumptionDate: null,
@@ -67,6 +69,7 @@ export default new Vuex.Store({
           decision_text: null,
         },
         compName3: {
+          choice: null,
           name: null,
           state: null,
           consumptionDate: null,
@@ -277,9 +280,29 @@ mutations: {
         return
       }
 
+      // clear name choices 2 and 3 in case they are blank - ie: don't keep previous NR's data
+      state.compInfo.compNames.compName2.name = null
+      state.compInfo.compNames.compName2.state = null
+      state.compInfo.compNames.compName2.consumptionDate = null
+      state.compInfo.compNames.compName2.conflict1 = null
+      state.compInfo.compNames.compName2.conflict2 = null
+      state.compInfo.compNames.compName2.conflict3 = null
+      state.compInfo.compNames.compName2.decision_text = null
+      state.compInfo.compNames.compName3.name = null
+      state.compInfo.compNames.compName3.state = null
+      state.compInfo.compNames.compName3.consumptionDate = null
+      state.compInfo.compNames.compName3.conflict1 = null
+      state.compInfo.compNames.compName3.conflict2 = null
+      state.compInfo.compNames.compName3.conflict3 = null
+      state.compInfo.compNames.compName3.decision_text = null
+
+
+
+
       for (let record of dbcompanyInfo.names) {
         switch (record.choice) {
           case 1:
+            state.compInfo.compNames.compName1.choice = record.choice
             state.compInfo.compNames.compName1.name = record.name
             state.compInfo.compNames.compName1.state = record.state
             state.compInfo.compNames.compName1.consumptionDate = record.consumptionDate
@@ -296,6 +319,7 @@ mutations: {
 
             break;
           case 2:
+            state.compInfo.compNames.compName2.choice = record.choice
             state.compInfo.compNames.compName2.name = record.name
             state.compInfo.compNames.compName2.state = record.state
             state.compInfo.compNames.compName2.consumptionDate = record.consumptionDate
@@ -314,6 +338,7 @@ mutations: {
 
             break;
           case 3:
+            state.compInfo.compNames.compName3.choice = record.choice
             state.compInfo.compNames.compName3.name = record.name
             state.compInfo.compNames.compName3.state = record.state
             state.compInfo.compNames.compName3.consumptionDate = record.consumptionDate
@@ -728,6 +753,35 @@ mutations: {
            })
            .catch(error => console.log('ERROR: ' + error))
     },
+
+    undoDecision({state}, nameChoice) {
+      console.log('Undo decision for name #' + nameChoice);
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN');
+
+      var objName = {}
+      if (nameChoice == 1) objName = this.getters.compName1;
+      if (nameChoice == 2) objName = this.getters.compName2;
+      if (nameChoice == 3) objName = this.getters.compName3;
+
+      objName.state = 'NE';
+      objName.conflict1 = null;
+      objName.conflict2 = null;
+      objName.conflict3 = null;
+      objName.conflict1_num = null;
+      objName.conflict2_num = null;
+      objName.conflict3_num = null;
+      objName.decision_text = null;
+
+
+      const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/names/' + nameChoice;
+      axios.put(url, objName, {headers: {Authorization: `Bearer ${myToken}`}})
+           .then(function(response){
+
+             // get full NR from scratch
+             this.getpostgrescompInfo(state.compInfo.nrNumber);
+            })
+            .catch(error => console.log('ERROR: ' + error))
+      },
 
     revertLastDecision({state}) {
       // TODO - RE-EVALUATE IN TERMS OF 'UNDO' VS 'REVERT'
