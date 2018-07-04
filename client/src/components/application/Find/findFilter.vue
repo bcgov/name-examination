@@ -81,7 +81,7 @@ var tmpJSON = [
     "approved": false,
     "rejected": false,
     "unfurnished": true,
-    "priority": 5,
+    "priority": 7,
     "h": true,
     "edited": false
   },
@@ -108,13 +108,13 @@ var tmpJSON = [
     "edited": false
   },
   {
-    "name": "my goodly goods",
+    "name": "my goody goods",
     "nr": "5432192",
     "examiner": "jeff",
     "approved": false,
     "rejected": false,
     "unfurnished": true,
-    "priority": 5,
+    "priority": 4,
     "h": true,
     "edited": false
   },
@@ -167,12 +167,30 @@ export default {
     selection: [],
     total: tmpJSON.length,
     // query: {limit: 5, offset: 0, sort:'priority', order:'asc'}
-    query: {}
+    query: {},
+    options: {
+      columnsDropdown: true,
+      columnsDisplay: ['examiner']
+    },
   }),
   mounted() {
     this.data = tmpJSON;
   },
   watch: {
+    HeaderSettings: {
+      handler() {
+        console.log('button click')
+      }
+    },
+    selection: {
+      handler() {
+        let selection = this.selection;
+        if (selection[0] !== undefined) {
+          // console.log(selection[0]);
+          console.log(selection[0].name);
+        }
+      }
+    },
     query: {
       handler() {
         this.handleQueryChange();
@@ -187,32 +205,73 @@ export default {
       let offset = this.query.offset;
       let sort = this.query.sort;
       let order = this.query.order;
+      // console.log(offset);
+      // console.log(limit);
+      // console.log(sort);
 
       let i;
-      let sortedData = [];
-      if (sort === 'priority' && order === 'asc') {
+      let sortedData = tmpJSON; //make this = this.data when thinking of applying multiple sorts -- have a clear sorts button
+      if (sort !== '') {
+        sortedData = [];
         for (i = 0; i < tmpJSON.length; i++) {
           let insert = false;
+          if (sort === 'h' && tmpJSON[i].h === false) {insert = true;}
+          if (sort === 'edited' && tmpJSON[i].edited === false) {insert = true;}
+          if (sort === 'unfurnished' && tmpJSON[i].unfurnished === false) {insert = true;}
+          if (sort === 'approved' && tmpJSON[i].approved === false) {insert = true;}
+          if (sort === 'rejected' && tmpJSON[i].rejected === false) {insert = true;}
+
           let s;
           for (s = 0; s < sortedData.length; s++) {
-            if (tmpJSON[i].priority < sortedData[s].priority) {
-              sortedData.splice(s,0,tmpJSON[i]);
-              insert = true;
-              break;
+            if (sort === 'priority' || sort === 'h') {
+              // if (order === 'asc' || sort === 'h') {
+                if (tmpJSON[i].priority < sortedData[s].priority && !insert) {
+                  sortedData.splice(s, 0, tmpJSON[i]);
+                  insert = true;
+                  break;
+                }
+              // } else {
+              //   if (tmpJSON[i].priority > sortedData[s].priority) {
+              //     sortedData.splice(s, 0, tmpJSON[i]);
+              //     insert = true;
+              //     break;
+              //   }
+              // }
+            }
+            if (sort === 'examiner' || sort === 'edited' || sort === 'unfurnished' || sort === 'approved' || sort === 'rejected') {
+              if (tmpJSON[i].examiner < sortedData[s].examiner && !insert) {
+                sortedData.splice(s, 0, tmpJSON[i]);
+                insert = true;
+                break;
+              }
+            }
+            if (sort === 'name') {
+              if (tmpJSON[i].name < sortedData[s].name) {
+                sortedData.splice(s, 0, tmpJSON[i]);
+                insert = true;
+                break;
+              }
+            }
+            if (sort === 'nr') {
+              if (tmpJSON[i].nr < sortedData[s].nr) {
+                sortedData.splice(s, 0, tmpJSON[i]);
+                insert = true;
+                break;
+              }
             }
           }
           if (insert !== true) {
             sortedData.push(tmpJSON[i]);
           }
         }
+        this.total = sortedData.length;
         this.data = sortedData;
-        this.total = data.length;
       }
-      else {
-        for (i = offset; i < offset + limit && i < tmpJSON.length; i++)
-          data.push(tmpJSON[i]);
-        this.data = data;
-      }
+
+      for (i = offset; i < offset + limit && i < sortedData.length; i++)
+        data.push(sortedData[i]);
+      this.data = data;
+
       // this.total = data.length;
     },
   },
