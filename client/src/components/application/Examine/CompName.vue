@@ -8,7 +8,8 @@
           <div id="top-buttons">
             <button class="btn btn-sm btn-secondary" v-if="!is_making_decision"
                     @click="getNextCompany()" >Get Next</button>
-            <button class="btn btn-sm btn-primary" v-if="!is_making_decision && !is_complete"
+            <button class="btn btn-sm btn-primary"
+                    v-if="!is_making_decision && !is_complete && is_my_current_nr"
                     @click="startDecision()" >Approve/Reject...</button>
 
             <button class="btn btn-sm btn-primary" v-if="is_making_decision"
@@ -18,8 +19,13 @@
             <button class="btn btn-sm btn-secondary" v-if="is_making_decision"
                     @click="is_making_decision=false">Cancel</button>
 
-            <button class="btn btn-sm btn-danger" v-if="is_complete" @click="reOpen()" >
+            <button class="btn btn-sm btn-danger"
+                    v-if="is_complete && !is_furnished" @click="reOpen()" >
               Re-Open</button>
+
+            <!-- EXAMINE button - to claim/examine an NR that is on hold -->
+            <button class="btn btn-sm btn-primary" v-if="can_claim" @click="claimNR()" >
+              Examine</button>
           </div>
 
           <table>
@@ -57,7 +63,7 @@
               </td>
             </tr>
           </table>
-          <div v-if="!is_making_decision">
+          <div v-if="!is_making_decision && !is_complete">
             <input v-model="currentName" class="form-control" onChange="runRecipe"/>
             <button @click="runManualSearch()">Manual Search</button>
           </div>
@@ -78,6 +84,18 @@
       currentState() {
         return this.$store.getters.currentState;
       },
+      userId() {
+        return this.$store.getters.userId;
+      },
+      is_my_current_nr() {
+        return this.$store.getters.is_my_current_nr;
+      },
+      is_complete() {
+        return this.$store.getters.is_complete;
+      },
+      is_furnished() {
+        return this.$store.getters.furnished;
+      },
       is_editing() {
         return  this.$store.getters.is_editing;
       },
@@ -88,6 +106,12 @@
         set: function(value) {
           this.$store.commit('is_making_decision', value);
         }
+      },
+      can_claim() {
+        console.log('got to can_claim with status ' + this.currentState);
+        // can this user claim the NR? Based on state.
+        if (['DRAFT', 'HOLD'].indexOf(this.currentState) > -1) return true;
+        else return false;
       },
       compName1() {
         return this.$store.getters.compName1;
@@ -115,15 +139,6 @@
         },
         set: function (value) {
           this.$store.commit('currentChoice', value);
-        }
-      },
-      is_complete() {
-        // indicates a complete BUT REVERTABLE (not yet furnished) NR that can be re-opened.
-        if (this.$store.state.furnished) return false;
-        else {
-          if (['APPROVED', 'REJECTED', 'CONDITION'].
-               indexOf(this.$store.getters.currentState) >= 0 ) return true;
-          else false;
         }
       },
       is_undoable_1() {
@@ -185,6 +200,9 @@
         this.$store.commit('decision_made', 'R');
       },
       reOpen() {
+        this.$store.dispatch('updateNRState', 'INPROGRESS');
+      },
+      claimNR() {
         this.$store.dispatch('updateNRState', 'INPROGRESS');
       },
       runRecipe(){

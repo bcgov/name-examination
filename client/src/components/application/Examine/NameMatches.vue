@@ -25,8 +25,8 @@
          @click="clickRecipeCard('Trademarks')">Trademarks &reg;</a>
       <div class="arrow-right"></div>
 
-      <div id="History1" class="icon icon-pass">
-        <i id="History2" class="fa fa-check"></i></div>
+      <div id="History1">
+        <i id="History2"></i></div>
       <a class="nav-link" data-toggle="pill" href="#"
          @click="clickRecipeCard('History')">History</a>
       <div class="arrow-right"></div>
@@ -50,6 +50,7 @@ export default {
     this.setConflicts();
     this.setConditions();
     this.setTrademarks();
+    this.setHistory();
   },
   computed: {
     currentRecipeCard: {
@@ -69,14 +70,27 @@ export default {
     trademarkInfo() {
       return this.$store.getters.trademarksJSON;
     },
+    historyInfo() {
+      return this.$store.getters.historiesJSON;
+    },
   },
   methods: {
     clickRecipeCard(recipeCard) {
       this.currentRecipeCard = recipeCard
     },
     setConflicts() {
-      // TODO - implement business rules for pass/concern/fail for trademarks
-      this.setConcern('Conflict');
+      /*
+      If there are any conflicts, set to FAIL; otherwise PASS.
+       */
+      if (this.conflictsInfo == null || this.conflictsInfo == undefined) {
+        this.setPass('Conflict');
+      }
+      else if (this.conflictsInfo.names.length == 0) {
+        this.setPass('Conflict');
+      }
+      else {
+        this.setFail('Conflict');
+      }
     },
     setConditions() {
       // if no restricted words -> call setPass
@@ -122,8 +136,32 @@ export default {
       }
     },
     setTrademarks() {
-      // TODO - implement business rules for pass/concern/fail for trademarks
-      this.setConcern('Trademarks');
+      /*
+      If there are any trademarks, set to FAIL; otherwise PASS.
+       */
+      if (this.trademarkInfo == null || this.trademarkInfo == undefined) {
+        this.setPass('Trademarks');
+      }
+      else if (this.trademarkInfo.names.length == 0) {
+        this.setPass('Trademarks');
+      }
+      else {
+        this.setFail('Trademarks');
+      }
+    },
+    setHistory() {
+      /*
+      If there is any history, set to CONCERN; otherwise PASS.
+       */
+      if (this.historyInfo == null || this.historyInfo == undefined) {
+        this.setPass('History');
+      }
+      else if (this.historyInfo.names.length == 0) {
+        this.setPass('History');
+      }
+      else {
+        this.setConcern('History');
+      }
     },
     setFail(val){
       console.log('fail + ' + val);
@@ -151,7 +189,7 @@ export default {
     }
   },
   watch: {
-    conflictInfo: function (val) {
+    conflictsInfo: function (val) {
       // set severity flag on recipe menu
       this.setConflicts();
     },
@@ -162,6 +200,10 @@ export default {
     trademarkInfo: function (val) {
       // set severity flag on recipe menu
       this.setTrademarks();
+    },
+    historyInfo: function (val) {
+      // set severity flag on recipe menu
+      this.setHistory();
     },
   },
 }
