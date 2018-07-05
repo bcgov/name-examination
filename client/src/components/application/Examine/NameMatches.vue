@@ -2,27 +2,25 @@
 <template>
   <div class="col-2">
 
-    <!-- NOTE - these are hardcoded styles right now - will need to control red/yellow/green
-    programmatically -->
     <div class="nav flex-column nav-pills recipe-steps" id="v-pills-tab" role="tablist"
          aria-orientation="vertical">
 
-      <div id="Conflict1" class="icon icon-fail">
-        <i id="Conflict2" class="fa fa-times"></i></div>
+      <div id="Conflict1">
+        <i id="Conflict2"></i></div>
       <a class="nav-link active" data-toggle="pill" href="#"
          @click="clickRecipeCard('Conflicts')">
         Conflicts
       </a>
       <div class="arrow-right"></div>
 
-      <div v-if = 'set_Conditions' id="Condition1" class="icon icon-concern">
-        <i id="Condition2" class="fa fa-exclamation"></i></div>
+      <div id="Condition1">
+        <i id="Condition2"></i></div>
       <a class="nav-link" data-toggle="pill" href="#"
          @click="clickRecipeCard('Condition')">Condition</a>
       <div class="arrow-right"></div>
 
-      <div id="Trademarks1" class="icon icon-pass">
-        <i id="Trademarks2" class="fa fa-check"></i></div>
+      <div id="Trademarks1">
+        <i id="Trademarks2"></i></div>
       <a class="nav-link" data-toggle="pill" href="#"
          @click="clickRecipeCard('Trademarks')">Trademarks &reg;</a>
       <div class="arrow-right"></div>
@@ -49,20 +47,45 @@ export default {
   name: 'matches',
   mounted() {
     this.currentRecipeCard = "Conflicts"
+    this.setConflicts();
+    this.setConditions();
+    this.setTrademarks();
   },
   computed: {
-    exists_Conflicts() {
-      if(this.$store.getters.conflictsJSON != null){ return true }
-      return false
+    currentRecipeCard: {
+      get: function () {
+        return this.$store.getters.currentRecipeCard;
+      },
+      set: function (value) {
+        this.$store.commit('currentRecipeCard', value);
+      }
     },
-    set_Conditions() {
+    conflictsInfo() {
+      return this.$store.getters.conflictsJSON;
+    },
+    conditionInfo() {
+      return this.$store.getters.conditionsJSON;
+    },
+    trademarkInfo() {
+      return this.$store.getters.trademarksJSON;
+    },
+  },
+  methods: {
+    clickRecipeCard(recipeCard) {
+      this.currentRecipeCard = recipeCard
+    },
+    setConflicts() {
+      // TODO - implement business rules for pass/concern/fail for trademarks
+      this.setConcern('Conflict');
+    },
+    setConditions() {
       // if no restricted words -> call setPass
       // else if any word has all possible conditions with allow us as 'N' -> call setFail
       // else -> call setConcern
-      console.log('enter set_conditions');
-      var conditionInfo = this.$store.getters.conditionsJSON
+
+      var conditionInfo = this.conditionInfo;
       if (conditionInfo != null) {
-        conditionInfo = this.$store.getters.conditionsJSON.restricted_words_conditions;
+        conditionInfo = conditionInfo.restricted_words_conditions;
         if (conditionInfo.length != 0) {
 
           var fail = false;
@@ -94,63 +117,53 @@ export default {
           this.setPass('Condition');
         }
       } else {
-        console.log('error: exists_conditions run before conditionsJSON was set.')
+        console.log('error: setConditions() run before conditionsJSON was set.')
+        this.setPass('Condition');
       }
-      return true;
     },
-    exists_Trademarks() {
-      if(this.$store.getters.trademarksJSON != null){ return true }
-      return false
-    },
-    exists_Histories() {
-      if(this.$store.getters.historiesJSON != null){ return true }
-      return false
-    },
-    currentRecipeCard: {
-      get: function () {
-        return this.$store.getters.currentRecipeCard;
-      },
-      set: function (value) {
-        this.$store.commit('currentRecipeCard', value);
-      }
-    }
-  },
-  methods: {
-    clickRecipeCard(recipeCard) {
-      this.currentRecipeCard = recipeCard
+    setTrademarks() {
+      // TODO - implement business rules for pass/concern/fail for trademarks
+      this.setConcern('Trademarks');
     },
     setFail(val){
-      return true;
-      console.log('fail');
+      console.log('fail + ' + val);
       var val1 = val+'1';
       var val2 = val+'2';
 
       document.getElementById(val1).className = "icon icon-fail";
-      console.log(document.getElementById(val1).className);
       document.getElementById(val2).className = "fa fa-times";
     },
     setConcern(val){
-      return true;
-      console.log('concern');
+      console.log('concern + ' + val);
       var val1 = val+'1';
       var val2 = val+'2';
 
       document.getElementById(val1).className = "icon icon-concern";
-      console.log(document.getElementById(val1).className);
       document.getElementById(val2).className = "fa fa-exclamation";
     },
     setPass(val){
-      return true;
-      console.log('pass');
+      console.log('pass + ' + val);
       var val1 = val+'1';
       var val2 = val+'2';
 
       document.getElementById(val1).className = "icon icon-pass";
-      console.log(document.getElementById(val1).className);
       document.getElementById(val2).className = "fa fa-check";
     }
-
-  }
+  },
+  watch: {
+    conflictInfo: function (val) {
+      // set severity flag on recipe menu
+      this.setConflicts();
+    },
+    conditionInfo: function (val) {
+      // set severity flag on recipe menu
+      this.setConditions();
+    },
+    trademarkInfo: function (val) {
+      // set severity flag on recipe menu
+      this.setTrademarks();
+    },
+  },
 }
 </script>
 
