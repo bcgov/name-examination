@@ -29,6 +29,7 @@ export default new Vuex.Store({
     currentHistory: null,  //NR number of history name selected
 
     currentRecipeCard: null,
+    is_my_current_nr: null,
     is_editing: false,
     is_making_decision: false,
     decision_made: null,
@@ -153,6 +154,10 @@ export default new Vuex.Store({
 mutations: {
     requestType (state, value) {
       state.compInfo.requestType = value;
+    },
+    is_my_current_nr (state, value) {
+      console.log('got to mutation with value ' + value);
+      state.is_my_current_nr = value;
     },
     is_making_decision(state, value) {
       state.is_making_decision = value;
@@ -369,7 +374,7 @@ mutations: {
 
 
       // if the current state is not INPROGRESS, clear any existing name record in currentNameObj
-      if (state.currentState !== 'INPROGRESS') this.dispatch('setCurrentName',{});
+      //if (state.currentState !== 'INPROGRESS') this.dispatch('setCurrentName',{});
 
 
       // we keep the original data so that if fields exist that we do not use, we don't lose that
@@ -410,6 +415,10 @@ mutations: {
       //state.reservationCount = dbcompanyInfo.reservationCount
       state.expiryDate = dbcompanyInfo.expiryDate
       state.submittedDate = dbcompanyInfo.submittedDate
+
+      // set flag indicating whether you own this NR and it's in progress
+      if (state.currentState == 'INPROGRESS' && state.examiner == state.userId) state.is_my_current_nr = true;
+      else state.is_my_current_nr = false;
 
     },
 
@@ -603,6 +612,7 @@ mutations: {
 
       if (state.kctoken){
         console.log('KC Authorized user roles')
+        state.userId = localStorage.getItem('USERNAME');
         commit('authUser', {
           //user_role: state.user_role,
           kctoken: state.kctoken
@@ -700,7 +710,6 @@ mutations: {
       axios.patch(url,{"state": nrState} ,{headers: {Authorization: `Bearer ${myToken}`}})
            .then(function(response){
                 console.log('state updated to ' + nrState + ' for ' + state.compInfo.nrNumber);
-                commit('currentState', nrState);
                 dispatch('getpostgrescompInfo', state.compInfo.nrNumber);
 
             })
@@ -731,6 +740,10 @@ mutations: {
               if (state.compInfo.compNames.compName2.state == null || state.compInfo.compNames.compName2.state !== 'NE') {
                 dispatch('updateNRState', 'REJECTED');
               } else {
+
+                // save updated name with new state, decision text, etc.
+                commit('compName1', state.currentNameObj);
+
                 // we'e got another choice to move on to so move to the next
                 commit('currentNameObj', state.compInfo.compNames.compName2);
               }
@@ -738,6 +751,9 @@ mutations: {
               if (state.compInfo.compNames.compName3.state == null || state.compInfo.compNames.compName3.state !== 'NE') {
                 dispatch('updateNRState', 'REJECTED');
               } else {
+                // save updated name with new state, decision text, etc.
+                state.compInfo.compNames.compName2 = state.currentNameObj;
+
                 // we'e got another choice to move on to so move to the next
                 commit('currentNameObj', state.compInfo.compNames.compName3);
               }
@@ -746,8 +762,6 @@ mutations: {
               dispatch('updateNRState', 'REJECTED');
             }
           }
-
-          dispatch('getpostgrescompInfo', state.compInfo.nrNumber);
         })
         .catch(error => {
           console.log('ERROR: ' + error);
@@ -995,6 +1009,21 @@ mutations: {
 
   },
   getters: {
+    userId(state) {
+      return state.userId;
+    },
+    is_my_current_nr(state) {
+      return state.is_my_current_nr;
+    },
+    furnished(state) {
+      return state.furnished;
+    },
+    is_complete(state) {
+      // indicates a complete NR
+      if (['APPROVED', 'REJECTED', 'CONDITION'].
+           indexOf(state.currentState) >= 0 ) return true;
+      else false;
+    },
     is_editing(state) {
       return state.is_editing
     },
