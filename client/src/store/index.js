@@ -140,6 +140,9 @@ export default new Vuex.Store({
       issue_Format_Text: null
     },
 
+    searchQuery: '',
+
+    //TODO
     conflictList: null,
     conflictHighlighting: null,
     conflictNames: null,
@@ -992,18 +995,19 @@ mutations: {
         .catch(error => console.log('ERROR: ' + error))
     },
 
-    //getSearchDataJSON( {commit, state} ) {
-    //  console.log('action: get search Data')
-    //  const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
-    //  const url = '/api/v1/requests/'
-    //  console.log('URL:' + url)
-    //  const vm = this
-    //  return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-    //    console.log('Search Data Response:' + response.data)
-    //    commit('loadSearchDataJSON',response.data)
-    //  })
-    //    .catch(error => console.log('ERROR: ' + error))
-    //},
+    getSearchDataJSON( {commit, state} ) {
+     console.log('action: get search Data');
+     const myToken = localStorage.getItem('KEYCLOAK_TOKEN');
+     state.searchQuery = '?order=priorityCd:desc';
+     const url = '/api/v1/requests' + state.searchQuery;
+     console.log('URL:' + url);
+     const vm = this;
+     return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+       console.log('Search Data Response:' + response.data)
+       commit('loadSearchDataJSON',response.data)
+     })
+       .catch(error => console.log('ERROR: ' + error))
+    },
 
     setCurrentName({commit, state},objName ) {
       commit('currentNameObj', objName);

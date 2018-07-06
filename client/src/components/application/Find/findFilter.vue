@@ -133,6 +133,11 @@ var tmpJSON = [
 
 export default {
   name: 'findfilter',
+  computed: {
+    searchJSON() {
+      return this.$store.getters.searchDataJSON;
+    },
+  },
   data: () => ({
     fixHeaderAndSetBodyMaxHeight: 400,
     tblStyle: {'table-layout': 'fixed'},
@@ -174,6 +179,8 @@ export default {
     },
   }),
   mounted() {
+    this.$store.dispatch()
+    console.log(this.searchJSON)
     this.data = tmpJSON;
   },
   watch: {
