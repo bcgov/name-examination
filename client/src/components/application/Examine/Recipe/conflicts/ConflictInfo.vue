@@ -5,10 +5,15 @@
       <div class="row ConflictInfo">
 
           <div class="col conflict-info-view">
-
-            <div v-if="is_corp" class="add-top-padding"><corpMatch /></div>
-            <div v-else-if="is_names" class="add-top-padding"><namesMatch /></div>
-            <div v-else class="add-top-padding"><nullMatch /></div>
+            <div v-if="is_corp" class="add-top-padding">
+              <corpMatch />
+            </div>
+            <div v-else-if="is_names" class="add-top-padding">
+              <namesMatch />
+            </div>
+            <div v-else class="add-top-padding">
+              <nullMatch />
+            </div>
           </div>
 
       </div>
@@ -32,28 +37,36 @@ import corpMatch from '@/components/application/Examine/Recipe/conflicts/conflic
       nullMatch
     },
     computed: {
-      currentConflict() {
-        return this.$store.getters.currentConflict;
+
+      currentConflict: {
+        get: function () {
+          console.log('got current conflict in conflictInfo ');
+          return this.$store.getters.currentConflict;
+        }
       },
       is_corp() {
+        console.log('got here');
+        console.log(this.currentConflict);
         if (this.currentConflict != undefined) {
-          if (this.currentConflict.source == 'CORP') return true;
+          if (this.currentConflict.source === 'CORP') return true;
           return false
         }
+        return false;
       },
       is_names() {
         if (this.currentConflict != undefined) {
-          if (this.currentConflict.source == 'NR') return true;
+          if (this.currentConflict.source === 'NR') return true;
           return false
         }
+        return false;
       },
-    }
+    },
   }
 </script>
 
 <style scoped>
   .conflict-info-view {
-    background-color: #00000;
+    /*background-color: #000000;*/
     padding: 10px;
   }
 </style>
