@@ -148,6 +148,7 @@ export default new Vuex.Store({
     namesConflictJSON: null,
     trademarksJSON: null,
     historiesJSON: null,
+    historiesInfoJSON: null,
     searchDataJSON: null,
     conditionsJSON: null
 },
@@ -447,6 +448,10 @@ mutations: {
       state.historiesJSON = historiesData
     },
 
+    loadHistoriesInfoJSON(state, historiesInfo){
+      console.log('Loading histories info into state');
+      state.historiesInfoJSON = historiesInfo;
+    },
     loadTrademarksJSON(state,trademarksData){
      console.log('Loading trademarks data into state')
       state.trademarksJSON = trademarksData
@@ -682,6 +687,7 @@ mutations: {
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         //response.data.nameRequest = 'NR 8270105';
+        //response.data.nameRequest = 'NR 0000021';
         console.log('Comp No Response:');
         console.log(response);
         commit('loadpostgresNo',response.data)
@@ -898,6 +904,7 @@ mutations: {
     getNamesConflict ({state,commit},value) {
       console.log('action: getting data for company number: ' + value.nrNumber)
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      //value.nrNumber = 'NR 8270105'
       const url = '/api/v1/requests/' + value.nrNumber
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
@@ -923,10 +930,11 @@ mutations: {
       console.log('action: getting HistoryInfo for company number: ' + value.nrNumber)
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + value.nrNumber
+      //const url = '/api/v1/requests/' + 'NR 8270105'
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         console.log('Names Conflict response:' + response.data)
-        commit('loadHistoryInfoJSON',response.data )
+        commit('loadHistoriesInfoJSON',response.data )
       })
         .catch(error => console.log('ERROR: getNamesConflict' + error))
     },
@@ -1003,6 +1011,7 @@ mutations: {
       commit('loadCorpConflictJSON',null)
       commit('loadConditionsJSON',null)
       commit('loadHistoriesJSON',null)
+      commit('loadHistoriesInfoJSON',null)
       commit('loadTrademarksJSON',null)
       commit('loadSearchDataJSON',null)
     },
@@ -1041,6 +1050,9 @@ mutations: {
     },
     email(state) {
       return state.email
+    },
+    currentConflict(state) {
+      return state.currentConflict;
     },
     currentNameObj(state) {
       return state.currentNameObj;
@@ -1231,6 +1243,9 @@ mutations: {
     },
     historiesJSON(state) {
       return state.historiesJSON
+    },
+    historiesInfoJSON(state) {
+      return state.historiesInfoJSON
     },
     trademarksJSON(state) {
       return state.trademarksJSON

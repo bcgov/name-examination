@@ -37,7 +37,10 @@
           return '';
         },
         set: function(value) {
+          console.log('set current conflict');
+          console.log(value);
           this.$store.commit('currentConflict', value);
+          console.log(this.$store.state.currentConflict);
           this.tmp = value
         }
       }

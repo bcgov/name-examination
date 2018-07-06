@@ -131,7 +131,8 @@
 
       },
       namesConflictInfo() {
-        let tmp = this.$store.getters.historyJSON
+        console.log('historiesInfo: ', this.$store.getters.historiesInfoJSON);
+        return this.$store.getters.historiesInfoJSON;
       }
     },
     methods: {
@@ -141,7 +142,7 @@
 
 <style scoped>
   .conflict-info-view {
-    background-color: #00000;
+    background-color: #000000;
     padding: 10px;
   }
 </style>
