@@ -138,7 +138,6 @@ export default new Vuex.Store({
       issue_Format_Text: null
     },
 
-    //TODO
     conflictList: null,
     conflictHighlighting: null,
     conflictNames: null,
@@ -953,51 +952,6 @@ mutations: {
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         console.log('Conditions Info Response:')
         console.log(response.data)
-
-        // TODO remove this temp data manipulation for new dev
-        try {
-          for (let record of response.data.restricted_words_conditions) {
-            record.old_data = record;
-            record.cnd_info[0].instructions = record.cnd_info[0].text + ' ' + record.cnd_info[0].consenting_body + '\n\n' + record.cnd_info[0].instructions;
-            record.cnd_info[0].text = '';
-          }
-        } catch (ex) {
-          pass
-        }
-        var new_fake_record = {
-          "cnd_info": [
-          {
-            allow_use: "Y",
-            consent_required: "N",
-            consenting_body: "",
-            id: 999,
-            instructions: "",
-            text: "Use of aboriginal name Saanich allowed bla bla bla"
-          }],
-          "word_info": {
-            id: 999,
-            phrase: "SAANICH"
-          }
-        }
-        response.data.restricted_words_conditions.push(new_fake_record);
-        var other_fake_record = {
-          "cnd_info": [
-          {
-            allow_use: "Y",
-            consent_required: "Y",
-            consenting_body: "",
-            id: 998,
-            instructions: "Please do something thanks kay bye.",
-            text: "This is another internal message that also has customer instructions and consent is required."
-          }],
-          "word_info": {
-            id: 998,
-            phrase: "OTHER"
-          }
-        }
-        response.data.restricted_words_conditions.push(other_fake_record);
-
-        console.log(response.data);
         commit('loadConditionsJSON',response.data)
       })
         .catch(error => console.log('ERROR: ' + error))
