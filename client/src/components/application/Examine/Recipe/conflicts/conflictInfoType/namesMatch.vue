@@ -1,6 +1,7 @@
-/* eslint-disable */
+<!--eslint-disable -->
 <template>
   <span>
+      <br/>
       <h3>Client</h3>
       <p>{{ clientFirstName }} {{ clientLastName}}</p>
 
@@ -119,7 +120,8 @@
 
       },
       namesConflictInfo() {
-        let tmp = this.$store.getters.namesConflictJSON
+        console.log(this.$store.getters.historiesJSON);
+        return this.$store.getters.historiesJSON;
       }
     },
     methods: {

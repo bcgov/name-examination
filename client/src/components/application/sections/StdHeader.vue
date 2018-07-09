@@ -45,7 +45,7 @@
                  placeholder="NR Number" aria-label="Search" v-model="nrNum">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Load</button>
         </form>
-        <p class="navbar-text">&nbsp;{{userid}}</p>
+        <p class="navbar-text">&nbsp;{{userId }}</p>
       </div>
     </nav>
   </div>
@@ -61,8 +61,8 @@
       }
     },
     computed: {
-      userid() {
-        return this.$store.getters.userid
+      userId() {
+        return this.$store.getters.userId
       },
       auth() {
         return this.$store.getters.isAuthenticated

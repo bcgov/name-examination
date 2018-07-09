@@ -29,6 +29,7 @@ export default new Vuex.Store({
     currentHistory: null,  //NR number of history name selected
 
     currentRecipeCard: null,
+    is_my_current_nr: null,
     is_editing: false,
     is_making_decision: false,
     decision_made: null,
@@ -50,6 +51,7 @@ export default new Vuex.Store({
       nrNumber: null,
       compNames: {
         compName1: {
+          choice: null,
           name: null,
           state: null,
           consumptionDate: null,
@@ -59,6 +61,7 @@ export default new Vuex.Store({
           decision_text: null,
         },
         compName2: {
+          choice: null,
           name: null,
           state: null,
           consumptionDate: null,
@@ -68,6 +71,7 @@ export default new Vuex.Store({
           decision_text: null,
         },
         compName3: {
+          choice: null,
           name: null,
           state: null,
           consumptionDate: null,
@@ -144,12 +148,17 @@ export default new Vuex.Store({
     namesConflictJSON: null,
     trademarksJSON: null,
     historiesJSON: null,
+    historiesInfoJSON: null,
     searchDataJSON: null,
     conditionsJSON: null
 },
 mutations: {
     requestType (state, value) {
       state.compInfo.requestType = value;
+    },
+    is_my_current_nr (state, value) {
+      console.log('got to mutation with value ' + value);
+      state.is_my_current_nr = value;
     },
     is_making_decision(state, value) {
       state.is_making_decision = value;
@@ -279,9 +288,29 @@ mutations: {
         return
       }
 
+      // clear name choices 2 and 3 in case they are blank - ie: don't keep previous NR's data
+      state.compInfo.compNames.compName2.name = null
+      state.compInfo.compNames.compName2.state = null
+      state.compInfo.compNames.compName2.consumptionDate = null
+      state.compInfo.compNames.compName2.conflict1 = null
+      state.compInfo.compNames.compName2.conflict2 = null
+      state.compInfo.compNames.compName2.conflict3 = null
+      state.compInfo.compNames.compName2.decision_text = null
+      state.compInfo.compNames.compName3.name = null
+      state.compInfo.compNames.compName3.state = null
+      state.compInfo.compNames.compName3.consumptionDate = null
+      state.compInfo.compNames.compName3.conflict1 = null
+      state.compInfo.compNames.compName3.conflict2 = null
+      state.compInfo.compNames.compName3.conflict3 = null
+      state.compInfo.compNames.compName3.decision_text = null
+
+
+
+
       for (let record of dbcompanyInfo.names) {
         switch (record.choice) {
           case 1:
+            state.compInfo.compNames.compName1.choice = record.choice
             state.compInfo.compNames.compName1.name = record.name
             state.compInfo.compNames.compName1.state = record.state
             state.compInfo.compNames.compName1.consumptionDate = record.consumptionDate
@@ -298,6 +327,7 @@ mutations: {
 
             break;
           case 2:
+            state.compInfo.compNames.compName2.choice = record.choice
             state.compInfo.compNames.compName2.name = record.name
             state.compInfo.compNames.compName2.state = record.state
             state.compInfo.compNames.compName2.consumptionDate = record.consumptionDate
@@ -316,6 +346,7 @@ mutations: {
 
             break;
           case 3:
+            state.compInfo.compNames.compName3.choice = record.choice
             state.compInfo.compNames.compName3.name = record.name
             state.compInfo.compNames.compName3.state = record.state
             state.compInfo.compNames.compName3.consumptionDate = record.consumptionDate
@@ -344,7 +375,7 @@ mutations: {
 
 
       // if the current state is not INPROGRESS, clear any existing name record in currentNameObj
-      if (state.currentState !== 'INPROGRESS') this.dispatch('setCurrentName',{});
+      //if (state.currentState !== 'INPROGRESS') this.dispatch('setCurrentName',{});
 
 
       // we keep the original data so that if fields exist that we do not use, we don't lose that
@@ -386,6 +417,10 @@ mutations: {
       state.expiryDate = dbcompanyInfo.expiryDate
       state.submittedDate = dbcompanyInfo.submittedDate
 
+      // set flag indicating whether you own this NR and it's in progress
+      if (state.currentState == 'INPROGRESS' && state.examiner == state.userId) state.is_my_current_nr = true;
+      else state.is_my_current_nr = false;
+
     },
 
     loadConflictsJSON(state,conflictData){
@@ -413,6 +448,10 @@ mutations: {
       state.historiesJSON = historiesData
     },
 
+    loadHistoriesInfoJSON(state, historiesInfo){
+      console.log('Loading histories info into state');
+      state.historiesInfoJSON = historiesInfo;
+    },
     loadTrademarksJSON(state,trademarksData){
      console.log('Loading trademarks data into state')
       state.trademarksJSON = trademarksData
@@ -578,6 +617,7 @@ mutations: {
 
       if (state.kctoken){
         console.log('KC Authorized user roles')
+        state.userId = localStorage.getItem('USERNAME');
         commit('authUser', {
           //user_role: state.user_role,
           kctoken: state.kctoken
@@ -647,6 +687,7 @@ mutations: {
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         //response.data.nameRequest = 'NR 8270105';
+        //response.data.nameRequest = 'NR 0000021';
         console.log('Comp No Response:');
         console.log(response);
         commit('loadpostgresNo',response.data)
@@ -675,7 +716,6 @@ mutations: {
       axios.patch(url,{"state": nrState} ,{headers: {Authorization: `Bearer ${myToken}`}})
            .then(function(response){
                 console.log('state updated to ' + nrState + ' for ' + state.compInfo.nrNumber);
-                commit('currentState', nrState);
                 dispatch('getpostgrescompInfo', state.compInfo.nrNumber);
 
             })
@@ -706,6 +746,10 @@ mutations: {
               if (state.compInfo.compNames.compName2.state == null || state.compInfo.compNames.compName2.state !== 'NE') {
                 dispatch('updateNRState', 'REJECTED');
               } else {
+
+                // save updated name with new state, decision text, etc.
+                commit('compName1', state.currentNameObj);
+
                 // we'e got another choice to move on to so move to the next
                 commit('currentNameObj', state.compInfo.compNames.compName2);
               }
@@ -713,6 +757,9 @@ mutations: {
               if (state.compInfo.compNames.compName3.state == null || state.compInfo.compNames.compName3.state !== 'NE') {
                 dispatch('updateNRState', 'REJECTED');
               } else {
+                // save updated name with new state, decision text, etc.
+                state.compInfo.compNames.compName2 = state.currentNameObj;
+
                 // we'e got another choice to move on to so move to the next
                 commit('currentNameObj', state.compInfo.compNames.compName3);
               }
@@ -721,8 +768,6 @@ mutations: {
               dispatch('updateNRState', 'REJECTED');
             }
           }
-
-          dispatch('getpostgrescompInfo', state.compInfo.nrNumber);
         })
         .catch(error => {
           console.log('ERROR: ' + error);
@@ -741,6 +786,35 @@ mutations: {
            })
            .catch(error => console.log('ERROR: ' + error))
     },
+
+    undoDecision({state}, nameChoice) {
+      console.log('Undo decision for name #' + nameChoice);
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN');
+
+      var objName = {}
+      if (nameChoice == 1) objName = this.getters.compName1;
+      if (nameChoice == 2) objName = this.getters.compName2;
+      if (nameChoice == 3) objName = this.getters.compName3;
+
+      objName.state = 'NE';
+      objName.conflict1 = null;
+      objName.conflict2 = null;
+      objName.conflict3 = null;
+      objName.conflict1_num = null;
+      objName.conflict2_num = null;
+      objName.conflict3_num = null;
+      objName.decision_text = null;
+
+
+      const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/names/' + nameChoice;
+      axios.put(url, objName, {headers: {Authorization: `Bearer ${myToken}`}})
+           .then(function(response){
+
+             // get full NR from scratch
+             this.getpostgrescompInfo(state.compInfo.nrNumber);
+            })
+            .catch(error => console.log('ERROR: ' + error))
+      },
 
     revertLastDecision({state}) {
       // TODO - RE-EVALUATE IN TERMS OF 'UNDO' VS 'REVERT'
@@ -830,6 +904,7 @@ mutations: {
     getNamesConflict ({state,commit},value) {
       console.log('action: getting data for company number: ' + value.nrNumber)
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      //value.nrNumber = 'NR 8270105'
       const url = '/api/v1/requests/' + value.nrNumber
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
@@ -855,10 +930,11 @@ mutations: {
       console.log('action: getting HistoryInfo for company number: ' + value.nrNumber)
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + value.nrNumber
+      //const url = '/api/v1/requests/' + 'NR 8270105'
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         console.log('Names Conflict response:' + response.data)
-        commit('loadHistoryInfoJSON',response.data )
+        commit('loadHistoriesInfoJSON',response.data )
       })
         .catch(error => console.log('ERROR: getNamesConflict' + error))
     },
@@ -935,12 +1011,28 @@ mutations: {
       commit('loadCorpConflictJSON',null)
       commit('loadConditionsJSON',null)
       commit('loadHistoriesJSON',null)
+      commit('loadHistoriesInfoJSON',null)
       commit('loadTrademarksJSON',null)
       commit('loadSearchDataJSON',null)
     },
 
   },
   getters: {
+    userId(state) {
+      return state.userId;
+    },
+    is_my_current_nr(state) {
+      return state.is_my_current_nr;
+    },
+    furnished(state) {
+      return state.furnished;
+    },
+    is_complete(state) {
+      // indicates a complete NR
+      if (['APPROVED', 'REJECTED', 'CONDITION'].
+           indexOf(state.currentState) >= 0 ) return true;
+      else false;
+    },
     is_editing(state) {
       return state.is_editing
     },
@@ -958,6 +1050,9 @@ mutations: {
     },
     email(state) {
       return state.email
+    },
+    currentConflict(state) {
+      return state.currentConflict;
     },
     currentNameObj(state) {
       return state.currentNameObj;
@@ -1148,6 +1243,9 @@ mutations: {
     },
     historiesJSON(state) {
       return state.historiesJSON
+    },
+    historiesInfoJSON(state) {
+      return state.historiesInfoJSON
     },
     trademarksJSON(state) {
       return state.trademarksJSON

@@ -17,14 +17,12 @@
        </div>
 
        <decision v-if="is_making_decision" />
-       <div class="row" v-else>
+       <div class="row" v-else-if="!is_complete">
          <compmatches />
          <div class="col"><matchissues /></div>
        </div>
 
-       <!-- <div="row">
-         <div class="col" ><examinationmenu /></div>
-       </div> -->
+
       </div>
     </div>
   </div>
@@ -53,7 +51,10 @@
       },
       is_making_decision() {
         return this.$store.getters.is_making_decision;
-      }
+      },
+      is_complete() {
+        return this.$store.getters.is_complete;
+      },
     },
     components: {
       requestinfoheaderview,
