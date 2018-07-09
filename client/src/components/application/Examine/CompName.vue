@@ -13,7 +13,9 @@
                     @click="startDecision()" >Approve/Reject...</button>
 
             <button class="btn btn-sm btn-primary" v-if="is_making_decision"
-                    @click="nameAccept()">Accept</button>
+                    @click="nameAccept()">
+              <span v-if="acceptance_will_be_conditional">Conditionally </span>Accept
+            </button>
             <button class="btn btn-sm btn-danger" v-if="is_making_decision"
                     @click="nameReject()" >Reject</button>
             <button class="btn btn-sm btn-secondary" v-if="is_making_decision"
@@ -30,9 +32,10 @@
 
           <table>
             <tr class="name-option"
-                  v-bind:class="{'active-name-option': currentChoice==1}">
+                v-bind:class="{'active-name-option': currentChoice==1,
+                               accepted: compName1.state == 'A'}">
               <td>1.</td>
-              <td id="name1" >
+              <td id="name1">
                 {{ compName1.name }}
                 <span class="name-state-icon" v-html="setIcon(compName1.state)"></span>
                 <button class="btn btn-undo" v-if="is_undoable_1"
@@ -41,9 +44,10 @@
               </td>
             </tr>
             <tr class="name-option"
-                  v-bind:class="{'active-name-option': currentChoice==2}">
+                v-bind:class="{'active-name-option': currentChoice==2,
+                               accepted: compName2.state == 'A'}">
               <td>2.</td>
-              <td id="name2" >
+              <td id="name2">
                 {{ compName2.name }}
                 <span class="name-state-icon" v-html="setIcon(compName2.state)"></span>
                 <button class="btn btn-undo" v-if="is_undoable_2"
@@ -52,7 +56,8 @@
               </td>
             </tr>
             <tr class="name-option"
-                  v-bind:class="{'active-name-option': currentChoice==3}">
+                v-bind:class="{'active-name-option': currentChoice==3,
+                               accepted: compName3.state == 'A'}">
               <td>3.</td>
               <td id="name3" >
                 {{ compName3.name }}
@@ -106,6 +111,9 @@
         set: function(value) {
           this.$store.commit('is_making_decision', value);
         }
+      },
+      acceptance_will_be_conditional() {
+        return this.$store.getters.acceptance_will_be_conditional;
       },
       can_claim() {
         console.log('got to can_claim with status ' + this.currentState);
@@ -279,6 +287,10 @@
   .name-option > td {
     vertical-align: top;
   }
+  .name-option.accepted {
+    color: #007bff;
+    font-size: 20px;
+  }
   .decision-text {
     font-size: 11px;
     width: 600px;
@@ -298,7 +310,8 @@
     color: #c00;
   }
   .name-state-icon .icon-accepted {
-    color: #38761d;
+    color: #007bff;
+    font-size: 20px;
   }
 
   .btn-undo {
