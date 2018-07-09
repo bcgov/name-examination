@@ -26,6 +26,8 @@ export default new Vuex.Store({
     currentState: null, // NR - APPROVED, REJECTED, INPROGRESS ETC...
 
     currentConflict: null, // the conflict name currently in focus
+    currentCondition: null, // the condition currently in focus
+    currentTrademark: null, // the trademark currently in focus
     currentHistory: null,  //NR number of history name selected
 
     currentRecipeCard: null,
@@ -596,6 +598,13 @@ mutations: {
     currentConflict(state,value){
       state.currentConflict = value
     },
+    currentCondition(state,value){
+      console.log('got here 2');
+      state.currentCondition = value
+    },
+    currentTrademark (state,value){
+      state.currentTrademark = value
+    },
 
     historyMatch(state,value){
       state.currentHistory = value
@@ -1060,6 +1069,12 @@ mutations: {
     },
     currentConflict(state) {
       return state.currentConflict;
+    },
+    currentCondition(state) {
+      return state.currentCondition;
+    },
+    currentTrademark(state) {
+      return state.currentTrademark;
     },
     currentNameObj(state) {
       return state.currentNameObj;

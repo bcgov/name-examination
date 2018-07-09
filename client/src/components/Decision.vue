@@ -198,11 +198,7 @@
         return this.$store.getters.conflictList;
       },
       currentConflict() {
-        if (this.$store.getters.currentConflict !== null) {
-          var conflict = Object.assign({}, this.$store.getters.currentConflict); // copy not reference
-          return conflict;
-        }
-        else return null;
+        return this.$store.getters.currentConflict;
       },
       listDecisionReasons() {
         return this.$store.getters.listDecisionReasons;
@@ -233,8 +229,6 @@
                revised_match_object.consent_required = (condition.consent_required == 'Y')?true:false;
                revised_match_object.instructions = condition.instructions;
                revised_match_object.text = condition.text;
-
-               console.log(revised_match_object.consent_required);
 
                retval.push(revised_match_object);
              }
@@ -268,6 +262,24 @@
         return this.conditions.filter(function (el) {return el.text !== '' && el.text !== null});
 
       },
+      currentCondition() {
+        var currentCondition = this.$store.getters.currentCondition;
+        if (currentCondition == null) return null;
+
+        // only use the currentCondition if it requires consent
+        if (currentCondition.consent_required != 'Y') return null;
+
+        // Re-arrange the fields in object to be easier to use in dropdowns - match main list
+        var revised_match_object = {};
+        revised_match_object.phrase = currentCondition.word;
+        revised_match_object.allow_use = (currentCondition.allow_use == 'Y')?true:false;
+        revised_match_object.consent_required = (currentCondition.consent_required == 'Y')?true:false;
+        revised_match_object.instructions = currentCondition.instructions;
+        revised_match_object.text = currentCondition.text;
+
+        return revised_match_object;
+
+      },
       trademarks() {
         try {
           if (this.$store.getters.trademarksJSON !== null) {
@@ -277,6 +289,9 @@
         } catch (err) {
           return [];
         }
+      },
+      currentTrademark() {
+        return this.$store.getters.currentTrademark;
       },
       customer_message() {
         /*
@@ -353,13 +368,19 @@
     mounted: function () {
       // pre-select the conflict from the display screen
       if (this.currentConflict !== null && this.currentConflict !== undefined) {
-        //this.conflicts_selected.push(this.currentConflict);
+        this.conflicts_selected.push(this.currentConflict);
       }
 
-      // pre-select the condition from the display screen TODO
+      // pre-select the condition from the display screen
+      if (this.currentCondition !== null && this.currentCondition !== undefined) {
+        this.conditions_selected.push(this.currentCondition);
+      }
 
 
-      // pre-select the trademark from the display screen TODO
+      // pre-select the trademark from the display screen
+      if (this.currentTrademark !== null && this.currentTrademark !== undefined) {
+        this.trademarks_selected.push(this.currentTrademark);
+      }
 
       // reset the conditional acceptance flag
       this.$store.commit('acceptance_will_be_conditional', false);

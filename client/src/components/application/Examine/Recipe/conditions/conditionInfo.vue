@@ -1,7 +1,7 @@
 /* eslint-disable */
 <template>
-  <span>
-    <datatable v-bind="$data" />
+  <span v-on:click="setSelection($event);">
+    <datatable v-bind="$data"/>
   </span>
 </template>
 
@@ -26,6 +26,16 @@
       total: 0,
       query: {}
     }),
+    computed: {
+      currentCondition: {
+        get: function () {
+          return this.$store.getters.currentCondition;
+        },
+        set: function (value) {
+          this.$store.commit('currentCondition', value);
+        }
+      },
+    },
     mounted() {
       var conditionsInfo = this.$store.getters.conditionsJSON;
       var dataList = this.createDataList(conditionsInfo);
@@ -35,6 +45,7 @@
     methods: {
       //goes through the JSON with conditions info and returns each restricted word and their conditions in a list
         createDataList(conditionsInfo){
+          if (conditionsInfo.restricted_words_conditions == undefined) return [];
 
           // looping through each word and its list of conditions
           var data = [];
@@ -69,8 +80,34 @@
           }
           // returns a list of json-like params for the datatable -> each element in the list is a row
           return data;
+        },
+      setSelection(event) {
+        // check if this is a body row (ie: in tbody)
+        var row = $(event.target).closest('tr')[0];
+        if (row !== undefined) {
+          if (row.parentNode.tagName == 'TBODY') {
+
+            // remove any other row's "selected" status, then add "selected" to this row
+            $(row).closest('tbody').find('tr').removeClass('selected');
+            $(row).addClass('selected');
+
+            // save version of this record with word, text, and instructions to be used to pick out
+            // correct condition in decision dropdown
+            this.currentCondition = {
+              word: row.children[0].innerHTML.trim(),
+              allow_use: row.children[1].innerHTML.trim(),
+              consent_required: row.children[2].innerHTML.trim(),
+              text: row.children[3].innerHTML.trim(),
+              instructions: row.children[4].innerHTML.trim(),
+            }
+          } else {
+            // do nothing
+          }
+        } else {
+          // do nothing
         }
-    }
+      }
+    },
   }
 </script>
 
@@ -78,5 +115,13 @@
   .small {
     color: #c69500;
     width: 50px;
+  }
+</style>
+
+<!-- unscoped style -->
+<style>
+
+  .table-striped tbody tr.selected {
+    background-color: #ffa;
   }
 </style>
