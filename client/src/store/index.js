@@ -33,6 +33,7 @@ export default new Vuex.Store({
     is_editing: false,
     is_making_decision: false,
     decision_made: null,
+    acceptance_will_be_conditional: false,
     is_header_shown: false,
     furnished: null,
     listPriorities: null, // DROP LIST
@@ -137,7 +138,6 @@ export default new Vuex.Store({
       issue_Format_Text: null
     },
 
-    //TODO
     conflictList: null,
     conflictHighlighting: null,
     conflictNames: null,
@@ -165,6 +165,9 @@ mutations: {
     },
     decision_made(state, value) {
       state.decision_made = value;
+    },
+    acceptance_will_be_conditional(state, value) {
+      state.acceptance_will_be_conditional = value;
     },
     currentState(state, value) {
       state.currentState = value;
@@ -375,7 +378,7 @@ mutations: {
 
 
       // if the current state is not INPROGRESS, clear any existing name record in currentNameObj
-      //if (state.currentState !== 'INPROGRESS') this.dispatch('setCurrentName',{});
+      if (state.currentState !== 'INPROGRESS') this.dispatch('setCurrentName',{});
 
 
       // we keep the original data so that if fields exist that we do not use, we don't lose that
@@ -947,7 +950,8 @@ mutations: {
       console.log('URL:' + url)
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        console.log('Conditions Info Response:' + response.data)
+        console.log('Conditions Info Response:')
+        console.log(response.data)
         commit('loadConditionsJSON',response.data)
       })
         .catch(error => console.log('ERROR: ' + error))
@@ -1041,6 +1045,9 @@ mutations: {
     },
     decision_made(state) {
       return state.decision_made;
+    },
+    acceptance_will_be_conditional(state) {
+      return state.acceptance_will_be_conditional;
     },
     is_header_shown(state) {
       return state.is_header_shown

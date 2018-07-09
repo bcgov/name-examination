@@ -18,7 +18,8 @@
         {title: 'Restricted Word', field: 'word', label: 'Word', thStyle: {background: '#fffae6'},colStyle: {width:'150px'}, sortable: false, visible: true},
         {title: 'Allow Use', field: 'allowUse', label: 'Allow', thStyle: {background: '#fffae6'}, colStyle: {width:'75px'}, sortable: false, visible: true},
         {title: 'Consent Required', field: 'consentReq', label: 'Consent', thStyle: {background: '#fffae6'}, colStyle: {width:'75px'}, sortable: false, visible: true},
-        {title: 'Text', field: 'text', label: 'text', thStyle: {background: '#fffae6'}, colStyle: {width:'300px'}, sortable: false, visible: true},
+        {title: 'Examiner Information', field: 'text', label: 'text', thStyle: {background: '#fffae6'}, colStyle: {width:'300px'}, sortable: false, visible: true},
+        {title: 'Customer Instructions', field: 'instructions', label: 'instructions', thStyle: {background: '#fffae6'}, colStyle: {width:'300px'}, sortable: false, visible: true},
       ],
       pageSizeOptions: [5, 10, 15, 20],
       data: [],
@@ -49,17 +50,20 @@
               var allowUse;
               var consentReq;
               var text;
+              var instructions;
               if (cndIter == 0) {
                 word = conditionsInfo.restricted_words_conditions[wordIter].word_info.phrase;
               }
               allowUse = conditionsInfo.restricted_words_conditions[wordIter].cnd_info[cndIter].allow_use;
               consentReq = conditionsInfo.restricted_words_conditions[wordIter].cnd_info[cndIter].consent_required;
+              instructions = conditionsInfo.restricted_words_conditions[wordIter].cnd_info[cndIter].instructions;
               text = conditionsInfo.restricted_words_conditions[wordIter].cnd_info[cndIter].text;
               data.push({
                 "word": word,
                 "allowUse": allowUse,
                 "consentReq": consentReq,
                 "text": text,
+                "instructions": instructions,
               });
             }
           }

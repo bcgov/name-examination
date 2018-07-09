@@ -10,7 +10,15 @@
       </div>
     </div>
 
-     <div class="lower-section container-fluid">
+    <div class="lower-section container-fluid">
+
+      <!-- msg re. in progress with someone else -->
+      <div id="examiner-warning" class="alert alert-warning"
+           v-if="currentState == 'INPROGRESS' && examiner != userId">
+        This NR is being examined by {{ examiner }}.
+      </div>
+
+
      <div class="namePage">
        <div class="row" >
          <div class="col"><compnameview /></div>
@@ -23,7 +31,7 @@
        </div>
 
 
-      </div>
+     </div>
     </div>
   </div>
 
@@ -55,6 +63,15 @@
       is_complete() {
         return this.$store.getters.is_complete;
       },
+      examiner() {
+        return this.$store.getters.examiner;
+      },
+      userId() {
+        return this.$store.getters.userId;
+      },
+      currentState() {
+        return this.$store.getters.currentState;
+      },
     },
     components: {
       requestinfoheaderview,
@@ -69,5 +86,11 @@
 <style scoped>
   .namePage > .row {
     margin-top: 10px;
+  }
+
+  #examiner-warning {
+    margin-left: -15px;
+    margin-right: -15px;
+    border-radius: unset;
   }
 </style>
