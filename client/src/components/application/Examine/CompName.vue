@@ -8,6 +8,8 @@
           <div id="top-buttons">
             <button class="btn btn-sm btn-secondary" v-if="!is_making_decision"
                     @click="getNextCompany()" >Get Next</button>
+            <button class="btn btn-sm btn-warning" v-if="!is_making_decision && is_my_current_nr"
+                    @click="holdRequest()">Hold</button>
             <button class="btn btn-sm btn-primary"
                     v-if="!is_making_decision && !is_complete && is_my_current_nr"
                     @click="startDecision()" >Approve/Reject...</button>
@@ -212,6 +214,9 @@
       },
       claimNR() {
         this.$store.dispatch('updateNRState', 'INPROGRESS');
+      },
+      holdRequest() {
+        this.$store.dispatch('updateNRState', 'HOLD');
       },
       runRecipe(){
         this.$store.dispatch('runRecipe')
