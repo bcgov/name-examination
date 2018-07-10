@@ -270,6 +270,9 @@ mutations: {
     internalComments (state, value) {
       state.internalComments = value;
     },
+    searchQuery(state, value) {
+      state.searchQuery = value;
+    },
     authUser (state, userData) {
       state.kctoken = userData
       //state.kctoken = userData.client_session
@@ -701,7 +704,7 @@ mutations: {
       const url = '/api/v1/requests/queues/@me/oldest'
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        response.data.nameRequest = 'NR 8270105';
+        // response.data.nameRequest = 'NR 8270105';
         //response.data.nameRequest = 'NR 0000021';
         console.log('Comp No Response:');
         console.log(response);
@@ -998,8 +1001,8 @@ mutations: {
     getSearchDataJSON( {commit, state} ) {
      console.log('action: get search Data');
      const myToken = localStorage.getItem('KEYCLOAK_TOKEN');
-     //state.searchQuery = '?order=priorityCd:desc';
-     const url = '/api/v1/requests/' + state.searchQuery;
+     //state.searchQuery = '?queue=hold';
+     const url = '/api/v1/requests' + state.searchQuery;
      console.log('URL:' + url);
      const vm = this;
      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {

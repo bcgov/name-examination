@@ -4,14 +4,17 @@
       <div class="container-fluid">
         <div class="search-select">
           <h4>Sort</h4>
-          <select>
-            <option value="none">None</option>
-            <option value="HOLD">On Hold</option>
-            <option value="INPROGRESS">In Progress</option>
+          <!--<select id="stateSelect">-->
+            <!--<option value="none">None</option>-->
+            <!--<option value="HOLD">On Hold</option>-->
+            <!--<option value="INPROGRESS">In Progress</option>-->
+          <!--</select>-->
+          <select v-model="state_sort">
+                <option v-for="state in states" :value="state">{{state}}</option>
           </select>
         </div>
-        <span class="searchTable">
-            <datatable v-bind="$data" />
+        <span class="searchTable" v-on:click="loadNR">
+            <datatable v-bind="$data"/>
         </span>
       </div>
     </div>
@@ -19,191 +22,62 @@
 
 <script defer>
 /* eslint-disable */
-// var tmpJSON = [
-//   {
-//     "name": "my good goods",
-//     "nr": "5432198",
-//     "examiner": "kial",
-//     "approved": false,
-//     "rejected": true,
-//     "unfurnished": false,
-//     "priority": 10,
-//     "h": false,
-//     "edited": true
-//   },
-//   {
-//     "name": "my goodies",
-//     "nr": "5432190",
-//     "examiner": "kial",
-//     "approved": false,
-//     "rejected": false,
-//     "unfurnished": true,
-//     "priority": 9,
-//     "h": true,
-//     "edited": false
-//   },
-//   {
-//     "name": "my goods",
-//     "nr": "5432191",
-//     "examiner": "jeff",
-//     "approved": true,
-//     "rejected": false,
-//     "unfurnished": true,
-//     "priority": 8,
-//     "h": false,
-//     "edited": true
-//   },
-//   {
-//     "name": "my goodly goods",
-//     "nr": "5432192",
-//     "examiner": "jeff",
-//     "approved": false,
-//     "rejected": false,
-//     "unfurnished": true,
-//     "priority": 5,
-//     "h": true,
-//     "edited": false
-//   },
-//   {
-//     "name": "my goodly goods",
-//     "nr": "5432192",
-//     "examiner": "jeff",
-//     "approved": false,
-//     "rejected": false,
-//     "unfurnished": true,
-//     "priority": 5,
-//     "h": true,
-//     "edited": false
-//   },
-//   {
-//     "name": "my goodly goods",
-//     "nr": "5432192",
-//     "examiner": "jeff",
-//     "approved": false,
-//     "rejected": false,
-//     "unfurnished": true,
-//     "priority": 5,
-//     "h": true,
-//     "edited": false
-//   },
-//   {
-//     "name": "my goodly goods",
-//     "nr": "5432192",
-//     "examiner": "jeff",
-//     "approved": false,
-//     "rejected": false,
-//     "unfurnished": true,
-//     "priority": 7,
-//     "h": true,
-//     "edited": false
-//   },
-//   {
-//     "name": "my goodly goods",
-//     "nr": "5432192",
-//     "examiner": "jeff",
-//     "approved": false,
-//     "rejected": false,
-//     "unfurnished": true,
-//     "priority": 5,
-//     "h": true,
-//     "edited": false
-//   },
-//   {
-//     "name": "my goodly goods",
-//     "nr": "5432192",
-//     "examiner": "jeff",
-//     "approved": false,
-//     "rejected": false,
-//     "unfurnished": true,
-//     "priority": 5,
-//     "h": true,
-//     "edited": false
-//   },
-//   {
-//     "name": "my goody goods",
-//     "nr": "5432192",
-//     "examiner": "jeff",
-//     "approved": false,
-//     "rejected": false,
-//     "unfurnished": true,
-//     "priority": 4,
-//     "h": true,
-//     "edited": false
-//   },
-//   {
-//     "name": "my goodly goods",
-//     "nr": "5432192",
-//     "examiner": "jeff",
-//     "approved": false,
-//     "rejected": false,
-//     "unfurnished": true,
-//     "priority": 1,
-//     "h": true,
-//     "edited": false
-//   },
-// ];
 
 export default {
   name: 'findfilter',
+  options: {
+
+  },
   computed: {
     searchData() {
-      if (this.$store.getters.searchDataJSON != null) {
-        console.log('search data: ', this.$store.getters.searchDataJSON.nameRequests);
-        this.total = this.$store.getters.searchDataJSON.nameRequests.length;
-        return this.$store.getters.searchDataJSON.nameRequests;
-      }
-      return null;
-    }
+      console.log('test: ',this.$store.getters.searchDataJSON);
+      return this.$store.getters.searchDataJSON;
+    },
   },
+  props: ['row'],
   data: () => ({
+    props: ['row'],
     fixHeaderAndSetBodyMaxHeight: 400,
     tblStyle: {'table-layout': 'fixed'},
     tblClass: ['table-bordered'],
     columns: (() => {
       const cols =[
-        {title: 'NR#', field: 'nrNum', label: 'nr', thStyle: {background: '#fffae6'}, sortable: true, visible: true},
+        {title: 'NR#', field: 'nrNum', label: 'nr', thStyle: {background: '#fffae6'}, visible: true, clickable: true},
         {title: 'Examiner', field: 'activeUser', thStyle: {background: '#fffae6'}, label: 'examiner', sortable: true, visible: true},
         {title: 'State', field: 'stateCd', thStyle: {background: '#fffae6'}, label: 'state', sortable: true, visible: true},
         {title: 'Priority', field: 'priorityCd', thStyle: {background: '#fffae6'}, label: 'priority', sortable: true, visible: true},
         {title: 'Furnished', field: 'furnished', label: 'furnished', thStyle: {background: '#fffae6'}, visible: true},
         {title: 'Req Type', field: 'requestTypeCd', label: 'reqType', thStyle: {background: '#fffae6'}, visible: true},
-        {title: 'NOB', field: 'natureBusinessInfo', label: 'nob', thStyle: {background: '#fffae6'}, sortable: true, visible: true},
-        {title: 'Names', field: 'names', label: 'name', thStyle: {background: '#fffae6'}, sortable: true, visible: true},
+        {title: 'NOB', field: 'natureBusinessInfo', label: 'nob', thStyle: {background: '#fffae6'}, visible: true},
+        {title: 'Names', field: 'names', label: 'name', thStyle: {background: '#fffae6'}, visible: true},
       ]
-      const groupsDef = {
-        Normal:['NR#','Examiner','State','Priority','Furnished','Req Type','NOB','Names'],
-        Sortable:[]
-      }
-      return cols.map(col=> {
-        Object.keys(groupsDef).forEach(groupName => {
-          if (groupsDef[groupName].includes(col.title)) {
-            col.group = groupName;
-          }
-        })
-        return col;
-      })
+      // const groupsDef = {
+      //   Normal:['NR#','Examiner','State','Priority','Furnished','Req Type','NOB','Names'],
+      //   Sortable:[]
+      // }
+      // return cols.map(col=> {
+      //   Object.keys(groupsDef).forEach(groupName => {
+      //     if (groupsDef[groupName].includes(col.title)) {
+      //       col.group = groupName;
+      //     }
+      //   })
+      //   return col;
+      // })
+      return cols;
     })(),
     pageSizeOptions: [5, 10, 15, 20],
     data: [],
     selection: [],
+    item: [],
     total: 0,
     // query: {limit: 5, offset: 0, sort:'priority', order:'asc'}
     query: {},
-    options: {
-      columnsDropdown: true,
-      columnsDisplay: ['examiner']
-    },
+    states:['none', 'HOLD', 'INPROGRESS', 'APPROVED', 'REJECTED'],
+    state_sort: "none",
   }),
   mounted() {
-    console.log(this.$store.dispatch('getSearchDataJSON'));
-    // this.data = tmpJSON;
-    console.log(this.searchData);
-    console.log(this.data);
-    if (this.searchData != null)
-      this.data = this.searchData;
-    // console.log('populateTable');
-    // this.data = this.populateTable(this.searchData);
-    // console.log('this.data: ',this.data)
+    this.$store.dispatch('getSearchDataJSON');
+    this.data = this.populateTable();
   },
   watch: {
     HeaderSettings: {
@@ -216,10 +90,24 @@ export default {
         let selection = this.selection;
         if (selection[0] !== undefined) {
           // console.log(selection[0]);
-          console.log(selection[0].name);
+          console.log(selection[0]);
         }
       }
     },
+    searchData: {
+      handler() {
+        this.data = this.populateTable();
+      }
+    },
+    state_sort: {
+      handler(val) {
+        if (val === 'none')
+          val = '';
+        this.$store.commit('searchQuery','?queue='+val.toLowerCase());
+        this.$store.dispatch('getSearchDataJSON');
+      }
+    },
+
     // query: {
     //   handler() {
     //     this.handleQueryChange();
@@ -228,26 +116,54 @@ export default {
     // }
   },
   methods: {
-    // populateTable(data){
-    //   let info = [];
-    //   let i;
-    //   for (i=0;i<data.length;i++) {
-    //     console.log(data[i]);
-    //     info.push({
-    //       "activeUser": data[i].activeUser,
-    //       "nrNum": "test",
-    //       "stateCd": "test",
-    //       "priorityCd": "test",
-    //       "furnished": "test",
-    //       "requestTypeCd": "test",
-    //       "natureBusinessInfo": "test",
-    //       "names": "test",
-    //     })
-    //   }
-    //   console.log(info);
-    //   // console.log(tmpJSON);
-    //   return info;
-    // },
+    populateTable(){
+      if (this.searchData != null) {
+        let data = this.searchData.nameRequests;
+
+        // organize names column //
+        for (let i=0; i<data.length;i++) {
+          for (let namesIter=0; namesIter<data[i].names.length; namesIter++) {
+            if (data[i].names[namesIter].choice !== namesIter+1) {
+              let tmp = data[i].names[data[i].names[namesIter].choice-1];
+              data[i].names[data[i].names[namesIter].choice-1] = data[i].names[namesIter];
+              data[i].names[namesIter] = tmp;
+            }
+          }
+          // let namesStr = '';
+          for (let namesIter=0; namesIter<data[i].names.length; namesIter++) {
+            data[i].names[namesIter] = data[i].names[namesIter].choice + '. ' + data[i].names[namesIter].name;
+            // namesStr += data[i].names[namesIter] + '\n';
+          }
+          // console.log(namesStr);
+          // data[i].names = namesStr;
+        }
+        // ----------------------------------- //
+        return data;
+      }
+      return [];
+    },
+    loadNR(event) {
+      console.log(event);
+      // check if this is a body row (ie: in tbody)
+       var row = $(event.target).closest('tr')[0];
+       if (row !== undefined) {
+         if (row.parentNode.tagName === 'TBODY') {
+
+           console.log('Row clicked: ', row);
+           console.log('row[1] ', row.children[1].innerHTML.trim());
+
+           let nr = row.children[1].innerHTML.trim();
+           this.$store.dispatch('resetValues')
+           this.$store.commit('nrNumber',nr)
+           document.getElementById('nameExamine').click();
+
+         } else {
+           // do nothing
+         }
+       } else {
+         // do nothing
+       }
+    }
     // handleQueryChange(){
     //   let data = [];
     //   let limit = this.query.limit;
