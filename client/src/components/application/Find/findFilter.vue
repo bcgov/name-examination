@@ -3,15 +3,16 @@
     <div>
       <div class="container-fluid">
         <div class="search-select">
-          <h4>Sort</h4>
-          <!--<select id="stateSelect">-->
-            <!--<option value="none">None</option>-->
-            <!--<option value="HOLD">On Hold</option>-->
-            <!--<option value="INPROGRESS">In Progress</option>-->
-          <!--</select>-->
-          <select v-model="state_sort">
+          <h4 style="margin-left: 0" class="filter">States:</h4>
+          <select v-model="stateSort">
                 <option v-for="state in states" :value="state">{{state}}</option>
           </select>
+          <h4 class="filter">NR</h4>
+          <input v-model="nrSearch" placeholder="0000000"/>
+          <h4 class="filter">Examiner:</h4>
+          <input v-model="username" placeholder="Username"/>
+          <h4 class="filter">By Priority:</h4>
+          <input type="checkbox" v-model="priority">
         </div>
         <span class="searchTable" v-on:click="loadNR">
             <datatable v-bind="$data"/>
@@ -22,7 +23,6 @@
 
 <script defer>
 /* eslint-disable */
-
 export default {
   name: 'findfilter',
   options: {
@@ -32,6 +32,23 @@ export default {
     searchData() {
       console.log('test: ',this.$store.getters.searchDataJSON);
       return this.$store.getters.searchDataJSON;
+    },
+    nrNum() {
+      // this.$store.dispatch('resetValues');
+      // document.getElementById('nameExamine').click();
+      return this.$store.getters.nrNumber;
+    },
+    examiner(){
+      console.log('examiner: ', this.username);
+      return this.username;
+    },
+    nrSearchVal(){
+      return this.nrSearch;
+    },
+    priorityChecked(){
+      if (this.priority)
+        return true;
+      return false;
     },
   },
   props: ['row'],
@@ -67,24 +84,24 @@ export default {
     })(),
     pageSizeOptions: [5, 10, 15, 20],
     data: [],
+    sortedData: [],
     selection: [],
     item: [],
     total: 0,
     // query: {limit: 5, offset: 0, sort:'priority', order:'asc'}
     query: {},
-    states:['none', 'HOLD', 'INPROGRESS', 'APPROVED', 'REJECTED'],
-    state_sort: "none",
+    states:['ALL', 'HOLD', 'INPROGRESS', 'APPROVED', 'REJECTED', 'CANCELLED'],
+    stateSort: "ALL",
+    username: '',
+    nrSearch: '',
+    priority: true,
   }),
   mounted() {
     this.$store.dispatch('getSearchDataJSON');
-    this.data = this.populateTable();
+    this.sortedData = this.populateTable(this.searchData);
+    console.log('DATA',this.data);
   },
   watch: {
-    HeaderSettings: {
-      handler() {
-        console.log('button click')
-      }
-    },
     selection: {
       handler() {
         let selection = this.selection;
@@ -96,52 +113,147 @@ export default {
     },
     searchData: {
       handler() {
-        this.data = this.populateTable();
+        this.sortedData = this.populateTable(this.searchData);
+        this.filterBySearch(this.username,this.nrSearch, this.priority);
+        this.handleQueryChange();
       }
     },
-    state_sort: {
-      handler(val) {
-        if (val === 'none')
-          val = '';
-        this.$store.commit('searchQuery','?queue='+val.toLowerCase());
+    stateSort: {
+      handler(newState) {
+        if (newState === 'ALL')
+          newState = '';
+        if (newState === 'HOLD')
+          this.priority = true;
+        this.$store.commit('searchQuery','?queue='+newState.toLowerCase());
         this.$store.dispatch('getSearchDataJSON');
       }
     },
-
-    // query: {
-    //   handler() {
-    //     this.handleQueryChange();
-    //   },
-    //   deep: true
-    // }
+    nrSearchVal: {
+      handler(newNrSearch) {
+        this.filterBySearch(this.username, newNrSearch, this.priority);
+        this.handleQueryChange();
+      }
+    },
+    examiner: {
+      handler(username) {
+        this.filterBySearch(username, this.nrSearch, this.priority);
+        this.handleQueryChange();
+      }
+    },
+    priorityChecked: {
+      handler(priority) {
+        this.filterBySearch(this.username, this.nrSearch, priority)
+        this.handleQueryChange();
+      }
+    },
+    query: {
+      handler() {
+        this.handleQueryChange();
+      },
+      deep: true
+    }
   },
   methods: {
-    populateTable(){
-      if (this.searchData != null) {
-        let data = this.searchData.nameRequests;
+    populateTable(searchData){
+      if (searchData != null) {
+        let data = searchData.nameRequests;
 
         // organize names column //
-        for (let i=0; i<data.length;i++) {
-          for (let namesIter=0; namesIter<data[i].names.length; namesIter++) {
-            if (data[i].names[namesIter].choice !== namesIter+1) {
-              let tmp = data[i].names[data[i].names[namesIter].choice-1];
-              data[i].names[data[i].names[namesIter].choice-1] = data[i].names[namesIter];
-              data[i].names[namesIter] = tmp;
+          for (let i=0; i<data.length;i++) {
+            for (let namesIter=0; namesIter<data[i].names.length; namesIter++) {
+              if (data[i].names[namesIter].choice !== undefined) {
+                if (data[i].names[namesIter].choice !== namesIter + 1) {
+                  let tmp = data[i].names[data[i].names[namesIter].choice - 1];
+                  data[i].names[data[i].names[namesIter].choice - 1] = data[i].names[namesIter];
+                  data[i].names[namesIter] = tmp;
+                }
+              }
             }
+            // let namesStr = '';
+            for (let namesIter=0; namesIter<data[i].names.length; namesIter++) {
+              if (data[i].names[namesIter].choice !== undefined) {
+                data[i].names[namesIter] = data[i].names[namesIter].choice + '. ' + data[i].names[namesIter].name;
+                // namesStr += data[i].names[namesIter] + '\n';
+              }
+            }
+            // console.log(namesStr);
+            // data[i].names = namesStr;
           }
-          // let namesStr = '';
-          for (let namesIter=0; namesIter<data[i].names.length; namesIter++) {
-            data[i].names[namesIter] = data[i].names[namesIter].choice + '. ' + data[i].names[namesIter].name;
-            // namesStr += data[i].names[namesIter] + '\n';
-          }
-          // console.log(namesStr);
-          // data[i].names = namesStr;
-        }
         // ----------------------------------- //
         return data;
       }
       return [];
     },
+
+    filterBySearch(username,nrSearch,priority) {
+      let allData = this.populateTable(this.searchData);
+      let newData = [];
+
+      nrSearch = nrSearch.replace(/^NR+/gm,'').trim();
+      if (nrSearch !== '') {
+        for (let i = 0; i < allData.length; i++) {
+          let nr = allData[i].nrNum.replace(/^NR+/gm,'').trim()
+          if (nr.search(nrSearch)!== -1)
+            newData.push(allData[i]);
+        }
+        this.sortedData = newData;
+      } else {
+        this.sortedData = allData;
+      }
+      newData = [];
+      if (username !== '') {
+        for (let i = 0; i < this.sortedData.length; i++) {
+          if (this.sortedData[i].activeUser.toLowerCase().search(username)!== -1)
+            newData.push(this.sortedData[i]);
+        }
+        this.sortedData = newData;
+      }
+      newData = [];
+      if (priority) {
+        for (let i = 0; i < this.sortedData.length; i++) {
+          if (this.sortedData[i].priorityCd != null && this.sortedData[i].priorityCd.toLowerCase() === 'y') {
+            newData.splice(0,0,this.sortedData[i]);
+          } else {
+            newData.push(this.sortedData[i]);
+          }
+        }
+        this.sortedData = newData;
+      }
+    },
+    // searchByNR(search) {
+    //   let allData = this.populateTable(this.searchData);
+    //   let newData = [];
+    //   if (search !== '') {
+    //     for (let i = 0; i < allData.length; i++) {
+    //       console.log('compare ',allData[i].nrNum.toLowerCase(), 'has ', search);
+    //       let nr = allData[i].nrNum.replace(/^NR+/gm,'').trim()
+    //       if (nr.search(search)!== -1)
+    //         newData.push(allData[i]);
+    //     }
+    //     console.log('newData: ',newData);
+    //     this.sortedData = newData;
+    //     console.log('this.data: ',this.data);
+    //   } else {
+    //     this.sortedData = allData;
+    //   }
+    // },
+    // searchByExaminer(search) {
+    //   let allData = this.populateTable(this.searchData);
+    //   search = search.toLowerCase();
+    //   let newData = [];
+    //   if (search !== '') {
+    //     for (let i = 0; i < allData.length; i++) {
+    //       console.log('compare ',allData[i].activeUser.toLowerCase(), 'has ', search);
+    //       if (allData[i].activeUser.toLowerCase().search(search)!== -1)
+    //         newData.push(allData[i]);
+    //     }
+    //     console.log('newData: ',newData);
+    //     this.sortedData = newData;
+    //     console.log('this.data: ',this.data);
+    //   } else {
+    //     this.sortedData = allData;
+    //   }
+    // },
     loadNR(event) {
       console.log(event);
       // check if this is a body row (ie: in tbody)
@@ -153,9 +265,10 @@ export default {
            console.log('row[1] ', row.children[1].innerHTML.trim());
 
            let nr = row.children[1].innerHTML.trim();
-           this.$store.dispatch('resetValues')
-           this.$store.commit('nrNumber',nr)
-           document.getElementById('nameExamine').click();
+           // this.$store.dispatch('resetValues');
+           // this.$store.commit('nrNumber',nr);
+           // console.log('new nr: ',this.nrNum);
+           // document.getElementById('nameExamine').click(); //put in computed that fires based on nrNumber change
 
          } else {
            // do nothing
@@ -163,82 +276,24 @@ export default {
        } else {
          // do nothing
        }
-    }
-    // handleQueryChange(){
-    //   let data = [];
-    //   let limit = this.query.limit;
-    //   let offset = this.query.offset;
-    //   let sort = this.query.sort;
-    //   let order = this.query.order;
-    //   // console.log(offset);
-    //   // console.log(limit);
-    //   // console.log(sort);
-    //
-    //   let i;
-    //   let sortedData = tmpJSON; //make this = this.data when thinking of applying multiple sorts -- have a clear sorts button
-    //   if (sort !== '') {
-    //     sortedData = [];
-    //     for (i = 0; i < tmpJSON.length; i++) {
-    //       let insert = false;
-    //       if (sort === 'h' && tmpJSON[i].h === false) {insert = true;}
-    //       if (sort === 'edited' && tmpJSON[i].edited === false) {insert = true;}
-    //       if (sort === 'unfurnished' && tmpJSON[i].unfurnished === false) {insert = true;}
-    //       if (sort === 'approved' && tmpJSON[i].approved === false) {insert = true;}
-    //       if (sort === 'rejected' && tmpJSON[i].rejected === false) {insert = true;}
-    //
-    //       let s;
-    //       for (s = 0; s < sortedData.length; s++) {
-    //         if (sort === 'priority' || sort === 'h') {
-    //           // if (order === 'asc' || sort === 'h') {
-    //             if (tmpJSON[i].priority < sortedData[s].priority && !insert) {
-    //               sortedData.splice(s, 0, tmpJSON[i]);
-    //               insert = true;
-    //               break;
-    //             }
-    //           // } else {
-    //           //   if (tmpJSON[i].priority > sortedData[s].priority) {
-    //           //     sortedData.splice(s, 0, tmpJSON[i]);
-    //           //     insert = true;
-    //           //     break;
-    //           //   }
-    //           // }
-    //         }
-    //         if (sort === 'examiner' || sort === 'edited' || sort === 'unfurnished' || sort === 'approved' || sort === 'rejected') {
-    //           if (tmpJSON[i].examiner < sortedData[s].examiner && !insert) {
-    //             sortedData.splice(s, 0, tmpJSON[i]);
-    //             insert = true;
-    //             break;
-    //           }
-    //         }
-    //         if (sort === 'name') {
-    //           if (tmpJSON[i].name < sortedData[s].name) {
-    //             sortedData.splice(s, 0, tmpJSON[i]);
-    //             insert = true;
-    //             break;
-    //           }
-    //         }
-    //         if (sort === 'nr') {
-    //           if (tmpJSON[i].nr < sortedData[s].nr) {
-    //             sortedData.splice(s, 0, tmpJSON[i]);
-    //             insert = true;
-    //             break;
-    //           }
-    //         }
-    //       }
-    //       if (insert !== true) {
-    //         sortedData.push(tmpJSON[i]);
-    //       }
-    //     }
-    //     this.total = sortedData.length;
-    //     this.data = sortedData;
-    //   }
-    //
-    //   for (i = offset; i < offset + limit && i < sortedData.length; i++)
-    //     data.push(sortedData[i]);
-    //   this.data = data;
-    //
-    //   // this.total = data.length;
-    // },
+    },
+    handleQueryChange(){
+      let allData = this.populateTable(this.searchData);
+      let data = [];
+      let limit = this.query.limit;
+      let offset = this.query.offset;
+      // let sort = this.query.sort;
+      // let order = this.query.order;
+      // console.log(offset);
+      // console.log(limit);
+      // console.log(sort);
+
+      for (let i = offset; i < offset + limit && i < this.sortedData.length; i++)
+        data.push(this.sortedData[i]);
+      this.data = data;
+
+      this.total = this.sortedData.length;
+    },
   },
 }
 </script>
@@ -246,5 +301,9 @@ export default {
 <style scoped>
   .searchTable {
     background: #fffae6;
+  }
+  .filter {
+    display: inline-block;
+    margin-left: 10px;
   }
  </style>
