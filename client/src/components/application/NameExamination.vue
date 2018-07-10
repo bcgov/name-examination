@@ -13,9 +13,17 @@
     <div class="lower-section container-fluid">
 
       <!-- msg re. in progress with someone else -->
-      <div id="examiner-warning" class="alert alert-warning"
+      <div class="alert alert-warning examiner-warning"
            v-if="currentState == 'INPROGRESS' && examiner != userId">
         This NR is being examined by {{ examiner }}.
+      </div>
+
+      <!-- msg re. exact history matches, ie: previous name submissions -->
+      <div class="alert alert-danger examiner-warning"
+           v-if="this.exactHistoryMatches !== null && this.exactHistoryMatches.length > 0">
+        This name has been requested <b>{{ this.exactHistoryMatches.length }}</b>
+        time<span v-if="this.exactHistoryMatches !== null && this.exactHistoryMatches.length > 1">s
+      </span> previously.
       </div>
 
 
@@ -72,6 +80,19 @@
       currentState() {
         return this.$store.getters.currentState;
       },
+      historiesJSON() {
+        return this.$store.getters.historiesJSON;
+      },
+      exactHistoryMatches() {
+        var currentName = this.$store.getters.currentName.toUpperCase();
+        // check for exact matches in history for alert re. previous submissions
+        if (this.historiesJSON !== null && this.historiesJSON.names !== undefined) {
+          return this.historiesJSON.names.filter(function (record) {
+            return currentName == record.name.toUpperCase();
+          });
+        }
+        return [];
+      },
     },
     components: {
       requestinfoheaderview,
@@ -88,7 +109,7 @@
     margin-top: 10px;
   }
 
-  #examiner-warning {
+  .examiner-warning {
     margin-left: -15px;
     margin-right: -15px;
     border-radius: unset;
