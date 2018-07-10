@@ -1,4 +1,4 @@
-/* eslint-disable */
+<!--eslint-disable-->
 <template>
   <div class="container-fluid">
     <nav class="navbar fixed-top navbar-dark navbar-expand-lg"
@@ -23,7 +23,7 @@
             <router-link to="/home" class="nav-link">Home</router-link>
           </li>
           <li class="nav-item active">
-            <router-link to="/nameExamination" class="nav-link">Examine Names</router-link>
+            <router-link to="/nameExamination" id="nameExamine" class="nav-link">Examine Names</router-link>
           </li>
           <li class="nav-item active">
             <router-link to="/find" class="nav-link">Search</router-link>
@@ -82,6 +82,7 @@
         this.$store.dispatch('resetValues')
         // By setting the NR number, this should trigger the watcher located on the RequestInfoHeader.vue component to fire
         this.$store.commit('nrNumber',this.nrNum)
+        document.getElementById('nameExamine').click();
 
       }
     }
