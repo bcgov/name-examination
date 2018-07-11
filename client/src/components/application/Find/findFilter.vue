@@ -224,18 +224,16 @@ export default {
       console.log(event);
       // check if this is a body row (ie: in tbody)
 
-      var row = $(event.target).closest('tr')[0];
-      if (row !== undefined) {
-       if (row.parentNode.tagName === 'TBODY') {
-
-         console.log('Row clicked: ', row);
-         console.log('row[1] ', row.children[1].innerHTML.trim());
-
-         let tbl = row.parentNode;
-         tbl.insertRow(row.rowIndex+1).insertCell(0).innerHTML = "LOAD";
+      var cell = $(event.target).closest('td');
+      console.log()
+      if (cell !== undefined) {
+       // if (cell.parentNode. === 'tr') {
+       //
+       //   console.log('Row clicked: ', cell);
+       //   console.log('row[1] ', cell.children[1].innerHTML.trim());
 
 
-         let nr = row.children[1].innerHTML.trim();
+         // let nr = row.children[1].innerHTML.trim();
          // this.$store.dispatch('resetValues');
          // this.$store.commit('nrNumber',nr);
          // console.log('new nr: ',this.nrNum);
