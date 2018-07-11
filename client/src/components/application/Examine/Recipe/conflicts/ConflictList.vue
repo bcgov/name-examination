@@ -2,7 +2,7 @@
 <template>
   <div>
     <div class="container-fluid">
-      <div class="row ConflictList">
+      <div class="row conflict-List-view">
 
         <select v-model="conflictMatch" class="form-control" size="17" border="0"
                 @change="setConflictInfo()">
@@ -79,4 +79,8 @@
 </script>
 
 <style scoped>
+  .conflict-List-view {
+    /*background-color: #000000;*/
+    padding: 10px;
+  }
 </style>

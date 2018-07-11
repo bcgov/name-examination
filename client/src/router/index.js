@@ -67,14 +67,15 @@ router.beforeResolve((to, from, next) => {
     console.log('Auth check:' + store.state.kctoken)
     // this route requires auth,
     // if not Authenticated, redirect to login page.
-    if (store.state.kctoken == null) {
+    let auth = localStorage.getItem('AUTHORIZED')
+    if (auth == 'true') {
+      console.log('Authorized')
+      next()
+    } else {
       console.log('Not authorized, redirect to /')
       next({
         path: '/'
       })
-    } else {
-      console.log('Authorized')
-      next()
     }
   } else {
     next() // make sure to always call next()!

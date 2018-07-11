@@ -18,10 +18,9 @@
 
        <decision v-if="is_making_decision" />
        <div class="row" v-else-if="!is_complete">
-         <compmatches />
+         <recipemenu />
          <div class="col"><matchissues /></div>
        </div>
-
 
       </div>
     </div>
@@ -33,7 +32,7 @@
 /* eslint-disable */
   import requestinfoheaderview from '@/components/application/Examine/RequestInfoHeader.vue';
   import compnameview from '@/components/application/Examine/CompName.vue';
-  import compmatches from '@/components/application/Examine/NameMatches.vue';
+  import recipemenu from '@/components/application/Examine/RecipeMenu.vue';
   import matchissues from '@/components/application/Examine/IssueInfo.vue';
   import decision from "@/components/Decision";
 
@@ -59,7 +58,7 @@
     components: {
       requestinfoheaderview,
       compnameview,
-      compmatches,
+      recipemenu,
       matchissues,
       decision,
     },
