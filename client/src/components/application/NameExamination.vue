@@ -85,7 +85,7 @@
         return this.$store.getters.historiesJSON;
       },
       exactHistoryMatches() {
-        if(this.$store.getters.currentName != null) {
+        try {
           var currentName = this.$store.getters.currentName.toUpperCase();
           // check for exact matches in history for alert re. previous submissions
           if (this.historiesJSON !== null && this.historiesJSON.names !== undefined) {
@@ -93,8 +93,11 @@
               return currentName == record.name.toUpperCase();
             });
           }
+          return [];
         }
-        return [];
+        catch(e) {
+          return [];
+        }
       },
     },
     components: {
