@@ -1,4 +1,4 @@
-/* eslint-disable */
+<!--eslint-disable-->
 <template>
   <div class="container-fluid">
     <nav class="navbar fixed-top navbar-dark navbar-expand-lg"
@@ -23,7 +23,7 @@
             <router-link to="/home" class="nav-link">Home</router-link>
           </li>
           <li class="nav-item active">
-            <router-link to="/nameExamination" class="nav-link">Examine Names</router-link>
+            <router-link to="/nameExamination" id="nameExamine" class="nav-link">Examine Names</router-link>
           </li>
           <li class="nav-item active">
             <router-link to="/find" class="nav-link">Search</router-link>

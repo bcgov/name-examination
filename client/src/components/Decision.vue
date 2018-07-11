@@ -1,18 +1,17 @@
 /* eslint-disable */
 <template>
   <span>
-
     <div class="row">
       <div class="col-6 add-top-padding">
         <h3>Conditions</h3>
         <div>
         <multiselect
           v-model="conditions_selected"
-          :options="conditions"
+          :options="conditions_onlycustomerfacing"
           :multiple="true"
-          label="display_string"
+          :custom-label="conditionsLabel"
           name="phrase"
-          track-by="display_string"
+          track-by="phrase"
           :close-on-select="true"
           deselectLabel=""
           selectLabel=""
@@ -28,7 +27,7 @@
           v-model="conflicts_selected"
           :options="conflictList"
           :multiple="true"
-          label="display_string"
+          :custom-label="conflictsLabel"
           track-by="nrNumber"
           :max="3"
           :close-on-select="true"
@@ -65,7 +64,7 @@
           v-model="trademarks_selected"
           :options="trademarks"
           :multiple="true"
-          label="name"
+          :custom-label="trademarksLabel"
           name="name"
           track-by="name"
           :close-on-select="true"
@@ -75,6 +74,16 @@
           placeholder=""
           :disabled="customer_message_override !== null"
         />
+        </div>
+      </div>
+    </div>
+
+    <!-- internal alerts -->
+    <div class="row">
+      <div class="col add-top-padding">
+        <div class="alert alert-warning"
+             v-for="record in conditions_onlyinternalinstructions" v-bind:key="record.id">
+            {{ record.text }}
         </div>
       </div>
     </div>
@@ -158,6 +167,9 @@
       }
     },
     computed: {
+      acceptance_will_be_conditional() {
+        return this.$store.getters.acceptance_will_be_conditional;
+      },
       is_making_decision: {
         get: function() {
           return this.$store.getters.is_making_decision;
@@ -183,24 +195,10 @@
         }
       },
       conflictList() {
-        // augment conflict list with a display string for dropdown
-        var conflict_list = this.$store.getters.conflictList;
-        $.each(conflict_list, function()
-        {
-          this.display_string = this.text + ' - ' + this.nrNumber;
-        });
-        return conflict_list;
+        return this.$store.getters.conflictList;
       },
       currentConflict() {
-        if (this.$store.getters.currentConflict !== null) {
-          var conflict = Object.assign({}, this.$store.getters.currentConflict); // copy not reference
-          console.log(this.$store.getters.currentConflict);
-
-          // augment conflict with a display string for dropdown
-          conflict.display_string = conflict.text + ' - ' + conflict.nrNumber;
-          return conflict;
-        }
-        else return null;
+        return this.$store.getters.currentConflict;
       },
       listDecisionReasons() {
         return this.$store.getters.listDecisionReasons;
@@ -229,13 +227,8 @@
                revised_match_object.phrase = wordmatch.word_info.phrase;
                revised_match_object.allow_use = (condition.allow_use == 'Y')?true:false;
                revised_match_object.consent_required = (condition.consent_required == 'Y')?true:false;
-               revised_match_object.consenting_body = condition.consenting_body;
                revised_match_object.instructions = condition.instructions;
                revised_match_object.text = condition.text;
-
-               // display string for dropdown
-               revised_match_object.display_string = revised_match_object.phrase + ' - '
-                 + revised_match_object.text + ' ' + revised_match_object.consenting_body;
 
                retval.push(revised_match_object);
              }
@@ -249,6 +242,44 @@
           return [];
         }
       },
+      conditions_onlycustomerfacing() {
+        /* subset of conditions, only those that have customer instructions
+        */
+
+        var arr_conditions = this.conditions.filter(function (el) {return el.consent_required==true});
+
+        // manually add "CONSENT REQUIRED" condition
+        arr_conditions.push({
+          instructions: "Consent Required.",
+          consent_required: true,
+          display_string: "Consent Required",
+        });
+
+        return arr_conditions;
+
+      },
+      conditions_onlyinternalinstructions() {
+        return this.conditions.filter(function (el) {return el.text !== '' && el.text !== null});
+
+      },
+      currentCondition() {
+        var currentCondition = this.$store.getters.currentCondition;
+        if (currentCondition == null) return null;
+
+        // only use the currentCondition if it requires consent
+        if (currentCondition.consent_required != 'Y') return null;
+
+        // Re-arrange the fields in object to be easier to use in dropdowns - match main list
+        var revised_match_object = {};
+        revised_match_object.phrase = currentCondition.word;
+        revised_match_object.allow_use = (currentCondition.allow_use == 'Y')?true:false;
+        revised_match_object.consent_required = (currentCondition.consent_required == 'Y')?true:false;
+        revised_match_object.instructions = currentCondition.instructions;
+        revised_match_object.text = currentCondition.text;
+
+        return revised_match_object;
+
+      },
       trademarks() {
         try {
           if (this.$store.getters.trademarksJSON !== null) {
@@ -258,6 +289,9 @@
         } catch (err) {
           return [];
         }
+      },
+      currentTrademark() {
+        return this.$store.getters.currentTrademark;
       },
       customer_message() {
         /*
@@ -273,13 +307,17 @@
 
         // CONDITIONS
         for (var i = 0; i < this.conditions_selected.length; i++) {
-          retval.push(this.conditions_selected[i].display_string + '\n\n' + this.conditions_selected[i].instructions);
+          if (this.conditions_selected[i].phrase !== undefined && this.conditions_selected[i].phrase !== '') {
+            retval.push(this.conditions_selected[i].phrase + ' - ' + this.conditions_selected[i].instructions);
+          }
+          else {
+            retval.push(this.conditions_selected[i].instructions);
+          }
         }
 
         // TRADEMARKS
         for (var i = 0; i < this.trademarks_selected.length; i++) {
-          retval.push('Trademark: ' + this.trademarks_selected[i].name + '\n'
-            + 'Require a letter of consent from trademark holder or franchisor.  Please email to consent.letters@gov.bc.ca');
+          retval.push('Registered Trademark: ' + this.trademarks_selected[i].name + ' - Application #' + this.trademarks_selected[i].application_number);
         }
 
         // GENERIC DECISION REASONS
@@ -333,16 +371,38 @@
         this.conflicts_selected.push(this.currentConflict);
       }
 
-      // pre-select the condition from the display screen TODO
+      // pre-select the condition from the display screen
+      if (this.currentCondition !== null && this.currentCondition !== undefined) {
+        this.conditions_selected.push(this.currentCondition);
+      }
 
 
-      // pre-select the trademark from the display screen TODO
+      // pre-select the trademark from the display screen
+      if (this.currentTrademark !== null && this.currentTrademark !== undefined) {
+        this.trademarks_selected.push(this.currentTrademark);
+      }
+
+      // reset the conditional acceptance flag
+      this.$store.commit('acceptance_will_be_conditional', false);
+
 
     },
     watch: {
       decision_made: function() {
-        console.log('got to decision_made watcher, with value ' + this.decision_made);
         this.nameAcceptReject();
+      },
+      conditions_selected: function () {
+        // set state variable indicating whether acceptance will be conditional or not
+
+        var retval = false;
+        for (var i = 0; i < this.conditions_selected.length; i++) {
+          if (this.conditions_selected[i].consent_required) {
+            retval = true;
+            break;
+          }
+        }
+
+        this.$store.commit('acceptance_will_be_conditional', retval);
       },
     },
     methods: {
@@ -356,13 +416,31 @@
 
         $('#edit-customer-message-modal').modal('hide');
       },
+      conflictsLabel(obj) {
+        return obj.text + ' - ' + obj.nrNumber;
+      },
+      conditionsLabel(obj) {
+        if (obj.display_string !== undefined) return obj.display_string;
+        else return obj.phrase + ' - ' + obj.instructions;
+      },
+      trademarksLabel(obj) {
+        return obj.name + ' - ' + obj.application_number;
+      },
       nameAcceptReject() {
 
         // save decision text, state, and up to three conflicts
         this.currentNameObj.decision_text = this.customer_message_display.substr(0,955);
+
         if (this.decision_made == 'A') {
-          if (this.conditions_selected.length > 0) this.currentNameObj.state = 'C'; // conditionally accepted
-          else this.currentNameObj.state = 'A'; // accepted
+          this.currentNameObj.state = 'A'; // accepted
+
+          // conditionally accepted if any conditions selected with condition_required flag TRUE
+          for (let record in this.conditions_selected) {
+            if (record.consent_required) {
+              this.currentNameObj.state = 'C';
+              break;
+            }
+          }
         }
         else {
           this.currentNameObj.state = 'R';

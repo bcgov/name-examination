@@ -1,6 +1,6 @@
 /* eslint-disable */
 <template>
-   <span>
+   <span v-on:click="setSelection($event);">
      <p v-if='has_trademarks'><datatable v-bind="$data" /></p>
   </span>
 </template>
@@ -32,7 +32,15 @@
       has_trademarks() {
         if(this.trademarksJSON != null) return true;
         return false;
-      }
+      },
+      currentTrademark: {
+        get: function () {
+          return this.$store.getters.currentTrademark;
+        },
+        set: function (value) {
+          this.$store.commit('currentTrademark', value);
+        }
+      },
     },
     methods: {
       createDataList(trademarksInfo){
@@ -57,6 +65,26 @@
             });
         }
         return data;
+      },
+      setSelection(event) {
+        // check if this is a body row (ie: in tbody)
+        var row = $(event.target).closest('tr')[0];
+        if (row !== undefined) {
+          if (row.parentNode.tagName == 'TBODY') {
+
+            // remove any other row's "selected" status, then add "selected" to this row
+            $(row).closest('tbody').find('tr').removeClass('selected');
+            $(row).addClass('selected');
+
+            // save trademark that matches row index
+            this.currentTrademark = this.trademarksJSON.names[row.sectionRowIndex];
+
+          } else {
+            // do nothing
+          }
+        } else {
+          // do nothing
+        }
       }
     }
   }
@@ -66,5 +94,13 @@
   .conflict-info-view {
     background-color: #00000;
     padding: 10px;
+  }
+</style>
+
+<!-- unscoped style -->
+<style>
+
+  .table-striped tbody tr.selected {
+    background-color: #ffa;
   }
 </style>

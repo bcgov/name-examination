@@ -1,13 +1,19 @@
-/* eslint-disable */
+<!--eslint-disable-->
 <template>
   <div class="col-2">
 
     <div class="nav flex-column nav-pills recipe-steps" id="v-pills-tab" role="tablist"
          aria-orientation="vertical">
 
+      <div id="History1">
+        <i id="History2"></i></div>
+      <a class="nav-link active" data-toggle="pill" href="#"
+         @click="clickRecipeCard('History')">History</a>
+      <div class="arrow-right"></div>
+
       <div id="Conflict1">
         <i id="Conflict2"></i></div>
-      <a class="nav-link active" data-toggle="pill" href="#"
+      <a class="nav-link" data-toggle="pill" href="#"
          @click="clickRecipeCard('Conflicts')">
         Conflicts
       </a>
@@ -25,12 +31,6 @@
          @click="clickRecipeCard('Trademarks')">Trademarks &reg;</a>
       <div class="arrow-right"></div>
 
-      <div id="History1">
-        <i id="History2"></i></div>
-      <a class="nav-link" data-toggle="pill" href="#"
-         @click="clickRecipeCard('History')">History</a>
-      <div class="arrow-right"></div>
-
       <!--<div class="icon icon-pass"><i class="fa fa-check"></i></div>
       <a class="nav-link" data-toggle="pill" href="#"
          @click="clickRecipeCard('Format')">Format</a>
@@ -46,7 +46,7 @@
 export default {
   name: 'matches',
   mounted() {
-    this.currentRecipeCard = "Conflicts"
+    this.currentRecipeCard = "History"
     this.setConflicts();
     this.setConditions();
     this.setTrademarks();

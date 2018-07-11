@@ -26,6 +26,8 @@ export default new Vuex.Store({
     currentState: null, // NR - APPROVED, REJECTED, INPROGRESS ETC...
 
     currentConflict: null, // the conflict name currently in focus
+    currentCondition: null, // the condition currently in focus
+    currentTrademark: null, // the trademark currently in focus
     currentHistory: null,  //NR number of history name selected
 
     currentRecipeCard: null,
@@ -33,6 +35,7 @@ export default new Vuex.Store({
     is_editing: false,
     is_making_decision: false,
     decision_made: null,
+    acceptance_will_be_conditional: false,
     is_header_shown: false,
     furnished: null,
     listPriorities: null, // DROP LIST
@@ -137,6 +140,8 @@ export default new Vuex.Store({
       issue_Format_Text: null
     },
 
+    searchQuery: '',
+
     //TODO
     conflictList: null,
     conflictHighlighting: null,
@@ -165,6 +170,9 @@ mutations: {
     },
     decision_made(state, value) {
       state.decision_made = value;
+    },
+    acceptance_will_be_conditional(state, value) {
+      state.acceptance_will_be_conditional = value;
     },
     currentState(state, value) {
       state.currentState = value;
@@ -261,6 +269,9 @@ mutations: {
     },
     internalComments (state, value) {
       state.internalComments = value;
+    },
+    searchQuery(state, value) {
+      state.searchQuery = value;
     },
     authUser (state, userData) {
       state.kctoken = userData
@@ -375,7 +386,7 @@ mutations: {
 
 
       // if the current state is not INPROGRESS, clear any existing name record in currentNameObj
-      //if (state.currentState !== 'INPROGRESS') this.dispatch('setCurrentName',{});
+      if (state.currentState !== 'INPROGRESS') this.dispatch('setCurrentName',{});
 
 
       // we keep the original data so that if fields exist that we do not use, we don't lose that
@@ -616,6 +627,13 @@ mutations: {
     currentConflict(state,value){
       state.currentConflict = value
     },
+    currentCondition(state,value){
+      console.log('got here 2');
+      state.currentCondition = value
+    },
+    currentTrademark (state,value){
+      state.currentTrademark = value
+    },
 
     historyMatch(state,value){
       state.currentHistory = value
@@ -705,7 +723,7 @@ mutations: {
       const url = '/api/v1/requests/queues/@me/oldest'
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        //response.data.nameRequest = 'NR 8270105';
+        // response.data.nameRequest = 'NR 8270105';
         //response.data.nameRequest = 'NR 0000021';
         console.log('Comp No Response:');
         console.log(response);
@@ -1026,6 +1044,20 @@ mutations: {
         .catch(error => console.log('ERROR: ' + error))
     },
 
+    getSearchDataJSON( {commit, state} ) {
+     console.log('action: get search Data');
+     const myToken = localStorage.getItem('KEYCLOAK_TOKEN');
+     //state.searchQuery = '?queue=hold';
+     const url = '/api/v1/requests' + state.searchQuery;
+     console.log('URL:' + url);
+     const vm = this;
+     return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+       console.log('Search Data Response:' + response.data)
+       commit('loadSearchDataJSON',response.data)
+     })
+       .catch(error => console.log('ERROR: ' + error))
+    },
+
     setCurrentName({commit, state},objName ) {
       commit('currentNameObj', objName);
     },
@@ -1129,6 +1161,9 @@ mutations: {
     decision_made(state) {
       return state.decision_made;
     },
+    acceptance_will_be_conditional(state) {
+      return state.acceptance_will_be_conditional;
+    },
     is_header_shown(state) {
       return state.is_header_shown
     },
@@ -1140,6 +1175,12 @@ mutations: {
     },
     currentConflict(state) {
       return state.currentConflict;
+    },
+    currentCondition(state) {
+      return state.currentCondition;
+    },
+    currentTrademark(state) {
+      return state.currentTrademark;
     },
     currentNameObj(state) {
       return state.currentNameObj;
