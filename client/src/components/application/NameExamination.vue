@@ -85,12 +85,14 @@
         return this.$store.getters.historiesJSON;
       },
       exactHistoryMatches() {
-        var currentName = this.$store.getters.currentName.toUpperCase();
-        // check for exact matches in history for alert re. previous submissions
-        if (this.historiesJSON !== null && this.historiesJSON.names !== undefined) {
-          return this.historiesJSON.names.filter(function (record) {
-            return currentName == record.name.toUpperCase();
-          });
+        if(this.$store.getters.currentName != null) {
+          var currentName = this.$store.getters.currentName.toUpperCase();
+          // check for exact matches in history for alert re. previous submissions
+          if (this.historiesJSON !== null && this.historiesJSON.names !== undefined) {
+            return this.historiesJSON.names.filter(function (record) {
+              return currentName == record.name.toUpperCase();
+            });
+          }
         }
         return [];
       },

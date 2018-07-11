@@ -432,70 +432,34 @@ mutations: {
     },
 
     loadConflictsJSON(state,JSONdata){
-      if(JSONdata == null) {
-        console.log('Deleting conflictsJSON from state')
-      }else {
-        console.log('Loading conflictsJSON into state')
-      }
       state.conflictsJSON = JSONdata
     },
 
     loadNamesConflictJSON(state,JSONdata){
-      if(JSONdata == null) {
-        console.log('Deleting names conflict from state')
-      }else {
-        console.log('Loading names conflict into state')
-      }
       state.namesConflictJSON = JSONdata
     },
 
     loadCorpConflictJSON(state,JSONdata){
-      if(JSONdata == null) {
-        console.log('Deleting corp conflict from state')
-      }else {
-        console.log('Loading corp conflict into state')
-      }
       state.corpConflictJSON = JSONdata
     },
 
     loadConditionsJSON(state,JSONdata){
-      if(JSONdata == null) {
-        console.log('Deleting conditionsJSON from state')
-      }else {
-        console.log('Loading conditionsJSON into state')
-      }
       state.conditionsJSON = JSONdata
     },
 
     loadHistoriesJSON(state,JSONdata){
-      if(JSONdata == null) {
-        console.log('Deleting historiesJSON from state')
-      }else {
-        console.log('Loading historiesJSON into state')
-      }
       state.historiesJSON = JSONdata
     },
 
     loadHistoriesInfoJSON(state, JSONdata){
-      if(JSONdata == null) {
-        console.log('Deleting historiesINFO from state')
-      }else {
-        console.log('Loading historiesINFO into state')
-      }
       state.historiesInfoJSON = JSONdata;
     },
 
     loadTrademarksJSON(state,JSONdata){
-      if(JSONdata == null) {
-        console.log('Deleting trademarksJSON from state')
-      }else {
-        console.log('Loading trademarksJSON into state')
-      }
       state.trademarksJSON = JSONdata
     },
 
     loadSearchDataJSON(){
-      console.log('Loading searchDataJSON into state')
       state.searchDataJSON = JSONdata
     },
 
@@ -1133,12 +1097,25 @@ mutations: {
 
     resetValues({commit}){
       // clear NR specific JSON data so that it can't get accidentally re-used by the next NR number
+      console.log('Deleting conflictsJSON from state')
       commit('conflictsJSON',null)
+
+      console.log('Deleting NamesConflictJSON from state')
       commit('loadNamesConflictJSON',null)
+
+      console.log('Deleting CorpConflictJSON from state')
       commit('loadCorpConflictJSON',null)
+
+      console.log('Deleting conditionsJSON from state')
       commit('loadConditionsJSON',null)
+
+      console.log('Deleting HistoriesJSON from state')
       commit('loadHistoriesJSON',null)
+
+      console.log('Deleting HistoriesInfoJSON from state')
       commit('loadHistoriesInfoJSON',null)
+
+      console.log('Deleting TrademarksJSON from state')
       commit('loadTrademarksJSON',null)
     },
 
