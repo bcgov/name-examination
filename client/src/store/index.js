@@ -494,6 +494,11 @@ mutations: {
       state.trademarksJSON = JSONdata
     },
 
+    loadSearchDataJSON(){
+      console.log('Loading searchDataJSON into state')
+      state.searchDataJSON = JSONdata
+    },
+
     update_nrData(state) {
       if(state.nrData.names.length == 0) {
         console.log('Error, No company names found')
@@ -1127,6 +1132,8 @@ mutations: {
     },
 
     resetValues({commit}){
+      // clear NR specific JSON data so that it can't get accidentally re-used by the next NR number
+      commit('conflictsJSON',null)
       commit('loadNamesConflictJSON',null)
       commit('loadCorpConflictJSON',null)
       commit('loadConditionsJSON',null)
