@@ -220,65 +220,36 @@ export default {
         this.sortedData = newData;
       }
     },
-    // searchByNR(search) {
-    //   let allData = this.populateTable(this.searchData);
-    //   let newData = [];
-    //   if (search !== '') {
-    //     for (let i = 0; i < allData.length; i++) {
-    //       console.log('compare ',allData[i].nrNum.toLowerCase(), 'has ', search);
-    //       let nr = allData[i].nrNum.replace(/^NR+/gm,'').trim()
-    //       if (nr.search(search)!== -1)
-    //         newData.push(allData[i]);
-    //     }
-    //     console.log('newData: ',newData);
-    //     this.sortedData = newData;
-    //     console.log('this.data: ',this.data);
-    //   } else {
-    //     this.sortedData = allData;
-    //   }
-    // },
-    // searchByExaminer(search) {
-    //   let allData = this.populateTable(this.searchData);
-    //   search = search.toLowerCase();
-    //   let newData = [];
-    //   if (search !== '') {
-    //     for (let i = 0; i < allData.length; i++) {
-    //       console.log('compare ',allData[i].activeUser.toLowerCase(), 'has ', search);
-    //       if (allData[i].activeUser.toLowerCase().search(search)!== -1)
-    //         newData.push(allData[i]);
-    //     }
-    //     console.log('newData: ',newData);
-    //     this.sortedData = newData;
-    //     console.log('this.data: ',this.data);
-    //   } else {
-    //     this.sortedData = allData;
-    //   }
-    // },
     loadNR(event) {
       console.log(event);
       // check if this is a body row (ie: in tbody)
-       var row = $(event.target).closest('tr')[0];
-       if (row !== undefined) {
-         if (row.parentNode.tagName === 'TBODY') {
 
-           console.log('Row clicked: ', row);
-           console.log('row[1] ', row.children[1].innerHTML.trim());
+      var row = $(event.target).closest('tr')[0];
+      if (row !== undefined) {
+       if (row.parentNode.tagName === 'TBODY') {
 
-           let nr = row.children[1].innerHTML.trim();
-           // this.$store.dispatch('resetValues');
-           // this.$store.commit('nrNumber',nr);
-           // console.log('new nr: ',this.nrNum);
-           // document.getElementById('nameExamine').click(); //put in computed that fires based on nrNumber change
+         console.log('Row clicked: ', row);
+         console.log('row[1] ', row.children[1].innerHTML.trim());
 
-         } else {
-           // do nothing
-         }
+         let tbl = row.parentNode;
+         tbl.insertRow(row.rowIndex+1).insertCell(0).innerHTML = "LOAD";
+
+
+         let nr = row.children[1].innerHTML.trim();
+         // this.$store.dispatch('resetValues');
+         // this.$store.commit('nrNumber',nr);
+         // console.log('new nr: ',this.nrNum);
+         // document.getElementById('nameExamine').click(); //put in computed that fires based on nrNumber change
+
        } else {
          // do nothing
        }
+      } else {
+       // do nothing
+      }
     },
     handleQueryChange(){
-      let allData = this.populateTable(this.searchData);
+      // let allData = this.populateTable(this.searchData);
       let data = [];
       let limit = this.query.limit;
       let offset = this.query.offset;
