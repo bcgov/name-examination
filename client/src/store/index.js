@@ -409,9 +409,6 @@ mutations: {
       state.applicantInfo.contactInfo.email = dbcompanyInfo.applicants.emailAddress
       state.applicantInfo.contactInfo.fax = dbcompanyInfo.applicants.faxNumber
 
-
-
-
       state.additionalCompInfo.jurisdiction = dbcompanyInfo.xproJurisdiction
       state.additionalCompInfo.natureOfBussiness = dbcompanyInfo.natureBusinessInfo
       //state.details = dbcompanyInfo.details
@@ -434,43 +431,36 @@ mutations: {
 
     },
 
-    loadConflictsJSON(state,conflictData){
-      console.log('Loading conflictsJSON into state')
-      state.conflictsJSON = conflictData
+    loadConflictsJSON(state,JSONdata){
+      state.conflictsJSON = JSONdata
     },
 
-    loadNamesConflictJSON(state,conflictInfoData){
-      console.log('Loading names conflict Info into state')
-      state.namesConflictJSON = conflictInfoData
+    loadNamesConflictJSON(state,JSONdata){
+      state.namesConflictJSON = JSONdata
     },
 
-    loadCorpConflictJSON(state,corpData){
-      console.log('Loading corp conflict Info into state')
-      state.corpConflictJSON = corpData
+    loadCorpConflictJSON(state,JSONdata){
+      state.corpConflictJSON = JSONdata
     },
 
-    loadConditionsJSON(state,conditionsData){
-      console.log('Loading conditions Info into state')
-      state.conditionsJSON = conditionsData
+    loadConditionsJSON(state,JSONdata){
+      state.conditionsJSON = JSONdata
     },
 
-    loadHistoriesJSON(state,historiesData){
-      console.log('Loading histories Data into state')
-      state.historiesJSON = historiesData
+    loadHistoriesJSON(state,JSONdata){
+      state.historiesJSON = JSONdata
     },
 
-    loadHistoriesInfoJSON(state, historiesInfo){
-      console.log('Loading histories info into state');
-      state.historiesInfoJSON = historiesInfo;
-    },
-    loadTrademarksJSON(state,trademarksData){
-     console.log('Loading trademarks data into state')
-      state.trademarksJSON = trademarksData
+    loadHistoriesInfoJSON(state, JSONdata){
+      state.historiesInfoJSON = JSONdata;
     },
 
-    loadSearchDataJSON(state,searchData){
-      console.log('Loading search Data into state')
-      state.searchDataJSON = searchData
+    loadTrademarksJSON(state,JSONdata){
+      state.trademarksJSON = JSONdata
+    },
+
+    loadSearchDataJSON(){
+      state.searchDataJSON = JSONdata
     },
 
     update_nrData(state) {
@@ -573,7 +563,9 @@ mutations: {
     },
     setConfig(state,configValues) {
     },
+
     nrNumber(state,value){
+      console.log('Changing NR Number to ' + value)
       state.compInfo.nrNumber = value
     },
 
@@ -615,10 +607,6 @@ mutations: {
     historyMatch(state,value){
       state.currentHistory = value
     },
-
-    nrNumber(state,value) {
-      state.compInfo.nrNumber = value;
-    }
 
   },
 
@@ -879,7 +867,6 @@ mutations: {
           commit('listDecisionReasons',response.data)
         })
       }
-
     },
 
     loadConfig( {commit, state}) {
@@ -891,19 +878,24 @@ mutations: {
       }
     },
 
-    checkConflicts( {commit, state} ) {
-      //TODO - Actions: finish loading conflict list
-      console.log('action: getting conflicts for company number: ' + state.compInfo.nrNumber + ' from solr')
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/analysis/' + state.currentChoice + '/conflicts'
-      console.log('URL:' + url)
-      const vm = this
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        console.log('Conflicts Info Response:' + response.data)
-        commit('loadConflictsJSON',response.data)
-        commit('setConflicts',response.data)
-      })
-        .catch(error => console.log('ERROR: ' + error))
+    newNrNumber({commit,dispatch},nrNum) {
+      //save current state ??
+
+      // reset the store values to null
+      console.log('Setting current state JSON to null')
+      dispatch('resetValues')
+
+      // By setting the NR number, this should(doesn't) trigger the watcher located on the RequestInfoHeader.vue component to fire
+      commit('nrNumber',nrNum)
+      console.log('nrNumber updated to ' + nrNum)
+
+      console.log('Getting NR data')
+      dispatch('getpostgrescompInfo',nrNum)
+
+      commit('currentChoice',1)
+
+      console.log('Running Recipe')
+      dispatch('runRecipe')
     },
 
     getConflictInfo ({state,commit},value) {
@@ -957,6 +949,30 @@ mutations: {
         .catch(error => console.log('ERROR: getNamesConflict' + error))
     },
 
+    runRecipe({dispatch,state}) {
+      if( state.currentChoice != null) {
+        this.dispatch('checkConflicts')
+        this.dispatch('checkTrademarks')
+        this.dispatch('checkConditions')
+        this.dispatch('checkHistories')
+      }
+    },
+
+    checkConflicts( {commit, state} ) {
+      //TODO - Actions: finish loading conflict list
+      console.log('action: getting conflicts for company number: ' + state.compInfo.nrNumber + ' from solr')
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/analysis/' + state.currentChoice + '/conflicts'
+      console.log('URL:' + url)
+      const vm = this
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        console.log('Check Conflicts Response:' + response.data)
+        commit('loadConflictsJSON',response.data)
+        commit('setConflicts',response.data)
+      })
+        .catch(error => console.log('ERROR: ' + error))
+    },
+
     checkConditions( {commit, state} ) {
 
       console.log('action: getting restricted words and conditions for company number: ' + state.compInfo.nrNumber + ' from solr')
@@ -965,8 +981,7 @@ mutations: {
       console.log('URL:' + url)
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        console.log('Conditions Info Response:')
-        console.log(response.data)
+        console.log('Check Conditions Response:' + response.data)
         commit('loadConditionsJSON',response.data)
       })
         .catch(error => console.log('ERROR: ' + error))
@@ -979,7 +994,7 @@ mutations: {
       console.log('URL:' + url)
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        console.log('Histories Info Response:' + response.data)
+        console.log('Check Histories Response:' + response.data)
         commit('loadHistoriesJSON',response.data)
       })
         .catch(error => console.log('ERROR: ' + error))
@@ -992,7 +1007,7 @@ mutations: {
       console.log('URL:' + url)
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        console.log('Trademarks Info Response:' + response.data)
+        console.log('Check Trademarks Response:' + response.data)
         commit('loadTrademarksJSON',response.data)
       })
         .catch(error => console.log('ERROR: ' + error))
@@ -1016,24 +1031,92 @@ mutations: {
       commit('currentNameObj', objName);
     },
 
-    runRecipe({dispatch,state}) {
-      console.log('Running Recipe')
+    runManualRecipe({dispatch,state},searchStr) {
+      console.log('Running Manual Recipe')
       if( state.currentChoice != null) {
-        this.dispatch('checkConflicts')
-        this.dispatch('checkTrademarks')
-        this.dispatch('checkConditions')
-        this.dispatch('checkHistories')
+        this.dispatch('checkManualConflicts',searchStr)
+        //this.dispatch('checkManualTrademarks',searchStr)
+        //this.dispatch('checkManualConditions',searchStr)
+        //this.dispatch('checkManualHistories',searchStr)
       }
     },
 
+    checkManualConflicts( {commit, state},searchStr ) {
+      console.log('action: manual check of conflicts for company number: ' + state.compInfo.nrNumber + ' from solr')
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
+      const url = '/api/v1/documents:conflicts'
+      console.log('URL:' + url)
+      const vm = this
+      return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {
+        console.log('Check Manual Conflicts for ' + searchStr + ' - Response:' + response.data)
+        commit('loadConflictsJSON',response.data)
+        commit('setConflicts',response.data)
+      })
+        .catch(error => console.log('ERROR: ' + error))
+    },
+
+    checkManualConditions( {commit, state},searchStr ) {
+      console.log('action: manual check of restricted words and conditions for company number: ' + state.compInfo.nrNumber + ' from solr')
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const url = '/api/v1/documents:conditions'
+      console.log('URL:' + url)
+      const vm = this
+      return axios.post(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        console.log('Check Manual Conditions Response:' + response.data)
+        commit('loadConditionsJSON',response.data)
+      })
+        .catch(error => console.log('ERROR: ' + error))
+    },
+
+    checkManualHistories( {commit, state},searchStr ) {
+      console.log('action: manual check of history for company number: ' + state.compInfo.nrNumber + ' from solr')
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const url = '/api/v1/documents:histories'
+      console.log('URL:' + url)
+      const vm = this
+      return axios.post(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        console.log('Check Manual Histories Response:' + response.data)
+        commit('loadHistoriesJSON',response.data)
+      })
+        .catch(error => console.log('ERROR: ' + error))
+    },
+
+    checkManualTrademarks( {commit, state},searchStr ) {
+      console.log('action: manual check of trademarks for company number: ' + state.compInfo.nrNumber + ' from solr')
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const url = '/api/v1/documents:trademarks'
+      console.log('URL:' + url)
+      const vm = this
+      return axios.post(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        console.log('Check Manual Trademarks Response:' + response.data)
+        commit('loadTrademarksJSON',response.data)
+      })
+        .catch(error => console.log('ERROR: ' + error))
+    },
+
     resetValues({commit}){
+      // clear NR specific JSON data so that it can't get accidentally re-used by the next NR number
+      console.log('Deleting conflictsJSON from state')
+      commit('conflictsJSON',null)
+
+      console.log('Deleting NamesConflictJSON from state')
       commit('loadNamesConflictJSON',null)
+
+      console.log('Deleting CorpConflictJSON from state')
       commit('loadCorpConflictJSON',null)
+
+      console.log('Deleting conditionsJSON from state')
       commit('loadConditionsJSON',null)
+
+      console.log('Deleting HistoriesJSON from state')
       commit('loadHistoriesJSON',null)
+
+      console.log('Deleting HistoriesInfoJSON from state')
       commit('loadHistoriesInfoJSON',null)
+
+      console.log('Deleting TrademarksJSON from state')
       commit('loadTrademarksJSON',null)
-      commit('loadSearchDataJSON',null)
     },
 
   },

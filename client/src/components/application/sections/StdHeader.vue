@@ -67,9 +67,6 @@
       auth() {
         return this.$store.getters.isAuthenticated
       },
-      currentChoice() {
-        return this.$store.getters.listJurisdictions;
-      },
     },
     methods: {
       onLogout() {
@@ -77,13 +74,11 @@
         window.location.assign("/");
       },
       onSubmit() {
-        // reset the store values to null
-        console.log('nrNumber updated to ' + this.nrNum)
-        this.$store.dispatch('resetValues')
-        // By setting the NR number, this should trigger the watcher located on the RequestInfoHeader.vue component to fire
-        this.$store.commit('nrNumber',this.nrNum)
-        document.getElementById('nameExamine').click();
-
+        console.log('Set new NR number')
+        this.$store.dispatch('newNrNumber',this.nrNum)
+        const path = '/nameExamination'
+        console.log('re-direct to ' + path)
+        this.$router.push(path)
       }
     }
   }

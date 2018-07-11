@@ -4,8 +4,10 @@
 
     <div class="row" >
 
-      <div class="col" style="padding-right: 4px;">
-        <conflictlistview /></div>
+      <div class="col conList">
+        <conflictlistview />
+      </div>
+
       <div class="col corpDet">
         <h2 id="currentConflictName">{{currentConflictName}}</h2>
         <conflictinfoview />
@@ -28,7 +30,6 @@
 /* eslint-disable */
   import conflictlistview from '@/components/application/Examine/Recipe/conflicts/ConflictList.vue';
   import conflictinfoview from '@/components/application/Examine/Recipe/conflicts/ConflictInfo.vue';
-
   // ClientInfo - read-only component
   import clientinfoview from '@/components/application/Examine/client/ClientInfo.vue';
 
@@ -68,6 +69,11 @@
   .client-info-view {
     background-color: #efefef;
     padding: 1px;
+  }
+  .conlist {
+    border: 1px solid #880000;
+    margin-right: 2px;
+    padding: 0;
   }
   .corpDet {
     border: 1px solid #ff9999;

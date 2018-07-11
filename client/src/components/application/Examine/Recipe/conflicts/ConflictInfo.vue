@@ -40,13 +40,11 @@ import corpMatch from '@/components/application/Examine/Recipe/conflicts/conflic
 
       currentConflict: {
         get: function () {
-          console.log('got current conflict in conflictInfo ');
+          console.log('current conflict in conflictInfo ');
           return this.$store.getters.currentConflict;
         }
       },
       is_corp() {
-        console.log('got here');
-        console.log(this.currentConflict);
         if (this.currentConflict != undefined) {
           if (this.currentConflict.source === 'CORP') return true;
           return false

@@ -71,8 +71,10 @@
             </tr>
           </table>
           <div v-if="!is_making_decision && !is_complete">
-            <input v-model="currentName" class="form-control" onChange="runRecipe"/>
-            <button @click="runManualSearch()">Manual Search</button>
+            <form class="form-inline my-2 my-lg-0" @submit.prevent="onSubmit">
+            <input v-model="searchStr" />
+            <button class="btn btn-sm" type="submit">Manual Search</button>
+            </form>
           </div>
 
         </div>
@@ -87,6 +89,11 @@
 /* eslint-disable */
   export default {
     name: 'CompName',
+    data () {
+      return {
+        searchStr:  ''
+      }
+    },
     computed: {
       currentState() {
         return this.$store.getters.currentState;
@@ -152,7 +159,6 @@
         }
       },
       is_undoable_1() {
-
         // first test generic reasons why a name would or wouldn't be undoable
         var undoable = this.is_undoable(this.compName1);
 
@@ -168,7 +174,6 @@
         return undoable;
       },
       is_undoable_2() {
-
         // first test generic reasons why a name would or wouldn't be undoable
         var undoable = this.is_undoable(this.compName2);
 
@@ -183,14 +188,15 @@
         return undoable;
       },
       is_undoable_3() {
-
         // first test generic reasons why a name would or wouldn't be undoable
         var undoable = this.is_undoable(this.compName3);
 
         return undoable;
       },
+
     },
     mounted() {
+      console.log('Compname Mounted')
       if(this.$store.getters.nrNumber == null){
         console.log('Mounted->get next NR number')
         this.$store.dispatch('getpostgrescompNo');
@@ -254,8 +260,17 @@
 
         return true;
       },
+      onSubmit()
+      {
+        console.log("Running manual recipe");
+        this.$store.dispatch('runManualRecipe', this.searchStr);
+      },
     },
     watch: {
+      currentName: function (val) {
+        console.log('CompName.currentName watcher fired:' + val)
+        this.searchStr =  val
+      },
       currentChoice: function (val) {
         console.log('CompName.currentChoice watcher fired:' + val)
         if(val != undefined ) { this.runRecipe() }
@@ -305,7 +320,6 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-
 </style>
 
 <!-- not scoped -->
