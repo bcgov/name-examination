@@ -141,6 +141,7 @@ export default new Vuex.Store({
     },
 
     searchQuery: '',
+    searchState: 'ALL',
 
     //TODO
     conflictList: null,
@@ -272,6 +273,9 @@ mutations: {
     },
     searchQuery(state, value) {
       state.searchQuery = value;
+    },
+    searchState(state,value) {
+      state.searchState = value;
     },
     authUser (state, userData) {
       state.kctoken = userData
@@ -459,7 +463,7 @@ mutations: {
       state.trademarksJSON = JSONdata
     },
 
-    loadSearchDataJSON(){
+    loadSearchDataJSON(state,JSONdata){
       state.searchDataJSON = JSONdata
     },
 
