@@ -336,7 +336,7 @@ export default {
          $(row).closest('tbody').find('tr').removeClass('select');
          $(row).addClass('select');
 
-         this.selectedNR = row.children[1].innerHTML.trim();
+         this.selectedNR = row.children[0].innerHTML.trim();
 
        } else {
          // do nothing
