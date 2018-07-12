@@ -141,6 +141,7 @@ export default new Vuex.Store({
     },
 
     searchQuery: '',
+    searchState: 'ALL',
 
     //TODO
     conflictList: null,
@@ -272,6 +273,9 @@ mutations: {
     },
     searchQuery(state, value) {
       state.searchQuery = value;
+    },
+    searchState(state,value) {
+      state.searchState = value;
     },
     authUser (state, userData) {
       state.kctoken = userData
@@ -459,7 +463,7 @@ mutations: {
       state.trademarksJSON = JSONdata
     },
 
-    loadSearchDataJSON(){
+    loadSearchDataJSON(state,JSONdata){
       state.searchDataJSON = JSONdata
     },
 
@@ -940,7 +944,6 @@ mutations: {
       console.log('action: getting HistoryInfo for company number: ' + value.nrNumber)
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + value.nrNumber
-      //const url = '/api/v1/requests/' + 'NR 8270105'
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         console.log('Names Conflict response:' + response.data)
@@ -1016,7 +1019,6 @@ mutations: {
     getSearchDataJSON( {commit, state} ) {
      console.log('action: get search Data');
      const myToken = localStorage.getItem('KEYCLOAK_TOKEN');
-     //state.searchQuery = '?queue=hold';
      const url = '/api/v1/requests' + state.searchQuery;
      console.log('URL:' + url);
      const vm = this;
