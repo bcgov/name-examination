@@ -33,7 +33,7 @@
           <input type="checkbox" v-model="unfurnished">
         </div>
         <div id="load-button">
-          <button type="button" v-on:click="examineNR">LOAD</button>
+          <button id="load" type="button" v-on:click="examineNR">LOAD</button>
         </div>
         <span class="searchTable" v-on:click="loadNR">
             <datatable v-bind="$data"/>
@@ -86,9 +86,7 @@ export default {
       return false;
     },
   },
-  props: ['row'],
   data: () => ({
-    props: ['row'],
     fixHeaderAndSetBodyMaxHeight: 400,
     tblStyle: {'table-layout': 'fixed'},
     tblClass: ['table-bordered'],
@@ -104,29 +102,14 @@ export default {
         {title: 'Names', field: 'names', label: 'name', thStyle: {background: '#fffae6'}, visible: true},
         {title: 'Last Update', field: 'lastUpdate', label: 'lastUpdate', thStyle: {background: '#fffae6'}, visible: true},
       ]
-      // const groupsDef = {
-      //   Normal:['NR#','Examiner','State','Priority','Furnished','Req Type','NOB','Names'],
-      //   Sortable:[]
-      // }
-      // return cols.map(col=> {
-      //   Object.keys(groupsDef).forEach(groupName => {
-      //     if (groupsDef[groupName].includes(col.title)) {
-      //       col.group = groupName;
-      //     }
-      //   })
-      //   return col;
-      // })
       return cols;
     })(),
     pageSizeOptions: [5, 10, 20, 50, 100],
     data: [],
     sortedData: [],
-    // selection: [],
-    item: [],
     total: 0,
-    // query: {limit: 5, offset: 0, sort:'priority', order:'asc'}
     query: {},
-    states:['ALL', 'HOLD', 'INPROGRESS', 'APPROVED', 'REJECTED', 'CANCELLED'],
+    states:['ALL', 'HOLD', 'INPROGRESS', 'DRAFT', 'EXPIRED', 'CANCELLED', 'APPROVED', 'CONDITIONAL', 'REJECTED'],
     stateSort: '',
     username: '',
     nrSearch: '',
@@ -143,15 +126,7 @@ export default {
     console.log('DATA',this.data);
   },
   watch: {
-    selection: {
-      handler() {
-        let selection = this.selection;
-        if (selection[0] !== undefined) {
-          // console.log(selection[0]);
-          console.log(selection[0]);
-        }
-      }
-    },
+
     searchData: {
       handler() {
         this.sortedData = this.populateTable(this.searchData);
@@ -261,6 +236,8 @@ export default {
     },
 
     filterBySearch(username,nrSearch,priority,compName,furnished,unfurnished) {
+      this.query.offset = 0;
+
       let allData = this.populateTable(this.searchData);
       let newData = [];
 
@@ -286,7 +263,7 @@ export default {
       newData = [];
       if (compName !== '') {
         for (let i = 0; i < this.sortedData.length; i++) {
-          if (typeof this.sortedData[i].names === "string" && this.sortedData[i].names.toLowerCase().search(compName)!== -1)
+          if (typeof this.sortedData[i].names === "string" && this.sortedData[i].names.toLowerCase().search(compName.toLowerCase())!== -1)
             newData.push(this.sortedData[i]);
         }
         this.sortedData = newData;
@@ -331,11 +308,9 @@ export default {
 
        if (row.parentNode.tagName == 'TBODY') {
 
-         console.log('Row clicked: ', row);
-         console.log('row[1] ', row.children[1].innerHTML.trim());
          $(row).closest('tbody').find('tr').removeClass('select');
          $(row).addClass('select');
-
+         $("#load").addClass("btn-primary");
          this.selectedNR = row.children[0].innerHTML.trim();
 
        } else {
@@ -346,8 +321,6 @@ export default {
       }
     },
     examineNR() {
-      console.log('loading: ',this.selectedNR);
-
       if (this.selectedNR != '') {
         this.$store.dispatch('newNrNumber',this.selectedNR);
         const path = '/nameExamination';
@@ -355,17 +328,11 @@ export default {
       }
     },
     handleQueryChange(){
-      // let allData = this.populateTable(this.searchData);
       this.selectedNR = '';
       $(".select").removeClass('select');
       let data = [];
       let limit = this.query.limit;
       let offset = this.query.offset;
-      // let sort = this.query.sort;
-      // let order = this.query.order;
-      // console.log(offset);
-      // console.log(limit);
-      // console.log(sort);
 
       for (let i = offset; i < offset + limit && i < this.sortedData.length; i++)
         data.push(this.sortedData[i]);
