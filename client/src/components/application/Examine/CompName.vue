@@ -70,11 +70,21 @@
               </td>
             </tr>
           </table>
+
           <div v-if="!is_making_decision && !is_complete">
+            <div align="right">
+              <button class="btn btn-sm btn-outline-primary"
+                      @click="quickApprove">Quick Approve</button>
+              <button class="btn btn-sm btn-outline-danger"
+                      @click="rejectDescriptive">Reject Decriptive</button>
+              <button class="btn btn-sm btn-outline-danger"
+                      @click="rejectDistinctive">Reject Distinctive</button>
+            </div>
             <form class="form-inline my-2 my-lg-0" @submit.prevent="onSubmit">
             <input v-model="searchStr" />
             <button class="btn btn-sm" type="submit">Manual Search</button>
             </form>
+
           </div>
 
         </div>
@@ -89,12 +99,21 @@
 /* eslint-disable */
   export default {
     name: 'CompName',
-    data () {
+    data: function () {
       return {
-        searchStr:  ''
+        searchStr: '',
+        retval: []
       }
     },
     computed: {
+      decision_made: {
+        get: function () {
+          return this.$store.getters.decision_made;
+        },
+        set: function (value) {
+          this.$store.commit('decision_made', value);
+        }
+      },
       currentState() {
         return this.$store.getters.currentState;
       },
@@ -193,7 +212,9 @@
 
         return undoable;
       },
-
+      listDecisionReasons() {
+        return this.$store.getters.listDecisionReasons;
+      },
     },
     mounted() {
       console.log('Compname Mounted')
@@ -210,7 +231,7 @@
         this.$store.state.is_making_decision = true;
       },
       nameAccept() {
-        this.$store.commit('decision_made', 'A');
+        this.$store.commit('decision_made:', 'A');
       },
       nameReject() {
         this.$store.commit('decision_made', 'R');
@@ -260,10 +281,85 @@
 
         return true;
       },
+      quickApprove() {
+        var approvalStr = ''
+        this.retval.push(approvalStr)
+        console.log('quickApprove')
+
+        this.decision_made = 'A'
+       // this.nameAccept()
+        this.nameAcceptReject()
+      },
+      rejectDescriptive() {
+        // When this was written, the 13th index of listDecisionReasons was the string needed for a descriptive term missing
+        // it was decided to HARD CODE this value until another solution is found
+        // var descriptiveStr = this.listDecisionReasons[13].reason
+        var descriptiveStr = 'Require descriptive second word or phrase * E.G. ' +
+                             'Construction, Gardening, Investments, Holdings, Etc.'
+
+        this.retval.push(descriptiveStr)
+        this.decision_made = 'R'
+        //this.nameReject()
+        this.nameAcceptReject()
+      },
+      rejectDistinctive() {
+        // When this was written, the 16th index of listDecisionReasons was the string needed for a distinctive term missing
+        // it was decided to HARD CODE this value until another solution is found
+        // var distinctiveStr = this.listDecisionReasons[16].reason
+        var distinctiveStr = "Require distinctive, nondescriptive first word or prefix * E.G. " +
+                             "Person's name, initials, geographic location, etc."
+        this.retval.push(distinctiveStr)
+        this.decision_made = 'R'
+        //this.nameReject()
+        this.nameAcceptReject()
+      },
       onSubmit()
       {
         console.log("Running manual recipe");
         this.$store.dispatch('runManualRecipe', this.searchStr);
+      },
+      nameAcceptReject() {
+
+        // save decision text, state, and up to three conflicts
+        //this.currentNameObj.decision_text = this.customer_message_display.substr(0,955);
+        this.currentNameObj.decision_text = this.retval[0]
+
+        console.log('nameAcceptReject decision_made:' + this.decision_made)
+        if (this.decision_made == 'A') {
+          this.currentNameObj.state = 'A'; // accepted
+
+          // Not needed for FAST PATH Approval / Reject
+          // conditionally accepted if any conditions selected with condition_required flag TRUE
+          //for (let record in this.conditions_selected) {
+            //if (record.consent_required) {
+              //this.currentNameObj.state = 'C';
+              //break;
+            //}
+          //}
+        }
+        else {
+          this.currentNameObj.state = 'R';
+        }
+        // Not needed for FAST PATH Approval / Reject
+        //for (var i = 0; i < this.conflicts_selected.length; i++) {
+          //if (i == 0) {
+            //this.currentNameObj.conflict1 = this.conflicts_selected[i].text;
+            //this.currentNameObj.conflict1_num = this.conflicts_selected[i].nrNumber;
+          //}
+          //if (i == 1) {
+            //this.currentNameObj.conflict2 = this.conflicts_selected[i].text;
+            //this.currentNameObj.conflict2_num = this.conflicts_selected[i].nrNumber;
+          //}
+          //if (i == 2) {
+            //this.currentNameObj.conflict3 = this.conflicts_selected[i].text;
+            //this.currentNameObj.conflict3_num = this.conflicts_selected[i].nrNumber;
+          //}
+        //}
+
+        // send decision to API and reset flags
+        this.$store.dispatch('nameAcceptReject');
+        this.decision_made = null;
+        this.is_making_decision = false;
       },
     },
     watch: {
