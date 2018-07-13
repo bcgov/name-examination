@@ -124,6 +124,7 @@ export default new Vuex.Store({
       linkedNR: null
     },
     reservationCount: null,
+    submitCount: null,
     submittedDate: null,
     expiryDate: null,
     issueText: null,
@@ -428,6 +429,7 @@ mutations: {
       //state.reservationCount = dbcompanyInfo.reservationCount
       state.expiryDate = dbcompanyInfo.expiryDate
       state.submittedDate = dbcompanyInfo.submittedDate
+      state.submitCount = dbcompanyInfo.submitCount
 
       // set flag indicating whether you own this NR and it's in progress
       if (state.currentState == 'INPROGRESS' && state.examiner == state.userId) state.is_my_current_nr = true;
@@ -522,6 +524,7 @@ mutations: {
       //state.reservationCount = dbcompanyInfo.reservationCount
       state.nrData.expiryDate = state.expiryDate
       state.nrData.submittedDate = state.submittedDate
+      state.nrData.submitCount = state.submitCount
     },
 
     loadCompanyIssues(state, dbcompanyIssues) {
@@ -1293,6 +1296,9 @@ mutations: {
     },
     submittedDate(state) {
       return state.submittedDate;
+    },
+    submitCount(state) {
+      return state.submitCount;
     },
     issue_Match(state) {
       return state.issue.issue_Match

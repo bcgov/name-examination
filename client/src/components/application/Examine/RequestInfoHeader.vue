@@ -72,6 +72,13 @@
       <div id='div2' class="col-md-4">
         <div class="row">
           <div class="col">
+            <h3>EXPIRY DATE</h3>
+            {{expiryDate}}
+            <h3>CONSUMPTION DATE</h3>
+            {{consumptionDate}}
+            <h3>SUBMITTED DATE</h3>
+            {{submittedDate}}
+            <h3>SUBMIT COUNT: {{submitCount}}</h3>
             <h3>NATURE OF BUSINESS</h3>
             <div v-if="show_extended_header">
               <textarea v-if="is_editing" v-model="natureOfBusiness" class="form-control" rows="10">
@@ -332,7 +339,19 @@ export default {
         set: function(value) {
           this.$store.commit('internalComments', value);
         }
-      }
+      },
+      expiryDate() {
+        return this.$store.getters.expiryDate;
+      },
+      consumptionDate() {
+        return this.findConsumptionDate();
+      },
+      submittedDate() {
+        return this.$store.getters.submittedDate;
+      },
+      submitCount() {
+        return this.$store.getters.submitCount;
+      },
     },
     components: {
       clientinfoview
@@ -375,6 +394,15 @@ export default {
 
         // clear newComment field for next comment added in this session
         this.newComment = null;
+      },
+      findConsumptionDate() {
+        if (this.compName1.consumptionDate != null) {
+          return this.compName1.consumptionDate;
+        }
+        if (this.compName2.consumptionDate != null) {
+          return this.compName2.consumptionDate;
+        }
+        return this.compName3.consumptionDate;
       }
     },
     watch: {

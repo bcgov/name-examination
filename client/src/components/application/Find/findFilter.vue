@@ -31,12 +31,16 @@
           <br/>
           <h4 style="margin-left: 0" class="filter">Unfurnished:</h4>
           <input type="checkbox" v-model="unfurnished">
+          <br/>
+          <div style="margin-left: 0" class="count">
+            <h4>Priorities: {{this.priorityCount}}</h4>
+          </div>
         </div>
         <div id="load-button">
-          <button id="load" type="button" v-on:click="examineNR">LOAD</button>
+          <button id="load" class="btn" type="button" v-on:click="examineNR">LOAD</button>
         </div>
         <span class="searchTable" v-on:click="loadNR">
-            <datatable v-bind="$data"/>
+            <datatable class="pre-line" v-bind="$data"/>
         </span>
       </div>
     </div>
@@ -97,10 +101,11 @@ export default {
         {title: 'State', field: 'stateCd', thStyle: {background: '#fffae6'}, label: 'state', visible: true},
         {title: 'Priority', field: 'priorityCd', thStyle: {background: '#fffae6'}, label: 'priority', visible: true},
         {title: 'Furnished', field: 'furnished', label: 'furnished', thStyle: {background: '#fffae6'}, visible: true},
-        {title: 'Req Type', field: 'requestTypeCd', label: 'reqType', thStyle: {background: '#fffae6'}, visible: false},
         {title: 'NOB', field: 'natureBusinessInfo', label: 'nob', thStyle: {background: '#fffae6'}, visible: true},
         {title: 'Names', field: 'names', label: 'name', thStyle: {background: '#fffae6'}, visible: true},
         {title: 'Last Update', field: 'lastUpdate', label: 'lastUpdate', thStyle: {background: '#fffae6'}, visible: true},
+        {title: 'Submitted', field: 'submittedDate', label: 'submittedDate', thStyle: {background: '#fffae6'}, visible: true},
+        {title: 'Req Type', field: 'requestTypeCd', label: 'reqType', thStyle: {background: '#fffae6'}, visible: false},
       ]
       return cols;
     })(),
@@ -118,6 +123,7 @@ export default {
     unfurnished: true,
     compName: '',
     selectedNR:'',
+    priorityCount:null,
   }),
   mounted() {
     this.$store.dispatch('getSearchDataJSON');
@@ -192,8 +198,8 @@ export default {
     populateTable(searchData){
       if (searchData != null) {
         let data = searchData.nameRequests;
-
-        // organize names and update columns //
+        let orderedBySubmitData =[];
+        // organize names and dates //
           for (let i=0; i<data.length;i++) {
             // organize names column //
             for (let namesIter=0; namesIter<data[i].names.length; namesIter++) {
@@ -221,13 +227,27 @@ export default {
               let day = data[i].lastUpdate.slice(8,10);
               let hour = data[i].lastUpdate.slice(11,13);
               let min = data[i].lastUpdate.slice(14,16);
-              let date = {'year': year,
+              let update = {'year': year,
                           'month': month,
                           'day': day,
                           'hour': hour,
                           'min': min};
-              data[i].lastUpdate = `${date.hour}:${date.min}\n${date.month}/${date.day}/${year}`;
+              data[i].lastUpdate = `${update.hour}:${update.min}\n${update.month}/${update.day}/${update.year}`;
             }
+            if (data[i].submittedDate != undefined && data[i].submittedDate[10]==="T") {
+              let year = data[i].submittedDate.slice(0,4);
+              let month = data[i].submittedDate.slice(5,7);
+              let day = data[i].submittedDate.slice(8,10);
+              let hour = data[i].submittedDate.slice(11,13);
+              let min = data[i].submittedDate.slice(14,16);
+              let submitDate = {'year': year,
+                          'month': month,
+                          'day': day,
+                          'hour': hour,
+                          'min': min};
+              data[i].submittedDate = `${submitDate.hour}:${submitDate.min}\n${submitDate.month}/${submitDate.day}/${submitDate.year}`;
+            }
+            orderedBySubmitData.splice(0,0,data[i]);
           }
         // ----------------------------------- //
         return data;
@@ -269,15 +289,18 @@ export default {
         this.sortedData = newData;
       }
       newData = [];
+      let priCount = 0;
       if (priority) {
         for (let i = 0; i < this.sortedData.length; i++) {
           if (this.sortedData[i].priorityCd != null && this.sortedData[i].priorityCd.toLowerCase() === 'y') {
             newData.splice(0,0,this.sortedData[i]);
+            priCount++;
           } else {
-            newData.push(this.sortedData[i]);
+            newData.splice(priCount,0,this.sortedData[i]);
           }
         }
         this.sortedData = newData;
+        this.priorityCount = priCount;
       }
       newData = [];
       if (!furnished) {
@@ -310,7 +333,7 @@ export default {
 
          $(row).closest('tbody').find('tr').removeClass('select');
          $(row).addClass('select');
-         $("#load").addClass("btn-primary");
+         $("#load").addClass("btn btn-primary");
          this.selectedNR = row.children[0].innerHTML.trim();
 
        } else {
@@ -351,6 +374,14 @@ export default {
   .filter {
     display: inline-block;
     margin-left: 10px;
+  }
+  .pre-line {
+    white-space: pre-line;
+  }
+  .count {
+    display: inline-block;
+    margin-left: 10px;
+    margin-top: 0;
   }
   #load-button {
     display: inline-block;
