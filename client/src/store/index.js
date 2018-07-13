@@ -1034,12 +1034,17 @@ mutations: {
     },
 
     runManualRecipe({dispatch,state},searchStr) {
-      console.log('Running Manual Recipe')
+      // Escape special solr characters
+      searchStr = searchStr.replace('+','\+')
+      searchStr = searchStr.replace('-','\-')
+      searchStr = searchStr.replace('"','\"')
+      //searchStr = searchStr.replace("'","''") - to handle apostrophe's
+
       if( state.currentChoice != null) {
         this.dispatch('checkManualConflicts',searchStr)
-        //this.dispatch('checkManualTrademarks',searchStr)
-        //this.dispatch('checkManualConditions',searchStr)
-        //this.dispatch('checkManualHistories',searchStr)
+        this.dispatch('checkManualTrademarks',searchStr)
+        this.dispatch('checkManualConditions',searchStr)
+        this.dispatch('checkManualHistories',searchStr)
       }
     },
 
@@ -1061,10 +1066,11 @@ mutations: {
     checkManualConditions( {commit, state},searchStr ) {
       console.log('action: manual check of restricted words and conditions for company number: ' + state.compInfo.nrNumber + ' from solr')
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
       const url = '/api/v1/documents:conditions'
       console.log('URL:' + url)
       const vm = this
-      return axios.post(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+      return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {
         console.log('Check Manual Conditions Response:' + response.data)
         commit('loadConditionsJSON',response.data)
       })
@@ -1074,10 +1080,11 @@ mutations: {
     checkManualHistories( {commit, state},searchStr ) {
       console.log('action: manual check of history for company number: ' + state.compInfo.nrNumber + ' from solr')
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
       const url = '/api/v1/documents:histories'
       console.log('URL:' + url)
       const vm = this
-      return axios.post(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+      return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {
         console.log('Check Manual Histories Response:' + response.data)
         commit('loadHistoriesJSON',response.data)
       })
@@ -1087,10 +1094,11 @@ mutations: {
     checkManualTrademarks( {commit, state},searchStr ) {
       console.log('action: manual check of trademarks for company number: ' + state.compInfo.nrNumber + ' from solr')
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
       const url = '/api/v1/documents:trademarks'
       console.log('URL:' + url)
       const vm = this
-      return axios.post(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+      return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {
         console.log('Check Manual Trademarks Response:' + response.data)
         commit('loadTrademarksJSON',response.data)
       })

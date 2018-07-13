@@ -97,9 +97,6 @@
 
 <script>
 /* eslint-disable */
-
-  import decision from '@/components/Decision.vue';
-
   export default {
     name: 'CompName',
     data: function () {
@@ -109,6 +106,14 @@
       }
     },
     computed: {
+      decision_made: {
+        get: function () {
+          return this.$store.getters.decision_made;
+        },
+        set: function (value) {
+          this.$store.commit('decision_made', value);
+        }
+      },
       currentState() {
         return this.$store.getters.currentState;
       },
@@ -226,7 +231,7 @@
         this.$store.state.is_making_decision = true;
       },
       nameAccept() {
-        this.$store.commit('decision_made', 'A');
+        this.$store.commit('decision_made:', 'A');
       },
       nameReject() {
         this.$store.commit('decision_made', 'R');
@@ -276,12 +281,13 @@
 
         return true;
       },
-      quickApprove(){
+      quickApprove() {
         var approvalStr = ''
         this.retval.push(approvalStr)
-        //this.currentNameObj.state = 'A'
+        console.log('quickApprove')
 
-        this.nameAccept()
+        this.decision_made = 'A'
+       // this.nameAccept()
         this.nameAcceptReject()
       },
       rejectDescriptive() {
@@ -292,8 +298,8 @@
                              'Construction, Gardening, Investments, Holdings, Etc.'
 
         this.retval.push(descriptiveStr)
-        //this.currentNameObj.state = 'R'
-        this.nameReject()
+        this.decision_made = 'R'
+        //this.nameReject()
         this.nameAcceptReject()
       },
       rejectDistinctive() {
@@ -303,7 +309,8 @@
         var distinctiveStr = "Require distinctive, nondescriptive first word or prefix * E.G. " +
                              "Person's name, initials, geographic location, etc."
         this.retval.push(distinctiveStr)
-        this.nameReject()
+        this.decision_made = 'R'
+        //this.nameReject()
         this.nameAcceptReject()
       },
       onSubmit()
@@ -354,9 +361,6 @@
         this.decision_made = null;
         this.is_making_decision = false;
       },
-    },
-    components: {
-      decision
     },
     watch: {
       currentName: function (val) {
