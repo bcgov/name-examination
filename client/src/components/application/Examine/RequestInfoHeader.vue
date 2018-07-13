@@ -75,8 +75,10 @@
             <h3>EXPIRY DATE</h3>
             {{expiryDate}}
             <h3>CONSUMPTION DATE</h3>
+            {{consumptionDate}}
             <h3>SUBMITTED DATE</h3>
             {{submittedDate}}
+            <h3>SUBMIT COUNT: {{submitCount}}</h3>
             <h3>NATURE OF BUSINESS</h3>
             <div v-if="show_extended_header">
               <textarea v-if="is_editing" v-model="natureOfBusiness" class="form-control" rows="10">
@@ -346,7 +348,10 @@ export default {
       },
       submittedDate() {
         return this.$store.getters.submittedDate;
-      }
+      },
+      submitCount() {
+        return this.$store.getters.submitCount;
+      },
     },
     components: {
       clientinfoview
