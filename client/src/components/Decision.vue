@@ -435,7 +435,8 @@
           this.currentNameObj.state = 'A'; // accepted
 
           // conditionally accepted if any conditions selected with condition_required flag TRUE
-          for (let record in this.conditions_selected) {
+          for (var i = 0; i < this.conditions_selected.length; i++) {
+            var record = this.conditions_selected[i];
             if (record.consent_required) {
               this.currentNameObj.state = 'C';
               break;
