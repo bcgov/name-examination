@@ -23,23 +23,28 @@
         <div class="row">
           <div class="col-md-4" >
             <div class="nrNum" v-bind:class="{ REDnrNum: priority}">{{ nrNumber }}</div>
+
+            <p v-if="!is_editing" style="font-weight: bold; text-align: center;">{{ jurisdiction_desc }}</p>
           </div>
-          <div class="col" >
-            <p v-if="!is_editing" style="font-weight: bold;">{{ jurisdiction_desc }}</p>
-            <select v-else v-model="jurisdiction" class="form-control">
+          <div class="col">
+            <nwpta jurisdiction="AB" />
+          </div>
+          <div class="col">
+            <nwpta jurisdiction="SK" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4" >
+            <!-- spacer -->
+          </div>
+          <div class="col add-top-padding" >
+            <h3 v-if="is_editing">Jurisdiction</h3>
+            <select v-if="is_editing" v-model="jurisdiction" class="form-control">
               <option v-for="option in jurisdiction_options" v-bind:value="option.value"
                       v-bind:key="option.value">
                 {{ option.text }}
               </option>
             </select>
-          </div>
-          <div class="col">
-            <p v-if="!is_editing">{{ nuans }}</p>
-            <input v-else v-model="nuans" class="form-control" />
-          </div>
-          <div class="col">
-            <p v-if="!is_editing">{{ sk_name }}</p>
-            <input v-else v-model="sk_name" class="form-control" />
           </div>
         </div>
 
@@ -72,13 +77,17 @@
       <div id='div2' class="col-md-4">
         <div class="row">
           <div class="col">
-            <h3>EXPIRY DATE</h3>
-            {{expiryDate}}
-            <h3>CONSUMPTION DATE</h3>
-            {{consumptionDate}}
             <h3>SUBMITTED DATE</h3>
             {{submittedDate}}
-            <h3>SUBMIT COUNT: {{submitCount}}</h3>
+
+            <h3 v-if="expiryDate !== null">EXPIRY DATE</h3>
+            <span v-if="expiryDate !== null">{{expiryDate}}</span>
+
+            <h3 v-if="consumptionDate !== null">CONSUMPTION DATE</h3>
+            <span v-if="consumptionDate !== null">{{consumptionDate}}</span>
+
+            <h3 v-if="submitCount > 0">SUBMIT COUNT: {{submitCount}}</h3>
+
             <h3>NATURE OF BUSINESS</h3>
             <div v-if="show_extended_header">
               <textarea v-if="is_editing" v-model="natureOfBusiness" class="form-control" rows="10">
@@ -137,16 +146,17 @@
     <!-- row 2 - buttons -->
     <div class="row">
       <div id='header-button-container' class="col-md-12">
-        <span v-if="!is_editing" class="f1" @click="toggleDetails">F1</span>
 
-        <button v-if="!is_editing" class="btn btn-sm btn-default"
+        <button v-if="!is_editing" class="f1 btn btn-sm btn-outline-secondary" @click="toggleDetails">Show Details</button>
+
+        <button v-if="!is_editing" class="btn btn-sm btn-secondary"
                 style="float: left;" @click="edit">Edit</button>
-        <span v-else>
-          <button class="btn btn-sm btn-default"
-                  style="float: left;" @click="save">Save</button>
-          <button class="btn btn-sm btn-default"
-                  style="float: left;" @click="cancelSave">Cancel</button>
-        </span>
+
+        <button v-if="is_editing" class="btn btn-sm btn-success"
+                style="float: left;" @click="save">Save</button>
+        <button v-if="is_editing" class="btn btn-sm btn-secondary"
+                style="float: left;" @click="cancelSave">Cancel</button>
+
       </div>
     </div>
 
@@ -158,6 +168,7 @@
 
 // ClientInfoHeader - editable component
 import clientinfoview from '@/components/application/Examine/client/ClientInfoHeader.vue';
+import nwpta from '@/components/application/Examine/nwpta/nwpta.vue';
 
 export default {
     name: 'RequestInfoHeader',
@@ -254,22 +265,6 @@ export default {
         if (this.natureOfBusiness.length > 200) return this.natureOfBusiness.substr(0, 200) + '...';
         else return this.natureOfBusiness;
       },
-      nuans: {
-        get: function() {
-          return this.$store.getters.nuans;
-        },
-        set: function(value) {
-          this.$store.commit('nuans', value);
-        }
-      },
-      sk_name: {
-        get: function() {
-          return this.$store.getters.sk_name;
-        },
-        set: function(value) {
-          this.$store.commit('sk_name', value);
-        }
-      },
       nr_status: {
         get: function() {
           return this.$store.getters.nr_status;
@@ -306,14 +301,6 @@ export default {
         },
         set: function(value) {
           this.$store.commit('reservationCount', value);
-        }
-      },
-      expiryDate: {
-        get: function() {
-          return this.$store.getters.expiryDate;
-        },
-        set: function(value) {
-          this.$store.commit('expiryDate', value);
         }
       },
       details: {
@@ -354,7 +341,8 @@ export default {
       },
     },
     components: {
-      clientinfoview
+      clientinfoview,
+      nwpta,
     },
     methods: {
       toggleDetails() {
@@ -438,10 +426,13 @@ export default {
     background-color: #cc0000;
     color: white;
   }
-  .f1 {
-    border: 1px solid #000000;
-    padding: 2px;
+
+  #header-button-container button {
+    margin: 5px 5px 5px 0;
+  }
+  #header-button-container .f1 {
     float: right;
+    margin-right: 0;
   }
 
   .comment {
