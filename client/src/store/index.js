@@ -113,9 +113,21 @@ export default new Vuex.Store({
     additionalCompInfo: {
       jurisdiction: null,
       natureOfBussiness: null,
-      nuans: null,
-      sk_name: null,
-      nr_status: null
+      nr_status: null,
+      nwpta_ab: {
+        partnerJurisdictionTypeCd: null,
+        partnerName: null,
+        partnerNameDate: null,
+        partnerNameNumber: null,
+        partnerNameTypeCd: null,
+      },
+      nwpta_sk: {
+        partnerJurisdictionTypeCd: null,
+        partnerName: null,
+        partnerNameDate: null,
+        partnerNameNumber: null,
+        partnerNameTypeCd: null,
+      },
     },
     examiner: null,
     priority: null,
@@ -242,11 +254,11 @@ mutations: {
     natureOfBusiness (state, value) {
       state.additionalCompInfo.natureOfBussiness = value;
     },
-    nuans (state, value) {
-      state.additionalCompInfo.nuans = value;
+    nwpta_ab (state, value) {
+      state.additionalCompInfo.nwpta_ab = value;
     },
-    sk_name (state, value) {
-      state.additionalCompInfo.sk_name = value;
+    nwpta_sk (state, value) {
+      state.additionalCompInfo.nwpta_sk = value;
     },
     nr_status (state, value) {
       state.additionalCompInfo.nr_status = value;
@@ -419,15 +431,14 @@ mutations: {
       //state.details = dbcompanyInfo.details
       state.additionalInfo = dbcompanyInfo.additionalInfo
       state.internalComments = dbcompanyInfo.comments
-      state.additionalCompInfo.nuans = dbcompanyInfo.nuansNum
-      state.additionalCompInfo.sk_name = dbcompanyInfo.skPartner
+
       state.additionalCompInfo.nr_status = dbcompanyInfo.state
       state.examiner = dbcompanyInfo.userId
       state.priority = dbcompanyInfo.priorityCd
       //state.reSubmission.reSubmissionYN = dbcompanyInfo.resubmissionYN
       //state.reSubmission.linkedNR = dbcompanyInfo.linkedNR
       //state.reservationCount = dbcompanyInfo.reservationCount
-      state.expiryDate = dbcompanyInfo.expiryDate
+      state.expiryDate = dbcompanyInfo.expirationDate
       state.submittedDate = dbcompanyInfo.submittedDate
       state.submitCount = dbcompanyInfo.submitCount
 
@@ -435,6 +446,11 @@ mutations: {
       if (state.currentState == 'INPROGRESS' && state.examiner == state.userId) state.is_my_current_nr = true;
       else state.is_my_current_nr = false;
 
+      // cycle through nwpta entries
+      for (let record of dbcompanyInfo.nwpta) {
+        if (record.partnerJurisdictionTypeCd == 'AB') state.additionalCompInfo.nwpta_ab = record;
+        if (record.partnerJurisdictionTypeCd == 'SK') state.additionalCompInfo.nwpta_sk = record;
+      }
     },
 
     loadConflictsJSON(state,JSONdata){
@@ -514,15 +530,16 @@ mutations: {
       state.nrData.details = state.details
       state.nrData.additionalInfo = state.additionalInfo
       state.nrData.comments = state.internalComments
-      state.nrData.nuansNum = state.additionalCompInfo.nuans
-      state.nrData.skPartner = state.additionalCompInfo.sk_name
+      state.nrData.nwpta = []
+      if (state.additionalCompInfo.nwpta_ab.partnerJurisdictionTypeCd !== null) state.nrData.nwpta.push(state.additionalCompInfo.nwpta_ab);
+      if (state.additionalCompInfo.nwpta_sk.partnerJurisdictionTypeCd !== null) state.nrData.nwpta.push(state.additionalCompInfo.nwpta_sk);
       //state.nrData.state =  state.additionalCompInfo.nr_status
       state.nrData.userId = state.examiner
       state.nrData.priorityCd = state.priority
       //state.reSubmission.reSubmissionYN = dbcompanyInfo.resubmissionYN
       //state.reSubmission.linkedNR = dbcompanyInfo.linkedNR
       //state.reservationCount = dbcompanyInfo.reservationCount
-      state.nrData.expiryDate = state.expiryDate
+      state.nrData.expirationDate = state.expiryDate
       state.nrData.submittedDate = state.submittedDate
       state.nrData.submitCount = state.submitCount
     },
@@ -903,6 +920,8 @@ mutations: {
 
       console.log('Running Recipe')
       dispatch('runRecipe')
+
+      commit('is_making_decision', false);
     },
 
     getConflictInfo ({state,commit},value) {
@@ -1258,11 +1277,11 @@ mutations: {
     natureOfBusiness(state) {
       return state.additionalCompInfo.natureOfBussiness
     },
-    nuans(state) {
-      return state.additionalCompInfo.nuans
+    nwpta_ab(state) {
+      return state.additionalCompInfo.nwpta_ab
     },
-    sk_name(state) {
-      return state.additionalCompInfo.sk_name
+    nwpta_sk(state) {
+      return state.additionalCompInfo.nwpta_sk
     },
     nr_status(state) {
       return state.additionalCompInfo.nr_status
