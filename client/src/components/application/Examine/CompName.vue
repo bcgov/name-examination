@@ -71,8 +71,8 @@
             </tr>
           </table>
 
-          <div v-if="!is_making_decision && !is_complete">
-            <div align="right">
+          <div >
+            <div align="right" v-if="!is_making_decision && !is_complete && is_my_current_nr">
               <button class="btn btn-sm btn-outline-primary"
                       @click="quickApprove">Quick Approve</button>
               <button class="btn btn-sm btn-outline-danger"
@@ -231,7 +231,7 @@
         this.$store.state.is_making_decision = true;
       },
       nameAccept() {
-        this.$store.commit('decision_made:', 'A');
+        this.$store.commit('decision_made', 'A');
       },
       nameReject() {
         this.$store.commit('decision_made', 'R');
