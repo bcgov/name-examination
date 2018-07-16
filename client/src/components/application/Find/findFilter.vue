@@ -334,7 +334,6 @@ export default {
       for (let i = 0; i < this.sortedData.length; i++)
         if (this.sortedData[i].lastUpdate != undefined && this.sortedData[i].lastUpdate.substring(9,11) === String(today))
           this.updatedToday++;
-
     },
     loadNR(event) {
       console.log(event);
@@ -377,6 +376,8 @@ export default {
       this.data = data;
 
       this.total = this.sortedData.length;
+      this.selectedNR = null;
+      $("#load").removeClass("btn-primary");
     },
   },
 }
