@@ -673,10 +673,13 @@ mutations: {
 
     },
 
-    setBaseURL(){
-      readJFile('static/config/baseurl.json', function (myArray) {
-        axios.baseURL=  myArray[0]['URL'];
+    loadConfiguration(){
+      readJFile('static/config/configuration.json', function (myArray) {
+        //The configuration JSON file element 0 is the base URL for axios
+        axios.baseURL =  myArray[0]['URL'];
         console.log("Setting BaseURL to: "+ axios.baseURL)
+        // Further configurations (if needed) would go here
+        // eg:  *someOtherConfig* =  myArray[1]['*OTHER*'];
       })
     },
 
