@@ -2,8 +2,6 @@
 import axios from 'axios'
 
 const instance = axios.create({
-  // This is a default value. The real value is set in the configuration.json file located in static/config/
-  baseURL: 'https://namex-test.pathfinder.gov.bc.ca'
 })
 
 let isAlreadyFetchingAccessToken = false
