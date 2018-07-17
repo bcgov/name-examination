@@ -21,6 +21,15 @@
             <h4>Company Name</h4>
             <input v-model="compName" placeholder="my company"/>
           </div>
+          <div style="margin-right: 20px" class="count">
+            <h3>Total: <span class="count-num">{{this.total}}</span></h3>
+          </div>
+          <div class="count">
+            <h3>Priorities: <span class="count-num">{{this.priorityCount}}</span></h3>
+          </div>
+          <div class="count">
+            <h3>Updated Today: <span class="count-num">{{this.updatedToday}}</span></h3>
+          </div>
           <br/>
           <br/>
           <h4 style="margin-left: 0" class="filter">By Priority:</h4>
@@ -31,10 +40,6 @@
           <br/>
           <h4 style="margin-left: 0" class="filter">Unfurnished:</h4>
           <input type="checkbox" v-model="unfurnished">
-          <br/>
-          <div style="margin-left: 0" class="count">
-            <h4>Priorities: {{this.priorityCount}}</h4>
-          </div>
         </div>
         <div id="load-button">
           <button id="load" class="btn" type="button" v-on:click="examineNR">LOAD</button>
@@ -97,12 +102,12 @@ export default {
     columns: (() => {
       const cols =[
         {title: 'NR#', field: 'nrNum', label: 'nr', thStyle: {background: '#fffae6'},visible: true},
-        {title: 'Examiner', field: 'activeUser', thStyle: {background: '#fffae6'}, label: 'examiner', visible: true},
+        {title: 'Examiner', field: 'activeUser', thStyle: {background: '#fffae6'}, label: 'examiner', colStyle: {width:'15%'},visible: true},
         {title: 'State', field: 'stateCd', thStyle: {background: '#fffae6'}, label: 'state', visible: true},
         {title: 'Priority', field: 'priorityCd', thStyle: {background: '#fffae6'}, label: 'priority', visible: true},
         {title: 'Furnished', field: 'furnished', label: 'furnished', thStyle: {background: '#fffae6'}, visible: true},
         {title: 'NOB', field: 'natureBusinessInfo', label: 'nob', thStyle: {background: '#fffae6'}, visible: true},
-        {title: 'Names', field: 'names', label: 'name', thStyle: {background: '#fffae6'}, visible: true},
+        {title: 'Names', field: 'names', label: 'name', thStyle: {background: '#fffae6'}, colStyle: {width:'15%'},visible: true},
         {title: 'Last Update', field: 'lastUpdate', label: 'lastUpdate', thStyle: {background: '#fffae6'}, visible: true},
         {title: 'Submitted', field: 'submittedDate', label: 'submittedDate', thStyle: {background: '#fffae6'}, visible: true},
         {title: 'Req Type', field: 'requestTypeCd', label: 'reqType', thStyle: {background: '#fffae6'}, visible: false},
@@ -124,6 +129,7 @@ export default {
     compName: '',
     selectedNR:'',
     priorityCount:null,
+    updatedToday: null,
   }),
   mounted() {
     this.$store.dispatch('getSearchDataJSON');
@@ -202,6 +208,8 @@ export default {
         // organize names and dates //
           for (let i=0; i<data.length;i++) {
             // organize names column //
+            if (data[i].activeUser != undefined)
+              data[i].activeUser += ' ';
             for (let namesIter=0; namesIter<data[i].names.length; namesIter++) {
               if (data[i].names[namesIter].choice !== undefined) {
                 if (data[i].names[namesIter].choice !== namesIter + 1) {
@@ -215,7 +223,7 @@ export default {
             for (let namesIter=0; namesIter<data[i].names.length; namesIter++) {
               if (data[i].names[namesIter].choice !== undefined) {
                 data[i].names[namesIter] = data[i].names[namesIter].choice + '. ' + data[i].names[namesIter].name;
-                namesStr += data[i].names[namesIter] + '\n';
+                namesStr += data[i].names[namesIter] + ' \n';
               }
             }
             if (namesStr !== '')
@@ -250,7 +258,7 @@ export default {
             orderedBySubmitData.splice(0,0,data[i]);
           }
         // ----------------------------------- //
-        return data;
+        return orderedBySubmitData;
       }
       return [];
     },
@@ -296,7 +304,7 @@ export default {
             newData.splice(0,0,this.sortedData[i]);
             priCount++;
           } else {
-            newData.splice(priCount,0,this.sortedData[i]);
+            newData.push(this.sortedData[i]);
           }
         }
         this.sortedData = newData;
@@ -320,6 +328,13 @@ export default {
         }
         this.sortedData = newData;
       }
+      let date = new Date();
+      let today = date.getDate();
+      this.updatedToday = 0;
+      for (let i = 0; i < this.sortedData.length; i++)
+        if (this.sortedData[i].lastUpdate != undefined && this.sortedData[i].lastUpdate.substring(9,11) === String(today))
+          this.updatedToday++;
+
     },
     loadNR(event) {
       console.log(event);
@@ -368,6 +383,12 @@ export default {
 </script>
 
 <style scoped>
+  h3 {
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #9c9cb9;
+  }
   .searchTable {
     background: #fffae6;
   }
@@ -380,8 +401,8 @@ export default {
   }
   .count {
     display: inline-block;
-    margin-left: 10px;
-    margin-top: 0;
+    float: right;
+    margin-left: 20px;
   }
   #load-button {
     display: inline-block;
