@@ -635,17 +635,17 @@ mutations: {
   },
 
   actions: {
-    kcauth ({commit, dispatch, state}) {
+    kcauth({commit, dispatch, state}) {
       const kc = localStorage.getItem('KEYCLOAK_TOKEN')
       state.kctoken = kc
       //console.log(authData)
       //state.user_role =  authData.realm_access.roles,
       state.user_role = ''
       state.idToken = kc
-      localStorage.setItem('kctoken',state.kctoken)
-      localStorage.setItem('user_role',state.user_role)
+      localStorage.setItem('kctoken', state.kctoken)
+      localStorage.setItem('user_role', state.user_role)
 
-      if (state.kctoken){
+      if (state.kctoken) {
         console.log('KC Authorized user roles')
         state.userId = localStorage.getItem('USERNAME');
         commit('authUser', {
@@ -655,7 +655,7 @@ mutations: {
       }
     },
 
-    logout ({commit,state}) {
+    logout({commit, state}) {
 
       commit('clearAuthData')
 
@@ -671,6 +671,13 @@ mutations: {
       localStorage.removeItem('AUTHORIZED')
       localStorage.removeItem('USERNAME')
 
+    },
+
+    setBaseURL(){
+      readJFile('static/config/baseurl.json', function (myArray) {
+        axios.baseURL=  myArray[0]['URL'];
+        console.log("Setting BaseURL to: "+ axios.baseURL)
+      })
     },
 
     tryAutoLogin ({commit}) {
@@ -714,6 +721,7 @@ mutations: {
       console.log('action: select next company number from postgres')
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/queues/@me/oldest'
+      console.log('URL:' + axios.baseURL + url)
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         // response.data.nameRequest = 'NR 8270105';
@@ -861,46 +869,6 @@ mutations: {
             })
             .catch(error => console.log('ERROR: ' + error))
       },
-
-    loadDropdowns( {commit, state} ) {
-      var json_files_path = 'static/ui_dropdowns/';
-
-      // jurisdictions - first list 1, then list 2
-      if (state.listJurisdictions === null) {
-        readJFile(json_files_path + 'jurisdiction 1.json', function (myArray) {
-          commit('listJurisdictions', myArray);
-
-          readJFile(json_files_path + 'jurisdiction 2.json', function (myArray) {
-            commit('listJurisdictions', state.listJurisdictions.concat(myArray));
-          });
-        });
-      }
-
-      // request types
-      if (state.listRequestTypes === null) {
-        readJFile(json_files_path + 'requesttype.json', function (myArray) { commit('listRequestTypes', myArray);})
-      }
-
-      // decision reasons
-      if (state.listDecisionReasons === null) {
-        console.log('action: get decision reasons list from API')
-        const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
-        const url = '/api/v1/requests/decisionreasons'
-        return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-          console.log(response);
-          commit('listDecisionReasons',response.data)
-        })
-      }
-    },
-
-    loadConfig( {commit, state}) {
-      //TODO - Actions: finish loading config values
-      if(state.config===null) {
-        readJFile('static/config/config.json', function (myArray) {
-          commit('setConfig', myArray);
-        });
-      }
-    },
 
     newNrNumber({commit,dispatch},nrNum) {
       //save current state ??

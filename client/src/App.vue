@@ -21,7 +21,7 @@ export default {
     },
     created () {
       //this.$store.dispatch('tryAutoLogin')
-      this.$store.dispatch('loadDropdowns');
+      this.$store.dispatch('setBaseURL');
     }
 };
 </script>
