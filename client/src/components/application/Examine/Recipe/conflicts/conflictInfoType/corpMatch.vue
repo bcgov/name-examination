@@ -2,31 +2,34 @@
 <template>
 
    <span v-if="is_xpro">
-      <h3>XPRO Corporation</h3>
-      <h3>Attorneys</h3>
-      <p v-for="attorney in attorneys" v-bind:key="attorney">{{ attorney }}</p>
-
-      <h3>Directors</h3>
-      <p v-for="director in directors" v-bind:key="director">{{ director }}</p>
-
-      <h3>Head Office</h3>
-      <p>{{ head_office }}</p>
+      <h3 class="corpType">XPRO Corporation</h3>
 
       <h3>Incorporation Number</h3>
       <p>{{ incorpNum }}</p>
 
       <h3>Incorporation Date</h3>
       <p>{{ incorporated }}</p>
+
+      <h3>Attorneys</h3>
+      <p v-if="is_not_available(attorneys)">Not Available</p>
+      <p v-else v-for="attorney in attorneys" v-bind:key="attorney">{{ attorney }}</p>
+
+      <h3>Directors</h3>
+      <p v-if="is_not_available(directors)">Not Available</p>
+      <p v-else v-for="director in directors" v-bind:key="director">{{ director }}</p>
 
       <h3>Jurisdiction</h3>
       <p>{{ jurisdiction }}</p>
 
       <h3>Nature Of Business</h3>
       <p>{{ natureOfBusiness }}</p>
+
+      <h3>Head Office</h3>
+      <p v-for="addressLine in head_office">
+        {{ addressLine }}</p>
    </span>
    <span v-else>
-      <h3>BC Corporation</h3>
-      <!--<h2 id="currentConflictName"></h2>-->
+      <h3 class="corpType">BC Corporation</h3>
       <h3>Incorporation Number</h3>
       <p>{{ incorpNum }}</p>
 
@@ -34,7 +37,8 @@
       <p>{{ incorporated }}</p>
 
       <h3>Directors</h3>
-      <p v-for="director in directors" v-bind:key="director">{{ director }}</p>
+      <p v-if="is_not_available(directors)">Not Available</p>
+      <p v-else v-for="director in directors" v-bind:key="director">{{ director }}</p>
 
       <h3>Jurisdiction</h3>
       <p>{{ jurisdiction }}</p>
@@ -151,6 +155,9 @@
 </script>
 
 <style scoped>
+  .corpType {
+    color: #494969;
+  }
 </style>
 
 

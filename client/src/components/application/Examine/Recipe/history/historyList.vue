@@ -5,7 +5,7 @@
       <div class="row ConflictList">
 
         <select v-model="selectedHistory" class="form-control" size="17" border="0" @click="check_deselect">
-          <option v-for="option in historyJSON.names"
+          <option style="margin: 1px" v-for="option in historyJSON.names"
                   v-bind:class="{fail: check_status(option)=='fail', concern: check_status(option)=='concern'}"
                   :key="option.value" v-bind:value="{nr_num: option.nr_num, name: option.name, score: option.score}">
             {{ option.name }}
