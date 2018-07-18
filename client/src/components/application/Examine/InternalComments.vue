@@ -4,7 +4,8 @@
       <div class="col add-top-padding">
         <h3>INTERNAL COMMENTS</h3>
         <textarea v-model="newComment" class="form-control" rows="5"></textarea>
-        <button @click="addNewComment" class="btn btn-sm btn-secondary float-right">Add Comment</button>
+        <button @click="addNewComment"
+                class="btn btn-sm btn-secondary float-right">Add Comment</button>
       </div>
       <div class="col">
         <div class="comment" v-for="comment in internalComments"

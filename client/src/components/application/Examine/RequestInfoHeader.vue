@@ -23,8 +23,8 @@
         <div class="row">
           <div class="col-md-4" >
             <div class="nrNum" v-bind:class="{ REDnrNum: priority}">{{ nrNumber }}</div>
-
-            <p v-if="!is_editing" style="font-weight: bold; text-align: center;">{{ jurisdiction_desc }}</p>
+            <p v-if="!is_editing"
+               style="font-weight: bold; text-align: center;">{{ jurisdiction_desc }}</p>
           </div>
           <div class="col">
             <nwpta jurisdiction="AB" />
@@ -147,7 +147,8 @@
     <div class="row">
       <div id='header-button-container' class="col-md-12">
 
-        <button v-if="!is_editing" class="f1 btn btn-sm btn-outline-secondary" @click="toggleDetails">Show Details</button>
+        <button v-if="!is_editing" class="f1 btn btn-sm btn-outline-secondary"
+                @click="toggleDetails">Show Details</button>
 
         <button v-if="!is_editing" class="btn btn-sm btn-secondary"
                 style="float: left;" @click="edit">Edit</button>
