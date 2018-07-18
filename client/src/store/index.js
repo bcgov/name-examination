@@ -947,7 +947,6 @@ mutations: {
     getNamesConflict ({state,commit},value) {
       console.log('action: getting data for company number: ' + value.nrNumber)
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
-      //value.nrNumber = 'NR 8270105'
       const url = '/api/v1/requests/' + value.nrNumber
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
@@ -970,10 +969,9 @@ mutations: {
     },
 
     getHistoryInfo ({state,commit},value) {
-      console.log('action: getting HistoryInfo for company number: ' + value.nrNumber)
+      console.log('action: getting HistoryInfo for company number: ' + value.nr_num)
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
-      // const url = '/api/v1/requests/' + value.nrNumber
-      const url = '/api/v1/requests/' + 'NR 0000023'
+      const url = '/api/v1/requests/' + value.nr_num
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         console.log('History info response:' + response.data)
@@ -1157,6 +1155,9 @@ mutations: {
 
       console.log('Deleting TrademarksJSON from state')
       commit('loadTrademarksJSON',null)
+    },
+    resetHistoriesInfo({commit}) {
+      commit('loadHistoriesInfoJSON',null)
     },
 
   },

@@ -9,7 +9,7 @@
       <p>{{ addressLine1 }}</p>
       <p>{{ addressLine2 }}</p>
       <p>{{ addressLine3 }}</p>
-      <p>{{ city }}, {{ province }}</p>
+      <p>{{ city }} {{ province }}</p>
       <p>{{ postalCode }}</p>
       <p>{{ country }}</p>
 

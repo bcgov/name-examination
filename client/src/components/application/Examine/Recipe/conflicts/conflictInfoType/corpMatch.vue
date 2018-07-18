@@ -44,11 +44,11 @@
 
       <h3>Records Office Delivery Address</h3>
      <p v-if="is_not_available(records_office_delivery_address)">Not Available</p>
-      <p v-else v-for="recordsAddressLine in records_office_delivery_address" v-bind:key="recordsAddressLine">
+      <p v-else v-for="recordsAddressLine in records_office_delivery_address">
         {{ recordsAddressLine }}</p>
 
       <h3>Registered Office Delivery Address</h3>
-      <p v-for="addressLine in registered_office_delivery_address" v-bind:key="addressLine">
+      <p v-for="addressLine in registered_office_delivery_address">
         {{ addressLine }}</p>
   </span>
 </template>

@@ -4,7 +4,7 @@
 
     <div class="row" >
       <div class="col"><historyListview /></div>
-      <div class="col history-info-view"><historyInfoview /></div>
+      <div id="historyInfo" class="col history-info-view"><historyInfoview /></div>
       <div class="col client-info-view">
         <h2>{{ currentName }}</h2>
         <div class="add-top-padding">
@@ -49,15 +49,6 @@
   .history-info-view {
     padding: 1px;
     margin-right: 1px;
-  }
-  .border-fail {
-    border: 1px solid #ff9999;
-  }
-  .border-concern {
-    border: 1px solid #ffc107;
-  }
-  .border-pass {
-    border: 1px solid #28a745;
   }
   .client-info-view {
     border: 1px solid #b3d9ff;

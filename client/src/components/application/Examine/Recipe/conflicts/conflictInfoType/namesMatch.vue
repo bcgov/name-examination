@@ -1,7 +1,8 @@
 <!--eslint-disable -->
 <template>
   <span>
-      <br/>
+      <h3>Submitted</h3>
+      <p>{{submittedDate}}</p>
       <h3>Client</h3>
       <p>{{ clientFirstName }} {{ clientLastName}}</p>
 
@@ -10,7 +11,7 @@
       <p>{{ addressLine1 }}</p>
       <p>{{ addressLine2 }}</p>
       <p>{{ addressLine3 }}</p>
-      <p>{{ city }}, {{ province }}</p>
+      <p>{{ city }} {{ province }}</p>
       <p>{{ postalCode }}</p>
       <p>{{ country }}</p>
 
@@ -133,11 +134,13 @@
           if (this.namesConflictInfo == undefined || this.namesConflictInfo.applicants == undefined ||
             this.namesConflictInfo.applicants.faxNumber == undefined) return '';
           return this.namesConflictInfo.applicants.faxNumber
-
+      },
+      submittedDate() {
+          if (this.namesConflictInfo == undefined || this.namesConflictInfo.submittedDate == undefined) return '';
+          return this.namesConflictInfo.submittedDate
       },
       namesConflictInfo() {
-        console.log(this.$store.getters.historiesJSON);
-        return this.$store.getters.historiesJSON;
+        return this.$store.getters.namesConflictJSON;
       }
     },
     methods: {

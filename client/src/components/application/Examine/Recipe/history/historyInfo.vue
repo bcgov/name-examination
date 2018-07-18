@@ -1,8 +1,9 @@
 <!--eslint-disable-->
 <template>
    <span>
+     <h2 id="currentHistoryName">{{ selectedHistory }}</h2>
      <div class="col client-info-view">
-        <h2>{{ selectedHistory }}</h2>
+
         <div class="add-top-padding">
           <h3>Submitted</h3>
           <p>{{ submittedDate }}</p>
@@ -16,7 +17,7 @@
       <p>{{ addressLine1 }}</p>
       <p>{{ addressLine2 }}</p>
       <p>{{ addressLine3 }}</p>
-      <p>{{ city }}, {{ province }}</p>
+      <p>{{ city }} {{ province }}</p>
       <p>{{ postalCode }}</p>
       <p>{{ country }}</p>
 
@@ -37,6 +38,8 @@
       <h3>Contact</h3>
       <p>{{ contactName }}</p>
       <h3>Submit Count: {{submitCount}}</h3>
+      <h3>State</h3>
+      <p>{{state}}</p>
       <div v-if="decisionText">
         <h3>Decision Text</h3>
         <p>{{decisionText}}</p>
@@ -59,7 +62,6 @@
     name: 'historyInfo',
     computed: {
       selectedHistory() {
-        console.log('history info selected history',this.$store.getters.currentHistory)
         if (this.$store.getters.currentHistory == undefined) return '';
         return this.$store.getters.currentHistory.name;
       },
@@ -152,6 +154,10 @@
         if (this.selectedHistoryInfo.submitCount == undefined) return 1;
         return this.selectedHistoryInfo.submitCount
       },
+      state() {
+        if (this.selectedHistoryInfo == undefined) return '';
+        return this.selectedHistoryInfo.state;
+      },
       decisionText() {
         if (this.selectedHistoryInfo == undefined) return '';
         return this.findDecision();
@@ -161,7 +167,6 @@
         return this.selectedHistoryInfo.comments;
       },
       selectedHistoryInfo() {
-        console.log('historiesInfo: ', this.$store.getters.historiesInfoJSON);
         return this.$store.getters.historiesInfoJSON;
       }
     },

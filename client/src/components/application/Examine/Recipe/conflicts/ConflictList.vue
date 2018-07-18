@@ -30,7 +30,7 @@
     },
     computed: {
       conflictData() {
-        if (this.$store.getters.currentConflict == null)
+        if (this.$store.getters.currentConflict == null && this.$store.getters.conflictList != null)
           this.selectedConflict = this.$store.getters.conflictList[0];
         else
           this.selectedConflict = this.$store.getters.currentConflict;

@@ -155,15 +155,17 @@ export default {
       /*
       If there is any history, set to CONCERN; otherwise PASS. -- changing
        */
-      if (this.historyInfo == null || this.historyInfo == undefined) {
-
-        this.setPass('History');
-      }
-      else if (this.historyInfo.names.length == 0) {
+      if (this.historyInfo == null || this.historyInfo.names.length == 0) {
         this.setPass('History');
       }
       else {
-        this.setConcern('History');
+        let set = false;
+        for (let i=0;i<this.historyInfo.names.length;i++) {
+          if (this.historyInfo.names[i].state==='REJECTED' || this.historyInfo.names[i].submitCount > 3)
+            this.setFail('History');
+        }
+        if (!set)
+          this.setConcern('History');
       }
     },
     setFail(val){
