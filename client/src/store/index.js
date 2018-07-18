@@ -673,13 +673,14 @@ mutations: {
 
     },
 
-    loadConfiguration(){
-      readJFile('static/config/configuration.json', function (myArray) {
-        //The configuration JSON file element 0 is the base URL for axios
-        axios.baseURL =  myArray[0]['URL'];
-        console.log("Setting BaseURL to: "+ axios.baseURL)
-        // Further configurations (if needed) would go here
-        // eg:  *someOtherConfig* =  myArray[1]['*OTHER*'];
+    loadSetUp({dispatch}){
+        //Read Configuration.json File
+        readJFile('static/config/configuration.json', function (myArray) {
+        axios.defaults.baseURL = myArray[0]['URL']
+        console.log("Setting axios.baseURL to: " + axios.defaults.baseURL)
+
+        //load UI dropdowns from json files and database tables
+        dispatch('loadDropdowns');
       })
     },
 
@@ -872,6 +873,42 @@ mutations: {
             })
             .catch(error => console.log('ERROR: ' + error))
       },
+
+      loadDropdowns( {commit, state} ) {
+            var json_files_path = 'static/ui_dropdowns/';
+
+            console.log("Load Drop Downs");
+            console.log("Jurisdictions");
+
+            // jurisdictions - first list 1, then list 2
+            if (state.listJurisdictions === null) {
+              readJFile(json_files_path + 'jurisdiction 1.json', function (myArray) {
+                commit('listJurisdictions', myArray);
+
+                readJFile(json_files_path + 'jurisdiction 2.json', function (myArray) {
+                  commit('listJurisdictions', state.listJurisdictions.concat(myArray));
+                });
+              });
+            }
+
+            console.log("Request Types")
+            // request types
+            if (state.listRequestTypes === null) {
+              readJFile(json_files_path + 'requesttype.json', function (myArray) { commit('listRequestTypes', myArray);})
+            }
+
+            console.log("Decision Reasons")
+            // decision reasons
+            if (state.listDecisionReasons === null) {
+              console.log('action: get decision reasons list from API')
+              const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+              const url = '/api/v1/requests/decisionreasons'
+              return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+                console.log(response);
+                commit('listDecisionReasons',response.data)
+              })
+            }
+    },
 
     newNrNumber({commit,dispatch},nrNum) {
       //save current state ??
