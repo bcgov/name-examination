@@ -621,14 +621,13 @@ mutations: {
       state.currentConflict = value
     },
     currentCondition(state,value){
-      console.log('got here 2');
       state.currentCondition = value
     },
     currentTrademark (state,value){
       state.currentTrademark = value
     },
 
-    historyMatch(state,value){
+    currentHistory(state,value){
       state.currentHistory = value
     },
 
@@ -973,13 +972,14 @@ mutations: {
     getHistoryInfo ({state,commit},value) {
       console.log('action: getting HistoryInfo for company number: ' + value.nrNumber)
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/requests/' + value.nrNumber
+      // const url = '/api/v1/requests/' + value.nrNumber
+      const url = '/api/v1/requests/' + 'NR 0000023'
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        console.log('Names Conflict response:' + response.data)
+        console.log('History info response:' + response.data)
         commit('loadHistoriesInfoJSON',response.data )
       })
-        .catch(error => console.log('ERROR: getNamesConflict' + error))
+        .catch(error => console.log('ERROR: getHistoryInfo' + error))
     },
 
     runRecipe({dispatch,state}) {
@@ -1413,6 +1413,6 @@ mutations: {
     },
     searchDataJSON(state) {
       return state.searchDataJSON
-    }
+    },
   }
 })

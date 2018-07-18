@@ -153,9 +153,10 @@ export default {
     },
     setHistory() {
       /*
-      If there is any history, set to CONCERN; otherwise PASS.
+      If there is any history, set to CONCERN; otherwise PASS. -- changing
        */
       if (this.historyInfo == null || this.historyInfo == undefined) {
+
         this.setPass('History');
       }
       else if (this.historyInfo.names.length == 0) {

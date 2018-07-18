@@ -1,13 +1,12 @@
-/* eslint-disable */
+<!--eslint-disable-->
 <template>
    <span>
      <div class="col client-info-view">
-        <h2>{{ currentName }}</h2>
-        <!--<div class="add-top-padding">
+        <h2>{{ selectedHistory }}</h2>
+        <div class="add-top-padding">
           <h3>Submitted</h3>
           <p>{{ submittedDate }}</p>
-        </div>-->
-      </div>
+        </div>
 
       <h3>Client</h3>
       <p>{{ clientFirstName }} {{ clientLastName}}</p>
@@ -37,7 +36,19 @@
 
       <h3>Contact</h3>
       <p>{{ contactName }}</p>
-
+      <h3>Submit Count: {{submitCount}}</h3>
+      <div v-if="decisionText">
+        <h3>Decision Text</h3>
+        <p>{{decisionText}}</p>
+      </div>
+      <br/>
+      <div v-if="comments">
+        <h3>Comments</h3>
+        <div class="comment-box">
+          <p v-for="comment in comments">{{comment.comment}}</p>
+        </div>
+      </div>
+     </div>
   </span>
 
 </template>
@@ -47,102 +58,132 @@
   export default {
     name: 'historyInfo',
     computed: {
-      currentName() {
-        if (this.$store.getters.currentName == undefined) return '';
-        return this.$store.getters.currentName
+      selectedHistory() {
+        console.log('history info selected history',this.$store.getters.currentHistory)
+        if (this.$store.getters.currentHistory == undefined) return '';
+        return this.$store.getters.currentHistory.name;
       },
       clientFirstName() {
-        if (this.namesConflictInfo == undefined) return '';
-        return this.namesConflictInfo.applicants.clientFirstName
+        if (this.selectedHistoryInfo == undefined) return '';
+        return this.selectedHistoryInfo.applicants.clientFirstName
 
       },
       clientLastName() {
-        if (this.namesConflictInfo == undefined) return '';
-        return this.namesConflictInfo.applicants.clientLastName
+        if (this.selectedHistoryInfo == undefined) return '';
+        return this.selectedHistoryInfo.applicants.clientLastName
       },
       firstName() {
-        if (this.namesConflictInfo == undefined) return '';
-        return this.namesConflictInfo.applicants.firstName
+        if (this.selectedHistoryInfo == undefined) return '';
+        return this.selectedHistoryInfo.applicants.firstName
 
       },
       middleName() {
-        if (this.namesConflictInfo == undefined) return '';
-        return this.namesConflictInfo.applicants.middleName
+        if (this.selectedHistoryInfo == undefined) return '';
+        return this.selectedHistoryInfo.applicants.middleName
 
       },
       lastName() {
-        if (this.namesConflictInfo == undefined) return '';
-        return this.namesConflictInfo.applicants.lastName
+        if (this.selectedHistoryInfo == undefined) return '';
+        return this.selectedHistoryInfo.applicants.lastName
 
       },
       addressLine1() {
-        if (this.namesConflictInfo == undefined) return '';
-        return this.namesConflictInfo.applicants.addrLine1
+        if (this.selectedHistoryInfo == undefined) return '';
+        return this.selectedHistoryInfo.applicants.addrLine1
 
       },
       addressLine2() {
-        if (this.namesConflictInfo == undefined) return '';
-        return this.namesConflictInfo.applicants.addrLine2
+        if (this.selectedHistoryInfo == undefined) return '';
+        return this.selectedHistoryInfo.applicants.addrLine2
 
       },
       addressLine3() {
-        if (this.namesConflictInfo == undefined) return '';
-        return this.namesConflictInfo.applicants.addrLine3
+        if (this.selectedHistoryInfo == undefined) return '';
+        return this.selectedHistoryInfo.applicants.addrLine3
 
       },
       city() {
-        if (this.namesConflictInfo == undefined) return '';
-        return this.namesConflictInfo.applicants.city
+        if (this.selectedHistoryInfo == undefined) return '';
+        return this.selectedHistoryInfo.applicants.city
 
       },
       province() {
-        if (this.namesConflictInfo == undefined) return '';
-        return this.namesConflictInfo.applicants.statePprovinceCd
+        if (this.selectedHistoryInfo == undefined) return '';
+        return this.selectedHistoryInfo.applicants.stateProvinceCd
 
       },
       country() {
-        if (this.namesConflictInfo == undefined) return '';
-        return this.namesConflictInfo.applicants.countryTypeCd
+        if (this.selectedHistoryInfo == undefined) return '';
+        return this.selectedHistoryInfo.applicants.countryTypeCd
 
       },
       postalCode() {
-        if (this.namesConflictInfo == undefined) return '';
-        return this.namesConflictInfo.applicants.postalCd
+        if (this.selectedHistoryInfo == undefined) return '';
+        return this.selectedHistoryInfo.applicants.postalCd
 
       },
       contactName() {
-        if (this.namesConflictInfo == undefined) return '';
-        return this.namesConflictInfo.applicants.contact
+        if (this.selectedHistoryInfo == undefined) return '';
+        return this.selectedHistoryInfo.applicants.contact
 
       },
       phone() {
-        if (this.namesConflictInfo == undefined) return '';
-        return this.namesConflictInfo.applicants.phoneNumber
+        if (this.selectedHistoryInfo == undefined) return '';
+        return this.selectedHistoryInfo.applicants.phoneNumber
 
       },
       conEmail() {
-        if (this.namesConflictInfo == undefined) return '';
-        return this.namesConflictInfo.applicants.emailAddress
+        if (this.selectedHistoryInfo == undefined) return '';
+        return this.selectedHistoryInfo.applicants.emailAddress
 
       },
       fax() {
-        if (this.namesConflictInfo == undefined) return '';
-        return this.namesConflictInfo.applicants.faxNumber
+        if (this.selectedHistoryInfo == undefined) return '';
+        return this.selectedHistoryInfo.applicants.faxNumber
 
       },
-      namesConflictInfo() {
+      submittedDate() {
+        if (this.selectedHistoryInfo == undefined) return '';
+        return this.selectedHistoryInfo.submittedDate;
+
+      },
+      submitCount() {
+        if (this.selectedHistoryInfo == undefined) return '';
+        if (this.selectedHistoryInfo.submitCount == undefined) return 1;
+        return this.selectedHistoryInfo.submitCount
+      },
+      decisionText() {
+        if (this.selectedHistoryInfo == undefined) return '';
+        return this.findDecision();
+      },
+      comments() {
+        if (this.selectedHistoryInfo == undefined) return '';
+        return this.selectedHistoryInfo.comments;
+      },
+      selectedHistoryInfo() {
         console.log('historiesInfo: ', this.$store.getters.historiesInfoJSON);
         return this.$store.getters.historiesInfoJSON;
       }
     },
     methods: {
+      findDecision() {
+        for (let i=0;i<this.selectedHistoryInfo.names.length; i++) {
+          if (this.selectedHistoryInfo.names[i].decisionText != null)
+            return this.selectedHistoryInfo.names[i].decisionText
+        }
+        return '';
+      }
     },
   }
 </script>
 
 <style scoped>
-  .conflict-info-view {
-    background-color: #000000;
-    padding: 10px;
+  .client-info-view {
+    margin-left: 0;
+    padding: 5px;
+  }
+  .comment-box {
+    margin: 1px;
+    background-color: lightyellow;
   }
 </style>

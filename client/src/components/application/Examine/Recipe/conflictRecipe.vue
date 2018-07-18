@@ -44,7 +44,9 @@
           return "";
       },
       currentName() {
-        return this.$store.getters.currentName;
+        if (this.$store.getters.currentName != null)
+          return this.$store.getters.currentName.toUpperCase();
+        return "";
       },
       submittedDate() {
         return this.$store.getters.submittedDate;
@@ -67,8 +69,9 @@
   .issue-sects {
   }
   .client-info-view {
+    border: 1px solid #b3d9ff;
     background-color: #efefef;
-    padding: 1px;
+    padding: 2px;
   }
   .conlist {
     border: 1px solid #880000;
