@@ -14,7 +14,7 @@
       </div>
 
       <div class="col client-info-view">
-        <h2>{{ currentName }}</h2>
+        <h2 style="text-transform: uppercase">{{ currentName }}</h2>
         <div class="add-top-padding">
           <h3>Submitted</h3>
           <p>{{ submittedDate }}</p>
@@ -44,9 +44,7 @@
           return "";
       },
       currentName() {
-        if (this.$store.getters.currentName != null)
-          return this.$store.getters.currentName.toUpperCase();
-        return "";
+        return this.$store.getters.currentName;
       },
       submittedDate() {
         return this.$store.getters.submittedDate;

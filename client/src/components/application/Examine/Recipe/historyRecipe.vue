@@ -6,7 +6,7 @@
       <div class="col"><historyListview /></div>
       <div id="historyInfo" class="col history-info-view"><historyInfoview /></div>
       <div class="col client-info-view">
-        <h2>{{ currentName }}</h2>
+        <h2 style="text-transform: uppercase">{{ currentName }}</h2>
         <div class="add-top-padding">
           <h3>Submitted</h3>
           <p>{{ submittedDate }}</p>
@@ -28,9 +28,7 @@
     name: 'historyRecipe',
     computed: {
       currentName() {
-        if (this.$store.getters.currentName != null)
-          return this.$store.getters.currentName.toUpperCase();
-        return "";
+        return this.$store.getters.currentName;
       },
       submittedDate() {
         return this.$store.getters.submittedDate;
@@ -41,7 +39,7 @@
       historyInfoview,
       historyListview,
       clientinfoview
-    }
+    },
   }
 </script>
 

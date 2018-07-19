@@ -402,8 +402,8 @@ mutations: {
       state.compInfo.requestType = dbcompanyInfo.requestTypeCd
 
 
-      // if the current state is not INPROGRESS, clear any existing name record in currentNameObj
-      if (state.currentState !== 'INPROGRESS') this.dispatch('setCurrentName',{});
+      // if the current state is not INPROGRESS, HOLD, or DRAFT clear any existing name record in currentNameObj
+      if (!['INPROGRESS','HOLD','DRAFT'].includes(state.currentState)) this.dispatch('setCurrentName',{});
 
 
       // we keep the original data so that if fields exist that we do not use, we don't lose that
@@ -972,6 +972,7 @@ mutations: {
       console.log('action: getting HistoryInfo for company number: ' + value.nr_num)
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + value.nr_num
+      // const url = '/api/v1/requests/NR00000023'
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         console.log('History info response:' + response.data)
@@ -1137,6 +1138,7 @@ mutations: {
       // clear NR specific JSON data so that it can't get accidentally re-used by the next NR number
       console.log('Deleting conflictsJSON from state')
       commit('conflictsJSON',null)
+      commit('currentConflict', null)
 
       console.log('Deleting NamesConflictJSON from state')
       commit('loadNamesConflictJSON',null)
@@ -1152,6 +1154,7 @@ mutations: {
 
       console.log('Deleting HistoriesInfoJSON from state')
       commit('loadHistoriesInfoJSON',null)
+      commit('currentHistory',null)
 
       console.log('Deleting TrademarksJSON from state')
       commit('loadTrademarksJSON',null)

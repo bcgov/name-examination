@@ -37,6 +37,8 @@
 
       <h3>Contact</h3>
       <p>{{ contactName }}</p>
+      <h3>NR #</h3>
+      <p><a href="#" target="_blank">{{nrNum}}</a></p>
       <h3>Submit Count: {{submitCount}}</h3>
       <h3>State</h3>
       <p>{{state}}</p>
@@ -48,7 +50,12 @@
       <div v-if="comments">
         <h3>Comments</h3>
         <div class="comment-box">
-          <p v-for="comment in comments">{{comment.comment}}</p>
+          <p v-for="comment in comments">
+            <span class="comment-examiner">{{ comment.examiner }}</span>
+            :<br/>
+            <span class="comment-timestamp">{{ comment.timestamp }}</span>
+            <span class="comment-text">{{ comment.comment }}</span>
+          </p>
         </div>
       </div>
      </div>
@@ -152,7 +159,11 @@
       submitCount() {
         if (this.selectedHistoryInfo == undefined) return '';
         if (this.selectedHistoryInfo.submitCount == undefined) return 1;
-        return this.selectedHistoryInfo.submitCount
+        return this.selectedHistoryInfo.submitCount;
+      },
+      nrNum() {
+        if (this.selectedHistoryInfo == undefined) return '';
+        return this.selectedHistoryInfo.nrNum;
       },
       state() {
         if (this.selectedHistoryInfo == undefined) return '';
@@ -163,7 +174,8 @@
         return this.findDecision();
       },
       comments() {
-        if (this.selectedHistoryInfo == undefined) return '';
+        if (this.selectedHistoryInfo == undefined || this.selectedHistoryInfo.comments == undefined
+          || this.selectedHistoryInfo.comments.length < 1) return '';
         return this.selectedHistoryInfo.comments;
       },
       selectedHistoryInfo() {
@@ -190,5 +202,11 @@
   .comment-box {
     margin: 1px;
     background-color: lightyellow;
+  }
+  .comment-text {
+    white-space: pre-line;
+  }
+  .comment-timestamp, .comment-examiner {
+    font-style: italic;
   }
 </style>
