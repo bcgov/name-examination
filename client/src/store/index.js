@@ -621,14 +621,13 @@ mutations: {
       state.currentConflict = value
     },
     currentCondition(state,value){
-      console.log('got here 2');
       state.currentCondition = value
     },
     currentTrademark (state,value){
       state.currentTrademark = value
     },
 
-    historyMatch(state,value){
+    currentHistory(state,value){
       state.currentHistory = value
     },
 
@@ -948,7 +947,6 @@ mutations: {
     getNamesConflict ({state,commit},value) {
       console.log('action: getting data for company number: ' + value.nrNumber)
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
-      //value.nrNumber = 'NR 8270105'
       const url = '/api/v1/requests/' + value.nrNumber
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
@@ -971,15 +969,15 @@ mutations: {
     },
 
     getHistoryInfo ({state,commit},value) {
-      console.log('action: getting HistoryInfo for company number: ' + value.nrNumber)
+      console.log('action: getting HistoryInfo for company number: ' + value.nr_num)
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/requests/' + value.nrNumber
+      const url = '/api/v1/requests/' + value.nr_num
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        console.log('Names Conflict response:' + response.data)
+        console.log('History info response:' + response.data)
         commit('loadHistoriesInfoJSON',response.data )
       })
-        .catch(error => console.log('ERROR: getNamesConflict' + error))
+        .catch(error => console.log('ERROR: getHistoryInfo' + error))
     },
 
     runRecipe({dispatch,state}) {
@@ -1157,6 +1155,9 @@ mutations: {
 
       console.log('Deleting TrademarksJSON from state')
       commit('loadTrademarksJSON',null)
+    },
+    resetHistoriesInfo({commit}) {
+      commit('loadHistoriesInfoJSON',null)
     },
 
   },
@@ -1413,6 +1414,6 @@ mutations: {
     },
     searchDataJSON(state) {
       return state.searchDataJSON
-    }
+    },
   }
 })
