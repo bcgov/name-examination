@@ -132,10 +132,8 @@ export default {
     updatedToday: null,
   }),
   mounted() {
-    this.$store.dispatch('getSearchDataJSON');
     this.sortedData = this.populateTable(this.searchData);
     this.stateSort = this.currentStateSort;
-    console.log('DATA',this.data);
   },
   watch: {
 
@@ -375,7 +373,7 @@ export default {
         data.push(this.sortedData[i]);
       this.data = data;
 
-      this.total = this.sortedData.length;
+      this.total = this.searchData.response.numFound;
       this.selectedNR = null;
       $("#load").removeClass("btn-primary");
     },
