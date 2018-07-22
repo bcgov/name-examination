@@ -40,7 +40,6 @@ import corpMatch from '@/components/application/Examine/Recipe/conflicts/conflic
 
       currentConflict: {
         get: function () {
-          console.log('current conflict in conflictInfo ');
           return this.$store.getters.currentConflict;
         }
       },
