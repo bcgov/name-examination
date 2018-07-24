@@ -3,7 +3,7 @@
   <span v-if="is_editing && is_complete">
 
     <span class="nwpta" v-if="nwpta.partnerJurisdictionTypeCd !== null">
-      <h3>{{ nwpta.partnerJurisdictionTypeCd }}</h3>
+      <h3 class="add-top-padding">{{ nwpta.partnerJurisdictionTypeCd }}</h3>
       <input type="text" v-model="nwpta.partnerNameNumber" class="form-control" />
       <input type="text" v-model="nwpta.partnerName" class="form-control" />
     </span>
@@ -12,7 +12,7 @@
   <span v-else>
 
     <span class="nwpta" v-if="nwpta.partnerJurisdictionTypeCd !== null">
-      <h3>{{ nwpta.partnerJurisdictionTypeCd }}</h3>
+      <h3 class="add-top-padding">{{ nwpta.partnerJurisdictionTypeCd }}</h3>
       {{ nwpta.partnerNameNumber }}
       <br/>
       {{ nwpta.partnerName }}

@@ -3,28 +3,40 @@
   <span>
     <div class="row">
 
-      <!-- details col 1 - priority, comments, etc -->
+      <!-- COLUMN 1 -->
+
       <div id='div1' class="col-md-5" >
         <div class="row">
-          <div class="col-md-4" style="height: 30px;">
-            <div class="priority" v-if="priority">Priority</div>
+          <div class="col-md-4" >
+            <div class="nrNum" v-bind:class="{ REDnrNum: priority}">{{ nrNumber }}</div>
+            <div class="priority" style="height: 30px;" v-if="priority">Priority</div>
           </div>
           <div class="col">
-            <p v-if="!is_editing" style="font-weight: bold;">{{ requestType_desc }}</p>
+            <p v-if="!is_editing" class="requestType">{{ requestType_desc }}</p>
             <select v-else v-model="requestType" class="form-control">
               <option v-for="option in requestType_options" v-bind:value="option.value"
                       v-bind:key="option.value">
                 {{ option.text }}
               </option>
             </select>
+
+
+            <p v-if="!is_editing" class="add-top-padding"
+               style="font-weight: bold;">{{ jurisdiction_desc }}</p>
+            <h3 v-else>Jurisdiction</h3>
+            <select v-if="is_editing" v-model="jurisdiction" class="form-control">
+              <option v-for="option in jurisdiction_options" v-bind:value="option.value"
+                      v-bind:key="option.value">
+                {{ option.text }}
+              </option>
+            </select>
+
           </div>
         </div>
 
         <div class="row">
-          <div class="col-md-4" >
-            <div class="nrNum" v-bind:class="{ REDnrNum: priority}">{{ nrNumber }}</div>
-            <p v-if="!is_editing"
-               style="font-weight: bold; text-align: center;">{{ jurisdiction_desc }}</p>
+          <div class="col-md-4">
+            <!-- spacer -->
           </div>
           <div class="col">
             <nwpta jurisdiction="AB" />
@@ -33,20 +45,7 @@
             <nwpta jurisdiction="SK" />
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-4" >
-            <!-- spacer -->
-          </div>
-          <div class="col add-top-padding" >
-            <h3 v-if="is_editing">Jurisdiction</h3>
-            <select v-if="is_editing" v-model="jurisdiction" class="form-control">
-              <option v-for="option in jurisdiction_options" v-bind:value="option.value"
-                      v-bind:key="option.value">
-                {{ option.text }}
-              </option>
-            </select>
-          </div>
-        </div>
+
 
         <div class="row">
           <div class="col add-top-padding">
@@ -73,29 +72,44 @@
         </div>
       </div>
 
-      <!-- details col 2 - nature of business -->
+      <!-- COLUMN 2 -->
+
       <div id='div2' class="col-md-4">
         <div class="row">
           <div class="col">
-            <h3>SUBMITTED DATE</h3>
-            {{submittedDate}}
-
-            <h3 v-if="expiryDate !== null">EXPIRY DATE</h3>
-            <span v-if="expiryDate !== null">{{expiryDate}}</span>
-
-            <h3 v-if="consumptionDate !== null">CONSUMPTION DATE</h3>
-            <span v-if="consumptionDate !== null">{{consumptionDate}}</span>
-
-            <h3 v-if="submitCount > 0">SUBMIT COUNT: {{submitCount}}</h3>
-
             <h3>NATURE OF BUSINESS</h3>
             <div v-if="show_extended_header">
-              <textarea v-if="is_editing" v-model="natureOfBusiness" class="form-control" rows="10">
-                </textarea>
-              <p v-else style="white-space: pre-line;">{{ natureOfBusiness }}</p>
+              <p style="white-space: pre-line;">{{ natureOfBusiness }}</p>
             </div>
             <p v-else style="white-space: pre-line;">{{ natureOfBusinessTruncated }}</p>
 
+            <span v-if="show_extended_header">
+
+              <span v-if="is_editing" :class="{'form-group-error': $v.corpNum.$error}">
+                <h3 class="inline">Related Corp #</h3>
+                <input class="form-control" v-model="corpNum" :onchange="$v.corpNum.$touch()" />
+                <div class="error" v-if="!$v.corpNum.isValidCorpNum">Please enter a valid Incorporation Number.</div>
+              </span>
+              <span v-else>
+                <h3 class="inline">Related Corp #</h3>
+                {{ corpNum }}
+              </span>
+
+
+              <h3>SUBMITTED DATE</h3>
+              {{submittedDate}}
+
+              <h3 v-if="expiryDate !== null">EXPIRY DATE</h3>
+              <span v-if="expiryDate !== null">{{expiryDate}}</span>
+
+              <h3 v-if="consumptionDate !== null">CONSUMPTION DATE</h3>
+              <span v-if="consumptionDate !== null">{{consumptionDate}}</span>
+
+              <h3 v-if="submitCount > 0">SUBMIT COUNT: {{submitCount}}</h3>
+
+              <h3 class="inline" v-if="previousNr">previous NR: </h3><span v-html="previousNr"></span>
+
+            </span>
           </div>
 
         </div>
@@ -104,9 +118,12 @@
             <h3>Name Choices</h3>
 
             <table style="width: 100%;">
-              <tr>
+              <tr :class="{'form-group-error': $v.compName1.name.$error}">
                 <td>1.</td>
-                <td><input v-model="compName1.name" class="form-control" /></td>
+                <td>
+                  <input v-model="compName1.name" class="form-control" :onchange="$v.compName1.name.$touch()" />
+                  <div class="error" v-if="!$v.compName1.name.required">The first name choice is required.</div>
+                </td>
               </tr>
               <tr>
                 <td>2.</td>
@@ -121,7 +138,7 @@
         </div>
       </div>
 
-      <!-- details col 3 - additional info, client details -->
+      <!-- COLUMN 3 -->
       <div id='div3' class="col-md-3">
         <div class="row">
           <div class="col">
@@ -129,7 +146,8 @@
               <div class="col">
                 <h3>ADDITIONAL INFORMATION</h3>
                 <p v-if="!is_editing" style="white-space: pre-line;">{{ additionalInfo }}</p>
-                <textarea v-else v-model="additionalInfo" class="form-control"></textarea>
+                <textarea v-else v-model="additionalInfo" class="form-control" maxlength="150">
+                </textarea>
               </div>
             </div>
             <div class="row">
@@ -148,9 +166,12 @@
       <div id='header-button-container' class="col-md-12">
 
         <button v-if="!is_editing" class="f1 btn btn-sm btn-outline-secondary"
-                @click="toggleDetails">Show Details</button>
+                @click="toggleDetails">
+          <span v-if="show_extended_header">Hide Details</span>
+          <span v-else>Show Details</span>
+        </button>
 
-        <button v-if="!is_editing" class="btn btn-sm btn-secondary"
+        <button v-if="!is_editing && can_edit" class="btn btn-sm btn-secondary"
                 style="float: left;" @click="edit">Edit</button>
 
         <button v-if="is_editing" class="btn btn-sm btn-success"
@@ -170,6 +191,9 @@
 // ClientInfoHeader - editable component
 import clientinfoview from '@/components/application/Examine/client/ClientInfoHeader.vue';
 import nwpta from '@/components/application/Examine/nwpta/nwpta.vue';
+import { required } from 'vuelidate/lib/validators'
+import axios from '@/axios-auth';
+
 
 export default {
     name: 'RequestInfoHeader',
@@ -178,6 +202,41 @@ export default {
         newComment: null,
       }
     },
+    validations: function () {
+
+      // set basic validations that aren't conditional on any other fields
+      var validations = {
+        // first name choice is required
+        compName1: {
+          name: {
+            required,
+          }
+        },
+      }
+      // validate corp # - not required, but if entered it must be validated TODO CONDITIONAL
+      //if (['CCR', 'UC', 'CUL', 'CCC', 'CLL', 'CCV'].indexOf(this.requestType) > -1) {
+      if (true) {
+        validations.corpNum = {
+          isValidCorpNum(value) {
+            // if empty, it's valid - not required
+            return true;
+            if (value == '' || value == null) return true;
+
+            const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+            const url = '/api/v1/corporations/' + value;
+            return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+              return true;
+            })
+            .catch(error => {
+              return false;
+            });
+          },
+        }
+      }
+
+      return validations;
+
+    },
     computed: {
       jurisdiction_options() {
         return this.$store.getters.listJurisdictions;
@@ -185,8 +244,18 @@ export default {
       requestType_options() {
         return this.$store.getters.listRequestTypes;
       },
+      is_my_current_nr() {
+        return this.$store.getters.is_my_current_nr;
+      },
       is_editing() {
         return  this.$store.getters.is_editing;
+      },
+      can_edit() {
+        // user can edit this if it is open (DRAFT, HOLD) or their INPROGRESS. If it is DRAFT or
+        // HOLD, clicking edit button will switch it to their INPROGRESS (in edit() f'n).
+        if (this.is_my_current_nr) return true;
+        if (['DRAFT', 'HOLD'].indexOf(this.nr_status) > -1) return true;
+        return false;
       },
       show_extended_header() {
         return this.is_editing || this.$store.state.is_header_shown;
@@ -280,22 +349,6 @@ export default {
       priority() {
         return this.$store.getters.priority;
       },
-      resubmissionYN: {
-        get: function() {
-          return this.$store.getters.resubmissionYN;
-        },
-        set: function(value) {
-          this.$store.commit('resubmissionYN', value);
-        }
-      },
-      linkedNR: {
-        get: function() {
-          return this.$store.getters.linkedNR;
-        },
-        set: function(value) {
-          this.$store.commit('linkedNR', value);
-        }
-      },
       reservationCount: {
         get: function() {
           return this.$store.getters.reservationCount;
@@ -340,6 +393,19 @@ export default {
       submitCount() {
         return this.$store.getters.submitCount;
       },
+      previousNr() {
+        if (this.$store.getters.previousNr != undefined)
+          return '<a href="/' + this.$store.getters.previousNr + '" target="_blank">' + this.$store.getters.previousNr + '</a>';
+        else return '';
+      },
+      corpNum: {
+        get: function () {
+          return this.$store.getters.corpNum;
+        },
+        set: function (value) {
+          this.$store.commit('corpNum', value);
+        }
+      },
     },
     components: {
       clientinfoview,
@@ -351,18 +417,24 @@ export default {
         else this.$store.state.is_header_shown = true;
       },
       edit() {
+        // if this isn't the user's INPROGRESS, make it that
+        if (!this.is_my_current_nr) {
+          this.$store.dispatch('updateNRState', 'INPROGRESS');
+        }
         this.$store.state.is_editing = true;
       },
       save() {
+
+        if (!this.validate()) {
+          // do not continue if there are validations
+          return;
+        }
 
         // save new comment
         this.addNewComment();
 
         this.$store.dispatch('updateRequest');
         this.$store.state.is_editing = false;
-
-        // get updated data fresh from server
-        this.$store.dispatch('getpostgrescompInfo',this.nrNumber)
 
         // show full header after editing so user can see everything they changed
         this.$store.state.is_header_shown = true;
@@ -392,7 +464,19 @@ export default {
           return this.compName2.consumptionDate;
         }
         return this.compName3.consumptionDate;
-      }
+      },
+      validate() {
+        /*
+        Validate form using vuelidate.
+         */
+        console.log('got to validate()');
+
+        // trigger vuelidate validation
+        this.$v.$touch();
+
+        // return opposite of 'invalid' flag, since we want to know if this IS valid
+        return !this.$v.$invalid;
+      },
     },
     watch: {
       nrNumber: function (val) {
@@ -416,7 +500,7 @@ export default {
      font-size: 1.5em;
      font-weight: bold;
      text-align: center;
-     margin-top: 10px;
+     margin-bottom: 10px;
    }
   .REDnrNum {
     color: #ff0000;
@@ -426,6 +510,13 @@ export default {
     text-align: center;
     background-color: #cc0000;
     color: white;
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+
+  .requestType {
+    font-size: 1.3em;
+    font-weight: bold;
   }
 
   #header-button-container button {
@@ -455,3 +546,10 @@ export default {
 
 
  </style>
+
+<!-- unscoped -->
+<style>
+  .RequestInfoHeader {
+    font-size: 11px;
+  }
+</style>
