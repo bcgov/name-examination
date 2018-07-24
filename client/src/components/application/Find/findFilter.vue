@@ -25,17 +25,18 @@
               </div>
             </div>
             <div class="lower-searches">
-              <h4 style="margin-left: 0" class="filter">By Priority:</h4>
-              <input type="checkbox" v-model="priority">
-              <br/>
+              <!--<h4 style="margin-left: 0" class="filter">By Priority:</h4>-->
+              <!--<input type="checkbox" v-model="priority">-->
+              <!--<br/>-->
               <h4 style="margin-left: 0" class="filter">Furnished:</h4>
               <input type="checkbox" v-model="furnished">
               <br/>
               <h4 style="margin-left: 0" class="filter">Unfurnished:</h4>
               <input type="checkbox" v-model="unfurnished">
-              <div class="search-sort">
-                <button id="sort" class="btn btn-primary" type="button" v-on:click="sort">SORT</button>
-              </div>
+              <!--uncomment if real-time search too slow-->
+              <!--<div class="search-sort">-->
+                <!--<button id="sort" class="btn btn-primary" type="button" v-on:click="sort">SORT</button>-->
+              <!--</div>-->
             </div>
           </div>
           <div class="counts">
@@ -101,7 +102,7 @@ export default {
       return false;
     },
     searchQuerySpecial() {
-      return this.$store.state.searchQuerySpecial;
+      return this.$store.getters.searchQuerySpecial;
     }
   },
   data: () => ({
@@ -139,7 +140,7 @@ export default {
     selectedNR:'',
     priorityCount:null,
     updatedToday: null,
-    searchQuery:'?queue=hold&priorityCd=true&furnished=true&unfurnished=true&rows=10',
+    searchQuery:'?order=priorityCd:desc,submittedDate:asc&queue=hold&furnished=true&unfurnished=true&rows=10',
   }),
   mounted() {
     this.sortedData = this.populateTable(this.searchData);
@@ -150,71 +151,49 @@ export default {
 
     searchData: {
       handler(newData) {
-        console.log('newData: ', newData);
-        this.data = this.populateTable(newData);
-        console.log('displayed data: ', this.data);
         this.total = newData.response.numFound;
+        this.data = this.populateTable(newData);
         this.priorityCount = newData.response.numPriorities;
         this.updatedToday = newData.response.numUpdatedToday;
-        // this.sortedData = this.populateTable(this.searchData);
-        // this.filterBySearch(this.username,this.nrSearch, this.priority, this.compName, this.furnished, this.unfurnished);
-        // this.handleQueryChange();
       }
     },
     stateSort: {
       handler(newState) {
         this.currentStateSort = newState;
-        if (newState === 'ALL')
+        if (newState === 'ALL') {
           newState = '';
-        if (newState === 'HOLD')
-          this.priority = true;
+        }
         this.updateQuery('queue', newState);
       }
     },
     nrSearch: {
       handler(nrNum) {
         this.updateQuery('nrNum',nrNum);
-
-        // this.filterBySearch(this.username, newNrSearch, this.priority, this.compName, this.furnished, this.unfurnished);
-        // this.handleQueryChange();
       }
     },
     username: {
       handler(activeUser) {
         this.updateQuery('activeUser',activeUser);
-
-        // this.filterBySearch(username, this.nrSearch, this.priority, this.compName, this.furnished, this.unfurnished);
-        // this.handleQueryChange();
       }
     },
     compName: {
       handler(compName) {
         this.updateQuery('compName',compName);
-        // this.filterBySearch(this.username, this.nrSearch, this.priority, compName, this.furnished, this.unfurnished);
-        // this.handleQueryChange();
       }
     },
     priorityCheckBox: {
       handler(priorityCd) {
         this.updateQuery('priorityCd',priorityCd);
-        // this.filterBySearch(this.username, this.nrSearch, priority, this.compName, this.furnished, this.unfurnished);
-        // this.handleQueryChange();
       }
     },
     furnishedCheckBox: {
       handler(furnished) {
         this.updateQuery('furnished',furnished);
-
-        // this.filterBySearch(this.username, this.nrSearch, this.priority, this.compName, furnished, this.unfurnished);
-        // this.handleQueryChange();
       }
     },
     unfurnishedCheckBox: {
       handler(unfurnished) {
         this.updateQuery('unfurnished',unfurnished);
-
-        // this.filterBySearch(this.username, this.nrSearch, this.priority, this.compName, this.furnished, unfurnished);
-        // this.handleQueryChange();
       }
     },
     query: {
@@ -227,6 +206,9 @@ export default {
       handler(newQuery) {
         console.log('new query = ', newQuery);
         this.$store.commit('searchQuery',newQuery);
+
+        // comment this out if real-time search is too slow
+        this.$store.dispatch('getSearchDataJSON');
       }
     },
     searchQuerySpecial: {
@@ -240,7 +222,6 @@ export default {
     populateTable(searchData){
       if (searchData != null) {
         let data = searchData.nameRequests;
-        // let orderedBySubmitData =[];
 
         // organize names/dates //
           for (let i=0; i<data.length;i++) {
@@ -256,9 +237,18 @@ export default {
                 }
               }
             }
+            let adjustCount = false;
             let namesStr = '';
             for (let namesIter=0; namesIter<data[i].names.length; namesIter++) {
               if (data[i].names[namesIter].choice !== undefined) {
+                if (this.compName != '') {
+                  if (data[i].names[namesIter].name.search(this.compName) != -1) {
+                    if (adjustCount)
+                      this.total--;
+                    else
+                      adjustCount = true;
+                  }
+                }
                 data[i].names[namesIter] = data[i].names[namesIter].choice + '. ' + data[i].names[namesIter].name;
                 namesStr += data[i].names[namesIter] + ' \n';
               }
@@ -292,88 +282,11 @@ export default {
                           'min': min};
               data[i].submittedDate = `${submitDate.hour}:${submitDate.min}\n${submitDate.month}/${submitDate.day}/${submitDate.year}`;
             }
-            // orderedBySubmitData.splice(0,0,data[i]);
           }
-        // ----------------------------------- //
-        // return orderedBySubmitData;
         return data;
       }
       return [];
     },
-
-    // to be done on backend --------------------
-    // filterBySearch(username,nrSearch,priority,compName,furnished,unfurnished) {
-    //   this.query.offset = 0;
-    //
-    //   let allData = this.populateTable(this.searchData);
-    //   let newData = [];
-    //
-    //   nrSearch = nrSearch.replace(/^NR+/gm,'').trim();
-    //   if (nrSearch !== '') {
-    //     for (let i = 0; i < allData.length; i++) {
-    //       let nr = allData[i].nrNum.replace(/^NR+/gm,'').trim()
-    //       if (nr.search(nrSearch)!== -1)
-    //         newData.push(allData[i]);
-    //     }
-    //     this.sortedData = newData;
-    //   } else {
-    //     this.sortedData = allData;
-    //   }
-    //   newData = [];
-    //   if (username !== '') {
-    //     for (let i = 0; i < this.sortedData.length; i++) {
-    //       if (this.sortedData[i].activeUser.toLowerCase().search(username)!== -1)
-    //         newData.push(this.sortedData[i]);
-    //     }
-    //     this.sortedData = newData;
-    //   }
-    //   newData = [];
-    //   if (compName !== '') {
-    //     for (let i = 0; i < this.sortedData.length; i++) {
-    //       if (typeof this.sortedData[i].names === "string" && this.sortedData[i].names.toLowerCase().search(compName.toLowerCase())!== -1)
-    //         newData.push(this.sortedData[i]);
-    //     }
-    //     this.sortedData = newData;
-    //   }
-    //   newData = [];
-    //   let priCount = 0;
-    //   if (priority) {
-    //     for (let i = 0; i < this.sortedData.length; i++) {
-    //       if (this.sortedData[i].priorityCd != null && this.sortedData[i].priorityCd.toLowerCase() === 'y') {
-    //         newData.splice(0,0,this.sortedData[i]);
-    //         priCount++;
-    //       } else {
-    //         newData.push(this.sortedData[i]);
-    //       }
-    //     }
-    //     this.sortedData = newData;
-    //     this.priorityCount = priCount;
-    //   }
-    //   newData = [];
-    //   if (!furnished) {
-    //     console.log("sorting not furnished")
-    //     for (let i = 0; i < this.sortedData.length; i++) {
-    //       if (this.sortedData[i].furnished == undefined || this.sortedData[i].furnished.toUpperCase() !== 'Y')
-    //         newData.push(this.sortedData[i]);
-    //     }
-    //     this.sortedData = newData;
-    //   }
-    //   newData = [];
-    //   if (!unfurnished) {
-    //     console.log("sorting not unfurnished")
-    //     for (let i = 0; i < this.sortedData.length; i++) {
-    //       if (this.sortedData[i].furnished == undefined || this.sortedData[i].furnished.toUpperCase() !== 'N')
-    //         newData.push(this.sortedData[i]);
-    //     }
-    //     this.sortedData = newData;
-    //   }
-    //   let date = new Date();
-    //   let today = date.getDate();
-    //   this.updatedToday = 0;
-    //   for (let i = 0; i < this.sortedData.length; i++)
-    //     if (this.sortedData[i].lastUpdate != undefined && this.sortedData[i].lastUpdate.substring(9,11) === String(today))
-    //       this.updatedToday++;
-    // },
     loadNR(event) {
       console.log(event);
       // check if this is a body row (ie: in tbody)
@@ -407,7 +320,7 @@ export default {
       this.selectedNR = '';
       $(".select").removeClass('select');
 
-      this.$store.dispatch('getSearchDataJSON');
+      this.updateQuery('start',0);
 
       this.selectedNR = null;
       $("#load").removeClass("btn-primary");
@@ -423,7 +336,7 @@ export default {
         this.searchQuery += '&'+sort+'='+value;
       }
       if (sort === 'start')
-        this.$store.commit('this.searchQuerySpecial',this.searchQuery);
+        this.$store.commit('searchQuerySpecial',this.searchQuery);
 
     },
     handleQueryChange(){
@@ -432,13 +345,6 @@ export default {
       this.updateQuery('rows',rows);
       this.updateQuery('start',start);
 
-      // to be deleted ------------
-      // let data = [];
-      // for (let i = offset; i < offset + limit && i < this.sortedData.length; i++)
-      //   data.push(this.sortedData[i]);
-      // this.data = data;
-
-      // this.total = this.searchData.response.numFound;
     },
   },
 }

@@ -151,8 +151,8 @@ export default new Vuex.Store({
       issue_Format_Text: null
     },
 
-    searchQuery: '?queue=hold&priorityCd=true&furnished=true&unfurnished=true&rows=10',
-    searchQuerySpecial: '?queue=hold&priorityCd=true&furnished=true&unfurnished=true&rows=10',
+    searchQuery: '?order=priorityCd:desc,submittedDate:asc&queue=hold&furnished=true&unfurnished=true&rows=10',
+    searchQuerySpecial: '?order=priorityCd:desc,submittedDate:asc&queue=hold&furnished=true&unfurnished=true&rows=10',
     searchState: 'HOLD',
 
     //TODO
@@ -1428,6 +1428,9 @@ mutations: {
     },
     searchDataJSON(state) {
       return state.searchDataJSON
+    },
+    searchQuerySpecial(state) {
+      return state.searchQuerySpecial
     },
   }
 })
