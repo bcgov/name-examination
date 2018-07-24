@@ -161,8 +161,11 @@ export default {
       else {
         let set = false;
         for (let i=0;i<this.historyInfo.names.length;i++) {
-          if (this.historyInfo.names[i].state==='REJECTED' || this.historyInfo.names[i].submitCount > 3)
+          if (this.historyInfo.names[i].name_state_type_cd==='R' || this.historyInfo.names[i].submit_count > 3) {
             this.setFail('History');
+            set=true;
+            break;
+          }
         }
         if (!set)
           this.setConcern('History');
