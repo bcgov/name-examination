@@ -12,7 +12,7 @@
                     @click="holdRequest()">Hold</button>
             <button class="btn btn-sm btn-primary"
                     v-if="!is_making_decision && !is_complete && is_my_current_nr"
-                    @click="startDecision()" >Approve/Reject...</button>
+                    @click="startDecision()" >Accept/Reject...</button>
 
             <button class="btn btn-sm btn-primary" v-if="is_making_decision"
                     @click="nameAccept()">

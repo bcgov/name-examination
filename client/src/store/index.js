@@ -10,8 +10,9 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     //User Info
+
     myKeycloak: null,
-    userId: null,
+    userId: localStorage.getItem('USERNAME'),
     authorized: null,
     email: null,
     kctoken: null,
@@ -132,12 +133,10 @@ export default new Vuex.Store({
     },
     examiner: null,
     priority: null,
-    reSubmission: {
-      reSubmissionYN: null,
-      linkedNR: null
-    },
     reservationCount: null,
     submitCount: null,
+    previousNr: null,
+    corpNum: null,
     submittedDate: null,
     expiryDate: null,
     issueText: null,
@@ -264,12 +263,6 @@ mutations: {
     nr_status (state, value) {
       state.additionalCompInfo.nr_status = value;
     },
-    resubmissionYN (state, value) {
-      state.reSubmission.reSubmissionYN = value;
-    },
-    linkedNR (state, value) {
-      state.reSubmission.linkedNR = value;
-    },
     reservationCount (state, value) {
       state.reservationCount = value;
     },
@@ -284,6 +277,9 @@ mutations: {
     },
     internalComments (state, value) {
       state.internalComments = value;
+    },
+    corpNum(state, value) {
+      state.corpNum = value;
     },
     searchQuery(state, value) {
       state.searchQuery = value;
@@ -403,8 +399,8 @@ mutations: {
       state.compInfo.requestType = dbcompanyInfo.requestTypeCd
 
 
-      // if the current state is not INPROGRESS, clear any existing name record in currentNameObj
-      if (state.currentState !== 'INPROGRESS') this.dispatch('setCurrentName',{});
+      // if the current state is not INPROGRESS, HOLD, or DRAFT clear any existing name record in currentNameObj
+      if (!['INPROGRESS','HOLD','DRAFT'].includes(state.currentState)) this.dispatch('setCurrentName',{});
 
 
       // we keep the original data so that if fields exist that we do not use, we don't lose that
@@ -436,16 +432,12 @@ mutations: {
       state.additionalCompInfo.nr_status = dbcompanyInfo.state
       state.examiner = dbcompanyInfo.userId
       state.priority = dbcompanyInfo.priorityCd
-      //state.reSubmission.reSubmissionYN = dbcompanyInfo.resubmissionYN
-      //state.reSubmission.linkedNR = dbcompanyInfo.linkedNR
       //state.reservationCount = dbcompanyInfo.reservationCount
       state.expiryDate = dbcompanyInfo.expirationDate
       state.submittedDate = dbcompanyInfo.submittedDate
       state.submitCount = dbcompanyInfo.submitCount
-
-      // set flag indicating whether you own this NR and it's in progress
-      if (state.currentState == 'INPROGRESS' && state.examiner == state.userId) state.is_my_current_nr = true;
-      else state.is_my_current_nr = false;
+      state.previousNr = dbcompanyInfo.previousNr
+      state.corpNum = dbcompanyInfo.corpNum
 
       // cycle through nwpta entries
       for (let record of dbcompanyInfo.nwpta) {
@@ -537,12 +529,12 @@ mutations: {
       //state.nrData.state =  state.additionalCompInfo.nr_status
       state.nrData.userId = state.examiner
       state.nrData.priorityCd = state.priority
-      //state.reSubmission.reSubmissionYN = dbcompanyInfo.resubmissionYN
-      //state.reSubmission.linkedNR = dbcompanyInfo.linkedNR
       //state.reservationCount = dbcompanyInfo.reservationCount
       state.nrData.expirationDate = state.expiryDate
       state.nrData.submittedDate = state.submittedDate
       state.nrData.submitCount = state.submitCount
+      state.nrData.previousNr = state.previousNr
+      state.nrData.corpNum = state.corpNum
     },
 
     loadCompanyIssues(state, dbcompanyIssues) {
@@ -622,14 +614,13 @@ mutations: {
       state.currentConflict = value
     },
     currentCondition(state,value){
-      console.log('got here 2');
       state.currentCondition = value
     },
     currentTrademark (state,value){
       state.currentTrademark = value
     },
 
-    historyMatch(state,value){
+    currentHistory(state,value){
       state.currentHistory = value
     },
 
@@ -825,14 +816,19 @@ mutations: {
         })
     },
 
-    //updates the names data, throught the api, into the database
+    //updates the names data, through the api, into the database
     updateRequest( {commit, state}) {
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       commit('update_nrData')
       const url = '/api/v1/requests/' + state.compInfo.nrNumber
       axios.put(url, state.nrData, {headers: {Authorization: `Bearer ${myToken}`}})
            .then(function(response){
-              console.log('Request updated for ' + state.compInfo.nrNumber)
+             console.log('Request updated for ' + state.compInfo.nrNumber)
+
+             // load updated data from response
+             if (response.data !== undefined && response.data.nrNum !== undefined) {
+               commit('loadCompanyInfo',response.data);
+             }
            })
            .catch(error => console.log('ERROR: ' + error))
     },
@@ -956,7 +952,6 @@ mutations: {
     getNamesConflict ({state,commit},value) {
       console.log('action: getting data for company number: ' + value.nrNumber)
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
-      //value.nrNumber = 'NR 8270105'
       const url = '/api/v1/requests/' + value.nrNumber
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
@@ -979,15 +974,16 @@ mutations: {
     },
 
     getHistoryInfo ({state,commit},value) {
-      console.log('action: getting HistoryInfo for company number: ' + value.nrNumber)
+      console.log('action: getting HistoryInfo for company number: ' + value.nr_num)
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/requests/' + value.nrNumber
+      const url = '/api/v1/requests/' + value.nr_num
+      // const url = '/api/v1/requests/NR00000023'
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        console.log('Names Conflict response:' + response.data)
+        console.log('History info response:' + response.data)
         commit('loadHistoriesInfoJSON',response.data )
       })
-        .catch(error => console.log('ERROR: getNamesConflict' + error))
+        .catch(error => console.log('ERROR: getHistoryInfo' + error))
     },
 
     runRecipe({dispatch,state}) {
@@ -1143,10 +1139,11 @@ mutations: {
         .catch(error => console.log('ERROR: ' + error))
     },
 
-    resetValues({commit}){
+    resetValues({state, commit}){
       // clear NR specific JSON data so that it can't get accidentally re-used by the next NR number
       console.log('Deleting conflictsJSON from state')
-      commit('conflictsJSON',null)
+      commit('loadConflictsJSON',null)
+      commit('currentConflict', null)
 
       console.log('Deleting NamesConflictJSON from state')
       commit('loadNamesConflictJSON',null)
@@ -1162,9 +1159,21 @@ mutations: {
 
       console.log('Deleting HistoriesInfoJSON from state')
       commit('loadHistoriesInfoJSON',null)
+      commit('currentHistory',null)
 
       console.log('Deleting TrademarksJSON from state')
       commit('loadTrademarksJSON',null)
+
+      // reset all flags like editing, making decision, etc.
+      state.is_editing = false;
+      state.is_making_decision = false;
+      state.decision_made = null;
+      state.acceptance_will_be_conditional = false;
+      state.is_header_shown = false;
+
+    },
+    resetHistoriesInfo({commit}) {
+      commit('loadHistoriesInfoJSON',null)
     },
 
   },
@@ -1173,14 +1182,16 @@ mutations: {
       return state.userId;
     },
     is_my_current_nr(state) {
-      return state.is_my_current_nr;
+      // set flag indicating whether you own this NR and it's in progress
+      if (state.currentState == 'INPROGRESS' && state.examiner == state.userId) return true;
+      else return false;
     },
     furnished(state) {
       return state.furnished;
     },
     is_complete(state) {
       // indicates a complete NR
-      if (['APPROVED', 'REJECTED', 'CONDITION'].
+      if (['APPROVED', 'REJECTED', 'CONDITIONAL'].
            indexOf(state.currentState) >= 0 ) return true;
       else false;
     },
@@ -1317,12 +1328,6 @@ mutations: {
       if (state.priority == 'Y') return true;
       else return false;
     },
-    reSubmissionYN(state) {
-      return state.reSubmission.reSubmissionYN
-    },
-    linkedNR(state) {
-      return state.reSubmission.linkedNR
-    },
     reservationCount(state) {
       return state.reservationCount
     },
@@ -1334,6 +1339,12 @@ mutations: {
     },
     submitCount(state) {
       return state.submitCount;
+    },
+    previousNr(state) {
+      return state.previousNr;
+    },
+    corpNum(state) {
+      return state.corpNum;
     },
     issue_Match(state) {
       return state.issue.issue_Match
@@ -1421,6 +1432,6 @@ mutations: {
     },
     searchDataJSON(state) {
       return state.searchDataJSON
-    }
+    },
   }
 })

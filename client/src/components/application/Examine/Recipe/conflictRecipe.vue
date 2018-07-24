@@ -14,7 +14,7 @@
       </div>
 
       <div class="col client-info-view">
-        <h2>{{ currentName }}</h2>
+        <h2 style="text-transform: uppercase">{{ currentName }}</h2>
         <div class="add-top-padding">
           <h3>Submitted</h3>
           <p>{{ submittedDate }}</p>
@@ -67,8 +67,9 @@
   .issue-sects {
   }
   .client-info-view {
+    border: 1px solid #b3d9ff;
     background-color: #efefef;
-    padding: 1px;
+    padding: 2px;
   }
   .conlist {
     border: 1px solid #880000;

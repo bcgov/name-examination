@@ -1,3 +1,4 @@
+<!--eslint-disable-->
 <template>
   <span v-if="layout_decision">
     <div class="row">

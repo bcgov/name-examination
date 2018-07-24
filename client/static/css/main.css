@@ -2287,6 +2287,15 @@ h3:first-child
 {
   margin-top: 0;
 }
+h3.inline {
+  display: inline;
+}
+h3.inline:before {
+  content: "";
+  display: table;
+  clear: both;
+  margin-top: 15px;
+}
 /* add top padding to element, used specifically where headings (h3) need more upper margin between
 it and element above, but because of grid layout and col's, it is hard to identify with css
 selectors. */
@@ -2411,3 +2420,20 @@ p
 }
 
 /* END loading spinner */
+
+/* FORM VALIDATION */
+
+.form-group-error h3, .error {
+  color: #cc0000;
+}
+
+.form-group-error input, .form-group-error textarea, .form-group-error select {
+  border-color: #cc0000;
+}
+
+.error {
+  display: none;
+}
+.form-group-error .error {
+  display: block;
+}
