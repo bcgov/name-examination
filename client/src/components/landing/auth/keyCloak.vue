@@ -19,7 +19,7 @@
 <script>
 /* eslint-disable */
 //var keycloak = Keycloak('static/config.json')
-var keycloak = Keycloak('static/keycloak.json')
+var keycloak = Keycloak('static/keycloak/keycloak.json')
 
 var initOptions = {
   responseMode: 'fragment',
