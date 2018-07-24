@@ -10,6 +10,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     //User Info
+    myKeycloak: null,
     userId: null,
     authorized: null,
     email: null,
@@ -632,13 +633,19 @@ mutations: {
       state.currentHistory = value
     },
 
+    saveKeyCloak(state,value){
+      state.myKeycloak = value
+    }
   },
 
   actions: {
     kcauth({commit, dispatch, state}) {
+
+      console.log('kcauth')
       const kc = localStorage.getItem('KEYCLOAK_TOKEN')
       state.kctoken = kc
-      //console.log(authData)
+
+
       //state.user_role =  authData.realm_access.roles,
       state.user_role = ''
       state.idToken = kc
@@ -667,7 +674,9 @@ mutations: {
       localStorage.removeItem('COMPINFO')
 
       localStorage.removeItem('kctoken')
+      localStorage.removeItem('KEYCLOAK_REFRESH')
       localStorage.removeItem('KEYCLOAK_TOKEN')
+      localStorage.removeItem('KEYCLOAK_EXPIRES')
       localStorage.removeItem('AUTHORIZED')
       localStorage.removeItem('USERNAME')
 
@@ -725,7 +734,7 @@ mutations: {
       console.log('action: select next company number from postgres')
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/queues/@me/oldest'
-      console.log('URL:' + axios.baseURL + url)
+      console.log('URL:' + axios.defaults.baseURL + url)
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         // response.data.nameRequest = 'NR 8270105';
@@ -744,7 +753,6 @@ mutations: {
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         console.log('Comp Info Response:' + response.data)
-        localStorage.setItem('COMPINFO',response.data)
         commit('loadCompanyInfo',response.data)
       })
       .catch(error => console.log('ERROR: ' + error))

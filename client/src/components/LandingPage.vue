@@ -9,7 +9,7 @@
 /* eslint-disable */
 var authorized = localStorage.getItem("AUTHORIZED");
 
-  export default {
+export default {
     name: 'LandingPage',
     data() {
       return {}
@@ -18,7 +18,7 @@ var authorized = localStorage.getItem("AUTHORIZED");
     //  StdHeader
     },
     mounted() {
-      if(authorized){
+      if(!authorized){
         this.$store.dispatch('kcauth');
       };
     },
