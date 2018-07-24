@@ -670,8 +670,7 @@ mutations: {
     loadSetUp({dispatch}){
         //Read Configuration.json File
         readJFile('static/config/configuration.json', function (myArray) {
-        // axios.defaults.baseURL = myArray[0]['URL']
-        axios.defaults.baseURL = 'http://127.0.0.1:5000/'
+        axios.defaults.baseURL = myArray[0]['URL']
         console.log("Setting axios.baseURL to: " + axios.defaults.baseURL)
 
         //load UI dropdowns from json files and database tables
