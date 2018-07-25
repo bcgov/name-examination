@@ -1,0 +1,10 @@
+{
+  "realm": "nest",
+  "auth-server-url": "https://dev-sso.pathfinder.gov.bc.ca/auth",
+  "ssl-required": "external",
+  "resource": "namex-TEST",
+  "credentials": {
+    "secret": "b0626238-ec80-43df-a5a7-72f1a6d50fe1"
+  },
+  "use-resource-role-mappings": true
+}
