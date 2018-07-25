@@ -288,6 +288,7 @@ mutations: {
       state.searchState = value;
     },
     authUser (state, userData) {
+      console.log('saving token')
       state.kctoken = userData
       //state.kctoken = userData.client_session
       //state.userRole = userData.user_role
@@ -687,6 +688,39 @@ mutations: {
     tryAutoLogin ({commit}) {
     },
 
+    checkToken({dispatch, state}){
+      if(state.myKeycloak==null){
+        console.log('myKeycloak is null')
+        //TODO - reset everything and force login???
+        dispatch('logout')
+        this.$router.push('/')
+        //return
+      }
+      if(state.myKeycloak.isTokenExpired(300)) {
+        console.log('myKeycloak token expired, updating...')
+        dispatch('updateToken')
+      }
+    },
+
+    updateToken({commit, state}){
+      const vm = this;
+      state.myKeycloak.updateToken().success(function (refreshed) {
+        if (refreshed) {
+          console.log('Token was successfully refreshed');
+          console.log('Token Updated')
+          localStorage.setItem('KEYCLOAK_TOKEN', state.myKeycloak.token);
+          localStorage.setItem('KEYCLOAK_REFRESH', state.myKeycloak.refreshToken);
+          localStorage.setItem('KEYCLOAK_EXPIRES', state.myKeycloak.tokenParsed.exp * 1000);
+          console.log('Saving Token')
+          commit('authUser', state.myKeycloak.token)
+        } else {
+          console.log('Token is still valid');
+        }
+      }).error(function () {
+        console.log('Failed to refresh the token, or the session has expired');
+      });
+    },
+
     storeUser ({commit, state}, userData) {
       if (!state.idToken) {
         return
@@ -727,6 +761,8 @@ mutations: {
       const url = '/api/v1/requests/queues/@me/oldest'
       console.log('URL:' + axios.defaults.baseURL + url)
       const vm = this
+      console.log('Next company - checkToken')
+      dispatch('checkToken')
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         // response.data.nameRequest = 'NR 8270105';
         //response.data.nameRequest = 'NR 0000021';
@@ -736,12 +772,13 @@ mutations: {
       })
     },
 
-    getpostgrescompInfo ({commit},nrNumber) {
+    getpostgrescompInfo ({dispatch,commit},nrNumber) {
       console.log('action: getting data for company number: ' + nrNumber + ' from postgres')
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + nrNumber
       console.log('URL:' + url)
       const vm = this
+      dispatch('checkToken')
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         console.log('Comp Info Response:' + response.data)
         commit('loadCompanyInfo',response.data)
@@ -1178,6 +1215,9 @@ mutations: {
 
   },
   getters: {
+    keycloak(state) {
+      return state.myKeycloak
+    },
     userId(state) {
       return state.userId;
     },
