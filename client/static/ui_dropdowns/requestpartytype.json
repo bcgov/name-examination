@@ -1,0 +1,12 @@
+﻿[
+	{
+		"value": "APP",
+		"text": "Applicant",
+		"FULL_DESC": "Applicant"
+	},
+	{
+		"value": "CLN",
+		"text": "Client",
+		"FULL_DESC": "Client"
+	}
+]

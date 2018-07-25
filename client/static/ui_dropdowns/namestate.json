@@ -1,0 +1,22 @@
+﻿[
+	{
+		"value": "A",
+		"text": "Approved",
+		"FULL_DESC": "Examined"
+	},
+	{
+		"value": "C",
+		"text": "Cond. Appr.",
+		"FULL_DESC": "Examined - Conditionally Approved"
+	},
+	{
+		"value": "R",
+		"text": "Rejected",
+		"FULL_DESC": "Examined and rejected"
+	},
+	{
+		"value": "NE",
+		"text": "Not Examined",
+		"FULL_DESC": "Not examined - in the queue or another choice approved"
+	}
+]

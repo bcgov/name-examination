@@ -1,0 +1,32 @@
+﻿[
+	{
+		"value": "D",
+		"text": "Draft",
+		"FULL_DESC": "Draft"
+	},
+	{
+		"value": "C",
+		"text": "Cancelled",
+		"FULL_DESC": "Cancelled"
+	},
+	{
+		"value": "H",
+		"text": "Held",
+		"FULL_DESC": "Under examination - not processed."
+	},
+	{
+		"value": "COMPLETED",
+		"text": "Completed",
+		"FULL_DESC": "Completed - accepted or rejected."
+	},
+	{
+		"value": "E",
+		"text": "Expired.",
+		"FULL_DESC": "Request name expired before being consumed."
+	},
+	{
+		"value": "HISTORICAL",
+		"text": "Historical",
+		"FULL_DESC": "Historical"
+	}
+]
