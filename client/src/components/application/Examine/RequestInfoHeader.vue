@@ -23,13 +23,16 @@
 
             <p v-if="!is_editing" class="add-top-padding"
                style="font-weight: bold;">{{ jurisdiction_desc }}</p>
-            <h3 v-else>Jurisdiction</h3>
-            <select v-if="is_editing" v-model="jurisdiction" class="form-control">
-              <option v-for="option in jurisdiction_options" v-bind:value="option.value"
-                      v-bind:key="option.value">
-                {{ option.text }}
-              </option>
-            </select>
+            <div v-else-if="jurisdiction_required" class="add-top-padding" :class="{'form-group-error': $v.jurisdiction.$error}">
+              <h3>Jurisdiction</h3>
+              <select v-model="jurisdiction" class="form-control" :onchange="$v.jurisdiction.$touch()">
+                <option v-for="option in jurisdiction_options" v-bind:value="option.value"
+                        v-bind:key="option.value">
+                  {{ option.text }}
+                </option>
+              </select>
+              <div class="error" v-if="!$v.jurisdiction.required">Jurisdiction is required.</div>
+            </div>
 
           </div>
         </div>
@@ -39,10 +42,10 @@
             <!-- spacer -->
           </div>
           <div class="col">
-            <nwpta jurisdiction="AB" />
+            <nwpta v-if="nwpta_required" jurisdiction="AB" />
           </div>
           <div class="col">
-            <nwpta jurisdiction="SK" />
+            <nwpta v-if="nwpta_required" jurisdiction="SK" />
           </div>
         </div>
 
@@ -77,24 +80,14 @@
       <div id='div2' class="col-md-4">
         <div class="row">
           <div class="col">
+
             <h3>NATURE OF BUSINESS</h3>
             <div v-if="show_extended_header">
               <p style="white-space: pre-line;">{{ natureOfBusiness }}</p>
             </div>
             <p v-else style="white-space: pre-line;">{{ natureOfBusinessTruncated }}</p>
 
-            <span v-if="show_extended_header">
-
-              <span v-if="is_editing" :class="{'form-group-error': $v.corpNum.$error}">
-                <h3 class="inline">Related Corp #</h3>
-                <input class="form-control" v-model="corpNum" :onchange="$v.corpNum.$touch()" />
-                <div class="error" v-if="!$v.corpNum.isValidCorpNum">Please enter a valid Incorporation Number.</div>
-              </span>
-              <span v-else>
-                <h3 class="inline">Related Corp #</h3>
-                {{ corpNum }}
-              </span>
-
+            <div v-if="show_extended_header" class="add-top-padding">
 
               <h3>SUBMITTED DATE</h3>
               {{submittedDate}}
@@ -107,9 +100,31 @@
 
               <h3 v-if="submitCount > 0">SUBMIT COUNT: {{submitCount}}</h3>
 
-              <h3 class="inline" v-if="previousNr">previous NR: </h3><span v-html="previousNr"></span>
+              <span v-if="prev_nr_required">
+                <span v-if="is_editing" :class="{'form-group-error': $v.previousNr.$error}">
+                  <h3 class="inline">Previous NR</h3>
+                  <input class="form-control" v-model="previousNr" :onchange="$v.previousNr.$touch()" />
+                  <div class="error" v-if="!$v.previousNr.isValidNr">Please enter a valid NR ("NR xxxxxxx").</div>
+                </span>
+                <span v-else>
+                  <h3 class="inline">Previous NR</h3>
+                  <span v-html="previousNr_link"></span>
+                </span>
+              </span>
 
-            </span>
+              <span v-if="corp_num_required">
+                <span v-if="is_editing" :class="{'form-group-error': $v.corpNum.$error}">
+                  <h3 class="inline">Related Corp #</h3>
+                  <input class="form-control" v-model="corpNum" :onchange="$v.corpNum.$touch()" />
+                  <div class="error" v-if="!$v.corpNum.isValidCorpNum">Please enter a valid Incorporation Number.</div>
+                </span>
+                <span v-else>
+                  <h3 class="inline">Related Corp #</h3>
+                  {{ corpNum }}
+                </span>
+              </span>
+
+            </div>
           </div>
 
         </div>
@@ -146,13 +161,14 @@
               <div class="col">
                 <h3>ADDITIONAL INFORMATION</h3>
                 <p v-if="!is_editing" style="white-space: pre-line;">{{ additionalInfo }}</p>
-                <textarea v-else v-model="additionalInfo" class="form-control" maxlength="150">
+                <textarea v-else v-model="additionalInfo" class="form-control" maxlength="150"
+                          rows="5">
                 </textarea>
               </div>
             </div>
             <div class="row">
               <div class="col add-top-padding">
-                <clientinfoview />
+                <clientinfoview ref="clientinfoview" />
               </div>
             </div>
           </div>
@@ -200,30 +216,67 @@ export default {
     data: function () {
       return {
         newComment: null,
+        corp_num_required: false,
+        prev_nr_required: false,
+        nwpta_required: false,
+        jurisdiction_required: false,
+        additional_info_template: null,
       }
     },
     validations: function () {
 
       // set basic validations that aren't conditional on any other fields
       var validations = {
-        // first name choice is required
+        // first name choice is always required
         compName1: {
           name: {
             required,
           }
         },
       }
-      // validate corp # - not required, but if entered it must be validated TODO CONDITIONAL
-      //if (['CCR', 'UC', 'CUL', 'CCC', 'CLL', 'CCV'].indexOf(this.requestType) > -1) {
-      if (true) {
+
+      // validate jurisdiction if required
+      if (this.jurisdiction_required) {
+        validations.jurisdiction = {
+          required,
+        }
+      }
+
+      // validate corp # - not required, but if entered it must be validated
+      if (this.corp_num_required) {
         validations.corpNum = {
           isValidCorpNum(value) {
             // if empty, it's valid - not required
-            return true;
             if (value == '' || value == null) return true;
+
+            // valid corp numbers are between 7 and 10 characters long
+            if (value.length < 7 || value.length > 10) return false;
 
             const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
             const url = '/api/v1/corporations/' + value;
+            return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+              return true;
+            })
+            .catch(error => {
+              return false;
+            });
+          },
+        }
+      }
+
+      // validate Previous NR # - not required, but if entered it must be validated
+      if (this.prev_nr_required) {
+        validations.previousNr = {
+          isValidNr(value) {
+            // if empty, it's valid - not required
+            if (value == '' || value == null) return true;
+
+            // valid NR #s are NR, space, 7 digits (10 characters total)
+            if (value.length !== 10) return false;
+            if (value.substr(0, 3) !== 'NR ') return false;
+
+            const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+            const url = '/api/v1/requests/' + value
             return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
               return true;
             })
@@ -243,6 +296,9 @@ export default {
       },
       requestType_options() {
         return this.$store.getters.listRequestTypes;
+      },
+      requestTypeRules() {
+        return this.$store.getters.requestTypeRules;
       },
       is_my_current_nr() {
         return this.$store.getters.is_my_current_nr;
@@ -393,7 +449,15 @@ export default {
       submitCount() {
         return this.$store.getters.submitCount;
       },
-      previousNr() {
+      previousNr: {
+        get: function () {
+          return this.$store.getters.previousNr;
+        },
+        set: function (value) {
+          this.$store.commit('previousNr', value);
+        }
+      },
+      previousNr_link() {
         if (this.$store.getters.previousNr != undefined)
           return '<a href="/' + this.$store.getters.previousNr + '" target="_blank">' + this.$store.getters.previousNr + '</a>';
         else return '';
@@ -430,6 +494,22 @@ export default {
           return;
         }
 
+        // if jurisdiction not required, clear the data (ie: BC)
+        if (!this.jurisdiction_required) this.$store.commit('jurisdiction', null);
+
+        // if corp num not required, clear the data
+        if (!this.corp_num_required) this.$store.commit('corpNum', null);
+
+        // if previous NR not required, clear the data
+        if (!this.prev_nr_required) this.$store.commit('previousNr', null);
+
+        // if NWPTA not required, clear the data
+        // TODO
+
+
+        // build Additional Info
+        this.buildAdditionalInfo();
+
         // save new comment
         this.addNewComment();
 
@@ -443,6 +523,53 @@ export default {
       cancelSave() {
         this.$store.dispatch('getpostgrescompInfo',this.nrNumber)
         this.$store.state.is_editing = false;
+      },
+      buildAdditionalInfo() {
+        var newAddInfo = "";
+
+        // create new additional info from template if relevant; add to top of additional info
+        if (this.additional_info_template !== null && this.additional_info_template != '') {
+
+
+          // split templates based on || separator
+          var templates = this.additional_info_template.split('||');
+          for (var i = 0; i < templates.length; i++) {
+            var template = templates[i];
+
+            // corp num placeholder
+            // if there is no corp num for this placeholder, do not use this bit of the template
+            if (template.indexOf('<corp_num>') > -1) {
+              if (this.corpNum != null && this.corpNum != '')
+                template = template.replace('<corp_num>', this.corpNum);
+              else template = '';
+            }
+
+            // previous NR placeholder
+            // if there is no previous NR for this placeholder, do not use this bit of the template
+            if (template.indexOf('<prev_nr>') > -1) {
+              if (this.previousNr != null && this.previousNr != '')
+                template = template.replace('<prev_nr>', this.previousNr);
+              else template = '';
+            }
+
+            // NWPTA placeholder
+            // if there is no NWPTA data for this placeholder, do not use this bit of the template
+            if (template.indexOf('<nwpta>') > -1) {
+              // TODO
+            }
+
+            /*
+            Check if this bit of text is already in Additional Info - ie: don't keep adding note
+            re. Corp Num or previous NR every time user saves, even if they haven't changed that
+            data.
+            */
+            if (template != '') {
+              if (this.additionalInfo.indexOf(template) == -1) newAddInfo += template + ' ';
+            }
+          }
+        }
+
+        if (newAddInfo != '') this.additionalInfo = newAddInfo + '\n' + this.additionalInfo;
       },
       addNewComment() {
 
@@ -471,11 +598,12 @@ export default {
          */
         console.log('got to validate()');
 
-        // trigger vuelidate validation
+        // trigger vuelidate validation in this component and child component
         this.$v.$touch();
+        this.$refs.clientinfoview.$v.$touch();
 
-        // return opposite of 'invalid' flag, since we want to know if this IS valid
-        return !this.$v.$invalid;
+        // return opposite of 'invalid' flags, since we want to know if this IS valid
+        return !this.$v.$invalid && !this.$refs.clientinfoview.$v.$invalid;
       },
     },
     watch: {
@@ -488,6 +616,27 @@ export default {
         } else {
           console.log('RequestInfoHeader.watch set currentChoice to 1')
           this.$store.commit('currentChoice',1)
+        }
+      },
+      requestType: function(val) {
+        /*
+        Show/hide elements of NR Details based on request type (display and edit).
+         */
+        var rules = this.requestTypeRules.filter(findArrValueByAttr(val, 'request_type'))[0];
+
+        if (rules == undefined) {
+          this.corp_num_required = false;
+          this.prev_nr_required = false;
+          this.nwpta_required = false;
+          this.jurisdiction_required = false;
+          this.additional_info_template = null;
+
+        } else {
+          this.corp_num_required = rules.corp_num_required;
+          this.prev_nr_required = rules.prev_nr_required;
+          this.nwpta_required = rules.nwpta_required;
+          this.jurisdiction_required = rules.jurisdiction_required;
+          this.additional_info_template = rules.additional_info_template;
         }
       }
     }

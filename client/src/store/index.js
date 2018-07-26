@@ -45,6 +45,8 @@ export default new Vuex.Store({
     listRequestTypes: null, // DROP LIST
     listDecisionReasons: null,
 
+    requestTypeRules: null, // list of request type rules, internal use only no display
+
     //Names Data
     //nr_conflict: null,
     details: null,
@@ -157,7 +159,6 @@ export default new Vuex.Store({
     searchQuerySpecial: '?order=priorityCd:desc,submittedDate:asc&queue=hold&furnished=true&unfurnished=true&rows=10',
     searchState: 'HOLD',
 
-    //TODO
     conflictList: null,
     conflictHighlighting: null,
     conflictNames: null,
@@ -279,6 +280,9 @@ mutations: {
     internalComments (state, value) {
       state.internalComments = value;
     },
+    previousNr(state, value) {
+      state.previousNr = value;
+    },
     corpNum(state, value) {
       state.corpNum = value;
     },
@@ -394,8 +398,8 @@ mutations: {
 
             break;
           default:
-            console.log('Error with company name structure')
-            return
+            console.log('got to a name record with null choice - moving on');
+            break;
         }
       }
 
@@ -488,16 +492,17 @@ mutations: {
         console.log('Error, No company names found')
         return
       } else {
-        for (let record of state.nrData.names) {
+        for (var i = 0; i < state.nrData.names.length; i++) {
+          var record = state.nrData.names[i];
           switch (record.choice) {
             case 1:
-              state.nrData.names[0] = state.compInfo.compNames.compName1;
+              state.nrData.names[i] = state.compInfo.compNames.compName1;
               break;
             case 2:
-              state.nrData.names[1] = state.compInfo.compNames.compName2;
+              state.nrData.names[i] = state.compInfo.compNames.compName2;
               break;
             case 3:
-              state.nrData.names[2] = state.compInfo.compNames.compName3;
+              state.nrData.names[i] = state.compInfo.compNames.compName3;
               break;
           }
         }
@@ -526,7 +531,7 @@ mutations: {
       state.nrData.xproJurisdiction = state.additionalCompInfo.jurisdiction
       state.nrData.natureBusinessInfo = state.additionalCompInfo.natureOfBussiness
       state.nrData.details = state.details
-      state.nrData.additionalInfo = state.additionalInfo
+      state.nrData.additionalInfo = state.additionalInfo.substr(0, 150);
       state.nrData.comments = state.internalComments
       state.nrData.nwpta = []
       if (state.additionalCompInfo.nwpta_ab.partnerJurisdictionTypeCd !== null) state.nrData.nwpta.push(state.additionalCompInfo.nwpta_ab);
@@ -559,6 +564,9 @@ mutations: {
     },
     listDecisionReasons (state, value) {
       state.listDecisionReasons = value;
+    },
+    requestTypeRules(state, value) {
+      state.requestTypeRules = value;
     },
     currentRecipeCard(state,value){
       state.currentRecipeCard = value
@@ -916,40 +924,45 @@ mutations: {
             .catch(error => console.log('ERROR: ' + error))
       },
 
-      loadDropdowns( {commit, state} ) {
-            var json_files_path = 'static/ui_dropdowns/';
+    loadDropdowns( {commit, state} ) {
+      var json_files_path = 'static/ui_dropdowns/';
 
-            console.log("Load Drop Downs");
-            console.log("Jurisdictions");
+      console.log("Load Drop Downs");
+      console.log("Jurisdictions");
 
-            // jurisdictions - first list 1, then list 2
-            if (state.listJurisdictions === null) {
-              readJFile(json_files_path + 'jurisdiction 1.json', function (myArray) {
-                commit('listJurisdictions', myArray);
+      // jurisdictions - first list 1, then list 2
+      if (state.listJurisdictions === null) {
+        readJFile(json_files_path + 'jurisdiction 1.json', function (myArray) {
+          commit('listJurisdictions', myArray);
 
-                readJFile(json_files_path + 'jurisdiction 2.json', function (myArray) {
-                  commit('listJurisdictions', state.listJurisdictions.concat(myArray));
-                });
-              });
-            }
+          readJFile(json_files_path + 'jurisdiction 2.json', function (myArray) {
+            commit('listJurisdictions', state.listJurisdictions.concat(myArray));
+          });
+        });
+      }
 
-            console.log("Request Types")
-            // request types
-            if (state.listRequestTypes === null) {
-              readJFile(json_files_path + 'requesttype.json', function (myArray) { commit('listRequestTypes', myArray);})
-            }
+      console.log("Request Types")
+      // request types
+      if (state.listRequestTypes === null) {
+        readJFile(json_files_path + 'requesttype.json', function (myArray) { commit('listRequestTypes', myArray);})
+      }
 
-            console.log("Decision Reasons")
-            // decision reasons
-            if (state.listDecisionReasons === null) {
-              console.log('action: get decision reasons list from API')
-              const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
-              const url = '/api/v1/requests/decisionreasons'
-              return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-                console.log(response);
-                commit('listDecisionReasons',response.data)
-              })
-            }
+      console.log("Decision Reasons")
+      // decision reasons
+      if (state.listDecisionReasons === null) {
+        const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+        const url = '/api/v1/requests/decisionreasons'
+        axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+          commit('listDecisionReasons',response.data)
+        })
+      }
+
+      // request type rules - from CSV, not JSON
+      if (state.requestTypeRules === null) {
+        readCsv(json_files_path + 'request_type_rules.csv', function (myArray) {
+          commit('requestTypeRules', myArray);
+        });
+      }
     },
 
     newNrNumber({commit,dispatch},nrNum) {
@@ -1034,7 +1047,6 @@ mutations: {
     },
 
     checkConflicts( {commit, state} ) {
-      //TODO - Actions: finish loading conflict list
       console.log('action: getting conflicts for company number: ' + state.compInfo.nrNumber + ' from solr')
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/analysis/' + state.currentChoice + '/conflicts'
@@ -1437,6 +1449,9 @@ mutations: {
     },
     listDecisionReasons(state) {
       return state.listDecisionReasons
+    },
+    requestTypeRules(state) {
+      return state.requestTypeRules
     },
     conflictList(state) {
       return state.conflictList
