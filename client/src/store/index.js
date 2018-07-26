@@ -12,11 +12,10 @@ export default new Vuex.Store({
     //User Info
 
     myKeycloak: null,
-    userId: localStorage.getItem('USERNAME'),
-    authorized: null,
-    email: null,
-    kctoken: null,
+    userId: null,
     user_role: null,
+    authorized: false,
+    email: null,
 
     //Interface settings
     currentChoice: null, // CURRENT NAME BEING EXAMINED (choice number)
@@ -295,15 +294,7 @@ mutations: {
     searchState(state,value) {
       state.searchState = value;
     },
-
-    authUser (state, userData) {
-      console.log('saving token')
-      state.kctoken = userData
-      //state.userRole = userData.user_role
-    },
-
     clearAuthData (state) {
-      state.kcToken = null
       state.userId = null
       state.authorized = null
     },
@@ -639,47 +630,34 @@ mutations: {
 
     saveKeyCloak(state,value){
       state.myKeycloak = value
-    }
-  },
-
-  actions: {
-    kcauth({commit, dispatch, state}) {
-
-      console.log('kcauth')
-      const kc = localStorage.getItem('KEYCLOAK_TOKEN')
-      state.kctoken = kc
-
-
-      //state.user_role =  authData.realm_access.roles,
-      state.user_role = ''
-      state.idToken = kc
-      localStorage.setItem('kctoken', state.kctoken)
-      localStorage.setItem('user_role', state.user_role)
-
-      if (state.kctoken) {
-        console.log('KC Authorized user roles')
-        state.userId = localStorage.getItem('USERNAME');
-        commit('authUser', {
-          //user_role: state.user_role,
-          kctoken: state.kctoken
-        })
-      }
     },
 
+    setLoginValues(state){
+      state.userId=localStorage.getItem('USERNAME')
+      state.user_role=localStorage.getItem('USER_ROLE')
+      state.authorized=localStorage.getItem('AUTHORIZED')
+    }
+
+  },
+  actions: {
     logout({commit, state}) {
 
       commit('clearAuthData')
 
-      localStorage.removeItem('kctoken')
       localStorage.removeItem('KEYCLOAK_REFRESH')
       localStorage.removeItem('KEYCLOAK_TOKEN')
       localStorage.removeItem('KEYCLOAK_EXPIRES')
       localStorage.removeItem('AUTHORIZED')
       localStorage.removeItem('USERNAME')
+      localStorage.removeItem('USER_ROLE')
 
     },
 
     loadSetUp({dispatch}){
+
+        // clear values from local storeage
+        dispatch('logout')
+
         //Read Configuration.json File
         readJFile('static/config/configuration.json', function (myArray) {
         axios.defaults.baseURL = myArray[0]['URL']
@@ -687,6 +665,7 @@ mutations: {
 
         //load UI dropdowns from json files and database tables
         dispatch('loadDropdowns');
+
       })
     },
 
@@ -728,35 +707,6 @@ mutations: {
       }).error(function () {
         console.log('Failed to refresh the token, or the session has expired');
       });
-    },
-
-    storeUser ({commit, state}, userData) {
-      if (!state.idToken) {
-        return
-      }
-      globalAxios.post('/users.json' + '?auth=' + state.idToken, userData)
-        .then(res => console.log(res))
-        .catch(error => console.log(error))
-    },
-
-    fetchUser ({commit, state}) {
-      if (!state.idToken) {
-        return
-      }
-      globalAxios.get('/users.json' + '?auth=' + state.idToken)
-        .then(res => {
-          console.log(res)
-          const data = res.data
-          const users = []
-          for (let key in data) {
-            const user = data[key]
-            user.id = key
-            users.push(user)
-          }
-          console.log(users)
-          commit('storeUser', users[0])
-        })
-        .catch(error => console.log(error))
     },
 
     setDetails({commit, state}) {
@@ -1263,9 +1213,6 @@ mutations: {
     is_header_shown(state) {
       return state.is_header_shown
     },
-    user(state) {
-      return state.user
-    },
     email(state) {
       return state.email
     },
@@ -1294,7 +1241,8 @@ mutations: {
       return state.issueText
     },
     isAuthenticated(state) {
-      return localStorage.getItem("AUTHORIZED")
+      //return localStorage.getItem("AUTHORIZED")
+      return state.authorized
     },
     nrNumber(state) {
       return state.compInfo.nrNumber

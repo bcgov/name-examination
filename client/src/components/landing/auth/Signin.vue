@@ -19,6 +19,8 @@
 
       if (!authorized) {
         keycloak = Keycloak('static/keycloak/keycloak.json');
+        this.$store.commit('saveKeyCloak', keycloak);
+
         var token
         const vm = this
 
@@ -29,12 +31,23 @@
             localStorage.setItem('KEYCLOAK_TOKEN', keycloak.token);
             localStorage.setItem('KEYCLOAK_REFRESH', keycloak.refreshToken);
             localStorage.setItem('KEYCLOAK_EXPIRES', keycloak.tokenParsed.exp * 1000);
-            localStorage.setItem("AUTHORIZED",true);
+            localStorage.setItem('USER_ROLE',keycloak.tokenParsed.user_role)
+            if(keycloak.tokenParsed.user_role == undefined){
+              localStorage.setItem("AUTHORIZED", false);
+            }else {
+              localStorage.setItem("AUTHORIZED", true);
+            }
+            //TODO-erase this once rolls creaated
+            localStorage.setItem("AUTHORIZED", true);
 
             // Get user profile
             keycloak.loadUserProfile().success(function (userProfile) {
               app.userName = userProfile.username;
               localStorage.setItem('USERNAME', app.userName);
+
+              console.log('set logion values in store')
+              vm.$store.commit('setLoginValues')
+
             });
 
           } else {
@@ -44,7 +57,6 @@
           alert('failed to initialize');
         });
 
-        vm.$store.commit('saveKeyCloak', keycloak);
       }else{
         console.log('Signin - checking Token')
         this.$store.dispatch('checkToken')

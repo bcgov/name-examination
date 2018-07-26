@@ -19,12 +19,9 @@ export default {
     },
     mounted() {
       if(!authorized){
-        this.$store.dispatch('kcauth');
       };
     },
     methods: {
-      getUserInfo(){
-      }
     }
   }
 </script>
