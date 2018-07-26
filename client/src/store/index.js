@@ -153,8 +153,9 @@ export default new Vuex.Store({
       issue_Format_Text: null
     },
 
-    searchQuery: '',
-    searchState: 'ALL',
+    searchQuery: '?order=priorityCd:desc,submittedDate:asc&queue=hold&furnished=true&unfurnished=true&rows=10',
+    searchQuerySpecial: '?order=priorityCd:desc,submittedDate:asc&queue=hold&furnished=true&unfurnished=true&rows=10',
+    searchState: 'HOLD',
 
     //TODO
     conflictList: null,
@@ -284,20 +285,23 @@ mutations: {
     searchQuery(state, value) {
       state.searchQuery = value;
     },
+    searchQuerySpecial(state, value) {
+      state.searchQuerySpecial = value;
+    },
     searchState(state,value) {
       state.searchState = value;
     },
+
     authUser (state, userData) {
       console.log('saving token')
       state.kctoken = userData
-      //state.kctoken = userData.client_session
       //state.userRole = userData.user_role
-      //state.idToken = userData.client_session
     },
 
     clearAuthData (state) {
       state.kcToken = null
       state.userId = null
+      state.authorized = null
     },
 
     loadpostgresNo(state, postgresData) {
@@ -658,13 +662,6 @@ mutations: {
 
       commit('clearAuthData')
 
-      localStorage.removeItem('expirationDate')
-      localStorage.removeItem('token')
-      localStorage.removeItem('user_role')
-      localStorage.removeItem('userId')
-      localStorage.removeItem('email')
-      localStorage.removeItem('COMPINFO')
-
       localStorage.removeItem('kctoken')
       localStorage.removeItem('KEYCLOAK_REFRESH')
       localStorage.removeItem('KEYCLOAK_TOKEN')
@@ -689,32 +686,36 @@ mutations: {
     },
 
     checkToken({dispatch, state}){
+      // checks if keycloak object exists - if not then state is unstable, force logout
       if(state.myKeycloak==null){
         console.log('myKeycloak is null')
         //TODO - reset everything and force login???
         dispatch('logout')
-        this.$router.push('/')
-        //return
+       return
       }
-      if(state.myKeycloak.isTokenExpired(300)) {
-        console.log('myKeycloak token expired, updating...')
+      // checks if keycloak object has tokenParsed yet, if not then just return as this only happens at login
+      if(state.myKeycloak.tokenParsed==null){ return }
+
+      var expiresIn = state.myKeycloak.tokenParsed['exp'] - Math.ceil(new Date().getTime() / 1000)
+
+      if(expiresIn < 1700 && expiresIn > 0) {
+        console.log('Token expires in ' + expiresIn + 'seconds, updating')
         dispatch('updateToken')
+      }else if(expiresIn < 0) {
+        dispatch('logout')
       }
     },
 
     updateToken({commit, state}){
       const vm = this;
-      state.myKeycloak.updateToken().success(function (refreshed) {
+      state.myKeycloak.updateToken(-1).success(function (refreshed) {
         if (refreshed) {
-          console.log('Token was successfully refreshed');
-          console.log('Token Updated')
           localStorage.setItem('KEYCLOAK_TOKEN', state.myKeycloak.token);
           localStorage.setItem('KEYCLOAK_REFRESH', state.myKeycloak.refreshToken);
           localStorage.setItem('KEYCLOAK_EXPIRES', state.myKeycloak.tokenParsed.exp * 1000);
-          console.log('Saving Token')
           commit('authUser', state.myKeycloak.token)
         } else {
-          console.log('Token is still valid');
+          console.log('Token is still valid, not refreshed');
         }
       }).error(function () {
         console.log('Failed to refresh the token, or the session has expired');
@@ -1472,6 +1473,9 @@ mutations: {
     },
     searchDataJSON(state) {
       return state.searchDataJSON
+    },
+    searchQuerySpecial(state) {
+      return state.searchQuerySpecial
     },
   }
 })

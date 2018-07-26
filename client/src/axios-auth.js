@@ -1,21 +1,11 @@
 /* eslint-disable */
 import axios from 'axios'
+import store from '@/store'
 
 const instance = axios.create({
 })
 
-let isAlreadyFetchingAccessToken = false
-let subscribers = []
-
 var activeRequestsCounter = 0;
-
-function onAccessTokenFetched(access_token) {
-  subscribers = subscribers.filter(callback => callback(access_token))
-}
-
-function addSubscriber(callback) {
-  subscribers.push(callback)
-}
 
 instance.interceptors.request.use(function (config) {
   /*
@@ -32,10 +22,9 @@ instance.interceptors.request.use(function (config) {
   }, 1000);
   config.loadingTimer = loadingTimer;
 
+
   return config;
 });
-
-
 
 instance.interceptors.response.use(function (response) {
   /*
@@ -49,6 +38,8 @@ instance.interceptors.response.use(function (response) {
     activeRequestsCounter = 0;
     $('#loading-overlay').css('display', 'none');
   }
+
+  store.dispatch('checkToken');
 
   return response
 }, function (error) {

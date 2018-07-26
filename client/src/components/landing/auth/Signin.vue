@@ -45,6 +45,9 @@
         });
 
         vm.$store.commit('saveKeyCloak', keycloak);
+      }else{
+        console.log('Signin - checking Token')
+        this.$store.dispatch('checkToken')
       }
     },
     methods: {
