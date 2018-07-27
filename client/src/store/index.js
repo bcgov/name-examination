@@ -1198,7 +1198,7 @@ mutations: {
     },
     is_complete(state) {
       // indicates a complete NR
-      if (['APPROVED', 'REJECTED', 'CONDITIONAL'].
+      if (['APPROVED', 'REJECTED', 'CONDITIONAL','COMPLETED'].
            indexOf(state.currentState) >= 0 ) return true;
       else false;
     },
