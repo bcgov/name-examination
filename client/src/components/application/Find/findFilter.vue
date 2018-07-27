@@ -41,7 +41,7 @@
           </div>
           <div class="counts">
             <div class="search-load">
-              <button id="load" class="btn" type="button" v-on:click="examineNR">LOAD</button>
+              <button id="load" class="btn" type="button" disabled v-on:click="examineNR">LOAD</button>
             </div>
             <div style="margin-right: 20px" class="count">
               <h3>Total: <span class="count-num">{{this.total}}</span></h3>
@@ -308,6 +308,7 @@ export default {
          $(row).closest('tbody').find('tr').removeClass('select');
          $(row).addClass('select');
          $("#load").addClass("btn btn-primary");
+         $("#load").prop('disabled', false);
          this.selectedNR = row.children[0].innerHTML.trim();
 
        } else {
@@ -327,14 +328,11 @@ export default {
     sort() {
       this.selectedNR = '';
       $(".select").removeClass('select');
-      // this.selectedNR = null;
       $("#load").removeClass("btn-primary");
+      $("#load").prop('disabled', true);
 
       // this.updateQuery('start',0);
       this.$store.dispatch('getSearchDataJSON');
-
-      // this.selectedNR = null;
-      // $("#load").removeClass("btn-primary");
     },
     updateQuery(sort,value) {
       if (this.searchQuery.includes(sort)) {
