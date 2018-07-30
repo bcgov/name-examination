@@ -41,7 +41,7 @@
           </div>
           <div class="counts">
             <div class="search-load">
-              <button id="load" class="btn" type="button" v-on:click="examineNR">LOAD</button>
+              <button id="load" class="btn" type="button" disabled v-on:click="examineNR">LOAD</button>
             </div>
             <div style="margin-right: 20px" class="count">
               <h3>Total: <span class="count-num">{{this.total}}</span></h3>
@@ -86,11 +86,11 @@ export default {
     examiner(){
       return this.username;
     },
-    priorityCheckBox(){
-      if (this.priority)
-        return true;
-      return false;
-    },
+    // priorityCheckBox(){
+    //   if (this.priority)
+    //     return true;
+    //   return false;
+    // },
     furnishedCheckBox(){
       if (this.furnished)
         return true;
@@ -101,9 +101,9 @@ export default {
         return true;
       return false;
     },
-    searchQuerySpecial() {
-      return this.$store.getters.searchQuerySpecial;
-    }
+    // searchQuerySpecial() {
+    //   return this.$store.getters.searchQuerySpecial;
+    // }
   },
   data: () => ({
     fixHeaderAndSetBodyMaxHeight: 400,
@@ -164,36 +164,43 @@ export default {
           newState = '';
         }
         this.updateQuery('queue', newState);
+        this.query.offset = 0;
       }
     },
     nrSearch: {
       handler(nrNum) {
         this.updateQuery('nrNum',nrNum);
+        this.query.offset = 0;
       }
     },
     username: {
       handler(activeUser) {
         this.updateQuery('activeUser',activeUser);
+        this.query.offset = 0;
       }
     },
     compName: {
       handler(compName) {
         this.updateQuery('compName',compName);
+        this.query.offset = 0;
       }
     },
-    priorityCheckBox: {
-      handler(priorityCd) {
-        this.updateQuery('priorityCd',priorityCd);
-      }
-    },
+    // priorityCheckBox: {
+    //   handler(priorityCd) {
+    //     this.updateQuery('priorityCd',priorityCd);
+    //     this.query.offset = 0;
+    //   }
+    // },
     furnishedCheckBox: {
       handler(furnished) {
         this.updateQuery('furnished',furnished);
+        this.query.offset = 0;
       }
     },
     unfurnishedCheckBox: {
       handler(unfurnished) {
         this.updateQuery('unfurnished',unfurnished);
+        this.query.offset = 0;
       }
     },
     query: {
@@ -208,15 +215,16 @@ export default {
         this.$store.commit('searchQuery',newQuery);
 
         // comment this out if real-time search is too slow
-        this.$store.dispatch('getSearchDataJSON');
+        this.sort();
+        // this.$store.dispatch('getSearchDataJSON');
       }
     },
-    searchQuerySpecial: {
-      handler(newQuery) {
-        console.log('special query fired: ', newQuery);
-        this.$store.dispatch('getSearchDataJSON');
-      }
-    }
+    // searchQuerySpecial: {
+    //   handler(newQuery) {
+    //     console.log('special query fired: ', newQuery);
+    //     this.$store.dispatch('getSearchDataJSON');
+    //   }
+    // }
   },
   methods: {
     populateTable(searchData){
@@ -300,6 +308,7 @@ export default {
          $(row).closest('tbody').find('tr').removeClass('select');
          $(row).addClass('select');
          $("#load").addClass("btn btn-primary");
+         $("#load").prop('disabled', false);
          this.selectedNR = row.children[0].innerHTML.trim();
 
        } else {
@@ -319,11 +328,11 @@ export default {
     sort() {
       this.selectedNR = '';
       $(".select").removeClass('select');
-
-      this.updateQuery('start',0);
-
-      this.selectedNR = null;
       $("#load").removeClass("btn-primary");
+      $("#load").prop('disabled', true);
+
+      // this.updateQuery('start',0);
+      this.$store.dispatch('getSearchDataJSON');
     },
     updateQuery(sort,value) {
       if (this.searchQuery.includes(sort)) {
@@ -335,8 +344,8 @@ export default {
       } else {
         this.searchQuery += '&'+sort+'='+value;
       }
-      if (sort === 'start')
-        this.$store.commit('searchQuerySpecial',this.searchQuery);
+      // if (sort === 'start')
+      //   this.$store.commit('searchQuerySpecial',this.searchQuery);
 
     },
     handleQueryChange(){
