@@ -1,4 +1,4 @@
-/* eslint-disable */
+<!--eslint-disable-->
 <template>
 
   <span v-if="show_extended_header">
