@@ -34,7 +34,7 @@
           <li class="nav-item active" v-if="!auth">
             <router-link to="/signin" class="nav-link">Login</router-link>
           </li>
-          <li class="nav-item active" v-if="auth">
+          <li class="nav-item active" v-else>
             <button @click="onLogout" class="nav-link btn-outline-dark"
                     style="background-color: #041978;">Logout
             </button>

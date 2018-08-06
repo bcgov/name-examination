@@ -64,7 +64,7 @@ let router = new Router({
 
 router.beforeResolve((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    console.log('Auth check:' + store.state.kctoken)
+    console.log('Authorization check')
     // this route requires auth,
     // if not Authenticated, redirect to login page.
     let auth = localStorage.getItem('AUTHORIZED')

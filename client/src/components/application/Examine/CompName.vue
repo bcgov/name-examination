@@ -76,15 +76,15 @@
               <button class="btn btn-sm btn-outline-primary"
                       @click="quickApprove">Quick Approve</button>
               <button class="btn btn-sm btn-outline-danger"
-                      @click="rejectDescriptive">Reject Decriptive</button>
+                      @click="rejectDescriptive">Reject Descriptive</button>
               <button class="btn btn-sm btn-outline-danger"
                       @click="rejectDistinctive">Reject Distinctive</button>
             </div>
             <form class="form-inline my-2 my-lg-0" @submit.prevent="onSubmit">
-            <input v-model="searchStr" />
-            <button class="btn btn-sm" type="submit">Manual Search</button>
+            <input class='search' v-model="searchStr" />
+            <button class="btn btn-sm btn-search" type="submit">Manual Search</button>
             </form>
-
+            <button class="btn btn-sm btn-reset"  @click="resetSearchStr">Search Reset</button>
           </div>
 
         </div>
@@ -318,6 +318,9 @@
         console.log("Running manual recipe");
         this.$store.dispatch('runManualRecipe', this.searchStr);
       },
+      resetSearchStr(){
+        this.searchStr = this.currentName
+      },
       nameAcceptReject() {
 
         // save decision text, state, and up to three conflicts
@@ -416,11 +419,25 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
+  .search{
+    width: 350px;
+    padding: 1px 4px;
+    margin-right: 5px;
+  }
+
+  .btn-search{
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+  .btn-reset{
+    margin-left: 5px;
+    margin-right: 5px;
+  }
 </style>
 
 <!-- not scoped -->
 <style>
-
   .name-state-icon .icon-rejected {
     color: #c00;
   }
