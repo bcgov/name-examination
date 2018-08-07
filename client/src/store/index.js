@@ -655,8 +655,10 @@ mutations: {
 
     loadSetUp({dispatch}){
 
+        //TODO - reset everything and force login???
         // clear values from local storeage
         dispatch('logout')
+        console.log('Logout 660')
 
         //Read Configuration.json File
         readJFile('static/config/configuration.json', function (myArray) {
@@ -677,7 +679,9 @@ mutations: {
       if(state.myKeycloak==null){
         console.log('myKeycloak is null')
         //TODO - reset everything and force login???
-        dispatch('logout')
+        //should only be null when first logging on (async keycloak)- if it becomes null somehow should we force another login?
+        //dispatch('logout')
+        //console.log('Logout 682')
        return
       }
       // checks if keycloak object has tokenParsed yet, if not then just return as this only happens at login
@@ -685,11 +689,14 @@ mutations: {
 
       var expiresIn = state.myKeycloak.tokenParsed['exp'] - Math.ceil(new Date().getTime() / 1000)
 
+      console.log('Token expires in ' + expiresIn + 'seconds, updating')
+
       if(expiresIn < 1700 && expiresIn > 0) {
-        console.log('Token expires in ' + expiresIn + 'seconds, updating')
         dispatch('updateToken')
       }else if(expiresIn < 0) {
-        dispatch('logout')
+        //TODO - reset everything and force login???
+        //dispatch('logout')
+        console.log('Logout 696')
       }
     },
 
@@ -700,7 +707,6 @@ mutations: {
           localStorage.setItem('KEYCLOAK_TOKEN', state.myKeycloak.token);
           localStorage.setItem('KEYCLOAK_REFRESH', state.myKeycloak.refreshToken);
           localStorage.setItem('KEYCLOAK_EXPIRES', state.myKeycloak.tokenParsed.exp * 1000);
-          commit('authUser', state.myKeycloak.token)
         } else {
           console.log('Token is still valid, not refreshed');
         }
@@ -1072,7 +1078,7 @@ mutations: {
       searchStr = searchStr.replace('+','\+')
       searchStr = searchStr.replace('-','\-')
       searchStr = searchStr.replace('"','\"')
-      //searchStr = searchStr.replace("'","''") - to handle apostrophe's
+      //searchStr = searchStr.replace("'","''") - to handle apostrophe's????
 
       if( state.currentChoice != null) {
         this.dispatch('checkManualConflicts',searchStr)

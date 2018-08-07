@@ -1,4 +1,4 @@
-/* eslint-disable */
+<!--eslint-disable-->
 <template>
 
   <span v-if="show_extended_header">
@@ -54,39 +54,49 @@
 
       <div class="form-row">
         <div class="col add-top-padding" :class="{'form-group-error': $v.firstName.$error}">
-          <input class="form-control " v-model="firstName" placeholder="First Name" :change="$v.firstName.$touch()" />
+          <input class="form-control " v-model="firstName"
+                 placeholder="First Name" :change="$v.firstName.$touch()" />
         </div>
         <div class="col add-top-padding">
-          <input class="form-control " v-model="middleName" placeholder="Middle Name"/>
+          <input class="form-control " v-model="middleName"
+                 placeholder="Middle Name"/>
         </div>
         <div class="col add-top-padding" :class="{'form-group-error': $v.lastName.$error}">
-          <input class="form-control " v-model="lastName" placeholder="Last Name" :change="$v.lastName.$touch()" />
+          <input class="form-control " v-model="lastName"
+                 placeholder="Last Name" :change="$v.lastName.$touch()" />
         </div>
       </div>
 
       <h3>Address</h3>
       <span :class="{'form-group-error': $v.addressLine1.$error}">
-        <input class="form-control " v-model="addressLine1" placeholder="Address" :change="$v.addressLine1.$touch()" />
+        <input class="form-control " v-model="addressLine1"
+               placeholder="Address" :change="$v.addressLine1.$touch()" />
       </span>
-      <input class="form-control " v-model="addressLine2" placeholder="Address" />
-      <input class="form-control " v-model="addressLine3" placeholder="Address" />
+      <input class="form-control " v-model="addressLine2"
+             placeholder="Address" />
+      <input class="form-control " v-model="addressLine3"
+             placeholder="Address" />
 
       <div class="form-row">
         <div class="col" :class="{'form-group-error': $v.city.$error}">
-          <input class="form-control " v-model="city" placeholder="City" :change="$v.city.$touch()" />
+          <input class="form-control " v-model="city"
+                 placeholder="City" :change="$v.city.$touch()" />
         </div>
         <div class="col" :class="{'form-group-error': $v.province.$error}">
-          <input class="form-control " v-model="province" placeholder="State/Province" :change="$v.province.$touch()" />
+          <input class="form-control " v-model="province"
+                 placeholder="State/Province" :change="$v.province.$touch()" />
         </div>
       </div>
 
       <div class="form-row">
         <div class="col" :class="{'form-group-error': $v.postalCode.$error}">
-          <input class="form-control " v-model="postalCode" placeholder="Postal Code" :change="$v.postalCode.$touch()" />
+          <input class="form-control " v-model="postalCode"
+                 placeholder="Postal Code" :change="$v.postalCode.$touch()" />
         </div>
         <div class="col" :class="{'form-group-error': $v.country.$error}">
           <!-- TODO - dropdown for country? from jurisdiction list 2? -->
-          <input class="form-control " v-model="country" placeholder="Country (2-CHAR CODE)" :change="$v.country.$touch()" />
+          <input class="form-control " v-model="country"
+                 placeholder="Country (2-CHAR CODE)" :change="$v.country.$touch()" />
         </div>
       </div>
 
@@ -115,7 +125,6 @@
 
 <script>
 /* eslint-disable */
-
   import { required } from 'vuelidate/lib/validators'
 
   export default {
