@@ -28,7 +28,7 @@
       <div id="Trademarks1">
         <i id="Trademarks2"></i></div>
       <a class="nav-link" data-toggle="pill" href="#"
-         @click="clickRecipeCard('Trademarks')">Trademarks &reg;</a>
+         @click="clickRecipeCard('Trademarks')">Trademarks</a>
       <div class="arrow-right"></div>
 
       <!--<div class="icon icon-pass"><i class="fa fa-check"></i></div>
