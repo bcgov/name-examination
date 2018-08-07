@@ -658,7 +658,7 @@ mutations: {
         //TODO - reset everything and force login???
         // clear values from local storeage
         dispatch('logout')
-        console.log('Logout 660')
+        //console.log('Logout 660')
 
         //Read Configuration.json File
         readJFile('static/config/configuration.json', function (myArray) {
@@ -680,7 +680,7 @@ mutations: {
         console.log('myKeycloak is null')
         //TODO - reset everything and force login???
         //should only be null when first logging on (async keycloak)- if it becomes null somehow should we force another login?
-        //dispatch('logout')
+        dispatch('logout')
         //console.log('Logout 682')
        return
       }
@@ -695,8 +695,8 @@ mutations: {
         dispatch('updateToken')
       }else if(expiresIn < 0) {
         //TODO - reset everything and force login???
-        //dispatch('logout')
-        console.log('Logout 696')
+        dispatch('logout')
+        //console.log('Logout 696')
       }
     },
 
