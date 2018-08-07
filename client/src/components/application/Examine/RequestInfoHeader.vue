@@ -182,17 +182,17 @@
       <div id='header-button-container' class="col-md-12">
 
         <button v-if="!is_editing" class="f1 btn btn-sm btn-outline-secondary"
-                @click="toggleDetails">
+                id="nr-details-show-hide-details-button" @click="toggleDetails">
           <span v-if="show_extended_header">Hide Details</span>
           <span v-else>Show Details</span>
         </button>
 
         <button v-if="!is_editing && can_edit" class="btn btn-sm btn-secondary"
-                style="float: left;" @click="edit">Edit</button>
+                id="nr-details-edit-button" style="float: left;" @click="edit">Edit</button>
 
-        <button v-if="is_editing" class="btn btn-sm btn-success"
+        <button v-if="is_editing" class="btn btn-sm btn-success" id="nr-details-save-button"
                 style="float: left;" @click="save">Save</button>
-        <button v-if="is_editing" class="btn btn-sm btn-secondary"
+        <button v-if="is_editing" class="btn btn-sm btn-secondary" id="nr-details-cancel-button"
                 style="float: left;" @click="cancelSave">Cancel</button>
 
       </div>
