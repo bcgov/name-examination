@@ -6,30 +6,32 @@
         <div class="col">
 
           <div id="top-buttons">
-            <button class="btn btn-sm btn-secondary" v-if="!is_making_decision && !is_my_current_nr"
+            <button class="btn btn-sm btn-secondary" id="examine-get-next-button"
+                    v-if="!is_making_decision && !is_my_current_nr"
                     @click="getNextCompany()" >Get Next</button>
-            <button class="btn btn-sm btn-warning" v-if="!is_making_decision && is_my_current_nr"
+            <button class="btn btn-sm btn-warning" id="examine-hold-button"
+                    v-if="!is_making_decision && is_my_current_nr"
                     @click="holdRequest()">Hold</button>
-            <button class="btn btn-sm btn-primary"
+            <button class="btn btn-sm btn-primary" id="examine-decide-button"
                     v-if="!is_making_decision && !is_complete && is_my_current_nr"
                     @click="startDecision()" >Approve/Reject...</button>
 
-            <button class="btn btn-sm btn-primary" v-if="is_making_decision"
-                    @click="nameAccept()">
-              <span v-if="acceptance_will_be_conditional">Conditionally </span>Accept
+            <button class="btn btn-sm btn-primary" id="decision-approve-button"
+                    v-if="is_making_decision" @click="nameAccept()">
+              <span v-if="acceptance_will_be_conditional">Conditionally </span>Approve
             </button>
-            <button class="btn btn-sm btn-danger" v-if="is_making_decision"
-                    @click="nameReject()" >Reject</button>
-            <button class="btn btn-sm btn-secondary" v-if="is_making_decision"
-                    @click="is_making_decision=false">Cancel</button>
+            <button class="btn btn-sm btn-danger" id="decision-reject-button"
+                    v-if="is_making_decision" @click="nameReject()" >Reject</button>
+            <button class="btn btn-sm btn-secondary" id="decision-cancel-button"
+                    v-if="is_making_decision" @click="is_making_decision=false">Cancel</button>
 
-            <button class="btn btn-sm btn-danger"
+            <button class="btn btn-sm btn-danger" id="examine-re-open-button"
                     v-if="is_complete && !is_furnished" @click="reOpen()" >
               Re-Open</button>
 
             <!-- EXAMINE button - to claim/examine an NR that is on hold -->
-            <button class="btn btn-sm btn-primary" v-if="can_claim" @click="claimNR()" >
-              Examine</button>
+            <button class="btn btn-sm btn-primary" id="examine-button" v-if="can_claim"
+                    @click="claimNR()" >Examine</button>
           </div>
 
           <table>
@@ -73,18 +75,19 @@
 
           <div >
             <div align="right" v-if="!is_making_decision && !is_complete && is_my_current_nr">
-              <button class="btn btn-sm btn-outline-primary"
+              <button class="btn btn-sm btn-outline-primary" id="examine-quick-approve-button"
                       @click="quickApprove">Quick Approve</button>
-              <button class="btn btn-sm btn-outline-danger"
+              <button class="btn btn-sm btn-outline-danger" id="examine-reject-descriptive-button"
                       @click="rejectDescriptive">Reject Descriptive</button>
-              <button class="btn btn-sm btn-outline-danger"
+              <button class="btn btn-sm btn-outline-danger" id="examine-reject-distinctive-button"
                       @click="rejectDistinctive">Reject Distinctive</button>
             </div>
             <div v-if="!is_making_decision" id="manual-search">
               <form class="form-inline my-2 my-lg-0" @submit.prevent="onSubmit">
                 <input class="search form-control" v-model="searchStr" />
                 <button class="btn-search" type="submit"><i class="fa fa-search" /></button>
-                <button class="btn-reset" v-if="is_running_manual_search" @click="resetSearchStr"><i class="fa fa-times" /></button>
+                <button class="btn-reset" v-if="is_running_manual_search" @click="resetSearchStr">
+                  <i class="fa fa-times" /></button>
               </form>
             </div>
           </div>
