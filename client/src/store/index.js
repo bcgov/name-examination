@@ -10,11 +10,12 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     //User Info
-    userId: localStorage.getItem('USERNAME'),
-    authorized: null,
-    email: null,
-    kctoken: null,
+
+    myKeycloak: null,
+    userId: null,
     user_role: null,
+    authorized: false,
+    email: null,
 
     //Interface settings
     currentChoice: null, // CURRENT NAME BEING EXAMINED (choice number)
@@ -293,16 +294,9 @@ mutations: {
     searchState(state,value) {
       state.searchState = value;
     },
-    authUser (state, userData) {
-      state.kctoken = userData
-      //state.kctoken = userData.client_session
-      //state.userRole = userData.user_role
-      //state.idToken = userData.client_session
-    },
-
     clearAuthData (state) {
-      state.kcToken = null
       state.userId = null
+      state.authorized = null
     },
 
     loadpostgresNo(state, postgresData) {
@@ -634,48 +628,36 @@ mutations: {
       state.currentHistory = value
     },
 
-  },
-
-  actions: {
-    kcauth({commit, dispatch, state}) {
-      const kc = localStorage.getItem('KEYCLOAK_TOKEN')
-      state.kctoken = kc
-      //console.log(authData)
-      //state.user_role =  authData.realm_access.roles,
-      state.user_role = ''
-      state.idToken = kc
-      localStorage.setItem('kctoken', state.kctoken)
-      localStorage.setItem('user_role', state.user_role)
-
-      if (state.kctoken) {
-        console.log('KC Authorized user roles')
-        state.userId = localStorage.getItem('USERNAME');
-        commit('authUser', {
-          //user_role: state.user_role,
-          kctoken: state.kctoken
-        })
-      }
+    saveKeyCloak(state,value){
+      state.myKeycloak = value
     },
 
+    setLoginValues(state){
+      state.userId=localStorage.getItem('USERNAME')
+      state.user_role=localStorage.getItem('USER_ROLE')
+      state.authorized=localStorage.getItem('AUTHORIZED')
+    }
+
+  },
+  actions: {
     logout({commit, state}) {
 
       commit('clearAuthData')
 
-      localStorage.removeItem('expirationDate')
-      localStorage.removeItem('token')
-      localStorage.removeItem('user_role')
-      localStorage.removeItem('userId')
-      localStorage.removeItem('email')
-      localStorage.removeItem('COMPINFO')
-
-      localStorage.removeItem('kctoken')
+      localStorage.removeItem('KEYCLOAK_REFRESH')
       localStorage.removeItem('KEYCLOAK_TOKEN')
+      localStorage.removeItem('KEYCLOAK_EXPIRES')
       localStorage.removeItem('AUTHORIZED')
       localStorage.removeItem('USERNAME')
+      localStorage.removeItem('USER_ROLE')
 
     },
 
     loadSetUp({dispatch}){
+
+        // clear values from local storeage
+        dispatch('logout')
+
         //Read Configuration.json File
         readJFile('static/config/configuration.json', function (myArray) {
         axios.defaults.baseURL = myArray[0]['URL']
@@ -683,39 +665,48 @@ mutations: {
 
         //load UI dropdowns from json files and database tables
         dispatch('loadDropdowns');
+
       })
     },
 
     tryAutoLogin ({commit}) {
     },
 
-    storeUser ({commit, state}, userData) {
-      if (!state.idToken) {
-        return
+    checkToken({dispatch, state}){
+      // checks if keycloak object exists - if not then state is unstable, force logout
+      if(state.myKeycloak==null){
+        console.log('myKeycloak is null')
+        //TODO - reset everything and force login???
+        dispatch('logout')
+       return
       }
-      globalAxios.post('/users.json' + '?auth=' + state.idToken, userData)
-        .then(res => console.log(res))
-        .catch(error => console.log(error))
+      // checks if keycloak object has tokenParsed yet, if not then just return as this only happens at login
+      if(state.myKeycloak.tokenParsed==null){ return }
+
+      var expiresIn = state.myKeycloak.tokenParsed['exp'] - Math.ceil(new Date().getTime() / 1000)
+
+      if(expiresIn < 1700 && expiresIn > 0) {
+        console.log('Token expires in ' + expiresIn + 'seconds, updating')
+        dispatch('updateToken')
+      }else if(expiresIn < 0) {
+        dispatch('logout')
+      }
     },
 
-    fetchUser ({commit, state}) {
-      if (!state.idToken) {
-        return
-      }
-      globalAxios.get('/users.json' + '?auth=' + state.idToken)
-        .then(res => {
-          console.log(res)
-          const data = res.data
-          const users = []
-          for (let key in data) {
-            const user = data[key]
-            user.id = key
-            users.push(user)
-          }
-          console.log(users)
-          commit('storeUser', users[0])
-        })
-        .catch(error => console.log(error))
+    updateToken({commit, state}){
+      const vm = this;
+      state.myKeycloak.updateToken(-1).success(function (refreshed) {
+        if (refreshed) {
+          localStorage.setItem('KEYCLOAK_TOKEN', state.myKeycloak.token);
+          localStorage.setItem('KEYCLOAK_REFRESH', state.myKeycloak.refreshToken);
+          localStorage.setItem('KEYCLOAK_EXPIRES', state.myKeycloak.tokenParsed.exp * 1000);
+          commit('authUser', state.myKeycloak.token)
+        } else {
+          console.log('Token is still valid, not refreshed');
+        }
+      }).error(function () {
+        console.log('Failed to refresh the token, or the session has expired');
+      });
     },
 
     setDetails({commit, state}) {
@@ -727,8 +718,10 @@ mutations: {
       console.log('action: select next company number from postgres')
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/queues/@me/oldest'
-      console.log('URL:' + axios.baseURL + url)
+      console.log('URL:' + axios.defaults.baseURL + url)
       const vm = this
+      console.log('Next company - checkToken')
+      dispatch('checkToken')
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         // response.data.nameRequest = 'NR 8270105';
         //response.data.nameRequest = 'NR 0000021';
@@ -738,15 +731,15 @@ mutations: {
       })
     },
 
-    getpostgrescompInfo ({commit},nrNumber) {
+    getpostgrescompInfo ({dispatch,commit},nrNumber) {
       console.log('action: getting data for company number: ' + nrNumber + ' from postgres')
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + nrNumber
       console.log('URL:' + url)
       const vm = this
+      dispatch('checkToken')
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         console.log('Comp Info Response:' + response.data)
-        localStorage.setItem('COMPINFO',response.data)
         commit('loadCompanyInfo',response.data)
       })
       .catch(error => console.log('ERROR: ' + error))
@@ -1185,6 +1178,9 @@ mutations: {
 
   },
   getters: {
+    keycloak(state) {
+      return state.myKeycloak
+    },
     userId(state) {
       return state.userId;
     },
@@ -1198,7 +1194,7 @@ mutations: {
     },
     is_complete(state) {
       // indicates a complete NR
-      if (['APPROVED', 'REJECTED', 'CONDITIONAL'].
+      if (['APPROVED', 'REJECTED', 'CONDITIONAL','COMPLETED'].
            indexOf(state.currentState) >= 0 ) return true;
       else false;
     },
@@ -1216,9 +1212,6 @@ mutations: {
     },
     is_header_shown(state) {
       return state.is_header_shown
-    },
-    user(state) {
-      return state.user
     },
     email(state) {
       return state.email
@@ -1248,7 +1241,8 @@ mutations: {
       return state.issueText
     },
     isAuthenticated(state) {
-      return localStorage.getItem("AUTHORIZED")
+      //return localStorage.getItem("AUTHORIZED")
+      return state.authorized
     },
     nrNumber(state) {
       return state.compInfo.nrNumber

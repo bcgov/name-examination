@@ -20,47 +20,33 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <router-link to="/home" class="nav-link">Home</router-link>
+            <router-link to="/home" class="nav-link" id="header-home-link">Home</router-link>
           </li>
           <li class="nav-item active">
-<<<<<<< HEAD
-            <router-link to="/searchresults" class="nav-link">Examine Names</router-link>
-          </li>
-          <li class="nav-item active">
-            <router-link to="/settings" class="nav-link">Settings</router-link>
-          </li>
-=======
             <router-link to="/nameExamination" id="nameExamine" class="nav-link">Examine Names</router-link>
           </li>
           <li class="nav-item active">
-            <router-link to="/find" class="nav-link">Search</router-link>
+            <router-link to="/find" class="nav-link" id="header-search-link">Search</router-link>
           </li>
           <!--<li class="nav-item active">
             <router-link to="/settings" class="nav-link">Settings</router-link>
           </li>-->
->>>>>>> upstream/master
           <li class="nav-item active" v-if="!auth">
-            <router-link to="/signin" class="nav-link">Login</router-link>
+            <router-link id="header-login-button" to="/signin" class="nav-link">Login</router-link>
           </li>
-          <li class="nav-item active" v-if="auth">
-            <button @click="onLogout" class="nav-link btn-outline-dark"
+          <li class="nav-item active" v-else>
+            <button id="header-login-button" @click="onLogout" class="nav-link btn-outline-dark"
                     style="background-color: #041978;">Logout
             </button>
           </li>
         </ul>
         <form class="form-inline my-2 my-lg-0" @submit.prevent="onSubmit">
-          <input class="form-control mr-sm-2" type="search"
-<<<<<<< HEAD
-                 placeholder="Search" aria-label="Search" v-model="nrNum">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-        <p class="navbar-text">&nbsp;{{userid}}</p>
-=======
+          <input id="header-search-input" class="form-control mr-sm-2" type="search"
                  placeholder="NR Number" aria-label="Search" v-model="nrNum">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Load</button>
+          <button id="header-search-button" class="btn btn-outline-success my-2 my-sm-0"
+                  type="submit">Load</button>
         </form>
         <p class="navbar-text">&nbsp;{{userId }}</p>
->>>>>>> upstream/master
       </div>
     </nav>
   </div>
@@ -70,14 +56,6 @@
 /* eslint-disable */
   export default {
     name: "std-header",
-<<<<<<< HEAD
-    data() {
-      return nrNum
-    },
-    computed: {
-      userid() {
-        return this.$store.getters.userid
-=======
     data () {
       return {
         nrNum: ''
@@ -86,7 +64,6 @@
     computed: {
       userId() {
         return this.$store.getters.userId
->>>>>>> upstream/master
       },
       auth() {
         return this.$store.getters.isAuthenticated
@@ -98,15 +75,11 @@
         window.location.assign("/");
       },
       onSubmit() {
-<<<<<<< HEAD
-        this.$store.dispatch('getpostgrescompInfo', this.nrNum);
-=======
         console.log('Set new NR number')
         this.$store.dispatch('newNrNumber',this.nrNum)
         const path = '/nameExamination'
         console.log('re-direct to ' + path)
         this.$router.push(path)
->>>>>>> upstream/master
       }
     }
   }

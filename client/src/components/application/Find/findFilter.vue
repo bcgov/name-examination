@@ -7,21 +7,21 @@
             <div class="upper-searches">
               <div style="margin-left: 0" class="filter">
                 <h4>States:</h4>
-                <select v-model="stateSort">
+                <select id="search-filter-state" v-model="stateSort">
                       <option v-for="state in states" :value="state">{{state}}</option>
                 </select>
               </div>
               <div class="filter">
                 <h4>NR</h4>
-                <input v-model="nrSearch" placeholder="0000000"/>
+                <input id="search-filter-nr-number" v-model="nrSearch" placeholder="0000000"/>
               </div>
               <div class="filter">
                 <h4>Examiner</h4>
-                <input v-model="username" placeholder="Username"/>
+                <input id="search-filter-examiner" v-model="username" placeholder="Username"/>
               </div>
               <div class="filter">
                 <h4>Company Name</h4>
-                <input v-model="compName" placeholder="my company"/>
+                <input id="search-filter-company" v-model="compName" placeholder="my company"/>
               </div>
             </div>
             <div class="lower-searches">
@@ -29,10 +29,10 @@
               <!--<input type="checkbox" v-model="priority">-->
               <!--<br/>-->
               <h4 style="margin-left: 0" class="filter">Furnished:</h4>
-              <input type="checkbox" v-model="furnished">
+              <input id="search-checkbox-furnished" type="checkbox" v-model="furnished">
               <br/>
               <h4 style="margin-left: 0" class="filter">Unfurnished:</h4>
-              <input type="checkbox" v-model="unfurnished">
+              <input id="search-checkbox-unfurnished" type="checkbox" v-model="unfurnished">
               <!--uncomment if real-time search too slow-->
               <!--<div class="search-sort">-->
                 <!--<button id="sort" class="btn btn-primary" type="button" v-on:click="sort">SORT</button>-->
@@ -41,7 +41,7 @@
           </div>
           <div class="counts">
             <div class="search-load">
-              <button id="load" class="btn" type="button" v-on:click="examineNR">LOAD</button>
+              <button id="load" class="btn" type="button" disabled v-on:click="examineNR">LOAD</button>
             </div>
             <div style="margin-right: 20px" class="count">
               <h3>Total: <span class="count-num">{{this.total}}</span></h3>
@@ -54,7 +54,7 @@
             </div>
           </div>
         </div>
-        <span class="searchTable" v-on:click="loadNR">
+        <span class="searchTable" id="search-table-container" v-on:click="loadNR">
             <datatable class="pre-line" v-bind="$data"/>
         </span>
       </div>
@@ -86,11 +86,11 @@ export default {
     examiner(){
       return this.username;
     },
-    priorityCheckBox(){
-      if (this.priority)
-        return true;
-      return false;
-    },
+    // priorityCheckBox(){
+    //   if (this.priority)
+    //     return true;
+    //   return false;
+    // },
     furnishedCheckBox(){
       if (this.furnished)
         return true;
@@ -101,14 +101,14 @@ export default {
         return true;
       return false;
     },
-    searchQuerySpecial() {
-      return this.$store.getters.searchQuerySpecial;
-    }
+    // searchQuerySpecial() {
+    //   return this.$store.getters.searchQuerySpecial;
+    // }
   },
   data: () => ({
     fixHeaderAndSetBodyMaxHeight: 400,
     tblStyle: {'table-layout': 'fixed'},
-    tblClass: ['table-bordered'],
+    tblClass: ['table-bordered', 'search-table'],
     columns: (() => {
       const cols =[
         {title: 'NR#', field: 'nrNum', label: 'nr', thStyle: {background: '#fffae6'},visible: true},
@@ -164,36 +164,43 @@ export default {
           newState = '';
         }
         this.updateQuery('queue', newState);
+        this.query.offset = 0;
       }
     },
     nrSearch: {
       handler(nrNum) {
         this.updateQuery('nrNum',nrNum);
+        this.query.offset = 0;
       }
     },
     username: {
       handler(activeUser) {
         this.updateQuery('activeUser',activeUser);
+        this.query.offset = 0;
       }
     },
     compName: {
       handler(compName) {
         this.updateQuery('compName',compName);
+        this.query.offset = 0;
       }
     },
-    priorityCheckBox: {
-      handler(priorityCd) {
-        this.updateQuery('priorityCd',priorityCd);
-      }
-    },
+    // priorityCheckBox: {
+    //   handler(priorityCd) {
+    //     this.updateQuery('priorityCd',priorityCd);
+    //     this.query.offset = 0;
+    //   }
+    // },
     furnishedCheckBox: {
       handler(furnished) {
         this.updateQuery('furnished',furnished);
+        this.query.offset = 0;
       }
     },
     unfurnishedCheckBox: {
       handler(unfurnished) {
         this.updateQuery('unfurnished',unfurnished);
+        this.query.offset = 0;
       }
     },
     query: {
@@ -208,15 +215,16 @@ export default {
         this.$store.commit('searchQuery',newQuery);
 
         // comment this out if real-time search is too slow
-        this.$store.dispatch('getSearchDataJSON');
+        this.sort();
+        // this.$store.dispatch('getSearchDataJSON');
       }
     },
-    searchQuerySpecial: {
-      handler(newQuery) {
-        console.log('special query fired: ', newQuery);
-        this.$store.dispatch('getSearchDataJSON');
-      }
-    }
+    // searchQuerySpecial: {
+    //   handler(newQuery) {
+    //     console.log('special query fired: ', newQuery);
+    //     this.$store.dispatch('getSearchDataJSON');
+    //   }
+    // }
   },
   methods: {
     populateTable(searchData){
@@ -300,6 +308,7 @@ export default {
          $(row).closest('tbody').find('tr').removeClass('select');
          $(row).addClass('select');
          $("#load").addClass("btn btn-primary");
+         $("#load").prop('disabled', false);
          this.selectedNR = row.children[0].innerHTML.trim();
 
        } else {
@@ -319,11 +328,11 @@ export default {
     sort() {
       this.selectedNR = '';
       $(".select").removeClass('select');
-
-      this.updateQuery('start',0);
-
-      this.selectedNR = null;
       $("#load").removeClass("btn-primary");
+      $("#load").prop('disabled', true);
+
+      // this.updateQuery('start',0);
+      this.$store.dispatch('getSearchDataJSON');
     },
     updateQuery(sort,value) {
       if (this.searchQuery.includes(sort)) {
@@ -335,8 +344,8 @@ export default {
       } else {
         this.searchQuery += '&'+sort+'='+value;
       }
-      if (sort === 'start')
-        this.$store.commit('searchQuerySpecial',this.searchQuery);
+      // if (sort === 'start')
+      //   this.$store.commit('searchQuerySpecial',this.searchQuery);
 
     },
     handleQueryChange(){

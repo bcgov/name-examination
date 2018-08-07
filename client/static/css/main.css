@@ -2263,6 +2263,24 @@ h5.twitterUserName a{
 {
   color: #1a5a96;
 }
+
+/* change secondary button color from grey to green */
+.btn-secondary {
+  background-color: #ff8514;
+  border-color: #ff8514;
+}
+.btn-secondary:hover {
+  background-color: #d77011;
+  border-color: #d77011;
+}
+.btn-secondary:disabled {
+  background-color: #ffc693;
+  border-color: #ffc693;
+}
+.btn-secondary:not(:disabled):not(.disabled):active {
+  background-color: #d77011;
+}
+
 /* end bootstrap overrides */
 
 .btn-fillin-success
