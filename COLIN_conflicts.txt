@@ -1,0 +1,47 @@
+xpro corporations:
+{
+   'attorney names': [
+       'RICK GUTZ'
+   ],
+   'directors': [
+       'BRENT DIBARTOLO',
+       'JEAN-CLAUDE GARNEAU',
+       'STEWART MCINNES',
+       'JOHN D. MCLURE',
+       'ROSS NICHOLLS',
+       'MICHAEL G. NURSE',
+       'NANCY M. PENNER'
+   ],
+   'head office': [
+       'CONSTITUTION SQUARE, 19TH FLOOR,',
+       '350 ALBERT STREET',
+       'OTTAWA',
+       'ON',
+       'CA',
+       'K1A 0K3'
+   ],
+   'incorp #': 'A0003650',
+   'incorporated': '1952-04-17',
+   'jurisdiction': 'FD-FEDERAL',
+   'nature of business': 'Not Available'
+}
+
+
+bc corporations:
+{
+   'directors': [
+       'BRENT DIBARTOLO',
+       'JEAN-CLAUDE GARNEAU',
+       'STEWART MCINNES',
+       'JOHN D. MCLURE',
+       'ROSS NICHOLLS',
+       'MICHAEL G. NURSE',
+       'NANCY M. PENNER'
+   ],
+   'incorp #': 'A0003650',
+   'incorporated': '1952-04-17',
+   'jurisdiction': 'BC',
+   'nature of business': 'Not Available',
+   'records office delivery address': 'Not Available',
+   'registered office delivery address': 'Not Available'
+}                    

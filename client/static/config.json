@@ -1,8 +1,0 @@
-{
-  "realm": "nest",
-  "auth-server-url": "https://dev-sso.pathfinder.gov.bc.ca/auth",
-  "ssl-required": "external",
-  "resource": "Varek.1",  
-  "public-client": true,
-  "use-resource-role-mappings": true
-}
