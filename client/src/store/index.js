@@ -522,7 +522,11 @@ mutations: {
       state.nrData.xproJurisdiction = state.additionalCompInfo.jurisdiction
       state.nrData.natureBusinessInfo = state.additionalCompInfo.natureOfBussiness
       state.nrData.details = state.details
-      state.nrData.additionalInfo = state.additionalInfo.substr(0, 150);
+
+      if (state.additionalInfo != '' && state.additionalInfo != null)
+        state.additionalInfo = state.additionalInfo.substr(0, 150);
+      state.nrData.additionalInfo = state.additionalInfo;
+
       state.nrData.comments = state.internalComments
       state.nrData.nwpta = []
       if (state.additionalCompInfo.nwpta_ab.partnerJurisdictionTypeCd !== null) state.nrData.nwpta.push(state.additionalCompInfo.nwpta_ab);
