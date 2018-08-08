@@ -1,4 +1,4 @@
-/* eslint-disable */
+<!-- eslint-disable -->
 <template>
   <div>
     <div class="name-sect">
@@ -315,11 +315,12 @@
       },
       onSubmit()
       {
-        console.log("Running manual recipe");
+        console.log("Running manual recipe on " + this.searchStr);
         this.$store.dispatch('runManualRecipe', this.searchStr);
       },
       resetSearchStr(){
         this.searchStr = this.currentName
+        this.$store.dispatch('runRecipe')
       },
       nameAcceptReject() {
 
