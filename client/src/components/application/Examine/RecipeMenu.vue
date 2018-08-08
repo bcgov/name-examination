@@ -7,14 +7,14 @@
 
       <div id="History1">
         <i id="History2"></i></div>
-      <a class="nav-link active" data-toggle="pill" href="#"
+      <a id="history-tab" class="nav-link active" data-toggle="pill" href="#"
          @click="clickRecipeCard('History')">History</a>
       <div class="arrow-right"></div>
 
 
       <div id="Conflict1">
         <i id="Conflict2"></i></div>
-      <a class="nav-link" data-toggle="pill" href="#"
+      <a id="conflicts-tab" class="nav-link" data-toggle="pill" href="#"
          @click="clickRecipeCard('Conflicts')">
         Conflicts
       </a>
@@ -22,21 +22,16 @@
 
       <div id="Condition1">
         <i id="Condition2"></i></div>
-      <a class="nav-link" data-toggle="pill" href="#"
+      <a id="conditions-tab" class="nav-link" data-toggle="pill" href="#"
          @click="clickRecipeCard('Condition')">Condition</a>
       <div class="arrow-right"></div>
 
       <div id="Trademarks1">
         <i id="Trademarks2"></i></div>
-      <a class="nav-link" data-toggle="pill" href="#"
-         @click="clickRecipeCard('Trademarks')">Trademarks &reg;</a>
+      <a id="trademarks-tab" class="nav-link" data-toggle="pill" href="#"
+         @click="clickRecipeCard('Trademarks')">Trademarks</a>
       <div class="arrow-right"></div>
 
-
-      <!--<div class="icon icon-pass"><i class="fa fa-check"></i></div>
-      <a class="nav-link" data-toggle="pill" href="#"
-         @click="clickRecipeCard('Format')">Format</a>
-      <div class="arrow-right"></div>-->
 
     </div>
   </div>
