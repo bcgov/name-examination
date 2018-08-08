@@ -29,7 +29,7 @@
       <div id="Trademarks1">
         <i id="Trademarks2"></i></div>
       <a id="trademarks-tab" class="nav-link" data-toggle="pill" href="#"
-         @click="clickRecipeCard('Trademarks')">Trademarks &reg;</a>
+         @click="clickRecipeCard('Trademarks')">Trademarks</a>
       <div class="arrow-right"></div>
 
 

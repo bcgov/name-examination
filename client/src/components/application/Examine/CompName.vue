@@ -1,4 +1,4 @@
-/* eslint-disable */
+<!-- eslint-disable -->
 <template>
   <div>
     <div class="name-sect">
@@ -321,7 +321,7 @@
       },
       onSubmit()
       {
-        console.log("Running manual recipe");
+        console.log("Running manual recipe on " + this.searchStr);
         this.$store.dispatch('runManualRecipe', this.searchStr);
 
         if (this.searchStr != this.currentName) this.is_running_manual_search = true;

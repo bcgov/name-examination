@@ -655,8 +655,10 @@ mutations: {
 
     loadSetUp({dispatch}){
 
+        //TODO - reset everything and force login???
         // clear values from local storeage
         dispatch('logout')
+        //console.log('Logout 660')
 
         //Read Configuration.json File
         readJFile('static/config/configuration.json', function (myArray) {
@@ -677,7 +679,9 @@ mutations: {
       if(state.myKeycloak==null){
         console.log('myKeycloak is null')
         //TODO - reset everything and force login???
+        //should only be null when first logging on (async keycloak)- if it becomes null somehow should we force another login?
         dispatch('logout')
+        //console.log('Logout 682')
        return
       }
       // checks if keycloak object has tokenParsed yet, if not then just return as this only happens at login
@@ -685,11 +689,14 @@ mutations: {
 
       var expiresIn = state.myKeycloak.tokenParsed['exp'] - Math.ceil(new Date().getTime() / 1000)
 
+      console.log('Token expires in ' + expiresIn + 'seconds, updating')
+
       if(expiresIn < 1700 && expiresIn > 0) {
-        console.log('Token expires in ' + expiresIn + 'seconds, updating')
         dispatch('updateToken')
       }else if(expiresIn < 0) {
+        //TODO - reset everything and force login???
         dispatch('logout')
+        //console.log('Logout 696')
       }
     },
 
@@ -700,7 +707,6 @@ mutations: {
           localStorage.setItem('KEYCLOAK_TOKEN', state.myKeycloak.token);
           localStorage.setItem('KEYCLOAK_REFRESH', state.myKeycloak.refreshToken);
           localStorage.setItem('KEYCLOAK_EXPIRES', state.myKeycloak.tokenParsed.exp * 1000);
-          commit('authUser', state.myKeycloak.token)
         } else {
           console.log('Token is still valid, not refreshed');
         }
@@ -1068,11 +1074,6 @@ mutations: {
     },
 
     runManualRecipe({dispatch,state},searchStr) {
-      // Escape special solr characters
-      searchStr = searchStr.replace('+','\+')
-      searchStr = searchStr.replace('-','\-')
-      searchStr = searchStr.replace('"','\"')
-      //searchStr = searchStr.replace("'","''") - to handle apostrophe's
 
       if( state.currentChoice != null) {
         this.dispatch('checkManualConflicts',searchStr)
@@ -1098,10 +1099,10 @@ mutations: {
     },
 
     checkManualConditions( {commit, state},searchStr ) {
-      console.log('action: manual check of restricted words and conditions for company number: ' + state.compInfo.nrNumber + ' from solr')
+      console.log('action: manual check of restricted words and conditions for company number: ' + state.compInfo.nrNumber )
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
-      const url = '/api/v1/documents:conditions'
+      const url = '/api/v1/documents:restricted_words'
       console.log('URL:' + url)
       const vm = this
       return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {
