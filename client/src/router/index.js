@@ -5,9 +5,7 @@ import Vuex from 'vuex'
 import store from '@/store'
 
 const LandingPage = () => import(/* webpackChunkName: "home" */'@/components/LandingPage')
-const Settings = () => import(/* webpackChunkName: "settings" */'@/components/application/sections/Settings')
-const Signin = () => import(/* webpackChunkName: "signin" */'@/components/landing/auth/Signin')
-const KeyCloak = () => import(/* webpackChunkName: "keycloak" */'@/components/landing/auth/keyCloak')
+const Signin = () => import(/* webpackChunkName: "signin" */'@/components/auth/Signin')
 const NameExamination = () => import(/* webpackChunkName: "nameexamination" */'@/components/application/NameExamination')
 const Find = () => import(/* webpackChunkName: "find" */'@/components/application/Find')
 
@@ -28,14 +26,6 @@ let router = new Router({
       component: Signin
     },
     {
-      name: 'settings',
-      component: Settings,
-      path: '/settings',
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
       name: 'nameexamination',
       component: NameExamination,
       path: '/nameExamination',
@@ -51,14 +41,6 @@ let router = new Router({
         requiresAuth: true
       }
     },
-    {
-      name: 'keycloak',
-      component: KeyCloak,
-      path: '/keycloak',
-      meta: {
-        requiresAuth: false
-      },
-    }
   ]
 })
 
