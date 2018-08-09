@@ -246,7 +246,9 @@
         /* subset of conditions, only those that have customer instructions
         */
 
-        var arr_conditions = this.conditions.filter(function (el) {return el.consent_required==true});
+        var arr_conditions = this.conditions.filter(function (el) {
+          return el.instructions !== '' && el.instructions !== null
+        });
 
         // manually add "CONSENT REQUIRED" condition
         arr_conditions.push({
