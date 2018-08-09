@@ -52,7 +52,7 @@
   import compnameview from '@/components/application/Examine/CompName.vue';
   import recipemenu from '@/components/application/Examine/RecipeMenu.vue';
   import matchissues from '@/components/application/Examine/IssueInfo.vue';
-  import decision from "@/components/Decision";
+  import decision from '@/components/application/Examine/Decision.vue';
 
   export default {
     name: "SearchResults",
