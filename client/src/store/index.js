@@ -294,6 +294,9 @@ mutations: {
     searchState(state,value) {
       state.searchState = value;
     },
+    furnished(state,value) {
+      state.furnished = value;
+    },
     clearAuthData (state) {
       state.userId = null
       state.authorized = null
@@ -438,6 +441,7 @@ mutations: {
       state.submitCount = dbcompanyInfo.submitCount
       state.previousNr = dbcompanyInfo.previousNr
       state.corpNum = dbcompanyInfo.corpNum
+      state.furnished = dbcompanyInfo.furnished
 
       // cycle through nwpta entries
       for (let record of dbcompanyInfo.nwpta) {
@@ -540,6 +544,7 @@ mutations: {
       state.nrData.submitCount = state.submitCount
       state.nrData.previousNr = state.previousNr
       state.nrData.corpNum = state.corpNum
+      state.nrData.furnished = state.furnished
     },
 
     loadCompanyIssues(state, dbcompanyIssues) {
@@ -867,6 +872,24 @@ mutations: {
             })
             .catch(error => console.log('ERROR: ' + error))
       },
+
+    resetDecision({state}, nameChoice) {
+
+      var objName = {}
+      if (nameChoice == 1) objName = this.getters.compName1;
+      if (nameChoice == 2) objName = this.getters.compName2;
+      if (nameChoice == 3) objName = this.getters.compName3;
+
+      objName.state = 'NE';
+      objName.conflict1 = null;
+      objName.conflict2 = null;
+      objName.conflict3 = null;
+      objName.conflict1_num = null;
+      objName.conflict2_num = null;
+      objName.conflict3_num = null;
+      objName.decision_text = null;
+
+    },
 
     revertLastDecision({state}) {
       // TODO - RE-EVALUATE IN TERMS OF 'UNDO' VS 'REVERT'

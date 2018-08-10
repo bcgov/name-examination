@@ -1,4 +1,4 @@
-<!-- eslint-disable -->
+<!--eslint-disable-->
 <template>
   <div>
     <div class="name-sect">
@@ -26,8 +26,12 @@
                     v-if="is_making_decision" @click="is_making_decision=false">Cancel</button>
 
             <button class="btn btn-sm btn-danger" id="examine-re-open-button"
-                    v-if="is_complete && !is_furnished" @click="reOpen()" >
+                    v-if="is_complete && !is_furnished && !is_cancelled && !is_approved_expired" @click="reOpen()" >
               Re-Open</button>
+
+            <button class="btn btn-sm btn-danger" id="examine-reset-button"
+                    v-if="is_complete && is_furnished && !is_cancelled && !is_approved_expired" data-toggle="modal" data-target="#add-comment-reset-modal">
+              RESET</button>
 
             <!-- EXAMINE button - to claim/examine an NR that is on hold -->
             <button class="btn btn-sm btn-primary" id="examine-button" v-if="can_claim"
@@ -97,6 +101,30 @@
       </div>
 
     </div>
+    <div class="modal fade" id="add-comment-reset-modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Please give a comment to explain why this NR is being RESET</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <textarea id="reset-comment-text" class="form-control" rows="10"
+                      v-model="add_comment_display"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-secondary"
+                    data-dismiss="modal" @click="cancelReset">Cancel</button>
+            <button type="button" id="add-comment-for-reset-button" class="btn btn-sm btn-primary" disabled="true"
+                    @click="addComment">Add Comment</button>
+            <button type="button" id="reset-nr-after-comment-button" class="btn btn-sm btn-danger" disabled="true"
+                    @click="reset">RESET</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -109,6 +137,7 @@
         searchStr: '',
         retval: [],
         is_running_manual_search: false,
+        add_comment_display: "",
       }
     },
     computed: {
@@ -133,7 +162,18 @@
         return this.$store.getters.is_complete;
       },
       is_furnished() {
-        return this.$store.getters.furnished;
+        if (this.$store.getters.furnished === "Y") return true;
+        return false;
+      },
+      is_cancelled() {
+        if (this.$store.getters.currentState === "CANCELLED") return true;
+        return false;
+      },
+      is_approved_expired() {
+        let expired_date = new Date(this.$store.getters.expiryDate);
+        let date = new Date();
+        if (this.$store.getters.currentState === "APPROVED" && date > expired_date) return true;
+        return false;
       },
       is_editing() {
         return  this.$store.getters.is_editing;
@@ -245,6 +285,33 @@
       reOpen() {
         this.$store.dispatch('updateNRState', 'INPROGRESS');
       },
+      reset() {
+        this.$store.commit('internalComments', this.add_comment_display);
+        this.$store.commit('currentState', 'INPROGRESS');
+        this.$store.commit('furnished', "N");
+        if (this.compName1 != undefined)
+          this.$store.dispatch('resetDecision', 1)
+        if (this.compName2 != undefined)
+          this.$store.dispatch('resetDecision', 2)
+        if (this.compName3 != undefined)
+          this.$store.dispatch('resetDecision', 3)
+      },
+      addComment() {
+        if ($("#add-comment-for-reset-button").text() === 'Edit') {
+          $("#reset-comment-text").prop('disabled', false);
+          $("#reset-nr-after-comment-button").prop('disabled', true);
+          $("#add-comment-for-reset-button").text('Add Comment');
+        } else {
+          $("#reset-comment-text").prop('disabled', true);
+          $("#reset-nr-after-comment-button").prop('disabled', false);
+          $("#add-comment-for-reset-button").text('Edit');
+        }
+      },
+      cancelReset() {
+        this.add_comment_display = "";
+        $("#reset-comment-text").prop('disabled', false);
+        $("#add-comment-for-reset-button").text('Add Comment');
+      },
       claimNR() {
         this.$store.dispatch('updateNRState', 'INPROGRESS');
       },
@@ -280,7 +347,7 @@
         if (this.currentState != 'INPROGRESS') return false;
 
         // if the NR is furnished, nothing is undoable
-        if (this.$store.state.furnished)  return false;
+        if (this.$store.state.furnished === 'Y')  return false;
 
         // if this name is complete (ie: anything other than NE) it's undoable
         if (name.state == 'NE' || name.state == null) return false;
@@ -375,6 +442,13 @@
       },
     },
     watch: {
+      add_comment_display: function(val) {
+        console.log('add_comment_display watcher fired:' + val)
+        if (val)
+          $("#add-comment-for-reset-button").prop('disabled', false);
+        else
+          $("#add-comment-for-reset-button").prop('disabled', true);
+      },
       currentName: function (val) {
         console.log('CompName.currentName watcher fired:' + val)
         this.searchStr =  val
