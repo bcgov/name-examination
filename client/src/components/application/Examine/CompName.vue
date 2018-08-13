@@ -171,6 +171,9 @@
         return false;
       },
       is_approved_expired() {
+        // if there is no expiry date, this NR is not approved-expired
+        if (this.$store.getters.expiryDate == null) return false;
+
         let expired_date = new Date(this.$store.getters.expiryDate);
         let date = new Date();
         if (this.$store.getters.currentState === "APPROVED" && date > expired_date) return true;
@@ -364,35 +367,26 @@
         return true;
       },
       quickApprove() {
-        var approvalStr = ''
-        this.retval.push(approvalStr)
+        this.currentNameObj.decision_text = ''
         console.log('quickApprove')
 
         this.decision_made = 'A'
-       // this.nameAccept()
         this.nameAcceptReject()
       },
       rejectDescriptive() {
-        // When this was written, the 13th index of listDecisionReasons was the string needed for a descriptive term missing
-        // it was decided to HARD CODE this value until another solution is found
-        // var descriptiveStr = this.listDecisionReasons[13].reason
-        var descriptiveStr = 'Require descriptive second word or phrase * E.G. ' +
-                             'Construction, Gardening, Investments, Holdings, Etc.'
 
-        this.retval.push(descriptiveStr)
+        this.currentNameObj.decision_text = 'Require descriptive second word or phrase * E.G. ' +
+          'Construction, Gardening, Investments, Holdings, Etc.'
         this.decision_made = 'R'
-        //this.nameReject()
         this.nameAcceptReject()
       },
       rejectDistinctive() {
         // When this was written, the 16th index of listDecisionReasons was the string needed for a distinctive term missing
         // it was decided to HARD CODE this value until another solution is found
         // var distinctiveStr = this.listDecisionReasons[16].reason
-        var distinctiveStr = "Require distinctive, nondescriptive first word or prefix * E.G. " +
-                             "Person's name, initials, geographic location, etc."
-        this.retval.push(distinctiveStr)
+        this.currentNameObj.decision_text = "Require distinctive, nondescriptive first word or " +
+          "prefix * E.G. Person's name, initials, geographic location, etc."
         this.decision_made = 'R'
-        //this.nameReject()
         this.nameAcceptReject()
       },
       onSubmit()
@@ -408,41 +402,14 @@
       },
       nameAcceptReject() {
 
-        // save decision text, state, and up to three conflicts
-        //this.currentNameObj.decision_text = this.customer_message_display.substr(0,955);
-        this.currentNameObj.decision_text = this.retval[0]
-
+        // save decision
         console.log('nameAcceptReject decision_made:' + this.decision_made)
         if (this.decision_made == 'A') {
-          this.currentNameObj.state = 'A'; // accepted
-
-          // Not needed for FAST PATH Approval / Reject
-          // conditionally accepted if any conditions selected with condition_required flag TRUE
-          //for (let record in this.conditions_selected) {
-            //if (record.consent_required) {
-              //this.currentNameObj.state = 'C';
-              //break;
-            //}
-          //}
+          this.currentNameObj.state = 'A';
         }
         else {
           this.currentNameObj.state = 'R';
         }
-        // Not needed for FAST PATH Approval / Reject
-        //for (var i = 0; i < this.conflicts_selected.length; i++) {
-          //if (i == 0) {
-            //this.currentNameObj.conflict1 = this.conflicts_selected[i].text;
-            //this.currentNameObj.conflict1_num = this.conflicts_selected[i].nrNumber;
-          //}
-          //if (i == 1) {
-            //this.currentNameObj.conflict2 = this.conflicts_selected[i].text;
-            //this.currentNameObj.conflict2_num = this.conflicts_selected[i].nrNumber;
-          //}
-          //if (i == 2) {
-            //this.currentNameObj.conflict3 = this.conflicts_selected[i].text;
-            //this.currentNameObj.conflict3_num = this.conflicts_selected[i].nrNumber;
-          //}
-        //}
 
         // send decision to API and reset flags
         this.$store.dispatch('nameAcceptReject');
