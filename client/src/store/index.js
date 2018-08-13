@@ -50,7 +50,7 @@ export default new Vuex.Store({
     //nr_conflict: null,
     details: null,
     additionalInfo: null,
-    internalComments: null,
+    internalComments: [],
     applicantsOrigData: null,
     nrData: null,
     compInfo: {
@@ -277,7 +277,7 @@ mutations: {
       state.additionalInfo = value;
     },
     internalComments (state, value) {
-      state.internalComments = value;
+      state.internalComments.push(value);
     },
     previousNr(state, value) {
       state.previousNr = value;
@@ -535,7 +535,7 @@ mutations: {
       state.nrData.nwpta = []
       if (state.additionalCompInfo.nwpta_ab.partnerJurisdictionTypeCd !== null) state.nrData.nwpta.push(state.additionalCompInfo.nwpta_ab);
       if (state.additionalCompInfo.nwpta_sk.partnerJurisdictionTypeCd !== null) state.nrData.nwpta.push(state.additionalCompInfo.nwpta_sk);
-      //state.nrData.state =  state.additionalCompInfo.nr_status
+      state.nrData.state =  state.currentState
       state.nrData.userId = state.examiner
       state.nrData.priorityCd = state.priority
       //state.reservationCount = dbcompanyInfo.reservationCount

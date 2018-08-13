@@ -120,7 +120,7 @@
             <button type="button" id="add-comment-for-reset-button" class="btn btn-sm btn-primary" disabled="true"
                     @click="addComment">Add Comment</button>
             <button type="button" id="reset-nr-after-comment-button" class="btn btn-sm btn-danger" disabled="true"
-                    @click="reset">RESET</button>
+                    data-dismiss="modal" @click="reset">RESET</button>
           </div>
         </div>
       </div>
@@ -138,6 +138,7 @@
         retval: [],
         is_running_manual_search: false,
         add_comment_display: "",
+        resetting: false,
       }
     },
     computed: {
@@ -204,6 +205,15 @@
       compName3() {
         return this.$store.getters.compName3;
       },
+      compName1State() {
+        return this.$store.getters.compName1.state;
+      },
+      compName2State() {
+        return this.$store.getters.compName2.state;
+      },
+      compName3State() {
+        return this.$store.getters.compName3.state;
+      },
       currentNameObj: {
         get: function() {
           return this.$store.getters.currentNameObj;
@@ -261,6 +271,9 @@
       listDecisionReasons() {
         return this.$store.getters.listDecisionReasons;
       },
+      internalComments() {
+        return this.$store.getters.internalComments;
+      },
     },
     mounted() {
       console.log('Compname Mounted')
@@ -286,15 +299,11 @@
         this.$store.dispatch('updateNRState', 'INPROGRESS');
       },
       reset() {
-        this.$store.commit('internalComments', this.add_comment_display);
-        this.$store.commit('currentState', 'INPROGRESS');
-        this.$store.commit('furnished', "N");
+        this.resetting = true;
         if (this.compName1 != undefined)
-          this.$store.dispatch('resetDecision', 1)
-        if (this.compName2 != undefined)
-          this.$store.dispatch('resetDecision', 2)
-        if (this.compName3 != undefined)
-          this.$store.dispatch('resetDecision', 3)
+          this.$store.dispatch('resetDecision', 1);
+        else
+          console.log('Error no compName1 on this NR')
       },
       addComment() {
         if ($("#add-comment-for-reset-button").text() === 'Edit') {
@@ -449,6 +458,29 @@
         else
           $("#add-comment-for-reset-button").prop('disabled', true);
       },
+      compName1State: function (val) {
+        console.log('compName1 watcher fired:' + val)
+        if (this.resetting) {
+          if (this.compName2 != undefined)
+            this.$store.dispatch('resetDecision', 2);
+          else
+            this.$store.commit('internalComments', this.add_comment_display);
+        }
+      },
+      compName2State: function (val) {
+        console.log('compName2 watcher fired:' + val)
+        if (this.resetting) {
+          if (this.compName3 != undefined)
+            this.$store.dispatch('resetDecision', 3);
+          else
+            this.$store.commit('internalComments', this.add_comment_display);
+        }
+      },
+      compName3State: function (val) {
+        console.log('compName3 watcher fired:' + val)
+        if (this.resetting)
+          this.$store.commit('internalComments', this.add_comment_display);
+      },
       currentName: function (val) {
         console.log('CompName.currentName watcher fired:' + val)
         this.searchStr =  val
@@ -456,6 +488,26 @@
       currentChoice: function (val) {
         console.log('CompName.currentChoice watcher fired:' + val)
         if(val != undefined ) { this.runRecipe() }
+      },
+      currentState: function (val) {
+        console.log('CompName.currentState watcher fired:' + val)
+        if (this.resetting) {
+          this.resetting = false;
+          this.$store.dispatch('updateRequest');
+          this.add_comment_display = "";
+          $("#reset-comment-text").prop('disabled', false);
+          $("#add-comment-for-reset-button").text('Add Comment');
+        }
+      },
+      internalComments: function (val) {
+        console.log('CompName.internalComments watcher fired:' + val)
+        if (this.resetting)
+          this.$store.commit('furnished', "N");
+      },
+      is_furnished: function (val) {
+        console.log('CompName.is_furnished watcher fired:' + val)
+        if (this.resetting && val === false)
+          this.$store.commit('currentState', 'INPROGRESS');
       },
       nrNumber: function (val) {
         console.log('CompName.nrNumber watcher fired:' + val)
