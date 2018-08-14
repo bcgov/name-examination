@@ -117,8 +117,6 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-sm btn-secondary"
                     data-dismiss="modal" @click="cancelReset">Cancel</button>
-            <button type="button" id="add-comment-for-reset-button" class="btn btn-sm btn-primary" disabled="true"
-                    @click="addComment">Add Comment</button>
             <button type="button" id="reset-nr-after-comment-button" class="btn btn-sm btn-danger" disabled="true"
                     data-dismiss="modal" @click="reset">RESET</button>
           </div>
@@ -308,21 +306,9 @@
         else
           console.log('Error no compName1 on this NR')
       },
-      addComment() {
-        if ($("#add-comment-for-reset-button").text() === 'Edit') {
-          $("#reset-comment-text").prop('disabled', false);
-          $("#reset-nr-after-comment-button").prop('disabled', true);
-          $("#add-comment-for-reset-button").text('Add Comment');
-        } else {
-          $("#reset-comment-text").prop('disabled', true);
-          $("#reset-nr-after-comment-button").prop('disabled', false);
-          $("#add-comment-for-reset-button").text('Edit');
-        }
-      },
       cancelReset() {
         this.add_comment_display = "";
         $("#reset-comment-text").prop('disabled', false);
-        $("#add-comment-for-reset-button").text('Add Comment');
       },
       claimNR() {
         this.$store.dispatch('updateNRState', 'INPROGRESS');
@@ -421,9 +407,9 @@
       add_comment_display: function(val) {
         console.log('add_comment_display watcher fired:' + val)
         if (val)
-          $("#add-comment-for-reset-button").prop('disabled', false);
+          $("#reset-nr-after-comment-button").prop('disabled', false);
         else
-          $("#add-comment-for-reset-button").prop('disabled', true);
+          $("#reset-nr-after-comment-button").prop('disabled', true);
       },
       compName1State: function (val) {
         console.log('compName1 watcher fired:' + val)
@@ -463,7 +449,6 @@
           this.$store.dispatch('updateRequest');
           this.add_comment_display = "";
           $("#reset-comment-text").prop('disabled', false);
-          $("#add-comment-for-reset-button").text('Add Comment');
         }
       },
       internalComments: function (val) {
