@@ -277,7 +277,7 @@ mutations: {
       state.additionalInfo = value;
     },
     internalComments (state, value) {
-      state.internalComments.push(value);
+      state.internalComments = value;
     },
     previousNr(state, value) {
       state.previousNr = value;
