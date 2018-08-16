@@ -16,6 +16,7 @@ export default new Vuex.Store({
     user_role: null,
     authorized: false,
     email: null,
+    errorJSON: null,
 
     //Interface settings
     currentChoice: null, // CURRENT NAME BEING EXAMINED (choice number)
@@ -676,7 +677,12 @@ mutations: {
       state.userId=localStorage.getItem('USERNAME')
       state.user_role=localStorage.getItem('USER_ROLE')
       state.authorized=localStorage.getItem('AUTHORIZED')
+    },
+
+    setErrorJSON(state,value) {
+      state.errorJSON = value
     }
+
 
   },
   actions: {
@@ -753,6 +759,18 @@ mutations: {
       }).error(function () {
         console.log('Failed to refresh the token, or the session has expired');
       });
+    },
+
+    checkError({commit},responseJSON){
+      console.log("ErrorChecking")
+      if( responseJSON.warnings != null ){
+        console.log("warnings")
+        commit('setErrorJSON',responseJSON.warnings)
+      }
+      if( responseJSON.errors != null ){
+        console.log("errors")
+        commit('setErrorJSON',responseJSON.errors)
+      }
     },
 
     setDetails({commit, state}) {
