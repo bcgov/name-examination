@@ -22,12 +22,12 @@
 
 
             <p v-if="!is_editing" class="add-top-padding"
-               style="font-weight: bold;">{{ jurisdiction_desc }}</p>
+               style="font-weight: bold;">{{ jurisdiction }}</p>
             <div v-else-if="jurisdiction_required" class="add-top-padding" :class="{'form-group-error': $v.jurisdiction.$error}">
               <h3>Jurisdiction</h3>
               <select v-model="jurisdiction" class="form-control" :onchange="$v.jurisdiction.$touch()">
-                <option v-for="option in jurisdiction_options" v-bind:value="option.value"
-                        v-bind:key="option.value">
+                <option v-for="option in jurisdiction_options" v-bind:value="option.text"
+                        v-bind:key="option.text">
                   {{ option.text }}
                 </option>
               </select>
@@ -364,13 +364,6 @@ export default {
         },
         set: function(value) {
           this.$store.commit('jurisdiction', value);
-        }
-      },
-      jurisdiction_desc() {
-        try {
-          return getDescFromList(this.jurisdiction_options, this.jurisdiction);
-        } catch (err) {
-          return '';
         }
       },
       natureOfBusiness: {
