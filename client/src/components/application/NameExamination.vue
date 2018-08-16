@@ -20,11 +20,9 @@
       </div>
 
       <!-- msg re. exact history matches, ie: previous name submissions -->
-      <div class="alert alert-danger examiner-warning"
-           v-if="this.exactHistoryMatches !== null && this.exactHistoryMatches.length > 0">
-        This name has been requested <b>{{ this.exactHistoryMatches.length }}</b>
-        time<span v-if="this.exactHistoryMatches !== null && this.exactHistoryMatches.length > 1">s
-      </span> previously.
+      <div id="exact-history-match-banner" class="examiner-warning"
+           v-if="this.exactHistoryMatches">
+        Similar name previously <b>{{ exactMatch }}</b>
       </div>
 
 
@@ -59,7 +57,8 @@
     data: function ()
     {
       return {
-        visible: true
+        visible: true,
+        exactMatch: null
       }
     },
     computed: {
@@ -88,15 +87,27 @@
         try {
           var currentName = this.$store.getters.currentName.toUpperCase();
           // check for exact matches in history for alert re. previous submissions
-          if (this.historiesJSON !== null && this.historiesJSON.names !== undefined) {
-            return this.historiesJSON.names.filter(function (record) {
-              return currentName == record.name.toUpperCase();
-            });
+          if (this.historiesJSON != null) {
+
+            let exactMatches = this.historiesJSON.names.filter(function (record) {
+                                return currentName == record.name.toUpperCase();
+                              });
+
+            for (let i=0; i<exactMatches.length; i++) {
+              if (exactMatches[i].name_state_type_cd === 'R' || exactMatches[i].submit_count > 3) {
+                this.exactMatch = 'REJECTED';
+                return true;
+              }
+            }
+            if (exactMatches.length > 0) {
+              this.exactMatch = 'APPROVED';
+              return true;
+            }
           }
-          return [];
+          return false;
         }
         catch(e) {
-          return [];
+          return false;
         }
       },
     },
@@ -107,6 +118,15 @@
       matchissues,
       decision,
     },
+    watch: {
+      exactMatch: function (val) {
+        console.log('exactMatch watcher fired, ' + val)
+        if (val == 'REJECTED')
+          $("#exact-history-match-banner").addClass("alert alert-danger");
+        else if (val == 'APPROVED')
+          $("#exact-history-match-banner").addClass("alert alert-warning");
+      }
+    }
   }
 </script>
 
