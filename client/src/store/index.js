@@ -763,7 +763,6 @@ mutations: {
 
     checkError({commit},responseJSON){
       console.log("ErrorChecking")
-      commit('setErrorJSON',responseJSON)
       if( responseJSON.warnings != null ){
         console.log("warnings")
         commit('setErrorJSON',responseJSON.warnings)
