@@ -22,6 +22,7 @@ instance.interceptors.request.use(function (config) {
   }, 1000);
   config.loadingTimer = loadingTimer;
 
+  store.dispatch('checkToken');
 
   return config;
 });
@@ -41,7 +42,13 @@ instance.interceptors.response.use(function (response) {
 
   store.dispatch('checkToken');
 
+  let status = response.status;
+  if ( status ===  400 || status === 206 || status != 2 ) {
+      store.dispatch('checkError',response.data)
+  }
+
   return response
+
 }, function (error) {
   /*
   1. cancel the timer associated with this request
