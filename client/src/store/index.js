@@ -408,7 +408,28 @@ mutations: {
 
       // we keep the original data so that if fields exist that we do not use, we don't lose that
       // data when we put new data
-      state.applicantOrigData = dbcompanyInfo.applicants
+      if (dbcompanyInfo.applicants != '')
+        state.applicantOrigData = dbcompanyInfo.applicants
+      else {
+        state.applicantOrigData = {
+          'clientFirstName':null,
+          'clientLastName':null,
+          'firstName':null,
+          'middleName':null,
+          'lastName':null,
+          'addrLine1':null,
+          'addrLine2':null,
+          'addrLine3':null,
+          'city':null,
+          'stateProvinceCd':null,
+          'postalCd':null,
+          'countryTypeCd':null,
+          'contact':null,
+          'phoneNumber':null,
+          'emailAddress':null,
+          'faxNumber':null,
+        }
+      }
       state.applicantInfo.clientName.firstName = dbcompanyInfo.applicants.clientFirstName
       state.applicantInfo.clientName.lastName = dbcompanyInfo.applicants.clientLastName
       state.applicantInfo.applicantName.firstName = dbcompanyInfo.applicants.firstName
@@ -500,6 +521,16 @@ mutations: {
               state.nrData.names[i] = state.compInfo.compNames.compName3;
               break;
           }
+        }
+        if (state.nrData.names.length < 2 && state.compInfo.compNames.compName2.name != null) {
+          state.compInfo.compNames.compName2.choice = 2;
+          state.compInfo.compNames.compName2.state = 'NE';
+          state.nrData.names[1] = state.compInfo.compNames.compName2;
+        }
+        if (state.nrData.names.length < 3 && state.compInfo.compNames.compName3.name != null) {
+          state.compInfo.compNames.compName3.choice = 3;
+          state.compInfo.compNames.compName3.state = 'NE';
+          state.nrData.names[2] = state.compInfo.compNames.compName3;
         }
       }
 
