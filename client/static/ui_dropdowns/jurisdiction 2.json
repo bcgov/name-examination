@@ -110,11 +110,6 @@
 		"text": "SAINT BARTHELEMY"
 	},
 	{
-		"value": "FX",
-		"SHORT_DESC": "FRANCE",
-		"text": " METROPO"
-	},
-	{
 		"value": "TA",
 		"SHORT_DESC": "TRISTAN DA CUNH",
 		"text": "TRISTAN DA CUNHA"
@@ -146,11 +141,6 @@
 	},
 	{
 		"value": "VG",
-		"text": "VIRGIN ISLANDS",
-		"LONG_DESC": ""
-	},
-	{
-		"value": "VI",
 		"text": "VIRGIN ISLANDS",
 		"LONG_DESC": ""
 	},
@@ -430,11 +420,6 @@
 		"text": "CONGO"
 	},
 	{
-		"value": "CD",
-		"SHORT_DESC": "CONGO",
-		"text": " THE DEMO"
-	},
-	{
 		"value": "CK",
 		"SHORT_DESC": "COOK ISLANDS",
 		"text": "COOK ISLANDS"
@@ -687,7 +672,7 @@
 	{
 		"value": "IR",
 		"SHORT_DESC": "IRAN",
-		"text": " ISLAMIC R"
+		"text": "IRAN"
 	},
 	{
 		"value": "IQ",
@@ -742,12 +727,12 @@
 	{
 		"value": "KP",
 		"SHORT_DESC": "KOREA",
-		"text": " DEMOCRAT"
+		"text": "DEMOCRATIC PEOPLE'S REPUBLIC OF KOREA"
 	},
 	{
 		"value": "KR",
 		"SHORT_DESC": "KOREA",
-		"text": " REPUBLIC"
+		"text": "SOUTH KOREA"
 	},
 	{
 		"value": "KW",
@@ -812,7 +797,7 @@
 	{
 		"value": "MK",
 		"SHORT_DESC": "MACEDONIA",
-		"text": " THE "
+		"text": "MACEDONIA"
 	},
 	{
 		"value": "MG",
@@ -877,12 +862,12 @@
 	{
 		"value": "FM",
 		"SHORT_DESC": "MICRONESIA",
-		"text": " FED"
+		"text": "MICRONESIA"
 	},
 	{
 		"value": "MD",
 		"SHORT_DESC": "MOLDOVA",
-		"text": " REPUBL"
+		"text": "MOLDOVA"
 	},
 	{
 		"value": "MC",
@@ -1227,7 +1212,7 @@
 	{
 		"value": "TZ",
 		"SHORT_DESC": "TANZANIA",
-		"text": " UNITE"
+		"text": "TANZANIA"
 	},
 	{
 		"value": "TH",

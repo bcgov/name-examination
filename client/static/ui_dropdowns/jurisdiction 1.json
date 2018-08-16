@@ -60,11 +60,6 @@
 		"text": "YUKON"
 	},
 	{
-		"value": "OT",
-		"SHORT_DESC": "OTHER",
-		"text": "OTHER"
-	},
-	{
 		"value": "FD",
 		"SHORT_DESC": "FEDERAL",
 		"text": "FEDERAL"

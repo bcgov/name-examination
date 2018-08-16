@@ -919,6 +919,10 @@ mutations: {
           commit('listJurisdictions', myArray);
 
           readJFile(json_files_path + 'jurisdiction 2.json', function (myArray) {
+
+            // sort the country list alphabetically
+            myArray.sort(function(a,b) {return (a.text > b.text) ? 1 : ((b.text > a.text) ? -1 : 0);} );
+
             commit('listJurisdictions', state.listJurisdictions.concat(myArray));
           });
         });
