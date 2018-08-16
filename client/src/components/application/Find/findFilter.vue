@@ -46,12 +46,6 @@
             <div style="margin-right: 20px" class="count">
               <h3>Total: <span class="count-num">{{this.total}}</span></h3>
             </div>
-            <div class="count">
-              <h3>Updated Today: <span class="count-num">{{this.updatedToday}}</span></h3>
-            </div>
-            <div class="count">
-              <h3>Priorities: <span class="count-num">{{this.priorityCount}}</span></h3>
-            </div>
           </div>
         </div>
         <span class="searchTable" id="search-table-container" v-on:click="loadNR">
@@ -138,8 +132,6 @@ export default {
     unfurnished: true,
     compName: '',
     selectedNR:'',
-    priorityCount:null,
-    updatedToday: null,
     searchQuery:'?order=priorityCd:desc,submittedDate:asc&queue=hold&furnished=true&unfurnished=true&rows=10',
   }),
   mounted() {
@@ -153,8 +145,6 @@ export default {
       handler(newData) {
         this.total = newData.response.numFound;
         this.data = this.populateTable(newData);
-        this.priorityCount = newData.response.numPriorities;
-        this.updatedToday = newData.response.numUpdatedToday;
       }
     },
     stateSort: {
@@ -229,8 +219,7 @@ export default {
   methods: {
     populateTable(searchData){
       if (searchData != null) {
-        let data = searchData.nameRequests;
-
+        let data = searchData.nameRequests[0];
         // organize names/dates //
           for (let i=0; i<data.length;i++) {
             // organize names column //
