@@ -13,6 +13,7 @@
 
     <div class="lower-section container-fluid">
 
+      <!-- msg re. in progress with someone else -->
       <div class="alert alert-warning examiner-warning"
            v-if="currentState == 'INPROGRESS' && examiner != userId">
         This NR is being examined by {{ examiner }}.
@@ -58,8 +59,6 @@
           visible: true,
           exactMatch: null,
           model: false,
-          // errorMsg: '',
-          // warningMsg: '',
         }
     },
     computed: {
@@ -126,8 +125,8 @@
           $("#exact-history-match-banner").addClass("alert alert-danger");
         else if (val == 'APPROVED')
           $("#exact-history-match-banner").addClass("alert alert-warning");
-      },
-    },
+      }
+    }
   }
 </script>
 

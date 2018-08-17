@@ -84,7 +84,7 @@ export default {
     //   if (this.priority)
     //     return true;
     //   return false;
-    // }
+    // },
     furnishedCheckBox(){
       if (this.furnished)
         return true;
@@ -97,7 +97,7 @@ export default {
     },
     // searchQuerySpecial() {
     //   return this.$store.getters.searchQuerySpecial;
-    // },
+    // }
   },
   data: () => ({
     fixHeaderAndSetBodyMaxHeight: 400,
@@ -214,7 +214,7 @@ export default {
     //     console.log('special query fired: ', newQuery);
     //     this.$store.dispatch('getSearchDataJSON');
     //   }
-    // },
+    // }
   },
   methods: {
     populateTable(searchData){
