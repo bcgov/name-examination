@@ -2,7 +2,7 @@
   {
     "API":"base_url",
     "DESC":"The base url for the API",
-    "URL":"https://namex-dev.pathfinder.gov.bc.ca"
+    "URL":"https://namex-test.pathfinder.gov.bc.ca"
   }
 ]
 
