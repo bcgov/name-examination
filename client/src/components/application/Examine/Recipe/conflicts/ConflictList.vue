@@ -46,9 +46,9 @@
           this.$store.dispatch('getConflictInfo', this.selectedConflict);
       },
       setSelectedConflict() {
-        if (this.$store.getters.currentConflict == null && this.$store.getters.conflictList != null)
+        if (this.$store.getters.currentConflict == null && this.$store.getters.conflictList != null && this.$store.getters.conflictList[0] != null)
           this.selectedConflict = this.$store.getters.conflictList[0];
-        else
+        else if (this.$store.getters.currentConflict != null)
           this.selectedConflict = this.$store.getters.currentConflict;
       }
 
@@ -65,6 +65,8 @@
       },
       conflictData: {
         handler() {
+          console.log('conflict data watcher fired')
+          this.$store.commit('currentConflict', null);
           this.setSelectedConflict();
         }
       }
