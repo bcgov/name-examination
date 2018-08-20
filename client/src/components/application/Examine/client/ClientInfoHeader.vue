@@ -41,11 +41,11 @@
     <span v-else>
       <div class="form-row">
         <div class="col">
-          <input type="text" class="form-control " id="firstName1"
+          <input type="text" class="form-control " id="firstName1" maxlength="50"
                  v-model="clientFirstName" placeholder="First Name" />
         </div>
         <div class="col">
-          <input type="text" class="form-control " id="lastName1"
+          <input type="text" class="form-control " id="lastName1" maxlength="50"
                  v-model="clientLastName" placeholder="Last Name"/>
         </div>
       </div>
@@ -53,59 +53,67 @@
       <h3>Applicant Info</h3>
 
       <div class="form-row">
-        <div class="col add-top-padding" :class="{'form-group-error': $v.firstName.$error}">
-          <input class="form-control " v-model="firstName" placeholder="First Name" :change="$v.firstName.$touch()" />
+        <div class="col add-top-padding">
+          <input class="form-control " v-model="firstName" maxlength="50"
+                 placeholder="First Name" />
         </div>
         <div class="col add-top-padding">
-          <input class="form-control " v-model="middleName" placeholder="Middle Name"/>
+          <input class="form-control " v-model="middleName" maxlength="50"
+                 placeholder="Middle Name"/>
         </div>
-        <div class="col add-top-padding" :class="{'form-group-error': $v.lastName.$error}">
-          <input class="form-control " v-model="lastName" placeholder="Last Name" :change="$v.lastName.$touch()" />
+        <div class="col add-top-padding">
+          <input class="form-control " v-model="lastName" maxlength="50"
+                 placeholder="Last Name" />
         </div>
       </div>
 
       <h3>Address</h3>
-      <span :class="{'form-group-error': $v.addressLine1.$error}">
-        <input class="form-control " v-model="addressLine1" placeholder="Address" :change="$v.addressLine1.$touch()" />
-      </span>
-      <input class="form-control " v-model="addressLine2" placeholder="Address" />
-      <input class="form-control " v-model="addressLine3" placeholder="Address" />
+      <input class="form-control " v-model="addressLine1" maxlength="200"
+             placeholder="Address" />
+      <input class="form-control " v-model="addressLine2" maxlength="200"
+             placeholder="Address" />
+      <input class="form-control " v-model="addressLine3" maxlength="200"
+             placeholder="Address" />
 
       <div class="form-row">
-        <div class="col" :class="{'form-group-error': $v.city.$error}">
-          <input class="form-control " v-model="city" placeholder="City" :change="$v.city.$touch()" />
+        <div class="col">
+          <input class="form-control " v-model="city" maxlength="200"
+                 placeholder="City" />
         </div>
-        <div class="col" :class="{'form-group-error': $v.province.$error}">
-          <input class="form-control " v-model="province" placeholder="State/Province" :change="$v.province.$touch()" />
+        <div class="col">
+          <input class="form-control " v-model="province" maxlength="2"
+                 placeholder="State/Province" />
         </div>
       </div>
 
       <div class="form-row">
-        <div class="col" :class="{'form-group-error': $v.postalCode.$error}">
-          <input class="form-control " v-model="postalCode" placeholder="Postal Code" :change="$v.postalCode.$touch()" />
+        <div class="col">
+          <input class="form-control " v-model="postalCode" maxlength="20"
+                 placeholder="Postal Code" />
         </div>
-        <div class="col" :class="{'form-group-error': $v.country.$error}">
+        <div class="col">
           <!-- TODO - dropdown for country? from jurisdiction list 2? -->
-          <input class="form-control " v-model="country" placeholder="Country (2-CHAR CODE)" :change="$v.country.$touch()" />
+          <input class="form-control " v-model="country" maxlength="2"
+                 placeholder="Country (2-CHAR CODE)" />
         </div>
       </div>
 
       <div class="form-row">
-        <div class="col add-top-padding" :class="{'form-group-error': $v.phone.$error}">
+        <div class="col add-top-padding">
           <h3>Phone</h3>
-          <input type="text" class="form-control " v-model="phone" :change="$v.phone.$touch()" />
+          <input type="text" class="form-control " v-model="phone" maxlength="30" />
         </div>
         <div class="form-group col add-top-padding">
           <h3>Fax</h3>
-          <input type="text" class="form-control " v-model="fax" />
+          <input type="text" class="form-control " v-model="fax" maxlength="30" />
         </div>
       </div>
 
       <h3>email</h3>
-      <input id="email1" class="form-control " v-model="conEmail" />
+      <input id="email1" class="form-control " v-model="conEmail" maxlength="75" />
 
       <h3>Contact</h3>
-      <input id="firstName1C" class="form-control " v-model="contactName" />
+      <input id="firstName1C" class="form-control " v-model="contactName" maxlength="150" />
 
 
     </span>
@@ -115,7 +123,6 @@
 
 <script>
 /* eslint-disable */
-
   import { required } from 'vuelidate/lib/validators'
 
   export default {
@@ -260,14 +267,6 @@
       },
     },
     validations: {
-      firstName: { required },
-      lastName: { required },
-      addressLine1: { required },
-      city: { required },
-      province: { required },
-      country: { required },
-      postalCode: { required },
-      phone: { required },
     },
     methods: {
     }

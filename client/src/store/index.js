@@ -16,6 +16,7 @@ export default new Vuex.Store({
     user_role: null,
     authorized: false,
     email: null,
+    errorJSON: null,
 
     //Interface settings
     currentChoice: null, // CURRENT NAME BEING EXAMINED (choice number)
@@ -50,7 +51,7 @@ export default new Vuex.Store({
     //nr_conflict: null,
     details: null,
     additionalInfo: null,
-    internalComments: null,
+    internalComments: [],
     applicantsOrigData: null,
     nrData: null,
     compInfo: {
@@ -294,6 +295,9 @@ mutations: {
     searchState(state,value) {
       state.searchState = value;
     },
+    furnished(state,value) {
+      state.furnished = value;
+    },
     clearAuthData (state) {
       state.userId = null
       state.authorized = null
@@ -405,7 +409,28 @@ mutations: {
 
       // we keep the original data so that if fields exist that we do not use, we don't lose that
       // data when we put new data
-      state.applicantOrigData = dbcompanyInfo.applicants
+      if (dbcompanyInfo.applicants != '')
+        state.applicantOrigData = dbcompanyInfo.applicants
+      else {
+        state.applicantOrigData = {
+          'clientFirstName':null,
+          'clientLastName':null,
+          'firstName':null,
+          'middleName':null,
+          'lastName':null,
+          'addrLine1':null,
+          'addrLine2':null,
+          'addrLine3':null,
+          'city':null,
+          'stateProvinceCd':null,
+          'postalCd':null,
+          'countryTypeCd':null,
+          'contact':null,
+          'phoneNumber':null,
+          'emailAddress':null,
+          'faxNumber':null,
+        }
+      }
       state.applicantInfo.clientName.firstName = dbcompanyInfo.applicants.clientFirstName
       state.applicantInfo.clientName.lastName = dbcompanyInfo.applicants.clientLastName
       state.applicantInfo.applicantName.firstName = dbcompanyInfo.applicants.firstName
@@ -438,6 +463,7 @@ mutations: {
       state.submitCount = dbcompanyInfo.submitCount
       state.previousNr = dbcompanyInfo.previousNr
       state.corpNum = dbcompanyInfo.corpNum
+      state.furnished = dbcompanyInfo.furnished
 
       // cycle through nwpta entries
       for (let record of dbcompanyInfo.nwpta) {
@@ -497,6 +523,16 @@ mutations: {
               break;
           }
         }
+        if (state.nrData.names.length < 2 && state.compInfo.compNames.compName2.name != null) {
+          state.compInfo.compNames.compName2.choice = 2;
+          state.compInfo.compNames.compName2.state = 'NE';
+          state.nrData.names[1] = state.compInfo.compNames.compName2;
+        }
+        if (state.nrData.names.length < 3 && state.compInfo.compNames.compName3.name != null) {
+          state.compInfo.compNames.compName3.choice = 3;
+          state.compInfo.compNames.compName3.state = 'NE';
+          state.nrData.names[2] = state.compInfo.compNames.compName3;
+        }
       }
 
       state.nrData.requestTypeCd = state.compInfo.requestType
@@ -522,12 +558,16 @@ mutations: {
       state.nrData.xproJurisdiction = state.additionalCompInfo.jurisdiction
       state.nrData.natureBusinessInfo = state.additionalCompInfo.natureOfBussiness
       state.nrData.details = state.details
-      state.nrData.additionalInfo = state.additionalInfo.substr(0, 150);
+
+      if (state.additionalInfo != '' && state.additionalInfo != null)
+        state.additionalInfo = state.additionalInfo.substr(0, 150);
+      state.nrData.additionalInfo = state.additionalInfo;
+
       state.nrData.comments = state.internalComments
       state.nrData.nwpta = []
       if (state.additionalCompInfo.nwpta_ab.partnerJurisdictionTypeCd !== null) state.nrData.nwpta.push(state.additionalCompInfo.nwpta_ab);
       if (state.additionalCompInfo.nwpta_sk.partnerJurisdictionTypeCd !== null) state.nrData.nwpta.push(state.additionalCompInfo.nwpta_sk);
-      //state.nrData.state =  state.additionalCompInfo.nr_status
+      state.nrData.state =  state.currentState
       state.nrData.userId = state.examiner
       state.nrData.priorityCd = state.priority
       //state.reservationCount = dbcompanyInfo.reservationCount
@@ -536,6 +576,7 @@ mutations: {
       state.nrData.submitCount = state.submitCount
       state.nrData.previousNr = state.previousNr
       state.nrData.corpNum = state.corpNum
+      state.nrData.furnished = state.furnished
     },
 
     loadCompanyIssues(state, dbcompanyIssues) {
@@ -636,7 +677,12 @@ mutations: {
       state.userId=localStorage.getItem('USERNAME')
       state.user_role=localStorage.getItem('USER_ROLE')
       state.authorized=localStorage.getItem('AUTHORIZED')
+    },
+
+    setErrorJSON(state,value) {
+      state.errorJSON = value
     }
+
 
   },
   actions: {
@@ -655,8 +701,10 @@ mutations: {
 
     loadSetUp({dispatch}){
 
+        //TODO - reset everything and force login???
         // clear values from local storeage
         dispatch('logout')
+        //console.log('Logout 660')
 
         //Read Configuration.json File
         readJFile('static/config/configuration.json', function (myArray) {
@@ -677,7 +725,9 @@ mutations: {
       if(state.myKeycloak==null){
         console.log('myKeycloak is null')
         //TODO - reset everything and force login???
+        //should only be null when first logging on (async keycloak)- if it becomes null somehow should we force another login?
         dispatch('logout')
+        //console.log('Logout 682')
        return
       }
       // checks if keycloak object has tokenParsed yet, if not then just return as this only happens at login
@@ -685,11 +735,14 @@ mutations: {
 
       var expiresIn = state.myKeycloak.tokenParsed['exp'] - Math.ceil(new Date().getTime() / 1000)
 
+      console.log('Token expires in ' + expiresIn + 'seconds, updating')
+
       if(expiresIn < 1700 && expiresIn > 0) {
-        console.log('Token expires in ' + expiresIn + 'seconds, updating')
         dispatch('updateToken')
       }else if(expiresIn < 0) {
+        //TODO - reset everything and force login???
         dispatch('logout')
+        //console.log('Logout 696')
       }
     },
 
@@ -700,13 +753,24 @@ mutations: {
           localStorage.setItem('KEYCLOAK_TOKEN', state.myKeycloak.token);
           localStorage.setItem('KEYCLOAK_REFRESH', state.myKeycloak.refreshToken);
           localStorage.setItem('KEYCLOAK_EXPIRES', state.myKeycloak.tokenParsed.exp * 1000);
-          commit('authUser', state.myKeycloak.token)
         } else {
           console.log('Token is still valid, not refreshed');
         }
       }).error(function () {
         console.log('Failed to refresh the token, or the session has expired');
       });
+    },
+
+    checkError({commit},responseJSON){
+      console.log("ErrorChecking")
+      if( responseJSON.warnings != null ){
+        console.log("warnings")
+        commit('setErrorJSON',responseJSON.warnings)
+      }
+      if( responseJSON.errors != null ){
+        console.log("errors")
+        commit('setErrorJSON',responseJSON.errors)
+      }
     },
 
     setDetails({commit, state}) {
@@ -858,6 +922,24 @@ mutations: {
             .catch(error => console.log('ERROR: ' + error))
       },
 
+    resetDecision({state}, nameChoice) {
+
+      var objName = {}
+      if (nameChoice == 1) objName = this.getters.compName1;
+      if (nameChoice == 2) objName = this.getters.compName2;
+      if (nameChoice == 3) objName = this.getters.compName3;
+
+      objName.state = 'NE';
+      objName.conflict1 = null;
+      objName.conflict2 = null;
+      objName.conflict3 = null;
+      objName.conflict1_num = null;
+      objName.conflict2_num = null;
+      objName.conflict3_num = null;
+      objName.decision_text = null;
+
+    },
+
     revertLastDecision({state}) {
       // TODO - RE-EVALUATE IN TERMS OF 'UNDO' VS 'REVERT'
       console.log('Revert last decision');
@@ -886,6 +968,10 @@ mutations: {
           commit('listJurisdictions', myArray);
 
           readJFile(json_files_path + 'jurisdiction 2.json', function (myArray) {
+
+            // sort the country list alphabetically
+            myArray.sort(function(a,b) {return (a.text > b.text) ? 1 : ((b.text > a.text) ? -1 : 0);} );
+
             commit('listJurisdictions', state.listJurisdictions.concat(myArray));
           });
         });
@@ -1068,11 +1154,6 @@ mutations: {
     },
 
     runManualRecipe({dispatch,state},searchStr) {
-      // Escape special solr characters
-      searchStr = searchStr.replace('+','\+')
-      searchStr = searchStr.replace('-','\-')
-      searchStr = searchStr.replace('"','\"')
-      //searchStr = searchStr.replace("'","''") - to handle apostrophe's
 
       if( state.currentChoice != null) {
         this.dispatch('checkManualConflicts',searchStr)
@@ -1098,10 +1179,10 @@ mutations: {
     },
 
     checkManualConditions( {commit, state},searchStr ) {
-      console.log('action: manual check of restricted words and conditions for company number: ' + state.compInfo.nrNumber + ' from solr')
+      console.log('action: manual check of restricted words and conditions for company number: ' + state.compInfo.nrNumber )
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
-      const url = '/api/v1/documents:conditions'
+      const url = '/api/v1/documents:restricted_words'
       console.log('URL:' + url)
       const vm = this
       return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {

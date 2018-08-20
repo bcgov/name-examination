@@ -1,20 +1,13 @@
-/* eslint-disable */
+<!--eslint-disable-->
 <template>
   <div class="col-2">
 
     <div class="nav flex-column nav-pills recipe-steps" id="v-pills-tab" role="tablist"
          aria-orientation="vertical">
 
-      <div id="History1">
-        <i id="History2"></i></div>
-      <a id="history-tab" class="nav-link active" data-toggle="pill" href="#"
-         @click="clickRecipeCard('History')">History</a>
-      <div class="arrow-right"></div>
-
-
       <div id="Conflict1">
         <i id="Conflict2"></i></div>
-      <a id="conflicts-tab" class="nav-link" data-toggle="pill" href="#"
+      <a id="conflicts-tab" class="nav-link active" data-toggle="pill" href="#"
          @click="clickRecipeCard('Conflicts')">
         Conflicts
       </a>
@@ -29,7 +22,13 @@
       <div id="Trademarks1">
         <i id="Trademarks2"></i></div>
       <a id="trademarks-tab" class="nav-link" data-toggle="pill" href="#"
-         @click="clickRecipeCard('Trademarks')">Trademarks &reg;</a>
+         @click="clickRecipeCard('Trademarks')">Trademarks</a>
+      <div class="arrow-right"></div>
+
+      <div id="History1">
+        <i id="History2"></i></div>
+      <a id="history-tab" class="nav-link" data-toggle="pill" href="#"
+         @click="clickRecipeCard('History')">History</a>
       <div class="arrow-right"></div>
 
 
@@ -43,7 +42,7 @@
 export default {
   name: 'matches',
   mounted() {
-    this.currentRecipeCard = "History"
+    this.currentRecipeCard = "Conflicts"
     this.setConflicts();
     this.setConditions();
     this.setTrademarks();

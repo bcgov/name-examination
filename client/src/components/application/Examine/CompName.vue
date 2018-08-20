@@ -1,4 +1,4 @@
-/* eslint-disable */
+<!--eslint-disable-->
 <template>
   <div>
     <div class="name-sect">
@@ -26,8 +26,12 @@
                     v-if="is_making_decision" @click="is_making_decision=false">Cancel</button>
 
             <button class="btn btn-sm btn-danger" id="examine-re-open-button"
-                    v-if="is_complete && !is_furnished" @click="reOpen()" >
+                    v-if="is_complete && !is_furnished && !is_cancelled && !is_approved_expired" @click="reOpen()" >
               Re-Open</button>
+
+            <button class="btn btn-sm btn-danger" id="examine-reset-button"
+                    v-if="is_complete && is_furnished && !is_cancelled && !is_approved_expired" data-toggle="modal" data-target="#add-comment-reset-modal">
+              RESET</button>
 
             <!-- EXAMINE button - to claim/examine an NR that is on hold -->
             <button class="btn btn-sm btn-primary" id="examine-button" v-if="can_claim"
@@ -97,6 +101,28 @@
       </div>
 
     </div>
+    <div class="modal fade" id="add-comment-reset-modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Please give a comment to explain why this NR is being RESET</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <textarea id="reset-comment-text" class="form-control" rows="10"
+                      v-model="add_comment_display"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-secondary"
+                    data-dismiss="modal" @click="cancelReset">Cancel</button>
+            <button type="button" id="reset-nr-after-comment-button" class="btn btn-sm btn-danger" disabled="true"
+                    data-dismiss="modal" @click="reset">RESET</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -109,6 +135,8 @@
         searchStr: '',
         retval: [],
         is_running_manual_search: false,
+        add_comment_display: "",
+        resetting: false,
       }
     },
     computed: {
@@ -133,7 +161,21 @@
         return this.$store.getters.is_complete;
       },
       is_furnished() {
-        return this.$store.getters.furnished;
+        if (this.$store.getters.furnished === "Y") return true;
+        return false;
+      },
+      is_cancelled() {
+        if (this.$store.getters.currentState === "CANCELLED") return true;
+        return false;
+      },
+      is_approved_expired() {
+        // if there is no expiry date, this NR is not approved-expired
+        if (this.$store.getters.expiryDate == null) return false;
+
+        let expired_date = new Date(this.$store.getters.expiryDate);
+        let date = new Date();
+        if (this.$store.getters.currentState === "APPROVED" && date > expired_date) return true;
+        return false;
       },
       is_editing() {
         return  this.$store.getters.is_editing;
@@ -163,6 +205,15 @@
       },
       compName3() {
         return this.$store.getters.compName3;
+      },
+      compName1State() {
+        return this.$store.getters.compName1.state;
+      },
+      compName2State() {
+        return this.$store.getters.compName2.state;
+      },
+      compName3State() {
+        return this.$store.getters.compName3.state;
       },
       currentNameObj: {
         get: function() {
@@ -221,6 +272,9 @@
       listDecisionReasons() {
         return this.$store.getters.listDecisionReasons;
       },
+      internalComments() {
+        return this.$store.getters.internalComments;
+      },
     },
     mounted() {
       console.log('Compname Mounted')
@@ -244,6 +298,17 @@
       },
       reOpen() {
         this.$store.dispatch('updateNRState', 'INPROGRESS');
+      },
+      reset() {
+        this.resetting = true;
+        if (this.compName1 != undefined)
+          this.$store.dispatch('resetDecision', 1);
+        else
+          console.log('Error no compName1 on this NR')
+      },
+      cancelReset() {
+        this.add_comment_display = "";
+        $("#reset-comment-text").prop('disabled', false);
       },
       claimNR() {
         this.$store.dispatch('updateNRState', 'INPROGRESS');
@@ -280,7 +345,7 @@
         if (this.currentState != 'INPROGRESS') return false;
 
         // if the NR is furnished, nothing is undoable
-        if (this.$store.state.furnished)  return false;
+        if (this.$store.state.furnished === 'Y')  return false;
 
         // if this name is complete (ie: anything other than NE) it's undoable
         if (name.state == 'NE' || name.state == null) return false;
@@ -288,40 +353,31 @@
         return true;
       },
       quickApprove() {
-        var approvalStr = ''
-        this.retval.push(approvalStr)
+        this.currentNameObj.decision_text = ''
         console.log('quickApprove')
 
         this.decision_made = 'A'
-       // this.nameAccept()
         this.nameAcceptReject()
       },
       rejectDescriptive() {
-        // When this was written, the 13th index of listDecisionReasons was the string needed for a descriptive term missing
-        // it was decided to HARD CODE this value until another solution is found
-        // var descriptiveStr = this.listDecisionReasons[13].reason
-        var descriptiveStr = 'Require descriptive second word or phrase * E.G. ' +
-                             'Construction, Gardening, Investments, Holdings, Etc.'
 
-        this.retval.push(descriptiveStr)
+        this.currentNameObj.decision_text = 'Require descriptive second word or phrase * E.G. ' +
+          'Construction, Gardening, Investments, Holdings, Etc.'
         this.decision_made = 'R'
-        //this.nameReject()
         this.nameAcceptReject()
       },
       rejectDistinctive() {
         // When this was written, the 16th index of listDecisionReasons was the string needed for a distinctive term missing
         // it was decided to HARD CODE this value until another solution is found
         // var distinctiveStr = this.listDecisionReasons[16].reason
-        var distinctiveStr = "Require distinctive, nondescriptive first word or prefix * E.G. " +
-                             "Person's name, initials, geographic location, etc."
-        this.retval.push(distinctiveStr)
+        this.currentNameObj.decision_text = "Require distinctive, nondescriptive first word or " +
+          "prefix * E.G. Person's name, initials, geographic location, etc."
         this.decision_made = 'R'
-        //this.nameReject()
         this.nameAcceptReject()
       },
       onSubmit()
       {
-        console.log("Running manual recipe");
+        console.log("Running manual recipe on " + this.searchStr);
         this.$store.dispatch('runManualRecipe', this.searchStr);
 
         if (this.searchStr != this.currentName) this.is_running_manual_search = true;
@@ -332,41 +388,14 @@
       },
       nameAcceptReject() {
 
-        // save decision text, state, and up to three conflicts
-        //this.currentNameObj.decision_text = this.customer_message_display.substr(0,955);
-        this.currentNameObj.decision_text = this.retval[0]
-
+        // save decision
         console.log('nameAcceptReject decision_made:' + this.decision_made)
         if (this.decision_made == 'A') {
-          this.currentNameObj.state = 'A'; // accepted
-
-          // Not needed for FAST PATH Approval / Reject
-          // conditionally accepted if any conditions selected with condition_required flag TRUE
-          //for (let record in this.conditions_selected) {
-            //if (record.consent_required) {
-              //this.currentNameObj.state = 'C';
-              //break;
-            //}
-          //}
+          this.currentNameObj.state = 'A';
         }
         else {
           this.currentNameObj.state = 'R';
         }
-        // Not needed for FAST PATH Approval / Reject
-        //for (var i = 0; i < this.conflicts_selected.length; i++) {
-          //if (i == 0) {
-            //this.currentNameObj.conflict1 = this.conflicts_selected[i].text;
-            //this.currentNameObj.conflict1_num = this.conflicts_selected[i].nrNumber;
-          //}
-          //if (i == 1) {
-            //this.currentNameObj.conflict2 = this.conflicts_selected[i].text;
-            //this.currentNameObj.conflict2_num = this.conflicts_selected[i].nrNumber;
-          //}
-          //if (i == 2) {
-            //this.currentNameObj.conflict3 = this.conflicts_selected[i].text;
-            //this.currentNameObj.conflict3_num = this.conflicts_selected[i].nrNumber;
-          //}
-        //}
 
         // send decision to API and reset flags
         this.$store.dispatch('nameAcceptReject');
@@ -375,6 +404,36 @@
       },
     },
     watch: {
+      add_comment_display: function(val) {
+        console.log('add_comment_display watcher fired:' + val)
+        if (val)
+          $("#reset-nr-after-comment-button").prop('disabled', false);
+        else
+          $("#reset-nr-after-comment-button").prop('disabled', true);
+      },
+      compName1State: function (val) {
+        console.log('compName1 watcher fired:' + val)
+        if (this.resetting) {
+          if (this.compName2 != undefined)
+            this.$store.dispatch('resetDecision', 2);
+          else
+            this.$store.commit('internalComments', this.add_comment_display);
+        }
+      },
+      compName2State: function (val) {
+        console.log('compName2 watcher fired:' + val)
+        if (this.resetting) {
+          if (this.compName3 != undefined)
+            this.$store.dispatch('resetDecision', 3);
+          else
+            this.$store.commit('internalComments', this.add_comment_display);
+        }
+      },
+      compName3State: function (val) {
+        console.log('compName3 watcher fired:' + val)
+        if (this.resetting)
+          this.$store.commit('internalComments', this.add_comment_display);
+      },
       currentName: function (val) {
         console.log('CompName.currentName watcher fired:' + val)
         this.searchStr =  val
@@ -382,6 +441,25 @@
       currentChoice: function (val) {
         console.log('CompName.currentChoice watcher fired:' + val)
         if(val != undefined ) { this.runRecipe() }
+      },
+      currentState: function (val) {
+        console.log('CompName.currentState watcher fired:' + val)
+        if (this.resetting) {
+          this.resetting = false;
+          this.$store.dispatch('updateRequest');
+          this.add_comment_display = "";
+          $("#reset-comment-text").prop('disabled', false);
+        }
+      },
+      internalComments: function (val) {
+        console.log('CompName.internalComments watcher fired:' + val)
+        if (this.resetting)
+          this.$store.commit('furnished', "N");
+      },
+      is_furnished: function (val) {
+        console.log('CompName.is_furnished watcher fired:' + val)
+        if (this.resetting && val === false)
+          this.$store.commit('currentState', 'INPROGRESS');
       },
       nrNumber: function (val) {
         console.log('CompName.nrNumber watcher fired:' + val)

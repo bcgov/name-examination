@@ -6,7 +6,7 @@
 
         <select v-model="selectedHistory" class="form-control" size="17" border="0" @click="check_deselect">
           <option style="margin: 1px" v-for="option in historyJSON.names"
-                  v-bind:class="{fail: check_status(option)=='fail', concern: check_status(option)=='concern'}"
+                  v-bind:class="{fail: check_status(option)=='fail', pass: check_status(option)=='pass'}"
                   :key="option.value" v-bind:value="{ name_state_type_cd: option.name_state_type_cd, submit_count: option.submit_count, nr_num: option.nr_num, name: option.name, score: option.score}">
             {{ option.name }}
           </option>
@@ -59,7 +59,7 @@
       },
       check_status(option) {
         if (option.submit_count < 4 && option.name_state_type_cd!='R') {
-          return 'concern'
+          return 'pass'
         } else {
           return 'fail'
         }
@@ -68,11 +68,11 @@
     watch: {
       selectedHistory: {
         handler(selection) {
-          if (this.check_status(selection) == 'concern') {
+          if (this.check_status(selection) == 'pass') {
             $("#historyInfo").removeClass();
-            $("#historyInfo").addClass("col history-info-view border-concern");
+            $("#historyInfo").addClass("col history-info-view border-pass");
             $("#currentHistoryName").removeClass();
-            $("#currentHistoryName").addClass("concern");
+            $("#currentHistoryName").addClass("pass");
           }
           else {
             $("#historyInfo").removeClass();
@@ -91,16 +91,22 @@
 <style scoped>
 </style>
 <style>
+  .pass {
+    background-color: #b6d7a8;
+  }
   .concern {
     background-color: #ffe680;
   }
   .fail {
-    background-color: #ff9999;
+    background-color: #ea9999;
   }
   .border-fail {
-    border: 1px solid #ff9999;
+    border: 1px solid #ea9999;
   }
   .border-concern {
     border: 1px solid #ffe680;
+  }
+  .border-pass {
+    border: 1px solid #b6d7a8;
   }
 </style>
