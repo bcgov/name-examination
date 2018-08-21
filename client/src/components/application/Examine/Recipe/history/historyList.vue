@@ -92,21 +92,21 @@
 </style>
 <style>
   .pass {
-    background-color: #99ff99;
+    background-color: #b6d7a8;
   }
   .concern {
     background-color: #ffe680;
   }
   .fail {
-    background-color: #ff9999;
+    background-color: #ea9999;
   }
   .border-fail {
-    border: 1px solid #ff9999;
+    border: 1px solid #ea9999;
   }
   .border-concern {
     border: 1px solid #ffe680;
   }
   .border-pass {
-    border: 1px solid #99ff99;
+    border: 1px solid #b6d7a8;
   }
 </style>
