@@ -1,7 +1,7 @@
 /* eslint-disable */
 <template>
   <div>
-    <h2>You should only see this page if you got here un-authenticated. Please login</h2>
+    <h2>Your authorization is missing or has expired. Please login</h2>
   </div>
 </template>
 
@@ -29,7 +29,9 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   h1, h2 {
-    font-weight: normal;
+    font-weight: bold;
+    font-size: large;
+    padding: 4ch;
   }
 
   ul {

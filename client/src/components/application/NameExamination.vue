@@ -62,6 +62,9 @@
       }
     },
     computed: {
+      auth() {
+        return this.$store.getters.isAuthenticated
+      },
       details() {
         return this.$store.getters.details;
       },
@@ -125,6 +128,14 @@
           $("#exact-history-match-banner").addClass("alert alert-danger");
         else if (val == 'APPROVED')
           $("#exact-history-match-banner").addClass("alert alert-warning");
+      },
+      auth: {
+        handler(selection) {
+          console.log('Watch re-direct to Signin')
+          if (auth != true) {
+            this.$router.push("/Signin")
+          }
+        }
       }
     }
   }
