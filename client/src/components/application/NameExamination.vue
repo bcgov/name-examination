@@ -1,4 +1,4 @@
-/* eslint-disable */
+<!--eslint-disable-->
 <template>
   <div>
     <div class="upper-section container-fluid">
@@ -54,12 +54,12 @@
 
   export default {
     name: "SearchResults",
-    data: function ()
-    {
-      return {
-        visible: true,
-        exactMatch: null
-      }
+    data: function () {
+        return {
+          visible: true,
+          exactMatch: null,
+          model: false,
+        }
     },
     computed: {
       details() {
