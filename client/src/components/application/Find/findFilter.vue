@@ -224,7 +224,7 @@ export default {
         // organize names/dates //
           for (let i=0; i<data.length;i++) {
             // display last comment only/format it for table //
-            if (data[i].comments[0] != undefined) {
+            if (data[i].comments != undefined && data[i].comments[0] != undefined) {
               let latestComment = data[i].comments[0];
               for (let commentIter = 0; commentIter < data[i].comments.length; commentIter++) {
                 if (data[i].comments[commentIter].timestamp > latestComment.timestamp) {

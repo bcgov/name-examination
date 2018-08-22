@@ -1233,6 +1233,20 @@ mutations: {
         .catch(error => console.log('ERROR: ' + error))
     },
 
+    syncNR({dispatch,commit},nrNumber) {
+      console.log('action: syncing data for nr number: ' + nrNumber + ' from with nro')
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const url = '/api/v1/requests/' + nrNumber + '/editclosed'
+      console.log('URL:' + url)
+      const vm = this
+      dispatch('checkToken')
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        console.log('Comp Info Response:' + response.data)
+        commit('loadCompanyInfo',response.data)
+      })
+      .catch(error => console.log('ERROR: ' + error))
+    },
+
     resetValues({state, commit}){
       // clear NR specific JSON data so that it can't get accidentally re-used by the next NR number
       console.log('Deleting conflictsJSON from state')
