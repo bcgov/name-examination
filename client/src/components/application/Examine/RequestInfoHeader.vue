@@ -416,7 +416,7 @@ export default {
       },
       additionalInfo: {
         get: function() {
-          return this.$store.getters.additionalInfo;
+          return this.$store.getters.additionalInfo == null ?  '' : this.$store.getters.additionalInfo;
         },
         set: function(value) {
           this.$store.commit('additionalInfo', value);
@@ -594,12 +594,21 @@ export default {
         // trigger vuelidate validation in this component and child component
         this.$v.$touch();
         this.$refs.clientinfoview.$v.$touch();
-        this.$refs.nwpta_ab.$v.$touch();
-        this.$refs.nwpta_sk.$v.$touch();
+
+        var nwpta_ab_invalid = false;
+        if (this.$refs.nwpta_ab !== undefined) {
+          this.$refs.nwpta_ab.$v.$touch();
+          nwpta_ab_invalid = this.$refs.nwpta_ab.$v.$invalid;
+        }
+        var nwpta_sk_invalid = false;
+        if (this.$refs.nwpta_sk !== undefined) {
+          this.$refs.nwpta_sk.$v.$touch();
+          nwpta_sk_invalid = this.$refs.nwpta_sk.$v.$invalid;
+        }
 
         // return opposite of 'invalid' flags, since we want to know if this IS valid
         return !this.$v.$invalid && !this.$refs.clientinfoview.$v.$invalid &&
-          !this.$refs.nwpta_ab.$v.$invalid && !this.$refs.nwpta_sk.$v.$invalid;
+          !nwpta_ab_invalid && !nwpta_sk_invalid;
       },
     },
     watch: {
