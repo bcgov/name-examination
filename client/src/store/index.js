@@ -738,10 +738,14 @@ mutations: {
       console.log('Token expires in ' + expiresIn + 'seconds, updating')
 
       if(expiresIn < 1700 && expiresIn > 0) {
+        console.log('Updating Token')
         dispatch('updateToken')
+
       }else if(expiresIn < 0) {
         //TODO - reset everything and force login???
+        console.log('Force Logout')
         dispatch('logout')
+        window.location.assign("/");
         //console.log('Logout 696')
       }
     },
