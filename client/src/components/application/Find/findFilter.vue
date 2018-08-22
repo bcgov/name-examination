@@ -114,6 +114,7 @@ export default {
         {title: 'Names', field: 'names', label: 'name', thStyle: {background: '#fffae6'}, colStyle: {width:'15%'},visible: true},
         {title: 'Last Update', field: 'lastUpdate', label: 'lastUpdate', thStyle: {background: '#fffae6'}, visible: true},
         {title: 'Submitted', field: 'submittedDate', label: 'submittedDate', thStyle: {background: '#fffae6'}, visible: true},
+        {title: 'Last Comment', field: 'comments', label: 'comments', thStyle: {background: '#fffae6'}, visible: true},
         {title: 'Req Type', field: 'requestTypeCd', label: 'reqType', thStyle: {background: '#fffae6'}, visible: false},
       ]
       return cols;
@@ -222,9 +223,18 @@ export default {
         let data = searchData.nameRequests[0];
         // organize names/dates //
           for (let i=0; i<data.length;i++) {
+            // display last comment only/format it for table //
+            if (data[i].comments[0] != undefined) {
+              let latestComment = data[i].comments[0];
+              for (let commentIter = 0; commentIter < data[i].comments.length; commentIter++) {
+                if (data[i].comments[commentIter].timestamp > latestComment.timestamp) {
+                  latestComment = data[i].comments[commentIter];
+                }
+              }
+              data[i].comments = latestComment.comment;
+            } else data[i].comments = null;
+
             // organize names column //
-            if (data[i].activeUser != undefined)
-              data[i].activeUser += ' ';
             for (let namesIter=0; namesIter<data[i].names.length; namesIter++) {
               if (data[i].names[namesIter].choice !== undefined) {
                 if (data[i].names[namesIter].choice !== namesIter + 1) {
