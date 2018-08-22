@@ -43,7 +43,7 @@ instance.interceptors.response.use(function (response) {
   store.dispatch('checkToken');
 
   let status = response.status;
-  if ( status ===  400 || status === 206 || status != 2 ) {
+  if ( status !== 200 ) {
       store.dispatch('checkError',response.data)
   }
 
@@ -83,6 +83,7 @@ instance.interceptors.response.use(function (response) {
     return retryOriginalRequest
   }
   */
+  store.dispatch('checkError',error)
   return Promise.reject(error)
 })
 

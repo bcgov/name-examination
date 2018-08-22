@@ -769,11 +769,14 @@ mutations: {
       console.log("ErrorChecking")
       if( responseJSON.warnings != null ){
         console.log("warnings")
-        commit('setErrorJSON',responseJSON.warnings)
+        commit('setErrorJSON',responseJSON)
       }
       if( responseJSON.errors != null ){
         console.log("errors")
-        commit('setErrorJSON',responseJSON.errors)
+        commit('setErrorJSON',responseJSON)
+      }
+      if( responseJSON.message != null){
+        commit('setErrorJSON',responseJSON)
       }
     },
 
@@ -1524,6 +1527,9 @@ mutations: {
     },
     searchQuerySpecial(state) {
       return state.searchQuerySpecial
+    },
+    errorJSON(state) {
+      return state.errorJSON
     },
   }
 })

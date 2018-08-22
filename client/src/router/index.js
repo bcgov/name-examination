@@ -55,6 +55,7 @@ router.beforeResolve((to, from, next) => {
       next()
     } else {
       console.log('Not authorized, redirect to /')
+      store.dispatch("checkError",{"message": "Not Authorized please login."});
       next({
         path: '/'
       })

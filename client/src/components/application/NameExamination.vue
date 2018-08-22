@@ -1,4 +1,4 @@
-/* eslint-disable */
+<!--eslint-disable-->
 <template>
   <div>
     <div class="upper-section container-fluid">
@@ -15,7 +15,7 @@
 
       <!-- msg re. in progress with someone else -->
       <div class="alert alert-warning examiner-warning"
-           v-if="currentState == 'INPROGRESS' && examiner != userId">
+           v-if="currentState == 'INPROGRESS' && examiner != userId && auth">
         This NR is being examined by {{ examiner }}.
       </div>
 
@@ -54,12 +54,12 @@
 
   export default {
     name: "SearchResults",
-    data: function ()
-    {
-      return {
-        visible: true,
-        exactMatch: null
-      }
+    data: function () {
+        return {
+          visible: true,
+          exactMatch: null,
+          model: false,
+        }
     },
     computed: {
       auth() {
