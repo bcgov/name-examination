@@ -101,3 +101,8 @@ function getTextFromValueMultiple(haystack, needle) {
   // return array of matches, not just single value
   return haystack.filter(findArrValue(needle));
 }
+
+function padWithZeroes(num, size) {
+    var s = "000000000" + num;
+    return s.substr(s.length-size);
+}
