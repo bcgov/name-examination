@@ -6,16 +6,15 @@
         <div class="col">
 
           <div id="top-buttons">
-            <button class="btn btn-sm btn-secondary" id="examine-get-next-button"
+            <button v-shortkey="['alt', 'n']" @shortkey="getNextCompany()" class="btn btn-sm btn-secondary" id="examine-get-next-button"
                     v-if="!is_making_decision && !is_my_current_nr"
-                    @click="getNextCompany()" >Get Next</button>
-            <button class="btn btn-sm btn-warning" id="examine-hold-button"
+                    @click="getNextCompany()" >Get <u>N</u>ext</button>
+            <button v-shortkey="['alt', 'h']" @shortkey="holdRequest()" class="btn btn-sm btn-warning" id="examine-hold-button"
                     v-if="!is_making_decision && is_my_current_nr"
-                    @click="holdRequest()">Hold</button>
-            <button class="btn btn-sm btn-primary" id="examine-decide-button"
+                    @click="holdRequest()"><u>H</u>old</button>
+            <button v-shortkey="['alt', 'd']" @shortkey="startDecision()" class="btn btn-sm btn-primary" id="examine-decide-button"
                     v-if="!is_making_decision && !is_complete && is_my_current_nr"
-                    @click="startDecision()" >Approve/Reject...</button>
-
+                    @click="startDecision()"><u>D</u>ecision</button>
             <button class="btn btn-sm btn-primary" id="decision-approve-button"
                     v-if="is_making_decision" @click="nameAccept()">
               <span v-if="acceptance_will_be_conditional">Conditionally </span>Approve
@@ -79,16 +78,16 @@
 
           <div >
             <div align="right" v-if="!is_making_decision && !is_complete && is_my_current_nr">
-              <button class="btn btn-sm btn-outline-primary" id="examine-quick-approve-button"
-                      @click="quickApprove">Quick Approve</button>
-              <button class="btn btn-sm btn-outline-danger" id="examine-reject-descriptive-button"
-                      @click="rejectDescriptive">Reject Descriptive</button>
-              <button class="btn btn-sm btn-outline-danger" id="examine-reject-distinctive-button"
-                      @click="rejectDistinctive">Reject Distinctive</button>
+              <button v-shortkey="['alt', 'a']" @shortkey="quickApprove()" class="btn btn-sm btn-outline-primary" id="examine-quick-approve-button"
+                      @click="quickApprove">Quick <u>A</u>pprove</button>
+              <button  v-shortkey="['alt', 'i']" @shortkey="rejectDistinctive()" class="btn btn-sm btn-outline-danger" id="examine-reject-distinctive-button"
+                      @click="rejectDistinctive">Reject D<u>i</u>stinctive</button>
+              <button v-shortkey="['alt', 'e']" @shortkey="rejectDescriptive()" class="btn btn-sm btn-outline-danger" id="examine-reject-descriptive-button"
+                      @click="rejectDescriptive">Reject D<u>e</u>scriptive</button>
             </div>
             <div v-if="!is_making_decision" id="manual-search">
               <form class="form-inline my-2 my-lg-0" @submit.prevent="onSubmit">
-                <input class="search form-control" v-model="searchStr" />
+                <input ref="search" type="text" class="search form-control" v-model="searchStr"  v-shortkey="['alt', 's']" @shortkey="setFocus()">
                 <button class="btn-search" type="submit"><i class="fa fa-search" /></button>
                 <button class="btn-reset" v-if="is_running_manual_search" @click="resetSearchStr">
                   <i class="fa fa-times" /></button>
@@ -282,6 +281,7 @@
         console.log('Mounted->get next NR number')
         this.$store.dispatch('getpostgrescompNo');
       }
+      this.setFocus();
     },
     methods: {
       getNextCompany() {
@@ -402,6 +402,9 @@
         this.decision_made = null;
         this.is_making_decision = false;
       },
+      setFocus: function() {
+        this.$refs.search.focus();
+      }
     },
     watch: {
       add_comment_display: function(val) {
