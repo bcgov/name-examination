@@ -42,10 +42,10 @@
             <!-- spacer -->
           </div>
           <div class="col">
-            <nwpta v-if="nwpta_required" jurisdiction="AB" />
+            <nwpta v-if="nwpta_required" jurisdiction="AB" ref="nwpta_ab"  />
           </div>
           <div class="col">
-            <nwpta v-if="nwpta_required" jurisdiction="SK" />
+            <nwpta v-if="nwpta_required" jurisdiction="SK" ref="nwpta_sk"  />
           </div>
         </div>
 
@@ -416,7 +416,7 @@ export default {
       },
       additionalInfo: {
         get: function() {
-          return this.$store.getters.additionalInfo;
+          return this.$store.getters.additionalInfo == null ?  '' : this.$store.getters.additionalInfo;
         },
         set: function(value) {
           this.$store.commit('additionalInfo', value);
@@ -496,9 +496,6 @@ export default {
         // if previous NR not required, clear the data
         if (!this.prev_nr_required) this.$store.commit('previousNr', null);
 
-        // if NWPTA not required, clear the data
-        // TODO
-
 
         // build Additional Info
         this.buildAdditionalInfo();
@@ -548,7 +545,10 @@ export default {
             // NWPTA placeholder
             // if there is no NWPTA data for this placeholder, do not use this bit of the template
             if (template.indexOf('<nwpta>') > -1) {
-              // TODO
+              // KBM 2018-08-22 - Do nothing - I don't think we need to add to Additional Info for
+              // NWPTA because it will have been added during initial entry into NRO, and we do not
+              // change nwpta type (assumed, numbered) to trigger adding/changing anything in
+              // Additional Info.
             }
 
             /*
@@ -595,8 +595,20 @@ export default {
         this.$v.$touch();
         this.$refs.clientinfoview.$v.$touch();
 
+        var nwpta_ab_invalid = false;
+        if (this.$refs.nwpta_ab !== undefined) {
+          this.$refs.nwpta_ab.$v.$touch();
+          nwpta_ab_invalid = this.$refs.nwpta_ab.$v.$invalid;
+        }
+        var nwpta_sk_invalid = false;
+        if (this.$refs.nwpta_sk !== undefined) {
+          this.$refs.nwpta_sk.$v.$touch();
+          nwpta_sk_invalid = this.$refs.nwpta_sk.$v.$invalid;
+        }
+
         // return opposite of 'invalid' flags, since we want to know if this IS valid
-        return !this.$v.$invalid && !this.$refs.clientinfoview.$v.$invalid;
+        return !this.$v.$invalid && !this.$refs.clientinfoview.$v.$invalid &&
+          !nwpta_ab_invalid && !nwpta_sk_invalid;
       },
     },
     watch: {
