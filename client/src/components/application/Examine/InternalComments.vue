@@ -6,8 +6,6 @@
         <h3>INTERNAL COMMENTS</h3>
         <textarea v-model="newComment" class="form-control" id="decision-new-comment-textarea"
                   rows="5"></textarea>
-        <button @click="addNewComment" id="decision-add-comment-button"
-                class="btn btn-sm btn-secondary float-right">Add Comment</button>
       </div>
       <div class="col">
         <div class="comment" v-for="comment in internalComments"
@@ -62,20 +60,32 @@
           this.$store.commit('internalComments', value);
         }
       },
+      currentNameObj: {
+        get: function () {
+          return this.$store.getters.currentNameObj;
+        },
+        set: function (value) {
+          this.$store.dispatch('currentNameObj', value);
+        }
+      },
     },
     methods: {
       addNewComment() {
         console.log('got here to addNewComment() in InternalComments component');
+
+        // do nothing if comment is blank
+        if (this.newComment == '') return;
 
         // create new comment object with just text, and add it to list of comments in data structure
         var newCommentData = {
           comment: this.newComment,
           examiner: this.$store.state.examiner
         };
+        // add to list of comments (effects display only)
         this.internalComments = this.internalComments.concat(newCommentData);
 
-        // clear newComment field for next comment added in this session
-        this.newComment = null;
+        // add to name record, to be sent to API
+        this.currentNameObj.comment = newCommentData;
       }
 
     }

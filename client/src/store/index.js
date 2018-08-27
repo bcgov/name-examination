@@ -66,6 +66,7 @@ export default new Vuex.Store({
           conflict2: null,
           conflict3: null,
           decision_text: null,
+          comment: null,
         },
         compName2: {
           choice: null,
@@ -76,6 +77,7 @@ export default new Vuex.Store({
           conflict2: null,
           conflict3: null,
           decision_text: null,
+          comment: null,
         },
         compName3: {
           choice: null,
@@ -86,6 +88,7 @@ export default new Vuex.Store({
           conflict2: null,
           conflict3: null,
           decision_text: null,
+          comment: null,
         },
       },
       requestType: null,
@@ -347,6 +350,7 @@ mutations: {
             state.compInfo.compNames.compName1.conflict2 = record.conflict2
             state.compInfo.compNames.compName1.conflict3 = record.conflict3
             state.compInfo.compNames.compName1.decision_text = record.decision_text
+            state.compInfo.compNames.compName1.comment = record.comment
 
             // if this name is not yet examined, set it as current name
             if (record.state == 'NE') {
@@ -364,6 +368,7 @@ mutations: {
             state.compInfo.compNames.compName2.conflict2 = record.conflict2
             state.compInfo.compNames.compName2.conflict3 = record.conflict3
             state.compInfo.compNames.compName2.decision_text = record.decision_text
+            state.compInfo.compNames.compName2.comment = record.comment
 
             // if this name is not yet examined, set it as current name
             if (record.state == 'NE' &&
@@ -383,6 +388,7 @@ mutations: {
             state.compInfo.compNames.compName3.conflict2 = record.conflict2
             state.compInfo.compNames.compName3.conflict3 = record.conflict3
             state.compInfo.compNames.compName3.decision_text = record.decision_text
+            state.compInfo.compNames.compName3.comment = record.comment
 
             // if this name is not yet examined, set it as current name
             if (record.state == 'NE' &&
@@ -923,6 +929,7 @@ mutations: {
       objName.conflict2_num = null;
       objName.conflict3_num = null;
       objName.decision_text = null;
+      objName.comment = null;
 
 
       const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/names/' + nameChoice;
@@ -950,7 +957,7 @@ mutations: {
       objName.conflict2_num = null;
       objName.conflict3_num = null;
       objName.decision_text = null;
-
+      objName.comment = null;
     },
 
     revertLastDecision({state}) {
@@ -967,7 +974,7 @@ mutations: {
              this.getpostgrescompInfo(state.compInfo.nrNumber);
             })
             .catch(error => console.log('ERROR: ' + error))
-      },
+    },
 
     loadDropdowns( {commit, state} ) {
       var json_files_path = 'static/ui_dropdowns/';
