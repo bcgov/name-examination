@@ -271,8 +271,13 @@
       listDecisionReasons() {
         return this.$store.getters.listDecisionReasons;
       },
-      internalComments() {
-        return this.$store.getters.internalComments;
+      internalComments: {
+        get: function() {
+          return this.$store.getters.internalComments;
+        },
+        set: function(value) {
+          this.$store.commit('internalComments', value);
+        }
       },
     },
     mounted() {
@@ -419,8 +424,14 @@
         if (this.resetting) {
           if (this.compName2 != undefined)
             this.$store.dispatch('resetDecision', 2);
-          else
-            this.$store.commit('internalComments', this.add_comment_display);
+          else {
+            // create new comment object with just text, and add it to list of comments in data structure
+            var newCommentData = {
+              comment: this.add_comment_display,
+              examiner: this.$store.state.examiner
+            };
+            this.internalComments = this.internalComments.concat(newCommentData);
+          }
         }
       },
       compName2State: function (val) {
@@ -428,14 +439,26 @@
         if (this.resetting) {
           if (this.compName3 != undefined)
             this.$store.dispatch('resetDecision', 3);
-          else
-            this.$store.commit('internalComments', this.add_comment_display);
+          else {
+            // create new comment object with just text, and add it to list of comments in data structure
+            var newCommentData = {
+              comment: this.add_comment_display,
+              examiner: this.$store.state.examiner
+            };
+            this.internalComments = this.internalComments.concat(newCommentData);
+          }
         }
       },
       compName3State: function (val) {
         console.log('compName3 watcher fired:' + val)
-        if (this.resetting)
-          this.$store.commit('internalComments', this.add_comment_display);
+        if (this.resetting) {
+          // create new comment object with just text, and add it to list of comments in data structure
+          var newCommentData = {
+            comment: this.add_comment_display,
+            examiner: this.$store.state.examiner
+          };
+          this.internalComments = this.internalComments.concat(newCommentData);
+        }
       },
       currentName: function (val) {
         console.log('CompName.currentName watcher fired:' + val)
