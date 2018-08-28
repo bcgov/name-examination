@@ -465,6 +465,9 @@
           }
         }
 
+        // add new comment
+        this.$refs.decisioncomments.addNewComment();
+
         // send decision to API and reset flags
         this.$store.dispatch('nameAcceptReject');
         this.decision_made = null;
