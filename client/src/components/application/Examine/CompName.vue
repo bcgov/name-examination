@@ -78,6 +78,7 @@
 
           <div >
             <div align="right" v-if="!is_making_decision && !is_complete && is_my_current_nr">
+
               <button v-shortkey="['alt', 'a']" @shortkey="quickApprove()" class="btn btn-sm btn-outline-primary" id="examine-quick-approve-button"
                       @click="quickApprove">Quick <u>A</u>pprove</button>
               <button  v-shortkey="['alt', 'i']" @shortkey="rejectDistinctive()" class="btn btn-sm btn-outline-danger" id="examine-reject-distinctive-button"
