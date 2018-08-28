@@ -7,21 +7,16 @@
 
 <script>
 /* eslint-disable */
-var authorized = localStorage.getItem("AUTHORIZED");
 
 export default {
     name: 'LandingPage',
     data() {
       return {}
     },
-    components: {
-    //  StdHeader
-    },
-    mounted() {
-      if(!authorized){
-      };
-    },
-    methods: {
+    computed: {
+      auth() {
+        return this.$store.getters.isAuthenticated
+      }
     }
   }
 </script>

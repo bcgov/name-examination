@@ -22,6 +22,9 @@
       visble: true
     },
     computed: {
+      auth() {
+        return this.$store.getters.isAuthenticated
+      },
       details() {
         return this.$store.getters.details;
       }
@@ -29,6 +32,13 @@
     components: {
       findfilter
     },
+    watch: {
+      auth: {
+        handler(selection) {
+          if (auth != true) { this.$router.push("/Signin") }
+        }
+      }
+    }
   }
 </script>
 
