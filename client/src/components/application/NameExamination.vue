@@ -87,6 +87,10 @@
         return this.$store.getters.historiesJSON;
       },
       exactHistoryMatches() {
+
+        // initialize to reset any previous value
+        this.exactMatch = null;
+
         try {
           var currentName = this.$store.getters.currentName.toUpperCase();
           // check for exact matches in history for alert re. previous submissions
