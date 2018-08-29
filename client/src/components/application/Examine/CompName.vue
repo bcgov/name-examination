@@ -302,7 +302,11 @@
         this.$store.commit('decision_made', 'R');
       },
       reOpen() {
-        this.$store.dispatch('updateNRState', 'INPROGRESS');
+        this.$store.state.currentState = 'INPROGRESS';
+        this.$store.dispatch('resetDecision', 1);
+        this.$store.dispatch('resetDecision', 2);
+        this.$store.dispatch('resetDecision', 3);
+        this.$store.dispatch('updateRequest');
       },
       reset() {
         this.resetting = true;
@@ -328,7 +332,7 @@
         if (name_state == 'R') {
           return '<i class="fa fa-times icon-rejected"></i>';
         }
-        else if (name_state == 'A') {
+        else if (name_state == 'A' || name_state == 'C') {
           return '<i class="fa fa-check icon-accepted"></i>';
         }
         else return '';
