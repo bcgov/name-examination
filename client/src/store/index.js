@@ -336,7 +336,10 @@ mutations: {
       state.compInfo.compNames.compName3.conflict3 = null
       state.compInfo.compNames.compName3.decision_text = null
 
-
+      // clear current name choice, to be reset by new data below
+      state.currentNameObj = null;
+      state.currentName = null;
+      state.currentChoice = null;
 
 
       for (let record of dbcompanyInfo.names) {
@@ -1038,8 +1041,6 @@ mutations: {
 
       console.log('Getting NR data')
       dispatch('getpostgrescompInfo',nrNum)
-
-      commit('currentChoice',1)
 
       console.log('Running Recipe')
       dispatch('runRecipe')
