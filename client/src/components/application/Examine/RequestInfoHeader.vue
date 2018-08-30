@@ -101,7 +101,7 @@
               <h3 v-if="submitCount > 0">SUBMIT COUNT: {{submitCount}}</h3>
 
               <span v-if="prev_nr_required">
-                <span v-if="is_editing && !is_editing" :class="{'form-group-error': $v.previousNr.$error}">
+                <span v-if="is_editing && !is_closed" :class="{'form-group-error': $v.previousNr.$error}">
                   <h3 class="inline">Previous NR</h3>
                   <input class="form-control" v-model="previousNr" :onchange="$v.previousNr.$touch()" />
                   <div class="error" v-if="!$v.previousNr.isValidNr">Please enter a valid NR ("NR xxxxxxx").</div>
