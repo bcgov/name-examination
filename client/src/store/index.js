@@ -1236,7 +1236,7 @@ mutations: {
     syncNR({dispatch,commit},nrNumber) {
       console.log('action: syncing data for nr number: ' + nrNumber + ' from with nro')
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/requests/' + nrNumber + '/editclosed'
+      const url = '/api/v1/requests/' + nrNumber + '/syncnr'
       console.log('URL:' + url)
       const vm = this
       dispatch('checkToken')
