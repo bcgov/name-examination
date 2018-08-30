@@ -12,7 +12,7 @@
             <div class="priority" style="height: 30px;" v-if="priority">Priority</div>
           </div>
           <div class="col">
-            <p v-if="!is_editing" class="requestType">{{ requestType_desc }}</p>
+            <p v-if="!is_editing || is_closed" class="requestType">{{ requestType_desc }}</p>
             <select v-else v-model="requestType" class="form-control">
               <option v-for="option in requestType_options" v-bind:value="option.value"
                       v-bind:key="option.value">
@@ -21,7 +21,7 @@
             </select>
 
 
-            <p v-if="!is_editing" class="add-top-padding"
+            <p v-if="!is_editing || is_closed" class="add-top-padding"
                style="font-weight: bold;">{{ jurisdiction }}</p>
             <div v-else-if="jurisdiction_required" class="add-top-padding" :class="{'form-group-error': $v.jurisdiction.$error}">
               <h3>Jurisdiction</h3>
@@ -101,7 +101,7 @@
               <h3 v-if="submitCount > 0">SUBMIT COUNT: {{submitCount}}</h3>
 
               <span v-if="prev_nr_required">
-                <span v-if="is_editing" :class="{'form-group-error': $v.previousNr.$error}">
+                <span v-if="is_editing && !is_closed" :class="{'form-group-error': $v.previousNr.$error}">
                   <h3 class="inline">Previous NR</h3>
                   <input class="form-control" v-model="previousNr" :onchange="$v.previousNr.$touch()" />
                   <div class="error" v-if="!$v.previousNr.isValidNr">Please enter a valid NR ("NR xxxxxxx").</div>
@@ -113,7 +113,7 @@
               </span>
 
               <span v-if="corp_num_required">
-                <span v-if="is_editing" :class="{'form-group-error': $v.corpNum.$error}">
+                <span v-if="is_editing && !is_closed" :class="{'form-group-error': $v.corpNum.$error}">
                   <h3 class="inline">Related Corp #</h3>
                   <input class="form-control" v-model="corpNum" :onchange="$v.corpNum.$touch()" />
                   <div class="error" v-if="!$v.corpNum.isValidCorpNum">Please enter a valid Incorporation Number.</div>
@@ -132,7 +132,7 @@
           <div class="col add-top-padding">
             <h3>Name Choices</h3>
 
-            <table style="width: 100%;">
+            <table v-if="!is_closed" style="width: 100%;">
               <tr :class="{'form-group-error': $v.compName1.name.$error}">
                 <td>1.</td>
                 <td>
@@ -149,6 +149,17 @@
                 <td><input v-model="compName3.name" class="form-control" /></td>
               </tr>
             </table>
+            <table v-else style="width: 100%;">
+              <tr>
+                <td>1. {{compName1.name}}</td>
+              </tr>
+              <tr>
+                <td>2. {{compName2.name}}</td>
+              </tr>
+              <tr>
+                <td>3. {{compName3.name}}</td>
+              </tr>
+            </table>
           </div>
         </div>
       </div>
@@ -160,7 +171,7 @@
             <div class="row">
               <div class="col">
                 <h3>ADDITIONAL INFORMATION</h3>
-                <p v-if="!is_editing" style="white-space: pre-line;">{{ additionalInfo }}</p>
+                <p v-if="!is_editing || is_closed" style="white-space: pre-line;">{{ additionalInfo }}</p>
                 <textarea v-else v-model="additionalInfo" class="form-control" maxlength="150"
                           rows="5">
                 </textarea>
@@ -310,7 +321,11 @@ export default {
         // user can edit this if it is open (DRAFT, HOLD) or their INPROGRESS. If it is DRAFT or
         // HOLD, clicking edit button will switch it to their INPROGRESS (in edit() f'n).
         if (this.is_my_current_nr) return true;
-        if (['DRAFT', 'HOLD'].indexOf(this.nr_status) > -1) return true;
+        if (['DRAFT', 'HOLD', 'REJECTED', 'APPROVED', 'CONDITIONAL'].indexOf(this.nr_status) > -1) return true;
+        return false;
+      },
+      is_closed() {
+        if (['REJECTED', 'APPROVED', 'CONDITIONAL'].indexOf(this.nr_status) > -1) return true;
         return false;
       },
       show_extended_header() {
@@ -475,8 +490,11 @@ export default {
       },
       edit() {
         // if this isn't the user's INPROGRESS, make it that
-        if (!this.is_my_current_nr) {
+        if (!this.is_my_current_nr && !this.is_closed) {
           this.$store.dispatch('updateNRState', 'INPROGRESS');
+        }
+        if (this.is_closed) {
+          this.$store.dispatch('syncNR',this.nrNumber);
         }
         this.$store.state.is_editing = true;
       },
