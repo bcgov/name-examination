@@ -99,42 +99,82 @@ export default {
     //   return this.$store.getters.searchQuerySpecial;
     // }
   },
-  data: () => ({
-    fixHeaderAndSetBodyMaxHeight: 400,
-    tblStyle: {'table-layout': 'fixed'},
-    tblClass: ['table-bordered', 'search-table'],
-    columns: (() => {
-      const cols =[
-        {title: 'NR#', field: 'nrNum', label: 'nr', thStyle: {background: '#fffae6'},visible: true},
-        {title: 'Examiner', field: 'activeUser', thStyle: {background: '#fffae6'}, label: 'examiner', colStyle: {width:'15%'},visible: true},
-        {title: 'State', field: 'stateCd', thStyle: {background: '#fffae6'}, label: 'state', visible: true},
-        {title: 'Priority', field: 'priorityCd', thStyle: {background: '#fffae6'}, label: 'priority', visible: true},
-        {title: 'Furnished', field: 'furnished', label: 'furnished', thStyle: {background: '#fffae6'}, visible: true},
-        {title: 'NOB', field: 'natureBusinessInfo', label: 'nob', thStyle: {background: '#fffae6'}, visible: true},
-        {title: 'Names', field: 'names', label: 'name', thStyle: {background: '#fffae6'}, colStyle: {width:'15%'},visible: true},
-        {title: 'Last Update', field: 'lastUpdate', label: 'lastUpdate', thStyle: {background: '#fffae6'}, visible: true},
-        {title: 'Submitted', field: 'submittedDate', label: 'submittedDate', thStyle: {background: '#fffae6'}, visible: true},
-        {title: 'Last Comment', field: 'comments', label: 'comments', thStyle: {background: '#fffae6'}, visible: true},
-        {title: 'Req Type', field: 'requestTypeCd', label: 'reqType', thStyle: {background: '#fffae6'}, visible: false},
-      ]
-      return cols;
-    })(),
-    pageSizeOptions: [5, 10, 20, 50, 100],
-    data: [],
-    sortedData: [],
-    total: 0,
-    query: {},
-    states:['ALL', 'HOLD', 'INPROGRESS', 'DRAFT', 'EXPIRED', 'CANCELLED', 'APPROVED', 'CONDITIONAL', 'REJECTED'],
-    stateSort: '',
-    username: '',
-    nrSearch: '',
-    priority: true,
-    furnished: true,
-    unfurnished: true,
-    compName: '',
-    selectedNR:'',
-    searchQuery:'?order=priorityCd:desc,submittedDate:asc&queue=hold&furnished=true&unfurnished=true&rows=10',
-  }),
+  data: function () {
+    return {
+      fixHeaderAndSetBodyMaxHeight: 400,
+      tblStyle: {'table-layout': 'fixed'},
+      tblClass: ['table-bordered', 'search-table'],
+      columns: (() => {
+        const cols = [
+          {title: 'NR#', field: 'nrNum', label: 'nr', thStyle: {background: '#fffae6'}, visible: true},
+          {
+            title: 'Examiner',
+            field: 'activeUser',
+            thStyle: {background: '#fffae6'},
+            label: 'examiner',
+            colStyle: {width: '15%'},
+            visible: true
+          },
+          {title: 'State', field: 'stateCd', thStyle: {background: '#fffae6'}, label: 'state', visible: true},
+          {title: 'Priority', field: 'priorityCd', thStyle: {background: '#fffae6'}, label: 'priority', visible: true},
+          {title: 'Furnished', field: 'furnished', label: 'furnished', thStyle: {background: '#fffae6'}, visible: true},
+          {title: 'NOB', field: 'natureBusinessInfo', label: 'nob', thStyle: {background: '#fffae6'}, visible: true},
+          {
+            title: 'Names',
+            field: 'names',
+            label: 'name',
+            thStyle: {background: '#fffae6'},
+            colStyle: {width: '15%'},
+            visible: true
+          },
+          {
+            title: 'Last Update',
+            field: 'lastUpdate',
+            label: 'lastUpdate',
+            thStyle: {background: '#fffae6'},
+            visible: true
+          },
+          {
+            title: 'Submitted',
+            field: 'submittedDate',
+            label: 'submittedDate',
+            thStyle: {background: '#fffae6'},
+            visible: true
+          },
+          {
+            title: 'Last Comment',
+            field: 'comments',
+            label: 'comments',
+            thStyle: {background: '#fffae6'},
+            visible: true
+          },
+          {
+            title: 'Req Type',
+            field: 'requestTypeCd',
+            label: 'reqType',
+            thStyle: {background: '#fffae6'},
+            visible: false
+          },
+        ]
+        return cols;
+      })(),
+      pageSizeOptions: [5, 10, 20, 50, 100],
+      data: [],
+      sortedData: [],
+      total: 0,
+      query: {},
+      states: ['ALL', 'HOLD', 'INPROGRESS', 'DRAFT', 'EXPIRED', 'CANCELLED', 'APPROVED', 'CONDITIONAL', 'REJECTED'],
+      stateSort: '',
+      username: '',
+      nrSearch: '',
+      priority: true,
+      furnished: true,
+      unfurnished: true,
+      compName: '',
+      selectedNR: '',
+      searchQuery: '?order=priorityCd:desc,submittedDate:asc&queue=hold&furnished=true&unfurnished=true&rows=10',
+    }
+  },
   mounted() {
     this.sortedData = this.populateTable(this.searchData);
     this.stateSort = this.currentStateSort;
@@ -224,7 +264,7 @@ export default {
         // organize names/dates //
           for (let i=0; i<data.length;i++) {
             // display last comment only/format it for table //
-            if (data[i].comments[0] != undefined) {
+            if (data[i].comments != undefined && data[i].comments[0] != undefined) {
               let latestComment = data[i].comments[0];
               for (let commentIter = 0; commentIter < data[i].comments.length; commentIter++) {
                 if (data[i].comments[commentIter].timestamp > latestComment.timestamp) {
