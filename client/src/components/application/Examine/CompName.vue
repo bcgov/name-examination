@@ -76,17 +76,17 @@
             </tr>
           </table>
 
-          <div >
-            <div align="right" v-if="!is_making_decision && !is_complete && is_my_current_nr">
+          <div>
+            <span class="float-right" style="margin-left: 10px;" v-if="!is_making_decision && !is_complete && is_my_current_nr">
               <button v-shortkey="['alt', 'a']" @shortkey="quickApprove()" class="btn btn-sm btn-outline-primary" id="examine-quick-approve-button"
                       @click="quickApprove">Quick <u>A</u>pprove</button>
               <button  v-shortkey="['alt', 'i']" @shortkey="rejectDistinctive()" class="btn btn-sm btn-outline-danger" id="examine-reject-distinctive-button"
                       @click="rejectDistinctive">Reject D<u>i</u>stinctive</button>
               <button v-shortkey="['alt', 'e']" @shortkey="rejectDescriptive()" class="btn btn-sm btn-outline-danger" id="examine-reject-descriptive-button"
                       @click="rejectDescriptive">Reject D<u>e</u>scriptive</button>
-            </div>
-            <div v-if="!is_making_decision" id="manual-search">
-              <form class="form-inline my-2 my-lg-0" @submit.prevent="onSubmit">
+            </span>
+            <div v-if="!is_making_decision && !is_complete" id="manual-search">
+              <form class="form-inline" @submit.prevent="onSubmit">
                 <input ref="search" type="text" class="search form-control" v-model="searchStr"  v-shortkey="['alt', 's']" @shortkey="setFocus()">
                 <button class="btn-search" type="submit"><i class="fa fa-search" /></button>
                 <button class="btn-reset" v-if="is_running_manual_search" @click="resetSearchStr">
@@ -537,8 +537,13 @@
     white-space: nowrap;
   }
 
+  #manual-search {
+    padding-top: 4px;
+  }
+
   .search{
-    width: 350px;
+    width: 100%;
+    max-width: 700px;
   }
 
   #manual-search button {

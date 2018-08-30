@@ -38,7 +38,7 @@
       <h3>Contact</h3>
       <p>{{ contactName }}</p>
       <h3>NR #</h3>
-      <p><a href="#" target="_blank">{{nrNum}}</a></p>
+      <p>{{nrNum}}</p>
       <h3>Submit Count: {{submitCount}}</h3>
       <h3>State</h3>
       <p>{{state}}</p>
