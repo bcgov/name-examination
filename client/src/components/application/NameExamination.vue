@@ -5,7 +5,7 @@
 
       <div class="namePage" >
 
-        <div v-bind:style="{ 'margin-left': '-15px', 'margin-right': '-15px', 'margin-top': '-22px', 'background-color': bgColor }">
+        <div v-bind:style="{ 'margin-left': '-15px', 'margin-right': '-15px', 'margin-top': '-22px','margin-bottom': '10px' 'background-color': bgColor }">
           <stateheaderview />
         </div>
 
