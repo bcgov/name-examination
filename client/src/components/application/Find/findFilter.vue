@@ -99,42 +99,82 @@ export default {
     //   return this.$store.getters.searchQuerySpecial;
     // }
   },
-  data: () => ({
-    fixHeaderAndSetBodyMaxHeight: 400,
-    tblStyle: {'table-layout': 'fixed'},
-    tblClass: ['table-bordered', 'search-table'],
-    columns: (() => {
-      const cols =[
-        {title: 'NR#', field: 'nrNum', label: 'nr', thStyle: {background: '#fffae6'},visible: true},
-        {title: 'Examiner', field: 'activeUser', thStyle: {background: '#fffae6'}, label: 'examiner', colStyle: {width:'15%'},visible: true},
-        {title: 'State', field: 'stateCd', thStyle: {background: '#fffae6'}, label: 'state', visible: true},
-        {title: 'Priority', field: 'priorityCd', thStyle: {background: '#fffae6'}, label: 'priority', visible: true},
-        {title: 'Furnished', field: 'furnished', label: 'furnished', thStyle: {background: '#fffae6'}, visible: true},
-        {title: 'NOB', field: 'natureBusinessInfo', label: 'nob', thStyle: {background: '#fffae6'}, visible: true},
-        {title: 'Names', field: 'names', label: 'name', thStyle: {background: '#fffae6'}, colStyle: {width:'15%'},visible: true},
-        {title: 'Last Update', field: 'lastUpdate', label: 'lastUpdate', thStyle: {background: '#fffae6'}, visible: true},
-        {title: 'Submitted', field: 'submittedDate', label: 'submittedDate', thStyle: {background: '#fffae6'}, visible: true},
-        {title: 'Last Comment', field: 'comments', label: 'comments', thStyle: {background: '#fffae6'}, visible: true},
-        {title: 'Req Type', field: 'requestTypeCd', label: 'reqType', thStyle: {background: '#fffae6'}, visible: false},
-      ]
-      return cols;
-    })(),
-    pageSizeOptions: [5, 10, 20, 50, 100],
-    data: [],
-    sortedData: [],
-    total: 0,
-    query: {},
-    states:['ALL', 'HOLD', 'INPROGRESS', 'DRAFT', 'EXPIRED', 'CANCELLED', 'APPROVED', 'CONDITIONAL', 'REJECTED'],
-    stateSort: '',
-    username: '',
-    nrSearch: '',
-    priority: true,
-    furnished: true,
-    unfurnished: true,
-    compName: '',
-    selectedNR:'',
-    searchQuery:'?order=priorityCd:desc,submittedDate:asc&queue=hold&furnished=true&unfurnished=true&rows=10',
-  }),
+  data: function () {
+    return {
+      fixHeaderAndSetBodyMaxHeight: 400,
+      tblStyle: {'table-layout': 'fixed'},
+      tblClass: ['table-bordered', 'search-table'],
+      columns: (() => {
+        const cols = [
+          {title: 'NR#', field: 'nrNum', label: 'nr', thStyle: {background: '#fffae6'}, visible: true},
+          {
+            title: 'Examiner',
+            field: 'activeUser',
+            thStyle: {background: '#fffae6'},
+            label: 'examiner',
+            colStyle: {width: '15%'},
+            visible: true
+          },
+          {title: 'State', field: 'stateCd', thStyle: {background: '#fffae6'}, label: 'state', visible: true},
+          {title: 'Priority', field: 'priorityCd', thStyle: {background: '#fffae6'}, label: 'priority', visible: true},
+          {title: 'Furnished', field: 'furnished', label: 'furnished', thStyle: {background: '#fffae6'}, visible: true},
+          {title: 'NOB', field: 'natureBusinessInfo', label: 'nob', thStyle: {background: '#fffae6'}, visible: true},
+          {
+            title: 'Names',
+            field: 'names',
+            label: 'name',
+            thStyle: {background: '#fffae6'},
+            colStyle: {width: '15%'},
+            visible: true
+          },
+          {
+            title: 'Last Update',
+            field: 'lastUpdate',
+            label: 'lastUpdate',
+            thStyle: {background: '#fffae6'},
+            visible: true
+          },
+          {
+            title: 'Submitted',
+            field: 'submittedDate',
+            label: 'submittedDate',
+            thStyle: {background: '#fffae6'},
+            visible: true
+          },
+          {
+            title: 'Last Comment',
+            field: 'comments',
+            label: 'comments',
+            thStyle: {background: '#fffae6'},
+            visible: true
+          },
+          {
+            title: 'Req Type',
+            field: 'requestTypeCd',
+            label: 'reqType',
+            thStyle: {background: '#fffae6'},
+            visible: false
+          },
+        ]
+        return cols;
+      })(),
+      pageSizeOptions: [5, 10, 20, 50, 100],
+      data: [],
+      sortedData: [],
+      total: 0,
+      query: {},
+      states: ['ALL', 'HOLD', 'INPROGRESS', 'DRAFT', 'EXPIRED', 'CANCELLED', 'APPROVED', 'CONDITIONAL', 'REJECTED'],
+      stateSort: '',
+      username: '',
+      nrSearch: '',
+      priority: true,
+      furnished: true,
+      unfurnished: true,
+      compName: '',
+      selectedNR: '',
+      searchQuery: '?order=priorityCd:desc,submittedDate:asc&queue=hold&furnished=true&unfurnished=true&rows=10',
+    }
+  },
   mounted() {
     this.sortedData = this.populateTable(this.searchData);
     this.stateSort = this.currentStateSort;
@@ -222,74 +262,74 @@ export default {
       if (searchData != null) {
         let data = searchData.nameRequests[0];
         // organize names/dates //
-          for (let i=0; i<data.length;i++) {
-            // display last comment only/format it for table //
-            if (data[i].comments[0] != undefined) {
-              let latestComment = data[i].comments[0];
-              for (let commentIter = 0; commentIter < data[i].comments.length; commentIter++) {
-                if (data[i].comments[commentIter].timestamp > latestComment.timestamp) {
-                  latestComment = data[i].comments[commentIter];
-                }
+        for (let i=0; i<data.length;i++) {
+          // display last comment only/format it for table //
+          if (data[i].comments != undefined && data[i].comments[0] != undefined) {
+            let latestComment = data[i].comments[0];
+            for (let commentIter = 0; commentIter < data[i].comments.length; commentIter++) {
+              if (data[i].comments[commentIter].timestamp > latestComment.timestamp) {
+                latestComment = data[i].comments[commentIter];
               }
-              data[i].comments = latestComment.comment;
-            } else data[i].comments = null;
+            }
+            data[i].comments = latestComment.comment;
+          } else data[i].comments = null;
 
-            // organize names column //
-            for (let namesIter=0; namesIter<data[i].names.length; namesIter++) {
-              if (data[i].names[namesIter].choice !== undefined) {
-                if (data[i].names[namesIter].choice !== namesIter + 1) {
-                  let tmp = data[i].names[data[i].names[namesIter].choice - 1];
-                  data[i].names[data[i].names[namesIter].choice - 1] = data[i].names[namesIter];
-                  data[i].names[namesIter] = tmp;
-                }
+          // organize names column //
+          for (let namesIter=0; namesIter<data[i].names.length; namesIter++) {
+            if (data[i].names[namesIter] != undefined && data[i].names[namesIter].choice !== undefined) {
+              if (data[i].names[namesIter].choice !== namesIter + 1) {
+                let tmp = data[i].names[data[i].names[namesIter].choice - 1];
+                data[i].names[data[i].names[namesIter].choice - 1] = data[i].names[namesIter];
+                data[i].names[namesIter] = tmp;
               }
-            }
-            let adjustCount = false;
-            let namesStr = '';
-            for (let namesIter=0; namesIter<data[i].names.length; namesIter++) {
-              if (data[i].names[namesIter].choice !== undefined) {
-                if (this.compName != '') {
-                  if (data[i].names[namesIter].name.search(this.compName) != -1) {
-                    if (adjustCount)
-                      this.total--;
-                    else
-                      adjustCount = true;
-                  }
-                }
-                data[i].names[namesIter] = data[i].names[namesIter].choice + '. ' + data[i].names[namesIter].name;
-                namesStr += data[i].names[namesIter] + ' \n';
-              }
-            }
-            if (namesStr !== '')
-              data[i].names = namesStr;
-            // organize names last update column //
-            if (data[i].lastUpdate != undefined && data[i].lastUpdate[10]==="T") {
-              let year = data[i].lastUpdate.slice(0,4);
-              let month = data[i].lastUpdate.slice(5,7);
-              let day = data[i].lastUpdate.slice(8,10);
-              let hour = data[i].lastUpdate.slice(11,13);
-              let min = data[i].lastUpdate.slice(14,16);
-              let update = {'year': year,
-                          'month': month,
-                          'day': day,
-                          'hour': hour,
-                          'min': min};
-              data[i].lastUpdate = `${update.hour}:${update.min}\n${update.month}/${update.day}/${update.year}`;
-            }
-            if (data[i].submittedDate != undefined && data[i].submittedDate[10]==="T") {
-              let year = data[i].submittedDate.slice(0,4);
-              let month = data[i].submittedDate.slice(5,7);
-              let day = data[i].submittedDate.slice(8,10);
-              let hour = data[i].submittedDate.slice(11,13);
-              let min = data[i].submittedDate.slice(14,16);
-              let submitDate = {'year': year,
-                          'month': month,
-                          'day': day,
-                          'hour': hour,
-                          'min': min};
-              data[i].submittedDate = `${submitDate.hour}:${submitDate.min}\n${submitDate.month}/${submitDate.day}/${submitDate.year}`;
             }
           }
+          let adjustCount = false;
+          let namesStr = '';
+          for (let namesIter=0; namesIter<data[i].names.length; namesIter++) {
+            if (data[i].names[namesIter] != undefined && data[i].names[namesIter].choice !== undefined) {
+              if (this.compName != '') {
+                if (data[i].names[namesIter].name.search(this.compName) != -1) {
+                  if (adjustCount)
+                    this.total--;
+                  else
+                    adjustCount = true;
+                }
+              }
+              data[i].names[namesIter] = data[i].names[namesIter].choice + '. ' + data[i].names[namesIter].name;
+              namesStr += data[i].names[namesIter] + ' \n';
+            }
+          }
+          if (namesStr !== '')
+            data[i].names = namesStr;
+          // organize names last update column //
+          if (data[i].lastUpdate != undefined && data[i].lastUpdate[10]==="T") {
+            let year = data[i].lastUpdate.slice(0,4);
+            let month = data[i].lastUpdate.slice(5,7);
+            let day = data[i].lastUpdate.slice(8,10);
+            let hour = data[i].lastUpdate.slice(11,13);
+            let min = data[i].lastUpdate.slice(14,16);
+            let update = {'year': year,
+                        'month': month,
+                        'day': day,
+                        'hour': hour,
+                        'min': min};
+            data[i].lastUpdate = `${update.hour}:${update.min}\n${update.month}/${update.day}/${update.year}`;
+          }
+          if (data[i].submittedDate != undefined && data[i].submittedDate[10]==="T") {
+            let year = data[i].submittedDate.slice(0,4);
+            let month = data[i].submittedDate.slice(5,7);
+            let day = data[i].submittedDate.slice(8,10);
+            let hour = data[i].submittedDate.slice(11,13);
+            let min = data[i].submittedDate.slice(14,16);
+            let submitDate = {'year': year,
+                        'month': month,
+                        'day': day,
+                        'hour': hour,
+                        'min': min};
+            data[i].submittedDate = `${submitDate.hour}:${submitDate.min}\n${submitDate.month}/${submitDate.day}/${submitDate.year}`;
+          }
+        }
         return data;
       }
       return [];
@@ -407,5 +447,4 @@ export default {
   .btn-group.pull-right {
     display: none;
   }
-
 </style>
