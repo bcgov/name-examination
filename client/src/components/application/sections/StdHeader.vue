@@ -75,11 +75,15 @@
         window.location.assign("/");
       },
       onSubmit() {
-        console.log('Set new NR number')
-        this.$store.dispatch('newNrNumber',this.nrNum)
-        const path = '/nameExamination'
-        console.log('re-direct to ' + path)
-        this.$router.push(path)
+        var myNum = this.nrNum.toUpperCase()
+        if(myNum.includes('NR')) {
+          if(!myNum.includes('NR ')) { myNum = myNum.replace('NR','NR ') }
+        }else {
+          myNum = 'NR ' + myNum
+        }
+        console.log('Set new NR number to:' + myNum)
+        this.$store.dispatch('newNrNumber',myNum)
+        this.$router.push('/nameExamination' )
       }
     }
   }

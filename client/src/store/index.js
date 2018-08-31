@@ -1165,7 +1165,7 @@ mutations: {
      console.log('action: get search Data');
      const myToken = localStorage.getItem('KEYCLOAK_TOKEN');
      const url = '/api/v1/requests' + state.searchQuery;
-     console.log('URL:' + url);
+     console.log('Search Query:' + state.searchQuery);
      const vm = this;
      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
        console.log('Search Data Response:' + response.data)
@@ -1539,6 +1539,9 @@ mutations: {
     },
     nrData(state) {
       return state.nrData
+    },
+    searchState(state) {
+      return state.searchState
     },
     searchDataJSON(state) {
       return state.searchDataJSON
