@@ -3,7 +3,11 @@
   <div>
     <div class="upper-section container-fluid">
 
-      <div class="namePage">
+      <div class="namePage" >
+
+        <div v-bind:style="{ 'margin-left': '-15px', 'margin-right': '-15px', 'margin-top': '-22px','margin-bottom': '10px', 'background-color': bgColor }">
+          <stateheaderview />
+        </div>
 
         <div class="RequestInfoHeader">
           <requestinfoheaderview />
@@ -25,7 +29,6 @@
         Similar name previously <b>{{ exactMatch }}</b>
       </div>
 
-
      <div class="namePage">
        <div class="row" >
          <div class="col"><compnameview /></div>
@@ -46,6 +49,7 @@
 
 <script>
 /* eslint-disable */
+  import stateheaderview from '@/components/application/sections/StateHeader.vue';
   import requestinfoheaderview from '@/components/application/Examine/RequestInfoHeader.vue';
   import compnameview from '@/components/application/Examine/CompName.vue';
   import recipemenu from '@/components/application/Examine/RecipeMenu.vue';
@@ -59,6 +63,7 @@
           visible: true,
           exactMatch: null,
           model: false,
+          bgColor: ''
         }
     },
     computed: {
@@ -81,6 +86,7 @@
         return this.$store.getters.userId;
       },
       currentState() {
+        this.setBGC();
         return this.$store.getters.currentState;
       },
       historiesJSON() {
@@ -118,7 +124,40 @@
         }
       },
     },
+    methods: {
+        setBGC() {
+          switch(this.$store.getters.currentState) {
+            case 'HOLD':
+              this.bgColor = 'yellow';
+              break;
+            case 'INPROGRESS':
+              this.bgColor = 'lime';
+              break;
+            case 'DRAFT':
+              this.bgColor = 'violet';
+              break;
+            case 'EXPIRED':
+              this.bgColor = 'orange';
+              break;
+            case 'CANCELLED':
+              this.bgColor = 'red';
+              break;
+            case 'APPROVED':
+              this.bgColor = 'dodgerblue';
+              break;
+            case 'CONDITIONAL':
+              this.bgColor = 'dodgerblue';
+              break;
+            case 'REJECTED':
+              this.bgColor = 'red';
+              break;
+            default:
+              this.bgColor = 'grey';
+          }
+        }
+    },
     components: {
+      stateheaderview,
       requestinfoheaderview,
       compnameview,
       recipemenu,
@@ -132,6 +171,11 @@
           $("#exact-history-match-banner").addClass("alert alert-danger");
         else if (val == 'APPROVED')
           $("#exact-history-match-banner").addClass("alert alert-warning");
+      },
+      auth: {
+        handler(selection) {
+          if (auth != true) { this.$router.push("/Signin") }
+        }
       }
     }
   }
@@ -140,8 +184,12 @@
 <style scoped>
   .namePage > .row {
     margin-top: 10px;
-  }
 
+  }
+  .stateheaderview {
+    margin-top: -21px;
+    padding-bottom: 2px;
+  }
   .examiner-warning {
     margin-left: -15px;
     margin-right: -15px;

@@ -757,10 +757,14 @@ mutations: {
       console.log('Token expires in ' + expiresIn + 'seconds, updating')
 
       if(expiresIn < 1700 && expiresIn > 0) {
+        console.log('Updating Token')
         dispatch('updateToken')
+
       }else if(expiresIn < 0) {
         //TODO - reset everything and force login???
+        console.log('Force Logout')
         dispatch('logout')
+        window.location.assign("/");
         //console.log('Logout 696')
       }
     },
@@ -1161,7 +1165,7 @@ mutations: {
      console.log('action: get search Data');
      const myToken = localStorage.getItem('KEYCLOAK_TOKEN');
      const url = '/api/v1/requests' + state.searchQuery;
-     console.log('URL:' + url);
+     console.log('Search Query:' + state.searchQuery);
      const vm = this;
      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
        console.log('Search Data Response:' + response.data)
@@ -1549,6 +1553,9 @@ mutations: {
     },
     nrData(state) {
       return state.nrData
+    },
+    searchState(state) {
+      return state.searchState
     },
     searchDataJSON(state) {
       return state.searchDataJSON

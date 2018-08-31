@@ -1,7 +1,6 @@
 /* eslint-disable*/
 <template>
-  <div class="signin">
-  </div>
+  <div></div>
 </template>
 
 <script>
@@ -50,6 +49,9 @@
 
             });
 
+            // everthing is good, re-direct to home page
+            vm.$router.push("/home")
+
           } else {
             alert('not authenticated');
           }
@@ -60,17 +62,8 @@
       }else{
         console.log('Signin - checking Token')
         this.$store.dispatch('checkToken')
-      }
-    },
-    methods: {
-      onLogout() {
-            this.$store.dispatch('logout')
+
       }
     }
   }
   </script>
-
-<style scoped>
-  .signin{
-  }
-</style>

@@ -440,6 +440,7 @@ export default {
     margin-top: 20px;
   }
 </style>
+
 <style>
   .table-striped tbody tr.select {
     background-color: #ffa;
@@ -447,5 +448,4 @@ export default {
   .btn-group.pull-right {
     display: none;
   }
-
 </style>
