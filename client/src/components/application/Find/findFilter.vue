@@ -440,6 +440,7 @@ export default {
     margin-top: 20px;
   }
 </style>
+
 <style>
   .table-striped tbody tr.select {
     background-color: #ffa;
