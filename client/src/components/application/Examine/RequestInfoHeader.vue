@@ -466,8 +466,11 @@ export default {
         }
       },
       previousNr_link() {
-        if (this.$store.getters.previousNr != undefined)
-          return '<a href="/' + this.$store.getters.previousNr + '" target="_blank">' + this.$store.getters.previousNr + '</a>';
+        if (this.$store.getters.previousNr != undefined) {
+          // KBM 2018-08-30 - removed for MVP but will be part of a future phase
+          // return '<a href="/' + this.$store.getters.previousNr + '" target="_blank">' + this.$store.getters.previousNr + '</a>';
+          return this.$store.getters.previousNr;
+        }
         else return '';
       },
       corpNum: {
