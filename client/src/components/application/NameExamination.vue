@@ -5,9 +5,7 @@
 
       <div class="namePage" >
 
-        <div v-bind:style="{ 'margin-left': '-15px', 'margin-right': '-15px', 'margin-top': '-22px','margin-bottom': '10px', 'background-color': bgColor }">
-          <stateheaderview />
-        </div>
+        <stateheaderview />
 
         <div class="RequestInfoHeader">
           <requestinfoheaderview />
@@ -63,7 +61,6 @@
           visible: true,
           exactMatch: null,
           model: false,
-          bgColor: ''
         }
     },
     computed: {
@@ -86,7 +83,6 @@
         return this.$store.getters.userId;
       },
       currentState() {
-        this.setBGC();
         return this.$store.getters.currentState;
       },
       historiesJSON() {
@@ -124,38 +120,6 @@
         }
       },
     },
-    methods: {
-        setBGC() {
-          switch(this.$store.getters.currentState) {
-            case 'HOLD':
-              this.bgColor = 'yellow';
-              break;
-            case 'INPROGRESS':
-              this.bgColor = 'lime';
-              break;
-            case 'DRAFT':
-              this.bgColor = 'violet';
-              break;
-            case 'EXPIRED':
-              this.bgColor = 'orange';
-              break;
-            case 'CANCELLED':
-              this.bgColor = 'red';
-              break;
-            case 'APPROVED':
-              this.bgColor = 'dodgerblue';
-              break;
-            case 'CONDITIONAL':
-              this.bgColor = 'dodgerblue';
-              break;
-            case 'REJECTED':
-              this.bgColor = 'red';
-              break;
-            default:
-              this.bgColor = 'grey';
-          }
-        }
-    },
     components: {
       stateheaderview,
       requestinfoheaderview,
@@ -186,10 +150,7 @@
     margin-top: 10px;
 
   }
-  .stateheaderview {
-    margin-top: -21px;
-    padding-bottom: 2px;
-  }
+
   .examiner-warning {
     margin-left: -15px;
     margin-right: -15px;
