@@ -466,7 +466,7 @@
       },
       currentName: function (val) {
         console.log('CompName.currentName watcher fired:' + val)
-        this.searchStr =  val
+        this.searchStr =  "+" + val
       },
       currentChoice: function (val) {
         console.log('CompName.currentChoice watcher fired:' + val)
