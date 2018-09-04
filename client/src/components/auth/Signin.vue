@@ -17,7 +17,8 @@
       var keycloak
 
       if (!authorized) {
-        keycloak = Keycloak('static/keycloak/keycloak.json');
+        keycloak = Keycloak('static/keycloak/sbcKey.json');
+        //keycloak = Keycloak('static/keycloak/keycloak.json');
         this.$store.commit('saveKeyCloak', keycloak);
 
         var token
