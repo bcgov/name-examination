@@ -287,6 +287,10 @@
         this.$store.dispatch('getpostgrescompNo');
       }
       this.setFocus();
+
+      // set manual search string based on current name - fixes bug related to leaving
+      // and coming back to same NR
+      this.setManualSearchStr(this.currentName);
     },
     methods: {
       getNextCompany() {
@@ -413,7 +417,11 @@
       },
       setFocus: function() {
         this.$refs.search.focus();
-      }
+      },
+      setManualSearchStr(val) {
+        console.log('setManualSearchStr() called with ' + val);
+        this.searchStr =  "+" + val;
+      },
     },
     watch: {
       add_comment_display: function(val) {
@@ -466,7 +474,7 @@
       },
       currentName: function (val) {
         console.log('CompName.currentName watcher fired:' + val)
-        this.searchStr =  "+" + val
+        this.setManualSearchStr(val);
       },
       currentChoice: function (val) {
         console.log('CompName.currentChoice watcher fired:' + val)
