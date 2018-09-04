@@ -7,21 +7,21 @@
             <div class="upper-searches">
               <div style="margin-left: 0" class="filter">
                 <h4>States:</h4>
-                <select id="search-filter-state" v-model="stateSort">
+                <select id="search-filter-state" v-model="stateSort" class="form-control">
                       <option v-for="state in states" :value="state">{{state}}</option>
                 </select>
               </div>
               <div class="filter">
                 <h4>NR</h4>
-                <input id="search-filter-nr-number" v-model="nrSearch" placeholder="0000000"/>
+                <input id="search-filter-nr-number" v-model="nrSearch" placeholder="0000000" class="form-control" />
               </div>
               <div class="filter">
                 <h4>Examiner</h4>
-                <input id="search-filter-examiner" v-model="username" placeholder="Username"/>
+                <input id="search-filter-examiner" v-model="username" placeholder="Username" class="form-control" />
               </div>
               <div class="filter">
                 <h4>Company Name</h4>
-                <input id="search-filter-company" v-model="compName" placeholder="my company"/>
+                <input id="search-filter-company" v-model="compName" placeholder="my company" class="form-control" />
               </div>
             </div>
             <div class="lower-searches">
@@ -29,10 +29,10 @@
               <!--<input type="checkbox" v-model="priority">-->
               <!--<br/>-->
               <h4 style="margin-left: 0" class="filter">Furnished:</h4>
-              <input id="search-checkbox-furnished" type="checkbox" v-model="furnished">
+              <input id="search-checkbox-furnished" type="checkbox" v-model="furnished" />
               <br/>
               <h4 style="margin-left: 0" class="filter">Unfurnished:</h4>
-              <input id="search-checkbox-unfurnished" type="checkbox" v-model="unfurnished">
+              <input id="search-checkbox-unfurnished" type="checkbox" v-model="unfurnished" />
               <!--uncomment if real-time search too slow-->
               <!--<div class="search-sort">-->
                 <!--<button id="sort" class="btn btn-primary" type="button" v-on:click="sort">SORT</button>-->
@@ -412,7 +412,7 @@ export default {
     border: 1px solid;
     border-radius: 4px;
     padding: 10px;
-    width: 600px;
+    width: 700px;
   }
   .lower-searches {
     margin: 20px;
