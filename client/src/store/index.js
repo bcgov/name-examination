@@ -785,13 +785,11 @@ mutations: {
     },
 
     checkError({commit},responseJSON){
-      console.log("ErrorChecking")
+      console.log("ErrorChecking: ", responseJSON)
       if( responseJSON.warnings != null ){
-        console.log("warnings")
         commit('setErrorJSON',responseJSON)
       }
       if( responseJSON.errors != null ){
-        console.log("errors")
         commit('setErrorJSON',responseJSON)
       }
       if( responseJSON.message != null){
@@ -1085,17 +1083,16 @@ mutations: {
         .catch(error => console.log('ERROR: getCorpConflict ' + error))
     },
 
-    getHistoryInfo ({state,commit},value) {
+    getHistoryInfo ({state,commit,dispatch},value) {
       console.log('action: getting HistoryInfo for company number: ' + value.nr_num)
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + value.nr_num
-      // const url = '/api/v1/requests/NR00000023'
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         console.log('History info response:' + response.data)
         commit('loadHistoriesInfoJSON',response.data )
       })
-        .catch(error => console.log('ERROR: getHistoryInfo' + error))
+        .catch(error => this.dispatch('checkError',{errors:[{code:404, message:{"History Info Error":["NR info could not be displayed because it has not been loaded into Postgres."]}}]}))
     },
 
     runRecipe({dispatch,state}) {
