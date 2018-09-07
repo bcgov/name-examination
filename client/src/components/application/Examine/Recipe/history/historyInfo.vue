@@ -40,8 +40,8 @@
       <h3>NR #</h3>
       <p>{{nrNum}}</p>
       <h3>Submit Count: {{submitCount}}</h3>
-      <h3>State</h3>
-      <p>{{state}}</p>
+      <h3>Name State</h3>
+      <p>{{nameState}}</p>
       <div v-if="decisionText">
         <h3>Decision Text</h3>
         <p>{{decisionText}}</p>
@@ -165,9 +165,14 @@
         if (this.selectedHistoryInfo == undefined) return '';
         return this.selectedHistoryInfo.nrNum;
       },
-      state() {
+      nameState() {
         if (this.selectedHistoryInfo == undefined) return '';
-        return this.selectedHistoryInfo.state;
+        for (let i=0; i<this.selectedHistoryInfo.names.length; i++) {
+          console.log(this.selectedHistoryInfo.names[i].name, ' ', this.selectedHistory)
+          if (this.selectedHistoryInfo.names[i].name === this.selectedHistory)
+            return this.selectedHistoryInfo.names[i].state;
+        }
+        return '';
       },
       decisionText() {
         if (this.selectedHistoryInfo == undefined) return '';
