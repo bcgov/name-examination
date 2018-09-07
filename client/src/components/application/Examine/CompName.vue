@@ -294,6 +294,7 @@
     },
     methods: {
       getNextCompany() {
+        this.$store.dispatch('resetValues');
         this.$store.dispatch('getpostgrescompNo');
       },
       startDecision() {
