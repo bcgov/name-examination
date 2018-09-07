@@ -174,7 +174,8 @@ export default new Vuex.Store({
     historiesJSON: null,
     historiesInfoJSON: null,
     searchDataJSON: null,
-    conditionsJSON: null
+    conditionsJSON: null,
+    statsDataJSON: null,
 },
 mutations: {
     requestType (state, value) {
@@ -343,6 +344,7 @@ mutations: {
 
 
       for (let record of dbcompanyInfo.names) {
+        console.log('Company Info->switch record.choice:' + record.choice)
         switch (record.choice) {
           case 1:
             state.compInfo.compNames.compName1.choice = record.choice
@@ -405,17 +407,25 @@ mutations: {
             console.log('got to a name record with null choice - moving on');
             break;
         }
+        //if no currentName selected choose 1st
+        if(state.curentName == null){
+          console.log('No currentName set => use 1st choice')
+          this.dispatch('setCurrentName',dbcompanyInfo.names[0])
+        }
       }
 
-
+      console.log('Still loading')
       state.currentState = dbcompanyInfo.state;
       state.compInfo.requestType = dbcompanyInfo.requestTypeCd
 
 
       // if the current state is not INPROGRESS, HOLD, or DRAFT clear any existing name record in currentNameObj
-      if (!['INPROGRESS','HOLD','DRAFT'].includes(state.currentState)) this.dispatch('setCurrentName',{});
+      if (!['INPROGRESS','HOLD','DRAFT'].includes(state.currentState)) {
+        console.log('Clearing currentName')
+        this.dispatch('setCurrentName',{});
+      }
 
-
+      console.log('Setting company data in state variables')
       // we keep the original data so that if fields exist that we do not use, we don't lose that
       // data when we put new data
       if (dbcompanyInfo.applicants != '')
@@ -474,6 +484,7 @@ mutations: {
       state.corpNum = dbcompanyInfo.corpNum
       state.furnished = dbcompanyInfo.furnished
 
+      console.log('Setting nwpta data in state variables')
       // cycle through nwpta entries
       for (let record of dbcompanyInfo.nwpta) {
 
@@ -521,6 +532,10 @@ mutations: {
 
     loadSearchDataJSON(state,JSONdata){
       state.searchDataJSON = JSONdata
+    },
+
+    loadStatsDataJSON(state,JSONdata){
+      state.statsDataJSON = JSONdata
     },
 
     update_nrData(state) {
@@ -1174,6 +1189,19 @@ mutations: {
        .catch(error => console.log('ERROR: ' + error))
     },
 
+    getStatsDataJSON( {commit, state},stateCd ) {
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN');
+      var newQuery = '?order=priorityCd:desc,submittedDate:asc&queue=' + stateCd + '&furnished=true&unfurnished=true&rows=1&start=0'
+      const url = '/api/v1/requests' + newQuery
+      console.log('Query:' + state.searchQuery);
+      const vm = this;
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        console.log('Stats Data Response:' + response.data)
+        commit('loadStatsDataJSON', response.data)
+      })
+        .catch(error => console.log('ERROR: ' + error))
+    },
+
     setCurrentName({commit, state},objName ) {
       commit('currentNameObj', objName);
     },
@@ -1562,6 +1590,9 @@ mutations: {
     },
     searchQuerySpecial(state) {
       return state.searchQuerySpecial
+    },
+    statsDataJSON(state){
+      return state.statsDataJSON
     },
     errorJSON(state) {
       return state.errorJSON

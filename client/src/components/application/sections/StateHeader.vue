@@ -27,7 +27,7 @@
             this.bgColor = 'yellow';
             break;
           case 'INPROGRESS':
-            this.bgColor = 'lime';
+            this.bgColor = 'green';
             break;
           case 'DRAFT':
             this.bgColor = 'violet';

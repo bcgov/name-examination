@@ -15,8 +15,13 @@ Vue.use(Vuex)
 let router = new Router({
   mode: 'history', // <-- removes the /#/
   routes: [
+    //{
+    //  path: '/',
+    //  name: 'LandingPage',
+    //  component: LandingPage
+    //},
     {
-      path: '/',
+      path: '/home',
       name: 'LandingPage',
       component: LandingPage
     },
