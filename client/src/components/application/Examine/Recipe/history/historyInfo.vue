@@ -168,7 +168,6 @@
       nameState() {
         if (this.selectedHistoryInfo == undefined) return '';
         for (let i=0; i<this.selectedHistoryInfo.names.length; i++) {
-          console.log(this.selectedHistoryInfo.names[i].name, ' ', this.selectedHistory)
           if (this.selectedHistoryInfo.names[i].name === this.selectedHistory)
             return this.selectedHistoryInfo.names[i].state;
         }

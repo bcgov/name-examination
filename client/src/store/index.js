@@ -1040,9 +1040,6 @@ mutations: {
       console.log('Getting NR data')
       dispatch('getpostgrescompInfo',nrNum)
 
-      console.log('Running Recipe')
-      dispatch('runRecipe')
-
       commit('is_making_decision', false);
     },
 
@@ -1176,7 +1173,7 @@ mutations: {
     },
 
     runManualRecipe({dispatch,state},searchStr) {
-
+      console.log('running manual recipe with: ', searchStr);
       if( state.currentChoice != null) {
         this.dispatch('checkManualConflicts',searchStr)
         this.dispatch('checkManualTrademarks',searchStr)
