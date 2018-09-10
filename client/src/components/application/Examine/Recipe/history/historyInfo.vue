@@ -2,7 +2,7 @@
 <template>
    <span>
      <h2 id="currentHistoryName">{{ selectedHistory }}</h2>
-     <div class="col client-info-view">
+     <div v-if="selectedHistory != ''" class="col client-info-view">
 
         <div class="add-top-padding">
           <h3>Submitted</h3>
@@ -59,14 +59,21 @@
         </div>
       </div>
      </div>
+     <div v-else class="add-top-padding">
+       <nullMatch />
+     </div>
   </span>
 
 </template>
 
 <script>
 /* eslint-disable */
+  import nullMatch from '@/components/application/Examine/Recipe/conflicts/conflictInfoType/nullMatch.vue';
   export default {
     name: 'historyInfo',
+    components: {
+      nullMatch
+    },
     computed: {
       selectedHistory() {
         if (this.$store.getters.currentHistory == undefined) return '';
@@ -158,7 +165,7 @@
       },
       submitCount() {
         if (this.selectedHistoryInfo == undefined) return '';
-        if (this.selectedHistoryInfo.submitCount == undefined) return 1;
+        if (this.selectedHistoryInfo.submitCount == undefined) return 'NA';
         return this.selectedHistoryInfo.submitCount;
       },
       nrNum() {
