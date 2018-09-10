@@ -360,7 +360,7 @@
 
         // if the NR is closed in any way, a name is not undoable - the NR will have to be
         // re-opened first.
-        if (this.currentState != 'INPROGRESS') return false;
+        if (!this.is_my_current_nr) return false;
 
         // if the NR is furnished, nothing is undoable
         if (this.$store.state.furnished === 'Y')  return false;
