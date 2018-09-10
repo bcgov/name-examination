@@ -40,7 +40,7 @@
           <table>
             <tr class="name-option"
                 v-bind:class="{'active-name-option': currentChoice==1,
-                               accepted: compName1.state == 'A'}">
+                               accepted: compName1.state == 'ACCEPTED'}">
               <td>1.</td>
               <td id="name1">
                 {{ compName1.name }}
@@ -52,7 +52,7 @@
             </tr>
             <tr class="name-option"
                 v-bind:class="{'active-name-option': currentChoice==2,
-                               accepted: compName2.state == 'A'}">
+                               accepted: compName2.state == 'ACCEPTED'}">
               <td>2.</td>
               <td id="name2">
                 {{ compName2.name }}
@@ -64,7 +64,7 @@
             </tr>
             <tr class="name-option"
                 v-bind:class="{'active-name-option': currentChoice==3,
-                               accepted: compName3.state == 'A'}">
+                               accepted: compName3.state == 'ACCEPTED'}">
               <td>3.</td>
               <td id="name3" >
                 {{ compName3.name }}
@@ -304,10 +304,10 @@
         this.$store.state.is_making_decision = true;
       },
       nameAccept() {
-        this.$store.commit('decision_made', 'A');
+        this.$store.commit('decision_made', 'ACCEPTED');
       },
       nameReject() {
-        this.$store.commit('decision_made', 'R');
+        this.$store.commit('decision_made', 'REJECTED');
       },
       reOpen() {
         this.$store.state.currentState = 'INPROGRESS';
@@ -338,10 +338,10 @@
         this.$store.dispatch('runManualRecipe', this.searchStr)
       },
       setIcon(name_state) {
-        if (name_state == 'R') {
+        if (name_state == 'REJECTED') {
           return '<i class="fa fa-times icon-rejected"></i>';
         }
-        else if (name_state == 'A' || name_state == 'C') {
+        else if (name_state == 'ACCEPTED' || name_state == 'CONDITION') {
           return '<i class="fa fa-check icon-accepted"></i>';
         }
         else return '';
@@ -374,14 +374,14 @@
         this.currentNameObj.decision_text = ''
         console.log('quickApprove')
 
-        this.decision_made = 'A'
+        this.decision_made = 'ACCEPTED'
         this.nameAcceptReject()
       },
       rejectDescriptive() {
 
         this.currentNameObj.decision_text = 'Require descriptive second word or phrase * E.G. ' +
           'Construction, Gardening, Investments, Holdings, Etc.'
-        this.decision_made = 'R'
+        this.decision_made = 'REJECTED'
         this.nameAcceptReject()
       },
       rejectDistinctive() {
@@ -390,7 +390,7 @@
         // var distinctiveStr = this.listDecisionReasons[16].reason
         this.currentNameObj.decision_text = "Require distinctive, nondescriptive first word or " +
           "prefix * E.G. Person's name, initials, geographic location, etc."
-        this.decision_made = 'R'
+        this.decision_made = 'REJECTED'
         this.nameAcceptReject()
       },
       onSubmit()
@@ -407,11 +407,11 @@
 
         // save decision
         console.log('nameAcceptReject decision_made:' + this.decision_made)
-        if (this.decision_made == 'A') {
-          this.currentNameObj.state = 'A';
+        if (this.decision_made == 'ACCEPTED') {
+          this.currentNameObj.state = 'ACCEPTED';
         }
         else {
-          this.currentNameObj.state = 'R';
+          this.currentNameObj.state = 'REJECTED';
         }
 
         // send decision to API and reset flags

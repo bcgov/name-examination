@@ -857,12 +857,12 @@ mutations: {
           console.log('Name ' + state.currentChoice + ' accepted/rejected for ' + state.compInfo.nrNumber);
 
           // Was this an accept? If so complete the NR
-          if (state.currentNameObj.state == 'A') {
+          if (state.currentNameObj.state == 'APPROVED') {
             dispatch('updateNRState', 'APPROVED');
           }
           // was this a conditional accept? If so complete the NR
-          else if (state.currentNameObj.state == 'C') {
-            dispatch('updateNRState', 'CONDITIONAL');
+          else if (state.currentNameObj.state == 'CONDITION') {
+            dispatch('updateNRState', 'CONDITION');
           }
           // This was a reject? If so check whether there are any more names
           else {
