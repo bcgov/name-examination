@@ -58,7 +58,7 @@
         }
       },
       check_status(option) {
-        if (option.submit_count < 4 && option.name_state_type_cd!='R') {
+        if (option.submit_count < 4 && (option.name_state_type_cd!='R' || option.name_state_type_cd!='REJECTED')) {
           return 'pass'
         } else {
           return 'fail'

@@ -103,7 +103,7 @@
                               });
 
             for (let i=0; i<exactMatches.length; i++) {
-              if (exactMatches[i].name_state_type_cd === 'R' || exactMatches[i].submit_count > 3) {
+              if (exactMatches[i].name_state_type_cd === 'R' || exactMatches[i].name_state_type_cd === 'REJECTED' || exactMatches[i].submit_count > 3) {
                 this.exactMatch = 'REJECTED';
                 return true;
               }
