@@ -1040,6 +1040,7 @@ mutations: {
       console.log('Getting NR data')
       dispatch('getpostgrescompInfo',nrNum)
 
+      //TODO: this is called in reset values already -- take out and test
       commit('is_making_decision', false);
     },
 
@@ -1308,7 +1309,7 @@ mutations: {
     },
     is_complete(state) {
       // indicates a complete NR
-      if (['APPROVED', 'REJECTED', 'CONDITIONAL','COMPLETED'].
+      if (['APPROVED', 'REJECTED', 'CONDITIONAL','COMPLETED','CANCELLED','HISTORICAL','EXPIRED'].
            indexOf(state.currentState) >= 0 ) return true;
       else false;
     },
