@@ -5,7 +5,7 @@
 
       <div class="namePage" >
 
-        <stateheaderview />
+        <!--<stateheaderview />-->
 
         <div class="RequestInfoHeader">
           <requestinfoheaderview />
