@@ -862,7 +862,7 @@ mutations: {
           }
           // was this a conditional accept? If so complete the NR
           else if (state.currentNameObj.state == 'CONDITION') {
-            dispatch('updateNRState', 'CONDITION');
+            dispatch('updateNRState', 'CONDITIONAL');
           }
           // This was a reject? If so check whether there are any more names
           else {

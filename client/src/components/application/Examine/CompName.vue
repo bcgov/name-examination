@@ -40,7 +40,7 @@
           <table>
             <tr class="name-option"
                 v-bind:class="{'active-name-option': currentChoice==1,
-                               accepted: compName1.state == 'ACCEPTED'}">
+                               accepted: compName1.state == 'APPROVED'}">
               <td>1.</td>
               <td id="name1">
                 {{ compName1.name }}
@@ -52,7 +52,7 @@
             </tr>
             <tr class="name-option"
                 v-bind:class="{'active-name-option': currentChoice==2,
-                               accepted: compName2.state == 'ACCEPTED'}">
+                               accepted: compName2.state == 'APPROVED'}">
               <td>2.</td>
               <td id="name2">
                 {{ compName2.name }}
@@ -64,7 +64,7 @@
             </tr>
             <tr class="name-option"
                 v-bind:class="{'active-name-option': currentChoice==3,
-                               accepted: compName3.state == 'ACCEPTED'}">
+                               accepted: compName3.state == 'APPROVED'}">
               <td>3.</td>
               <td id="name3" >
                 {{ compName3.name }}
@@ -304,7 +304,7 @@
         this.$store.state.is_making_decision = true;
       },
       nameAccept() {
-        this.$store.commit('decision_made', 'ACCEPTED');
+        this.$store.commit('decision_made', 'APPROVED');
       },
       nameReject() {
         this.$store.commit('decision_made', 'REJECTED');
@@ -341,7 +341,7 @@
         if (name_state == 'REJECTED') {
           return '<i class="fa fa-times icon-rejected"></i>';
         }
-        else if (name_state == 'ACCEPTED' || name_state == 'CONDITION') {
+        else if (name_state == 'APPROVED' || name_state == 'CONDITION') {
           return '<i class="fa fa-check icon-accepted"></i>';
         }
         else return '';
@@ -374,7 +374,7 @@
         this.currentNameObj.decision_text = ''
         console.log('quickApprove')
 
-        this.decision_made = 'ACCEPTED'
+        this.decision_made = 'APPROVED'
         this.nameAcceptReject()
       },
       rejectDescriptive() {
@@ -407,8 +407,8 @@
 
         // save decision
         console.log('nameAcceptReject decision_made:' + this.decision_made)
-        if (this.decision_made == 'ACCEPTED') {
-          this.currentNameObj.state = 'ACCEPTED';
+        if (this.decision_made == 'APPROVED') {
+          this.currentNameObj.state = 'APPROVED';
         }
         else {
           this.currentNameObj.state = 'REJECTED';

@@ -432,8 +432,8 @@
         // save decision text, state, decision comment, and up to three conflicts
 
 
-        if (this.decision_made == 'ACCEPTED') {
-          this.currentNameObj.state = 'ACCEPTED'; // accepted
+        if (this.decision_made == 'APPROVED') {
+          this.currentNameObj.state = 'APPROVED'; // accepted
 
           // conditionally accepted if any conditions selected with condition_required flag TRUE
           for (var i = 0; i < this.conditions_selected.length; i++) {
