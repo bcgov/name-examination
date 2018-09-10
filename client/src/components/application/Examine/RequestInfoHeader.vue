@@ -636,7 +636,6 @@ export default {
       nrNumber: function (val) {
         console.log('RequestInfoHeader.nrNumber watcher fired:' )
         this.$store.dispatch('getpostgrescompInfo',this.nrNumber)
-        this.$store.dispatch('runRecipe');
       },
       requestType: function(val) {
         /*

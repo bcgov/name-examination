@@ -136,6 +136,7 @@
         is_running_manual_search: false,
         add_comment_display: "",
         resetting: false,
+        searching: false,
       }
     },
     computed: {
@@ -290,11 +291,13 @@
 
       // set manual search string based on current name - fixes bug related to leaving
       // and coming back to same NR
+      this.searching = true;
       this.setManualSearchStr(this.currentName);
     },
     methods: {
       getNextCompany() {
         this.$store.dispatch('resetValues');
+        this.searching = true;
         this.$store.dispatch('getpostgrescompNo');
       },
       startDecision() {
@@ -330,8 +333,9 @@
       holdRequest() {
         this.$store.dispatch('updateNRState', 'HOLD');
       },
-      runRecipe(){
-        this.$store.dispatch('runRecipe')
+      runManualRecipe(){
+        console.log("Running manual recipe on " + this.searchStr);
+        this.$store.dispatch('runManualRecipe', this.searchStr)
       },
       setIcon(name_state) {
         if (name_state == 'R') {
@@ -391,7 +395,6 @@
       },
       onSubmit()
       {
-        console.log("Running manual recipe on " + this.searchStr);
         this.$store.dispatch('runManualRecipe', this.searchStr);
 
         if (this.searchStr != this.currentName) this.is_running_manual_search = true;
@@ -475,11 +478,8 @@
       },
       currentName: function (val) {
         console.log('CompName.currentName watcher fired:' + val)
+        this.searching = true;
         this.setManualSearchStr(val);
-      },
-      currentChoice: function (val) {
-        console.log('CompName.currentChoice watcher fired:' + val)
-        if(val != undefined ) { this.runRecipe() }
       },
       currentState: function (val) {
         console.log('CompName.currentState watcher fired:' + val)
@@ -502,7 +502,14 @@
       },
       nrNumber: function (val) {
         console.log('CompName.nrNumber watcher fired:' + val)
-        if(val != null){ this.runRecipe()}
+        if(val != null){ this.runManualRecipe()}
+      },
+      searchStr: function (val) {
+        console.log('searchStr watcher fired: ' + val)
+        if (this.searching) {
+          this.runManualRecipe();
+          this.searching = false;
+        }
       }
     }
   }
