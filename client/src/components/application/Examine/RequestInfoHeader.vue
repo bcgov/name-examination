@@ -10,7 +10,7 @@
           <div class="col-md-4" >
             <div class="nrNum" v-bind:class="{ REDnrNum: priority}">{{ nrNumber }}</div>
             <div class="priority" style="height: 30px;" v-if="priority">Priority</div>
-            <div class="status">Status: {{ nr_status }}</div>
+            <div class="status">Status: {{ nr_status }} <span v-if="is_approved_expired">-EXPIRED</span></div>
           </div>
           <div class="col">
             <p v-if="!is_editing || is_closed" class="requestType">{{ requestType_desc }}</p>
@@ -311,6 +311,15 @@ export default {
       },
       requestTypeRules() {
         return this.$store.getters.requestTypeRules;
+      },
+      is_approved_expired() {
+        // if there is no expiry date, this NR is not approved-expired
+        if (this.$store.getters.expiryDate == null) return false;
+
+        let expired_date = new Date(this.$store.getters.expiryDate);
+        let date = new Date();
+        if (this.$store.getters.currentState === "APPROVED" && date > expired_date) return true;
+        return false;
       },
       is_my_current_nr() {
         return this.$store.getters.is_my_current_nr;
