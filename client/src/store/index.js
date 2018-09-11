@@ -175,7 +175,7 @@ export default new Vuex.Store({
     historiesInfoJSON: null,
     searchDataJSON: null,
     conditionsJSON: null,
-    statsDataJSON: null,
+    statsDataJSON: {'hold':'', 'draft':'', 'expired':'', 'cancelled':'', 'approved':'', 'conditional':'', 'rejected':''}
 },
 mutations: {
     requestType (state, value) {
@@ -534,8 +534,8 @@ mutations: {
       state.searchDataJSON = JSONdata
     },
 
-    loadStatsDataJSON(state,JSONdata){
-      state.statsDataJSON = JSONdata
+    loadStatsDataJSON(state,params){
+      state.statsDataJSON[params.myState] = params.JSONdata
     },
 
     update_nrData(state) {
@@ -1194,7 +1194,12 @@ mutations: {
       const vm = this;
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         console.log('Stats Data Response:' + response.data)
-        commit('loadStatsDataJSON', response.data)
+        var params ={
+          myState: stateCd,
+          JSONdata: response.data
+        }
+        //commit('loadStatsDataJSON', response.data)
+        commit('loadStatsDataJSON',params)
       })
         .catch(error => console.log('ERROR: ' + error))
     },

@@ -5,7 +5,7 @@
   </div>
   <div v-else>
     <h2>Names Examination</h2>
-    <p>Current standings on {{todayStr}}</p>
+    <p>Current status on {{todayStr}}</p>
   </div>
 </template>
 
@@ -16,7 +16,14 @@ export default {
     name: 'LandingPage',
     data() {
       return {
-        total: 0
+        cHold:0,
+        cDraft:0,
+        cExpired:0,
+        cCancelled:0,
+        cApproved:0,
+        cConditional:0,
+        cRejected:0,
+        cTotal: 0
       }
     },
     mounted() {
@@ -50,11 +57,18 @@ export default {
       }
     },
     watch: {
-      searchData: {
+      statsData: {
         handler(newData) {
-          this.total += newData.response.numFound;
+          this.cTotal = 0
+          newData.forEach( function(stateCd) {
+            var cStateCd = newData[stateCd].response.numFound
+            this.CTotal += cStateCd
+
+
+
+          });
         }
-      },
+      }
     }
   }
 </script>
