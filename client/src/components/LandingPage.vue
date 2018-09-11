@@ -6,14 +6,52 @@
   <div v-else>
     <h2>Names Examination</h2>
     <p>Current status on {{todayStr}}</p>
+    <table>
+      <tr>
+        <td colspan="2"><b>Queue Status</b></td>
+      </tr>
+      <tr>
+        <td>Not Examined:</td>
+        <td>{{statsData.draft.response.numFound}}</td>
+      </tr>
+      <tr>
+        <td>Hold:</td>
+        <td>{{statsData.hold.response.numFound}}</td>
+      </tr>
+      <tr>
+        <td>Approved:</td>
+        <td>{{statsData.approved.response.numFound}}</td>
+      </tr>
+      <tr>
+        <td>Conditional:</td>
+        <td>{{statsData.conditional.response.numFound}}</td>
+      </tr>
+      <tr>
+        <td>Rejected:</td>
+        <td>{{statsData.rejected.response.numFound}}</td>
+      </tr>
+      <tr>
+        <td>Cancelled:</td>
+        <td>{{statsData.cancelled.response.numFound}}</td>
+      </tr>
+      <tr>
+        <td>Expired:</td>
+        <td>{{statsData.expired.response.numFound}}</td>
+      </tr>
+    </table>
+
   </div>
+
 </template>
 
 <script>
 /* eslint-disable */
 
+import StdHeader from "./application/sections/StdHeader";
+
 export default {
-    name: 'LandingPage',
+  components: {StdHeader},
+  name: 'LandingPage',
     data() {
       return {
         cHold:0,
@@ -48,26 +86,11 @@ export default {
       getCurrentStats() {
         this.$store.statsDataJSON=null
         console.log("Get Statistics")
-        var states = ['hold', 'draft', 'expired', 'cancelled', 'approved', 'conditional', 'rejected']
+        var nStates = ['hold', 'draft', 'expired', 'cancelled', 'approved', 'conditional', 'rejected']
         var vm = this
-        states.forEach( function(stateCd) {
-          console.log("Statistics for " + stateCd)
+        nStates.forEach( function(stateCd) {
           vm.$store.dispatch('getStatsDataJSON',stateCd);
         });
-      }
-    },
-    watch: {
-      statsData: {
-        handler(newData) {
-          this.cTotal = 0
-          newData.forEach( function(stateCd) {
-            var cStateCd = newData[stateCd].response.numFound
-            this.CTotal += cStateCd
-
-
-
-          });
-        }
       }
     }
   }
