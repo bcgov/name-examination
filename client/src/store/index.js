@@ -1344,7 +1344,7 @@ mutations: {
       // indicates a complete NR
       if (['APPROVED', 'REJECTED', 'CONDITIONAL','COMPLETED','CANCELLED','HISTORICAL','EXPIRED'].
            indexOf(state.currentState) >= 0 ) return true;
-      else false;
+      else return false;
     },
     is_editing(state) {
       return state.is_editing
