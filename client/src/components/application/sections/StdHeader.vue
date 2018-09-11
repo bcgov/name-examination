@@ -83,6 +83,7 @@
         }
         console.log('Set new NR number to:' + myNum)
         this.$store.dispatch('newNrNumber',myNum)
+        this.nrNum = ''
         this.$router.push('/nameExamination' )
       }
     }
