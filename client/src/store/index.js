@@ -1084,7 +1084,7 @@ mutations: {
         .catch(error => console.log('ERROR: getNamesConflict' + error))
     },
 
-    getCorpConflict ({state,commit},value) {
+    getCorpConflict ({state,commit,dispatch},value) {
       console.log('action: getting data for company number: ' + value.nrNumber )
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/corporations/' + value.nrNumber
@@ -1093,7 +1093,7 @@ mutations: {
         console.log('Corp Conflict response:' + response.data)
         commit('loadCorpConflictJSON',response.data)
       })
-        .catch(error => console.log('ERROR: getCorpConflict ' + error))
+        .catch(error => this.dispatch('checkError',{errors:[{code:404, message:{"Corp Info Error":["Corporation info could not be displayed because it isn't in fdw-registries data."]}}]}))
     },
 
     getHistoryInfo ({state,commit,dispatch},value) {
@@ -1105,7 +1105,7 @@ mutations: {
         console.log('History info response:' + response.data)
         commit('loadHistoriesInfoJSON',response.data )
       })
-        .catch(error => this.dispatch('checkError',{errors:[{code:404, message:{"History Info Error":["NR info could not be displayed because it has not been loaded into Postgres."]}}]}))
+        .catch(error => this.dispatch('checkError',{errors:[{code:404, message:{"History Info Error":["NR info could not be displayed because it isn't in postgres data yet."]}}]}))
     },
 
     runRecipe({dispatch,state}) {
