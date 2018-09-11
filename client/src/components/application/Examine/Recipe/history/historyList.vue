@@ -58,7 +58,7 @@
         }
       },
       check_status(option) {
-        if (option.submit_count < 4 && option.name_state_type_cd!='R') {
+        if (option.submit_count < 4 && (option.name_state_type_cd!='R')) {
           return 'pass'
         } else {
           return 'fail'
@@ -68,20 +68,25 @@
     watch: {
       selectedHistory: {
         handler(selection) {
-          if (this.check_status(selection) == 'pass') {
-            $("#historyInfo").removeClass();
-            $("#historyInfo").addClass("col history-info-view border-pass");
-            $("#currentHistoryName").removeClass();
-            $("#currentHistoryName").addClass("pass");
-          }
-          else {
+          if (selection != undefined) {
+            if (this.check_status(selection) == 'pass') {
+              $("#historyInfo").removeClass();
+              $("#historyInfo").addClass("col history-info-view border-pass");
+              $("#currentHistoryName").removeClass();
+              $("#currentHistoryName").addClass("pass");
+            }
+            else {
+              $("#historyInfo").removeClass();
+              $("#historyInfo").addClass("col history-info-view border-fail");
+              $("#currentHistoryName").removeClass();
+              $("#currentHistoryName").addClass("fail");
+            }
+            this.$store.commit('currentHistory', selection);
+            this.setHistoryInfo();
+          } else {
             $("#historyInfo").removeClass();
             $("#historyInfo").addClass("col history-info-view border-fail");
-            $("#currentHistoryName").removeClass();
-            $("#currentHistoryName").addClass("fail");
           }
-          this.$store.commit('currentHistory', selection);
-          this.setHistoryInfo();
         }
       },
     }

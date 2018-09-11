@@ -432,14 +432,14 @@
         // save decision text, state, decision comment, and up to three conflicts
 
 
-        if (this.decision_made == 'A') {
-          this.currentNameObj.state = 'A'; // accepted
+        if (this.decision_made == 'APPROVED') {
+          this.currentNameObj.state = 'APPROVED'; // accepted
 
           // conditionally accepted if any conditions selected with condition_required flag TRUE
           for (var i = 0; i < this.conditions_selected.length; i++) {
             var record = this.conditions_selected[i];
             if (record.consent_required) {
-              this.currentNameObj.state = 'C';
+              this.currentNameObj.state = 'CONDITION';
               break;
             }
           }
@@ -450,7 +450,7 @@
           this.conflicts_selected = [];
         }
         else {
-          this.currentNameObj.state = 'R';
+          this.currentNameObj.state = 'REJECTED';
         }
         for (var i = 0; i < this.conflicts_selected.length; i++) {
           if (i == 0) {

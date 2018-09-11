@@ -872,11 +872,11 @@ mutations: {
           console.log('Name ' + state.currentChoice + ' accepted/rejected for ' + state.compInfo.nrNumber);
 
           // Was this an accept? If so complete the NR
-          if (state.currentNameObj.state == 'A') {
+          if (state.currentNameObj.state == 'APPROVED') {
             dispatch('updateNRState', 'APPROVED');
           }
           // was this a conditional accept? If so complete the NR
-          else if (state.currentNameObj.state == 'C') {
+          else if (state.currentNameObj.state == 'CONDITION') {
             dispatch('updateNRState', 'CONDITIONAL');
           }
           // This was a reject? If so check whether there are any more names
@@ -1055,9 +1055,7 @@ mutations: {
       console.log('Getting NR data')
       dispatch('getpostgrescompInfo',nrNum)
 
-      console.log('Running Recipe')
-      dispatch('runRecipe')
-
+      //TODO: this is called in reset values already -- take out and test
       commit('is_making_decision', false);
     },
 
@@ -1209,7 +1207,7 @@ mutations: {
     },
 
     runManualRecipe({dispatch,state},searchStr) {
-
+      console.log('running manual recipe with: ', searchStr);
       if( state.currentChoice != null) {
         this.dispatch('checkManualConflicts',searchStr)
         this.dispatch('checkManualTrademarks',searchStr)
@@ -1344,7 +1342,7 @@ mutations: {
     },
     is_complete(state) {
       // indicates a complete NR
-      if (['APPROVED', 'REJECTED', 'CONDITIONAL','COMPLETED'].
+      if (['APPROVED', 'REJECTED', 'CONDITIONAL','COMPLETED','CANCELLED','HISTORICAL','EXPIRED'].
            indexOf(state.currentState) >= 0 ) return true;
       else false;
     },

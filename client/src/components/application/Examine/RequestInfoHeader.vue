@@ -10,6 +10,7 @@
           <div class="col-md-4" >
             <div class="nrNum" v-bind:class="{ REDnrNum: priority}">{{ nrNumber }}</div>
             <div class="priority" style="height: 30px;" v-if="priority">Priority</div>
+            <div class="status">Status: {{ nr_status }}</div>
           </div>
           <div class="col">
             <p v-if="!is_editing || is_closed" class="requestType">{{ requestType_desc }}</p>
@@ -636,7 +637,6 @@ export default {
       nrNumber: function (val) {
         console.log('RequestInfoHeader.nrNumber watcher fired:' )
         this.$store.dispatch('getpostgrescompInfo',this.nrNumber)
-        this.$store.dispatch('runRecipe');
       },
       requestType: function(val) {
         /*
@@ -681,6 +681,11 @@ export default {
     color: white;
     font-size: 13px;
     margin-bottom: 10px;
+  }
+  .status {
+    font-size: 1.1em;
+    padding-top: 5px;
+    text-align: center;
   }
 
   .requestType {

@@ -16,7 +16,6 @@
     },
     computed: {
       currentState() {
-        this.setBGC();
         return this.$store.getters.currentState;
       },
     },
@@ -51,6 +50,11 @@
             this.bgColor = 'grey';
         }
       },
+    },
+    watch: {
+      currentState: function (val) {
+        this.setBGC();
+      }
     }
   }
 </script>

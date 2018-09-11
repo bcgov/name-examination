@@ -40,7 +40,7 @@
           <table>
             <tr class="name-option"
                 v-bind:class="{'active-name-option': currentChoice==1,
-                               accepted: compName1.state == 'A'}">
+                               accepted: compName1.state == 'APPROVED'}">
               <td>1.</td>
               <td id="name1">
                 {{ compName1.name }}
@@ -52,7 +52,7 @@
             </tr>
             <tr class="name-option"
                 v-bind:class="{'active-name-option': currentChoice==2,
-                               accepted: compName2.state == 'A'}">
+                               accepted: compName2.state == 'APPROVED'}">
               <td>2.</td>
               <td id="name2">
                 {{ compName2.name }}
@@ -64,7 +64,7 @@
             </tr>
             <tr class="name-option"
                 v-bind:class="{'active-name-option': currentChoice==3,
-                               accepted: compName3.state == 'A'}">
+                               accepted: compName3.state == 'APPROVED'}">
               <td>3.</td>
               <td id="name3" >
                 {{ compName3.name }}
@@ -136,6 +136,7 @@
         is_running_manual_search: false,
         add_comment_display: "",
         resetting: false,
+        searching: false,
       }
     },
     computed: {
@@ -290,21 +291,23 @@
 
       // set manual search string based on current name - fixes bug related to leaving
       // and coming back to same NR
+      this.searching = true;
       this.setManualSearchStr(this.currentName);
     },
     methods: {
       getNextCompany() {
         this.$store.dispatch('resetValues');
+        this.searching = true;
         this.$store.dispatch('getpostgrescompNo');
       },
       startDecision() {
         this.$store.state.is_making_decision = true;
       },
       nameAccept() {
-        this.$store.commit('decision_made', 'A');
+        this.$store.commit('decision_made', 'APPROVED');
       },
       nameReject() {
-        this.$store.commit('decision_made', 'R');
+        this.$store.commit('decision_made', 'REJECTED');
       },
       reOpen() {
         this.$store.state.currentState = 'INPROGRESS';
@@ -330,14 +333,15 @@
       holdRequest() {
         this.$store.dispatch('updateNRState', 'HOLD');
       },
-      runRecipe(){
-        this.$store.dispatch('runRecipe')
+      runManualRecipe(){
+        console.log("Running manual recipe on " + this.searchStr);
+        this.$store.dispatch('runManualRecipe', this.searchStr)
       },
       setIcon(name_state) {
-        if (name_state == 'R') {
+        if (name_state == 'REJECTED') {
           return '<i class="fa fa-times icon-rejected"></i>';
         }
-        else if (name_state == 'A' || name_state == 'C') {
+        else if (name_state == 'APPROVED' || name_state == 'CONDITION') {
           return '<i class="fa fa-check icon-accepted"></i>';
         }
         else return '';
@@ -356,7 +360,7 @@
 
         // if the NR is closed in any way, a name is not undoable - the NR will have to be
         // re-opened first.
-        if (this.currentState != 'INPROGRESS') return false;
+        if (!this.is_my_current_nr) return false;
 
         // if the NR is furnished, nothing is undoable
         if (this.$store.state.furnished === 'Y')  return false;
@@ -370,14 +374,14 @@
         this.currentNameObj.decision_text = ''
         console.log('quickApprove')
 
-        this.decision_made = 'A'
+        this.decision_made = 'APPROVED'
         this.nameAcceptReject()
       },
       rejectDescriptive() {
 
         this.currentNameObj.decision_text = 'Require descriptive second word or phrase * E.G. ' +
           'Construction, Gardening, Investments, Holdings, Etc.'
-        this.decision_made = 'R'
+        this.decision_made = 'REJECTED'
         this.nameAcceptReject()
       },
       rejectDistinctive() {
@@ -386,12 +390,11 @@
         // var distinctiveStr = this.listDecisionReasons[16].reason
         this.currentNameObj.decision_text = "Require distinctive, nondescriptive first word or " +
           "prefix * E.G. Person's name, initials, geographic location, etc."
-        this.decision_made = 'R'
+        this.decision_made = 'REJECTED'
         this.nameAcceptReject()
       },
       onSubmit()
       {
-        console.log("Running manual recipe on " + this.searchStr);
         this.$store.dispatch('runManualRecipe', this.searchStr);
 
         if (this.searchStr != this.currentName) this.is_running_manual_search = true;
@@ -404,11 +407,11 @@
 
         // save decision
         console.log('nameAcceptReject decision_made:' + this.decision_made)
-        if (this.decision_made == 'A') {
-          this.currentNameObj.state = 'A';
+        if (this.decision_made == 'APPROVED') {
+          this.currentNameObj.state = 'APPROVED';
         }
         else {
-          this.currentNameObj.state = 'R';
+          this.currentNameObj.state = 'REJECTED';
         }
 
         // send decision to API and reset flags
@@ -475,11 +478,8 @@
       },
       currentName: function (val) {
         console.log('CompName.currentName watcher fired:' + val)
+        this.searching = true;
         this.setManualSearchStr(val);
-      },
-      currentChoice: function (val) {
-        console.log('CompName.currentChoice watcher fired:' + val)
-        if(val != undefined ) { this.runRecipe() }
       },
       currentState: function (val) {
         console.log('CompName.currentState watcher fired:' + val)
@@ -502,7 +502,14 @@
       },
       nrNumber: function (val) {
         console.log('CompName.nrNumber watcher fired:' + val)
-        if(val != null){ this.runRecipe()}
+        if(val != null){ this.runManualRecipe()}
+      },
+      searchStr: function (val) {
+        console.log('searchStr watcher fired: ' + val)
+        if (this.searching) {
+          this.runManualRecipe();
+          this.searching = false;
+        }
       }
     }
   }
