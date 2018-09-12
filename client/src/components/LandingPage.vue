@@ -52,8 +52,9 @@ export default {
   components: {StdHeader},
   name: 'LandingPage',
     mounted() {
-      var statsJSON = {hold: {response: {numfound:''}}}
-      this.getCurrentStats()
+      if(auth==true) {
+        this.getCurrentStats()
+      }
     },
     computed: {
       auth() {
