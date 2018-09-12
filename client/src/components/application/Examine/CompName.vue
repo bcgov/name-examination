@@ -397,10 +397,11 @@
       {
         this.$store.dispatch('runManualRecipe', this.searchStr);
 
-        if (this.searchStr != this.currentName) this.is_running_manual_search = true;
+        if (this.searchStr != '+' + this.currentName) this.is_running_manual_search = true;
       },
       resetSearchStr(){
-        this.searchStr = this.currentName
+        this.searching = true;
+        this.setManualSearchStr(this.currentName);
         this.is_running_manual_search = false;
       },
       nameAcceptReject() {
