@@ -175,7 +175,14 @@ export default new Vuex.Store({
     historiesInfoJSON: null,
     searchDataJSON: null,
     conditionsJSON: null,
-    statsDataJSON: {'hold':'', 'draft':'', 'expired':'', 'cancelled':'', 'approved':'', 'conditional':'', 'rejected':''}
+    statsDataJSON: {hold: {response: {numfound: ''}},
+                    draft: {response: {numfound: ''}},
+                    expired: {response: {numfound: ''}},
+                    cancelled: {response: {numfound: ''}},
+                    approved: {response: {numfound: ''}},
+                    conditional: {response: {numfound: ''}},
+                    rejected: {response: {numfound: ''}}
+    }
 },
 mutations: {
     requestType (state, value) {
@@ -716,7 +723,6 @@ mutations: {
     setErrorJSON(state,value) {
       state.errorJSON = value
     }
-
 
   },
   actions: {

@@ -39,7 +39,6 @@
         <td>{{statsData.expired.response.numFound}}</td>
       </tr>
     </table>
-
   </div>
 
 </template>
@@ -52,19 +51,8 @@ import StdHeader from "./application/sections/StdHeader";
 export default {
   components: {StdHeader},
   name: 'LandingPage',
-    data() {
-      return {
-        cHold:0,
-        cDraft:0,
-        cExpired:0,
-        cCancelled:0,
-        cApproved:0,
-        cConditional:0,
-        cRejected:0,
-        cTotal: 0
-      }
-    },
     mounted() {
+      var statsJSON = {hold: {response: {numfound:''}}}
       this.getCurrentStats()
     },
     computed: {
@@ -79,7 +67,7 @@ export default {
       },
       statsData() {
         return this.$store.getters.statsDataJSON;
-      },
+      }
     },
     methods: {
       //states: ['ALL', 'HOLD', 'INPROGRESS', 'DRAFT', 'EXPIRED', 'CANCELLED', 'APPROVED', 'CONDITIONAL', 'REJECTED'],
