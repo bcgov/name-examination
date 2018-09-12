@@ -415,8 +415,8 @@ mutations: {
             break;
         }
         //if no currentName selected choose 1st
-        if(state.curentName == null){
-          console.log('No currentName set => use 1st choice')
+        if(state.currentName == null){
+          console.log('No currentName set => use 1st choice: ', state.currentChoice)
           this.dispatch('setCurrentName',dbcompanyInfo.names[0])
         }
       }
