@@ -18,6 +18,7 @@
         <td>Hold:</td>
         <td>{{statsData.hold.response.numFound}}</td>
       </tr>
+<!--
       <tr>
         <td>Approved:</td>
         <td>{{statsData.approved.response.numFound}}</td>
@@ -38,6 +39,7 @@
         <td>Expired:</td>
         <td>{{statsData.expired.response.numFound}}</td>
       </tr>
+ -->
     </table>
   </div>
 
@@ -51,9 +53,10 @@ import StdHeader from "./application/sections/StdHeader";
 export default {
   components: {StdHeader},
   name: 'LandingPage',
-    mounted() {
-      if(auth==true) {
-        this.getCurrentStats()
+    watch: {
+      auth: function (val) {
+        console.log("Auth=" + val)
+          if(val){ this.getCurrentStats() }
       }
     },
     computed: {
@@ -75,7 +78,8 @@ export default {
       getCurrentStats() {
         this.$store.statsDataJSON=null
         console.log("Get Statistics")
-        var nStates = ['hold', 'draft', 'expired', 'cancelled', 'approved', 'conditional', 'rejected']
+        //var nStates = ['hold', 'draft', 'expired', 'cancelled', 'approved', 'conditional', 'rejected']
+        var nStates = ['hold', 'draft']
         var vm = this
         nStates.forEach( function(stateCd) {
           vm.$store.dispatch('getStatsDataJSON',stateCd);
