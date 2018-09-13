@@ -34,6 +34,7 @@
       },
     },
     mounted() {
+      this.selectedConflict = '';
       this.setSelectedConflict();
     },
     methods: {

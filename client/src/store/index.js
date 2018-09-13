@@ -1251,7 +1251,7 @@ mutations: {
         .catch(error => console.log('ERROR: ' + error))
     },
 
-    checkManualHistories( {commit, state},searchStr ) {
+    checkManualHistories( {commit, state, dispatch},searchStr ) {
       console.log('action: manual check of history for company number: ' + state.compInfo.nrNumber + ' from solr')
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
@@ -1316,6 +1316,7 @@ mutations: {
       commit('currentHistory',null)
 
       console.log('Deleting TrademarksJSON from state')
+      commit('currentTrademark',null)
       commit('loadTrademarksJSON',null)
 
       // reset all flags like editing, making decision, etc.

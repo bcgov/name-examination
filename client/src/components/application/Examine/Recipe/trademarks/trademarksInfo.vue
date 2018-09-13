@@ -86,6 +86,12 @@
           // do nothing
         }
       }
+    },
+    watch: {
+      trademarksJSON: function (val) {
+        console.log('HERE', val)
+        this.data = this.createDataList(this.trademarksJSON);
+      }
     }
   }
 </script>

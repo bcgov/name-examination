@@ -395,6 +395,7 @@
       },
       onSubmit()
       {
+        this.$store.dispatch('resetValues');
         this.$store.dispatch('runManualRecipe', this.searchStr);
 
         if (this.searchStr != '+' + this.currentName) this.is_running_manual_search = true;
