@@ -1316,6 +1316,7 @@ mutations: {
       commit('currentHistory',null)
 
       console.log('Deleting TrademarksJSON from state')
+      commit('currentTrademark',null)
       commit('loadTrademarksJSON',null)
 
       // reset all flags like editing, making decision, etc.

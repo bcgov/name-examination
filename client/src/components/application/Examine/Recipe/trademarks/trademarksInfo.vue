@@ -86,6 +86,12 @@
           // do nothing
         }
       }
+    },
+    watch: {
+      trademarksJSON: function (val) {
+        console.log('trademarksJSON watcher fired: ', val);
+        this.data = this.createDataList(this.trademarksJSON);
+      }
     }
   }
 </script>

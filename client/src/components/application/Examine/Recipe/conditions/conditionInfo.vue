@@ -35,10 +35,12 @@
           this.$store.commit('currentCondition', value);
         }
       },
+      conditionsInfo() {
+        return this.$store.getters.conditionsJSON;
+      }
     },
     mounted() {
-      var conditionsInfo = this.$store.getters.conditionsJSON;
-      var dataList = this.createDataList(conditionsInfo);
+      let dataList = this.createDataList(this.conditionsInfo);
       if (dataList.length == 0) {dataList.push()}
       this.data = dataList;
     },
@@ -108,6 +110,20 @@
         }
       }
     },
+    watch: {
+      conditionsInfo: function (val) {
+        console.log('conditionsInfo watcher fired: ', val);
+        if (val != null) {
+          let dataList = this.createDataList(this.conditionsInfo);
+          if (dataList.length == 0) {
+            dataList.push()
+          }
+          this.data = dataList;
+        } else {
+          this.data = [];
+        }
+      }
+    }
   }
 </script>
 
