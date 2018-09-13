@@ -112,6 +112,7 @@
     },
     watch: {
       conditionsInfo: function (val) {
+        console.log('conditionsInfo watcher fired: ', val);
         if (val != null) {
           let dataList = this.createDataList(this.conditionsInfo);
           if (dataList.length == 0) {

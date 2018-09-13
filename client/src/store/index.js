@@ -1251,7 +1251,7 @@ mutations: {
         .catch(error => console.log('ERROR: ' + error))
     },
 
-    checkManualHistories( {commit, state, dispatch},searchStr ) {
+    checkManualHistories( {commit, state},searchStr ) {
       console.log('action: manual check of history for company number: ' + state.compInfo.nrNumber + ' from solr')
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};

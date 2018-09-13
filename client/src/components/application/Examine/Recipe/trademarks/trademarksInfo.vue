@@ -89,7 +89,7 @@
     },
     watch: {
       trademarksJSON: function (val) {
-        console.log('HERE', val)
+        console.log('trademarksJSON watcher fired: ', val);
         this.data = this.createDataList(this.trademarksJSON);
       }
     }
