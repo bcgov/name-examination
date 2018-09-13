@@ -467,6 +467,16 @@ mutations: {
 
       // cycle through nwpta entries
       for (let record of dbcompanyInfo.nwpta) {
+
+        // convert date from long form to DD-MM-YYYY
+        if (record.partnerNameDate != null && record.partnerNameDate != '') {
+          var nwpta_date = new Date(record.partnerNameDate);
+          record.partnerNameDate =
+            padWithZeroes(nwpta_date.getUTCDate(), 2) + "-" +
+            padWithZeroes((nwpta_date.getUTCMonth() + 1), 2) + "-" +
+            nwpta_date.getFullYear();
+        }
+
         if (record.partnerJurisdictionTypeCd == 'AB') state.additionalCompInfo.nwpta_ab = record;
         if (record.partnerJurisdictionTypeCd == 'SK') state.additionalCompInfo.nwpta_sk = record;
       }
