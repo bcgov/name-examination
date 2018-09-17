@@ -414,11 +414,12 @@ mutations: {
             console.log('got to a name record with null choice - moving on');
             break;
         }
-        //if no currentName selected choose 1st
-        if(state.currentName == null){
-          console.log('No currentName set => use 1st choice: ', state.currentChoice)
-          this.dispatch('setCurrentName',dbcompanyInfo.names[0])
-        }
+      }
+
+      //if no currentName selected choose 1st
+      if(state.currentName == null){
+        console.log('No currentName set => use 1st choice: ', state.currentChoice)
+        this.dispatch('setCurrentName',dbcompanyInfo.names[0])
       }
 
       console.log('Still loading')
