@@ -40,47 +40,61 @@
       }
     },
     mounted() {
-      let dataList = this.createDataList(this.conditionsInfo);
-      if (dataList.length == 0) {dataList.push()}
-      this.data = dataList;
+      this.data = this.createDataList(this.conditionsInfo);
     },
     methods: {
       //goes through the JSON with conditions info and returns each restricted word and their conditions in a list
-        createDataList(conditionsInfo){
-          if (conditionsInfo.restricted_words_conditions == undefined) return [];
+        createDataList(conditionsInfo, rows=10, offset=0){
+
+          if (conditionsInfo.restricted_words_conditions == undefined) {
+            this.total = 0;
+            return [];
+          }
 
           // looping through each word and its list of conditions
           var data = [];
-          var wordIter;
-          for (wordIter=0;wordIter<conditionsInfo.restricted_words_conditions.length; wordIter++) {
+
+          for (let wordIter=offset;wordIter<conditionsInfo.restricted_words_conditions.length && wordIter<rows+offset; wordIter++) {
+
+            var word = conditionsInfo.restricted_words_conditions[wordIter].word_info.phrase;
+            var allowUse = '';
+            var consentReq = '';
+            var text = '';
+            var instructions = '';
 
             // looping through the list of conditions for each word (some words have more than 1 possible condition)
-            var cndIter;
-            for (cndIter=0;cndIter<conditionsInfo.restricted_words_conditions[wordIter].cnd_info.length; cndIter++) {
+            for (let cndIter=0;cndIter<conditionsInfo.restricted_words_conditions[wordIter].cnd_info.length; cndIter++) {
 
-              // these params are the ones being displayed in the conditions table
-              var word = '';
-              var allowUse;
-              var consentReq;
-              var text;
-              var instructions;
-              if (cndIter == 0) {
-                word = conditionsInfo.restricted_words_conditions[wordIter].word_info.phrase;
-              }
               allowUse = conditionsInfo.restricted_words_conditions[wordIter].cnd_info[cndIter].allow_use;
               consentReq = conditionsInfo.restricted_words_conditions[wordIter].cnd_info[cndIter].consent_required;
               instructions = conditionsInfo.restricted_words_conditions[wordIter].cnd_info[cndIter].instructions;
               text = conditionsInfo.restricted_words_conditions[wordIter].cnd_info[cndIter].text;
-              data.push({
-                "word": word,
-                "allowUse": allowUse,
-                "consentReq": consentReq,
-                "text": text,
-                "instructions": instructions,
-              });
+
+              // if there is more than 1 condition for the word:
+              if (conditionsInfo.restricted_words_conditions[wordIter].cnd_info.length > 1) {
+                if (cndIter != 0) word = '';
+                if (cndIter < conditionsInfo.restricted_words_conditions[wordIter].cnd_info.length-1) {
+                  data.push({
+                    "word": word,
+                    "allowUse": allowUse,
+                    "consentReq": consentReq,
+                    "text": text,
+                    "instructions": instructions,
+                  });
+                }
+              }
             }
+            // add row to table
+            data.push({
+              "word": word,
+              "allowUse": allowUse,
+              "consentReq": consentReq,
+              "text": text,
+              "instructions": instructions,
+            });
           }
           // returns a list of json-like params for the datatable -> each element in the list is a row
+          this.total = conditionsInfo.restricted_words_conditions.length;
           return data;
         },
       setSelection(event) {
@@ -113,15 +127,24 @@
     watch: {
       conditionsInfo: function (val) {
         console.log('conditionsInfo watcher fired: ', val);
-        if (val != null) {
-          let dataList = this.createDataList(this.conditionsInfo);
-          if (dataList.length == 0) {
-            dataList.push()
-          }
-          this.data = dataList;
-        } else {
+        if (val != null)
+          this.data = this.createDataList(val);
+        else {
           this.data = [];
+          this.total = 0;
         }
+      },
+      query: {
+        handler (val) {
+          console.log('conditions query watcher fired: ', val);
+          if (this.conditionsInfo != null)
+            this.data = this.createDataList(this.conditionsInfo, val.limit, val.offset);
+          else {
+            this.data = [];
+            this.total = 0;
+          }
+        },
+        deep: true
       }
     }
   }
