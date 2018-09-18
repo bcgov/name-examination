@@ -428,6 +428,14 @@
         console.log('setManualSearchStr() called with ' + val);
         this.searchStr =  "+" + val;
       },
+      addNewComment() {
+        // create new comment object with just text, and add it to list of comments in data structure
+        var newCommentData = {
+          comment: this.add_comment_display,
+          examiner: this.$store.state.examiner
+        };
+        this.internalComments = this.internalComments.concat(newCommentData);
+      },
     },
     watch: {
       add_comment_display: function(val) {
@@ -440,43 +448,31 @@
       compName1State: function (val) {
         console.log('compName1 watcher fired:' + val)
         if (this.resetting) {
-          if (this.compName2 != undefined)
-            this.$store.dispatch('resetDecision', 2);
-          else {
-            // create new comment object with just text, and add it to list of comments in data structure
-            var newCommentData = {
-              comment: this.add_comment_display,
-              examiner: this.$store.state.examiner
-            };
-            this.internalComments = this.internalComments.concat(newCommentData);
-          }
+          if (this.compName2 != undefined) {
+            if (this.compName2State != 'NE')
+              this.$store.dispatch('resetDecision', 2);
+            else
+              this.addNewComment();
+          } else
+            this.addNewComment();
         }
       },
       compName2State: function (val) {
         console.log('compName2 watcher fired:' + val)
         if (this.resetting) {
-          if (this.compName3 != undefined)
-            this.$store.dispatch('resetDecision', 3);
-          else {
-            // create new comment object with just text, and add it to list of comments in data structure
-            var newCommentData = {
-              comment: this.add_comment_display,
-              examiner: this.$store.state.examiner
-            };
-            this.internalComments = this.internalComments.concat(newCommentData);
-          }
+          if (this.compName3 != undefined) {
+            if (this.compName2State != 'NE')
+              this.$store.dispatch('resetDecision', 3);
+            else
+              this.addNewComment();
+          } else
+            this.addNewComment();
         }
       },
       compName3State: function (val) {
         console.log('compName3 watcher fired:' + val)
-        if (this.resetting) {
-          // create new comment object with just text, and add it to list of comments in data structure
-          var newCommentData = {
-            comment: this.add_comment_display,
-            examiner: this.$store.state.examiner
-          };
-          this.internalComments = this.internalComments.concat(newCommentData);
-        }
+        if (this.resetting)
+          this.addNewComment();
       },
       currentName: function (val) {
         console.log('CompName.currentName watcher fired:' + val)

@@ -235,7 +235,8 @@ export default {
       }
     },
     query: {
-      handler() {
+      handler(val) {
+        console.log('query watcher fired: ', val);
         this.handleQueryChange();
       },
       deep: true
