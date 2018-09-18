@@ -1,4 +1,4 @@
-/* eslint-disable */
+<!--eslint-disable-->
 <template>
   <div class="container-fluid">
 
@@ -8,6 +8,9 @@
       <div class="col client-info-view">
         <h2 style="text-transform: uppercase">{{ currentName }}</h2>
         <div class="add-top-padding">
+          <h3>NR #</h3>
+          <p>{{nrNum}}</p>
+
           <h3>Submitted</h3>
           <p>{{ submittedDate }}</p>
         </div>
@@ -34,7 +37,10 @@
         if (this.$store.getters.submittedDate)
           return new Date(this.$store.getters.submittedDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
         return null
-     },
+      },
+      nrNum() {
+        return  this.$store.getters.nrNumber;
+      }
 
     },
     components: {

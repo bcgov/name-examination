@@ -1,8 +1,12 @@
 <!--eslint-disable -->
 <template>
   <span>
+      <h3>NR #</h3>
+      <p>{{nrNum}}</p>
+
       <h3>Submitted</h3>
       <p>{{submittedDate}}</p>
+
       <h3>Client</h3>
       <p>{{ clientFirstName }} {{ clientLastName}}</p>
 
@@ -138,6 +142,10 @@
       submittedDate() {
           if (this.namesConflictInfo == undefined || this.namesConflictInfo.submittedDate == undefined) return '';
           return new Date(this.namesConflictInfo.submittedDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+      },
+      nrNum() {
+        if (this.namesConflictInfo == undefined) return '';
+        return this.namesConflictInfo.nrNum;
       },
       namesConflictInfo() {
         return this.$store.getters.namesConflictJSON;
