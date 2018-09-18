@@ -1088,7 +1088,7 @@ mutations: {
         console.log('Names Conflict response:' + response.data)
         commit('loadNamesConflictJSON',response.data )
       })
-        .catch(error => console.log('ERROR: getNamesConflict' + error))
+        .catch(error => this.dispatch('checkError',{errors:[{code:404, message:{"NR Info Error":["NR info could not be displayed because it isn't loaded in postgres yet."]}}]}))
     },
 
     getCorpConflict ({state,commit,dispatch},value) {
@@ -1112,7 +1112,7 @@ mutations: {
         console.log('History info response:' + response.data)
         commit('loadHistoriesInfoJSON',response.data )
       })
-        .catch(error => this.dispatch('checkError',{errors:[{code:404, message:{"History Info Error":["NR info could not be displayed because it isn't in postgres data yet."]}}]}))
+        .catch(error => this.dispatch('checkError',{errors:[{code:404, message:{"NR Info Error":["NR info could not be displayed because it isn't loaded in postgres yet."]}}]}))
     },
 
     runRecipe({dispatch,state}) {
