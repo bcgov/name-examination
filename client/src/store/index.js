@@ -1495,10 +1495,14 @@ mutations: {
       return state.reservationCount
     },
     expiryDate(state) {
-      return state.expiryDate
+      if (state.expiryDate != null)
+        return new Date(state.expiryDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+      return null
     },
     submittedDate(state) {
-      return state.submittedDate;
+      if (state.submittedDate != null)
+        return new Date(state.submittedDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+      return null
     },
     submitCount(state) {
       return state.submitCount;

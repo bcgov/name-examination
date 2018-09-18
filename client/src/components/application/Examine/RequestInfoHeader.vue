@@ -61,7 +61,7 @@
                   <p>
                     <span class="comment-examiner">{{ comment.examiner }}</span>
                     -
-                    <span class="comment-timestamp">{{ comment.timestamp }}</span>
+                    <span class="comment-timestamp">{{ new Date(comment.timestamp).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'}) }}</span>
                   </p>
                   <p class="comment-text">{{ comment.comment }}</p>
 
@@ -456,17 +456,13 @@ export default {
         }
       },
       expiryDate() {
-        if (this.$store.getters.expiryDate != null)
-          return new Date(this.$store.getters.expiryDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
-        return null;
+        return this.$store.getters.expiryDate;
       },
       consumptionDate() {
         return this.findConsumptionDate();
       },
       submittedDate() {
-        if (this.$store.getters.submittedDate)
-          return new Date(this.$store.getters.submittedDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
-        return null
+        return this.$store.getters.submittedDate;
       },
       submitCount() {
         return this.$store.getters.submitCount;

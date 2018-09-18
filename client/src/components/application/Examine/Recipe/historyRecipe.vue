@@ -34,9 +34,7 @@
         return this.$store.getters.currentName;
       },
       submittedDate() {
-        if (this.$store.getters.submittedDate)
-          return new Date(this.$store.getters.submittedDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
-        return null
+        return this.$store.getters.submittedDate;
       },
       nrNum() {
         return  this.$store.getters.nrNumber;
