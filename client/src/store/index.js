@@ -144,6 +144,7 @@ export default new Vuex.Store({
     corpNum: null,
     submittedDate: null,
     expiryDate: null,
+    lastUpdate: null,
     issueText: null,
     issue: {
       issue_Match: null,
@@ -485,8 +486,23 @@ mutations: {
       state.examiner = dbcompanyInfo.userId
       state.priority = dbcompanyInfo.priorityCd
       //state.reservationCount = dbcompanyInfo.reservationCount
-      state.expiryDate = dbcompanyInfo.expirationDate
-      state.submittedDate = dbcompanyInfo.submittedDate
+
+      // condition needed because new Date will return a random date if given a null value
+      if (dbcompanyInfo.expirationDate != null)
+        state.expiryDate = new Date(dbcompanyInfo.expirationDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+      else
+        state.expiryDate = dbcompanyInfo.expirationDate;
+
+      if (dbcompanyInfo.submittedDate != null)
+        state.submittedDate = new Date(dbcompanyInfo.submittedDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+      else
+        state.submittedDate = dbcompanyInfo.submittedDate;
+
+      if (dbcompanyInfo.lastUpdate != null)
+        state.lastUpdate = new Date(dbcompanyInfo.lastUpdate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+      else
+        state.lastUpdate = dbcompanyInfo.lastUpdate;
+
       state.submitCount = dbcompanyInfo.submitCount
       state.previousNr = dbcompanyInfo.previousNr
       state.corpNum = dbcompanyInfo.corpNum
@@ -515,6 +531,35 @@ mutations: {
     },
 
     loadNamesConflictJSON(state,JSONdata){
+
+      // format dates to local timezone
+      if (JSONdata != null) {
+        if (JSONdata.expirationDate != null)
+          JSONdata.expiryDate = new Date(JSONdata.expirationDate).toLocaleString('en-ca', {
+            hour: '2-digit',
+            minute: '2-digit',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          });
+        if (JSONdata.submittedDate != null)
+          JSONdata.submittedDate = new Date(JSONdata.submittedDate).toLocaleString('en-ca', {
+            hour: '2-digit',
+            minute: '2-digit',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          });
+        if (JSONdata.lastUpdate != null)
+          JSONdata.lastUpdate = new Date(JSONdata.lastUpdate).toLocaleString('en-ca', {
+            hour: '2-digit',
+            minute: '2-digit',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          });
+      }
+
       state.namesConflictJSON = JSONdata
     },
 
@@ -613,6 +658,7 @@ mutations: {
       state.nrData.userId = state.examiner
       state.nrData.priorityCd = state.priority
       //state.reservationCount = dbcompanyInfo.reservationCount
+      state.nrData.lastUpdate = state.lastUpdate
       state.nrData.expirationDate = state.expiryDate
       state.nrData.submittedDate = state.submittedDate
       state.nrData.submitCount = state.submitCount
@@ -924,6 +970,15 @@ mutations: {
 
     //updates the names data, through the api, into the database
     updateRequest( {commit, state}) {
+
+      // change dates back to utc format
+      if (state.lastUpdate != null)
+        state.lastUpdate = new Date(state.lastUpdate).toUTCString()
+      if (state.submittedDate != null)
+        state.submittedDate = new Date(state.submittedDate).toUTCString()
+      if (state.expiryDate != null)
+        state.expiryDate = new Date(state.expiryDate).toUTCString()
+
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       commit('update_nrData')
       const url = '/api/v1/requests/' + state.compInfo.nrNumber
