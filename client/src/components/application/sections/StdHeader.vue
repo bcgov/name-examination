@@ -75,16 +75,20 @@
         window.location.assign("/");
       },
       onSubmit() {
-        var myNum = this.nrNum.toUpperCase()
-        if(myNum.includes('NR')) {
-          if(!myNum.includes('NR ')) { myNum = myNum.replace('NR','NR ') }
-        }else {
-          myNum = 'NR ' + myNum
+        if(this.nrNum!='') {
+          var myNum = this.nrNum.toUpperCase()
+          if (myNum.includes('NR')) {
+            if (!myNum.includes('NR ')) {
+              myNum = myNum.replace('NR', 'NR ')
+            }
+          } else {
+            myNum = 'NR ' + myNum
+          }
+          console.log('Set new NR number to:' + myNum)
+          this.$store.dispatch('newNrNumber', myNum)
+          this.nrNum = ''
+          this.$router.push('/nameExamination')
         }
-        console.log('Set new NR number to:' + myNum)
-        this.$store.dispatch('newNrNumber',myNum)
-        this.nrNum = ''
-        this.$router.push('/nameExamination' )
       }
     }
   }
