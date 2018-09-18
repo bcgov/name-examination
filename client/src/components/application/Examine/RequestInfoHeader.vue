@@ -456,13 +456,17 @@ export default {
         }
       },
       expiryDate() {
-        return this.$store.getters.expiryDate;
+        if (this.$store.getters.expiryDate != null)
+          return new Date(this.$store.getters.expiryDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+        return null;
       },
       consumptionDate() {
         return this.findConsumptionDate();
       },
       submittedDate() {
-        return this.$store.getters.submittedDate;
+        if (this.$store.getters.submittedDate)
+          return new Date(this.$store.getters.submittedDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+        return null
       },
       submitCount() {
         return this.$store.getters.submitCount;

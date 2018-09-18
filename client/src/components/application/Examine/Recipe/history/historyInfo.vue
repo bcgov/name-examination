@@ -160,7 +160,9 @@
       },
       submittedDate() {
         if (this.selectedHistoryInfo == undefined) return '';
-        return this.selectedHistoryInfo.submittedDate;
+        if (this.selectedHistoryInfo.submittedDate != null)
+          return new Date(this.selectedHistoryInfo.submittedDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+        return null
 
       },
       submitCount() {

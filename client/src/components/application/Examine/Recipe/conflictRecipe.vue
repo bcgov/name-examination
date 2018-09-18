@@ -47,8 +47,10 @@
         return this.$store.getters.currentName;
       },
       submittedDate() {
-        return this.$store.getters.submittedDate;
-     },
+        if (this.$store.getters.submittedDate)
+          return new Date(this.$store.getters.submittedDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+        return null
+      },
     },
     components: {
       conflictlistview,

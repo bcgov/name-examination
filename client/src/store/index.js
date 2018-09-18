@@ -487,21 +487,9 @@ mutations: {
       state.priority = dbcompanyInfo.priorityCd
       //state.reservationCount = dbcompanyInfo.reservationCount
 
-      // condition needed because new Date will return a random date if given a null value
-      if (dbcompanyInfo.expirationDate != null)
-        state.expiryDate = new Date(dbcompanyInfo.expirationDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
-      else
-        state.expiryDate = dbcompanyInfo.expirationDate;
-
-      if (dbcompanyInfo.submittedDate != null)
-        state.submittedDate = new Date(dbcompanyInfo.submittedDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
-      else
-        state.submittedDate = dbcompanyInfo.submittedDate;
-
-      if (dbcompanyInfo.lastUpdate != null)
-        state.lastUpdate = new Date(dbcompanyInfo.lastUpdate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
-      else
-        state.lastUpdate = dbcompanyInfo.lastUpdate;
+      state.expiryDate = dbcompanyInfo.expirationDate;
+      state.submittedDate = dbcompanyInfo.submittedDate;
+      state.lastUpdate = dbcompanyInfo.lastUpdate;
 
       state.submitCount = dbcompanyInfo.submitCount
       state.previousNr = dbcompanyInfo.previousNr
@@ -531,35 +519,6 @@ mutations: {
     },
 
     loadNamesConflictJSON(state,JSONdata){
-
-      // format dates to local timezone
-      if (JSONdata != null) {
-        if (JSONdata.expirationDate != null)
-          JSONdata.expiryDate = new Date(JSONdata.expirationDate).toLocaleString('en-ca', {
-            hour: '2-digit',
-            minute: '2-digit',
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-          });
-        if (JSONdata.submittedDate != null)
-          JSONdata.submittedDate = new Date(JSONdata.submittedDate).toLocaleString('en-ca', {
-            hour: '2-digit',
-            minute: '2-digit',
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-          });
-        if (JSONdata.lastUpdate != null)
-          JSONdata.lastUpdate = new Date(JSONdata.lastUpdate).toLocaleString('en-ca', {
-            hour: '2-digit',
-            minute: '2-digit',
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-          });
-      }
-
       state.namesConflictJSON = JSONdata
     },
 
@@ -970,14 +929,6 @@ mutations: {
 
     //updates the names data, through the api, into the database
     updateRequest( {commit, state}) {
-
-      // change dates back to utc format
-      if (state.lastUpdate != null)
-        state.lastUpdate = new Date(state.lastUpdate).toUTCString()
-      if (state.submittedDate != null)
-        state.submittedDate = new Date(state.submittedDate).toUTCString()
-      if (state.expiryDate != null)
-        state.expiryDate = new Date(state.expiryDate).toUTCString()
 
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       commit('update_nrData')
