@@ -4,10 +4,13 @@
      <h2 id="currentHistoryName">{{ selectedHistory }}</h2>
      <div v-if="selectedHistory != ''" class="col client-info-view">
 
-        <div class="add-top-padding">
-          <h3>Submitted</h3>
-          <p>{{ submittedDate }}</p>
-        </div>
+      <div class="add-top-padding">
+        <h3>NR #</h3>
+        <p>{{nrNum}}</p>
+
+        <h3>Submitted</h3>
+        <p>{{ submittedDate }}</p>
+      </div>
 
       <h3>Client</h3>
       <p>{{ clientFirstName }} {{ clientLastName}}</p>
@@ -37,8 +40,6 @@
 
       <h3>Contact</h3>
       <p>{{ contactName }}</p>
-      <h3>NR #</h3>
-      <p>{{nrNum}}</p>
       <h3>Submit Count: {{submitCount}}</h3>
       <h3>Name State</h3>
       <p>{{nameState}}</p>
@@ -160,7 +161,9 @@
       },
       submittedDate() {
         if (this.selectedHistoryInfo == undefined) return '';
-        return this.selectedHistoryInfo.submittedDate;
+        if (this.selectedHistoryInfo.submittedDate != null)
+          return new Date(this.selectedHistoryInfo.submittedDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+        return null
 
       },
       submitCount() {

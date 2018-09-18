@@ -144,6 +144,7 @@ export default new Vuex.Store({
     corpNum: null,
     submittedDate: null,
     expiryDate: null,
+    lastUpdate: null,
     issueText: null,
     issue: {
       issue_Match: null,
@@ -485,8 +486,11 @@ mutations: {
       state.examiner = dbcompanyInfo.userId
       state.priority = dbcompanyInfo.priorityCd
       //state.reservationCount = dbcompanyInfo.reservationCount
-      state.expiryDate = dbcompanyInfo.expirationDate
-      state.submittedDate = dbcompanyInfo.submittedDate
+
+      state.expiryDate = dbcompanyInfo.expirationDate;
+      state.submittedDate = dbcompanyInfo.submittedDate;
+      state.lastUpdate = dbcompanyInfo.lastUpdate;
+
       state.submitCount = dbcompanyInfo.submitCount
       state.previousNr = dbcompanyInfo.previousNr
       state.corpNum = dbcompanyInfo.corpNum
@@ -613,6 +617,7 @@ mutations: {
       state.nrData.userId = state.examiner
       state.nrData.priorityCd = state.priority
       //state.reservationCount = dbcompanyInfo.reservationCount
+      state.nrData.lastUpdate = state.lastUpdate
       state.nrData.expirationDate = state.expiryDate
       state.nrData.submittedDate = state.submittedDate
       state.nrData.submitCount = state.submitCount
@@ -924,6 +929,7 @@ mutations: {
 
     //updates the names data, through the api, into the database
     updateRequest( {commit, state}) {
+
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       commit('update_nrData')
       const url = '/api/v1/requests/' + state.compInfo.nrNumber
@@ -1489,10 +1495,14 @@ mutations: {
       return state.reservationCount
     },
     expiryDate(state) {
-      return state.expiryDate
+      if (state.expiryDate != null)
+        return new Date(state.expiryDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+      return null
     },
     submittedDate(state) {
-      return state.submittedDate;
+      if (state.submittedDate != null)
+        return new Date(state.submittedDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+      return null
     },
     submitCount(state) {
       return state.submitCount;

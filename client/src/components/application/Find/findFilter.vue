@@ -304,32 +304,11 @@ export default {
           if (namesStr !== '')
             data[i].names = namesStr;
           // organize names last update column //
-          if (data[i].lastUpdate != undefined && data[i].lastUpdate[10]==="T") {
-            let year = data[i].lastUpdate.slice(0,4);
-            let month = data[i].lastUpdate.slice(5,7);
-            let day = data[i].lastUpdate.slice(8,10);
-            let hour = data[i].lastUpdate.slice(11,13);
-            let min = data[i].lastUpdate.slice(14,16);
-            let update = {'year': year,
-                        'month': month,
-                        'day': day,
-                        'hour': hour,
-                        'min': min};
-            data[i].lastUpdate = `${update.hour}:${update.min}\n${update.month}/${update.day}/${update.year}`;
-          }
-          if (data[i].submittedDate != undefined && data[i].submittedDate[10]==="T") {
-            let year = data[i].submittedDate.slice(0,4);
-            let month = data[i].submittedDate.slice(5,7);
-            let day = data[i].submittedDate.slice(8,10);
-            let hour = data[i].submittedDate.slice(11,13);
-            let min = data[i].submittedDate.slice(14,16);
-            let submitDate = {'year': year,
-                        'month': month,
-                        'day': day,
-                        'hour': hour,
-                        'min': min};
-            data[i].submittedDate = `${submitDate.hour}:${submitDate.min}\n${submitDate.month}/${submitDate.day}/${submitDate.year}`;
-          }
+          if (data[i].lastUpdate != undefined)
+            data[i].lastUpdate = new Date(data[i].lastUpdate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+
+          if (data[i].submittedDate != undefined)
+            data[i].submittedDate = new Date(data[i].submittedDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
         }
         return data;
       }

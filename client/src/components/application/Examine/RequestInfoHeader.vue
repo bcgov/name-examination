@@ -61,7 +61,7 @@
                   <p>
                     <span class="comment-examiner">{{ comment.examiner }}</span>
                     -
-                    <span class="comment-timestamp">{{ comment.timestamp }}</span>
+                    <span class="comment-timestamp">{{ new Date(comment.timestamp).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'}) }}</span>
                   </p>
                   <p class="comment-text">{{ comment.comment }}</p>
 
