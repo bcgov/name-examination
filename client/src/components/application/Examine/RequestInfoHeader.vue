@@ -103,12 +103,14 @@
                     <input type="text" v-model="expiryDateForEdit" class="form-control"
                            placeholder="Expiry Date" :onchange="$v.expiryDateForEdit.$touch()" />
                     <div class="date-helper-text">DD-MM-YYYY</div>
+                    <div class="error" v-if="!$v.expiryDateForEdit.required">
+                      Expiry Date is required.</div>
                     <div class="error" v-if="!$v.expiryDateForEdit.isValidFormat">
                       Date must be in format DD-MM-YYYY.</div>
                     <div class="error" v-else-if="!$v.expiryDateForEdit.isActualDate">
                       This is not an actual date. Date must be in format DD-MM-YYYY.</div>
-                    <div class="error" v-if="!$v.expiryDateForEdit.required">
-                      Expiry Date is required.</div>
+                    <div class="error" v-if="!$v.expiryDateForEdit.isFutureDate">
+                      Expiry Date must be in the future.</div>
                   </span>
 
                 </span>
@@ -303,6 +305,12 @@ export default {
           },
           isActualDate(value) {
             return isActualDate(value);
+          },
+          isFutureDate(value) {
+            // don't do this validation if it is not an actual date yet
+            if (value == '' || value == null || !isValidFormat(value) || !isActualDate(value)) return true;
+
+            return isFutureDate(value);
           },
         }
       }

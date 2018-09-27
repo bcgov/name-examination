@@ -109,8 +109,6 @@ function padWithZeroes(num, size) {
 
 /* validation function for date format - validates for DD-MM-YYYY */
 function isValidFormat(value) {
-  // if empty, it's valid - not required
-  if (value == '' || value == null) return true;
 
   // check for format DD-MM-YYYY
   if (value.match(/\d\d-\d\d-\d\d\d\d$/gi) == null) return false;
@@ -124,11 +122,8 @@ function isValidFormat(value) {
   return true;
 }
 
-/* validation function for date format - validates for DD-MM-YYYY */
+/* validation function for date format - does this string resolve to an actual Date object? */
 function isActualDate(value) {
-
-  // if empty, it's valid - not required
-  if (value == '' || value == null) return true;
 
   // try to convert string to Date object - if it's not an actual date (like Feb 31)
   // this will fail either by setting a date that's not actually the date (ie: it tries
@@ -139,4 +134,12 @@ function isActualDate(value) {
 
   return true;
 
+}
+
+/* validation function for date - is it in the future? */
+function isFutureDate(value) {
+
+  var fakedate = new Date(value.substr(6, 4), (value.substr(3, 2) - 1), value.substr(0, 2));
+  var today = new Date();
+  return fakedate > today;
 }

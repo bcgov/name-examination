@@ -76,9 +76,13 @@
       nwpta: {
         partnerNameDate: {
           isValidFormat(value) {
+            // if empty, it's valid - not required
+            if (value == '' || value == null) return true;
             return isValidFormat(value);
           },
           isActualDate(value) {
+            // if empty, it's valid - not required
+            if (value == '' || value == null) return true;
             return isActualDate(value);
           },
         }
