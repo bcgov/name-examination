@@ -144,6 +144,7 @@ export default new Vuex.Store({
     corpNum: null,
     submittedDate: null,
     expiryDate: null,
+    expiryDateForEdit: null,
     lastUpdate: null,
     issueText: null,
     issue: {
@@ -282,6 +283,9 @@ mutations: {
     },
     expiryDate (state, value) {
       state.expiryDate = value;
+    },
+    expiryDateForEdit (state, value) {
+      state.expiryDateForEdit = value;
     },
     details (state, value) {
       state.details = value;
@@ -512,6 +516,14 @@ mutations: {
         if (record.partnerJurisdictionTypeCd == 'AB') state.additionalCompInfo.nwpta_ab = record;
         if (record.partnerJurisdictionTypeCd == 'SK') state.additionalCompInfo.nwpta_sk = record;
       }
+
+      // convert Expiry Date from timestamp to DD-MM-YYYY string for editing
+      if (state.expiryDate != null) {
+        var thedate = new Date(state.expiryDate);
+        state.expiryDateForEdit = padWithZeroes(thedate.getUTCDate(), 2) + "-" + padWithZeroes(thedate.getUTCMonth() + 1, 2) + "-" + thedate.getFullYear();
+      }
+      else state.expiryDateForEdit = null;
+
     },
 
     loadConflictsJSON(state,JSONdata){
@@ -1495,9 +1507,19 @@ mutations: {
       return state.reservationCount
     },
     expiryDate(state) {
-      if (state.expiryDate != null)
-        return new Date(state.expiryDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+      if (state.expiryDate != null) {
+        // try converting from timestamp string
+        var retval = new Date(state.expiryDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+        if (retval == 'Invalid Date') {
+          retval = null;
+        }
+        return retval;
+      }
+
       return null
+    },
+    expiryDateForEdit(state) {
+      return state.expiryDateForEdit;
     },
     submittedDate(state) {
       if (state.submittedDate != null)

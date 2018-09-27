@@ -94,7 +94,27 @@
               {{submittedDate}}
 
               <h3 v-if="expiryDate !== null">EXPIRY DATE</h3>
-              <span v-if="expiryDate !== null">{{expiryDate}}</span>
+              <span v-if="expiryDate !== null">
+
+                <span v-if="!is_editing">{{ expiryDate }}</span>
+                <span v-else>
+
+                  <span :class="{'form-group-error': $v.expiryDateForEdit.$error}">
+                    <input type="text" v-model="expiryDateForEdit" class="form-control"
+                           placeholder="Expiry Date" :onchange="$v.expiryDateForEdit.$touch()" />
+                    <div class="date-helper-text">DD-MM-YYYY</div>
+                    <div class="error" v-if="!$v.expiryDateForEdit.required">
+                      Expiry Date is required.</div>
+                    <div class="error" v-if="!$v.expiryDateForEdit.isValidFormat">
+                      Date must be in format DD-MM-YYYY.</div>
+                    <div class="error" v-else-if="!$v.expiryDateForEdit.isActualDate">
+                      This is not an actual date. Date must be in format DD-MM-YYYY.</div>
+                    <div class="error" v-if="!$v.expiryDateForEdit.isFutureDate">
+                      Expiry Date must be in the future.</div>
+                  </span>
+
+                </span>
+              </span>
 
               <h3 v-if="consumptionDate !== null">CONSUMPTION DATE</h3>
               <span v-if="consumptionDate !== null">{{consumptionDate}}</span>
@@ -248,14 +268,14 @@ export default {
       }
 
       // validate jurisdiction if required
-      if (this.jurisdiction_required) {
+      if (this.jurisdiction_required && !this.is_closed) {
         validations.jurisdiction = {
           required,
         }
       }
 
       // validate corp # - not required, but if entered it must be validated
-      if (this.corp_num_required) {
+      if (this.corp_num_required && !this.is_closed) {
         validations.corpNum = {
           isValidCorpNum(value) {
             // if empty, it's valid - not required
@@ -276,8 +296,27 @@ export default {
         }
       }
 
+      // validate Expiry Date if present - only present when editing a furnished NR
+      if (this.expiryDateForEdit !== null) {
+        validations.expiryDateForEdit = {
+          required,
+          isValidFormat(value) {
+            return isValidFormat(value);
+          },
+          isActualDate(value) {
+            return isActualDate(value);
+          },
+          isFutureDate(value) {
+            // don't do this validation if it is not an actual date yet
+            if (value == '' || value == null || !isValidFormat(value) || !isActualDate(value)) return true;
+
+            return isFutureDate(value);
+          },
+        }
+      }
+
       // validate Previous NR # - not required, but if entered it must be validated
-      if (this.prev_nr_required) {
+      if (this.prev_nr_required && !this.is_closed) {
         validations.previousNr = {
           isValidNr(value) {
             // if empty, it's valid - not required
@@ -292,9 +331,9 @@ export default {
             return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
               return true;
             })
-            .catch(error => {
-              return false;
-            });
+              .catch(error => {
+                return false;
+              });
           },
         }
       }
@@ -455,8 +494,21 @@ export default {
           this.$store.commit('internalComments', value);
         }
       },
-      expiryDate() {
-        return this.$store.getters.expiryDate;
+      expiryDate: {
+        get: function() {
+          return this.$store.getters.expiryDate;
+        },
+        set: function(value) {
+          this.$store.commit('expiryDate', value);
+        }
+      },
+      expiryDateForEdit: {
+        get: function() {
+          return this.$store.getters.expiryDateForEdit;
+        },
+        set: function(value) {
+          this.$store.commit('expiryDateForEdit', value);
+        }
       },
       consumptionDate() {
         return this.findConsumptionDate();
@@ -514,7 +566,7 @@ export default {
       save() {
 
         if (!this.validate()) {
-          // do not continue if there are validations
+          // do not continue if there are validation errors
           return;
         }
 
@@ -527,12 +579,20 @@ export default {
         // if previous NR not required, clear the data
         if (!this.prev_nr_required) this.$store.commit('previousNr', null);
 
-
         // build Additional Info
         this.buildAdditionalInfo();
 
         // save new comment
         this.addNewComment();
+
+        // save Expiry Date - convert to UTC timestamp string to be consistent with data from API
+        if (this.expiryDateForEdit !== null) {
+          this.expiryDate = new Date(
+              this.expiryDateForEdit.substr(6,4), // yyyy
+              this.expiryDateForEdit.substr(3,2)-1, // mm
+              this.expiryDateForEdit.substr(0,2)) // dd
+            .toUTCString();
+        }
 
         this.$store.dispatch('updateRequest');
         this.$store.state.is_editing = false;
@@ -734,5 +794,12 @@ export default {
 <style>
   .RequestInfoHeader {
     font-size: 11px;
+  }
+</style>
+
+<style scoped>
+  .date-helper-text {
+    font-style: italic;
+    color: grey;
   }
 </style>
