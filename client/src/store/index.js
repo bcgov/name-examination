@@ -987,7 +987,7 @@ mutations: {
             .catch(error => console.log('ERROR: ' + error))
       },
 
-    resetDecision({state}, nameChoice) {
+    resetDecision({dispatch,state}, nameChoice) {
 
       var objName = {}
       if (nameChoice == 1) objName = this.getters.compName1;
@@ -1003,6 +1003,9 @@ mutations: {
       objName.conflict3_num = null;
       objName.decision_text = null;
       objName.comment = null;
+
+      // set current name to selection which re-sets the manual search string
+      dispatch('setCurrentName',objName.name)
     },
 
     revertLastDecision({state}) {

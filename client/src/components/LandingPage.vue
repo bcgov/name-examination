@@ -89,7 +89,7 @@ export default {
       getCurrentStats() {
         this.$store.statsDataJSON=null
         console.log("Get Statistics")
-        // var nStates = ['hold', 'draft', 'expired', 'cancelled', 'approved', 'conditional', 'rejected']
+        //var nStates = ['hold', 'draft', 'expired', 'cancelled', 'approved', 'conditional', 'rejected']
         var nStates = ['hold', 'draft']
         var vm = this
         nStates.forEach( function(stateCd) {
