@@ -355,7 +355,7 @@ export default {
         // if there is no expiry date, this NR is not approved-expired
         if (this.$store.getters.expiryDate == null) return false;
 
-        let expired_date = new Date(this.$store.getters.expiryDate);
+        let expired_date = new Date(this.$store.state.expiryDate);
         let date = new Date();
         if (this.$store.getters.currentState === "APPROVED" && date > expired_date) return true;
         return false;
@@ -511,7 +511,7 @@ export default {
         }
       },
       consumptionDate() {
-        return this.findConsumptionDate();
+        return this.$store.getters.consumptionDate;
       },
       submittedDate() {
         return this.$store.getters.submittedDate;
@@ -666,15 +666,6 @@ export default {
 
         // clear newComment field for next comment added in this session
         this.newComment = null;
-      },
-      findConsumptionDate() {
-        if (this.compName1.consumptionDate != null) {
-          return this.compName1.consumptionDate;
-        }
-        if (this.compName2.consumptionDate != null) {
-          return this.compName2.consumptionDate;
-        }
-        return this.compName3.consumptionDate;
       },
       validate() {
         /*

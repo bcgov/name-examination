@@ -6,15 +6,28 @@
         <div class="col">
 
           <div id="top-buttons">
+
+            <!-- GET NEXT button -->
             <button v-shortkey="['alt', 'n']" @shortkey="getNextCompany()" class="btn btn-sm btn-secondary" id="examine-get-next-button"
                     v-if="!is_making_decision && !is_my_current_nr"
                     @click="getNextCompany()" >Get <u>N</u>ext</button>
+
+            <!-- CANCEL button -->
+            <button class="btn btn-sm btn-danger" id="examine-cancel-button"
+                    v-if="!is_cancelled && !is_approved_expired && !is_consumed" data-toggle="modal" data-target="#add-cancel-comment-modal">
+              Cancel</button>
+
+            <!-- HOLD button -->
             <button v-shortkey="['alt', 'h']" @shortkey="holdRequest()" class="btn btn-sm btn-warning" id="examine-hold-button"
                     v-if="!is_making_decision && is_my_current_nr"
                     @click="holdRequest()"><u>H</u>old</button>
+
+            <!-- DECISION button -->
             <button v-shortkey="['alt', 'd']" @shortkey="startDecision()" class="btn btn-sm btn-primary" id="examine-decide-button"
                     v-if="!is_making_decision && !is_complete && is_my_current_nr"
                     @click="startDecision()"><u>D</u>ecision</button>
+
+            <!-- ACCEPT/REJECT/CANCEL DECISION buttons -->
             <button class="btn btn-sm btn-primary" id="decision-approve-button"
                     v-if="is_making_decision" @click="nameAccept()">
               <span v-if="acceptance_will_be_conditional">Conditionally </span>Approve
@@ -24,10 +37,12 @@
             <button class="btn btn-sm btn-secondary" id="decision-cancel-button"
                     v-if="is_making_decision" @click="is_making_decision=false">Cancel</button>
 
+            <!-- RE-OPEN (un-furnished) button -->
             <button class="btn btn-sm btn-danger" id="examine-re-open-button"
                     v-if="is_complete && !is_furnished && !is_cancelled && !is_approved_expired" @click="reOpen()" >
               Re-Open</button>
 
+            <!-- RESET (from furnished) button -->
             <button class="btn btn-sm btn-danger" id="examine-reset-button"
                     v-if="is_complete && is_furnished && !is_cancelled && !is_approved_expired" data-toggle="modal" data-target="#add-comment-reset-modal">
               RESET</button>
@@ -35,6 +50,8 @@
             <!-- EXAMINE button - to claim/examine an NR that is on hold -->
             <button class="btn btn-sm btn-primary" id="examine-button" v-if="can_claim"
                     @click="claimNR()" >Examine</button>
+
+
           </div>
 
           <table>
@@ -100,6 +117,8 @@
       </div>
 
     </div>
+
+    <!-- RESET COMMENT popup -->
     <div class="modal fade" id="add-comment-reset-modal" tabindex="-1" role="dialog">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -122,6 +141,32 @@
         </div>
       </div>
     </div>
+
+    <!-- CANCEL COMMENT popup -->
+    <div class="modal fade" id="add-cancel-comment-modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Please give a comment to explain why this NR is being CANCELLED</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <textarea id="cancel-comment-text" class="form-control" rows="10"
+                      v-model="cancel_comment_display"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-secondary"
+                    data-dismiss="modal" @click="cancelNrCancel">Cancel</button>
+            <button type="button" id="cancel-nr-after-comment-button" class="btn btn-sm btn-danger" disabled="true"
+                    data-dismiss="modal" @click="cancelNr">CANCEL</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
   </div>
 </template>
 
@@ -135,6 +180,7 @@
         retval: [],
         is_running_manual_search: false,
         add_comment_display: "",
+        cancel_comment_display: "",
         resetting: false,
         searching: false,
       }
@@ -172,10 +218,17 @@
         // if there is no expiry date, this NR is not approved-expired
         if (this.$store.getters.expiryDate == null) return false;
 
-        let expired_date = new Date(this.$store.getters.expiryDate);
-        let date = new Date();
-        if (this.$store.getters.currentState === "APPROVED" && date > expired_date) return true;
+        let expired_date = new Date(this.$store.state.expiryDate);
+        let today = new Date();
+        console.log('***');
+        console.log(this.$store.getters.currentState);
+        console.log(expired_date);
+        if (this.$store.getters.currentState === "APPROVED" && today > expired_date) return true;
         return false;
+      },
+      is_consumed() {
+        if (this.consumptionDate != null) return true;
+        else return false;
       },
       is_editing() {
         return  this.$store.getters.is_editing;
@@ -279,6 +332,9 @@
         set: function(value) {
           this.$store.commit('internalComments', value);
         }
+      },
+      consumptionDate() {
+        return this.$store.getters.consumptionDate;
       },
     },
     mounted() {
@@ -428,13 +484,21 @@
         console.log('setManualSearchStr() called with ' + val);
         this.searchStr =  "+" + val;
       },
-      addNewComment() {
+      addNewComment(value) {
         // create new comment object with just text, and add it to list of comments in data structure
         var newCommentData = {
-          comment: this.add_comment_display,
+          comment: value,
           examiner: this.$store.state.examiner
         };
         this.internalComments = this.internalComments.concat(newCommentData);
+      },
+      cancelNr() {
+        this.addNewComment(this.cancel_comment_display);
+        this.$store.dispatch('cancelNr', 'CANCELLED');
+      },
+      cancelNrCancel() {
+        this.cancel_comment_display = "";
+        $("#cancel-comment-text").prop('disabled', false); // TODO need this?
       },
     },
     watch: {
@@ -445,16 +509,23 @@
         else
           $("#reset-nr-after-comment-button").prop('disabled', true);
       },
+      cancel_comment_display: function(val) {
+        console.log('cancel_comment_display watcher fired:' + val)
+        if (val)
+          $("#cancel-nr-after-comment-button").prop('disabled', false);
+        else
+          $("#cancel-nr-after-comment-button").prop('disabled', true);
+      },
       compName1State: function (val) {
         console.log('compName1 watcher fired:' + val)
         if (this.resetting) {
           if (this.compName2 != undefined) {
-            if (this.compName2State != 'NE')
-              this.$store.dispatch('resetDecision', 2);
-            else
-              this.addNewComment();
           } else
-            this.addNewComment();
+            this.addNewComment(this.add_comment_display);
+          if (this.compName2State != 'NE')
+            this.$store.dispatch('resetDecision', 2);
+          else
+            this.addNewComment(this.add_comment_display);
         }
       },
       compName2State: function (val) {
@@ -464,15 +535,15 @@
             if (this.compName2State != 'NE')
               this.$store.dispatch('resetDecision', 3);
             else
-              this.addNewComment();
+              this.addNewComment(this.add_comment_display);
           } else
-            this.addNewComment();
+            this.addNewComment(this.add_comment_display);
         }
       },
       compName3State: function (val) {
         console.log('compName3 watcher fired:' + val)
         if (this.resetting)
-          this.addNewComment();
+          this.addNewComment(this.add_comment_display);
       },
       currentName: function (val) {
         console.log('CompName.currentName watcher fired:' + val)
