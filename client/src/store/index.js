@@ -886,6 +886,20 @@ mutations: {
             .catch(error => console.log('ERROR: ' + error))
       },
 
+    cancelNr({commit, state, dispatch},nrState) {
+      console.log('Cancelling for number ' + state.compInfo.nrNumber)
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const url = '/api/v1/requests/' + state.compInfo.nrNumber
+
+      axios.patch(url,{"state": nrState, "comments": state.internalComments} ,{headers: {Authorization: `Bearer ${myToken}`}})
+           .then(function(response){
+                console.log('CANCELLED ' + state.compInfo.nrNumber);
+                dispatch('getpostgrescompInfo', state.compInfo.nrNumber);
+
+            })
+            .catch(error => console.log('ERROR: ' + error))
+      },
+
     nameAcceptReject( {commit, dispatch, state}) {
       console.log('Name Accepted/Rejected for ' + state.compInfo.nrNumber + ", " + state.currentName)
       console.log(state.currentNameObj);
@@ -1528,6 +1542,23 @@ mutations: {
       if (state.submittedDate != null)
         return new Date(state.submittedDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
       return null
+    },
+    consumptionDate(state) {
+      /* Find the consumption date for the request from the individual name consumption date.
+       */
+      var thedate = null;
+      if (state.compInfo.compNames.compName1.consumptionDate != null) {
+        thedate = state.compInfo.compNames.compName1.consumptionDate;
+      }
+      else if (state.compInfo.compNames.compName2.consumptionDate != null) {
+        thedate = state.compInfo.compNames.compName2.consumptionDate;
+      }
+      else thedate = state.compInfo.compNames.compName3.consumptionDate;
+
+      if (thedate != null)
+        return new Date(thedate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+      return null
+
     },
     submitCount(state) {
       return state.submitCount;
