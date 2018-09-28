@@ -692,16 +692,7 @@ export default {
         return !this.$v.$invalid && !this.$refs.clientinfoview.$v.$invalid &&
           !nwpta_ab_invalid && !nwpta_sk_invalid;
       },
-    },
-    watch: {
-      nrNumber: function (val) {
-        console.log('RequestInfoHeader.nrNumber watcher fired:' )
-        this.$store.dispatch('getpostgrescompInfo',this.nrNumber)
-      },
-      requestType: function(val) {
-        /*
-        Show/hide elements of NR Details based on request type (display and edit).
-         */
+      checkReqTypeRules(val) {
         var rules = this.requestTypeRules.filter(findArrValueByAttr(val, 'request_type'))[0];
 
         if (rules == undefined) {
@@ -718,6 +709,19 @@ export default {
           this.jurisdiction_required = rules.jurisdiction_required;
           this.additional_info_template = rules.additional_info_template;
         }
+      },
+    },
+    watch: {
+      nrNumber: function (val) {
+        console.log('RequestInfoHeader.nrNumber watcher fired:' )
+        this.$store.dispatch('getpostgrescompInfo',this.nrNumber);
+        this.checkReqTypeRules(this.requestType);
+      },
+      requestType: function(val) {
+        /*
+        Show/hide elements of NR Details based on request type (display and edit).
+         */
+        this.checkReqTypeRules(val);
       }
     }
 }
