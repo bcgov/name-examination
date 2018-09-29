@@ -15,7 +15,7 @@
             <!-- CANCEL button -->
             <button class="btn btn-sm btn-danger" id="examine-cancel-button"
                     v-if="!is_cancelled && !is_approved_expired && !is_consumed" data-toggle="modal" data-target="#add-cancel-comment-modal">
-              Cancel</button>
+              Cancel Request</button>
 
             <!-- HOLD button -->
             <button v-shortkey="['alt', 'h']" @shortkey="holdRequest()" class="btn btn-sm btn-warning" id="examine-hold-button"
