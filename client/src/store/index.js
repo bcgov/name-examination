@@ -665,9 +665,11 @@ mutations: {
     currentNameObj(state,value){
       state.currentNameObj = value
       console.log('setting currentNameObj')
-      // also set currentName and currentChoice
-      state.currentName = value.name;
-      state.currentChoice = value.choice;
+      if (value != null) {
+        // also set currentName and currentChoice
+        state.currentName = value.name;
+        state.currentChoice = value.choice;
+      }
     },
     currentChoice(state,value){
       console.log('Setting current choice to ' + value)
