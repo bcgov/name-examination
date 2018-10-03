@@ -504,7 +504,21 @@ mutations: {
       // cycle through nwpta entries
       for (let record of dbcompanyInfo.nwpta) {
 
-        // convert date from long form to DD-MM-YYYY
+        // convert date from long form to DD-MM-YYYY (first clear existing data)
+        state.additionalCompInfo.nwpta_ab = {
+          partnerJurisdictionTypeCd: null,
+          partnerName: null,
+          partnerNameDate: null,
+          partnerNameNumber: null,
+          partnerNameTypeCd: null,
+        };
+        state.additionalCompInfo.nwpta_sk = {
+          partnerJurisdictionTypeCd: null,
+          partnerName: null,
+          partnerNameDate: null,
+          partnerNameNumber: null,
+          partnerNameTypeCd: null,
+        };
         if (record.partnerNameDate != null && record.partnerNameDate != '') {
           var nwpta_date = new Date(record.partnerNameDate);
           record.partnerNameDate =

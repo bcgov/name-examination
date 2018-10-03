@@ -1,52 +1,54 @@
-﻿Request Type,Request Type Desc,NWPTA Required,Foreign Jurisdiction Required,Previous NR Required,Corp Num Required,Additional Info Template
-CR,BC Corp/Amalgamation,TRUE,,,,
-CCR,BC Company/Change of Name,,,,TRUE,**Change of Name**||**<corp_num>**
-CT,BC Company Continuing In,TRUE,,,,**Continuation In** <nwpta> 
-RCR,BC Company Restoration,TRUE,,,,
-XCR,Corporation Foreign/XPRO-Reg/Amalgamation,,TRUE,,,
-XCCR,Corporation Foreign - Xpro change of name,,TRUE,,,**Change of Name** 
-XRCR,Corporation Foreign - Xpro reinstatement,,TRUE,,,**Reinstatement**
-AS,Corporation Foreign - Xpro assumed name,,TRUE,TRUE,,**Previous <prev_nr>** 
-LC,  LLC - Extraprovincial Registration ,,TRUE,,,
-CLC,LLC - Extraprovincial Change of Name,,TRUE,,,
-RLC,LLC - Extraprovincial Reinstatement,,TRUE,,,
-AL,LLC - Extraprovincial Assumed Name,,TRUE,TRUE,,**Previous <prev_nr>** 
-FR,Sole Proprietorship/General Partnership - Registration,,,,,
-CFR,Sole Proprietorship/General Partnership - Change of Name,,,,,**Change of Name** 
-LL,Limited Liability Partnership - Registration,,TRUE,,,
-CLP,Limited Liability Partnership - Name Change,,TRUE,,,**Change of Name** 
-LP,Limited Partnership - Registration,TRUE,TRUE,,,**Limited Partnership**||<nwpta>
-CLP,Limited Partnership - Change of Name,,TRUE,,TRUE,**Change of Name**||**<corp_num>**
-XCLP,Limited Partnership - Change of Name - XPRO,,,,,
-SO,Society -Incorporation,,,,,
-ASO,Society -Amalgamation,,,,,**Amalgamation** 
-CSO,Society - Name Change,,TRUE,,,**Change of Name**
-RSO,Society - Restoration,,TRUE,,,
-CTSO,Society - Continuation In,,,,,**Continuation In**
-XSO,Society - Extraprovincial Non-Share Corporation ,,TRUE,TRUE,,**Previous <prev_nr>** 
-XCSO,Society - Extraprovincial Change of Name,,,,,
-XASO,Society - Extraprovincial Non-Share Corporation Assumed Name,,,,,
-XCASO,Society - Extraprovincial Non-Share Corporation Change Assumed Name,,,,,
-XRSO,Society - Extraprovincial Non-Share Corporation  Restoration,,,,,
-CSSO,Society - Conversion of a Special Act,,TRUE,,,
-CP,Co-op-Reg/Almalgamation,,TRUE,,,
-CCP,Co-op Name Change,,TRUE,,,**Change of Name**
-CTC,Co-op Continuing In,,,,,**Continuation In** 
-RCP,Co-op Restoration,,TRUE,,,
-XCP,Cooperative - Extraprovincial,,,,,
-XCCP,Cooperative - Extraprovincial Change of Name,,,,,
-XRCP,Cooperative - Extraprovincial Restoration,,,,,
-CC,CCC-Incorp/Amalgamation,,,,,
-CCV,CCC-BC TO CCC Conversion,,,,TRUE,**Change of Name**||**<corp_num>**
-CCC,CCC-Name Change,,,,TRUE,**Change of Name**||**<corp_num>**
-CCCT,CCC - Continung In,TRUE,,,,**Continuation In** <nwpta>
-RCC,CCC - Restore,TRUE,,,,**Restoration** <nwpta>
-UL,ULC-Incorporatiomalgamation,TRUE,TRUE,,,<nwpta>
-XUL,ULC-Inc XPRO=Y,,,,,
-ULCT,ULC - Continuing In ,,,,, **Continuation In** **Change of Name**
-RUL,ULC - Restoration,,TRUE,,,**Restoration** **Continuation In** **Change of Name**
-UA,ULC XPRo Assumed Name,,TRUE,TRUE,,**Previous <prev_nr>** 
-FI,Financial Institution (BC)-Incorporation,,,,,
-CFI,Financial Institution (BC)-Name Change,,,,,**Change of Name** 
-RFI,Financial Institution (BC)-Restoration,,,,,**Restoration** **Change of Name**
-PA,Private Act,,,,,
+Request Type,Request Type Desc,NWPTA Required,Foreign Jurisdiction Required,Previous NR Required,Corp Num Required,Additional Info Template,Is LP NWPTA type,Is CP NWPTA type
+CR,BC Corp/Amalgamation,TRUE,,,,,,
+CCR,BC Company/Change of Name,,,,TRUE,**Change of Name**||**<corp_num>**,,
+CT,BC Company Continuing In,TRUE,,,,**Continuation In** <nwpta> ,,
+RCR,BC Company Restoration,TRUE,,,,,,
+XCR,Corporation Foreign/XPRO-Reg/Amalgamation,,TRUE,,,,,
+XCCR,Corporation Foreign - Xpro change of name,,TRUE,,,**Change of Name** ,,
+XRCR,Corporation Foreign - Xpro reinstatement,,TRUE,,,**Reinstatement**,,
+AS,Corporation Foreign - Xpro assumed name,,TRUE,TRUE,,**Previous <prev_nr>** ,,
+LC,LLC - Extraprovincial Registration ,,TRUE,,,,,
+CLC,LLC - Extraprovincial Change of Name,,TRUE,,,,,
+RLC,LLC - Extraprovincial Reinstatement,,TRUE,,,,,
+AL,LLC - Extraprovincial Assumed Name,,TRUE,TRUE,,**Previous <prev_nr>** ,,
+FR,Sole Proprietorship/General Partnership - Registration,,,,,,,
+CFR,Sole Proprietorship/General Partnership - Change of Name,,,,,**Change of Name** ,,
+LL,Limited Liability Partnership - Registration,TRUE,TRUE,,,,TRUE,
+LP,Limited Partnership - Registration,TRUE,TRUE,,,**Limited Partnership**||<nwpta>,TRUE,
+CLP,Limited Partnership - Change of Name,TRUE,TRUE,,TRUE,**Change of Name**||**<corp_num>**,TRUE,
+XCLP,Limited Partnership - Change of Name - XPRO,TRUE,,,,,TRUE,
+SO,Society -Incorporation,,,,,,,
+ASO,Society -Amalgamation,,,,,**Amalgamation** ,,
+CSO,Society - Name Change,,TRUE,,,**Change of Name**,,
+RSO,Society - Restoration,,TRUE,,,,,
+CTSO,Society - Continuation In,,,,,**Continuation In**,,
+XSO,Society - Extraprovincial Non-Share Corporation ,,TRUE,TRUE,,**Previous <prev_nr>** ,,
+XCSO,Society - Extraprovincial Change of Name,,,,,,,
+XASO,Society - Extraprovincial Non-Share Corporation Assumed Name,,,,,,,
+XCASO,Society - Extraprovincial Non-Share Corporation Change Assumed Name,,,,,,,
+XRSO,Society - Extraprovincial Non-Share Corporation  Restoration,,,,,,,
+CSSO,Society - Conversion of a Special Act,,TRUE,,,,,
+CP,Co-op-Reg/Almalgamation,TRUE,TRUE,,,,,TRUE
+CCP,Co-op Name Change,TRUE,TRUE,,,**Change of Name**,,TRUE
+CTC,Co-op Continuing In,TRUE,,,,**Continuation In** ,,TRUE
+RCP,Co-op Restoration,TRUE,TRUE,,,,,TRUE
+XCP,Cooperative - Extraprovincial,TRUE,,,,,,TRUE
+XCCP,Cooperative - Extraprovincial Change of Name,TRUE,,,,,,TRUE
+XRCP,Cooperative - Extraprovincial Restoration,TRUE,,,,,,TRUE
+CC,CCC-Incorp/Amalgamation,,,,,,,
+CCV,CCC-BC TO CCC Conversion,,,,TRUE,**Change of Name**||**<corp_num>**,,
+CCC,CCC-Name Change,,,,TRUE,**Change of Name**||**<corp_num>**,,
+CCCT,CCC - Continung In,TRUE,,,,**Continuation In** <nwpta>,,
+RCC,CCC - Restore,TRUE,,,,**Restoration** <nwpta>,,
+UL,ULC-Incorporatiomalgamation,TRUE,TRUE,,,<nwpta>,,
+XUL,ULC-Inc XPRO=Y,,,,,,,
+ULCT,ULC - Continuing In ,,,,, **Continuation In** **Change of Name**,,
+RUL,ULC - Restoration,,TRUE,,,**Restoration** **Continuation In** **Change of Name**,,
+UA,ULC XPRo Assumed Name,,TRUE,TRUE,,**Previous <prev_nr>** ,,
+FI,Financial Institution (BC)-Incorporation,,,,,,,
+CFI,Financial Institution (BC)-Name Change,,,,,**Change of Name** ,,
+RFI,Financial Institution (BC)-Restoration,,,,,**Restoration** **Change of Name**,,
+PA,Private Act,,,,,,,
+CLL,,TRUE,,,,,TRUE,
+XCLL,,TRUE,,,,,TRUE,
+XLL,,TRUE,,,,,TRUE,

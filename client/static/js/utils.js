@@ -50,6 +50,8 @@ function readCsv(csvFile, callback) {
               'prev_nr_required': data[4]=='TRUE'?true:false,
               'corp_num_required': data[5]=='TRUE'?true:false,
               'additional_info_template': data[6],
+              'is_lp_nwpta_type': data[7]=='TRUE'?true:false,
+              'is_cp_nwpta_type': data[8]=='TRUE'?true:false,
             }
 
             lines.push(obj);

@@ -43,10 +43,16 @@
             <!-- spacer -->
           </div>
           <div class="col">
-            <nwpta v-if="nwpta_required" jurisdiction="AB" ref="nwpta_ab"  />
+            <nwpta v-if="nwpta_required" ref="nwpta_ab"
+                   jurisdiction="AB"
+                   v-bind:is_lp_nwpta_type="is_lp_nwpta_type"
+                   v-bind:is_cp_nwpta_type="is_cp_nwpta_type" />
           </div>
           <div class="col">
-            <nwpta v-if="nwpta_required" jurisdiction="SK" ref="nwpta_sk"  />
+            <nwpta v-if="nwpta_required" ref="nwpta_sk"
+                   jurisdiction="SK"
+                   v-bind:is_lp_nwpta_type="is_lp_nwpta_type"
+                   v-bind:is_cp_nwpta_type="is_cp_nwpta_type" />
           </div>
         </div>
 
@@ -253,6 +259,8 @@ export default {
         nwpta_required: false,
         jurisdiction_required: false,
         additional_info_template: null,
+        is_lp_nwpta_type: null,
+        is_cp_nwpta_type: null,
       }
     },
     validations: function () {
@@ -409,6 +417,7 @@ export default {
       },
       requestType: {
         get: function() {
+          this.checkReqTypeRules(this.$store.getters.requestType);
           return this.$store.getters.requestType;
         },
         set: function(value) {
@@ -594,6 +603,10 @@ export default {
             .toUTCString();
         }
 
+        // adjust nwpta data if it was requested and the type was changed
+        this.$refs.nwpta_ab.adjustUponSave();
+        this.$refs.nwpta_sk.adjustUponSave();
+
         this.$store.dispatch('updateRequest');
         this.$store.state.is_editing = false;
 
@@ -701,6 +714,8 @@ export default {
           this.nwpta_required = false;
           this.jurisdiction_required = false;
           this.additional_info_template = null;
+          this.is_lp_nwpta_type = null;
+          this.is_cp_nwpta_type = null;
 
         } else {
           this.corp_num_required = rules.corp_num_required;
@@ -708,6 +723,8 @@ export default {
           this.nwpta_required = rules.nwpta_required;
           this.jurisdiction_required = rules.jurisdiction_required;
           this.additional_info_template = rules.additional_info_template;
+          this.is_lp_nwpta_type = rules.is_lp_nwpta_type;
+          this.is_cp_nwpta_type = rules.is_cp_nwpta_type;
         }
       },
     },
