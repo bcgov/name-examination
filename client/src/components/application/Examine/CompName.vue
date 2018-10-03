@@ -14,7 +14,7 @@
 
             <!-- CANCEL button -->
             <button class="btn btn-sm btn-danger" id="examine-cancel-button"
-                    v-if="!is_cancelled && !is_approved_expired && !is_consumed" data-toggle="modal" data-target="#add-cancel-comment-modal">
+                    v-if="!is_making_decision && !is_cancelled && !is_approved_expired && !is_consumed" data-toggle="modal" data-target="#add-cancel-comment-modal">
               Cancel Request</button>
 
             <!-- HOLD button -->
@@ -160,7 +160,7 @@
             <button type="button" class="btn btn-sm btn-secondary"
                     data-dismiss="modal" @click="cancelNrCancel">Cancel</button>
             <button type="button" id="cancel-nr-after-comment-button" class="btn btn-sm btn-danger" disabled="true"
-                    data-dismiss="modal" @click="cancelNr">CANCEL</button>
+                    data-dismiss="modal" @click="cancelNr">CANCEL REQUEST</button>
           </div>
         </div>
       </div>
