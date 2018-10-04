@@ -502,23 +502,24 @@ mutations: {
 
       console.log('Setting nwpta data in state variables')
       // cycle through nwpta entries
+      // - first clear existing nwpta data that may persist from previous NR
+      state.additionalCompInfo.nwpta_ab = {
+        partnerJurisdictionTypeCd: null,
+        partnerName: null,
+        partnerNameDate: null,
+        partnerNameNumber: null,
+        partnerNameTypeCd: null,
+      };
+      state.additionalCompInfo.nwpta_sk = {
+        partnerJurisdictionTypeCd: null,
+        partnerName: null,
+        partnerNameDate: null,
+        partnerNameNumber: null,
+        partnerNameTypeCd: null,
+      };
       for (let record of dbcompanyInfo.nwpta) {
 
-        // convert date from long form to DD-MM-YYYY (first clear existing data)
-        state.additionalCompInfo.nwpta_ab = {
-          partnerJurisdictionTypeCd: null,
-          partnerName: null,
-          partnerNameDate: null,
-          partnerNameNumber: null,
-          partnerNameTypeCd: null,
-        };
-        state.additionalCompInfo.nwpta_sk = {
-          partnerJurisdictionTypeCd: null,
-          partnerName: null,
-          partnerNameDate: null,
-          partnerNameNumber: null,
-          partnerNameTypeCd: null,
-        };
+        // convert date from long form to DD-MM-YYYY
         if (record.partnerNameDate != null && record.partnerNameDate != '') {
           var nwpta_date = new Date(record.partnerNameDate);
           record.partnerNameDate =
