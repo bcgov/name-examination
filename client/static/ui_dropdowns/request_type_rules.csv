@@ -28,13 +28,13 @@ XASO,Society - Extraprovincial Non-Share Corporation Assumed Name,,,,,,,
 XCASO,Society - Extraprovincial Non-Share Corporation Change Assumed Name,,,,,,,
 XRSO,Society - Extraprovincial Non-Share Corporation  Restoration,,,,,,,
 CSSO,Society - Conversion of a Special Act,,TRUE,,,,,
-CP,Co-op-Reg/Almalgamation,TRUE,TRUE,,,,,TRUE
-CCP,Co-op Name Change,TRUE,TRUE,,,**Change of Name**,,TRUE
+CP,Co-op-Reg/Almalgamation,TRUE,,,,,,TRUE
+CCP,Co-op Name Change,TRUE,,,,**Change of Name**,,TRUE
 CTC,Co-op Continuing In,TRUE,,,,**Continuation In** ,,TRUE
-RCP,Co-op Restoration,TRUE,TRUE,,,,,TRUE
-XCP,Cooperative - Extraprovincial,TRUE,,,,,,TRUE
-XCCP,Cooperative - Extraprovincial Change of Name,TRUE,,,,,,TRUE
-XRCP,Cooperative - Extraprovincial Restoration,TRUE,,,,,,TRUE
+RCP,Co-op Restoration,TRUE,,,,,,TRUE
+XCP,Cooperative - Extraprovincial,TRUE,TRUE,,,,,TRUE
+XCCP,Cooperative - Extraprovincial Change of Name,TRUE,TRUE,,,,,TRUE
+XRCP,Cooperative - Extraprovincial Restoration,TRUE,TRUE,,,,,TRUE
 CC,CCC-Incorp/Amalgamation,,,,,,,
 CCV,CCC-BC TO CCC Conversion,,,,TRUE,**Change of Name**||**<corp_num>**,,
 CCC,CCC-Name Change,,,,TRUE,**Change of Name**||**<corp_num>**,,
