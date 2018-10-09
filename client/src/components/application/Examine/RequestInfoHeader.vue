@@ -567,9 +567,14 @@ export default {
         if (!this.is_my_current_nr && !this.is_closed) {
           this.$store.dispatch('updateNRState', 'INPROGRESS');
         }
+
+        // KBM - REMOVED per ticket #970
+        /*
         if (this.is_closed) {
           this.$store.dispatch('syncNR',this.nrNumber);
         }
+        */
+
         this.$store.state.is_editing = true;
       },
       save() {
