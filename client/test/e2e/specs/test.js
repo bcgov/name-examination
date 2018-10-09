@@ -11,8 +11,8 @@ module.exports = {
     browser
       .url(devServer)
       .waitForElementVisible('#app', 5000)
-      .assert.elementPresent('.hello')
-      .assert.containsText('h2', 'You should only see this page if you got here un-authenticated. Please login')
+      .assert.elementPresent('h2')
+      .assert.containsText('h2', 'Your authorization is missing or has expired. Please login')
       .assert.elementCount('h2', 1)
       .end();
   },
