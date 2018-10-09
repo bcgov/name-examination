@@ -1,11 +1,13 @@
 import Vue from 'vue';
 import LandingPage from '@/components/LandingPage';
+import store from '@/store'
 
 describe('LandingPage.vue', () => {
-  it('should render correct contents', () => {
-    const Constructor = Vue.extend(LandingPage);
-    const vm = new Constructor().$mount();
-    expect(vm.$el.querySelector('.hello h2').textContent)
-      .toEqual('You should only see this page if you got here un-authenticated. Please login');
-  });
+
+    it('renders warning message when not connected', () => {
+        const Constructor = Vue.extend(LandingPage);
+        const vm = new Constructor({store:store}).$mount();
+        expect(vm.$el.querySelector('h2').textContent)
+            .toEqual('Your authorization is missing or has expired. Please login');
+    });
 });
