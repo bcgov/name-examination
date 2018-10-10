@@ -609,8 +609,8 @@ export default {
         }
 
         // adjust nwpta data if it was requested and the type was changed
-        this.$refs.nwpta_ab.adjustUponSave();
-        this.$refs.nwpta_sk.adjustUponSave();
+        if (this.$refs.nwpta_ab != undefined) this.$refs.nwpta_ab.adjustUponSave();
+        if (this.$refs.nwpta_sk != undefined) this.$refs.nwpta_sk.adjustUponSave();
 
         this.$store.dispatch('updateRequest');
         this.$store.state.is_editing = false;
