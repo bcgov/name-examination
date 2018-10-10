@@ -138,7 +138,7 @@ if ( triggerBuild(CONTEXT_DIRECTORY) != "" ) {
 
         // Part 1 - CI - Source code scanning, build
 
-        stage('checkout') {
+        stage('Checkout') {
             try {
                 echo "checking out source"
                 echo "Build: ${BUILD_ID}"
@@ -168,7 +168,7 @@ if ( triggerBuild(CONTEXT_DIRECTORY) != "" ) {
             }
         }//end stage
 
-        stage('Intermediate build') {
+        stage('Intermediate Build') {
             try {
                 echo ">>> Building namex-web intermediate image..."
                 openshiftBuild bldCfg: FE_INT_BUILDCFG_NAME, showBuildLogs: 'true'
@@ -198,7 +198,7 @@ if ( triggerBuild(CONTEXT_DIRECTORY) != "" ) {
             }
         }//end stage
 
-        stage ('Final image build') {
+        stage ('Final Build') {
             try {
                 echo ">>> Building Namex final image..."
                 openshiftBuild bldCfg: FE_BUILDCFG_NAME, showBuildLogs: 'true'
@@ -244,7 +244,7 @@ if ( triggerBuild(CONTEXT_DIRECTORY) != "" ) {
 
         //Part 2 deploy to dev
 
-        stage ('Dev deploy') {
+        stage ('Deploy DEV') {
             try {
                 openshiftTag destStream: FE_IMAGE_NAME, verbose: 'true', destTag: 'dev', srcStream: FE_IMAGE_NAME, srcTag: "${IMAGE_HASH}"
 
@@ -308,7 +308,7 @@ if ( triggerBuild(CONTEXT_DIRECTORY) != "" ) {
                 sleep 60
 
                 try {
-                    def retVal = sh returnStatus: true, script: '/zap/zap-baseline.py -r baseline.html -t http://namex-dev.pathfinder.gov.bc.ca'
+                    def retVal = sh returnStatus: true, script: '/zap/zap-baseline.py -r baseline.html -t http://namex-fe-web-caddy-dev.pathfinder.gov.bc.ca'
                     publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: '/zap/wrk', reportFiles: 'baseline.html', reportName: 'ZAP Baseline Scan', reportTitles: 'ZAP Baseline Scan'])
                     echo "Return value is: ${retVal}"
 
@@ -339,7 +339,7 @@ if ( triggerBuild(CONTEXT_DIRECTORY) != "" ) {
 
     //Part 4 deploy to test
 
-    stage('deploy-test') {
+    stage('Deploy TEST') {
         node {
             SLACK_TOKEN = sh (
                 script: """oc get secret/slack -o template --template="{{.data.token}}" | base64 --decode""",
@@ -439,12 +439,12 @@ if ( triggerBuild(CONTEXT_DIRECTORY) != "" ) {
     ])
     {
         node(zappodlabel2) {
-            stage('ZAP Security Scan') {
+            stage('ZAP Security Scan TEST') {
 
                 sleep 60
 
                 try {
-                    def retVal = sh returnStatus: true, script: '/zap/zap-baseline.py -r baseline.html -t http://namex-test.pathfinder.gov.bc.ca'
+                    def retVal = sh returnStatus: true, script: '/zap/zap-baseline.py -r baseline.html -t http://namex-web-test-test.pathfinder.gov.bc.ca'
                     // publishHTML([allowMissing: false`, alwaysLinkToLastBuild: false, keepAll: true, reportDir: '/zap/wrk', reportFiles: 'baseline.html', reportName: 'ZAP Baseline Scan', reportTitles: 'ZAP Baseline Scan'])
                     echo "Return value is: ${retVal}"
 
@@ -475,7 +475,7 @@ if ( triggerBuild(CONTEXT_DIRECTORY) != "" ) {
 
     // Part 6 - deploy to prod
 
-    stage('deploy-prod') {
+    stage('Deploy PROD') {
         node {
             SLACK_TOKEN = sh (
                     script: """oc get secret/slack -o template --template="{{.data.token}}" | base64 --decode""",
