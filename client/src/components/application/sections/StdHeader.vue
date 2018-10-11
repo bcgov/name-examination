@@ -76,7 +76,7 @@
       },
       onSubmit() {
         if(this.nrNum!='') {
-          var myNum = this.nrNum.toUpperCase()
+          var myNum = this.nrNum.toUpperCase().trim();
           if (myNum.includes('NR')) {
             if (!myNum.includes('NR ')) {
               myNum = myNum.replace('NR', 'NR ')
