@@ -13,7 +13,7 @@
         }
     },
     mounted() {
-      var authorized = localStorage.getItem("AUTHORIZED");
+      var authorized = sessionStorage.getItem("AUTHORIZED");
       var keycloak
 
       if (!authorized) {
@@ -28,17 +28,17 @@
           if (authenticated) {
             console.log('Keycloak Authenticated')
 
-            localStorage.setItem('KEYCLOAK_TOKEN', keycloak.token);
-            localStorage.setItem('KEYCLOAK_REFRESH', keycloak.refreshToken);
+            sessionStorage.setItem('KEYCLOAK_TOKEN', keycloak.token);
+            sessionStorage.setItem('KEYCLOAK_REFRESH', keycloak.refreshToken);
             localStorage.setItem('KEYCLOAK_EXPIRES', keycloak.tokenParsed.exp * 1000);
             localStorage.setItem('USER_ROLE',keycloak.tokenParsed.user_role)
             if(keycloak.tokenParsed.user_role == undefined){
-              localStorage.setItem("AUTHORIZED", false);
+              sessionStorage.setItem("AUTHORIZED", false);
             }else {
-              localStorage.setItem("AUTHORIZED", true);
+              sessionStorage.setItem("AUTHORIZED", true);
             }
             //TODO-erase this once rolls creaated
-            localStorage.setItem("AUTHORIZED", true);
+            sessionStorage.setItem("AUTHORIZED", true);
 
             // Get user profile
             keycloak.loadUserProfile().success(function (userProfile) {

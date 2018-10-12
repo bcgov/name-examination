@@ -752,7 +752,7 @@ mutations: {
     setLoginValues(state){
       state.userId=localStorage.getItem('USERNAME')
       state.user_role=localStorage.getItem('USER_ROLE')
-      state.authorized=localStorage.getItem('AUTHORIZED')
+      state.authorized=sessionStorage.getItem('AUTHORIZED')
     },
 
     setErrorJSON(state,value) {
@@ -765,10 +765,10 @@ mutations: {
 
       commit('clearAuthData')
 
-      localStorage.removeItem('KEYCLOAK_REFRESH')
-      localStorage.removeItem('KEYCLOAK_TOKEN')
+      sessionStorage.removeItem('KEYCLOAK_REFRESH')
+      sessionStorage.removeItem('KEYCLOAK_TOKEN')
+      sessionStorage.removeItem('AUTHORIZED')
       localStorage.removeItem('KEYCLOAK_EXPIRES')
-      localStorage.removeItem('AUTHORIZED')
       localStorage.removeItem('USERNAME')
       localStorage.removeItem('USER_ROLE')
 
@@ -829,8 +829,8 @@ mutations: {
       const vm = this;
       state.myKeycloak.updateToken(-1).success(function (refreshed) {
         if (refreshed) {
-          localStorage.setItem('KEYCLOAK_TOKEN', state.myKeycloak.token);
-          localStorage.setItem('KEYCLOAK_REFRESH', state.myKeycloak.refreshToken);
+          sessionStorage.setItem('KEYCLOAK_TOKEN', state.myKeycloak.token);
+          sessionStorage.setItem('KEYCLOAK_REFRESH', state.myKeycloak.refreshToken);
           localStorage.setItem('KEYCLOAK_EXPIRES', state.myKeycloak.tokenParsed.exp * 1000);
         } else {
           console.log('Token is still valid, not refreshed');
@@ -860,7 +860,7 @@ mutations: {
 
     getpostgrescompNo ({commit, dispatch, state}) {
       console.log('action: select next company number from postgres')
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/queues/@me/oldest'
       console.log('URL:' + axios.defaults.baseURL + url)
       const vm = this
@@ -877,7 +877,7 @@ mutations: {
 
     getpostgrescompInfo ({dispatch,commit},nrNumber) {
       console.log('action: getting data for company number: ' + nrNumber + ' from postgres')
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + nrNumber
       console.log('URL:' + url)
       const vm = this
@@ -891,7 +891,7 @@ mutations: {
 
     updateNRState ({commit, state, dispatch},nrState) {
       console.log('Updating Examination state for number ' + state.compInfo.nrNumber + ' to ' + nrState)
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + state.compInfo.nrNumber
 
       axios.patch(url,{"state": nrState} ,{headers: {Authorization: `Bearer ${myToken}`}})
@@ -905,7 +905,7 @@ mutations: {
 
     cancelNr({commit, state, dispatch},nrState) {
       console.log('Cancelling for number ' + state.compInfo.nrNumber)
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + state.compInfo.nrNumber
 
       axios.patch(url,{"state": nrState, "comments": state.internalComments} ,{headers: {Authorization: `Bearer ${myToken}`}})
@@ -920,7 +920,7 @@ mutations: {
     nameAcceptReject( {commit, dispatch, state}) {
       console.log('Name Accepted/Rejected for ' + state.compInfo.nrNumber + ", " + state.currentName)
       console.log(state.currentNameObj);
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/names/' + state.currentChoice;
       axios.put(url, state.currentNameObj, {headers: {Authorization: `Bearer ${myToken}`}})
         .then(function(response){
@@ -973,7 +973,7 @@ mutations: {
     //updates the names data, through the api, into the database
     updateRequest( {commit, state}) {
 
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       commit('update_nrData')
       const url = '/api/v1/requests/' + state.compInfo.nrNumber
       axios.put(url, state.nrData, {headers: {Authorization: `Bearer ${myToken}`}})
@@ -990,7 +990,7 @@ mutations: {
 
     undoDecision({state}, nameChoice) {
       console.log('Undo decision for name #' + nameChoice);
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN');
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
 
       var objName = {}
       if (nameChoice == 1) objName = this.getters.compName1;
@@ -1042,7 +1042,7 @@ mutations: {
     revertLastDecision({state}) {
       // TODO - RE-EVALUATE IN TERMS OF 'UNDO' VS 'REVERT'
       console.log('Revert last decision');
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN');
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
       const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/names/' + nameNumber;
 
       axios.put(url, {headers: {Authorization: `Bearer ${myToken}`}},{"name": nameData} )
@@ -1085,7 +1085,7 @@ mutations: {
       console.log("Decision Reasons")
       // decision reasons
       if (state.listDecisionReasons === null) {
-        const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+        const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
         const url = '/api/v1/requests/decisionreasons'
         axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
           commit('listDecisionReasons',response.data)
@@ -1133,7 +1133,7 @@ mutations: {
 
     getNamesConflict ({state,commit},value) {
       console.log('action: getting data for company number: ' + value.nrNumber)
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + value.nrNumber
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
@@ -1145,7 +1145,7 @@ mutations: {
 
     getCorpConflict ({state,commit,dispatch},value) {
       console.log('action: getting data for company number: ' + value.nrNumber )
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/corporations/' + value.nrNumber
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
@@ -1157,7 +1157,7 @@ mutations: {
 
     getHistoryInfo ({state,commit,dispatch},value) {
       console.log('action: getting HistoryInfo for company number: ' + value.nr_num)
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + value.nr_num
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
@@ -1178,7 +1178,7 @@ mutations: {
 
     checkConflicts( {commit, state} ) {
       console.log('action: getting conflicts for company number: ' + state.compInfo.nrNumber + ' from solr')
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/analysis/' + state.currentChoice + '/conflicts'
       console.log('URL:' + url)
       const vm = this
@@ -1193,7 +1193,7 @@ mutations: {
     checkConditions( {commit, state} ) {
 
       console.log('action: getting restricted words and conditions for company number: ' + state.compInfo.nrNumber + ' from solr')
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/analysis/' + state.currentChoice + '/restricted_words'
       console.log('URL:' + url)
       const vm = this
@@ -1206,7 +1206,7 @@ mutations: {
 
     checkHistories( {commit, state} ) {
       console.log('action: getting history for company number: ' + state.compInfo.nrNumber + ' from solr')
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/analysis/' + state.currentChoice + '/histories'
       console.log('URL:' + url)
       const vm = this
@@ -1219,7 +1219,7 @@ mutations: {
 
     checkTrademarks( {commit, state} ) {
       console.log('action: getting trademarks for company number: ' + state.compInfo.nrNumber + ' from solr')
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/analysis/' + state.currentChoice + '/trademarks'
       console.log('URL:' + url)
       const vm = this
@@ -1232,7 +1232,7 @@ mutations: {
 
     getSearchDataJSON( {commit, state} ) {
      console.log('action: get search Data');
-     const myToken = localStorage.getItem('KEYCLOAK_TOKEN');
+     const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
      const url = '/api/v1/requests' + state.searchQuery;
      console.log('Search Query:' + state.searchQuery);
      const vm = this;
@@ -1244,7 +1244,7 @@ mutations: {
     },
 
     getStatsDataJSON( {commit, state},stateCd ) {
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN');
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
       var newQuery = '?order=priorityCd:desc,submittedDate:asc&queue=' + stateCd + '&furnished=true&unfurnished=true&rows=1&start=0'
       const url = '/api/v1/requests' + newQuery
       console.log('Query:' + state.searchQuery);
@@ -1277,7 +1277,7 @@ mutations: {
 
     checkManualConflicts( {commit, state},searchStr ) {
       console.log('action: manual check of conflicts for company number: ' + state.compInfo.nrNumber + ' from solr')
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
       const url = '/api/v1/documents:conflicts'
       console.log('URL:' + url)
@@ -1292,7 +1292,7 @@ mutations: {
 
     checkManualConditions( {commit, state},searchStr ) {
       console.log('action: manual check of restricted words and conditions for company number: ' + state.compInfo.nrNumber )
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
       const url = '/api/v1/documents:restricted_words'
       console.log('URL:' + url)
@@ -1306,7 +1306,7 @@ mutations: {
 
     checkManualHistories( {commit, state},searchStr ) {
       console.log('action: manual check of history for company number: ' + state.compInfo.nrNumber + ' from solr')
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
       const url = '/api/v1/documents:histories'
       console.log('URL:' + url)
@@ -1320,7 +1320,7 @@ mutations: {
 
     checkManualTrademarks( {commit, state},searchStr ) {
       console.log('action: manual check of trademarks for company number: ' + state.compInfo.nrNumber + ' from solr')
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
       const url = '/api/v1/documents:trademarks'
       console.log('URL:' + url)
@@ -1334,7 +1334,7 @@ mutations: {
 
     syncNR({dispatch,commit},nrNumber) {
       console.log('action: syncing data for nr number: ' + nrNumber + ' from with nro')
-      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + nrNumber + '/syncnr'
       console.log('URL:' + url)
       const vm = this
