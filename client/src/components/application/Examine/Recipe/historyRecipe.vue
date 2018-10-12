@@ -54,6 +54,15 @@
     padding: 1px;
     margin-right: 1px;
   }
+
+  h2, h3 {
+    font-size: 15px;
+  }
+
+  p {
+    font-size: 14px;
+  }
+
   .client-info-view {
     border: 1px solid #b3d9ff;
     background-color: #efefef;

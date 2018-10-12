@@ -213,6 +213,15 @@
     margin-left: 0;
     padding: 5px;
   }
+
+  h3, h2 {
+    font-size: 15px;
+  }
+
+  p {
+    font-size: 14px;
+  }
+
   .comment-box {
     margin: 1px;
     background-color: lightyellow;
