@@ -292,7 +292,7 @@ export default {
             // valid corp numbers are between 7 and 10 characters long
             if (value.length < 7 || value.length > 10) return false;
 
-            const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+            const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
             const url = '/api/v1/corporations/' + value;
             return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
               return true;
@@ -334,7 +334,7 @@ export default {
             if (value.length !== 10) return false;
             if (value.substr(0, 3) !== 'NR ') return false;
 
-            const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+            const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
             const url = '/api/v1/requests/' + value
             return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
               return true;

@@ -54,7 +54,7 @@ router.beforeResolve((to, from, next) => {
     console.log('Authorization check')
     // this route requires auth,
     // if not Authenticated, redirect to login page.
-    let auth = localStorage.getItem('AUTHORIZED')
+    let auth = sessionStorage.getItem('AUTHORIZED')
     if (auth == 'true') {
       console.log('Authorized')
       next()
