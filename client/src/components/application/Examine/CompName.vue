@@ -622,10 +622,6 @@
     white-space: nowrap;
   }
 
-  #manual-search {
-    padding-top: 4px;
-  }
-
   .search{
     width: 100%;
     max-width: 700px;
