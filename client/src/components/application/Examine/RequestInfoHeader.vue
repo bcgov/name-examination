@@ -224,28 +224,6 @@
         </div>
       </div>
     </div>
-
-    <!--&lt;!&ndash; row 2 - buttons &ndash;&gt;-->
-    <!--<div class="row">-->
-      <!--<div id='header-button-container' class="col-md-12">-->
-
-        <!--<button v-if="!is_editing" class="f1 btn btn-sm btn-outline-secondary"-->
-                <!--id="nr-details-show-hide-details-button" @click="toggleDetails">-->
-          <!--<span v-if="show_extended_header">Hide Details</span>-->
-          <!--<span v-else>Show Details</span>-->
-        <!--</button>-->
-
-        <!--<button v-if="!is_editing && can_edit" class="btn btn-sm btn-secondary"-->
-                <!--id="nr-details-edit-button" style="float: right;" @click="edit">Edit</button>-->
-
-        <!--<button v-if="is_editing" class="btn btn-sm btn-success" id="nr-details-save-button"-->
-                <!--style="float: right;" @click="save">Save</button>-->
-        <!--<button v-if="is_editing" class="btn btn-sm btn-secondary" id="nr-details-cancel-button"-->
-                <!--style="float: right;" @click="cancelSave">Cancel</button>-->
-
-      <!--</div>-->
-    <!--</div>-->
-
   </span>
 </template>
 
