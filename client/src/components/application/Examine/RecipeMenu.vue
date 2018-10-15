@@ -1,6 +1,6 @@
 <!--eslint-disable-->
 <template>
-  <div class="col-2">
+  <div class="col-2 recipe-steps-parent-col">
 
     <div class="nav flex-column nav-pills recipe-steps" id="v-pills-tab" role="tablist"
          aria-orientation="vertical">
@@ -241,6 +241,11 @@ export default {
   }
 
   /* RECIPE STEPS */
+
+  .recipe-steps-parent-col {
+    width: 200px;
+    max-width: 200px;
+  }
 
   .recipe-steps
   {

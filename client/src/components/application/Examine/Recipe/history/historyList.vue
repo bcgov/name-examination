@@ -1,8 +1,8 @@
 <!--eslint-disable-->
 <template>
-  <div>
-    <div class="container-fluid">
-      <div class="row ConflictList">
+
+    <div class="col history-list-parent-col">
+      <div class="row history-list-view">
 
         <select v-model="selectedHistory" class="form-control" size="17" border="0" @click="check_deselect">
           <option style="margin: 1px" v-for="option in historyJSON.names"
@@ -16,7 +16,7 @@
 
     </div>
 
-  </div>
+
 </template>
 
 <script>
@@ -96,6 +96,18 @@
 <style scoped>
 </style>
 <style>
+
+  .history-list-parent-col {
+    min-width: 500px;
+  }
+  .history-list-view {
+    padding: 0 10px;
+  }
+
+  .history-list-view option {
+    padding: 5px;
+  }
+
   .pass {
     background-color: #b6d7a8;
   }
