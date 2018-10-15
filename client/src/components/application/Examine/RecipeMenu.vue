@@ -8,7 +8,7 @@
       <div id="Conflict1">
         <i id="Conflict2"></i></div>
       <a id="conflicts-tab" class="nav-link active nav-link-text" data-toggle="pill" href="#"
-         @click="clickRecipeCard('Conflicts')">
+         @click="clickRecipeCard('Conflicts')" tabindex="9">
         Conflicts
       </a>
       <div class="arrow-right"></div>
@@ -16,19 +16,19 @@
       <div id="Condition1">
         <i id="Condition2"></i></div>
       <a id="conditions-tab" class="nav-link nav-link-text" data-toggle="pill" href="#"
-         @click="clickRecipeCard('Condition')">Condition</a>
+         @click="clickRecipeCard('Condition')" tabindex="3">Condition</a>
       <div class="arrow-right"></div>
 
       <div id="Trademarks1">
         <i id="Trademarks2"></i></div>
       <a id="trademarks-tab" class="nav-link nav-link-text" data-toggle="pill" href="#"
-         @click="clickRecipeCard('Trademarks')">Trademarks</a>
+         @click="clickRecipeCard('Trademarks')" tabindex="4">Trademarks</a>
       <div class="arrow-right"></div>
 
       <div id="History1">
         <i id="History2"></i></div>
       <a id="history-tab" class="nav-link nav-link-text" data-toggle="pill" href="#"
-         @click="clickRecipeCard('History')">History</a>
+         @click="clickRecipeCard('History')" tabindex="5">History</a>
       <div class="arrow-right"></div>
 
 

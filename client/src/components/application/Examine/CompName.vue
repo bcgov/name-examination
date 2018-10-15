@@ -104,9 +104,9 @@
             </span>
             <div v-if="!is_making_decision && !is_complete" id="manual-search">
               <form class="form-inline" @submit.prevent="onSubmit">
-                <input ref="search" type="text" class="search form-control" v-model="searchStr"  v-shortkey="['alt', 's']" @shortkey="setFocus()">
-                <button class="btn-search" type="submit"><i class="fa fa-search" /></button>
-                <button class="btn-reset" v-if="is_running_manual_search" @click="resetSearchStr">
+                <input ref="search" type="text" class="search form-control" v-model="searchStr"  v-shortkey="['alt', 's']" @shortkey="setFocus()" tabindex="1">
+                <button class="btn-search" type="submit"><i class="fa fa-search" tabindex="8"/></button>
+                <button class="btn-reset" v-if="is_running_manual_search" @click="resetSearchStr" tabindex="7">
                   <i class="fa fa-times" /></button>
               </form>
             </div>

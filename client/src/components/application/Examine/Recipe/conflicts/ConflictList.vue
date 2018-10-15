@@ -5,7 +5,7 @@
       <div class="row conflict-list-view">
 
         <select v-model="selectedConflict" class="form-control" size="17" border="0"
-                @click="check_deselect">
+                @click="check_deselect" tabindex="2">
           <option v-for="option in conflictData" :key="option.value"
             v-bind:value="{nrNumber: option.nrNumber, text: option.text, source: option.source}">
             {{ option.text }}

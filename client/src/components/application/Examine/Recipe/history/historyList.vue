@@ -4,7 +4,7 @@
     <div class="col history-list-parent-col">
       <div class="row history-list-view">
 
-        <select v-model="selectedHistory" class="form-control" size="17" border="0" @click="check_deselect">
+        <select v-model="selectedHistory" class="form-control" size="17" border="0" @click="check_deselect" tabindex="6">
           <option style="margin: 1px" v-for="option in historyJSON.names"
                   v-bind:class="{fail: check_status(option)=='fail', pass: check_status(option)=='pass'}"
                   :key="option.value" v-bind:value="{ name_state_type_cd: option.name_state_type_cd, submit_count: option.submit_count, nr_num: option.nr_num, name: option.name, score: option.score}">
