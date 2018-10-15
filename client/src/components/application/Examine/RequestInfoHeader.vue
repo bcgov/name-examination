@@ -206,11 +206,11 @@
         <div class="bottom-right">
           <div id='header-button-container' class="col-md-12">
 
-            <button v-if="!is_editing" class="f1 btn btn-sm btn-outline-secondary"
-                    id="nr-details-show-hide-details-button" @click="toggleDetails">
-              <span v-if="show_extended_header">Hide Details</span>
-              <span v-else>Show Details</span>
-            </button>
+        <button v-shortkey="['alt', 'b']" @shortkey="toggleDetails()"  v-if="!is_editing" class="f1 btn btn-sm btn-outline-secondary"
+                id="nr-details-show-hide-details-button" @click="toggleDetails">
+          <span v-if="show_extended_header">Hide Details (<u>b</u>)</span>
+          <span v-else>Show Details  (<u>b</u>)</span>
+        </button>
 
             <button v-if="!is_editing && can_edit" class="btn btn-sm btn-secondary"
                     id="nr-details-edit-button" style="float: right;" @click="edit">Edit</button>
