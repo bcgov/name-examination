@@ -5,7 +5,7 @@
 
       <!-- COLUMN 1 -->
 
-      <div id='div1' class="col-md-5" >
+      <div id='div1' class="col-md-5 add-bottom-padding" >
         <div class="row">
           <div class="col-md-4" >
             <div class="nrNum" v-bind:class="{ REDnrNum: priority}">{{ nrNumber }}</div>
@@ -34,49 +34,41 @@
               </select>
               <div class="error" v-if="!$v.jurisdiction.required">Jurisdiction is required.</div>
             </div>
-
+            <div class="row">
+              <div class="col">
+                <nwpta v-if="nwpta_required" ref="nwpta_ab"
+                       jurisdiction="AB"
+                       v-bind:is_lp_nwpta_type="is_lp_nwpta_type"
+                       v-bind:is_cp_nwpta_type="is_cp_nwpta_type" />
+              </div>
+              <div class="col">
+                <nwpta v-if="nwpta_required" ref="nwpta_sk"
+                       jurisdiction="SK"
+                       v-bind:is_lp_nwpta_type="is_lp_nwpta_type"
+                       v-bind:is_cp_nwpta_type="is_cp_nwpta_type" />
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-md-4">
-            <!-- spacer -->
-          </div>
+        <div v-if="show_extended_header" class="row add-top-padding-extra">
           <div class="col">
-            <nwpta v-if="nwpta_required" ref="nwpta_ab"
-                   jurisdiction="AB"
-                   v-bind:is_lp_nwpta_type="is_lp_nwpta_type"
-                   v-bind:is_cp_nwpta_type="is_cp_nwpta_type" />
-          </div>
-          <div class="col">
-            <nwpta v-if="nwpta_required" ref="nwpta_sk"
-                   jurisdiction="SK"
-                   v-bind:is_lp_nwpta_type="is_lp_nwpta_type"
-                   v-bind:is_cp_nwpta_type="is_cp_nwpta_type" />
-          </div>
-        </div>
+            <div>
+              <h3>INTERNAL COMMENTS</h3>
+              <div class="comment" v-for="comment in internalComments"
+                   v-bind:key="comment.timestamp">
+                <p>
+                  <span class="comment-examiner">{{ comment.examiner }}</span>
+                  -
+                  <span class="comment-timestamp">{{ new Date(comment.timestamp).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'}) }}</span>
+                </p>
+                <p class="comment-text">{{ comment.comment }}</p>
 
-
-        <div class="row">
-          <div class="col add-top-padding">
-            <div v-if="show_extended_header">
-              <div>
-                <h3>INTERNAL COMMENTS</h3>
-                <div class="comment" v-for="comment in internalComments"
-                     v-bind:key="comment.timestamp">
-                  <p>
-                    <span class="comment-examiner">{{ comment.examiner }}</span>
-                    -
-                    <span class="comment-timestamp">{{ new Date(comment.timestamp).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'}) }}</span>
-                  </p>
-                  <p class="comment-text">{{ comment.comment }}</p>
-
-                </div>
               </div>
-              <div v-if="is_editing">
-                <h3>add comment</h3>
-                <textarea v-model="newComment" class="form-control" rows="5"></textarea>
-              </div>
+            </div>
+            <div v-if="is_editing" class="add-top-padding">
+              <h3>add comment</h3>
+              <textarea v-model="newComment" class="form-control" rows="5"></textarea>
             </div>
           </div>
         </div>
@@ -84,7 +76,7 @@
 
       <!-- COLUMN 2 -->
 
-      <div id='div2' class="col-md-4">
+      <div id='div2' class="col-md-4 add-bottom-padding">
         <div class="row">
           <div class="col">
 
@@ -193,7 +185,7 @@
 
       <!-- COLUMN 3 -->
       <div id='div3' class="col-md-3">
-        <div class="row">
+        <div class="row add-bottom-padding-extra">
           <div class="col">
             <div class="row">
               <div class="col">
@@ -204,38 +196,34 @@
                 </textarea>
               </div>
             </div>
-            <div class="row">
+            <div class="row add-bottom-padding">
               <div class="col add-top-padding">
                 <clientinfoview ref="clientinfoview" />
               </div>
             </div>
           </div>
         </div>
-      </div>
+        <div class="bottom-right">
+          <div id='header-button-container' class="col-md-12">
 
-    </div>
+            <button v-if="!is_editing" class="f1 btn btn-sm btn-outline-secondary"
+                    id="nr-details-show-hide-details-button" @click="toggleDetails">
+              <span v-if="show_extended_header">Hide Details</span>
+              <span v-else>Show Details</span>
+            </button>
 
-    <!-- row 2 - buttons -->
-    <div class="row">
-      <div id='header-button-container' class="col-md-12">
+            <button v-if="!is_editing && can_edit" class="btn btn-sm btn-secondary"
+                    id="nr-details-edit-button" style="float: right;" @click="edit">Edit</button>
 
-        <button v-if="!is_editing" class="f1 btn btn-sm btn-outline-secondary"
-                id="nr-details-show-hide-details-button" @click="toggleDetails">
-          <span v-if="show_extended_header">Hide Details</span>
-          <span v-else>Show Details</span>
-        </button>
+            <button v-if="is_editing" class="btn btn-sm btn-success" id="nr-details-save-button"
+                    style="float: right;" @click="save">Save</button>
+            <button v-if="is_editing" class="btn btn-sm btn-secondary" id="nr-details-cancel-button"
+                    style="float: right;" @click="cancelSave">Cancel</button>
 
-        <button v-if="!is_editing && can_edit" class="btn btn-sm btn-secondary"
-                id="nr-details-edit-button" style="float: left;" @click="edit">Edit</button>
-
-        <button v-if="is_editing" class="btn btn-sm btn-success" id="nr-details-save-button"
-                style="float: left;" @click="save">Save</button>
-        <button v-if="is_editing" class="btn btn-sm btn-secondary" id="nr-details-cancel-button"
-                style="float: left;" @click="cancelSave">Cancel</button>
-
+          </div>
+        </div>
       </div>
     </div>
-
   </span>
 </template>
 
@@ -803,7 +791,23 @@ export default {
     font-style: italic;
   }
 
+  .add-top-padding-extra {
+    padding-top: 45px;
+  }
 
+  .add-bottom-padding {
+    padding-bottom: 10px;
+  }
+
+  .add-bottom-padding-extra {
+    padding-bottom: 30px;
+  }
+
+  .bottom-right {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
 
  </style>
 
