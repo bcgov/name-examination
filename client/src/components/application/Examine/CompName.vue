@@ -28,14 +28,16 @@
                     @click="startDecision()"><u>D</u>ecision</button>
 
             <!-- ACCEPT/REJECT/CANCEL DECISION buttons -->
-            <button class="btn btn-sm btn-primary" id="decision-approve-button"
+            <button v-shortkey="['alt', 'a']" @shortkey="nameAccept()" class="btn btn-sm btn-primary" id="decision-approve-button"
                     v-if="is_making_decision" @click="nameAccept()">
-              <span v-if="acceptance_will_be_conditional">Conditionally </span>Approve
+              <span v-if="acceptance_will_be_conditional">Conditionally </span><u>A</u>pprove
             </button>
-            <button class="btn btn-sm btn-danger" id="decision-reject-button"
-                    v-if="is_making_decision" @click="nameReject()" >Reject</button>
-            <button class="btn btn-sm btn-secondary" id="decision-cancel-button"
-                    v-if="is_making_decision" @click="is_making_decision=false">Cancel</button>
+            <button v-shortkey="['alt', 'r']" @shortkey="nameReject()" class="btn btn-sm btn-danger" id="decision-reject-button"
+                    v-if="is_making_decision" @click="nameReject()" ><u>R</u>eject
+            </button>
+            <button v-shortkey="['alt', 'c']" @shortkey="is_making_decision=false" class="btn btn-sm btn-secondary" id="decision-cancel-button"
+                    v-if="is_making_decision" @click="is_making_decision=false">Back
+            </button>
 
             <!-- RE-OPEN (un-furnished) button -->
             <button class="btn btn-sm btn-danger" id="examine-re-open-button"
