@@ -173,6 +173,12 @@
 </script>
 
 <style scoped>
+  h2, h3 {
+    font-size: 15px;
+  }
+  p {
+    font-size: 14px;
+  }
 </style>
 
 

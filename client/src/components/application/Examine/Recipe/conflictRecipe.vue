@@ -77,6 +77,15 @@
     background-color: #efefef;
     padding: 2px;
   }
+
+   h3, h2 {
+    font-size: 15px;
+  }
+
+   p {
+    font-size: 14px;
+  }
+
   .conlist {
     border: 1px solid #880000;
     margin-right: 2px;

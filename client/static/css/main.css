@@ -2324,7 +2324,7 @@ selectors. */
 p
 {
   margin-bottom: 0;
-  font-size: 11px;
+  font-size: 14px;
 }
 
 .upper-section
@@ -2350,7 +2350,7 @@ p
   border-radius: .2rem;
 
   /* additional styles for this application */
-  font-size: 11px;
+  font-size: 14px;
   margin-bottom: 2px;
 }
 

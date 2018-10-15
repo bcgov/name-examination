@@ -80,4 +80,13 @@
     /*background-color: #000000;*/
     padding: 10px;
   }
+
+  h3, h2 {
+    font-size: 15px;
+  }
+
+  p {
+    font-size: 14px;
+  }
+
 </style>

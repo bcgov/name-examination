@@ -589,7 +589,7 @@
   .name-sect {
   }
   .name-option {
-    font-size:1.2em;
+    font-size:1.3em;
     text-align: left;
   }
   .active-name-option{
@@ -640,9 +640,14 @@
     margin-top: -1px;
   }
 
-  .btn-search{
+  .btn-search {
     margin-left: -25px;
   }
+
+  .btn-search .fa-search {
+    font-size: 14px;
+  }
+
   .btn-reset {
     margin-left: -40px;
 }

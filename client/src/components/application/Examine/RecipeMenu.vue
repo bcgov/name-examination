@@ -7,7 +7,7 @@
 
       <div id="Conflict1">
         <i id="Conflict2"></i></div>
-      <a id="conflicts-tab" class="nav-link active" data-toggle="pill" href="#"
+      <a id="conflicts-tab" class="nav-link active nav-link-text" data-toggle="pill" href="#"
          @click="clickRecipeCard('Conflicts')">
         Conflicts
       </a>
@@ -15,19 +15,19 @@
 
       <div id="Condition1">
         <i id="Condition2"></i></div>
-      <a id="conditions-tab" class="nav-link" data-toggle="pill" href="#"
+      <a id="conditions-tab" class="nav-link nav-link-text" data-toggle="pill" href="#"
          @click="clickRecipeCard('Condition')">Condition</a>
       <div class="arrow-right"></div>
 
       <div id="Trademarks1">
         <i id="Trademarks2"></i></div>
-      <a id="trademarks-tab" class="nav-link" data-toggle="pill" href="#"
+      <a id="trademarks-tab" class="nav-link nav-link-text" data-toggle="pill" href="#"
          @click="clickRecipeCard('Trademarks')">Trademarks</a>
       <div class="arrow-right"></div>
 
       <div id="History1">
         <i id="History2"></i></div>
-      <a id="history-tab" class="nav-link" data-toggle="pill" href="#"
+      <a id="history-tab" class="nav-link nav-link-text" data-toggle="pill" href="#"
          @click="clickRecipeCard('History')">History</a>
       <div class="arrow-right"></div>
 
@@ -267,8 +267,8 @@ export default {
   .recipe-steps .arrow-right {
     width: 0;
     height: 0;
-    border-top: 17px solid transparent;
-    border-bottom: 17px solid transparent;
+    border-top: 19px solid transparent;
+    border-bottom: 19px solid transparent;
     border-left: 17px solid #ccc;
     float:left;
     margin: 4px 0;
@@ -281,16 +281,19 @@ export default {
 
   .recipe-steps .icon
   {
-    width: 34px;
-    height: 34px;
+    width: 38px;
+    height: 38px;
     float: left;
     margin: 4px 0;
     display: block;
     text-align: center;
-    font-size: 23px;
+    font-size: 25px;
     color: white;
   }
 
+  .nav-link-text {
+    font-size: 15px;
+  }
   .recipe-steps .icon-fail
   {
     background-color: #c00;
