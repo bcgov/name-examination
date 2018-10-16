@@ -2324,7 +2324,6 @@ selectors. */
 p
 {
   margin-bottom: 0;
-  font-size: 14px;
 }
 
 .upper-section
@@ -2333,7 +2332,6 @@ p
   margin-top: -20px;
   padding-top: 20px;
 }
-
 
 .lower-section
 {
