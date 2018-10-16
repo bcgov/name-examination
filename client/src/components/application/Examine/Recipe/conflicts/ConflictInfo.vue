@@ -67,10 +67,9 @@ import corpMatch from '@/components/application/Examine/Recipe/conflicts/conflic
     padding: 10px;
   }
 
-  h3, h2 {
+h3, h2 {
     font-size: 15px;
   }
-
   p {
     font-size: 14px;
   }
