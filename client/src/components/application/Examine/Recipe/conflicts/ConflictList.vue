@@ -76,7 +76,7 @@
 
 <style scoped>
   .conflict-list-parent-col {
-    min-width: 500px;
+    min-width: 800px;
   }
 
   .conflict-list-view {
