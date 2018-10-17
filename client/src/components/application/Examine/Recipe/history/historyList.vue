@@ -98,7 +98,7 @@
 <style>
 
   .history-list-parent-col {
-    min-width: 500px;
+    min-width: 800px;
   }
   .history-list-view {
     padding: 0 10px;
