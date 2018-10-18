@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Vue from 'vue';
 import router from '@/router'
 import StdHeader from '@/components/application/sections/StdHeader';

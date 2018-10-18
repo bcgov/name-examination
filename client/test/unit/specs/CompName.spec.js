@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Vue from 'vue';
 Vue.use(require('vue-shortkey'))
 import CompName from '@/components/application/Examine/CompName';
