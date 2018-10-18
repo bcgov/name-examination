@@ -74,11 +74,37 @@ describe('StdHeader.vue', () => {
                 done();
             }, 300)
         })
-        it('offers a link to sign out', ()=>{
-            expect(vm.$el.querySelector('#header-logout-button')).not.toEqual(null);
-        })
         it('does not offer a link to sign in', ()=>{
             expect(vm.$el.querySelector('#header-login-button')).toEqual(null);
+        })
+        describe('sign out link', ()=>{
+            let oldAddEventListener;
+            let logoutClickHandlerIsSet;
+            beforeEach(() => {
+                logoutClickHandlerIsSet = false;
+                oldAddEventListener = document.defaultView.EventTarget.prototype.addEventListener;
+                document.defaultView.EventTarget.prototype.addEventListener = function(type, callback) {
+                    if (this.id == 'header-logout-button' && type =='click') {
+                        logoutClickHandlerIsSet = true
+                    }
+                    oldAddEventListener.bind(this)(type, callback);
+                }
+                store = {
+                    getters: {
+                        isAuthenticated: true
+                    },
+                }
+                vm = mount();
+            })
+            afterEach(()=>{
+                document.defaultView.EventTarget.prototype.addEventListener = oldAddEventListener;
+            })
+            it('exists', ()=>{
+                expect(vm.$el.querySelector('#header-logout-button')).not.toEqual(null);
+            })
+            it('has a click handler that we will test later down in this file', ()=>{
+                expect(logoutClickHandlerIsSet).toEqual(true);
+            })
         })
     })
 
