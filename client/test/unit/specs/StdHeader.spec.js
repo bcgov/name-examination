@@ -78,7 +78,7 @@ describe('StdHeader.vue', () => {
                 done();
             }, 300)
         })
-        it('does not offer a link to sign-in when already authenticated', ()=>{
+        it('offers a link to sign out when authenticated', ()=>{
             store = {
                 getters: {
                     isAuthenticated: true
@@ -86,7 +86,7 @@ describe('StdHeader.vue', () => {
             }
             vm = mount();
 
-            expect(vm.$el.querySelector('#header-login-button').innerHTML.trim()).not.toEqual("Login");
+            expect(vm.$el.querySelector('#header-login-button').innerHTML.trim()).toEqual("Logout");
         })
     })
 
@@ -177,13 +177,7 @@ describe('StdHeader.vue', () => {
         it('resets location', ()=>{
             expect(assigned).toEqual('/');
         })
-        it('does not exist when logged out', ()=>{
-            setTimeout(()=>{
-              expect(vm.$el.querySelector('#header-login-button').innerHTML.trim()).not.toEqual("Logout");
-              done();
-            }, 300)
-        })
-        it('is not an option when not authenticated', ()=>{
+        it('offers a login link when not authenticated', ()=>{
             store = {
                 getters: {
                     isAuthenticated: false
@@ -195,7 +189,7 @@ describe('StdHeader.vue', () => {
             }
             vm = mount();
 
-            expect(vm.$el.querySelector('#header-login-button').innerHTML.trim()).not.toEqual("Logout");
+            expect(vm.$el.querySelector('#header-login-button').innerHTML.trim()).toEqual("Login");
         })
     })
 })
