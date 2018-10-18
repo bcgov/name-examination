@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Vue from 'vue';
 import LandingPage from '@/components/LandingPage';
 import store from '@/store'
