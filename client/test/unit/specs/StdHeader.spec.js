@@ -28,20 +28,23 @@ describe('StdHeader.vue', () => {
     it('displays user id', ()=>{
         store = {
             getters: {
+                isAuthenticated: true,
                 userId: 'max'
             }
         }
         vm = mount();
-        let value = vm.$el.querySelector('p.navbar-text').innerHTML;
+        let value = vm.$el.querySelector('#userid').innerHTML;
 
-        expect(value).toEqual('&nbsp;max')
+        expect(value).toEqual('max')
     })
 
-    describe('Navigation menu', ()=>{
+    describe('Navigation menu when logged in', ()=>{
 
         beforeEach(() => {
             store = {
-                getters: {}
+                getters: {
+                    isAuthenticated: true
+                },
             }
             vm = mount();
         })
@@ -70,6 +73,35 @@ describe('StdHeader.vue', () => {
                 done();
             }, 300)
         })
+        it('offers a link to sign out', ()=>{
+            expect(vm.$el.querySelector('#header-logout-button')).not.toEqual(null);
+        })
+        it('does not offer a link to sign in', ()=>{
+            expect(vm.$el.querySelector('#header-login-button')).toEqual(null);
+        })
+    })
+
+    describe('Navigation menu when not logged in', ()=>{
+
+        beforeEach(() => {
+            store = {
+                getters: {}
+            }
+            vm = mount();
+        })
+
+        it('does not offer a link to /home', ()=>{
+            expect(vm.$el.querySelector('#header-home-link')).toEqual(null);
+        })
+        it('does not offer a link to /nameExamination', ()=>{
+            expect(vm.$el.querySelector('#nameExamine')).toEqual(null);
+        })
+        it('does not offer a link to /find', ()=>{
+            expect(vm.$el.querySelector('#header-search-link')).toEqual(null);
+        })
+        it('does not offer a link to sign out', ()=>{
+            expect(vm.$el.querySelector('#header-logout-button')).toEqual(null);
+        })
         it('offers a link to sign-in', (done)=>{
             click('#header-login-button');
 
@@ -77,16 +109,6 @@ describe('StdHeader.vue', () => {
                 expect(window.location.pathname).toEqual('/signin')
                 done();
             }, 300)
-        })
-        it('offers a link to sign out when authenticated', ()=>{
-            store = {
-                getters: {
-                    isAuthenticated: true
-                }
-            }
-            vm = mount();
-
-            expect(vm.$el.querySelector('#header-login-button').innerHTML.trim()).toEqual("Logout");
         })
     })
 
@@ -97,7 +119,9 @@ describe('StdHeader.vue', () => {
         }
         beforeEach(() => {
             store = {
-                getters: {},
+                getters: {
+                  isAuthenticated: true,
+                },
                 dispatch: function(message, value) {
                     messageSentToStore = message;
                     valueSent = value
@@ -147,7 +171,7 @@ describe('StdHeader.vue', () => {
     describe('logout', ()=>{
 
         let logout = ()=>{
-            click('#header-login-button');
+            click('#header-logout-button');
         }
         let assigned;
         let oldHandler;
@@ -189,7 +213,7 @@ describe('StdHeader.vue', () => {
             }
             vm = mount();
 
-            expect(vm.$el.querySelector('#header-login-button').innerHTML.trim()).toEqual("Login");
+            expect(vm.$el.querySelector('#header-login-button')).not.toEqual(null);
         })
     })
 })

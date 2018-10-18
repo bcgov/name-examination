@@ -1,8 +1,7 @@
 <!--eslint-disable-->
 <template>
   <div class="container-fluid">
-    <nav class="navbar fixed-top navbar-dark navbar-expand-lg"
-         style="background-color: #041978;">
+    <nav class="navbar fixed-top navbar-dark navbar-expand-lg">
       <a class="navbar-brand" href="#">
         <img src="static/images/gov3_bc_logo.png"
              alt="Province of British Columbia"
@@ -17,7 +16,9 @@
               aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+      <!-- MENU WHEN LOGGED IN -->
+      <div v-if="auth" class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
             <router-link to="/home" class="nav-link" id="header-home-link">Home</router-link>
@@ -28,26 +29,29 @@
           <li class="nav-item active">
             <router-link to="/find" class="nav-link" id="header-search-link">Search</router-link>
           </li>
-          <!--<li class="nav-item active">
-            <router-link to="/settings" class="nav-link">Settings</router-link>
-          </li>-->
-          <li class="nav-item active" v-if="!auth">
-            <router-link id="header-login-button" to="/signin" class="nav-link">Login</router-link>
-          </li>
-          <li class="nav-item active" v-else>
-            <button id="header-login-button" @click="onLogout" class="nav-link btn-outline-dark"
-                    style="background-color: #041978;">Logout
-            </button>
-          </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0" @submit.prevent="onSubmit">
+        <form class="form-inline my-2 my-lg-0 mr-auto" @submit.prevent="onSubmit">
           <input id="header-search-input" class="form-control mr-sm-2" type="search"
                  placeholder="NR Number" aria-label="Search" v-model="nrNum">
           <button id="header-search-button" class="btn btn-outline-success my-2 my-sm-0"
                   type="submit">Load</button>
         </form>
-        <p class="navbar-text">&nbsp;{{userId }}</p>
+
+
+        <div class="nav-item">
+          <p id="userid" class="navbar-text active">{{ userId }}</p>
+          <button id="header-logout-button" @click="onLogout" class="btn btn-sm">Logout</button>
+        </div>
+
       </div>
+
+      <!-- MENU WHEN LOGGED OUT  -->
+      <div v-else class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-text mr-auto">&nbsp;</div><!-- empty, for spacing -->
+        <router-link tag="button" id="header-login-button" to="/signin" class="btn btn-sm">Login</router-link>
+      </div>
+
+
     </nav>
   </div>
 </template>
@@ -95,4 +99,31 @@
 </script>
 
 <style scoped>
+
+  .navbar {
+    background-color: #003366;
+  }
+
+  #userid {
+    color: white;
+  }
+
+  #header-login-button, #header-logout-button {
+    background-color: white;
+    color: #003366;
+  }
+
+  #header-logout-button {
+    margin-left: 10px;
+  }
+
+  #header-search-button {
+    border-color: #1a5a96;
+    color: white;
+  }
+  #header-search-button:hover {
+    border-color: #1a5a96;
+    background-color: #1a5a96;
+  }
+
 </style>
