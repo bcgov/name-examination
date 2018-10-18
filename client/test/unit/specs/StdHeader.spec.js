@@ -62,7 +62,7 @@ describe('StdHeader.vue', () => {
                 done();
             }, 300)
         })
-        it.skip('offers a link to /find', (done)=>{
+        it('offers a link to /find', (done)=>{
             click('#header-search-link');
 
             setTimeout(()=>{
@@ -78,7 +78,7 @@ describe('StdHeader.vue', () => {
                 done();
             }, 300)
         })
-        it.skip('does not offer a link to sign-in when already authenticated', ()=>{
+        it('does not offer a link to sign-in when already authenticated', ()=>{
             store = {
                 getters: {
                     isAuthenticated: true
@@ -86,7 +86,7 @@ describe('StdHeader.vue', () => {
             }
             vm = mount();
 
-            expect(vm.$el.querySelector('#header-login-button')).toEqual(null);
+            expect(vm.$el.querySelector('#header-login-button').innerHTML.trim()).not.toEqual("Login");
         })
     })
 
@@ -147,8 +147,7 @@ describe('StdHeader.vue', () => {
     describe('logout', ()=>{
 
         let logout = ()=>{
-            vm.onLogout();
-            // click('#header-logout-button');
+            click('#header-login-button');
         }
         let assigned;
         let oldHandler;
@@ -178,10 +177,13 @@ describe('StdHeader.vue', () => {
         it('resets location', ()=>{
             expect(assigned).toEqual('/');
         })
-        it.skip('needs to be tested by clicking on logout button instead of calling vm.onLogout()', ()=>{
-            expect(vm.$el.querySelector('#header-logout-button')).not.toEqual(null);
+        it('does not exist when logged out', ()=>{
+            setTimeout(()=>{
+              expect(vm.$el.querySelector('#header-login-button').innerHTML.trim()).not.toEqual("Logout");
+              done();
+            }, 300)
         })
-        it.skip('is not an option when not authenticated', ()=>{
+        it('is not an option when not authenticated', ()=>{
             store = {
                 getters: {
                     isAuthenticated: false
@@ -193,7 +195,7 @@ describe('StdHeader.vue', () => {
             }
             vm = mount();
 
-            expect(vm.$el.querySelector('#header-logout-button')).toEqual(null);
+            expect(vm.$el.querySelector('#header-login-button').innerHTML.trim()).not.toEqual("Logout");
         })
     })
 })
