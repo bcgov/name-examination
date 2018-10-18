@@ -814,7 +814,7 @@ export default {
 <!-- unscoped -->
 <style>
   .RequestInfoHeader {
-    font-size: 11px;
+    font-size: 14px;
   }
 </style>
 
