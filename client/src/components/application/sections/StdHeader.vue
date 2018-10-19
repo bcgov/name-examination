@@ -17,7 +17,6 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <!-- MENU WHEN LOGGED IN -->
       <div v-if="auth" class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
@@ -45,7 +44,6 @@
 
       </div>
 
-      <!-- MENU WHEN LOGGED OUT  -->
       <div v-else class="collapse navbar-collapse" id="navbarSupportedContent">
         <div class="navbar-text mr-auto">&nbsp;</div><!-- empty, for spacing -->
         <router-link tag="button" id="header-login-button" to="/signin" class="btn btn-sm">Login</router-link>
