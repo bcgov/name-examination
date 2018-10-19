@@ -50,6 +50,14 @@ describe('StdHeader.vue', () => {
             vm = mount();
         })
 
+        it('offers a link to /home from logo', (done)=>{
+            click('.navbar-brand');
+
+            setTimeout(()=>{
+                expect(window.location.pathname).toEqual('/home')
+                done();
+            }, 300)
+        })
         it('offers a link to /nameExamination', (done)=>{
             click('#nameExamine');
 
