@@ -1,5 +1,9 @@
 import Vue from 'vue';
+import Vuelidate from 'vuelidate'
+import Datatable from 'vue2-datatable-component'
+Vue.use(Vuelidate)
 Vue.use(require('vue-shortkey'))
+Vue.use(Datatable)
 import App from '@/App.vue';
 import store from '@/store'
 import router from '@/router'
