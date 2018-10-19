@@ -200,20 +200,26 @@ export default {
     },
     nrSearch: {
       handler(nrNum) {
-        this.updateQuery('nrNum',nrNum);
-        this.query.offset = 0;
+        if (nrNum.length < 1 || nrNum.length > 2) {
+          this.updateQuery('nrNum', nrNum);
+          this.query.offset = 0;
+        }
       }
     },
     username: {
       handler(activeUser) {
-        this.updateQuery('activeUser',activeUser);
-        this.query.offset = 0;
+        if (activeUser.length < 1 || activeUser.length > 2) {
+          this.updateQuery('activeUser', activeUser);
+          this.query.offset = 0;
+        }
       }
     },
     compName: {
       handler(compName) {
-        this.updateQuery('compName',compName);
-        this.query.offset = 0;
+        if (compName.length < 1 || compName.length > 2) {
+          this.updateQuery('compName', compName);
+          this.query.offset = 0;
+        }
       }
     },
     // priorityCheckBox: {
