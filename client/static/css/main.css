@@ -62,7 +62,7 @@ th {
 
 
 #app {
-  margin-top: 60px;
+  margin-top: 100px;
 }
 
 
@@ -74,8 +74,9 @@ th {
 #header-main {
 	background-color: #003366;
 	border: none;
-	/* 	border-bottom: 2px solid #fcba19; */
-	/* 	padding-bottom: 5px; */
+	border-bottom: 2px solid #fcba19;
+	padding-bottom: 5px;
+	box-shadow: 0px 5px 10px 0px rgba(169,169,169,1);
 }
 
 #header .header-main-left, #header .header-main-right {
@@ -2341,7 +2342,8 @@ p
 
 /* override form-control style from bootstrap so we don't have to add form-control-sm to every form field */
 .upper-section .form-control,
-.lower-section .form-control {
+.lower-section .form-control,
+nav .form-control {
   /* from form-control-sm */
   padding: .25rem .5rem;
   line-height: 1.5;
