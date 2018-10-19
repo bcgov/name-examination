@@ -3,8 +3,6 @@
   <span>
     <div class="row">
 
-      <!-- COLUMN 1 -->
-
       <div id='div1' class="col-md-5 add-bottom-padding" >
         <div class="row">
           <div class="col-md-4" >
@@ -73,8 +71,6 @@
           </div>
         </div>
       </div>
-
-      <!-- COLUMN 2 -->
 
       <div id='div2' class="col-md-4 add-bottom-padding">
         <div class="row">
@@ -183,7 +179,6 @@
         </div>
       </div>
 
-      <!-- COLUMN 3 -->
       <div id='div3' class="col-md-3">
         <div class="row add-bottom-padding-extra">
           <div class="col">

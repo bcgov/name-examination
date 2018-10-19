@@ -7,27 +7,22 @@
 
           <div id="top-buttons">
 
-            <!-- GET NEXT button -->
             <button v-shortkey="['alt', 'n']" @shortkey="getNextCompany()" class="btn btn-sm btn-secondary" id="examine-get-next-button"
                     v-if="!is_making_decision && !is_my_current_nr"
                     @click="getNextCompany()" >Get <u>N</u>ext</button>
 
-            <!-- CANCEL button -->
             <button class="btn btn-sm btn-danger" id="examine-cancel-button"
                     v-if="!is_making_decision && !is_cancelled && !is_approved_expired && !is_consumed" data-toggle="modal" data-target="#add-cancel-comment-modal">
               Cancel Request</button>
 
-            <!-- HOLD button -->
             <button v-shortkey="['alt', 'h']" @shortkey="holdRequest()" class="btn btn-sm btn-warning" id="examine-hold-button"
                     v-if="!is_making_decision && is_my_current_nr"
                     @click="holdRequest()"><u>H</u>old</button>
 
-            <!-- DECISION button -->
             <button v-shortkey="['alt', 'd']" @shortkey="startDecision()" class="btn btn-sm btn-primary" id="examine-decide-button"
                     v-if="!is_making_decision && !is_complete && is_my_current_nr"
                     @click="startDecision()"><u>D</u>ecision</button>
 
-            <!-- ACCEPT/REJECT/CANCEL DECISION buttons -->
             <button v-shortkey="['alt', 'a']" @shortkey="nameAccept()" class="btn btn-sm btn-primary" id="decision-approve-button"
                     v-if="is_making_decision" @click="nameAccept()">
               <span v-if="acceptance_will_be_conditional">Conditionally </span><u>A</u>pprove
@@ -39,17 +34,14 @@
                     v-if="is_making_decision" @click="is_making_decision=false">Ba<u>c</u>k
             </button>
 
-            <!-- RE-OPEN (un-furnished) button -->
             <button class="btn btn-sm btn-danger" id="examine-re-open-button"
                     v-if="is_complete && !is_furnished && !is_cancelled && !is_approved_expired" @click="reOpen()" >
               Re-Open</button>
 
-            <!-- RESET (from furnished) button -->
             <button class="btn btn-sm btn-danger" id="examine-reset-button"
                     v-if="is_complete && is_furnished && !is_cancelled && !is_approved_expired" data-toggle="modal" data-target="#add-comment-reset-modal">
               RESET</button>
 
-            <!-- EXAMINE button - to claim/examine an NR that is on hold -->
             <button class="btn btn-sm btn-primary" id="examine-button" v-if="can_claim"
                     @click="claimNR()" >Examine</button>
 
@@ -120,7 +112,6 @@
 
     </div>
 
-    <!-- RESET COMMENT popup -->
     <div class="modal fade" id="add-comment-reset-modal" tabindex="-1" role="dialog">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -144,7 +135,6 @@
       </div>
     </div>
 
-    <!-- CANCEL COMMENT popup -->
     <div class="modal fade" id="add-cancel-comment-modal" tabindex="-1" role="dialog">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">

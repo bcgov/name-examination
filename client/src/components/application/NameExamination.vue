@@ -5,8 +5,6 @@
 
       <div class="namePage" >
 
-        <!--<stateheaderview />-->
-
         <div class="RequestInfoHeader">
           <requestinfoheaderview />
         </div>
@@ -15,13 +13,11 @@
 
     <div class="lower-section container-fluid">
 
-      <!-- msg re. in progress with someone else -->
       <div class="alert alert-warning examiner-warning"
            v-if="currentState == 'INPROGRESS' && examiner != userId && auth">
         This NR is being examined by {{ examiner }}.
       </div>
 
-      <!-- msg re. exact history matches, ie: previous name submissions -->
       <div id="exact-history-match-banner" class="examiner-warning"
            v-if="this.exactHistoryMatches">
         Similar name previously <b>{{ exactMatch }}</b>

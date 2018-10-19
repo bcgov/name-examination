@@ -9,7 +9,6 @@
         <span v-if="nwpta_requested">REQUESTED</span>
       </h3>
 
-      <!-- for do-it-for-me requests, give radio buttons to choose nuans, assumaed nauns, or numbered assumed -->
       <div :hidden="!nwpta_requested">
         <div class="form-check">
           <input type="radio" value="requested_nuans" class="form-check-input"
@@ -34,19 +33,16 @@
         </div>
       </div>
 
-      <!-- number -->
       <span v-if="!nwpta_requested || requested_radio_selection_nuans || requested_radio_selection_assumed">
         <input type="text" v-model="nwpta.partnerNameNumber" class="form-control"
                placeholder="Number" maxlength="20" />
       </span>
 
-      <!-- name - only for "Named Assumed" type OR "do it for me" -->
       <span v-if="(!nwpta_requested && is_named_assumed) || (nwpta_requested && requested_radio_selection_assumed)">
         <input type="text" v-model="nwpta.partnerName" class="form-control" placeholder="Name"
                maxlength="255" />
       </span>
 
-      <!-- date -->
       <span v-if="!nwpta_requested || requested_radio_selection_nuans || requested_radio_selection_assumed" :class="{'form-group-error': $v.nwpta.partnerNameDate.$error}">
         <input type="text" v-model="nwpta.partnerNameDate" class="form-control"
                placeholder="Expiry Date" :onchange="$v.nwpta.partnerNameDate.$touch()" />
@@ -78,16 +74,13 @@
       </h3>
       <div v-if="is_numbered_assumed">Numbered Assumed</div>
 
-      <!-- number -->
       {{ nwpta.partnerNameNumber }}
 
-      <!-- name - only for "Named Assumed" type -->
       <span v-if="is_named_assumed">
         <br/>
         {{ nwpta.partnerName }}
       </span>
 
-      <!-- date -->
       <br />
       {{ nwpta.partnerNameDate }}
     </span>

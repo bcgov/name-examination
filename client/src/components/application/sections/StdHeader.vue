@@ -45,7 +45,7 @@
       </div>
 
       <div v-else class="collapse navbar-collapse" id="navbarSupportedContent">
-        <div class="navbar-text mr-auto">&nbsp;</div><!-- empty, for spacing -->
+        <div class="navbar-text mr-auto">&nbsp;</div>
         <router-link tag="button" id="header-login-button" to="/signin" class="btn btn-sm">Login</router-link>
       </div>
 

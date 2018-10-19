@@ -4,7 +4,6 @@
   <span v-if="show_extended_header">
     <h3>Client</h3>
 
-    <!-- VIEW -->
     <span v-if="!is_editing">
       <p>{{ clientFirstName }} {{ clientLastName}}</p>
 
@@ -37,7 +36,6 @@
     </span>
 
 
-    <!-- EDIT -->
     <span v-else>
       <div class="form-row">
         <div class="col">
@@ -92,7 +90,6 @@
                  placeholder="Postal Code" />
         </div>
         <div class="col">
-          <!-- TODO - dropdown for country? from jurisdiction list 2? -->
           <input class="form-control " v-model="country" maxlength="2"
                  placeholder="Country (2-CHAR CODE)" />
         </div>
@@ -275,5 +272,3 @@
 
 <style scoped>
 </style>
-
-

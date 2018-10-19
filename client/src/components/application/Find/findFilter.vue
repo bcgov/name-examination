@@ -25,18 +25,11 @@
               </div>
             </div>
             <div class="lower-searches">
-              <!--<h4 style="margin-left: 0" class="filter">By Priority:</h4>-->
-              <!--<input type="checkbox" v-model="priority">-->
-              <!--<br/>-->
               <h4 style="margin-left: 0" class="filter">Furnished:</h4>
               <input id="search-checkbox-furnished" type="checkbox" v-model="furnished" />
               <br/>
               <h4 style="margin-left: 0" class="filter">Unfurnished:</h4>
               <input id="search-checkbox-unfurnished" type="checkbox" v-model="unfurnished" />
-              <!--uncomment if real-time search too slow-->
-              <!--<div class="search-sort">-->
-                <!--<button id="sort" class="btn btn-primary" type="button" v-on:click="sort">SORT</button>-->
-              <!--</div>-->
             </div>
           </div>
           <div class="counts">
@@ -94,10 +87,7 @@ export default {
       if (this.unfurnished)
         return true;
       return false;
-    },
-    // searchQuerySpecial() {
-    //   return this.$store.getters.searchQuerySpecial;
-    // }
+  },
   },
   data: function () {
     return {

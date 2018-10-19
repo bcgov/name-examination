@@ -2,7 +2,6 @@
 
 <template>
   <div>
-    <!-- error msgs from backend -->
     <div class="modal fade" id="error-message-modal" role="dialog">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">

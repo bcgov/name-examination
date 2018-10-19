@@ -78,7 +78,6 @@
       </div>
     </div>
 
-    <!-- internal alerts -->
     <div class="row">
       <div class="col add-top-padding">
         <div class="alert alert-warning"
@@ -95,7 +94,6 @@
           <pre>{{ customer_message_display }}</pre>
         </div>
 
-        <!-- character count warning -->
         <div v-bind:class="{ 'warning': customer_message_display.length > 955,
                               'character_count': true }">
           Character count: {{ customer_message_display.length }}
@@ -115,7 +113,6 @@
 
     <internalcomments ref="decisioncomments" layout="decision"></internalcomments>
 
-    <!-- Edit Customer Comments popup -->
     <div class="modal fade" id="edit-customer-message-modal" tabindex="-1" role="dialog">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
