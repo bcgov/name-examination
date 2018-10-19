@@ -50,8 +50,8 @@ describe('StdHeader.vue', () => {
             vm = mount();
         })
 
-        it('offers a link to /home', (done)=>{
-            click('#header-home-link');
+        it('offers a link to /home from logo', (done)=>{
+            click('.navbar-brand');
 
             setTimeout(()=>{
                 expect(window.location.pathname).toEqual('/home')
@@ -91,9 +91,6 @@ describe('StdHeader.vue', () => {
             vm = mount();
         })
 
-        it('does not offer a link to /home', ()=>{
-            expect(vm.$el.querySelector('#header-home-link')).toEqual(null);
-        })
         it('does not offer a link to /nameExamination', ()=>{
             expect(vm.$el.querySelector('#nameExamine')).toEqual(null);
         })

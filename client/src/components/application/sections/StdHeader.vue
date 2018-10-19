@@ -1,12 +1,14 @@
 <!--eslint-disable-->
 <template>
   <div class="container-fluid">
-    <nav class="navbar fixed-top navbar-dark navbar-expand-lg">
-      <a class="navbar-brand" href="#">
+    <nav class="navbar fixed-top navbar-dark navbar-expand-lg" id="header-main">
+
+      <router-link to="/home" class="navbar-brand">
         <img src="static/images/gov3_bc_logo.png"
              alt="Province of British Columbia"
              title="Province of British Columbia logo"/>
-      </a>
+        Namex
+      </router-link>
       <button class="navbar-toggler"
               type="button"
               data-toggle="collapse"
@@ -17,41 +19,48 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <!-- MENU WHEN LOGGED IN -->
+      <!-- logged in -->
       <div v-if="auth" class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <router-link to="/home" class="nav-link" id="header-home-link">Home</router-link>
+
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <span id="userid" class="nav-link">{{ userId }}</span>
           </li>
-          <li class="nav-item active">
-            <router-link to="/nameExamination" id="nameExamine" class="nav-link">Examine Names</router-link>
-          </li>
-          <li class="nav-item active">
-            <router-link to="/find" class="nav-link" id="header-search-link">Search</router-link>
+          <li class="navbar-text divider">|</li>
+          <li class="nav-item">
+            <a id="header-logout-button" href="#" @click="onLogout" class="nav-link">Logout</a>
           </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0 mr-auto" @submit.prevent="onSubmit">
-          <input id="header-search-input" class="form-control mr-sm-2" type="search"
-                 placeholder="NR Number" aria-label="Search" v-model="nrNum">
-          <button id="header-search-button" class="btn btn-outline-success my-2 my-sm-0"
-                  type="submit">Load</button>
-        </form>
-
-
-        <div class="nav-item">
-          <p id="userid" class="navbar-text active">{{ userId }}</p>
-          <button id="header-logout-button" @click="onLogout" class="btn btn-sm">Logout</button>
-        </div>
-
       </div>
 
-      <!-- MENU WHEN LOGGED OUT  -->
+      <!-- not logged in -->
       <div v-else class="collapse navbar-collapse" id="navbarSupportedContent">
-        <div class="navbar-text mr-auto">&nbsp;</div><!-- empty, for spacing -->
-        <router-link tag="button" id="header-login-button" to="/signin" class="btn btn-sm">Login</router-link>
+        <router-link tag="button" id="header-login-button" to="/signin" class="btn btn-sm ml-auto">Login</router-link>
       </div>
 
+      <!-- SECONDARY MENU -->
+      <div v-if="auth" class="navbar fixed-top" id="secondary-menu">
 
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <router-link to="/nameExamination" id="nameExamine" class="nav-link">Examine Names</router-link>
+          </li>
+          <li class="navbar-text divider">|</li>
+          <li class="nav-item">
+            <router-link to="/find" class="nav-link" id="header-search-link">Search</router-link>
+          </li>
+          <li class="navbar-text divider">|</li>
+          <li class="nav-item">
+            <form class="form-inline" id="header-search-form" @submit.prevent="onSubmit">
+              <input id="header-search-input" class="form-control mr-sm-2" type="search"
+                     placeholder="NR Number" aria-label="Search" v-model="nrNum">
+              <button id="header-search-button" class="btn btn-outline-success my-2 my-sm-0"
+                      type="submit">Load</button>
+            </form>
+          </li>
+        </ul>
+
+      </div>
     </nav>
   </div>
 </template>
@@ -101,29 +110,53 @@
 <style scoped>
 
   .navbar {
-    background-color: #003366;
+    padding-left: 40px;
   }
 
-  #userid {
-    color: white;
+  .navbar-brand img {
+    margin-top: -13px; /* bump the image up, since it's got white/blue space in the image itself that
+                          adds artificial padding */
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-bottom: 5px;
   }
 
-  #header-login-button, #header-logout-button {
+  .nav-link {
+    color: white !important;
+  }
+
+
+  #header-login-button {
     background-color: white;
     color: #003366;
   }
 
-  #header-logout-button {
-    margin-left: 10px;
+  #secondary-menu {
+    height: 50px;
+    background-color: #38598a;
+    color: white;
+    margin-top: 69px;
+    box-shadow: 0px 5px 10px 0px rgba(169,169,169,1);
+  }
+
+  #secondary-menu .divider {
+    color: #7597d6;
   }
 
   #header-search-button {
-    border-color: #1a5a96;
+    border-color: #003366;
     color: white;
+    padding-top: 3px;
+    padding-bottom: 3px;
   }
   #header-search-button:hover {
-    border-color: #1a5a96;
+    border-color: #003366;
     background-color: #1a5a96;
+  }
+
+  #header-search-form {
+    padding-right: .5rem;
+    padding-left: .5rem;
   }
 
 </style>
