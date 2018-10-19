@@ -6,15 +6,28 @@
         <div class="col">
 
           <div id="top-buttons">
+
+            <!-- GET NEXT button -->
             <button v-shortkey="['alt', 'n']" @shortkey="getNextCompany()" class="btn btn-sm btn-secondary" id="examine-get-next-button"
                     v-if="!is_making_decision && !is_my_current_nr"
                     @click="getNextCompany()" >Get <u>N</u>ext</button>
+
+            <!-- CANCEL button -->
+            <button class="btn btn-sm btn-danger" id="examine-cancel-button"
+                    v-if="!is_making_decision && !is_cancelled && !is_approved_expired && !is_consumed" data-toggle="modal" data-target="#add-cancel-comment-modal">
+              Cancel Request</button>
+
+            <!-- HOLD button -->
             <button v-shortkey="['alt', 'h']" @shortkey="holdRequest()" class="btn btn-sm btn-warning" id="examine-hold-button"
                     v-if="!is_making_decision && is_my_current_nr"
                     @click="holdRequest()"><u>H</u>old</button>
+
+            <!-- DECISION button -->
             <button v-shortkey="['alt', 'd']" @shortkey="startDecision()" class="btn btn-sm btn-primary" id="examine-decide-button"
                     v-if="!is_making_decision && !is_complete && is_my_current_nr"
                     @click="startDecision()"><u>D</u>ecision</button>
+
+            <!-- ACCEPT/REJECT/CANCEL DECISION buttons -->
             <button class="btn btn-sm btn-primary" id="decision-approve-button"
                     v-if="is_making_decision" @click="nameAccept()">
               <span v-if="acceptance_will_be_conditional">Conditionally </span>Approve
@@ -24,10 +37,12 @@
             <button class="btn btn-sm btn-secondary" id="decision-cancel-button"
                     v-if="is_making_decision" @click="is_making_decision=false">Cancel</button>
 
+            <!-- RE-OPEN (un-furnished) button -->
             <button class="btn btn-sm btn-danger" id="examine-re-open-button"
                     v-if="is_complete && !is_furnished && !is_cancelled && !is_approved_expired" @click="reOpen()" >
               Re-Open</button>
 
+            <!-- RESET (from furnished) button -->
             <button class="btn btn-sm btn-danger" id="examine-reset-button"
                     v-if="is_complete && is_furnished && !is_cancelled && !is_approved_expired" data-toggle="modal" data-target="#add-comment-reset-modal">
               RESET</button>
@@ -35,12 +50,14 @@
             <!-- EXAMINE button - to claim/examine an NR that is on hold -->
             <button class="btn btn-sm btn-primary" id="examine-button" v-if="can_claim"
                     @click="claimNR()" >Examine</button>
+
+
           </div>
 
           <table>
             <tr class="name-option"
                 v-bind:class="{'active-name-option': currentChoice==1,
-                               accepted: compName1.state == 'A'}">
+                               accepted: compName1.state == 'APPROVED'}">
               <td>1.</td>
               <td id="name1">
                 {{ compName1.name }}
@@ -52,7 +69,7 @@
             </tr>
             <tr class="name-option"
                 v-bind:class="{'active-name-option': currentChoice==2,
-                               accepted: compName2.state == 'A'}">
+                               accepted: compName2.state == 'APPROVED'}">
               <td>2.</td>
               <td id="name2">
                 {{ compName2.name }}
@@ -64,7 +81,7 @@
             </tr>
             <tr class="name-option"
                 v-bind:class="{'active-name-option': currentChoice==3,
-                               accepted: compName3.state == 'A'}">
+                               accepted: compName3.state == 'APPROVED'}">
               <td>3.</td>
               <td id="name3" >
                 {{ compName3.name }}
@@ -76,17 +93,17 @@
             </tr>
           </table>
 
-          <div >
-            <div align="right" v-if="!is_making_decision && !is_complete && is_my_current_nr">
+          <div>
+            <span class="float-right" style="margin-left: 10px;" v-if="!is_making_decision && !is_complete && is_my_current_nr">
               <button v-shortkey="['alt', 'a']" @shortkey="quickApprove()" class="btn btn-sm btn-outline-primary" id="examine-quick-approve-button"
                       @click="quickApprove">Quick <u>A</u>pprove</button>
               <button  v-shortkey="['alt', 'i']" @shortkey="rejectDistinctive()" class="btn btn-sm btn-outline-danger" id="examine-reject-distinctive-button"
                       @click="rejectDistinctive">Reject D<u>i</u>stinctive</button>
               <button v-shortkey="['alt', 'e']" @shortkey="rejectDescriptive()" class="btn btn-sm btn-outline-danger" id="examine-reject-descriptive-button"
                       @click="rejectDescriptive">Reject D<u>e</u>scriptive</button>
-            </div>
-            <div v-if="!is_making_decision" id="manual-search">
-              <form class="form-inline my-2 my-lg-0" @submit.prevent="onSubmit">
+            </span>
+            <div v-if="!is_making_decision && !is_complete" id="manual-search">
+              <form class="form-inline" @submit.prevent="onSubmit">
                 <input ref="search" type="text" class="search form-control" v-model="searchStr"  v-shortkey="['alt', 's']" @shortkey="setFocus()">
                 <button class="btn-search" type="submit"><i class="fa fa-search" /></button>
                 <button class="btn-reset" v-if="is_running_manual_search" @click="resetSearchStr">
@@ -100,6 +117,8 @@
       </div>
 
     </div>
+
+    <!-- RESET COMMENT popup -->
     <div class="modal fade" id="add-comment-reset-modal" tabindex="-1" role="dialog">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -122,6 +141,32 @@
         </div>
       </div>
     </div>
+
+    <!-- CANCEL COMMENT popup -->
+    <div class="modal fade" id="add-cancel-comment-modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Please give a comment to explain why this NR is being CANCELLED</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <textarea id="cancel-comment-text" class="form-control" rows="10"
+                      v-model="cancel_comment_display"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-secondary"
+                    data-dismiss="modal" @click="cancelNrCancel">Cancel</button>
+            <button type="button" id="cancel-nr-after-comment-button" class="btn btn-sm btn-danger" disabled="true"
+                    data-dismiss="modal" @click="cancelNr">CANCEL REQUEST</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
   </div>
 </template>
 
@@ -135,7 +180,9 @@
         retval: [],
         is_running_manual_search: false,
         add_comment_display: "",
+        cancel_comment_display: "",
         resetting: false,
+        searching: false,
       }
     },
     computed: {
@@ -171,10 +218,17 @@
         // if there is no expiry date, this NR is not approved-expired
         if (this.$store.getters.expiryDate == null) return false;
 
-        let expired_date = new Date(this.$store.getters.expiryDate);
-        let date = new Date();
-        if (this.$store.getters.currentState === "APPROVED" && date > expired_date) return true;
+        let expired_date = new Date(this.$store.state.expiryDate);
+        let today = new Date();
+        console.log('***');
+        console.log(this.$store.getters.currentState);
+        console.log(expired_date);
+        if (this.$store.getters.currentState === "APPROVED" && today > expired_date) return true;
         return false;
+      },
+      is_consumed() {
+        if (this.consumptionDate != null) return true;
+        else return false;
       },
       is_editing() {
         return  this.$store.getters.is_editing;
@@ -271,8 +325,16 @@
       listDecisionReasons() {
         return this.$store.getters.listDecisionReasons;
       },
-      internalComments() {
-        return this.$store.getters.internalComments;
+      internalComments: {
+        get: function() {
+          return this.$store.getters.internalComments;
+        },
+        set: function(value) {
+          this.$store.commit('internalComments', value);
+        }
+      },
+      consumptionDate() {
+        return this.$store.getters.consumptionDate;
       },
     },
     mounted() {
@@ -282,22 +344,33 @@
         this.$store.dispatch('getpostgrescompNo');
       }
       this.setFocus();
+
+      // set manual search string based on current name - fixes bug related to leaving
+      // and coming back to same NR
+      this.searching = true;
+      this.setManualSearchStr(this.currentName);
     },
     methods: {
       getNextCompany() {
+        this.$store.dispatch('resetValues');
+        this.searching = true;
         this.$store.dispatch('getpostgrescompNo');
       },
       startDecision() {
         this.$store.state.is_making_decision = true;
       },
       nameAccept() {
-        this.$store.commit('decision_made', 'A');
+        this.$store.commit('decision_made', 'APPROVED');
       },
       nameReject() {
-        this.$store.commit('decision_made', 'R');
+        this.$store.commit('decision_made', 'REJECTED');
       },
       reOpen() {
-        this.$store.dispatch('updateNRState', 'INPROGRESS');
+        this.$store.state.currentState = 'INPROGRESS';
+        this.$store.dispatch('resetDecision', 1);
+        this.$store.dispatch('resetDecision', 2);
+        this.$store.dispatch('resetDecision', 3);
+        this.$store.dispatch('updateRequest');
       },
       reset() {
         this.resetting = true;
@@ -316,14 +389,15 @@
       holdRequest() {
         this.$store.dispatch('updateNRState', 'HOLD');
       },
-      runRecipe(){
-        this.$store.dispatch('runRecipe')
+      runManualRecipe(){
+        console.log("Running manual recipe on " + this.searchStr);
+        this.$store.dispatch('runManualRecipe', this.searchStr)
       },
       setIcon(name_state) {
-        if (name_state == 'R') {
+        if (name_state == 'REJECTED') {
           return '<i class="fa fa-times icon-rejected"></i>';
         }
-        else if (name_state == 'A') {
+        else if (name_state == 'APPROVED' || name_state == 'CONDITION') {
           return '<i class="fa fa-check icon-accepted"></i>';
         }
         else return '';
@@ -342,7 +416,7 @@
 
         // if the NR is closed in any way, a name is not undoable - the NR will have to be
         // re-opened first.
-        if (this.currentState != 'INPROGRESS') return false;
+        if (!this.is_my_current_nr) return false;
 
         // if the NR is furnished, nothing is undoable
         if (this.$store.state.furnished === 'Y')  return false;
@@ -356,14 +430,14 @@
         this.currentNameObj.decision_text = ''
         console.log('quickApprove')
 
-        this.decision_made = 'A'
+        this.decision_made = 'APPROVED'
         this.nameAcceptReject()
       },
       rejectDescriptive() {
 
         this.currentNameObj.decision_text = 'Require descriptive second word or phrase * E.G. ' +
           'Construction, Gardening, Investments, Holdings, Etc.'
-        this.decision_made = 'R'
+        this.decision_made = 'REJECTED'
         this.nameAcceptReject()
       },
       rejectDistinctive() {
@@ -372,29 +446,30 @@
         // var distinctiveStr = this.listDecisionReasons[16].reason
         this.currentNameObj.decision_text = "Require distinctive, nondescriptive first word or " +
           "prefix * E.G. Person's name, initials, geographic location, etc."
-        this.decision_made = 'R'
+        this.decision_made = 'REJECTED'
         this.nameAcceptReject()
       },
       onSubmit()
       {
-        console.log("Running manual recipe on " + this.searchStr);
+        this.$store.dispatch('resetValues');
         this.$store.dispatch('runManualRecipe', this.searchStr);
 
-        if (this.searchStr != this.currentName) this.is_running_manual_search = true;
+        if (this.searchStr != '+' + this.currentName) this.is_running_manual_search = true;
       },
       resetSearchStr(){
-        this.searchStr = this.currentName
+        this.searching = true;
+        this.setManualSearchStr(this.currentName);
         this.is_running_manual_search = false;
       },
       nameAcceptReject() {
 
         // save decision
         console.log('nameAcceptReject decision_made:' + this.decision_made)
-        if (this.decision_made == 'A') {
-          this.currentNameObj.state = 'A';
+        if (this.decision_made == 'APPROVED') {
+          this.currentNameObj.state = 'APPROVED';
         }
         else {
-          this.currentNameObj.state = 'R';
+          this.currentNameObj.state = 'REJECTED';
         }
 
         // send decision to API and reset flags
@@ -404,7 +479,27 @@
       },
       setFocus: function() {
         this.$refs.search.focus();
-      }
+      },
+      setManualSearchStr(val) {
+        console.log('setManualSearchStr() called with ' + val);
+        this.searchStr =  "+" + val;
+      },
+      addNewComment(value) {
+        // create new comment object with just text, and add it to list of comments in data structure
+        var newCommentData = {
+          comment: value,
+          examiner: this.$store.state.examiner
+        };
+        this.internalComments = this.internalComments.concat(newCommentData);
+      },
+      cancelNr() {
+        this.addNewComment(this.cancel_comment_display);
+        this.$store.dispatch('cancelNr', 'CANCELLED');
+      },
+      cancelNrCancel() {
+        this.cancel_comment_display = "";
+        $("#cancel-comment-text").prop('disabled', false); // TODO need this?
+      },
     },
     watch: {
       add_comment_display: function(val) {
@@ -414,36 +509,46 @@
         else
           $("#reset-nr-after-comment-button").prop('disabled', true);
       },
+      cancel_comment_display: function(val) {
+        console.log('cancel_comment_display watcher fired:' + val)
+        if (val)
+          $("#cancel-nr-after-comment-button").prop('disabled', false);
+        else
+          $("#cancel-nr-after-comment-button").prop('disabled', true);
+      },
       compName1State: function (val) {
         console.log('compName1 watcher fired:' + val)
         if (this.resetting) {
-          if (this.compName2 != undefined)
+          if (this.compName2 != undefined) {
+          } else
+            this.addNewComment(this.add_comment_display);
+          if (this.compName2State != 'NE')
             this.$store.dispatch('resetDecision', 2);
           else
-            this.$store.commit('internalComments', this.add_comment_display);
+            this.addNewComment(this.add_comment_display);
         }
       },
       compName2State: function (val) {
         console.log('compName2 watcher fired:' + val)
         if (this.resetting) {
-          if (this.compName3 != undefined)
-            this.$store.dispatch('resetDecision', 3);
-          else
-            this.$store.commit('internalComments', this.add_comment_display);
+          if (this.compName3 != undefined) {
+            if (this.compName2State != 'NE')
+              this.$store.dispatch('resetDecision', 3);
+            else
+              this.addNewComment(this.add_comment_display);
+          } else
+            this.addNewComment(this.add_comment_display);
         }
       },
       compName3State: function (val) {
         console.log('compName3 watcher fired:' + val)
         if (this.resetting)
-          this.$store.commit('internalComments', this.add_comment_display);
+          this.addNewComment(this.add_comment_display);
       },
       currentName: function (val) {
         console.log('CompName.currentName watcher fired:' + val)
-        this.searchStr =  val
-      },
-      currentChoice: function (val) {
-        console.log('CompName.currentChoice watcher fired:' + val)
-        if(val != undefined ) { this.runRecipe() }
+        this.searching = true;
+        this.setManualSearchStr(val);
       },
       currentState: function (val) {
         console.log('CompName.currentState watcher fired:' + val)
@@ -466,7 +571,14 @@
       },
       nrNumber: function (val) {
         console.log('CompName.nrNumber watcher fired:' + val)
-        if(val != null){ this.runRecipe()}
+        if(val != null){ this.runManualRecipe()}
+      },
+      searchStr: function (val) {
+        console.log('searchStr watcher fired: ' + val)
+        if (this.searching) {
+          this.runManualRecipe();
+          this.searching = false;
+        }
       }
     }
   }
@@ -510,8 +622,13 @@
     white-space: nowrap;
   }
 
+  #manual-search {
+    padding-top: 4px;
+  }
+
   .search{
-    width: 350px;
+    width: 100%;
+    max-width: 700px;
   }
 
   #manual-search button {

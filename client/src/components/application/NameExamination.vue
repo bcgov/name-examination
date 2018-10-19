@@ -3,7 +3,9 @@
   <div>
     <div class="upper-section container-fluid">
 
-      <div class="namePage">
+      <div class="namePage" >
+
+        <!--<stateheaderview />-->
 
         <div class="RequestInfoHeader">
           <requestinfoheaderview />
@@ -25,7 +27,6 @@
         Similar name previously <b>{{ exactMatch }}</b>
       </div>
 
-
      <div class="namePage">
        <div class="row" >
          <div class="col"><compnameview /></div>
@@ -46,6 +47,7 @@
 
 <script>
 /* eslint-disable */
+  import stateheaderview from '@/components/application/sections/StateHeader.vue';
   import requestinfoheaderview from '@/components/application/Examine/RequestInfoHeader.vue';
   import compnameview from '@/components/application/Examine/CompName.vue';
   import recipemenu from '@/components/application/Examine/RecipeMenu.vue';
@@ -87,6 +89,10 @@
         return this.$store.getters.historiesJSON;
       },
       exactHistoryMatches() {
+
+        // initialize to reset any previous value
+        this.exactMatch = null;
+
         try {
           var currentName = this.$store.getters.currentName.toUpperCase();
           // check for exact matches in history for alert re. previous submissions
@@ -97,7 +103,7 @@
                               });
 
             for (let i=0; i<exactMatches.length; i++) {
-              if (exactMatches[i].name_state_type_cd === 'R' || exactMatches[i].submit_count > 3) {
+              if (exactMatches[i].name_state_type_cd === 'R' || exactMatches[i].name_state_type_cd === 'REJECTED' || exactMatches[i].submit_count > 3) {
                 this.exactMatch = 'REJECTED';
                 return true;
               }
@@ -115,6 +121,7 @@
       },
     },
     components: {
+      stateheaderview,
       requestinfoheaderview,
       compnameview,
       recipemenu,
@@ -128,6 +135,11 @@
           $("#exact-history-match-banner").addClass("alert alert-danger");
         else if (val == 'APPROVED')
           $("#exact-history-match-banner").addClass("alert alert-warning");
+      },
+      auth: {
+        handler(selection) {
+          if (auth != true) { this.$router.push("/Signin") }
+        }
       }
     }
   }
@@ -136,6 +148,7 @@
 <style scoped>
   .namePage > .row {
     margin-top: 10px;
+
   }
 
   .examiner-warning {

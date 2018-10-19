@@ -17,6 +17,11 @@ let router = new Router({
   routes: [
     {
       path: '/',
+      name: 'home',
+      component: LandingPage
+    },
+    {
+      path: '/home',
       name: 'LandingPage',
       component: LandingPage
     },

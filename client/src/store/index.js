@@ -66,6 +66,7 @@ export default new Vuex.Store({
           conflict2: null,
           conflict3: null,
           decision_text: null,
+          comment: null,
         },
         compName2: {
           choice: null,
@@ -76,6 +77,7 @@ export default new Vuex.Store({
           conflict2: null,
           conflict3: null,
           decision_text: null,
+          comment: null,
         },
         compName3: {
           choice: null,
@@ -86,6 +88,7 @@ export default new Vuex.Store({
           conflict2: null,
           conflict3: null,
           decision_text: null,
+          comment: null,
         },
       },
       requestType: null,
@@ -141,6 +144,8 @@ export default new Vuex.Store({
     corpNum: null,
     submittedDate: null,
     expiryDate: null,
+    expiryDateForEdit: null,
+    lastUpdate: null,
     issueText: null,
     issue: {
       issue_Match: null,
@@ -171,7 +176,15 @@ export default new Vuex.Store({
     historiesJSON: null,
     historiesInfoJSON: null,
     searchDataJSON: null,
-    conditionsJSON: null
+    conditionsJSON: null,
+    statsDataJSON: {hold: {response: {numfound: ''}},
+                    draft: {response: {numfound: ''}},
+                    expired: {response: {numfound: ''}},
+                    cancelled: {response: {numfound: ''}},
+                    approved: {response: {numfound: ''}},
+                    conditional: {response: {numfound: ''}},
+                    rejected: {response: {numfound: ''}}
+    }
 },
 mutations: {
     requestType (state, value) {
@@ -271,6 +284,9 @@ mutations: {
     expiryDate (state, value) {
       state.expiryDate = value;
     },
+    expiryDateForEdit (state, value) {
+      state.expiryDateForEdit = value;
+    },
     details (state, value) {
       state.details = value;
     },
@@ -333,10 +349,14 @@ mutations: {
       state.compInfo.compNames.compName3.conflict3 = null
       state.compInfo.compNames.compName3.decision_text = null
 
-
+      // clear current name choice, to be reset by new data below
+      state.currentNameObj = null;
+      state.currentName = null;
+      state.currentChoice = null;
 
 
       for (let record of dbcompanyInfo.names) {
+        console.log('Company Info->switch record.choice:' + record.choice)
         switch (record.choice) {
           case 1:
             state.compInfo.compNames.compName1.choice = record.choice
@@ -347,6 +367,7 @@ mutations: {
             state.compInfo.compNames.compName1.conflict2 = record.conflict2
             state.compInfo.compNames.compName1.conflict3 = record.conflict3
             state.compInfo.compNames.compName1.decision_text = record.decision_text
+            state.compInfo.compNames.compName1.comment = record.comment
 
             // if this name is not yet examined, set it as current name
             if (record.state == 'NE') {
@@ -364,6 +385,7 @@ mutations: {
             state.compInfo.compNames.compName2.conflict2 = record.conflict2
             state.compInfo.compNames.compName2.conflict3 = record.conflict3
             state.compInfo.compNames.compName2.decision_text = record.decision_text
+            state.compInfo.compNames.compName2.comment = record.comment
 
             // if this name is not yet examined, set it as current name
             if (record.state == 'NE' &&
@@ -383,6 +405,7 @@ mutations: {
             state.compInfo.compNames.compName3.conflict2 = record.conflict2
             state.compInfo.compNames.compName3.conflict3 = record.conflict3
             state.compInfo.compNames.compName3.decision_text = record.decision_text
+            state.compInfo.compNames.compName3.comment = record.comment
 
             // if this name is not yet examined, set it as current name
             if (record.state == 'NE' &&
@@ -398,15 +421,24 @@ mutations: {
         }
       }
 
+      //if no currentName selected choose 1st
+      if(state.currentName == null){
+        console.log('No currentName set => use 1st choice: ', state.currentChoice)
+        this.dispatch('setCurrentName',dbcompanyInfo.names[0])
+      }
 
+      console.log('Still loading')
       state.currentState = dbcompanyInfo.state;
       state.compInfo.requestType = dbcompanyInfo.requestTypeCd
 
 
       // if the current state is not INPROGRESS, HOLD, or DRAFT clear any existing name record in currentNameObj
-      if (!['INPROGRESS','HOLD','DRAFT'].includes(state.currentState)) this.dispatch('setCurrentName',{});
+      if (!['INPROGRESS','HOLD','DRAFT'].includes(state.currentState)) {
+        console.log('Clearing currentName')
+        this.dispatch('setCurrentName',{});
+      }
 
-
+      console.log('Setting company data in state variables')
       // we keep the original data so that if fields exist that we do not use, we don't lose that
       // data when we put new data
       if (dbcompanyInfo.applicants != '')
@@ -458,14 +490,33 @@ mutations: {
       state.examiner = dbcompanyInfo.userId
       state.priority = dbcompanyInfo.priorityCd
       //state.reservationCount = dbcompanyInfo.reservationCount
-      state.expiryDate = dbcompanyInfo.expirationDate
-      state.submittedDate = dbcompanyInfo.submittedDate
+
+      state.expiryDate = dbcompanyInfo.expirationDate;
+      state.submittedDate = dbcompanyInfo.submittedDate;
+      state.lastUpdate = dbcompanyInfo.lastUpdate;
+
       state.submitCount = dbcompanyInfo.submitCount
       state.previousNr = dbcompanyInfo.previousNr
       state.corpNum = dbcompanyInfo.corpNum
       state.furnished = dbcompanyInfo.furnished
 
+      console.log('Setting nwpta data in state variables')
       // cycle through nwpta entries
+      // - first clear existing nwpta data that may persist from previous NR
+      state.additionalCompInfo.nwpta_ab = {
+        partnerJurisdictionTypeCd: null,
+        partnerName: null,
+        partnerNameDate: null,
+        partnerNameNumber: null,
+        partnerNameTypeCd: null,
+      };
+      state.additionalCompInfo.nwpta_sk = {
+        partnerJurisdictionTypeCd: null,
+        partnerName: null,
+        partnerNameDate: null,
+        partnerNameNumber: null,
+        partnerNameTypeCd: null,
+      };
       for (let record of dbcompanyInfo.nwpta) {
 
         // convert date from long form to DD-MM-YYYY
@@ -480,6 +531,14 @@ mutations: {
         if (record.partnerJurisdictionTypeCd == 'AB') state.additionalCompInfo.nwpta_ab = record;
         if (record.partnerJurisdictionTypeCd == 'SK') state.additionalCompInfo.nwpta_sk = record;
       }
+
+      // convert Expiry Date from timestamp to DD-MM-YYYY string for editing
+      if (state.expiryDate != null) {
+        var thedate = new Date(state.expiryDate);
+        state.expiryDateForEdit = padWithZeroes(thedate.getUTCDate(), 2) + "-" + padWithZeroes(thedate.getUTCMonth() + 1, 2) + "-" + thedate.getFullYear();
+      }
+      else state.expiryDateForEdit = null;
+
     },
 
     loadConflictsJSON(state,JSONdata){
@@ -512,6 +571,10 @@ mutations: {
 
     loadSearchDataJSON(state,JSONdata){
       state.searchDataJSON = JSONdata
+    },
+
+    loadStatsDataJSON(state,params){
+      state.statsDataJSON[params.myState] = params.JSONdata
     },
 
     update_nrData(state) {
@@ -581,6 +644,7 @@ mutations: {
       state.nrData.userId = state.examiner
       state.nrData.priorityCd = state.priority
       //state.reservationCount = dbcompanyInfo.reservationCount
+      state.nrData.lastUpdate = state.lastUpdate
       state.nrData.expirationDate = state.expiryDate
       state.nrData.submittedDate = state.submittedDate
       state.nrData.submitCount = state.submitCount
@@ -616,9 +680,11 @@ mutations: {
     currentNameObj(state,value){
       state.currentNameObj = value
       console.log('setting currentNameObj')
-      // also set currentName and currentChoice
-      state.currentName = value.name;
-      state.currentChoice = value.choice;
+      if (value != null) {
+        // also set currentName and currentChoice
+        state.currentName = value.name;
+        state.currentChoice = value.choice;
+      }
     },
     currentChoice(state,value){
       console.log('Setting current choice to ' + value)
@@ -693,7 +759,6 @@ mutations: {
       state.errorJSON = value
     }
 
-
   },
   actions: {
     logout({commit, state}) {
@@ -748,10 +813,14 @@ mutations: {
       console.log('Token expires in ' + expiresIn + 'seconds, updating')
 
       if(expiresIn < 1700 && expiresIn > 0) {
+        console.log('Updating Token')
         dispatch('updateToken')
+
       }else if(expiresIn < 0) {
         //TODO - reset everything and force login???
+        console.log('Force Logout')
         dispatch('logout')
+        window.location.assign("/");
         //console.log('Logout 696')
       }
     },
@@ -772,13 +841,11 @@ mutations: {
     },
 
     checkError({commit},responseJSON){
-      console.log("ErrorChecking")
+      console.log("ErrorChecking: ", responseJSON)
       if( responseJSON.warnings != null ){
-        console.log("warnings")
         commit('setErrorJSON',responseJSON)
       }
       if( responseJSON.errors != null ){
-        console.log("errors")
         commit('setErrorJSON',responseJSON)
       }
       if( responseJSON.message != null){
@@ -836,6 +903,20 @@ mutations: {
             .catch(error => console.log('ERROR: ' + error))
       },
 
+    cancelNr({commit, state, dispatch},nrState) {
+      console.log('Cancelling for number ' + state.compInfo.nrNumber)
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const url = '/api/v1/requests/' + state.compInfo.nrNumber
+
+      axios.patch(url,{"state": nrState, "comments": state.internalComments} ,{headers: {Authorization: `Bearer ${myToken}`}})
+           .then(function(response){
+                console.log('CANCELLED ' + state.compInfo.nrNumber);
+                dispatch('getpostgrescompInfo', state.compInfo.nrNumber);
+
+            })
+            .catch(error => console.log('ERROR: ' + error))
+      },
+
     nameAcceptReject( {commit, dispatch, state}) {
       console.log('Name Accepted/Rejected for ' + state.compInfo.nrNumber + ", " + state.currentName)
       console.log(state.currentNameObj);
@@ -846,11 +927,11 @@ mutations: {
           console.log('Name ' + state.currentChoice + ' accepted/rejected for ' + state.compInfo.nrNumber);
 
           // Was this an accept? If so complete the NR
-          if (state.currentNameObj.state == 'A') {
+          if (state.currentNameObj.state == 'APPROVED') {
             dispatch('updateNRState', 'APPROVED');
           }
           // was this a conditional accept? If so complete the NR
-          else if (state.currentNameObj.state == 'C') {
+          else if (state.currentNameObj.state == 'CONDITION') {
             dispatch('updateNRState', 'CONDITIONAL');
           }
           // This was a reject? If so check whether there are any more names
@@ -891,6 +972,7 @@ mutations: {
 
     //updates the names data, through the api, into the database
     updateRequest( {commit, state}) {
+
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       commit('update_nrData')
       const url = '/api/v1/requests/' + state.compInfo.nrNumber
@@ -923,6 +1005,7 @@ mutations: {
       objName.conflict2_num = null;
       objName.conflict3_num = null;
       objName.decision_text = null;
+      objName.comment = null;
 
 
       const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/names/' + nameChoice;
@@ -935,7 +1018,7 @@ mutations: {
             .catch(error => console.log('ERROR: ' + error))
       },
 
-    resetDecision({state}, nameChoice) {
+    resetDecision({dispatch,state}, nameChoice) {
 
       var objName = {}
       if (nameChoice == 1) objName = this.getters.compName1;
@@ -950,7 +1033,10 @@ mutations: {
       objName.conflict2_num = null;
       objName.conflict3_num = null;
       objName.decision_text = null;
+      objName.comment = null;
 
+      // set current name to selection which re-sets the manual search string
+      dispatch('setCurrentName',objName.name)
     },
 
     revertLastDecision({state}) {
@@ -967,7 +1053,7 @@ mutations: {
              this.getpostgrescompInfo(state.compInfo.nrNumber);
             })
             .catch(error => console.log('ERROR: ' + error))
-      },
+    },
 
     loadDropdowns( {commit, state} ) {
       var json_files_path = 'static/ui_dropdowns/';
@@ -1028,11 +1114,7 @@ mutations: {
       console.log('Getting NR data')
       dispatch('getpostgrescompInfo',nrNum)
 
-      commit('currentChoice',1)
-
-      console.log('Running Recipe')
-      dispatch('runRecipe')
-
+      //TODO: this is called in reset values already -- take out and test
       commit('is_making_decision', false);
     },
 
@@ -1058,10 +1140,10 @@ mutations: {
         console.log('Names Conflict response:' + response.data)
         commit('loadNamesConflictJSON',response.data )
       })
-        .catch(error => console.log('ERROR: getNamesConflict' + error))
+        .catch(error => this.dispatch('checkError',{errors:[{code:404, message:{"NR Info Error":["NR info could not be displayed because it isn't loaded in postgres yet."]}}]}))
     },
 
-    getCorpConflict ({state,commit},value) {
+    getCorpConflict ({state,commit,dispatch},value) {
       console.log('action: getting data for company number: ' + value.nrNumber )
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/corporations/' + value.nrNumber
@@ -1070,20 +1152,19 @@ mutations: {
         console.log('Corp Conflict response:' + response.data)
         commit('loadCorpConflictJSON',response.data)
       })
-        .catch(error => console.log('ERROR: getCorpConflict ' + error))
+        .catch(error => this.dispatch('checkError',{errors:[{code:404, message:{"Corp Info Error":["Corporation info could not be displayed because it isn't in fdw-registries data."]}}]}))
     },
 
-    getHistoryInfo ({state,commit},value) {
+    getHistoryInfo ({state,commit,dispatch},value) {
       console.log('action: getting HistoryInfo for company number: ' + value.nr_num)
       const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + value.nr_num
-      // const url = '/api/v1/requests/NR00000023'
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
         console.log('History info response:' + response.data)
         commit('loadHistoriesInfoJSON',response.data )
       })
-        .catch(error => console.log('ERROR: getHistoryInfo' + error))
+        .catch(error => this.dispatch('checkError',{errors:[{code:404, message:{"NR Info Error":["NR info could not be displayed because it isn't loaded in postgres yet."]}}]}))
     },
 
     runRecipe({dispatch,state}) {
@@ -1153,7 +1234,7 @@ mutations: {
      console.log('action: get search Data');
      const myToken = localStorage.getItem('KEYCLOAK_TOKEN');
      const url = '/api/v1/requests' + state.searchQuery;
-     console.log('URL:' + url);
+     console.log('Search Query:' + state.searchQuery);
      const vm = this;
      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
        console.log('Search Data Response:' + response.data)
@@ -1162,12 +1243,30 @@ mutations: {
        .catch(error => console.log('ERROR: ' + error))
     },
 
+    getStatsDataJSON( {commit, state},stateCd ) {
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN');
+      var newQuery = '?order=priorityCd:desc,submittedDate:asc&queue=' + stateCd + '&furnished=true&unfurnished=true&rows=1&start=0'
+      const url = '/api/v1/requests' + newQuery
+      console.log('Query:' + state.searchQuery);
+      const vm = this;
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        console.log('Stats Data Response:' + response.data)
+        var params ={
+          myState: stateCd,
+          JSONdata: response.data
+        }
+        //commit('loadStatsDataJSON', response.data)
+        commit('loadStatsDataJSON',params)
+      })
+        .catch(error => console.log('ERROR: ' + error))
+    },
+
     setCurrentName({commit, state},objName ) {
       commit('currentNameObj', objName);
     },
 
     runManualRecipe({dispatch,state},searchStr) {
-
+      console.log('running manual recipe with: ', searchStr);
       if( state.currentChoice != null) {
         this.dispatch('checkManualConflicts',searchStr)
         this.dispatch('checkManualTrademarks',searchStr)
@@ -1233,6 +1332,20 @@ mutations: {
         .catch(error => console.log('ERROR: ' + error))
     },
 
+    syncNR({dispatch,commit},nrNumber) {
+      console.log('action: syncing data for nr number: ' + nrNumber + ' from with nro')
+      const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+      const url = '/api/v1/requests/' + nrNumber + '/syncnr'
+      console.log('URL:' + url)
+      const vm = this
+      dispatch('checkToken')
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        console.log('Comp Info Response:' + response.data)
+        commit('loadCompanyInfo',response.data)
+      })
+      .catch(error => console.log('ERROR: ' + error))
+    },
+
     resetValues({state, commit}){
       // clear NR specific JSON data so that it can't get accidentally re-used by the next NR number
       console.log('Deleting conflictsJSON from state')
@@ -1256,6 +1369,7 @@ mutations: {
       commit('currentHistory',null)
 
       console.log('Deleting TrademarksJSON from state')
+      commit('currentTrademark',null)
       commit('loadTrademarksJSON',null)
 
       // reset all flags like editing, making decision, etc.
@@ -1288,9 +1402,9 @@ mutations: {
     },
     is_complete(state) {
       // indicates a complete NR
-      if (['APPROVED', 'REJECTED', 'CONDITIONAL','COMPLETED'].
+      if (['APPROVED', 'REJECTED', 'CONDITIONAL','COMPLETED','CANCELLED','HISTORICAL','EXPIRED'].
            indexOf(state.currentState) >= 0 ) return true;
-      else false;
+      else return false;
     },
     is_editing(state) {
       return state.is_editing
@@ -1427,10 +1541,41 @@ mutations: {
       return state.reservationCount
     },
     expiryDate(state) {
-      return state.expiryDate
+      if (state.expiryDate != null) {
+        // try converting from timestamp string
+        var retval = new Date(state.expiryDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+        if (retval == 'Invalid Date') {
+          retval = null;
+        }
+        return retval;
+      }
+
+      return null
+    },
+    expiryDateForEdit(state) {
+      return state.expiryDateForEdit;
     },
     submittedDate(state) {
-      return state.submittedDate;
+      if (state.submittedDate != null)
+        return new Date(state.submittedDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+      return null
+    },
+    consumptionDate(state) {
+      /* Find the consumption date for the request from the individual name consumption date.
+       */
+      var thedate = null;
+      if (state.compInfo.compNames.compName1.consumptionDate != null) {
+        thedate = state.compInfo.compNames.compName1.consumptionDate;
+      }
+      else if (state.compInfo.compNames.compName2.consumptionDate != null) {
+        thedate = state.compInfo.compNames.compName2.consumptionDate;
+      }
+      else thedate = state.compInfo.compNames.compName3.consumptionDate;
+
+      if (thedate != null)
+        return new Date(thedate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+      return null
+
     },
     submitCount(state) {
       return state.submitCount;
@@ -1528,11 +1673,17 @@ mutations: {
     nrData(state) {
       return state.nrData
     },
+    searchState(state) {
+      return state.searchState
+    },
     searchDataJSON(state) {
       return state.searchDataJSON
     },
     searchQuerySpecial(state) {
       return state.searchQuerySpecial
+    },
+    statsDataJSON(state){
+      return state.statsDataJSON
     },
     errorJSON(state) {
       return state.errorJSON

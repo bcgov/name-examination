@@ -1,7 +1,6 @@
 /* eslint-disable*/
 <template>
-  <div class="signin">
-  </div>
+  <div></div>
 </template>
 
 <script>
@@ -18,6 +17,7 @@
       var keycloak
 
       if (!authorized) {
+        //keycloak = Keycloak('static/keycloak/sbcKey.json');
         keycloak = Keycloak('static/keycloak/keycloak.json');
         this.$store.commit('saveKeyCloak', keycloak);
 
@@ -50,6 +50,9 @@
 
             });
 
+            // everthing is good, re-direct to home page
+            vm.$router.push("/home")
+
           } else {
             alert('not authenticated');
           }
@@ -60,17 +63,8 @@
       }else{
         console.log('Signin - checking Token')
         this.$store.dispatch('checkToken')
-      }
-    },
-    methods: {
-      onLogout() {
-            this.$store.dispatch('logout')
+
       }
     }
   }
   </script>
-
-<style scoped>
-  .signin{
-  }
-</style>

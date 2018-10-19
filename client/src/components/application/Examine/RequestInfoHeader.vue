@@ -10,9 +10,10 @@
           <div class="col-md-4" >
             <div class="nrNum" v-bind:class="{ REDnrNum: priority}">{{ nrNumber }}</div>
             <div class="priority" style="height: 30px;" v-if="priority">Priority</div>
+            <div class="status">Status: {{ nr_status }} <span v-if="is_approved_expired">-EXPIRED</span></div>
           </div>
           <div class="col">
-            <p v-if="!is_editing" class="requestType">{{ requestType_desc }}</p>
+            <p v-if="!is_editing || is_closed" class="requestType">{{ requestType_desc }}</p>
             <select v-else v-model="requestType" class="form-control">
               <option v-for="option in requestType_options" v-bind:value="option.value"
                       v-bind:key="option.value">
@@ -21,7 +22,7 @@
             </select>
 
 
-            <p v-if="!is_editing" class="add-top-padding"
+            <p v-if="!is_editing || is_closed" class="add-top-padding"
                style="font-weight: bold;">{{ jurisdiction }}</p>
             <div v-else-if="jurisdiction_required" class="add-top-padding" :class="{'form-group-error': $v.jurisdiction.$error}">
               <h3>Jurisdiction</h3>
@@ -42,10 +43,16 @@
             <!-- spacer -->
           </div>
           <div class="col">
-            <nwpta v-if="nwpta_required" jurisdiction="AB" ref="nwpta_ab"  />
+            <nwpta v-if="nwpta_required" ref="nwpta_ab"
+                   jurisdiction="AB"
+                   v-bind:is_lp_nwpta_type="is_lp_nwpta_type"
+                   v-bind:is_cp_nwpta_type="is_cp_nwpta_type" />
           </div>
           <div class="col">
-            <nwpta v-if="nwpta_required" jurisdiction="SK" ref="nwpta_sk"  />
+            <nwpta v-if="nwpta_required" ref="nwpta_sk"
+                   jurisdiction="SK"
+                   v-bind:is_lp_nwpta_type="is_lp_nwpta_type"
+                   v-bind:is_cp_nwpta_type="is_cp_nwpta_type" />
           </div>
         </div>
 
@@ -60,7 +67,7 @@
                   <p>
                     <span class="comment-examiner">{{ comment.examiner }}</span>
                     -
-                    <span class="comment-timestamp">{{ comment.timestamp }}</span>
+                    <span class="comment-timestamp">{{ new Date(comment.timestamp).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'}) }}</span>
                   </p>
                   <p class="comment-text">{{ comment.comment }}</p>
 
@@ -93,7 +100,27 @@
               {{submittedDate}}
 
               <h3 v-if="expiryDate !== null">EXPIRY DATE</h3>
-              <span v-if="expiryDate !== null">{{expiryDate}}</span>
+              <span v-if="expiryDate !== null">
+
+                <span v-if="!is_editing">{{ expiryDate }}</span>
+                <span v-else>
+
+                  <span :class="{'form-group-error': $v.expiryDateForEdit.$error}">
+                    <input type="text" v-model="expiryDateForEdit" class="form-control"
+                           placeholder="Expiry Date" :onchange="$v.expiryDateForEdit.$touch()" />
+                    <div class="date-helper-text">DD-MM-YYYY</div>
+                    <div class="error" v-if="!$v.expiryDateForEdit.required">
+                      Expiry Date is required.</div>
+                    <div class="error" v-if="!$v.expiryDateForEdit.isValidFormat">
+                      Date must be in format DD-MM-YYYY.</div>
+                    <div class="error" v-else-if="!$v.expiryDateForEdit.isActualDate">
+                      This is not an actual date. Date must be in format DD-MM-YYYY.</div>
+                    <div class="error" v-if="!$v.expiryDateForEdit.isFutureDate">
+                      Expiry Date must be in the future.</div>
+                  </span>
+
+                </span>
+              </span>
 
               <h3 v-if="consumptionDate !== null">CONSUMPTION DATE</h3>
               <span v-if="consumptionDate !== null">{{consumptionDate}}</span>
@@ -101,7 +128,7 @@
               <h3 v-if="submitCount > 0">SUBMIT COUNT: {{submitCount}}</h3>
 
               <span v-if="prev_nr_required">
-                <span v-if="is_editing" :class="{'form-group-error': $v.previousNr.$error}">
+                <span v-if="is_editing && !is_closed" :class="{'form-group-error': $v.previousNr.$error}">
                   <h3 class="inline">Previous NR</h3>
                   <input class="form-control" v-model="previousNr" :onchange="$v.previousNr.$touch()" />
                   <div class="error" v-if="!$v.previousNr.isValidNr">Please enter a valid NR ("NR xxxxxxx").</div>
@@ -113,7 +140,7 @@
               </span>
 
               <span v-if="corp_num_required">
-                <span v-if="is_editing" :class="{'form-group-error': $v.corpNum.$error}">
+                <span v-if="is_editing && !is_closed" :class="{'form-group-error': $v.corpNum.$error}">
                   <h3 class="inline">Related Corp #</h3>
                   <input class="form-control" v-model="corpNum" :onchange="$v.corpNum.$touch()" />
                   <div class="error" v-if="!$v.corpNum.isValidCorpNum">Please enter a valid Incorporation Number.</div>
@@ -132,7 +159,7 @@
           <div class="col add-top-padding">
             <h3>Name Choices</h3>
 
-            <table style="width: 100%;">
+            <table v-if="!is_closed" style="width: 100%;">
               <tr :class="{'form-group-error': $v.compName1.name.$error}">
                 <td>1.</td>
                 <td>
@@ -149,6 +176,17 @@
                 <td><input v-model="compName3.name" class="form-control" /></td>
               </tr>
             </table>
+            <table v-else style="width: 100%;">
+              <tr>
+                <td>1. {{compName1.name}}</td>
+              </tr>
+              <tr>
+                <td>2. {{compName2.name}}</td>
+              </tr>
+              <tr>
+                <td>3. {{compName3.name}}</td>
+              </tr>
+            </table>
           </div>
         </div>
       </div>
@@ -160,7 +198,7 @@
             <div class="row">
               <div class="col">
                 <h3>ADDITIONAL INFORMATION</h3>
-                <p v-if="!is_editing" style="white-space: pre-line;">{{ additionalInfo }}</p>
+                <p v-if="!is_editing || is_closed" style="white-space: pre-line;">{{ additionalInfo }}</p>
                 <textarea v-else v-model="additionalInfo" class="form-control" maxlength="150"
                           rows="5">
                 </textarea>
@@ -221,6 +259,8 @@ export default {
         nwpta_required: false,
         jurisdiction_required: false,
         additional_info_template: null,
+        is_lp_nwpta_type: null,
+        is_cp_nwpta_type: null,
       }
     },
     validations: function () {
@@ -236,14 +276,14 @@ export default {
       }
 
       // validate jurisdiction if required
-      if (this.jurisdiction_required) {
+      if (this.jurisdiction_required && !this.is_closed) {
         validations.jurisdiction = {
           required,
         }
       }
 
       // validate corp # - not required, but if entered it must be validated
-      if (this.corp_num_required) {
+      if (this.corp_num_required && !this.is_closed) {
         validations.corpNum = {
           isValidCorpNum(value) {
             // if empty, it's valid - not required
@@ -264,8 +304,27 @@ export default {
         }
       }
 
+      // validate Expiry Date if present - only present when editing a furnished NR
+      if (this.expiryDateForEdit !== null) {
+        validations.expiryDateForEdit = {
+          required,
+          isValidFormat(value) {
+            return isValidFormat(value);
+          },
+          isActualDate(value) {
+            return isActualDate(value);
+          },
+          isFutureDate(value) {
+            // don't do this validation if it is not an actual date yet
+            if (value == '' || value == null || !isValidFormat(value) || !isActualDate(value)) return true;
+
+            return isFutureDate(value);
+          },
+        }
+      }
+
       // validate Previous NR # - not required, but if entered it must be validated
-      if (this.prev_nr_required) {
+      if (this.prev_nr_required && !this.is_closed) {
         validations.previousNr = {
           isValidNr(value) {
             // if empty, it's valid - not required
@@ -280,9 +339,9 @@ export default {
             return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
               return true;
             })
-            .catch(error => {
-              return false;
-            });
+              .catch(error => {
+                return false;
+              });
           },
         }
       }
@@ -300,6 +359,15 @@ export default {
       requestTypeRules() {
         return this.$store.getters.requestTypeRules;
       },
+      is_approved_expired() {
+        // if there is no expiry date, this NR is not approved-expired
+        if (this.$store.getters.expiryDate == null) return false;
+
+        let expired_date = new Date(this.$store.state.expiryDate);
+        let date = new Date();
+        if (this.$store.getters.currentState === "APPROVED" && date > expired_date) return true;
+        return false;
+      },
       is_my_current_nr() {
         return this.$store.getters.is_my_current_nr;
       },
@@ -310,7 +378,11 @@ export default {
         // user can edit this if it is open (DRAFT, HOLD) or their INPROGRESS. If it is DRAFT or
         // HOLD, clicking edit button will switch it to their INPROGRESS (in edit() f'n).
         if (this.is_my_current_nr) return true;
-        if (['DRAFT', 'HOLD'].indexOf(this.nr_status) > -1) return true;
+        if (['DRAFT', 'HOLD', 'REJECTED', 'APPROVED', 'CONDITIONAL'].indexOf(this.nr_status) > -1) return true;
+        return false;
+      },
+      is_closed() {
+        if (['REJECTED', 'APPROVED', 'CONDITIONAL'].indexOf(this.nr_status) > -1) return true;
         return false;
       },
       show_extended_header() {
@@ -345,6 +417,7 @@ export default {
       },
       requestType: {
         get: function() {
+          this.checkReqTypeRules(this.$store.getters.requestType);
           return this.$store.getters.requestType;
         },
         set: function(value) {
@@ -416,7 +489,7 @@ export default {
       },
       additionalInfo: {
         get: function() {
-          return this.$store.getters.additionalInfo;
+          return this.$store.getters.additionalInfo == null ?  '' : this.$store.getters.additionalInfo;
         },
         set: function(value) {
           this.$store.commit('additionalInfo', value);
@@ -430,11 +503,24 @@ export default {
           this.$store.commit('internalComments', value);
         }
       },
-      expiryDate() {
-        return this.$store.getters.expiryDate;
+      expiryDate: {
+        get: function() {
+          return this.$store.getters.expiryDate;
+        },
+        set: function(value) {
+          this.$store.commit('expiryDate', value);
+        }
+      },
+      expiryDateForEdit: {
+        get: function() {
+          return this.$store.getters.expiryDateForEdit;
+        },
+        set: function(value) {
+          this.$store.commit('expiryDateForEdit', value);
+        }
       },
       consumptionDate() {
-        return this.findConsumptionDate();
+        return this.$store.getters.consumptionDate;
       },
       submittedDate() {
         return this.$store.getters.submittedDate;
@@ -451,8 +537,11 @@ export default {
         }
       },
       previousNr_link() {
-        if (this.$store.getters.previousNr != undefined)
-          return '<a href="/' + this.$store.getters.previousNr + '" target="_blank">' + this.$store.getters.previousNr + '</a>';
+        if (this.$store.getters.previousNr != undefined) {
+          // KBM 2018-08-30 - removed for MVP but will be part of a future phase
+          // return '<a href="/' + this.$store.getters.previousNr + '" target="_blank">' + this.$store.getters.previousNr + '</a>';
+          return this.$store.getters.previousNr;
+        }
         else return '';
       },
       corpNum: {
@@ -475,15 +564,18 @@ export default {
       },
       edit() {
         // if this isn't the user's INPROGRESS, make it that
-        if (!this.is_my_current_nr) {
+        if (!this.is_my_current_nr && !this.is_closed) {
           this.$store.dispatch('updateNRState', 'INPROGRESS');
+        }
+        if (this.is_closed) {
+          this.$store.dispatch('syncNR',this.nrNumber);
         }
         this.$store.state.is_editing = true;
       },
       save() {
 
         if (!this.validate()) {
-          // do not continue if there are validations
+          // do not continue if there are validation errors
           return;
         }
 
@@ -496,12 +588,24 @@ export default {
         // if previous NR not required, clear the data
         if (!this.prev_nr_required) this.$store.commit('previousNr', null);
 
-
         // build Additional Info
         this.buildAdditionalInfo();
 
         // save new comment
         this.addNewComment();
+
+        // save Expiry Date - convert to UTC timestamp string to be consistent with data from API
+        if (this.expiryDateForEdit !== null) {
+          this.expiryDate = new Date(
+              this.expiryDateForEdit.substr(6,4), // yyyy
+              this.expiryDateForEdit.substr(3,2)-1, // mm
+              this.expiryDateForEdit.substr(0,2)) // dd
+            .toUTCString();
+        }
+
+        // adjust nwpta data if it was requested and the type was changed
+        this.$refs.nwpta_ab.adjustUponSave();
+        this.$refs.nwpta_sk.adjustUponSave();
 
         this.$store.dispatch('updateRequest');
         this.$store.state.is_editing = false;
@@ -576,15 +680,6 @@ export default {
         // clear newComment field for next comment added in this session
         this.newComment = null;
       },
-      findConsumptionDate() {
-        if (this.compName1.consumptionDate != null) {
-          return this.compName1.consumptionDate;
-        }
-        if (this.compName2.consumptionDate != null) {
-          return this.compName2.consumptionDate;
-        }
-        return this.compName3.consumptionDate;
-      },
       validate() {
         /*
         Validate form using vuelidate.
@@ -594,30 +689,23 @@ export default {
         // trigger vuelidate validation in this component and child component
         this.$v.$touch();
         this.$refs.clientinfoview.$v.$touch();
-        this.$refs.nwpta_ab.$v.$touch();
-        this.$refs.nwpta_sk.$v.$touch();
+
+        var nwpta_ab_invalid = false;
+        if (this.$refs.nwpta_ab !== undefined) {
+          this.$refs.nwpta_ab.$v.$touch();
+          nwpta_ab_invalid = this.$refs.nwpta_ab.$v.$invalid;
+        }
+        var nwpta_sk_invalid = false;
+        if (this.$refs.nwpta_sk !== undefined) {
+          this.$refs.nwpta_sk.$v.$touch();
+          nwpta_sk_invalid = this.$refs.nwpta_sk.$v.$invalid;
+        }
 
         // return opposite of 'invalid' flags, since we want to know if this IS valid
         return !this.$v.$invalid && !this.$refs.clientinfoview.$v.$invalid &&
-          !this.$refs.nwpta_ab.$v.$invalid && !this.$refs.nwpta_sk.$v.$invalid;
+          !nwpta_ab_invalid && !nwpta_sk_invalid;
       },
-    },
-    watch: {
-      nrNumber: function (val) {
-        console.log('RequestInfoHeader.nrNumber watcher fired:' )
-        this.$store.dispatch('getpostgrescompInfo',this.nrNumber)
-        if( this.$store.getters.currentChoice == null || this.$store.getters.currentChoice == 1 ){
-          console.log('RequestInfoHeader.watch runRecipe:' + val)
-          this.$store.dispatch('runRecipe')
-        } else {
-          console.log('RequestInfoHeader.watch set currentChoice to 1')
-          this.$store.commit('currentChoice',1)
-        }
-      },
-      requestType: function(val) {
-        /*
-        Show/hide elements of NR Details based on request type (display and edit).
-         */
+      checkReqTypeRules(val) {
         var rules = this.requestTypeRules.filter(findArrValueByAttr(val, 'request_type'))[0];
 
         if (rules == undefined) {
@@ -626,6 +714,8 @@ export default {
           this.nwpta_required = false;
           this.jurisdiction_required = false;
           this.additional_info_template = null;
+          this.is_lp_nwpta_type = null;
+          this.is_cp_nwpta_type = null;
 
         } else {
           this.corp_num_required = rules.corp_num_required;
@@ -633,7 +723,22 @@ export default {
           this.nwpta_required = rules.nwpta_required;
           this.jurisdiction_required = rules.jurisdiction_required;
           this.additional_info_template = rules.additional_info_template;
+          this.is_lp_nwpta_type = rules.is_lp_nwpta_type;
+          this.is_cp_nwpta_type = rules.is_cp_nwpta_type;
         }
+      },
+    },
+    watch: {
+      nrNumber: function (val) {
+        console.log('RequestInfoHeader.nrNumber watcher fired:' )
+        this.$store.dispatch('getpostgrescompInfo',this.nrNumber);
+        this.checkReqTypeRules(this.requestType);
+      },
+      requestType: function(val) {
+        /*
+        Show/hide elements of NR Details based on request type (display and edit).
+         */
+        this.checkReqTypeRules(val);
       }
     }
 }
@@ -657,6 +762,11 @@ export default {
     color: white;
     font-size: 13px;
     margin-bottom: 10px;
+  }
+  .status {
+    font-size: 1.1em;
+    padding-top: 5px;
+    text-align: center;
   }
 
   .requestType {
@@ -696,5 +806,12 @@ export default {
 <style>
   .RequestInfoHeader {
     font-size: 11px;
+  }
+</style>
+
+<style scoped>
+  .date-helper-text {
+    font-style: italic;
+    color: grey;
   }
 </style>

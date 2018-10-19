@@ -2,12 +2,15 @@
 <template>
    <span>
      <h2 id="currentHistoryName">{{ selectedHistory }}</h2>
-     <div class="col client-info-view">
+     <div v-if="selectedHistory != ''" class="col client-info-view">
 
-        <div class="add-top-padding">
-          <h3>Submitted</h3>
-          <p>{{ submittedDate }}</p>
-        </div>
+      <div class="add-top-padding">
+        <h3>NR #</h3>
+        <p>{{nrNum}}</p>
+
+        <h3>Submitted</h3>
+        <p>{{ submittedDate }}</p>
+      </div>
 
       <h3>Client</h3>
       <p>{{ clientFirstName }} {{ clientLastName}}</p>
@@ -37,11 +40,9 @@
 
       <h3>Contact</h3>
       <p>{{ contactName }}</p>
-      <h3>NR #</h3>
-      <p><a href="#" target="_blank">{{nrNum}}</a></p>
       <h3>Submit Count: {{submitCount}}</h3>
-      <h3>State</h3>
-      <p>{{state}}</p>
+      <h3>Name State</h3>
+      <p>{{nameState}}</p>
       <div v-if="decisionText">
         <h3>Decision Text</h3>
         <p>{{decisionText}}</p>
@@ -59,14 +60,21 @@
         </div>
       </div>
      </div>
+     <div v-else class="add-top-padding">
+       <nullMatch />
+     </div>
   </span>
 
 </template>
 
 <script>
 /* eslint-disable */
+  import nullMatch from '@/components/application/Examine/Recipe/conflicts/conflictInfoType/nullMatch.vue';
   export default {
     name: 'historyInfo',
+    components: {
+      nullMatch
+    },
     computed: {
       selectedHistory() {
         if (this.$store.getters.currentHistory == undefined) return '';
@@ -153,21 +161,27 @@
       },
       submittedDate() {
         if (this.selectedHistoryInfo == undefined) return '';
-        return this.selectedHistoryInfo.submittedDate;
+        if (this.selectedHistoryInfo.submittedDate != null)
+          return new Date(this.selectedHistoryInfo.submittedDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+        return null
 
       },
       submitCount() {
         if (this.selectedHistoryInfo == undefined) return '';
-        if (this.selectedHistoryInfo.submitCount == undefined) return 1;
+        if (this.selectedHistoryInfo.submitCount == undefined) return 'NA';
         return this.selectedHistoryInfo.submitCount;
       },
       nrNum() {
         if (this.selectedHistoryInfo == undefined) return '';
         return this.selectedHistoryInfo.nrNum;
       },
-      state() {
+      nameState() {
         if (this.selectedHistoryInfo == undefined) return '';
-        return this.selectedHistoryInfo.state;
+        for (let i=0; i<this.selectedHistoryInfo.names.length; i++) {
+          if (this.selectedHistoryInfo.names[i].name === this.selectedHistory)
+            return this.selectedHistoryInfo.names[i].state;
+        }
+        return '';
       },
       decisionText() {
         if (this.selectedHistoryInfo == undefined) return '';

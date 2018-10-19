@@ -11,6 +11,7 @@
   export default {
     name: 'trademarkInfo',
     data: () => ({
+      tblClass: ['table-bordered', 'search-table'],
       columns: [
         {title: 'Trademark', field: 'name', label: 'Name', sortable: false, visible: true},
         {title: 'Description', field: 'description', label: 'Description', sortable: false, visible: true},
@@ -43,15 +44,12 @@
       },
     },
     methods: {
-      createDataList(trademarksInfo){
-        if(trademarksInfo == null) {
-          console.log("trademarksJSON is null")
-          return null;
-        }
+      createDataList(trademarksInfo, rows=10, offset=0){
+        if(trademarksInfo == null)
+          return [];
 
         var data = [];
-        var wordIter;
-        for (var cndIter=0;cndIter<trademarksInfo["names"].length; cndIter++) {
+        for (var cndIter=offset;cndIter<rows+offset && cndIter<trademarksInfo["names"].length; cndIter++) {
             var name = trademarksInfo["names"][cndIter].name;
             var description = trademarksInfo["names"][cndIter].description;
             var status = trademarksInfo["names"][cndIter].status;
@@ -64,6 +62,7 @@
               application_number: application_number
             });
         }
+        this.total = trademarksInfo["names"].length;
         return data;
       },
       setSelection(event) {
@@ -86,15 +85,28 @@
           // do nothing
         }
       }
+    },
+    watch: {
+      trademarksJSON: function (val) {
+        console.log('trademarksJSON watcher fired: ', val);
+        if (val != null)
+          this.data = this.createDataList(this.trademarksJSON);
+        else
+          this.data = [];
+      },
+      query: {
+        handler (val) {
+          console.log('trademarks query watcher fired: ', val);
+          this.data = this.createDataList(this.trademarksJSON, val.limit, val.offset);
+        },
+        deep: true
+      }
     }
   }
 </script>
 
 <style scoped>
-  .conflict-info-view {
-    background-color: #00000;
-    padding: 10px;
-  }
+
 </style>
 
 <!-- unscoped style -->

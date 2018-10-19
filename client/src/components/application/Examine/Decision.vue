@@ -429,24 +429,28 @@
         return obj.name + ' - ' + obj.application_number;
       },
       nameAcceptReject() {
+        // save decision text, state, decision comment, and up to three conflicts
 
-        // save decision text, state, and up to three conflicts
-        this.currentNameObj.decision_text = this.customer_message_display.substr(0,955);
 
-        if (this.decision_made == 'A') {
-          this.currentNameObj.state = 'A'; // accepted
+        if (this.decision_made == 'APPROVED') {
+          this.currentNameObj.state = 'APPROVED'; // accepted
 
           // conditionally accepted if any conditions selected with condition_required flag TRUE
           for (var i = 0; i < this.conditions_selected.length; i++) {
             var record = this.conditions_selected[i];
             if (record.consent_required) {
-              this.currentNameObj.state = 'C';
+              this.currentNameObj.state = 'CONDITION';
               break;
             }
           }
+
+          // if there were conflicts selected but this is an approval, this will result in
+          // accidental "rejected due to conflict" messaging. Remove it by clearing the selected
+          // conflicts (Issue #767).
+          this.conflicts_selected = [];
         }
         else {
-          this.currentNameObj.state = 'R';
+          this.currentNameObj.state = 'REJECTED';
         }
         for (var i = 0; i < this.conflicts_selected.length; i++) {
           if (i == 0) {
@@ -464,6 +468,11 @@
 
           }
         }
+
+        this.currentNameObj.decision_text = this.customer_message_display.substr(0,955);
+
+        // add new comment
+        this.$refs.decisioncomments.addNewComment();
 
         // send decision to API and reset flags
         this.$store.dispatch('nameAcceptReject');
