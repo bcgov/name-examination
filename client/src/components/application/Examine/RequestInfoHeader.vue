@@ -646,6 +646,7 @@ export default {
               // NWPTA because it will have been added during initial entry into NRO, and we do not
               // change nwpta type (assumed, numbered) to trigger adding/changing anything in
               // Additional Info.
+              template = '';
             }
 
             /*
