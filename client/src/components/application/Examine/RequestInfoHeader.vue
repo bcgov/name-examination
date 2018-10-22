@@ -663,6 +663,9 @@ export default {
       },
       addNewComment() {
 
+        // do nothing if comment is blank
+        if (this.newComment == '' || this.newComment == null) return;
+
         // create new comment object with just text, and add it to list of comments in data structure
         var newCommentData = {
           comment: this.newComment,

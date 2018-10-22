@@ -74,7 +74,7 @@
         console.log('got here to addNewComment() in InternalComments component');
 
         // do nothing if comment is blank
-        if (this.newComment == '') return;
+        if (this.newComment == '' || this.newComment == null) return;
 
         // create new comment object with just text, and add it to list of comments in data structure
         var newCommentData = {
