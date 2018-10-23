@@ -16,6 +16,7 @@ let whenSomeoneApprovesWithCondition = (when, data)=>{
                 } }))
             )
             let button = data.vm.$el.querySelector('#decision-approve-button');
+            expect(button).not.toEqual(null)
             let window = button.ownerDocument.defaultView;
             var click = new window.Event('click');
             button.dispatchEvent(click);

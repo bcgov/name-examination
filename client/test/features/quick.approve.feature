@@ -1,7 +1,7 @@
 Feature: Quick approve
 
 Scenario: Joe can quickly approve the next examination assigned to him
-    Given Joe has an INPROGRESS assigned name request NR1234
+    Given Joe has an INPROGRESS assigned name request NR1234 with name Dev & Co INC
     When Joe accesses Name examination
     Then he sees that he can quickly approve NR1234
 
@@ -9,6 +9,6 @@ Scenario: Joe can quickly approve the next examination assigned to him
     Then he sees that NR1234 is now APPROVED
 
 Scenario: Max can not quickly approve examination assigned to Joe
-    Given Joe has an INPROGRESS assigned name request NR1234
+    Given Joe has an INPROGRESS assigned name request NR1234 with name Dev & Co INC
     When Max accesses Name examination
     Then he sees that he can NOT quickly approve NR1234

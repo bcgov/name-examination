@@ -12,10 +12,12 @@ import {
     whenSomeoneGoesToDecisionScreen,
     heSeesTheSelectedConditionInDecisionScreen,
     whenSomeoneApprovesWithCondition,
-    givenRestrictedWord
+    givenRestrictedWord,
+    whenGetNext,
+    heSeesConditionListIsEmpty
 } from './activities'
 import { loadFeature, defineFeature } from 'jest-cucumber';
-const feature = loadFeature('./test/features/conditional.approval.feature');
+const feature = loadFeature('./test/features/regular.work.feature');
 
 defineFeature(feature, test => {
 
@@ -31,7 +33,7 @@ defineFeature(feature, test => {
         staticFilesServer.stop(done)
     })
 
-    test('Joe can approve a request with a condition', ({ given, when, then }) => {
+    test('Joe can chain approval of several requests', ({ given, when, then }) => {
 
         givenRestrictedWord(given, data)
 
@@ -46,6 +48,19 @@ defineFeature(feature, test => {
         whenSomeoneGoesToDecisionScreen(when, data)
 
         heSeesTheSelectedConditionInDecisionScreen(then, data)
+
+        whenSomeoneApprovesWithCondition(when, data)
+
+        heSeesNrStatusIsApproved(then, data)
+
+
+        givenSomeoneHasAssignedNr(given, data)
+
+        whenGetNext(when, data)
+
+        whenSomeoneGoesToDecisionScreen(when, data)
+
+        heSeesConditionListIsEmpty(then, data)
 
         whenSomeoneApprovesWithCondition(when, data)
 
