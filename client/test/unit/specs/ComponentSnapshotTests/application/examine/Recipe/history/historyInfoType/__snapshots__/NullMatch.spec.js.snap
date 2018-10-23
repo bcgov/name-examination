@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NullMatch.vue renders a NullMatch component 1`] = `<span />`;

@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConflictInfo.vue renders a ConflictInfo component 1`] = `
+<div>
+  <div
+    class="container-fluid"
+  >
+    <div
+      class="row ConflictInfo"
+    >
+      <div
+        class="col conflict-info-view"
+      >
+        <div
+          class="add-top-padding"
+        >
+          <nullmatch-stub />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

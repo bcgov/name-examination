@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConflictList.vue renders a ConflictList component 1`] = `
+<div
+  class="col conflict-list-parent-col"
+>
+  <div
+    class="row conflict-list-view"
+  >
+    <select
+      border="0"
+      class="form-control"
+      size="17"
+      tabindex="2"
+    />
+  </div>
+</div>
+`;
