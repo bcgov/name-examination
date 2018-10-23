@@ -10,7 +10,7 @@ module.exports = {
         sandbox.getStub = sandbox.stub(axios, 'get');
         sandbox.patchStub = sandbox.stub(axios, 'patch');
         sandbox.getStub.withArgs('/api/v1/requests/decisionreasons', sinon.match.any).returns(
-            new Promise((resolve) => resolve({ data: { listDecisionReasons:[] } }))
+            new Promise((resolve) => resolve({ data: [] }))
         )
         sandbox.postStub.withArgs('/api/v1/documents:conflicts', sinon.match.any).returns(
             new Promise((resolve) => resolve({ data: {

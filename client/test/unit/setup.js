@@ -18,3 +18,7 @@ global.readCsv = (new Function( utils + `return function(csvFile, callback){
 global.findArrValue = (new Function( utils + `return findArrValue;`))();
 global.findArrValueByAttr = (new Function( utils + `return findArrValueByAttr;`))();
 global.getDescFromList = (new Function( utils + `return getDescFromList;`))();
+let app = document.createElement('DIV')
+app.id = "app"
+document.body.innerHTML = '';
+document.body.appendChild(app);

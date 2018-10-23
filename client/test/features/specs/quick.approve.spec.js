@@ -16,10 +16,6 @@ defineFeature(feature, test => {
     let data = {};
 
     beforeEach((done) => {
-        let app = document.createElement('DIV')
-        app.id = "app"
-        document.body.innerHTML = '';
-        document.body.appendChild(app);
         data.apiSandbox = createApiSandbox()
         jest.setTimeout(100000);
         staticFilesServer.start(done)
