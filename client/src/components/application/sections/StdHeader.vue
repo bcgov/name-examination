@@ -3,7 +3,7 @@
   <div class="container-fluid">
     <nav class="navbar fixed-top navbar-dark navbar-expand-lg" id="header-main">
 
-      <router-link to="/home" class="navbar-brand">
+      <router-link to="/home" class="navbar-brand router-link-never-mark-active">
         <img src="static/images/gov3_bc_logo.png"
              alt="Province of British Columbia"
              title="Province of British Columbia logo"/>
@@ -143,6 +143,8 @@
     color: white;
     margin-top: 69px;
     box-shadow: 0px 5px 10px 0px rgba(169,169,169,1);
+    font-size: 15px;
+    line-height: 23px;
   }
 
   #secondary-menu .divider {
