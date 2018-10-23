@@ -363,9 +363,11 @@
       },
       nameAccept() {
         this.$store.commit('decision_made', 'APPROVED');
+        this.$store.commit('currentCondition', null);
       },
       nameReject() {
         this.$store.commit('decision_made', 'REJECTED');
+        this.$store.commit('currentCondition', null);
       },
       reOpen() {
         this.$store.state.currentState = 'INPROGRESS';

@@ -185,8 +185,8 @@ export default new Vuex.Store({
                     conditional: {response: {numfound: ''}},
                     rejected: {response: {numfound: ''}}
     }
-},
-mutations: {
+  },
+  mutations: {
     requestType (state, value) {
       state.compInfo.requestType = value;
     },
