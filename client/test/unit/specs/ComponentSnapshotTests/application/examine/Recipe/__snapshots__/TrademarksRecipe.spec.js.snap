@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TrademarksRecipe.vue renders a TrademarksRecipe component 1`] = `
+<div
+  class="container-fluid"
+>
+  <div
+    class="row"
+  >
+    <div
+      class="col"
+    >
+      <trademarksinfoview-stub />
+    </div>
+  </div>
+</div>
+`;
