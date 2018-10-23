@@ -8,6 +8,7 @@ const LandingPage = () => import(/* webpackChunkName: "home" */'@/components/Lan
 const Signin = () => import(/* webpackChunkName: "signin" */'@/components/auth/Signin')
 const NameExamination = () => import(/* webpackChunkName: "nameexamination" */'@/components/application/NameExamination')
 const Find = () => import(/* webpackChunkName: "find" */'@/components/application/Find')
+const Stats = () => import(/* webpackChunkName: "stats" */'@/components/application/Stats/Stats.vue')
 
 Vue.use(Router)
 Vue.use(Vuex)
@@ -42,6 +43,14 @@ let router = new Router({
       name: 'find',
       component: Find,
       path: '/find',
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      name: 'stats',
+      component: Stats,
+      path: '/stats',
       meta: {
         requiresAuth: true
       }
