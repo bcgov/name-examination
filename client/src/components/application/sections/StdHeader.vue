@@ -64,6 +64,8 @@
           </li>
         </ul>
 
+        <router-link to="/stats" class="nav-link ml-auto">Stats</router-link>
+
       </div>
     </nav>
   </div>
