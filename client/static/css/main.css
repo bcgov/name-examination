@@ -2455,3 +2455,16 @@ nav .form-control {
 .form-group-error .error {
   display: block;
 }
+
+/* END form validation */
+
+/* GOV HEADER TWEAKS */
+
+.router-link-active, .router-link-active:hover, .router-link-active:focus {
+  text-decoration: underline;
+}
+.router-link-never-mark-active, .router-link-never-mark-active:hover {
+  text-decoration: none;
+}
+
+/* END gov header tweaks */
