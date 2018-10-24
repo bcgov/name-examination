@@ -1,0 +1,313 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CompName.vue  renders a CompName component 1`] = `
+<div>
+  <div
+    class="name-sect"
+  >
+    <div
+      class="row"
+    >
+      <div
+        class="col"
+      >
+        <div
+          id="top-buttons"
+        >
+          <button
+            class="btn btn-sm btn-secondary"
+            id="examine-get-next-button"
+          >
+            Get 
+            <u>
+              N
+            </u>
+            ext
+          </button>
+           
+          <button
+            class="btn btn-sm btn-danger"
+            data-target="#add-cancel-comment-modal"
+            data-toggle="modal"
+            id="examine-cancel-button"
+          >
+            
+            Cancel Request
+          </button>
+           
+          <!---->
+           
+          <!---->
+           
+          <!---->
+           
+          <!---->
+           
+          <!---->
+           
+          <!---->
+           
+          <!---->
+           
+          <!---->
+        </div>
+         
+        <table>
+          <tr
+            class="name-option"
+          >
+            <td>
+              1.
+            </td>
+             
+            <td
+              id="name1"
+            >
+              
+              
+              
+              <span
+                class="name-state-icon"
+              />
+               
+              <!---->
+               
+              <span
+                class="decision-text"
+              >
+                
+              </span>
+            </td>
+          </tr>
+           
+          <tr
+            class="name-option"
+          >
+            <td>
+              2.
+            </td>
+             
+            <td
+              id="name2"
+            >
+              
+              
+              
+              <span
+                class="name-state-icon"
+              />
+               
+              <!---->
+               
+              <span
+                class="decision-text"
+              >
+                
+              </span>
+            </td>
+          </tr>
+           
+          <tr
+            class="name-option"
+          >
+            <td>
+              3.
+            </td>
+             
+            <td
+              id="name3"
+            >
+              
+              
+              
+              <span
+                class="name-state-icon"
+              />
+               
+              <!---->
+               
+              <span
+                class="decision-text"
+              >
+                
+              </span>
+            </td>
+          </tr>
+        </table>
+         
+        <div>
+          <!---->
+           
+          <div
+            id="manual-search"
+          >
+            <form
+              class="form-inline"
+            >
+              <input
+                class="search form-control"
+                tabindex="1"
+                type="text"
+              />
+               
+              <button
+                class="btn-search"
+                type="submit"
+              >
+                <i
+                  class="fa fa-search"
+                  tabindex="8"
+                />
+              </button>
+               
+              <!---->
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+   
+  <div
+    class="modal fade"
+    id="add-comment-reset-modal"
+    role="dialog"
+    tabindex="-1"
+  >
+    <div
+      class="modal-dialog modal-lg"
+      role="document"
+    >
+      <div
+        class="modal-content"
+      >
+        <div
+          class="modal-header"
+        >
+          <h5
+            class="modal-title"
+          >
+            Please give a comment to explain why this NR is being RESET
+          </h5>
+           
+          <button
+            aria-label="Close"
+            class="close"
+            data-dismiss="modal"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+            >
+              ×
+            </span>
+          </button>
+        </div>
+         
+        <div
+          class="modal-body"
+        >
+          <textarea
+            class="form-control"
+            id="reset-comment-text"
+            rows="10"
+          />
+        </div>
+         
+        <div
+          class="modal-footer"
+        >
+          <button
+            class="btn btn-sm btn-secondary"
+            data-dismiss="modal"
+            type="button"
+          >
+            Cancel
+          </button>
+           
+          <button
+            class="btn btn-sm btn-danger"
+            data-dismiss="modal"
+            disabled="disabled"
+            id="reset-nr-after-comment-button"
+            type="button"
+          >
+            RESET
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+   
+  <div
+    class="modal fade"
+    id="add-cancel-comment-modal"
+    role="dialog"
+    tabindex="-1"
+  >
+    <div
+      class="modal-dialog modal-lg"
+      role="document"
+    >
+      <div
+        class="modal-content"
+      >
+        <div
+          class="modal-header"
+        >
+          <h5
+            class="modal-title"
+          >
+            Please give a comment to explain why this NR is being CANCELLED
+          </h5>
+           
+          <button
+            aria-label="Close"
+            class="close"
+            data-dismiss="modal"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+            >
+              ×
+            </span>
+          </button>
+        </div>
+         
+        <div
+          class="modal-body"
+        >
+          <textarea
+            class="form-control"
+            id="cancel-comment-text"
+            rows="10"
+          />
+        </div>
+         
+        <div
+          class="modal-footer"
+        >
+          <button
+            class="btn btn-sm btn-secondary"
+            data-dismiss="modal"
+            type="button"
+          >
+            Cancel
+          </button>
+           
+          <button
+            class="btn btn-sm btn-danger"
+            data-dismiss="modal"
+            disabled="disabled"
+            id="cancel-nr-after-comment-button"
+            type="button"
+          >
+            CANCEL REQUEST
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
