@@ -1,6 +1,4 @@
 /* eslint-disable */
-import Vue from 'vue';
-Vue.use(require('vue-shortkey'))
 import { shallowMount } from '@vue/test-utils';
 import HistoryRecipe from '@/components/application/Examine/Recipe/historyRecipe';
 import store from '@/store'

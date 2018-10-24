@@ -13,7 +13,7 @@ describe('RecipeMenu.vue', () => {
         vm = new component({store: store});
     });
 
-   it("renders an RecipeMenu component", () => {
+   it("renders a RecipeMenu component", () => {
      expect(vm.$el).toMatchSnapshot();
    })
 

@@ -1,7 +1,6 @@
 /* eslint-disable */
 import Vue from 'vue';
 Vue.use(require('vue-shortkey'))
-import { shallowMount } from '@vue/test-utils';
 import Nwpta from '@/components/application/Examine/nwpta/nwpta';
 import store from '@/store'
 
@@ -13,7 +12,7 @@ describe('Nwpta.vue', () => {
         vm = new component({store: store});
     });
 
-   it("renders an RequestInfoHeader component", () => {
+   it("renders a RequestInfoHeader component", () => {
      expect(vm.$el).toMatchSnapshot();
    })
 

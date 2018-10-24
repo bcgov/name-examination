@@ -1,16 +1,16 @@
 /* eslint-disable */
 import { shallowMount } from '@vue/test-utils';
-import CorpMatch from '@/components/application/Examine/Recipe/conflicts/conflictInfoType/corpMatch';
+import StateHeader from '@/components/application/sections/StateHeader';
 import store from '@/store'
 
-describe('CorpMatch.vue', () => {
+describe('StateHeader.vue', () => {
 
     let component;
     beforeEach(() => {
-        component = shallowMount(CorpMatch, {store: store});
+        component = shallowMount(StateHeader, {store: store});
     });
 
-   it("renders a CorpMatch component", () => {
+   it("renders a StateHeader component", () => {
      expect(component.element).toMatchSnapshot();
    })
 

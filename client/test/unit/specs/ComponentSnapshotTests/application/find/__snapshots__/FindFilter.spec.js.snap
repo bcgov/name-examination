@@ -1,0 +1,212 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FindFilter.vue renders a FindFilter component 1`] = `
+<div>
+  <div
+    class="container-fluid"
+  >
+    <div
+      class="upper-div"
+    >
+      <div
+        class="search-select"
+      >
+        <div
+          class="upper-searches"
+        >
+          <div
+            class="filter"
+            style="margin-left: 0px;"
+          >
+            <h4>
+              States:
+            </h4>
+             
+            <select
+              class="form-control"
+              id="search-filter-state"
+            >
+              <option
+                value="ALL"
+              >
+                ALL
+              </option>
+              <option
+                value="HOLD"
+              >
+                HOLD
+              </option>
+              <option
+                value="INPROGRESS"
+              >
+                INPROGRESS
+              </option>
+              <option
+                value="DRAFT"
+              >
+                DRAFT
+              </option>
+              <option
+                value="EXPIRED"
+              >
+                EXPIRED
+              </option>
+              <option
+                value="CANCELLED"
+              >
+                CANCELLED
+              </option>
+              <option
+                value="APPROVED"
+              >
+                APPROVED
+              </option>
+              <option
+                value="CONDITIONAL"
+              >
+                CONDITIONAL
+              </option>
+              <option
+                value="REJECTED"
+              >
+                REJECTED
+              </option>
+            </select>
+          </div>
+           
+          <div
+            class="filter"
+          >
+            <h4>
+              NR
+            </h4>
+             
+            <input
+              class="form-control"
+              id="search-filter-nr-number"
+              placeholder="0000000"
+            />
+          </div>
+           
+          <div
+            class="filter"
+          >
+            <h4>
+              Examiner
+            </h4>
+             
+            <input
+              class="form-control"
+              id="search-filter-examiner"
+              placeholder="Username"
+            />
+          </div>
+           
+          <div
+            class="filter"
+          >
+            <h4>
+              Company Name
+            </h4>
+             
+            <input
+              class="form-control"
+              id="search-filter-company"
+              placeholder="my company"
+            />
+          </div>
+        </div>
+         
+        <div
+          class="lower-searches"
+        >
+          <h4
+            class="filter"
+            style="margin-left: 0px;"
+          >
+            Furnished:
+          </h4>
+           
+          <input
+            id="search-checkbox-furnished"
+            type="checkbox"
+          />
+           
+          <br />
+           
+          <h4
+            class="filter"
+            style="margin-left: 0px;"
+          >
+            Unfurnished:
+          </h4>
+           
+          <input
+            id="search-checkbox-unfurnished"
+            type="checkbox"
+          />
+        </div>
+      </div>
+       
+      <div
+        class="counts"
+      >
+        <div
+          class="search-load"
+        >
+          <button
+            class="btn"
+            disabled="disabled"
+            id="load"
+            type="button"
+          >
+            LOAD
+          </button>
+        </div>
+         
+        <div
+          class="count"
+          style="margin-right: 20px;"
+        >
+          <h3>
+            Total: 
+            <span
+              class="count-num"
+            >
+              0
+            </span>
+          </h3>
+        </div>
+      </div>
+    </div>
+     
+    <span
+      class="searchTable"
+      id="search-table-container"
+    >
+      <datatable-stub
+        class="pre-line"
+        columns="[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]"
+        compname=""
+        data=""
+        fixheaderandsetbodymaxheight="400"
+        furnished="true"
+        nrsearch=""
+        pagesizeoptions="5,10,20,50,100"
+        priority="true"
+        query="[object Object]"
+        searchquery="?order=priorityCd:desc,submittedDate:asc&queue=HOLD&furnished=true&unfurnished=true&rows=10"
+        selectednr=""
+        sorteddata=""
+        states="ALL,HOLD,INPROGRESS,DRAFT,EXPIRED,CANCELLED,APPROVED,CONDITIONAL,REJECTED"
+        statesort="HOLD"
+        tblclass="table-bordered,search-table"
+        tblstyle="[object Object]"
+        total="0"
+        unfurnished="true"
+        username=""
+      />
+    </span>
+  </div>
+</div>
+`;

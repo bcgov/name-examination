@@ -1,16 +1,16 @@
 /* eslint-disable */
 import { shallowMount } from '@vue/test-utils';
-import CorpMatch from '@/components/application/Examine/Recipe/conflicts/conflictInfoType/corpMatch';
+import ClientInfo from '@/components/application/Examine/client/ClientInfo';
 import store from '@/store'
 
-describe('CorpMatch.vue', () => {
+describe('ClientInfo.vue', () => {
 
     let component;
     beforeEach(() => {
-        component = shallowMount(CorpMatch, {store: store});
+        component = shallowMount(ClientInfo, {store: store});
     });
 
-   it("renders a CorpMatch component", () => {
+   it("renders a ClientInfo component", () => {
      expect(component.element).toMatchSnapshot();
    })
 

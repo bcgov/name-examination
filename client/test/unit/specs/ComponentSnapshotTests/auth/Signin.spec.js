@@ -1,16 +1,16 @@
 /* eslint-disable */
 import { shallowMount } from '@vue/test-utils';
-import CorpMatch from '@/components/application/Examine/Recipe/conflicts/conflictInfoType/corpMatch';
+import Signin from '@/components/auth/Signin';
 import store from '@/store'
 
-describe('CorpMatch.vue', () => {
+describe.skip('Signin.vue', () => {
 
     let component;
     beforeEach(() => {
-        component = shallowMount(CorpMatch, {store: store});
+        component = shallowMount(Signin, {store: store});
     });
 
-   it("renders a CorpMatch component", () => {
+   it("renders a Signin component", () => {
      expect(component.element).toMatchSnapshot();
    })
 

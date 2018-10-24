@@ -12,7 +12,7 @@ describe('ConditionInfo.vue', () => {
         vm = new component({store: store});
     });
 
-   it("renders an ConditionInfo component", () => {
+   it("renders a ConditionInfo component", () => {
      expect(vm.$el).toMatchSnapshot();
    })
 

@@ -1,6 +1,4 @@
 /* eslint-disable */
-import Vue from 'vue';
-Vue.use(require('vue-shortkey'))
 import { shallowMount } from '@vue/test-utils';
 import TrademarksInfo from '@/components/application/Examine/Recipe/trademarks/trademarksInfo';
 import store from '@/store'

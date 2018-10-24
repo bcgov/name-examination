@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StateHeader.vue renders a StateHeader component 1`] = `
+<div
+  class="stateheaderview"
+>
+  <p
+    class="state-text"
+  >
+    
+  </p>
+</div>
+`;

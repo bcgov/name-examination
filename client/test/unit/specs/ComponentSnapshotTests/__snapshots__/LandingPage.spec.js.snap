@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LandingPage.vue Snapshot renders a LandingPage component 1`] = `
+<div
+  class="container-fluid homepage-container"
+>
+  <div
+    class="row"
+  >
+    <div
+      class="col"
+    >
+      <div>
+        <h2>
+          Your authorization is missing or has expired. Please login.
+        </h2>
+      </div>
+    </div>
+  </div>
+</div>
+`;

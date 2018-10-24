@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Stats.vue renders a Stats component 1`] = `
+<div>
+  <div
+    class="container-fluid"
+  >
+    <div
+      class="row"
+    >
+      <div
+        class="col"
+      >
+        <form
+          class="form-inline"
+        >
+          <input
+            class="form-control"
+            placeholder="hrs"
+            style="width: 100px;"
+            type="number"
+          />
+           
+          <button
+            class="btn btn-success btn-sm"
+            style="margin-left: 10px;"
+            type="submit"
+          >
+            Get Stats
+          </button>
+        </form>
+         
+        <div
+          class="font-italic"
+          style="width: 100px; text-align: center;"
+        >
+          hours
+        </div>
+      </div>
+       
+      <div
+        class="col"
+      >
+        <div
+          class="float-right"
+        >
+          Decisions in the past 1 hours : 
+        </div>
+      </div>
+    </div>
+     
+    <div
+      class="row"
+    />
+  </div>
+</div>
+`;

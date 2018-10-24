@@ -1,16 +1,16 @@
 /* eslint-disable */
 import { shallowMount } from '@vue/test-utils';
-import CorpMatch from '@/components/application/Examine/Recipe/conflicts/conflictInfoType/corpMatch';
+import Find from '@/components/application/Find';
 import store from '@/store'
 
-describe('CorpMatch.vue', () => {
+describe('Find.vue', () => {
 
     let component;
     beforeEach(() => {
-        component = shallowMount(CorpMatch, {store: store});
+        component = shallowMount(Find, {store: store});
     });
 
-   it("renders a CorpMatch component", () => {
+   it("renders a Find component", () => {
      expect(component.element).toMatchSnapshot();
    })
 
