@@ -51,7 +51,7 @@
           </div>
         </div>
 
-        <div v-if="show_extended_header" class="row add-top-padding-extra">
+        <div v-if="show_extended_header" class="row add-top-padding-extra" id="comments-div">
           <div class="col">
             <div>
               <h3>INTERNAL COMMENTS</h3>
@@ -703,25 +703,28 @@ export default {
           !nwpta_ab_invalid && !nwpta_sk_invalid;
       },
       checkReqTypeRules(val) {
-        var rules = this.requestTypeRules.filter(findArrValueByAttr(val, 'request_type'))[0];
 
-        if (rules == undefined) {
-          this.corp_num_required = false;
-          this.prev_nr_required = false;
-          this.nwpta_required = false;
-          this.jurisdiction_required = false;
-          this.additional_info_template = null;
-          this.is_lp_nwpta_type = null;
-          this.is_cp_nwpta_type = null;
+        if (this.requestTypeRules != null) {
+          var rules = this.requestTypeRules.filter(findArrValueByAttr(val, 'request_type'))[0];
 
-        } else {
-          this.corp_num_required = rules.corp_num_required;
-          this.prev_nr_required = rules.prev_nr_required;
-          this.nwpta_required = rules.nwpta_required; /* not used, can be removed after business confirms */
-          this.jurisdiction_required = rules.jurisdiction_required;
-          this.additional_info_template = rules.additional_info_template;
-          this.is_lp_nwpta_type = rules.is_lp_nwpta_type;
-          this.is_cp_nwpta_type = rules.is_cp_nwpta_type;
+          if (rules == undefined) {
+            this.corp_num_required = false;
+            this.prev_nr_required = false;
+            this.nwpta_required = false;
+            this.jurisdiction_required = false;
+            this.additional_info_template = null;
+            this.is_lp_nwpta_type = null;
+            this.is_cp_nwpta_type = null;
+
+          } else {
+            this.corp_num_required = rules.corp_num_required;
+            this.prev_nr_required = rules.prev_nr_required;
+            this.nwpta_required = rules.nwpta_required; /* not used, can be removed after business confirms */
+            this.jurisdiction_required = rules.jurisdiction_required;
+            this.additional_info_template = rules.additional_info_template;
+            this.is_lp_nwpta_type = rules.is_lp_nwpta_type;
+            this.is_cp_nwpta_type = rules.is_cp_nwpta_type;
+          }
         }
       },
     },
