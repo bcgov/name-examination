@@ -36,13 +36,13 @@
             </div>
             <div class="row">
               <div class="col">
-                <nwpta v-if="nwpta_required" ref="nwpta_ab"
+                <nwpta ref="nwpta_ab"
                        jurisdiction="AB"
                        v-bind:is_lp_nwpta_type="is_lp_nwpta_type"
                        v-bind:is_cp_nwpta_type="is_cp_nwpta_type" />
               </div>
               <div class="col">
-                <nwpta v-if="nwpta_required" ref="nwpta_sk"
+                <nwpta ref="nwpta_sk"
                        jurisdiction="SK"
                        v-bind:is_lp_nwpta_type="is_lp_nwpta_type"
                        v-bind:is_cp_nwpta_type="is_cp_nwpta_type" />
@@ -717,7 +717,7 @@ export default {
         } else {
           this.corp_num_required = rules.corp_num_required;
           this.prev_nr_required = rules.prev_nr_required;
-          this.nwpta_required = rules.nwpta_required;
+          this.nwpta_required = rules.nwpta_required; /* not used, can be removed after business confirms */
           this.jurisdiction_required = rules.jurisdiction_required;
           this.additional_info_template = rules.additional_info_template;
           this.is_lp_nwpta_type = rules.is_lp_nwpta_type;
