@@ -1,6 +1,8 @@
 import staticFilesServer from '../../unit/static.files.server';
 import { createApiSandbox, sinon } from './support/api.stubs'
 import {
+    givenQueue,
+    givenQueueIsEmpty,
     givenSomeoneHasAssignedNr,
     whenSomeoneAccessNameExamination,
     whenHeQuicklyApproves,
@@ -27,7 +29,7 @@ defineFeature(feature, test => {
 
     test('Joe can quickly approve the next examination assigned to him', ({ given, when, then }) => {
 
-        givenSomeoneHasAssignedNr(given, data)
+        givenQueue(given, data)
 
         whenSomeoneAccessNameExamination(given, data)
 
@@ -41,7 +43,7 @@ defineFeature(feature, test => {
 
     test('Max can not quickly approve examination assigned to Joe', ({ given, when, then }) => {
 
-        givenSomeoneHasAssignedNr(given, data)
+        givenQueueIsEmpty(given, data)
 
         whenSomeoneAccessNameExamination(given, data)
 

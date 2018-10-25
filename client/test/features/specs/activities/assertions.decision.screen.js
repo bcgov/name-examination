@@ -7,8 +7,10 @@ let heSeesTheSelectedConditionInDecisionScreen = (then, data)=>{
 
 let heSeesConditionListIsEmpty = (then, data)=>{
     then(/^he sees conditions list is empty/, () => {
-        let item = data.vm.$el.querySelector('div.lower-section div.namePage span div.row div div div.multiselect div.multiselect__tags-wrap')
-        expect(item.innerHTML).toEqual('')
+        let selection = data.vm.$el.querySelector('div.lower-section div.namePage span div.row div div div.multiselect div.multiselect__tags-wrap')
+        expect(selection.innerHTML).toEqual('')
+        let list = data.vm.$el.querySelector('div.lower-section div.namePage span div.row div div div.multiselect div.multiselect__content-wrapper li.multiselect__element .multiselect__option span')
+        expect(list.innerHTML).toEqual('Consent Required')
     });
 }
 

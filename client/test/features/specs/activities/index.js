@@ -13,6 +13,7 @@ import { heSeesTheSelectedConditionInDecisionScreen, heSeesConditionListIsEmpty 
 import { whenSomeoneApprovesWithCondition } from './when.approving.with.condition'
 import { givenRestrictedWord } from './given.restricted.word'
 import { whenGetNext } from './get.next'
+import { givenQueue, givenQueueIsEmpty } from './given.queue'
 
 module.exports = {
     givenSomeoneHasAssignedNr:givenSomeoneHasAssignedNr,
@@ -28,5 +29,7 @@ module.exports = {
     whenSomeoneApprovesWithCondition:whenSomeoneApprovesWithCondition,
     givenRestrictedWord:givenRestrictedWord,
     whenGetNext:whenGetNext,
-    heSeesConditionListIsEmpty:heSeesConditionListIsEmpty
+    heSeesConditionListIsEmpty:heSeesConditionListIsEmpty,
+    givenQueue:givenQueue,
+    givenQueueIsEmpty:givenQueueIsEmpty
 }

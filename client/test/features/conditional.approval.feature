@@ -2,7 +2,9 @@ Feature: Conditional approval
 
 Scenario: Joe can approve a request with a condition
     Given INSURANCE is a restricted word requiring consent with instructions: double check please
-    Given Joe has an INPROGRESS assigned name request NR1111 with name INSURANCE & Co INC
+    Given the name request queue contains:
+        | NR    | Name               |
+        | NR1111| INSURANCE & Co INC |
     Given Joe accesses Name examination
     Given he accesses conditions tab
     Given he selects the first condition on INSURANCE

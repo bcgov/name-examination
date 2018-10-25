@@ -1,6 +1,7 @@
 import staticFilesServer from '../../unit/static.files.server';
 import { createApiSandbox, sinon } from './support/api.stubs'
 import {
+    givenQueue,
     givenSomeoneHasAssignedNr,
     whenSomeoneAccessNameExamination,
     whenSomeoneAccessConditionsTab,
@@ -35,7 +36,7 @@ defineFeature(feature, test => {
 
         givenRestrictedWord(given, data)
 
-        givenSomeoneHasAssignedNr(given, data)
+        givenQueue(given, data)
 
         whenSomeoneAccessNameExamination(given, data)
 

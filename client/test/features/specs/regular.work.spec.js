@@ -14,7 +14,8 @@ import {
     whenSomeoneApprovesWithCondition,
     givenRestrictedWord,
     whenGetNext,
-    heSeesConditionListIsEmpty
+    heSeesConditionListIsEmpty,
+    givenQueue
 } from './activities'
 import { loadFeature, defineFeature } from 'jest-cucumber';
 const feature = loadFeature('./test/features/regular.work.feature');
@@ -37,7 +38,7 @@ defineFeature(feature, test => {
 
         givenRestrictedWord(given, data)
 
-        givenSomeoneHasAssignedNr(given, data)
+        givenQueue(given, data)
 
         whenSomeoneAccessNameExamination(given, data)
 
@@ -53,8 +54,6 @@ defineFeature(feature, test => {
 
         heSeesNrStatusIsApproved(then, data)
 
-
-        givenSomeoneHasAssignedNr(given, data)
 
         whenGetNext(when, data)
 
