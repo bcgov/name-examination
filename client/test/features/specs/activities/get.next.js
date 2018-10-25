@@ -1,4 +1,4 @@
-let whenGetNext = (when, data)=>{
+let getNext = (when, data)=>{
     when(/^(.*) accesses the next examination$/, (userId) => {
         data.stubApi({ user:userId })
         return new Promise((done) => {
@@ -15,5 +15,5 @@ let whenGetNext = (when, data)=>{
 }
 
 module.exports = {
-    whenGetNext:whenGetNext
+    getNext:getNext
 }

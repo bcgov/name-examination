@@ -1,6 +1,6 @@
 import sinon from 'sinon'
 
-let whenSomeoneApprovesWithCondition = (when, data)=>{
+let conditionalyApprove = (when, data)=>{
     when(/^he approves (.*)$/, (nr) => {
         return new Promise((done) => {
             data.apiSandbox.getStub.withArgs('/api/v1/requests/'+nr, sinon.match.any).returns(
@@ -28,5 +28,5 @@ let whenSomeoneApprovesWithCondition = (when, data)=>{
 }
 
 module.exports = {
-    whenSomeoneApprovesWithCondition:whenSomeoneApprovesWithCondition
+    conditionalyApprove:conditionalyApprove
 }

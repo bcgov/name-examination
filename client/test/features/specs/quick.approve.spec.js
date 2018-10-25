@@ -2,14 +2,17 @@ import staticFilesServer from '../../unit/static.files.server';
 import { createApiSandbox, sinon } from './support/api.stubs'
 import {
     givenQueue,
-    givenQueueIsEmpty,
-    givenSomeoneHasAssignedNr,
-    whenSomeoneAccessNameExamination,
-    whenHeQuicklyApproves,
+    givenQueueIsEmpty
+} from './support'
+import {
+    openNameExamination,
+    quicklyApprove
+} from './activities'
+import {
     heSeesThatHeCanQuicklyApprove,
     heSeesThatHeCanNotQuicklyApprove,
     heSeesNrStatusIsApproved
-} from './activities'
+} from './assertions'
 import { loadFeature, defineFeature } from 'jest-cucumber';
 const feature = loadFeature('./test/features/quick.approve.feature');
 
@@ -31,12 +34,12 @@ defineFeature(feature, test => {
 
         givenQueue(given, data)
 
-        whenSomeoneAccessNameExamination(given, data)
+        openNameExamination(given, data)
 
         heSeesThatHeCanQuicklyApprove(then, data)
 
 
-        whenHeQuicklyApproves(when, data)
+        quicklyApprove(when, data)
 
         heSeesNrStatusIsApproved(then, data)
     })
@@ -45,7 +48,7 @@ defineFeature(feature, test => {
 
         givenQueueIsEmpty(given, data)
 
-        whenSomeoneAccessNameExamination(given, data)
+        openNameExamination(given, data)
 
         heSeesThatHeCanNotQuicklyApprove(then, data)
 

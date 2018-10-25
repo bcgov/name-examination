@@ -1,4 +1,4 @@
-let whenSomeoneSelectTheCondition = (when, data)=>{
+let selectCondition = (when, data)=>{
     when(/^he selects the first condition on (.*)/, (word) => {
         return new Promise((done) => {
             let row = data.vm.$el.querySelector('#condition div[name=NormalTableBody] table tr');
@@ -17,5 +17,5 @@ let whenSomeoneSelectTheCondition = (when, data)=>{
 }
 
 module.exports = {
-    whenSomeoneSelectTheCondition:whenSomeoneSelectTheCondition
+    selectCondition:selectCondition
 }

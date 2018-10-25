@@ -2,19 +2,19 @@ import staticFilesServer from '../../unit/static.files.server';
 import { createApiSandbox, sinon } from './support/api.stubs'
 import {
     givenQueue,
-    givenSomeoneHasAssignedNr,
-    whenSomeoneAccessNameExamination,
-    whenSomeoneAccessConditionsTab,
-    whenHeQuicklyApproves,
-    heSeesThatHeCanQuicklyApprove,
-    heSeesThatHeCanNotQuicklyApprove,
-    heSeesNrStatusIsApproved,
-    whenSomeoneSelectTheCondition,
-    whenSomeoneGoesToDecisionScreen,
-    heSeesTheSelectedConditionInDecisionScreen,
-    whenSomeoneApprovesWithCondition,
     givenRestrictedWord
+} from './support'
+import {
+    openNameExamination,
+    accessConditionsTab,
+    selectCondition,
+    accessDecisionScreen,
+    conditionalyApprove
 } from './activities'
+import {
+    heSeesNrStatusIsApproved,
+    heSeesTheSelectedConditionInDecisionScreen
+} from './assertions'
 import { loadFeature, defineFeature } from 'jest-cucumber';
 const feature = loadFeature('./test/features/conditional.approval.feature');
 
@@ -38,17 +38,17 @@ defineFeature(feature, test => {
 
         givenQueue(given, data)
 
-        whenSomeoneAccessNameExamination(given, data)
+        openNameExamination(given, data)
 
-        whenSomeoneAccessConditionsTab(given, data)
+        accessConditionsTab(given, data)
 
-        whenSomeoneSelectTheCondition(given, data)
+        selectCondition(given, data)
 
-        whenSomeoneGoesToDecisionScreen(when, data)
+        accessDecisionScreen(when, data)
 
         heSeesTheSelectedConditionInDecisionScreen(then, data)
 
-        whenSomeoneApprovesWithCondition(when, data)
+        conditionalyApprove(when, data)
 
         heSeesNrStatusIsApproved(then, data)
     })
