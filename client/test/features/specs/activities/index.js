@@ -1,31 +1,17 @@
-import { whenSomeoneAccessNameExamination } from './when.accessing.name.examination'
-import { givenSomeoneHasAssignedNr } from './given.assigned.nr'
-import {
-    heSeesThatHeCanQuicklyApprove,
-    heSeesThatHeCanNotQuicklyApprove
-} from './assertions.quick.approve'
-import { whenHeQuicklyApproves } from './quick.approval'
-import { heSeesNrStatusIsApproved } from './assertions.nr.status'
-import { givenSomeoneHasAssignedNrRequiringConsent } from './given.assigned.nr.requiring.consent'
-import { whenSomeoneAccessConditionsTab } from './when.accessing.conditions.tab'
-import { whenSomeoneSelectTheCondition } from './when.selecting.condition'
-import { whenSomeoneGoesToDecisionScreen } from './when.going.to.decision.screen'
-import { heSeesTheSelectedConditionInDecisionScreen } from './assertions.decision.screen'
-import { whenSomeoneApprovesWithCondition } from './when.approving.with.condition'
-import { givenRestrictedWord } from './given.restricted.word'
+import { openNameExamination } from './open.name.examination'
+import { quicklyApprove } from './quick.approve'
+import { accessConditionsTab } from './access.conditions.tab'
+import { selectCondition } from './select.condition'
+import { accessDecisionScreen } from './access.decision.screen'
+import { conditionalyApprove } from './conditionaly.approve'
+import { getNext } from './get.next'
 
 module.exports = {
-    givenSomeoneHasAssignedNr:givenSomeoneHasAssignedNr,
-    whenSomeoneAccessNameExamination:whenSomeoneAccessNameExamination,
-    heSeesThatHeCanQuicklyApprove:heSeesThatHeCanQuicklyApprove,
-    heSeesThatHeCanNotQuicklyApprove:heSeesThatHeCanNotQuicklyApprove,
-    whenHeQuicklyApproves:whenHeQuicklyApproves,
-    heSeesNrStatusIsApproved:heSeesNrStatusIsApproved,
-    givenSomeoneHasAssignedNrRequiringConsent:givenSomeoneHasAssignedNrRequiringConsent,
-    whenSomeoneAccessConditionsTab:whenSomeoneAccessConditionsTab,
-    whenSomeoneSelectTheCondition:whenSomeoneSelectTheCondition,
-    whenSomeoneGoesToDecisionScreen:whenSomeoneGoesToDecisionScreen,
-    heSeesTheSelectedConditionInDecisionScreen:heSeesTheSelectedConditionInDecisionScreen,
-    whenSomeoneApprovesWithCondition:whenSomeoneApprovesWithCondition,
-    givenRestrictedWord:givenRestrictedWord
+    openNameExamination:openNameExamination,
+    quicklyApprove:quicklyApprove,
+    accessConditionsTab:accessConditionsTab,
+    selectCondition:selectCondition,
+    accessDecisionScreen:accessDecisionScreen,
+    conditionalyApprove:conditionalyApprove,
+    getNext:getNext
 }

@@ -35,6 +35,34 @@ module.exports = {
             } }))
         )
 
+        sandbox.getStub.withArgs('/api/v1/requests/undefined', sinon.match.any).returns(
+            new Promise((resolve) => resolve({ data: {} }))
+        )
+        sandbox.putStub.withArgs('/api/v1/requests/undefined/names/1', sinon.match.any).returns(
+            new Promise((resolve) => resolve({ data: {} }))
+        )
+        sandbox.patchStub.withArgs('/api/v1/requests/undefined', sinon.match.any).returns(
+            new Promise((resolve) => resolve({ data: {} }))
+        )
+        sandbox.getStub.withArgs('/api/v1/requests/null', sinon.match.any).returns(
+            new Promise((resolve) => resolve({ data: {} }))
+        )
+        sandbox.putStub.withArgs('/api/v1/requests/null/names/1', sinon.match.any).returns(
+            new Promise((resolve) => resolve({ data: {} }))
+        )
+        sandbox.patchStub.withArgs('/api/v1/requests/null', sinon.match.any).returns(
+            new Promise((resolve) => resolve({ data: {} }))
+        )
+
+        sandbox.putStub.withArgs(sinon.match(/\/api\/v1\/requests\/(.*)\/names\/1/), sinon.match.any).returns(
+            new Promise((resolve) => resolve({ data: {
+            } }))
+        )
+        sandbox.patchStub.withArgs(sinon.match(/\/api\/v1\/requests\/(.*)/), sinon.match.any).returns(
+            new Promise((resolve) => resolve({ data: {
+            } }))
+        )
+
         return sandbox;
     },
     sinon:sinon

@@ -9,8 +9,9 @@ import store from '@/store'
 import router from '@/router'
 import { cleanState } from '../support/clean.state'
 
-let whenSomeoneAccessNameExamination = (when, data)=>{
+let openNameExamination = (when, data)=>{
     when(/^(.*) accesses Name examination$/, (userId) => {
+        data.stubApi({ user:userId })
         return new Promise((done) => {
             const Constructor = Vue.extend(App);
             store.replaceState(cleanState())
@@ -29,5 +30,5 @@ let whenSomeoneAccessNameExamination = (when, data)=>{
 }
 
 module.exports = {
-    whenSomeoneAccessNameExamination:whenSomeoneAccessNameExamination
+    openNameExamination:openNameExamination
 }

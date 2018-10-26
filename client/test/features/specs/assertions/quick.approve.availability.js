@@ -7,8 +7,7 @@ let heSeesThatHeCanQuicklyApprove = (then, data)=>{
 }
 let heSeesThatHeCanNotQuicklyApprove = (then, data)=>{
     then(/^he sees that he can NOT quickly approve (.*)$/, (nr)=>{
-        expect(data.vm.$el.querySelector('#div1').textContent).toContain(nr)
-        expect(data.vm.$el.querySelector('#div1').textContent).toContain('Status: INPROGRESS')
+        expect(data.vm.$el.querySelector('#div1').textContent).toContain('Status:   ERROR!!')
         expect(data.vm.$el.querySelector('#examine-quick-approve-button')).toEqual(null)
     })
 }

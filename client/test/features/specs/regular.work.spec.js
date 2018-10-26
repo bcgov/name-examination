@@ -1,22 +1,26 @@
 import staticFilesServer from '../../unit/static.files.server';
 import { createApiSandbox, sinon } from './support/api.stubs'
 import {
-    givenQueue,
-    givenRestrictedWord
+    givenRestrictedWord,
+    givenQueue
 } from './support'
 import {
     openNameExamination,
     accessConditionsTab,
     selectCondition,
     accessDecisionScreen,
-    conditionalyApprove
+    conditionalyApprove,
+    getNext
 } from './activities'
 import {
+    heSeesThatHeCanQuicklyApprove,
+    heSeesThatHeCanNotQuicklyApprove,
     heSeesNrStatusIsApproved,
-    heSeesTheSelectedConditionInDecisionScreen
+    heSeesTheSelectedConditionInDecisionScreen,
+    heSeesConditionListIsEmpty
 } from './assertions'
 import { loadFeature, defineFeature } from 'jest-cucumber';
-const feature = loadFeature('./test/features/conditional.approval.feature');
+const feature = loadFeature('./test/features/regular.work.feature');
 
 defineFeature(feature, test => {
 
@@ -32,11 +36,12 @@ defineFeature(feature, test => {
         staticFilesServer.stop(done)
     })
 
-    test('Joe can approve a request with a condition', ({ given, when, then }) => {
+    test('Joe can chain approval of several requests', ({ given, when, then }) => {
 
         givenRestrictedWord(given, data)
 
         givenQueue(given, data)
+        
 
         openNameExamination(given, data)
 
@@ -47,6 +52,17 @@ defineFeature(feature, test => {
         accessDecisionScreen(when, data)
 
         heSeesTheSelectedConditionInDecisionScreen(then, data)
+
+        conditionalyApprove(when, data)
+
+        heSeesNrStatusIsApproved(then, data)
+
+
+        getNext(when, data)
+
+        accessDecisionScreen(when, data)
+
+        heSeesConditionListIsEmpty(then, data)
 
         conditionalyApprove(when, data)
 

@@ -1,13 +1,18 @@
 import staticFilesServer from '../../unit/static.files.server';
 import { createApiSandbox, sinon } from './support/api.stubs'
 import {
-    givenSomeoneHasAssignedNr,
-    whenSomeoneAccessNameExamination,
-    whenHeQuicklyApproves,
+    givenQueue,
+    givenQueueIsEmpty
+} from './support'
+import {
+    openNameExamination,
+    quicklyApprove
+} from './activities'
+import {
     heSeesThatHeCanQuicklyApprove,
     heSeesThatHeCanNotQuicklyApprove,
     heSeesNrStatusIsApproved
-} from './activities'
+} from './assertions'
 import { loadFeature, defineFeature } from 'jest-cucumber';
 const feature = loadFeature('./test/features/quick.approve.feature');
 
@@ -27,23 +32,23 @@ defineFeature(feature, test => {
 
     test('Joe can quickly approve the next examination assigned to him', ({ given, when, then }) => {
 
-        givenSomeoneHasAssignedNr(given, data)
+        givenQueue(given, data)
 
-        whenSomeoneAccessNameExamination(given, data)
+        openNameExamination(given, data)
 
         heSeesThatHeCanQuicklyApprove(then, data)
 
 
-        whenHeQuicklyApproves(when, data)
+        quicklyApprove(when, data)
 
         heSeesNrStatusIsApproved(then, data)
     })
 
     test('Max can not quickly approve examination assigned to Joe', ({ given, when, then }) => {
 
-        givenSomeoneHasAssignedNr(given, data)
+        givenQueueIsEmpty(given, data)
 
-        whenSomeoneAccessNameExamination(given, data)
+        openNameExamination(given, data)
 
         heSeesThatHeCanNotQuicklyApprove(then, data)
 

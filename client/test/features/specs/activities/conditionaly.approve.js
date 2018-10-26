@@ -1,7 +1,7 @@
 import sinon from 'sinon'
 
-let whenHeQuicklyApproves = (when, data)=> {
-    when(/^he quickly approves (.*)/, (nr) => {
+let conditionalyApprove = (when, data)=>{
+    when(/^he approves (.*)$/, (nr) => {
         return new Promise((done) => {
             data.apiSandbox.getStub.withArgs('/api/v1/requests/'+nr, sinon.match.any).returns(
                 new Promise((resolve) => resolve({ data: {
@@ -15,17 +15,18 @@ let whenHeQuicklyApproves = (when, data)=> {
                     userId: data.owner
                 } }))
             )
-            let button = data.vm.$el.querySelector('#examine-quick-approve-button');
+            let button = data.vm.$el.querySelector('#decision-approve-button');
+            expect(button).not.toEqual(null)
             let window = button.ownerDocument.defaultView;
             var click = new window.Event('click');
             button.dispatchEvent(click);
             setTimeout(()=>{
                 done();
             }, 1000)
-        })
+        });
     });
 }
 
 module.exports = {
-    whenHeQuicklyApproves:whenHeQuicklyApproves
+    conditionalyApprove:conditionalyApprove
 }
