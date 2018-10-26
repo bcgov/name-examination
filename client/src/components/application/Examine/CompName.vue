@@ -523,23 +523,17 @@
       compName1State: function (val) {
         console.log('compName1 watcher fired:' + val)
         if (this.resetting) {
-          if (this.compName2 != undefined) {
-          } else
-            this.addNewComment(this.add_comment_display);
-          if (this.compName2State != 'NE')
+          if (this.compName2 != undefined && this.compName2State != 'NE') {
             this.$store.dispatch('resetDecision', 2);
-          else
+          } else
             this.addNewComment(this.add_comment_display);
         }
       },
       compName2State: function (val) {
         console.log('compName2 watcher fired:' + val)
         if (this.resetting) {
-          if (this.compName3 != undefined) {
-            if (this.compName2State != 'NE')
-              this.$store.dispatch('resetDecision', 3);
-            else
-              this.addNewComment(this.add_comment_display);
+          if (this.compName3 != undefined && this.compName3State != 'NE') {
+            this.$store.dispatch('resetDecision', 3);
           } else
             this.addNewComment(this.add_comment_display);
         }
