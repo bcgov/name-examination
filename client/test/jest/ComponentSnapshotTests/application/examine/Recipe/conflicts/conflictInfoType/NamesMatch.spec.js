@@ -1,16 +1,16 @@
 /* eslint-disable */
 import { shallowMount } from '@vue/test-utils';
-import NameMatch from '@/components/application/Examine/Recipe/conflicts/conflictInfoType/namesMatch';
+import NamesMatch from '@/components/application/Examine/Recipe/conflicts/conflictInfoType/namesMatch';
 import store from '@/store'
 
-describe('NameMatch.vue', () => {
+describe('NamesMatch.vue', () => {
 
     let component;
     beforeEach(() => {
-        component = shallowMount(NameMatch, {store: store});
+        component = shallowMount(NamesMatch, {store: store});
     });
 
-   it("renders a NameMatch component", () => {
+   it("renders a NamesMatch component", () => {
      expect(component.element).toMatchSnapshot();
    })
 

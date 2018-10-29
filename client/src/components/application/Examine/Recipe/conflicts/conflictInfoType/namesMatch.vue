@@ -36,6 +36,12 @@
       <h3>Contact</h3>
       <p>{{ contactName }}</p>
 
+      <h3 v-if="decisionText">Decision Text</h3>
+      <p v-if="decisionText">{{decisionText}}</p>
+
+      <h3 v-if="conflicts.length > 0">Conflicts</h3>
+      <p v-for="conflict in conflicts">{{ conflict }}</p>
+
   </span>
 
 </template>
@@ -45,6 +51,13 @@
   export default {
     name: 'namesMatch',
     computed: {
+      currentConflictName() {
+        let currentConflict = this.$store.getters.currentConflict;
+        if (currentConflict != null)
+          return currentConflict.text;
+        else
+          return "";
+      },
       clientFirstName() {
           if (this.namesConflictInfo == undefined || this.namesConflictInfo.applicants == undefined ||
             this.namesConflictInfo.applicants.clientFirstName == undefined) return '';
@@ -149,7 +162,33 @@
       },
       namesConflictInfo() {
         return this.$store.getters.namesConflictJSON;
-      }
+      },
+      decisionText() {
+        if (this.namesConflictInfo == undefined) return '';
+
+        // get decision text for this particular name choice
+        for (let i = 0; i < this.namesConflictInfo.names.length; i++) {
+          if (this.namesConflictInfo.names[i].name === this.currentConflictName &&
+              this.namesConflictInfo.names[i].decision_text != '') {
+            return this.namesConflictInfo.names[i].decision_text;
+          }
+        }
+        return null;
+      },
+      conflicts() {
+        if (this.namesConflictInfo == undefined) return [];
+
+        // get all conflicts (up to 3) for this particular name choice
+        var conflicts = [];
+        for (let i = 0; i < this.namesConflictInfo.names.length; i++) {
+          if (this.namesConflictInfo.names[i].name === this.currentConflictName) {
+            if (![null, ''].includes(this.namesConflictInfo.names[i].conflict1)) conflicts.push(this.namesConflictInfo.names[i].conflict1);
+            if (![null, ''].includes(this.namesConflictInfo.names[i].conflict2)) conflicts.push(this.namesConflictInfo.names[i].conflict2);
+            if (![null, ''].includes(this.namesConflictInfo.names[i].conflict3)) conflicts.push(this.namesConflictInfo.names[i].conflict3);
+          }
+        }
+        return conflicts;
+      },
     },
     methods: {
     },
