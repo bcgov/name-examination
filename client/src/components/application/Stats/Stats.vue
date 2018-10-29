@@ -118,10 +118,9 @@ export default {
       if (this.timespan != '' && this.timespan != null) params = '?timespan=' + this.timespan;
       const url = '/api/v1/requests/stats' + params
       return axios.get(url, {headers: {Authorization: `Bearer ${sessionStorage.getItem('KEYCLOAK_TOKEN')}`}}).then(response => {
-        console.log(response);
+
         if (response.data && response.data.numRecords > 0) {
           this.requests = response.data.nameRequests;
-          console.log(this.requests);
 
           // sort names by choice number
           for (let request of this.requests) {
@@ -134,8 +133,6 @@ export default {
         .catch(error => console.log('ERROR: ' + error))
     },
     sortNames(data) {
-      console.log('got to sortNames() for ');
-      console.log(data);
       function compare(a,b) {
         if (a.choice < b.choice)
           return -1;
