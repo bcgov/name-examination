@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IssueInfo.vue renders an IssueInfo component 1`] = `
+<div
+  class="container-fluid"
+>
+  <div
+    class="row"
+  >
+    <!---->
+     
+    <!---->
+     
+    <!---->
+     
+    <!---->
+  </div>
+</div>
+`;

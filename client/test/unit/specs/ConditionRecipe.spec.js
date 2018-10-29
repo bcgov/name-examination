@@ -3,13 +3,8 @@ import Vue from 'vue';
 import Datatable from 'vue2-datatable-component'
 Vue.use(require('vue-shortkey'))
 Vue.use(Datatable)
-import NameExamination from '@/components/application/NameExamination';
-import CompName from '@/components/application/Examine/CompName';
-import RecipeMenu from '@/components/application/Examine/RecipeMenu';
 import conditionInfo from '@/components/application/Examine/Recipe/conditions/conditionInfo';
 import store from '@/store'
-import axios from '@/axios-auth.js';
-import sinon from 'sinon';
 
 describe('conditionInfo.vue', () => {
   let instance;

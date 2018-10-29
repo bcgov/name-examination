@@ -147,15 +147,8 @@
   import internalcomments from "@/components/application/Examine/InternalComments.vue";
   import Multiselect from 'vue-multiselect';
 
-  const myMixin = {
-    created(){
-      console.log("It works!")
-    }
-  }
-
   export default {
     name: "Decision",
-    mixins: [myMixin],
     data: function ()
     {
       return {

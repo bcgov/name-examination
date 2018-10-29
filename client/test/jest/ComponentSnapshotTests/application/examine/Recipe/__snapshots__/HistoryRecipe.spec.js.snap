@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HistoryRecipe.vue renders a HistoryRecipe component 1`] = `
+<div
+  class="row"
+>
+  <historylistview-stub />
+   
+  <div
+    class="col history-info-view"
+    id="historyInfo"
+  >
+    <historyinfoview-stub />
+  </div>
+   
+  <div
+    class="col client-info-view"
+  >
+    <h2
+      style="text-transform: uppercase;"
+    >
+      
+    </h2>
+     
+    <div
+      class="add-top-padding"
+    >
+      <h3>
+        NR #
+      </h3>
+       
+      <p>
+        
+      </p>
+       
+      <h3>
+        Submitted
+      </h3>
+       
+      <p>
+        
+      </p>
+    </div>
+     
+    <div
+      class="add-top-padding"
+    >
+      <clientinfoview-stub />
+    </div>
+  </div>
+</div>
+`;

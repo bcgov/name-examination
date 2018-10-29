@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HistoryList.vue renders a HistoryList component 1`] = `
+<div
+  class="col history-list-parent-col"
+>
+  <div
+    class="row history-list-view"
+  >
+    <select
+      border="0"
+      class="form-control"
+      size="17"
+      tabindex="6"
+    />
+  </div>
+</div>
+`;
