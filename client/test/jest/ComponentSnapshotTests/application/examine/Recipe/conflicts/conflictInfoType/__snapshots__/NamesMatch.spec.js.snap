@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`NameMatch.vue renders a NameMatch component 1`] = `
+exports[`NamesMatch.vue renders a NamesMatch component 1`] = `
 <span>
   <h3>
     NR #
@@ -81,5 +81,12 @@ exports[`NameMatch.vue renders a NameMatch component 1`] = `
   <p>
     
   </p>
+   
+  <!---->
+   
+  <!---->
+   
+  <!---->
+   
 </span>
 `;
