@@ -78,7 +78,7 @@
             </b-col>
           </b-row>
 
-          <b-table id="search-table" show-empty striped hover class="pre-line" :fields="headers" :items="data">
+          <b-table id="search-table" show-empty striped hover fixed class="pre-line scroll" :fields="headers" :items="data">
             <template slot="NameRequestNumber" slot-scope="data">
               <a @click="examineNr(data.value)">{{data.value}}</a>
             </template>
@@ -95,16 +95,16 @@ export default {
   data: function () {
     return {
       headers:[
-        {key:'Status', label: 'Status', thClass:'search-header', class: 'text-center'},
-        {key:'LastModifiedBy', label: 'Last Modified By', thClass:'search-header'},
-        {key:'NameRequestNumber', label: 'Name Request Number', class: 'text-center link', thClass:'search-header', formatter: (value) => {return value.trim()}},
-        {key:'Names', label: 'Names', thClass:'search-header'},
-        {key:'NatureOfBusiness', label: 'Nature Of Business', thClass:'search-header'},
-        {key:'Priority', label: 'Priority', thClass:'search-header', class: 'text-center'},
-        {key:'ClientNotification', label: 'Client Notification', thClass:'search-header', class: 'text-center'},
-        {key:'Submitted', label: 'Submitted', thClass:'search-header', class: 'text-center'},
-        {key:'LastUpdate', label: 'Last Update', thClass:'search-header', class: 'text-center'},
-        {key:'LastComment', label: 'Last Comment', thClass:'search-header'},
+        {key:'Status', label: 'Status', thClass:'search-header status-col', class: 'text-center'},
+        {key:'LastModifiedBy', label: 'Last Modified By', thClass:'search-header username-col'},
+        {key:'NameRequestNumber', label: 'Name Request Number', class: 'text-center link', thClass:'search-header nr-col', formatter: (value) => {return value.trim()}},
+        {key:'Names', label: 'Names', thClass:'search-header name-col'},
+        {key:'NatureOfBusiness', label: 'Nature Of Business', thClass:'search-header nob-col', class: 'text-cutoff'},
+        {key:'Priority', label: 'Priority', thClass:'search-header priority-col', class: 'text-center'},
+        {key:'ClientNotification', label: 'Client Notification', thClass:'search-header notification-col', class: 'text-center'},
+        {key:'Submitted', label: 'Submitted', thClass:'search-header submitted-col', class: 'text-center'},
+        {key:'LastUpdate', label: 'Last Update', thClass:'search-header last-update-col', class: 'text-center'},
+        {key:'LastComment', label: 'Last Comment', thClass:'search-header comment-col'},
       ],
       data: [],
       pageSizeOptions: [5, 10, 20, 50, 100],
@@ -187,6 +187,22 @@ export default {
         this.$store.commit('searchInterval',val);
       }
     },
+    currentPerPage: {
+      get: function () {
+        return this.$store.state.searchPerPage;
+      },
+      set: function (val) {
+        this.$store.commit('searchPerPage',val);
+      }
+    },
+    storeCurrentPage: {
+      get: function () {
+        return this.$store.state.searchCurrentPage;
+      },
+      set: function (val) {
+        this.$store.commit('searchCurrentPage',val);
+      }
+    },
     searchData() {
       return this.$store.getters.searchDataJSON;
     },
@@ -208,6 +224,8 @@ export default {
       this.updateQuery('queue',this.stateSort);
     else
       this.stateSort = this.currentStateSort;
+
+    $('#search-table table').addClass('scroll');
   },
   methods: {
     populateTable(searchData){
@@ -232,7 +250,7 @@ export default {
             for (let namesIter = 0; namesIter < data[i].names.length; namesIter++) {
               if (data[i].names[namesIter] != undefined && data[i].names[namesIter].choice !== undefined) {
                 if (this.compName != '') {
-                  if (data[i].names[namesIter].name.search(this.compName) != -1) {
+                  if (data[i].names[namesIter].name.search(this.compName.toUpperCase()) != -1) {
                     if (adjustCount)
                       this.total--;
                     else
@@ -245,6 +263,10 @@ export default {
             }
             if (namesStr !== '')
               data[i].names = namesStr;
+          }
+          // truncate nature of business if too long
+          if (data[i].natureBusinessInfo != null && data[i].natureBusinessInfo.length > 100) {
+            data[i].natureBusinessInfo = [data[i].natureBusinessInfo.slice(0,75), '...'];
           }
           // display priority (priority/standard)
           if (data[i].priorityCd === 'Y')
@@ -259,12 +281,26 @@ export default {
             data[i].furnished = 'Not Notified';
 
           // organize dates //
-          if (data[i].lastUpdate != undefined)
-            data[i].lastUpdate = new Date(data[i].lastUpdate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
-
-          if (data[i].submittedDate != undefined)
-            data[i].submittedDate = new Date(data[i].submittedDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
-
+          if (data[i].lastUpdate != undefined) {
+            data[i].lastUpdate = new Date(data[i].lastUpdate).toLocaleString('en-ca', {
+              hour: '2-digit',
+              minute: '2-digit',
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric'
+            });
+            data[i].lastUpdate = [data[i].lastUpdate.slice(0,12),'\n',data[i].lastUpdate.slice(12,-1)];
+          }
+          if (data[i].submittedDate != undefined) {
+            data[i].submittedDate = new Date(data[i].submittedDate).toLocaleString('en-ca', {
+              hour: '2-digit',
+              minute: '2-digit',
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric'
+            });
+            data[i].submittedDate = [data[i].submittedDate.slice(0,12),'\n',data[i].submittedDate.slice(12,-1)];
+          }
           // display last comment only/format it for table //
           if (data[i].comments != undefined && data[i].comments[0] != undefined) {
             let latestComment = data[i].comments[0];
@@ -274,6 +310,9 @@ export default {
               }
             }
             data[i].comments = latestComment.comment;
+            if (data[i].comments.length > 100) {
+              data[i].comments = [data[i].comments.slice(0,75), '...'];
+            }
           } else data[i].comments = null;
 
           data[i] = this.buildTableRow(data[i]);
@@ -296,10 +335,10 @@ export default {
          $(row).addClass('select');
          $("#load").addClass("btn btn-primary");
          $("#load").prop('disabled', false);
-         if (this.selectedNR === row.children[1].children[0].innerHTML.trim() && this.selectedNR != '') {
+         if (this.selectedNR === row.children[2].children[0].innerHTML.trim() && this.selectedNR != '') {
            this.examineNr(this.selectedNR)
          } else {
-           this.selectedNR = row.children[1].children[0].innerHTML.trim();
+           this.selectedNR = row.children[2].children[0].innerHTML.trim();
          }
 
        } else {
@@ -364,6 +403,10 @@ export default {
           this.notification = this.currentNotification;
         else if (this.interval !== this.currentInterval)
           this.interval = this.currentInterval;
+        else if (this.perPage !== this.currentPerPage)
+          this.perPage = this.currentPerPage;
+        else if (this.currentPage !== this.storeCurrentPage)
+          this.currentPage = this.storeCurrentPage;
         else {
           this.mounting = false;
           this.sort();
@@ -432,11 +475,13 @@ export default {
   watch: {
 
     searchData: function (val) {
+      console.log('searchData watcher fired: ', val);
       this.total = val.response.numFound;
       this.pageNumbers = this.buildPages();
       this.data = this.populateTable(val);
     },
     stateSort: function (val) {
+      console.log('stateSort watcher fired: ', val);
       this.currentStateSort = val;
       if (val === 'ALL') {
         val = '';
@@ -444,18 +489,24 @@ export default {
       this.updateQuery('queue', val);
     },
     nrSearch: function (val) {
+      console.log('nrSearch watcher fired: ', val);
+      this.currentNrSearch = val;
       this.updateQuery('nrNum', val);
     },
     username: function (val) {
+      console.log('username watcher fired: ', val);
+      this.currentUsername = val;
       this.updateQuery('activeUser', val);
     },
     compName: function (val) {
       console.log('compName watcher fired: ', val);
+      this.currentCompName = val;
       this.updateQuery('compName', val);
     },
     perPage: function (val) {
       console.log('perPage watcher fired: ', val);
       this.pageNumbers = this.buildPages();
+      this.currentPerPage = val;
       this.updateQuery('rows',val);
     },
     currentPage: function (val) {
@@ -470,18 +521,22 @@ export default {
         $('#previous').prop('disabled', false);
         $('next').prop('disabled', false);
       }
+      this.storeCurrentPage = val;
       this.updateQuery('start',(val-1)*this.perPage);
     },
     ranking: function (val) {
       console.log('ranking watcher fired: ', val);
+      this.currentRanking = val;
       this.updateQuery('ranking',val);
     },
     notification: function (val) {
       console.log('notification watcher fired: ', val);
+      this.currentNotification = val;
       this.updateQuery('notification',val);
     },
     interval: function (val) {
       console.log('interval watcher fired: ', val);
+      this.currentInterval = val;
       this.updateQuery('interval',val);
     }
   },
@@ -547,6 +602,18 @@ export default {
   #filter-header {
     background-color: #b3cce6;
   }
+  #search-filter-state {
+    height: 30px !important;
+  }
+  #search-filter-priority {
+    height: 30px !important;
+  }
+  #search-filter-furnished {
+    height: 30px !important;
+  }
+  #search-filter-submittedDate {
+    height: 30px !important;
+  }
 
 </style>
 
@@ -560,6 +627,17 @@ export default {
     color: #FFFFFF;
     background-color: #336699;
     text-decoration: none;
+    width: 100px;
+  }
+  .name-col {
+    width: 300px;
+  }
+  .username-col {
+    width: 120px;
+  }
+  .text-cutoff {
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
   .table-striped tbody tr:hover {
     background-color:#96c0e6;

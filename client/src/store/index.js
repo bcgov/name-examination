@@ -160,9 +160,16 @@ export default new Vuex.Store({
       issue_Format_Text: null
     },
 
-    searchQuery: '?order=priorityCd:desc,submittedDate:asc&queue=hold&furnished=true&unfurnished=true&rows=10',
-    searchQuerySpecial: '?order=priorityCd:desc,submittedDate:asc&queue=hold&furnished=true&unfurnished=true&rows=10',
+    searchQuery: '?order=priorityCd:desc,submittedDate:asc&queue=hold&ranking=All&notification=All&interval=All&rows=10',
     searchState: 'HOLD',
+    searchNr: '',
+    searchUsername: '',
+    searchCompName: '',
+    searchRanking: 'All',
+    searchNotification: 'All',
+    searchInterval: '30 days',
+    searchCurrentPage: 1,
+    searchPerPage: 10,
 
     conflictList: null,
     conflictHighlighting: null,
@@ -310,6 +317,30 @@ export default new Vuex.Store({
     },
     searchState(state,value) {
       state.searchState = value;
+    },
+    searchNr(state,value) {
+      state.searchNr = value;
+    },
+    searchUsername(state,value) {
+      state.searchUsername = value;
+    },
+    searchCompName(state,value) {
+      state.searchCompName = value;
+    },
+    searchRanking(state,value) {
+      state.searchRanking = value;
+    },
+    searchNotification(state,value) {
+      state.searchNotification = value;
+    },
+    searchInterval(state,value) {
+      state.searchInterval = value;
+    },
+    searchCurrentPage(state,value) {
+      state.searchCurrentPage = value;
+    },
+    searchPerPage(state,value) {
+      state.searchPerPage = value;
     },
     furnished(state,value) {
       state.furnished = value;
@@ -1230,11 +1261,11 @@ export default new Vuex.Store({
         .catch(error => console.log('ERROR: ' + error))
     },
 
-    getSearchDataJSON( {commit, state} ) {
+    getSearchDataJSON( {commit, state}, val) {
      console.log('action: get search Data');
      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-     const url = '/api/v1/requests' + state.searchQuery;
-     console.log('Search Query:' + state.searchQuery);
+     const url = '/api/v1/requests' + val;
+     console.log('Search Query:' + val);
      const vm = this;
      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
        console.log('Search Data Response:' + response.data)
