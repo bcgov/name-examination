@@ -248,6 +248,7 @@
           instructions: "Consent Required.",
           consent_required: true,
           display_string: "Consent Required",
+          id: "CONSENTREQUIRED",
         });
 
         return arr_conditions;
@@ -297,11 +298,27 @@
 
         // CONFLICTS
         for (var i = 0; i < this.conflicts_selected.length; i++) {
-          retval.push('Rejected due to conflict with ' + this.conflicts_selected[i].text);
+
+          // check whether "Consent Required" condition is set - if so, set message re. "Requires consent from..."
+          if (this.conditions_selected.filter(findArrValueByAttr('CONSENTREQUIRED', 'id')).length > 0) {
+            retval.push('Consent required from ' + this.conflicts_selected[i].text);
+          }
+
+          // if "Consent Required" condition is not set, set message re. "Rejected due..."
+          else {
+            retval.push('Rejected due to conflict with ' + this.conflicts_selected[i].text);
+          }
         }
 
         // CONDITIONS
         for (var i = 0; i < this.conditions_selected.length; i++) {
+
+          // if this is the "Consent Required" condition, and there are conflicts, do not set
+          // "Consent Required" messgage, because it is redundant with messaging re. conflicts.
+          if (this.conditions_selected[i].id == 'CONSENTREQUIRED' && this.conflicts_selected.length > 0) {
+            continue;
+          }
+
           if (this.conditions_selected[i].phrase !== undefined && this.conditions_selected[i].phrase !== '') {
             retval.push(this.conditions_selected[i].phrase + ' - ' + this.conditions_selected[i].instructions);
           }
