@@ -6,6 +6,8 @@ import App from './App';
 import axios from 'axios'
 import Vuelidate from 'vuelidate'
 import Datatable from 'vue2-datatable-component'
+import BootstrapVue from 'bootstrap-vue'
+import { Table } from 'bootstrap-vue/es/components'
 
 import router from '@/router'
 import store from '@/store'
@@ -13,6 +15,8 @@ import store from '@/store'
 Vue.use(Vuelidate)
 Vue.use(require('vue-shortkey'))
 Vue.use(Datatable)
+Vue.use(BootstrapVue)
+Vue.use(Table)
 
 //axios.defaults.baseURL =  <-- set in setttings and auto login
 axios.defaults.headers.get['Accept'] = 'application/json'

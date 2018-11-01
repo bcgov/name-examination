@@ -5,23 +5,12 @@ exports[`FindFilter.vue renders a FindFilter component 1`] = `
   <div
     class="container-fluid"
   >
-    <div
-      class="upper-div"
-    >
-      <div
-        class="search-select"
-      >
-        <div
-          class="upper-searches"
+    <table>
+      <thead>
+        <tr
+          id="filter-header"
         >
-          <div
-            class="filter"
-            style="margin-left: 0px;"
-          >
-            <h4>
-              States:
-            </h4>
-             
+          <th>
             <select
               class="form-control"
               id="search-filter-state"
@@ -72,139 +61,228 @@ exports[`FindFilter.vue renders a FindFilter component 1`] = `
                 REJECTED
               </option>
             </select>
-          </div>
+          </th>
            
-          <div
-            class="filter"
-          >
-            <h4>
-              NR
-            </h4>
-             
-            <input
-              class="form-control"
-              id="search-filter-nr-number"
-              placeholder="0000000"
-            />
-          </div>
-           
-          <div
-            class="filter"
-          >
-            <h4>
-              Examiner
-            </h4>
-             
+          <th>
             <input
               class="form-control"
               id="search-filter-examiner"
               placeholder="Username"
             />
-          </div>
+          </th>
            
-          <div
-            class="filter"
-          >
-            <h4>
-              Company Name
-            </h4>
-             
+          <th>
+            <input
+              class="form-control"
+              id="search-filter-nr-number"
+              placeholder="NR Number"
+            />
+          </th>
+           
+          <th>
             <input
               class="form-control"
               id="search-filter-company"
-              placeholder="my company"
+              placeholder="Name"
             />
-          </div>
-        </div>
-         
-        <div
-          class="lower-searches"
-        >
-          <h4
-            class="filter"
-            style="margin-left: 0px;"
-          >
-            Furnished:
-          </h4>
+          </th>
            
-          <input
-            id="search-checkbox-furnished"
-            type="checkbox"
-          />
+          <th />
            
-          <br />
-           
-          <h4
-            class="filter"
-            style="margin-left: 0px;"
-          >
-            Unfurnished:
-          </h4>
-           
-          <input
-            id="search-checkbox-unfurnished"
-            type="checkbox"
-          />
-        </div>
-      </div>
-       
-      <div
-        class="counts"
-      >
-        <div
-          class="search-load"
-        >
-          <button
-            class="btn"
-            disabled="disabled"
-            id="load"
-            type="button"
-          >
-            LOAD
-          </button>
-        </div>
-         
-        <div
-          class="count"
-          style="margin-right: 20px;"
-        >
-          <h3>
-            Total: 
-            <span
-              class="count-num"
+          <th>
+            <select
+              class="form-control"
+              id="search-filter-priority"
             >
-              0
-            </span>
-          </h3>
-        </div>
-      </div>
-    </div>
+              <option
+                value="All"
+              >
+                All
+              </option>
+              <option
+                value="Priority"
+              >
+                Priority
+              </option>
+              <option
+                value="Standard"
+              >
+                Standard
+              </option>
+            </select>
+          </th>
+           
+          <th>
+            <select
+              class="form-control"
+              id="search-filter-furnished"
+            >
+              <option
+                value="All"
+              >
+                All
+              </option>
+              <option
+                value="Notified"
+              >
+                Notified
+              </option>
+              <option
+                value="Not Notified"
+              >
+                Not Notified
+              </option>
+            </select>
+          </th>
+           
+          <th>
+            <select
+              class="form-control"
+              id="search-filter-submittedDate"
+            >
+              <option
+                value="Today"
+              >
+                Today
+              </option>
+              <option
+                value="7 days"
+              >
+                7 days
+              </option>
+              <option
+                value="30 days"
+              >
+                30 days
+              </option>
+              <option
+                value="90 days"
+              >
+                90 days
+              </option>
+              <option
+                value="1 year"
+              >
+                1 year
+              </option>
+              <option
+                value="3 years"
+              >
+                3 years
+              </option>
+              <option
+                value="5 years"
+              >
+                5 years
+              </option>
+              <option
+                value="All"
+              >
+                All
+              </option>
+            </select>
+          </th>
+           
+          <th />
+           
+          <th />
+        </tr>
+      </thead>
+    </table>
+     
+    <h1>
+      Search
+    </h1>
      
     <span
       class="searchTable"
       id="search-table-container"
     >
-      <datatable-stub
-        class="pre-line"
-        columns="[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]"
-        compname=""
-        data=""
-        fixheaderandsetbodymaxheight="400"
-        furnished="true"
-        nrsearch=""
-        pagesizeoptions="5,10,20,50,100"
-        priority="true"
-        query="[object Object]"
-        searchquery="?order=priorityCd:desc,submittedDate:asc&queue=HOLD&furnished=true&unfurnished=true&rows=10"
-        selectednr=""
-        sorteddata=""
-        states="ALL,HOLD,INPROGRESS,DRAFT,EXPIRED,CANCELLED,APPROVED,CONDITIONAL,REJECTED"
-        statesort="HOLD"
-        tblclass="table-bordered,search-table"
-        tblstyle="[object Object]"
-        total="0"
-        unfurnished="true"
-        username=""
+      <b-row
+        id="table-options"
+      >
+        <b-col>
+          <b-link
+            id="clear-filter"
+          >
+            Clear Filters
+          </b-link>
+        </b-col>
+         
+        <b-col>
+          <b-row
+            id="pagination"
+          >
+            <b-col>
+              <p
+                id="results"
+              >
+                Results: 0
+              </p>
+            </b-col>
+             
+            <b-col>
+              <b-form-group
+                horizontal=""
+                id="display-selection"
+                label="Display:"
+              >
+                <b-form-select
+                  options="5,10,20,50,100"
+                  style="width: 60px; float: right; margin-right: 10px;"
+                />
+              </b-form-group>
+            </b-col>
+             
+            <b-col>
+              <b-form-group
+                horizontal=""
+                id="page-selection"
+                label="Page:"
+              >
+                <b-form-select
+                  options="1"
+                  style="width: 60px; float: right;"
+                />
+              </b-form-group>
+            </b-col>
+             
+            <b-col>
+              <div
+                id="prev-next-page"
+              >
+                <span>
+                  of 1
+                </span>
+                 
+                <b-button-group>
+                  <b-btn
+                    id="previous"
+                  >
+                    ‹
+                  </b-btn>
+                   
+                  <b-btn
+                    id="next"
+                  >
+                    ›
+                  </b-btn>
+                </b-button-group>
+              </div>
+            </b-col>
+          </b-row>
+        </b-col>
+      </b-row>
+       
+      <b-table
+        class="pre-line scroll"
+        fields="[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]"
+        fixed=""
+        hover=""
+        id="search-table"
+        items=""
+        show-empty=""
+        striped=""
       />
     </span>
   </div>
