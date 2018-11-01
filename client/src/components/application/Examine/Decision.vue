@@ -301,7 +301,7 @@
 
           // check whether "Consent Required" condition is set - if so, set message re. "Requires consent from..."
           if (this.conditions_selected.filter(findArrValueByAttr('CONSENTREQUIRED', 'id')).length > 0) {
-            retval.push('Requires consent from ' + this.conflicts_selected[i].text);
+            retval.push('Consent required from ' + this.conflicts_selected[i].text);
           }
 
           // if "Consent Required" condition is not set, set message re. "Rejected due..."

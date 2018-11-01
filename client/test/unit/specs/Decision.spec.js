@@ -116,7 +116,7 @@ describe('Decision.vue', () => {
     });
 
     it('Conflict message includes "consent required" and not "rejected"', () => {
-      expect(instance.customer_message_display).toContain("Requires consent from DR. EARL J. MCDONALD INC.");
+      expect(instance.customer_message_display).toContain("Consent required from DR. EARL J. MCDONALD INC.");
       expect(instance.customer_message_display).not.toContain("Rejected due to conflict with DR. EARL J. MCDONALD INC.");
     });
 
@@ -141,7 +141,7 @@ describe('Decision.vue', () => {
     });
 
     it('Conflict message includes "rejected" and not "consent required"', () => {
-      expect(instance.customer_message_display).not.toContain("Requires consent from DR. EARL J. MCDONALD INC.");
+      expect(instance.customer_message_display).not.toContain("Consent required from from DR. EARL J. MCDONALD INC.");
       expect(instance.customer_message_display).toContain("Rejected due to conflict with DR. EARL J. MCDONALD INC.");
     });
 
