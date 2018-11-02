@@ -103,7 +103,8 @@ export default {
           sortable: false
         },
         {
-          key: 'furnished'
+          key: 'furnished',
+          label: "Sent back to NRO?"
         }
       ]
     }
