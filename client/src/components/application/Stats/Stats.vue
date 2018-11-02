@@ -19,7 +19,7 @@
 <br>
         <div class="row">
           <div class="col">
-            <b-pagination v-on:input="pageChanged" size="md" :total-rows="numRecords" :current-page="currentPage" :v-model="currentPage" :per-page=100>
+            <b-pagination v-on:input="pageChanged" size="md" :total-rows="numRecords" :current-page="currentPage" :v-model="currentPage" :per-page="perPage">
             </b-pagination>
           </div>
         </div>
@@ -80,7 +80,7 @@ export default {
       requests: null,
       numRecords: null,
       currentPage: 1,
-      perPage: 0,
+      perPage: 100,
       totalRows: null,
       pageOptions: [ 50, 100, 200 ],
       fields: [
