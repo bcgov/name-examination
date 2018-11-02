@@ -36,7 +36,32 @@
                    :per-page="perPage"
                    :v-model="requests"
           >
-      <span slot="names" slot-scope="data" v-html="data.value"></span>
+            <span slot="names" slot-scope="data" v-html="data.value"></span>
+            <template slot="nrdetails" slot-scope="data">
+              <span class="add-top-padding"><b>{{data.item.nrNum}}</b></span>
+              <span class="row">
+                  <ol class="add-top-padding">
+                  <li v-for="name in data.item.names">
+                   {{ name.name }}
+                    <span v-if="name.state != 'NE'" class="decision" :class="name.state">{{ name.state }}</span>
+                    <p class="decision-reason">{{ name.decision_text }}</p>
+                  </li>
+                </ol>
+              </span>
+               <div class="row">
+              <div class="col comment" v-if="data.item.comments.length">
+                <h3>Last Comment</h3>
+                <p>
+                  <span class="comment-examiner">{{ data.item.comments[data.item.comments.length-1].examiner }}</span>
+                   -
+                  <span class="comment-timestamp">{{ new Date(data.item.comments[data.item.comments.length-1].timestamp).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'}) }}</span>
+                </p>
+                <p class="comment-text">{{ data.item.comments[data.item.comments.length-1].comment }}</p>
+              </div>
+              <div class="col"></div>
+
+            </div>
+          </template>
           </b-table>
         </div>
      </div>
@@ -60,12 +85,8 @@ export default {
       pageOptions: [ 50, 100, 200 ],
       fields: [
         {
-          key: 'nrNum',
-          sortable: true,
-          label: 'NR Number'
-        },
-        {
-          key: 'names',
+          key: 'nrdetails',
+          label: "Request Details",
           _showDetails: true
         },
         {
@@ -137,16 +158,8 @@ export default {
 
                 // sort names by choice number
                 let r = requests.map((request)=> {
-                   let names = this.sortNames(request.names);
-
-                    request.names='<ol>'
-                    names.forEach((name)=> {
-                      request.names += `<li>${name.name}</li>`
-                    })
-
-                    request.names +='</ol>'
+                    request.names = this.sortNames(request.names);
                     request.lastUpdate = this.convertDate(request.lastUpdate);
-                    console.log(request.names)
                     return request
                 });
 
