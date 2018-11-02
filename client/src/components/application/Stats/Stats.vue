@@ -4,7 +4,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col">
-            <form class="form-inline" @submit.prevent="getReportData">
+            <form class="form-inline" @submit.prevent="onGetStatsClick" >
               <input class="form-control" type="number" placeholder="hrs"
                      v-model="timespan" style="width: 100px;">
               <button class="btn btn-success btn-sm" style="margin-left: 10px;" type="submit">Get Stats</button>
@@ -16,51 +16,55 @@
             <div class="float-right">Decisions in the past {{ timespanHuman }}: {{ numRecords }}</div>
           </div>
         </div>
-
+<br>
         <div class="row">
-          <div class="col-12 add-top-padding request-report" v-for="request in requests">
-            <div class="row">
-              <div class="col">
-                <h2>{{ request.nrNum }}</h2>
-              </div>
-              <div class="col">{{ request.stateCd }}</div>
-              <div class="col">
-                <p>{{ request.activeUser }}</p>
-              </div>
-              <div class="col">
-                <p>{{ convertDate(request.lastUpdate) }}</p>
-              </div>
-              <div class="col">
-                Sent back to NRO? {{ request.furnished }}
-              </div>
-            </div>
-            <ol class="add-top-padding">
-              <li v-for="name in request.names">
-                {{ name.name }}
-                <span v-if="name.state != 'NE'" class="decision" :class="name.state">{{ name.state }}</span>
-                <p class="decision-reason">{{ name.decision_text }}</p>
-              </li>
-            </ol>
-            <div class="row">
-              <div class="col comment" v-if="request.comments.length">
-                <h3>Last Comment</h3>
-                <p>
-                  <span class="comment-examiner">{{ request.comments[request.comments.length-1].examiner }}</span>
-                  -
-                  <span class="comment-timestamp">{{ new Date(request.comments[request.comments.length-1].timestamp).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'}) }}</span>
-                </p>
-                <p class="comment-text">{{ request.comments[request.comments.length-1].comment }}</p>
-              </div>
-              <div class="col"></div>
-
-            </div>
+          <div class="col">
+            <b-pagination v-on:input="pageChanged" size="md" :total-rows="numRecords" :current-page="currentPage" :v-model="currentPage" :per-page="perPage">
+            </b-pagination>
           </div>
         </div>
 
 
+        <div class="b-table">
+          <b-table striped hover
+                   show-empty
+                   responsive
+                   ref="table"
+                   :items="getPagedStats"
+                   :fields="fields"
+                   :current-page="currentPage"
+                   :per-page="perPage"
+                   :v-model="requests"
+          >
+            <span slot="names" slot-scope="data" v-html="data.value"></span>
+            <template slot="nrdetails" slot-scope="data">
+              <span class="add-top-padding"><b>{{data.item.nrNum}}</b></span>
+              <span class="row">
+                  <ol class="add-top-padding">
+                  <li v-for="name in data.item.names">
+                   {{ name.name }}
+                    <span v-if="name.state != 'NE'" class="decision" :class="name.state">{{ name.state }}</span>
+                    <p class="decision-reason">{{ name.decision_text }}</p>
+                  </li>
+                </ol>
+              </span>
+               <div class="row">
+              <div class="col comment" v-if="data.item.comments.length">
+                <h3>Last Comment</h3>
+                <p>
+                  <span class="comment-examiner">{{ data.item.comments[data.item.comments.length-1].examiner }}</span>
+                   -
+                  <span class="comment-timestamp">{{ new Date(data.item.comments[data.item.comments.length-1].timestamp).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'}) }}</span>
+                </p>
+                <p class="comment-text">{{ data.item.comments[data.item.comments.length-1].comment }}</p>
+              </div>
+              <div class="col"></div>
 
-
-      </div>
+            </div>
+          </template>
+          </b-table>
+        </div>
+     </div>
     </div>
 </template>
 
@@ -75,6 +79,34 @@ export default {
       timespan: 1, // number of hours back to look at
       requests: null,
       numRecords: null,
+      currentPage: 1,
+      perPage: 100,
+      totalRows: null,
+      pageOptions: [ 50, 100, 200 ],
+      fields: [
+        {
+          key: 'nrdetails',
+          label: "Request Details",
+          _showDetails: true
+        },
+        {
+          key: 'stateCd',
+          sortable: true,
+          label: 'Status'
+        },
+        {
+          key: 'lastUpdate',
+          sortable: true
+        },
+        {
+          key: 'activeUser',
+          sortable: false
+        },
+        {
+          key: 'furnished',
+          label: "Sent back to NRO?"
+        }
+      ]
     }
   },
   computed: {
@@ -98,39 +130,46 @@ export default {
       return retval;
     }
   },
-  mounted() {
-    this.getReportData();
-  },
   methods: {
-    gotoNR() {
-      if (this.selectedNR != '') {
-        this.$store.dispatch('newNrNumber',this.selectedNR);
-        const path = '/nameExamination';
-        this.$router.push(path);
-      }
+    onGetStatsClick(e) {
+        this.$refs.table.refresh();
     },
-    getReportData() {
+    getPagedStats(ctx) {
 
-      // clear data
-      this.requests = null;
+      console.log("CTX", ctx)
+        this.requests = null;
+        if (this.currentPage === 0) this.currentPage = 1
 
-      var params = '';
-      if (this.timespan != '' && this.timespan != null) params = '?timespan=' + this.timespan;
-      const url = '/api/v1/requests/stats' + params
-      return axios.get(url, {headers: {Authorization: `Bearer ${sessionStorage.getItem('KEYCLOAK_TOKEN')}`}}).then(response => {
-
-        if (response.data && response.data.numRecords > 0) {
-          this.requests = response.data.nameRequests;
-
-          // sort names by choice number
-          for (let request of this.requests) {
-            request.names = this.sortNames(request.names);
-          }
-
-          this.numRecords = response.data.numRecords;
+        var params = '';
+        if (this.timespan != '' && this.timespan != null) {
+          params = '?timespan=' + this.timespan;
+        } else {
+          params = '?timespan=1'
         }
-      })
+
+        let currentPage = ctx.currentPage ? '&currentpage=' + ctx.currentPage : this.currentPage ? '&currentpage=' + this.currentPage : '';
+        let pageSize = ctx.perPage ? '&perpage=' + ctx.perPage : this.perPage ? '&perpage=' + this.perPage : '&perpage=100';
+        let url = '/api/v1/requests/stats' + params + currentPage + pageSize;
+        let promise = axios.get(url, {headers: {Authorization: `Bearer ${sessionStorage.getItem('KEYCLOAK_TOKEN')}`}});
+
+        return promise.then(response => {
+
+            if (response.data && response.data.numRecords > 0) {
+                let requests = response.data.nameRequests;
+
+                // sort names by choice number
+                let r = requests.map((request)=> {
+                    request.names = this.sortNames(request.names);
+                    request.lastUpdate = this.convertDate(request.lastUpdate);
+                    return request
+                });
+
+                this.numRecords = response.data.numRecords;
+                return r
+            }
+        })
         .catch(error => console.log('ERROR: ' + error))
+
     },
     sortNames(data) {
       function compare(a,b) {
@@ -145,7 +184,16 @@ export default {
     convertDate(thedate) {
         return new Date(thedate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
     },
+    pageChanged(page) {
+      console.log("Page changed", page)
+      this.currentPage = page
+    }
   },
+  watch: {
+    currentPage: function(val) {
+      console.log("CURRENT PAGE CHANGED: ", val)
+    }
+  }
 }
 </script>
 

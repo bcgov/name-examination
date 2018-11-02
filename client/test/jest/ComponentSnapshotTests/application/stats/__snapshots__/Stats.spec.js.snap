@@ -49,9 +49,37 @@ exports[`Stats.vue renders a Stats component 1`] = `
       </div>
     </div>
      
+    <br />
+     
     <div
       class="row"
-    />
+    >
+      <div
+        class="col"
+      >
+        <b-pagination
+          current-page="1"
+          per-page="100"
+          size="md"
+          v-model="1"
+        />
+      </div>
+    </div>
+     
+    <div
+      class="b-table"
+    >
+      <b-table
+        current-page="1"
+        fields="[object Object],[object Object],[object Object],[object Object],[object Object]"
+        hover=""
+        items="function () { [native code] }"
+        per-page="100"
+        responsive=""
+        show-empty=""
+        striped=""
+      />
+    </div>
   </div>
 </div>
 `;
