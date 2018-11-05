@@ -58,7 +58,6 @@
                 </p>
                 <p class="comment-text">{{ data.item.comments[data.item.comments.length-1].comment }}</p>
               </div>
-              <div class="col"></div>
 
             </div>
           </template>
@@ -80,9 +79,8 @@ export default {
       requests: null,
       numRecords: null,
       currentPage: 1,
-      perPage: 100,
+      perPage: 50,
       totalRows: null,
-      pageOptions: [ 50, 100, 200 ],
       fields: [
         {
           key: 'nrdetails',
@@ -135,8 +133,7 @@ export default {
         this.$refs.table.refresh();
     },
     getPagedStats(ctx) {
-
-      console.log("CTX", ctx)
+      
         this.requests = null;
         if (this.currentPage === 0) this.currentPage = 1
 
@@ -148,7 +145,7 @@ export default {
         }
 
         let currentPage = ctx.currentPage ? '&currentpage=' + ctx.currentPage : this.currentPage ? '&currentpage=' + this.currentPage : '';
-        let pageSize = ctx.perPage ? '&perpage=' + ctx.perPage : this.perPage ? '&perpage=' + this.perPage : '&perpage=100';
+        let pageSize = ctx.perPage ? '&perpage=' + ctx.perPage : this.perPage;
         let url = '/api/v1/requests/stats' + params + currentPage + pageSize;
         let promise = axios.get(url, {headers: {Authorization: `Bearer ${sessionStorage.getItem('KEYCLOAK_TOKEN')}`}});
 
