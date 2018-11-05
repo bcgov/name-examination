@@ -8,9 +8,35 @@ describe('Decision.vue', () => {
 
   let instance;
   let vm;
+
+  let makeDecision = function(decision) {
+    // Fake a decision being made, and return the decision text from before and after the decision
+    // was made.
+
+    // make the decision
+    var customer_message_initial = instance.customer_message_display;
+    instance.decision_made = decision;
+    instance.nameAcceptReject();
+    var customer_message_after_decision = instance.customer_message_display;
+
+    // return the pre and post decision text for comparisons
+    return [customer_message_initial, customer_message_after_decision];
+  }
+
   beforeEach(() => {
     const Constructor = Vue.extend(Decision);
     instance = new Constructor({store:store});
+
+    instance.decision_made = null;
+
+    // stub $refs for function call that is not part of these tests
+    instance.$refs = {
+      decisioncomments: {
+        addNewComment() {
+          return null;
+        }
+      }
+    };
   });
 
   describe('When conditions have been selected with consent required', () => {
@@ -44,6 +70,19 @@ describe('Decision.vue', () => {
       expect(instance.acceptance_will_be_conditional).toBe(true);
     });
 
+    it('Saves the decision text as built by examiner upon APPROVED decision made', () => {
+      var customer_message_initial, customer_message_after_decision;
+      [customer_message_initial, customer_message_after_decision] = makeDecision("APPROVED");
+
+      expect(customer_message_after_decision).toBe(customer_message_initial);
+    });
+
+    it('Saves the decision text as built by examiner upon REJECTED decision made', () => {
+      var customer_message_initial, customer_message_after_decision;
+      [customer_message_initial, customer_message_after_decision] = makeDecision("REJECTED");
+
+      expect(customer_message_after_decision).toBe(customer_message_initial);
+    });
   });
 
   describe('When conditions have been selected with NO consent required', () => {
@@ -88,6 +127,20 @@ describe('Decision.vue', () => {
       expect(instance.customer_message_display).toContain("Consent Required.");
     });
 
+    it('Saves the decision text as built by examiner upon APPROVED decision made', () => {
+      var customer_message_initial, customer_message_after_decision;
+      [customer_message_initial, customer_message_after_decision] = makeDecision("APPROVED");
+
+      expect(customer_message_after_decision).toBe(customer_message_initial);
+    });
+
+    it('Saves the decision text as built by examiner upon REJECTED decision made', () => {
+      var customer_message_initial, customer_message_after_decision;
+      [customer_message_initial, customer_message_after_decision] = makeDecision("REJECTED");
+
+      expect(customer_message_after_decision).toBe(customer_message_initial);
+    });
+
   });
 
   describe('When "consent required" condition has been selected WITH conflicts', () => {
@@ -120,10 +173,26 @@ describe('Decision.vue', () => {
       expect(instance.customer_message_display).not.toContain("Rejected due to conflict with DR. EARL J. MCDONALD INC.");
     });
 
+    it('Saves the decision text as built by examiner upon APPROVED decision made', () => {
+      var customer_message_initial, customer_message_after_decision;
+      [customer_message_initial, customer_message_after_decision] = makeDecision("APPROVED");
+
+      expect(customer_message_after_decision).toBe(customer_message_initial);
+    });
+
+    it('Saves the decision text as built by examiner upon REJECTED decision made', () => {
+      var customer_message_initial, customer_message_after_decision;
+      [customer_message_initial, customer_message_after_decision] = makeDecision("REJECTED");
+
+      expect(customer_message_after_decision).toBe(customer_message_initial);
+    });
+
   });
 
-  describe('When conflicts have been selected', () => {
+  describe('When conflicts have been selected without "consent required" condition', () => {
     beforeEach(() => {
+
+      instance.decision_made = null;
 
       instance.conflicts_selected = [
         {
@@ -149,6 +218,21 @@ describe('Decision.vue', () => {
       expect(instance.customer_message_display).toContain("Rejected due to conflict with DR. EARL J. MCDONALD INC.");
       expect(instance.customer_message_display).toContain("Rejected due to conflict with SAMPLE CONFLICT");
 
+    });
+
+    it('Clears the decision text re. conflicts upon APPROVED decision made', () => {
+      var customer_message_initial, customer_message_after_decision;
+      [customer_message_initial, customer_message_after_decision] = makeDecision("APPROVED");
+
+      expect(customer_message_after_decision).not.toContain("Rejected due to conflict with DR. EARL J. MCDONALD INC.");
+      expect(customer_message_after_decision).not.toContain("Rejected due to conflict with SAMPLE CONFLICT");
+    });
+
+    it('Saves the decision text as built by examiner upon REJECTED decision made', () => {
+      var customer_message_initial, customer_message_after_decision;
+      [customer_message_initial, customer_message_after_decision] = makeDecision("REJECTED");
+
+      expect(customer_message_after_decision).toBe(customer_message_initial);
     });
 
   });

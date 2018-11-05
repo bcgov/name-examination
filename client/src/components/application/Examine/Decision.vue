@@ -300,7 +300,7 @@
         for (var i = 0; i < this.conflicts_selected.length; i++) {
 
           // check whether "Consent Required" condition is set - if so, set message re. "Requires consent from..."
-          if (this.conditions_selected.filter(findArrValueByAttr('CONSENTREQUIRED', 'id')).length > 0) {
+          if (this.consent_required_condition_set) {
             retval.push('Consent required from ' + this.conflicts_selected[i].text);
           }
 
@@ -371,7 +371,12 @@
           //this.customer_message_override = value;
 
         }
-      }
+      },
+      consent_required_condition_set() {
+        // is the "Consent Required" condition selected in Conditions dropdown?
+        if (this.conditions_selected.filter(findArrValueByAttr('CONSENTREQUIRED', 'id')).length > 0) return true;
+        else return false;
+      },
     },
     components: {
       internalcomments,
@@ -457,7 +462,11 @@
           // if there were conflicts selected but this is an approval, this will result in
           // accidental "rejected due to conflict" messaging. Remove it by clearing the selected
           // conflicts (Issue #767).
-          this.conflicts_selected = [];
+          // Do NOT clear the conflicts if the "Consent Required" condition is also set - then it's
+          // intentional.
+          if (!this.consent_required_condition_set) {
+            this.conflicts_selected = [];
+          }
         }
         else {
           this.currentNameObj.state = 'REJECTED';
