@@ -66,7 +66,8 @@
                 <span class="name-state-icon" v-html="setIcon(compName1.state)"></span>
                 <button class="btn btn-undo" v-if="is_undoable_1"
                         v-on:click="undoDecision(1)">Undo Decision</button>
-                <span class="decision-text">{{ compName1.decision_text }}</span>
+                <span class="decision-text"
+                        v-bind:class="{completed: is_complete}">{{ compName1.decision_text }}</span>
               </td>
             </tr>
             <tr class="name-option"
@@ -78,7 +79,8 @@
                 <span class="name-state-icon" v-html="setIcon(compName2.state)"></span>
                 <button class="btn btn-undo" v-if="is_undoable_2"
                         v-on:click="undoDecision(2)">Undo Decision</button>
-                <span class="decision-text">{{ compName2.decision_text }}</span>
+                <span class="decision-text"
+                        v-bind:class="{completed: is_complete}">{{ compName2.decision_text }}</span>
               </td>
             </tr>
             <tr class="name-option"
@@ -90,7 +92,8 @@
                 <span class="name-state-icon" v-html="setIcon(compName3.state)"></span>
                 <button class="btn btn-undo" v-if="is_undoable_3"
                         v-on:click="undoDecision(3)">Undo Decision</button>
-                <span class="decision-text">{{ compName3.decision_text }}</span>
+                <span class="decision-text"
+                      v-bind:class="{completed: is_complete}">{{ compName3.decision_text }}</span>
               </td>
             </tr>
           </table>
@@ -618,6 +621,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  decision-text.completed {
+    font-size: 11px;
+    white-space: pre-wrap;
   }
 
   .search{
