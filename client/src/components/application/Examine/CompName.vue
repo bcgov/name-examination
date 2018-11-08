@@ -95,6 +95,8 @@
                 <span class="decision-text"
                       v-bind:class="{completed: is_complete}">{{ compName3.decision_text }}</span>
               </td>
+                <span v-bind:class="{completed: is_complete, 'decision-text': !is_complete }">{{ compName3.decision_text }}</span>
+              </td>
             </tr>
           </table>
 
@@ -623,8 +625,8 @@
     white-space: nowrap;
   }
 
-  decision-text.completed {
-    font-size: 11px;
+  .completed {
+    font-size: 15px;
     white-space: pre-wrap;
   }
 
