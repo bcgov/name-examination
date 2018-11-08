@@ -1,0 +1,172 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RequestInfoHeader.vue renders a RequestInfoHeader component 1`] = `
+<span>
+  <div
+    class="row"
+  >
+    <div
+      class="col-md-5 add-bottom-padding"
+      id="div1"
+    >
+      <div
+        class="row"
+      >
+        <div
+          class="col-md-4"
+        >
+          <div
+            class="nrNum"
+          >
+            
+          </div>
+           
+          <!---->
+           
+          <div
+            class="status"
+          >
+            Status:  
+            <!---->
+          </div>
+        </div>
+         
+        <div
+          class="col"
+        >
+          <p
+            class="requestType"
+          >
+            ERROR!!
+          </p>
+           
+          <p
+            class="add-top-padding"
+            style="font-weight: bold;"
+          >
+            
+          </p>
+           
+          <div
+            class="row"
+          >
+            <div
+              class="col"
+            >
+              <nwpta-stub
+                jurisdiction="AB"
+              />
+            </div>
+             
+            <div
+              class="col"
+            >
+              <nwpta-stub
+                jurisdiction="SK"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+       
+      <!---->
+    </div>
+     
+    <div
+      class="col-md-4 add-bottom-padding"
+      id="div2"
+    >
+      <div
+        class="row"
+      >
+        <div
+          class="col"
+        >
+          <h3>
+            NATURE OF BUSINESS
+          </h3>
+           
+          <p
+            style="white-space: pre-line;"
+          >
+            
+          </p>
+           
+          <!---->
+        </div>
+      </div>
+       
+      <!---->
+    </div>
+     
+    <div
+      class="col-md-3"
+      id="div3"
+    >
+      <div
+        class="row add-bottom-padding-extra"
+      >
+        <div
+          class="col"
+        >
+          <div
+            class="row"
+          >
+            <div
+              class="col"
+            >
+              <h3>
+                ADDITIONAL INFORMATION
+              </h3>
+               
+              <p
+                style="white-space: pre-line;"
+              >
+                
+              </p>
+            </div>
+          </div>
+           
+          <div
+            class="row add-bottom-padding"
+          >
+            <div
+              class="col add-top-padding"
+            >
+              <clientinfoview-stub />
+            </div>
+          </div>
+        </div>
+      </div>
+       
+      <div
+        class="bottom-right"
+      >
+        <div
+          class="col-md-12"
+          id="header-button-container"
+        >
+          <button
+            class="f1 btn btn-sm btn-outline-secondary"
+            id="nr-details-show-hide-details-button"
+          >
+            <span>
+              Show Details  (
+              <u>
+                b
+              </u>
+              )
+            </span>
+          </button>
+           
+          <!---->
+           
+          <!---->
+           
+          <!---->
+        </div>
+      </div>
+    </div>
+  </div>
+</span>
+`;

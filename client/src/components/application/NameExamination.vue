@@ -29,7 +29,10 @@
 
      <div class="namePage">
        <div class="row" >
-         <div class="col"><compnameview /></div>
+         <div class="col">
+           <compnameview v-if="!is_complete" />
+           <completed-comp-name v-if="is_complete" />
+         </div>
        </div>
 
        <decision v-if="is_making_decision" />
@@ -53,6 +56,7 @@
   import recipemenu from '@/components/application/Examine/RecipeMenu.vue';
   import matchissues from '@/components/application/Examine/IssueInfo.vue';
   import decision from '@/components/application/Examine/Decision.vue';
+  import CompletedCompName from "./Examine/CompletedCompName";
 
   export default {
     name: "SearchResults",
@@ -121,6 +125,7 @@
       },
     },
     components: {
+      CompletedCompName,
       stateheaderview,
       requestinfoheaderview,
       compnameview,
