@@ -185,6 +185,10 @@
 
       <!-- COLUMN 3 -->
       <div id='div3' class="col-md-3">
+
+        <!-- comments indicator -->
+        <i class="fa fa-comment" id="comments-indicator" v-if="internalComments_length > 0"></i>
+
         <div class="row add-bottom-padding-extra">
           <div class="col">
             <div class="row">
@@ -489,6 +493,14 @@ export default {
         },
         set: function(value) {
           this.$store.commit('internalComments', value);
+        }
+      },
+      internalComments_length() {
+        // non-breaking attribute for number of comments (doesn't break on null)
+        try {
+          return this.internalComments.length;
+        } catch (err) {
+          return 0;
         }
       },
       expiryDate: {
@@ -798,6 +810,12 @@ export default {
     font-style: italic;
   }
 
+  #comments-indicator {
+    position: absolute;
+    top: 0;
+    right: 15px;
+    font-size: 16px;
+  }
   .add-top-padding-extra {
     padding-top: 45px;
   }
