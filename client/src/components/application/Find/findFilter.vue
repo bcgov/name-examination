@@ -113,7 +113,7 @@ export default {
       numberOfPages: 1,
       perPage: 10,
       total: 0,
-      states: ['ALL', 'HOLD', 'INPROGRESS', 'DRAFT', 'EXPIRED', 'CANCELLED', 'APPROVED', 'CONDITIONAL', 'REJECTED'],
+      states: ['ALL', 'HOLD', 'INPROGRESS', 'DRAFT', 'EXPIRED', 'CANCELLED', 'APPROVED', 'CONDITIONAL', 'REJECTED', 'COMPLETED'],
       stateSort: 'HOLD',
       username: '',
       nrSearch: '',
