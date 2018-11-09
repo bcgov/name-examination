@@ -66,7 +66,7 @@
                 <span class="name-state-icon" v-html="setIcon(compName1.state)"></span>
                 <button class="btn btn-undo" v-if="is_undoable_1"
                         v-on:click="undoDecision(1)">Undo Decision</button>
-                <span class="decision-text"
+                <span id="decision-text1" class="decision-text"
                         v-bind:class="{completed: is_complete}">{{ compName1.decision_text }}</span>
               </td>
             </tr>
@@ -79,7 +79,7 @@
                 <span class="name-state-icon" v-html="setIcon(compName2.state)"></span>
                 <button class="btn btn-undo" v-if="is_undoable_2"
                         v-on:click="undoDecision(2)">Undo Decision</button>
-                <span class="decision-text"
+                <span id="decision-text2" class="decision-text"
                         v-bind:class="{completed: is_complete}">{{ compName2.decision_text }}</span>
               </td>
             </tr>
@@ -92,7 +92,7 @@
                 <span class="name-state-icon" v-html="setIcon(compName3.state)"></span>
                 <button class="btn btn-undo" v-if="is_undoable_3"
                         v-on:click="undoDecision(3)">Undo Decision</button>
-                <span class="decision-text"
+                <span id="decision-text3" class="decision-text"
                       v-bind:class="{completed: is_complete}">{{ compName3.decision_text }}</span>
               </td>
             </tr>
