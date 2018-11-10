@@ -171,6 +171,7 @@ export default new Vuex.Store({
     searchCurrentPage: 1,
     searchPerPage: 10,
 
+    exactMatchesConflicts: [],
     conflictList: null,
     conflictHighlighting: null,
     conflictNames: null,
@@ -760,6 +761,19 @@ export default new Vuex.Store({
         state.conflictList.push({nrNumber: mID, text: state.conflictNames[c].name, source: state.conflictNames[c].source})
         c++
       }
+  },
+
+    setExactMatchesConflicts(state, jsonValue) {
+        var names = jsonValue['names']
+        state.exactMatchesConflicts = []
+        for (var i=0; i<names.length; i++) {
+            var entry = names[i];
+            state.exactMatchesConflicts.push({
+                text:entry.name,
+                nrNumber:entry.id,
+                source:entry.source
+            })
+        }
     },
 
     currentConflict(state,value){
@@ -1150,6 +1164,8 @@ export default new Vuex.Store({
     },
 
     getConflictInfo ({state,commit},value) {
+      if (value.nrNumber === undefined || value.nrNumber === null) { return; }
+
       console.log('Getting Conflict Info')
       commit('currentConflict', value);
       if(value.source == "CORP" ){
@@ -1299,11 +1315,27 @@ export default new Vuex.Store({
     runManualRecipe({dispatch,state},searchStr) {
       console.log('running manual recipe with: ', searchStr);
       if( state.currentChoice != null) {
+        this.dispatch('checkManualExactMatches',searchStr)
         this.dispatch('checkManualConflicts',searchStr)
         this.dispatch('checkManualTrademarks',searchStr)
         this.dispatch('checkManualConditions',searchStr)
         this.dispatch('checkManualHistories',searchStr)
       }
+    },
+
+    checkManualExactMatches( {commit, state}, query ) {
+
+      console.log('action: getting exact matches for number: ' + state.compInfo.nrNumber + ' from solr')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+      console.log('query', query.substring(1))
+      const url = '/api/v1/exact-match?query='+query.substring(1)
+      console.log('URL:' + url)
+      const vm = this
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        console.log('Check Exact Match Response:', JSON.stringify(response.data))
+        commit('setExactMatchesConflicts', response.data)
+      })
+        .catch(error => console.log('ERROR (exact matches): ' + error))
     },
 
     checkManualConflicts( {commit, state},searchStr ) {
@@ -1670,6 +1702,12 @@ export default new Vuex.Store({
     },
     requestTypeRules(state) {
       return state.requestTypeRules
+    },
+    exactMatchesConflicts(state) {
+      return state.exactMatchesConflicts
+    },
+    hasExactMatches(state) {
+      return state.exactMatchesConflicts ? state.exactMatchesConflicts.length > 0 : false;
     },
     conflictList(state) {
       return state.conflictList
