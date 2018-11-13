@@ -59,7 +59,7 @@ exports[`Stats.vue renders a Stats component 1`] = `
       >
         <b-pagination
           current-page="1"
-          per-page="100"
+          per-page="50"
           size="md"
           v-model="1"
         />
@@ -74,7 +74,7 @@ exports[`Stats.vue renders a Stats component 1`] = `
         fields="[object Object],[object Object],[object Object],[object Object],[object Object]"
         hover=""
         items="function () { [native code] }"
-        per-page="100"
+        per-page="50"
         responsive=""
         show-empty=""
         striped=""
