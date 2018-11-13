@@ -57,7 +57,7 @@ describe('CompName.vue', () => {
         it('displays small decision text while in progress', () => {
               console.log(vm.$store.getters.compName1);
               expect(vm.$store.getters.compName1.name).toEqual("Bad Name");
-              expect(vm.$el.querySelector('.completed')).toBeNull()
+              expect(vm.$el.querySelector('.completed-decision-text')).toBeNull()
         })
       });
 
@@ -88,8 +88,8 @@ describe('CompName.vue', () => {
         });
 
         it('displays full decision text once completed', () => {
-            expect(vm.$el.querySelectorAll('.completed')).not.toBeNull();
-            expect(vm.$el.querySelectorAll('.completed').length).toBe(3);
+            expect(vm.$el.querySelectorAll('.completed-decision-text')).not.toBeNull();
+            expect(vm.$el.querySelectorAll('.completed-decision-text').length).toBe(3);
         })
     })
 
