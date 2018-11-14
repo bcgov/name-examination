@@ -43,10 +43,14 @@
       <h3>Submit Count: {{submitCount}}</h3>
       <h3>Name State</h3>
       <p>{{nameState}}</p>
-      <div v-if="decisionText">
-        <h3>Decision Text</h3>
-        <p>{{decisionText}}</p>
-      </div>
+
+      <h3 v-if="decisionText">Decision Text</h3>
+      <p v-if="decisionText">{{ decisionText }}</p>
+
+      <h3 v-if="conflicts.length > 0">Conflicts</h3>
+      <p v-for="conflict in conflicts">{{ conflict }}</p>
+
+
       <br/>
       <div v-if="comments">
         <h3>Comments</h3>
@@ -184,8 +188,30 @@
         return '';
       },
       decisionText() {
-        if (this.selectedHistoryInfo == undefined) return '';
-        return this.findDecision();
+        if (this.selectedHistoryInfo == undefined) return null;
+
+        // get decision text for this particular name choice
+        for (let i = 0; i < this.selectedHistoryInfo.names.length; i++) {
+          if (this.selectedHistoryInfo.names[i].name === this.selectedHistory &&
+              this.selectedHistoryInfo.names[i].decision_text != '') {
+            return this.selectedHistoryInfo.names[i].decision_text;
+          }
+        }
+        return null;
+      },
+      conflicts() {
+        if (this.selectedHistoryInfo == undefined) return [];
+
+        // get all conflicts (up to 3) for this particular name choice
+        var conflicts = [];
+        for (let i = 0; i < this.selectedHistoryInfo.names.length; i++) {
+          if (this.selectedHistoryInfo.names[i].name === this.selectedHistory) {
+            if (![null, ''].includes(this.selectedHistoryInfo.names[i].conflict1)) conflicts.push(this.selectedHistoryInfo.names[i].conflict1);
+            if (![null, ''].includes(this.selectedHistoryInfo.names[i].conflict2)) conflicts.push(this.selectedHistoryInfo.names[i].conflict2);
+            if (![null, ''].includes(this.selectedHistoryInfo.names[i].conflict3)) conflicts.push(this.selectedHistoryInfo.names[i].conflict3);
+          }
+        }
+        return conflicts;
       },
       comments() {
         if (this.selectedHistoryInfo == undefined || this.selectedHistoryInfo.comments == undefined
@@ -197,13 +223,6 @@
       }
     },
     methods: {
-      findDecision() {
-        for (let i=0;i<this.selectedHistoryInfo.names.length; i++) {
-          if (this.selectedHistoryInfo.names[i].decisionText != null)
-            return this.selectedHistoryInfo.names[i].decisionText
-        }
-        return '';
-      }
     },
   }
 </script>
@@ -213,6 +232,15 @@
     margin-left: 0;
     padding: 5px;
   }
+
+  h3, h2 {
+    font-size: 15px;
+  }
+
+  p {
+    font-size: 14px;
+  }
+
   .comment-box {
     margin: 1px;
     background-color: lightyellow;

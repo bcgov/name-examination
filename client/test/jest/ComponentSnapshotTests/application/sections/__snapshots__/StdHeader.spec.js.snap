@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StdHeader.vue renders a StdHeader component 1`] = `
+<div
+  class="container-fluid"
+>
+  <nav
+    class="navbar fixed-top navbar-dark navbar-expand-lg"
+    id="header-main"
+  >
+    <router-link-stub
+      class="navbar-brand router-link-never-mark-active"
+      event="click"
+      tag="a"
+      to="/home"
+    >
+      <img
+        alt="Province of British Columbia"
+        src="static/images/gov3_bc_logo.png"
+        title="Province of British Columbia logo"
+      />
+      
+      Namex
+    
+    </router-link-stub>
+     
+    <button
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+      class="navbar-toggler"
+      data-target="#navbarSupportedContent"
+      data-toggle="collapse"
+      type="button"
+    >
+      <span
+        class="navbar-toggler-icon"
+      />
+    </button>
+     
+    <div
+      class="collapse navbar-collapse"
+      id="navbarSupportedContent"
+    >
+      <router-link-stub
+        class="btn btn-sm ml-auto"
+        event="click"
+        id="header-login-button"
+        tag="button"
+        to="/signin"
+      >
+        Login
+      </router-link-stub>
+    </div>
+     
+    <!---->
+  </nav>
+</div>
+`;

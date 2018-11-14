@@ -25,4 +25,13 @@
   #condition {
     margin: 5px;
   }
+
+  h2, h3 {
+    font-size: 15px;
+  }
+
+  p {
+    font-size: 14px;
+  }
+
 </style>

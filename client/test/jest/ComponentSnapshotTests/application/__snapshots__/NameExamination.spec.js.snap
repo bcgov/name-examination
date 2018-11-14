@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NameExamination.vue renders a NameExamination view 1`] = `
+<div>
+  <div
+    class="upper-section container-fluid"
+  >
+    <div
+      class="namePage"
+    >
+      <div
+        class="RequestInfoHeader"
+      >
+        <requestinfoheaderview-stub />
+      </div>
+    </div>
+  </div>
+   
+  <div
+    class="lower-section container-fluid"
+  >
+    <!---->
+     
+    <!---->
+     
+    <div
+      class="namePage"
+    >
+      <div
+        class="row"
+      >
+        <div
+          class="col"
+        >
+          <compnameview-stub />
+        </div>
+      </div>
+       
+      <div
+        class="row"
+      >
+        <recipemenu-stub />
+         
+        <div
+          class="col"
+        >
+          <matchissues-stub />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

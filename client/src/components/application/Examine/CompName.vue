@@ -28,14 +28,16 @@
                     @click="startDecision()"><u>D</u>ecision</button>
 
             <!-- ACCEPT/REJECT/CANCEL DECISION buttons -->
-            <button class="btn btn-sm btn-primary" id="decision-approve-button"
+            <button v-shortkey="['alt', 'a']" @shortkey="nameAccept()" class="btn btn-sm btn-primary" id="decision-approve-button"
                     v-if="is_making_decision" @click="nameAccept()">
-              <span v-if="acceptance_will_be_conditional">Conditionally </span>Approve
+              <span v-if="acceptance_will_be_conditional">Conditionally </span><u>A</u>pprove
             </button>
-            <button class="btn btn-sm btn-danger" id="decision-reject-button"
-                    v-if="is_making_decision" @click="nameReject()" >Reject</button>
-            <button class="btn btn-sm btn-secondary" id="decision-cancel-button"
-                    v-if="is_making_decision" @click="is_making_decision=false">Cancel</button>
+            <button v-shortkey="['alt', 'r']" @shortkey="nameReject()" class="btn btn-sm btn-danger" id="decision-reject-button"
+                    v-if="is_making_decision" @click="nameReject()" ><u>R</u>eject
+            </button>
+            <button v-shortkey="['alt', 'c']" @shortkey="is_making_decision=false" class="btn btn-sm btn-secondary" id="decision-cancel-button"
+                    v-if="is_making_decision" @click="is_making_decision=false">Ba<u>c</u>k
+            </button>
 
             <!-- RE-OPEN (un-furnished) button -->
             <button class="btn btn-sm btn-danger" id="examine-re-open-button"
@@ -44,7 +46,7 @@
 
             <!-- RESET (from furnished) button -->
             <button class="btn btn-sm btn-danger" id="examine-reset-button"
-                    v-if="is_complete && is_furnished && !is_cancelled && !is_approved_expired" data-toggle="modal" data-target="#add-comment-reset-modal">
+                    v-if="is_complete && is_furnished && !is_cancelled && !is_approved_expired" @click="reset()">
               RESET</button>
 
             <!-- EXAMINE button - to claim/examine an NR that is on hold -->
@@ -64,7 +66,8 @@
                 <span class="name-state-icon" v-html="setIcon(compName1.state)"></span>
                 <button class="btn btn-undo" v-if="is_undoable_1"
                         v-on:click="undoDecision(1)">Undo Decision</button>
-                <span class="decision-text">{{ compName1.decision_text }}</span>
+                <span id="decision-text1" class="decision-text"
+                        v-bind:class="{'completed-decision-text': is_complete}">{{ compName1.decision_text }}</span>
               </td>
             </tr>
             <tr class="name-option"
@@ -76,7 +79,8 @@
                 <span class="name-state-icon" v-html="setIcon(compName2.state)"></span>
                 <button class="btn btn-undo" v-if="is_undoable_2"
                         v-on:click="undoDecision(2)">Undo Decision</button>
-                <span class="decision-text">{{ compName2.decision_text }}</span>
+                <span id="decision-text2" class="decision-text"
+                        v-bind:class="{'completed-decision-text': is_complete}">{{ compName2.decision_text }}</span>
               </td>
             </tr>
             <tr class="name-option"
@@ -88,7 +92,8 @@
                 <span class="name-state-icon" v-html="setIcon(compName3.state)"></span>
                 <button class="btn btn-undo" v-if="is_undoable_3"
                         v-on:click="undoDecision(3)">Undo Decision</button>
-                <span class="decision-text">{{ compName3.decision_text }}</span>
+                <span id="decision-text3" class="decision-text"
+                      v-bind:class="{'completed-decision-text': is_complete}">{{ compName3.decision_text }}</span>
               </td>
             </tr>
           </table>
@@ -104,9 +109,9 @@
             </span>
             <div v-if="!is_making_decision && !is_complete" id="manual-search">
               <form class="form-inline" @submit.prevent="onSubmit">
-                <input ref="search" type="text" class="search form-control" v-model="searchStr"  v-shortkey="['alt', 's']" @shortkey="setFocus()">
-                <button class="btn-search" type="submit"><i class="fa fa-search" /></button>
-                <button class="btn-reset" v-if="is_running_manual_search" @click="resetSearchStr">
+                <input ref="search" type="text" class="search form-control" v-model="searchStr"  v-shortkey="['alt', 's']" @shortkey="setFocus()" tabindex="1">
+                <button class="btn-search" type="submit"><i class="fa fa-search" tabindex="8"/></button>
+                <button class="btn-reset" v-if="is_running_manual_search" @click="resetSearchStr" tabindex="7">
                   <i class="fa fa-times" /></button>
               </form>
             </div>
@@ -116,30 +121,6 @@
 
       </div>
 
-    </div>
-
-    <!-- RESET COMMENT popup -->
-    <div class="modal fade" id="add-comment-reset-modal" tabindex="-1" role="dialog">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Please give a comment to explain why this NR is being RESET</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <textarea id="reset-comment-text" class="form-control" rows="10"
-                      v-model="add_comment_display"></textarea>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-sm btn-secondary"
-                    data-dismiss="modal" @click="cancelReset">Cancel</button>
-            <button type="button" id="reset-nr-after-comment-button" class="btn btn-sm btn-danger" disabled="true"
-                    data-dismiss="modal" @click="reset">RESET</button>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- CANCEL COMMENT popup -->
@@ -361,9 +342,11 @@
       },
       nameAccept() {
         this.$store.commit('decision_made', 'APPROVED');
+        this.$store.commit('currentCondition', null);
       },
       nameReject() {
         this.$store.commit('decision_made', 'REJECTED');
+        this.$store.commit('currentCondition', null);
       },
       reOpen() {
         this.$store.state.currentState = 'INPROGRESS';
@@ -378,10 +361,6 @@
           this.$store.dispatch('resetDecision', 1);
         else
           console.log('Error no compName1 on this NR')
-      },
-      cancelReset() {
-        this.add_comment_display = "";
-        $("#reset-comment-text").prop('disabled', false);
       },
       claimNR() {
         this.$store.dispatch('updateNRState', 'INPROGRESS');
@@ -478,7 +457,9 @@
         this.is_making_decision = false;
       },
       setFocus: function() {
-        this.$refs.search.focus();
+        if(this.$refs.search) {
+          this.$refs.search.focus();
+        }
       },
       setManualSearchStr(val) {
         console.log('setManualSearchStr() called with ' + val);
@@ -502,13 +483,6 @@
       },
     },
     watch: {
-      add_comment_display: function(val) {
-        console.log('add_comment_display watcher fired:' + val)
-        if (val)
-          $("#reset-nr-after-comment-button").prop('disabled', false);
-        else
-          $("#reset-nr-after-comment-button").prop('disabled', true);
-      },
       cancel_comment_display: function(val) {
         console.log('cancel_comment_display watcher fired:' + val)
         if (val)
@@ -519,23 +493,20 @@
       compName1State: function (val) {
         console.log('compName1 watcher fired:' + val)
         if (this.resetting) {
-          if (this.compName2 != undefined) {
-          } else
-            this.addNewComment(this.add_comment_display);
-          if (this.compName2State != 'NE')
+          if (this.compName2 != undefined && this.compName2State != 'NE') {
+            console.log("***** Resetting");
             this.$store.dispatch('resetDecision', 2);
-          else
+          } else {
+            console.log("***** Not Resetting?")
             this.addNewComment(this.add_comment_display);
+          }
         }
       },
       compName2State: function (val) {
         console.log('compName2 watcher fired:' + val)
         if (this.resetting) {
-          if (this.compName3 != undefined) {
-            if (this.compName2State != 'NE')
-              this.$store.dispatch('resetDecision', 3);
-            else
-              this.addNewComment(this.add_comment_display);
+          if (this.compName3 != undefined && this.compName3State != 'NE') {
+            this.$store.dispatch('resetDecision', 3);
           } else
             this.addNewComment(this.add_comment_display);
         }
@@ -556,7 +527,6 @@
           this.resetting = false;
           this.$store.dispatch('updateRequest');
           this.add_comment_display = "";
-          $("#reset-comment-text").prop('disabled', false);
         }
       },
       internalComments: function (val) {
@@ -589,7 +559,7 @@
   .name-sect {
   }
   .name-option {
-    font-size:1.2em;
+    font-size:1.3em;
     text-align: left;
   }
   .active-name-option{
@@ -622,13 +592,15 @@
     white-space: nowrap;
   }
 
-  #manual-search {
-    padding-top: 4px;
+  .completed-decision-text {
+    font-size: 15px;
+    white-space: pre-wrap;
   }
 
   .search{
     width: 100%;
     max-width: 700px;
+    font-size: 16px;
   }
 
   #manual-search button {
@@ -640,9 +612,14 @@
     margin-top: -1px;
   }
 
-  .btn-search{
+  .btn-search {
     margin-left: -25px;
   }
+
+  .btn-search .fa-search {
+    font-size: 14px;
+  }
+
   .btn-reset {
     margin-left: -40px;
 }

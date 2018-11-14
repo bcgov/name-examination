@@ -6,7 +6,7 @@
 
 
   <div v-if="!auth">
-    <h2 >Your authorization is missing or has expired. Please login</h2>
+    <h2 >Your authorization is missing or has expired. Please login.</h2>
   </div>
   <div v-else>
     <h3>Welcome to Name X!</h3>

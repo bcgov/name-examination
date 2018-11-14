@@ -1,22 +1,22 @@
 <!--eslint-disable-->
 <template>
-  <div>
-    <div class="container-fluid">
-      <div class="row conflict-List-view">
 
-        <select v-model="selectedConflict" class="form-control" size="17" border="0"
-                @click="check_deselect">
+    <div class="col conflict-list-parent-col">
+      <div class="row conflict-list-view">
+        <select v-if="conflictData.length > 0"  v-model="selectedConflict" class="form-control" size="17" border="0"
+                @click="check_deselect" tabindex="2">
           <option v-for="option in conflictData" :key="option.value"
             v-bind:value="{nrNumber: option.nrNumber, text: option.text, source: option.source}">
             {{ option.text }}
           </option>
+
         </select>
+        <div v-else class="empty-list">( No data )</div>
 
       </div>
 
     </div>
 
-  </div>
 </template>
 
 <script>
@@ -76,8 +76,25 @@
 </script>
 
 <style scoped>
-  .conflict-List-view {
-    /*background-color: #000000;*/
-    padding: 10px;
+  .conflict-list-parent-col {
+    min-width: 800px;
   }
+
+  .conflict-list-view {
+    padding: 0 10px;
+    height: 100%;
+  }
+
+  .conflict-list-view option {
+    padding: 5px;
+  }
+
+  h3, h2 {
+    font-size: 15px;
+  }
+
+  p {
+    font-size: 14px;
+  }
+
 </style>

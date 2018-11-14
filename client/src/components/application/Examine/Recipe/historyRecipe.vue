@@ -1,9 +1,10 @@
 <!--eslint-disable-->
 <template>
-  <div class="container-fluid">
 
     <div class="row" >
-      <div class="col"><historyListview /></div>
+
+      <historyListview />
+
       <div id="historyInfo" class="col history-info-view"><historyInfoview /></div>
       <div class="col client-info-view">
         <h2 style="text-transform: uppercase">{{ currentName }}</h2>
@@ -18,7 +19,7 @@
       </div>
     </div>
 
-  </div>
+
 </template>
 
 <script>
@@ -54,6 +55,15 @@
     padding: 1px;
     margin-right: 1px;
   }
+
+  h2, h3 {
+    font-size: 15px;
+  }
+
+  p {
+    font-size: 14px;
+  }
+
   .client-info-view {
     border: 1px solid #b3d9ff;
     background-color: #efefef;

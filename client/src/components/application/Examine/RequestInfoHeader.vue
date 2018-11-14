@@ -5,7 +5,7 @@
 
       <!-- COLUMN 1 -->
 
-      <div id='div1' class="col-md-5" >
+      <div id='div1' class="col-md-5 add-bottom-padding" >
         <div class="row">
           <div class="col-md-4" >
             <div class="nrNum" v-bind:class="{ REDnrNum: priority}">{{ nrNumber }}</div>
@@ -34,49 +34,41 @@
               </select>
               <div class="error" v-if="!$v.jurisdiction.required">Jurisdiction is required.</div>
             </div>
-
+            <div class="row">
+              <div class="col">
+                <nwpta ref="nwpta_ab"
+                       jurisdiction="AB"
+                       v-bind:is_lp_nwpta_type="is_lp_nwpta_type"
+                       v-bind:is_cp_nwpta_type="is_cp_nwpta_type" />
+              </div>
+              <div class="col">
+                <nwpta ref="nwpta_sk"
+                       jurisdiction="SK"
+                       v-bind:is_lp_nwpta_type="is_lp_nwpta_type"
+                       v-bind:is_cp_nwpta_type="is_cp_nwpta_type" />
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-md-4">
-            <!-- spacer -->
-          </div>
+        <div v-if="show_extended_header" class="row add-top-padding-extra" id="comments-div">
           <div class="col">
-            <nwpta v-if="nwpta_required" ref="nwpta_ab"
-                   jurisdiction="AB"
-                   v-bind:is_lp_nwpta_type="is_lp_nwpta_type"
-                   v-bind:is_cp_nwpta_type="is_cp_nwpta_type" />
-          </div>
-          <div class="col">
-            <nwpta v-if="nwpta_required" ref="nwpta_sk"
-                   jurisdiction="SK"
-                   v-bind:is_lp_nwpta_type="is_lp_nwpta_type"
-                   v-bind:is_cp_nwpta_type="is_cp_nwpta_type" />
-          </div>
-        </div>
+            <div>
+              <h3>INTERNAL COMMENTS</h3>
+              <div class="comment" v-for="comment in internalComments"
+                   v-bind:key="comment.timestamp">
+                <p>
+                  <span class="comment-examiner">{{ comment.examiner }}</span>
+                  -
+                  <span class="comment-timestamp">{{ new Date(comment.timestamp).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'}) }}</span>
+                </p>
+                <p class="comment-text">{{ comment.comment }}</p>
 
-
-        <div class="row">
-          <div class="col add-top-padding">
-            <div v-if="show_extended_header">
-              <div>
-                <h3>INTERNAL COMMENTS</h3>
-                <div class="comment" v-for="comment in internalComments"
-                     v-bind:key="comment.timestamp">
-                  <p>
-                    <span class="comment-examiner">{{ comment.examiner }}</span>
-                    -
-                    <span class="comment-timestamp">{{ new Date(comment.timestamp).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'}) }}</span>
-                  </p>
-                  <p class="comment-text">{{ comment.comment }}</p>
-
-                </div>
               </div>
-              <div v-if="is_editing">
-                <h3>add comment</h3>
-                <textarea v-model="newComment" class="form-control" rows="5"></textarea>
-              </div>
+            </div>
+            <div v-if="is_editing" class="add-top-padding">
+              <h3>add comment</h3>
+              <textarea v-model="newComment" class="form-control" rows="5"></textarea>
             </div>
           </div>
         </div>
@@ -84,7 +76,7 @@
 
       <!-- COLUMN 2 -->
 
-      <div id='div2' class="col-md-4">
+      <div id='div2' class="col-md-4 add-bottom-padding">
         <div class="row">
           <div class="col">
 
@@ -193,7 +185,11 @@
 
       <!-- COLUMN 3 -->
       <div id='div3' class="col-md-3">
-        <div class="row">
+
+        <!-- comments indicator -->
+        <i class="fa fa-comment" id="comments-indicator" v-if="internalComments_length > 0"></i>
+
+        <div class="row add-bottom-padding-extra">
           <div class="col">
             <div class="row">
               <div class="col">
@@ -204,38 +200,34 @@
                 </textarea>
               </div>
             </div>
-            <div class="row">
+            <div class="row add-bottom-padding">
               <div class="col add-top-padding">
                 <clientinfoview ref="clientinfoview" />
               </div>
             </div>
           </div>
         </div>
-      </div>
+        <div class="bottom-right">
+          <div id='header-button-container' class="col-md-12">
 
-    </div>
-
-    <!-- row 2 - buttons -->
-    <div class="row">
-      <div id='header-button-container' class="col-md-12">
-
-        <button v-if="!is_editing" class="f1 btn btn-sm btn-outline-secondary"
+        <button v-shortkey="['alt', 'b']" @shortkey="toggleDetails()"  v-if="!is_editing" class="f1 btn btn-sm btn-outline-secondary"
                 id="nr-details-show-hide-details-button" @click="toggleDetails">
-          <span v-if="show_extended_header">Hide Details</span>
-          <span v-else>Show Details</span>
+          <span v-if="show_extended_header">Hide Details (<u>b</u>)</span>
+          <span v-else>Show Details  (<u>b</u>)</span>
         </button>
 
-        <button v-if="!is_editing && can_edit" class="btn btn-sm btn-secondary"
-                id="nr-details-edit-button" style="float: left;" @click="edit">Edit</button>
+            <button v-if="!is_editing && can_edit" class="btn btn-sm btn-secondary"
+                    id="nr-details-edit-button" style="float: right;" @click="edit">Edit</button>
 
-        <button v-if="is_editing" class="btn btn-sm btn-success" id="nr-details-save-button"
-                style="float: left;" @click="save">Save</button>
-        <button v-if="is_editing" class="btn btn-sm btn-secondary" id="nr-details-cancel-button"
-                style="float: left;" @click="cancelSave">Cancel</button>
+            <button v-if="is_editing" class="btn btn-sm btn-success" id="nr-details-save-button"
+                    style="float: right;" @click="save">Save</button>
+            <button v-if="is_editing" class="btn btn-sm btn-secondary" id="nr-details-cancel-button"
+                    style="float: right;" @click="cancelSave">Cancel</button>
 
+          </div>
+        </div>
       </div>
     </div>
-
   </span>
 </template>
 
@@ -292,7 +284,7 @@ export default {
             // valid corp numbers are between 7 and 10 characters long
             if (value.length < 7 || value.length > 10) return false;
 
-            const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+            const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
             const url = '/api/v1/corporations/' + value;
             return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
               return true;
@@ -334,7 +326,7 @@ export default {
             if (value.length !== 10) return false;
             if (value.substr(0, 3) !== 'NR ') return false;
 
-            const myToken = localStorage.getItem('KEYCLOAK_TOKEN')
+            const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
             const url = '/api/v1/requests/' + value
             return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
               return true;
@@ -503,6 +495,14 @@ export default {
           this.$store.commit('internalComments', value);
         }
       },
+      internalComments_length() {
+        // non-breaking attribute for number of comments (doesn't break on null)
+        try {
+          return this.internalComments.length;
+        } catch (err) {
+          return 0;
+        }
+      },
       expiryDate: {
         get: function() {
           return this.$store.getters.expiryDate;
@@ -567,9 +567,14 @@ export default {
         if (!this.is_my_current_nr && !this.is_closed) {
           this.$store.dispatch('updateNRState', 'INPROGRESS');
         }
+
+        // KBM - REMOVED per ticket #970
+        /*
         if (this.is_closed) {
           this.$store.dispatch('syncNR',this.nrNumber);
         }
+        */
+
         this.$store.state.is_editing = true;
       },
       save() {
@@ -604,8 +609,8 @@ export default {
         }
 
         // adjust nwpta data if it was requested and the type was changed
-        this.$refs.nwpta_ab.adjustUponSave();
-        this.$refs.nwpta_sk.adjustUponSave();
+        if (this.$refs.nwpta_ab != undefined) this.$refs.nwpta_ab.adjustUponSave();
+        if (this.$refs.nwpta_sk != undefined) this.$refs.nwpta_sk.adjustUponSave();
 
         this.$store.dispatch('updateRequest');
         this.$store.state.is_editing = false;
@@ -653,6 +658,7 @@ export default {
               // NWPTA because it will have been added during initial entry into NRO, and we do not
               // change nwpta type (assumed, numbered) to trigger adding/changing anything in
               // Additional Info.
+              template = '';
             }
 
             /*
@@ -669,6 +675,9 @@ export default {
         if (newAddInfo != '') this.additionalInfo = newAddInfo + '\n' + this.additionalInfo;
       },
       addNewComment() {
+
+        // do nothing if comment is blank
+        if (this.newComment == '' || this.newComment == null) return;
 
         // create new comment object with just text, and add it to list of comments in data structure
         var newCommentData = {
@@ -706,25 +715,28 @@ export default {
           !nwpta_ab_invalid && !nwpta_sk_invalid;
       },
       checkReqTypeRules(val) {
-        var rules = this.requestTypeRules.filter(findArrValueByAttr(val, 'request_type'))[0];
 
-        if (rules == undefined) {
-          this.corp_num_required = false;
-          this.prev_nr_required = false;
-          this.nwpta_required = false;
-          this.jurisdiction_required = false;
-          this.additional_info_template = null;
-          this.is_lp_nwpta_type = null;
-          this.is_cp_nwpta_type = null;
+        if (this.requestTypeRules != null) {
+          var rules = this.requestTypeRules.filter(findArrValueByAttr(val, 'request_type'))[0];
 
-        } else {
-          this.corp_num_required = rules.corp_num_required;
-          this.prev_nr_required = rules.prev_nr_required;
-          this.nwpta_required = rules.nwpta_required;
-          this.jurisdiction_required = rules.jurisdiction_required;
-          this.additional_info_template = rules.additional_info_template;
-          this.is_lp_nwpta_type = rules.is_lp_nwpta_type;
-          this.is_cp_nwpta_type = rules.is_cp_nwpta_type;
+          if (rules == undefined) {
+            this.corp_num_required = false;
+            this.prev_nr_required = false;
+            this.nwpta_required = false;
+            this.jurisdiction_required = false;
+            this.additional_info_template = null;
+            this.is_lp_nwpta_type = null;
+            this.is_cp_nwpta_type = null;
+
+          } else {
+            this.corp_num_required = rules.corp_num_required;
+            this.prev_nr_required = rules.prev_nr_required;
+            this.nwpta_required = rules.nwpta_required; /* not used, can be removed after business confirms */
+            this.jurisdiction_required = rules.jurisdiction_required;
+            this.additional_info_template = rules.additional_info_template;
+            this.is_lp_nwpta_type = rules.is_lp_nwpta_type;
+            this.is_cp_nwpta_type = rules.is_cp_nwpta_type;
+          }
         }
       },
     },
@@ -798,14 +810,36 @@ export default {
     font-style: italic;
   }
 
+  #comments-indicator {
+    position: absolute;
+    top: 0;
+    right: 15px;
+    font-size: 16px;
+  }
+  .add-top-padding-extra {
+    padding-top: 45px;
+  }
 
+  .add-bottom-padding {
+    padding-bottom: 10px;
+  }
+
+  .add-bottom-padding-extra {
+    padding-bottom: 30px;
+  }
+
+  .bottom-right {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
 
  </style>
 
 <!-- unscoped -->
 <style>
   .RequestInfoHeader {
-    font-size: 11px;
+    font-size: 14px;
   }
 </style>
 

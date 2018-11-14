@@ -1,0 +1,261 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Decision.vue renders a Decision view 1`] = `
+<span>
+  <div
+    class="row"
+  >
+    <div
+      class="col-6 add-top-padding"
+    >
+      <h3>
+        Conditions
+      </h3>
+       
+      <div>
+        <multiselect-stub
+          close-on-select="true"
+          custom-label="function () { [native code] }"
+          deselectgrouplabel="Press enter to deselect group"
+          deselectlabel=""
+          limit="99999"
+          limittext="function(t){return\\"and \\".concat(t,\\" more\\")}"
+          maxheight="300"
+          multiple="true"
+          name="phrase"
+          opendirection=""
+          options="[object Object]"
+          placeholder=""
+          selectedlabel=""
+          selectgrouplabel="Press enter to select group"
+          selectlabel=""
+          showlabels="true"
+          shownooptions="true"
+          shownoresults="true"
+          tabindex="0"
+          track-by="phrase"
+        />
+      </div>
+    </div>
+     
+    <div
+      class="col-6 add-top-padding"
+    >
+      <h3>
+        Conflicts
+      </h3>
+       
+      <multiselect-stub
+        close-on-select="true"
+        custom-label="function () { [native code] }"
+        deselectgrouplabel="Press enter to deselect group"
+        deselectlabel=""
+        limit="99999"
+        limittext="function(t){return\\"and \\".concat(t,\\" more\\")}"
+        max="3"
+        maxheight="300"
+        multiple="true"
+        name=""
+        opendirection=""
+        placeholder=""
+        selectedlabel=""
+        selectgrouplabel="Press enter to select group"
+        selectlabel=""
+        showlabels="true"
+        shownooptions="true"
+        shownoresults="true"
+        tabindex="0"
+        track-by="nrNumber"
+      />
+    </div>
+  </div>
+   
+  <div
+    class="row"
+  >
+    <div
+      class="col-6 add-top-padding"
+    >
+      <h3>
+        Generic Rejection Reason (label TBD)
+      </h3>
+       
+      <multiselect-stub
+        close-on-select="true"
+        deselectgrouplabel="Press enter to deselect group"
+        deselectlabel=""
+        label="name"
+        limit="99999"
+        limittext="function(t){return\\"and \\".concat(t,\\" more\\")}"
+        maxheight="300"
+        multiple="true"
+        name=""
+        opendirection=""
+        placeholder=""
+        selectedlabel=""
+        selectgrouplabel="Press enter to select group"
+        selectlabel=""
+        showlabels="true"
+        shownooptions="true"
+        shownoresults="true"
+        tabindex="0"
+        track-by="name"
+      />
+    </div>
+     
+    <div
+      class="col-6 add-top-padding"
+    >
+      <h3>
+        Trademarks
+      </h3>
+       
+      <div>
+        <multiselect-stub
+          close-on-select="true"
+          custom-label="function () { [native code] }"
+          deselectgrouplabel="Press enter to deselect group"
+          deselectlabel=""
+          limit="99999"
+          limittext="function(t){return\\"and \\".concat(t,\\" more\\")}"
+          maxheight="300"
+          multiple="true"
+          name="name"
+          opendirection=""
+          options=""
+          placeholder=""
+          selectedlabel=""
+          selectgrouplabel="Press enter to select group"
+          selectlabel=""
+          showlabels="true"
+          shownooptions="true"
+          shownoresults="true"
+          tabindex="0"
+          track-by="name"
+        />
+      </div>
+    </div>
+  </div>
+   
+  <div
+    class="row"
+  >
+    <div
+      class="col add-top-padding"
+    />
+  </div>
+   
+  <div
+    class="row"
+  >
+    <div
+      class="col add-top-padding"
+    >
+      <h3>
+        Message to Requestor
+      </h3>
+       
+      <div
+        class="customer-msg-box"
+      >
+        <pre>
+          
+        </pre>
+      </div>
+       
+      <div
+        class="character_count"
+      >
+        
+        Character count: 0
+        
+        <!---->
+      </div>
+       
+      <a
+        data-target="#edit-customer-message-modal"
+        data-toggle="modal"
+        href="#"
+        id="edit-customer-message-link"
+      >
+        Edit...
+      </a>
+       
+      <!---->
+    </div>
+  </div>
+   
+  <internalcomments-stub
+    layout="decision"
+  />
+   
+  <div
+    class="modal fade"
+    id="edit-customer-message-modal"
+    role="dialog"
+    tabindex="-1"
+  >
+    <div
+      class="modal-dialog modal-lg"
+      role="document"
+    >
+      <div
+        class="modal-content"
+      >
+        <div
+          class="modal-header"
+        >
+          <h5
+            class="modal-title"
+            id="exampleModalLabel"
+          >
+            Edit Customer Comments
+          </h5>
+           
+          <button
+            aria-label="Close"
+            class="close"
+            data-dismiss="modal"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+            >
+              ×
+            </span>
+          </button>
+        </div>
+         
+        <div
+          class="modal-body"
+        >
+          <textarea
+            class="form-control"
+            id="edit-customer-message-textarea"
+            rows="10"
+          />
+        </div>
+         
+        <div
+          class="modal-footer"
+        >
+          <button
+            class="btn btn-sm btn-secondary"
+            data-dismiss="modal"
+            type="button"
+          >
+            Cancel
+          </button>
+           
+          <button
+            class="btn btn-sm btn-primary"
+            type="button"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</span>
+`;

@@ -1,12 +1,8 @@
 <!--eslint-disable-->
 <template>
-  <div class="container-fluid">
+    <div class="row">
 
-    <div class="row" >
-
-      <div class="col conList">
-        <conflictlistview />
-      </div>
+      <conflictlistview />
 
       <div class="col corpDet">
         <h2 id="currentConflictName">{{currentConflictName}}</h2>
@@ -25,8 +21,6 @@
         <div class="add-top-padding"><clientinfoview /></div>
       </div>
     </div>
-
-  </div>
 </template>
 
 <script>
@@ -77,11 +71,15 @@
     background-color: #efefef;
     padding: 2px;
   }
-  .conlist {
-    border: 1px solid #880000;
-    margin-right: 2px;
-    padding: 0;
+
+   h3, h2 {
+    font-size: 15px;
   }
+
+   p {
+    font-size: 14px;
+  }
+
   .corpDet {
     border: 1px solid #ff9999;
     margin-right: 2px;

@@ -59,13 +59,22 @@
     </span>
 
   </span>
-  <span v-else-if="(!is_editing || is_numbered_assumed) && has_nwpta">
+  <span v-else-if="!is_editing && nwpta_requested && has_nwpta && !is_header_shown">
 
     <span class="nwpta" :id="id">
       <h3 class="add-top-padding">
         {{ jurisdiction }}
-        <span v-if="is_named_assumed">(Assumed)</span>
+        <span>REQUESTED</span>
+      </h3>
+    </span>
+
+  </span>
+  <span v-else-if="(!is_editing || is_numbered_assumed) && has_nwpta && is_header_shown">
+    <span class="nwpta" :id="id">
+      <h3 class="add-top-padding">
+        {{ jurisdiction }}
         <span v-if="nwpta_requested">REQUESTED</span>
+        <span v-else-if="is_named_assumed">(Assumed)</span>
       </h3>
       <div v-if="is_numbered_assumed">Numbered Assumed</div>
 
@@ -82,7 +91,6 @@
       <br />
       {{ nwpta.partnerNameDate }}
     </span>
-
   </span>
 </template>
 
@@ -170,6 +178,9 @@
         if (this.requested_radio_selection == 'requested_numbered') return true;
         else return false;
       },
+      is_header_shown() {
+        return this.$store.state.is_header_shown;
+      },
     },
     mounted: function () {
       // initial value of radio buttons for do-it-for-me
@@ -223,5 +234,8 @@
     font-style: italic;
     color: grey;
     text-align: center;
+  }
+  .nwpta {
+
   }
 </style>

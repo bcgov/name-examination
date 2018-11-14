@@ -1,0 +1,290 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FindFilter.vue renders a FindFilter component 1`] = `
+<div>
+  <div
+    class="container-fluid"
+  >
+    <table>
+      <thead>
+        <tr
+          id="filter-header"
+        >
+          <th>
+            <select
+              class="form-control"
+              id="search-filter-state"
+            >
+              <option
+                value="ALL"
+              >
+                ALL
+              </option>
+              <option
+                value="HOLD"
+              >
+                HOLD
+              </option>
+              <option
+                value="INPROGRESS"
+              >
+                INPROGRESS
+              </option>
+              <option
+                value="DRAFT"
+              >
+                DRAFT
+              </option>
+              <option
+                value="EXPIRED"
+              >
+                EXPIRED
+              </option>
+              <option
+                value="CANCELLED"
+              >
+                CANCELLED
+              </option>
+              <option
+                value="APPROVED"
+              >
+                APPROVED
+              </option>
+              <option
+                value="CONDITIONAL"
+              >
+                CONDITIONAL
+              </option>
+              <option
+                value="REJECTED"
+              >
+                REJECTED
+              </option>
+            </select>
+          </th>
+           
+          <th>
+            <input
+              class="form-control"
+              id="search-filter-examiner"
+              placeholder="Username"
+            />
+          </th>
+           
+          <th>
+            <input
+              class="form-control"
+              id="search-filter-nr-number"
+              placeholder="NR Number"
+            />
+          </th>
+           
+          <th>
+            <input
+              class="form-control"
+              id="search-filter-company"
+              placeholder="Name"
+            />
+          </th>
+           
+          <th />
+           
+          <th>
+            <select
+              class="form-control"
+              id="search-filter-priority"
+            >
+              <option
+                value="All"
+              >
+                All
+              </option>
+              <option
+                value="Priority"
+              >
+                Priority
+              </option>
+              <option
+                value="Standard"
+              >
+                Standard
+              </option>
+            </select>
+          </th>
+           
+          <th>
+            <select
+              class="form-control"
+              id="search-filter-furnished"
+            >
+              <option
+                value="All"
+              >
+                All
+              </option>
+              <option
+                value="Notified"
+              >
+                Notified
+              </option>
+              <option
+                value="Not Notified"
+              >
+                Not Notified
+              </option>
+            </select>
+          </th>
+           
+          <th>
+            <select
+              class="form-control"
+              id="search-filter-submittedDate"
+            >
+              <option
+                value="Today"
+              >
+                Today
+              </option>
+              <option
+                value="7 days"
+              >
+                7 days
+              </option>
+              <option
+                value="30 days"
+              >
+                30 days
+              </option>
+              <option
+                value="90 days"
+              >
+                90 days
+              </option>
+              <option
+                value="1 year"
+              >
+                1 year
+              </option>
+              <option
+                value="3 years"
+              >
+                3 years
+              </option>
+              <option
+                value="5 years"
+              >
+                5 years
+              </option>
+              <option
+                value="All"
+              >
+                All
+              </option>
+            </select>
+          </th>
+           
+          <th />
+           
+          <th />
+        </tr>
+      </thead>
+    </table>
+     
+    <h1>
+      Search
+    </h1>
+     
+    <span
+      class="searchTable"
+      id="search-table-container"
+    >
+      <b-row
+        id="table-options"
+      >
+        <b-col>
+          <b-link
+            id="clear-filter"
+          >
+            Clear Filters
+          </b-link>
+        </b-col>
+         
+        <b-col>
+          <b-row
+            id="pagination"
+          >
+            <b-col>
+              <p
+                id="results"
+              >
+                Results: 0
+              </p>
+            </b-col>
+             
+            <b-col>
+              <b-form-group
+                horizontal=""
+                id="display-selection"
+                label="Display:"
+              >
+                <b-form-select
+                  options="5,10,20,50,100"
+                  style="width: 60px; float: right; margin-right: 10px;"
+                />
+              </b-form-group>
+            </b-col>
+             
+            <b-col>
+              <b-form-group
+                horizontal=""
+                id="page-selection"
+                label="Page:"
+              >
+                <b-form-select
+                  options="1"
+                  style="width: 60px; float: right;"
+                />
+              </b-form-group>
+            </b-col>
+             
+            <b-col>
+              <div
+                id="prev-next-page"
+              >
+                <span>
+                  of 1
+                </span>
+                 
+                <b-button-group>
+                  <b-btn
+                    id="previous"
+                  >
+                    ‹
+                  </b-btn>
+                   
+                  <b-btn
+                    id="next"
+                  >
+                    ›
+                  </b-btn>
+                </b-button-group>
+              </div>
+            </b-col>
+          </b-row>
+        </b-col>
+      </b-row>
+       
+      <b-table
+        class="pre-line scroll"
+        fields="[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]"
+        fixed=""
+        hover=""
+        id="search-table"
+        items=""
+        show-empty=""
+        striped=""
+      />
+    </span>
+  </div>
+</div>
+`;

@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CorpMatch.vue renders a CorpMatch component 1`] = `
+<span>
+  <h3
+    class="corpType"
+  >
+    BC Corporation
+  </h3>
+   
+  <h3>
+    Incorporation Number
+  </h3>
+   
+  <p>
+    
+  </p>
+   
+  <h3>
+    Incorporation Date
+  </h3>
+   
+  <p>
+    
+  </p>
+   
+  <h3>
+    Directors
+  </h3>
+    
+  <h3>
+    Jurisdiction
+  </h3>
+   
+  <p>
+    
+  </p>
+   
+  <h3>
+    Nature Of Business
+  </h3>
+   
+  <p>
+    
+  </p>
+   
+  <h3>
+    Records Office Delivery Address
+  </h3>
+    
+  <h3>
+    Registered Office Delivery Address
+  </h3>
+   
+</span>
+`;

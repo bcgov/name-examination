@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App.vue  renders the App 1`] = `
+<div>
+  <div
+    class="modal fade"
+    id="error-message-modal"
+    role="dialog"
+  >
+    <div
+      class="modal-dialog modal-lg"
+      role="document"
+    >
+      <div
+        class="modal-content"
+      >
+        <!---->
+         
+        <!---->
+         
+        <div
+          class="modal-footer"
+        >
+          <button
+            class="btn btn-sm btn-primary"
+            data-dismiss="modal"
+            type="button"
+          >
+            Continue
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+   
+  <div
+    id="app"
+  >
+    <stdheader-stub />
+     
+    <div>
+      <router-view-stub
+        name="default"
+      />
+    </div>
+  </div>
+</div>
+`;

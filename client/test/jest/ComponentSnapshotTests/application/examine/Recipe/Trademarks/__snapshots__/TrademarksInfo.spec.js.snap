@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TrademarksInfo.vue renders a TrademarksInfo component 1`] = `
+<span>
+  <!---->
+</span>
+`;

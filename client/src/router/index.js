@@ -8,6 +8,7 @@ const LandingPage = () => import(/* webpackChunkName: "home" */'@/components/Lan
 const Signin = () => import(/* webpackChunkName: "signin" */'@/components/auth/Signin')
 const NameExamination = () => import(/* webpackChunkName: "nameexamination" */'@/components/application/NameExamination')
 const Find = () => import(/* webpackChunkName: "find" */'@/components/application/Find')
+const Stats = () => import(/* webpackChunkName: "stats" */'@/components/application/Stats/Stats.vue')
 
 Vue.use(Router)
 Vue.use(Vuex)
@@ -46,6 +47,14 @@ let router = new Router({
         requiresAuth: true
       }
     },
+    {
+      name: 'stats',
+      component: Stats,
+      path: '/stats',
+      meta: {
+        requiresAuth: true
+      }
+    },
   ]
 })
 
@@ -54,7 +63,7 @@ router.beforeResolve((to, from, next) => {
     console.log('Authorization check')
     // this route requires auth,
     // if not Authenticated, redirect to login page.
-    let auth = localStorage.getItem('AUTHORIZED')
+    let auth = sessionStorage.getItem('AUTHORIZED')
     if (auth == 'true') {
       console.log('Authorized')
       next()

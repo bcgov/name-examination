@@ -1,34 +1,34 @@
 <!--eslint-disable-->
 <template>
-  <div class="col-2">
+  <div class="col-2 recipe-steps-parent-col">
 
     <div class="nav flex-column nav-pills recipe-steps" id="v-pills-tab" role="tablist"
          aria-orientation="vertical">
 
       <div id="Conflict1">
         <i id="Conflict2"></i></div>
-      <a id="conflicts-tab" class="nav-link active" data-toggle="pill" href="#"
-         @click="clickRecipeCard('Conflicts')">
+      <a id="conflicts-tab" class="nav-link active nav-link-text" data-toggle="pill" href="#"
+         @click="clickRecipeCard('Conflicts')" tabindex="9">
         Conflicts
       </a>
       <div class="arrow-right"></div>
 
       <div id="Condition1">
         <i id="Condition2"></i></div>
-      <a id="conditions-tab" class="nav-link" data-toggle="pill" href="#"
-         @click="clickRecipeCard('Condition')">Condition</a>
+      <a id="conditions-tab" class="nav-link nav-link-text" data-toggle="pill" href="#"
+         @click="clickRecipeCard('Condition')" tabindex="3">Condition</a>
       <div class="arrow-right"></div>
 
       <div id="Trademarks1">
         <i id="Trademarks2"></i></div>
-      <a id="trademarks-tab" class="nav-link" data-toggle="pill" href="#"
-         @click="clickRecipeCard('Trademarks')">Trademarks</a>
+      <a id="trademarks-tab" class="nav-link nav-link-text" data-toggle="pill" href="#"
+         @click="clickRecipeCard('Trademarks')" tabindex="4">Trademarks</a>
       <div class="arrow-right"></div>
 
       <div id="History1">
         <i id="History2"></i></div>
-      <a id="history-tab" class="nav-link" data-toggle="pill" href="#"
-         @click="clickRecipeCard('History')">History</a>
+      <a id="history-tab" class="nav-link nav-link-text" data-toggle="pill" href="#"
+         @click="clickRecipeCard('History')" tabindex="5">History</a>
       <div class="arrow-right"></div>
 
 
@@ -242,6 +242,11 @@ export default {
 
   /* RECIPE STEPS */
 
+  .recipe-steps-parent-col {
+    width: 200px;
+    max-width: 200px;
+  }
+
   .recipe-steps
   {
     display: block;
@@ -267,8 +272,8 @@ export default {
   .recipe-steps .arrow-right {
     width: 0;
     height: 0;
-    border-top: 17px solid transparent;
-    border-bottom: 17px solid transparent;
+    border-top: 19px solid transparent;
+    border-bottom: 19px solid transparent;
     border-left: 17px solid #ccc;
     float:left;
     margin: 4px 0;
@@ -281,16 +286,19 @@ export default {
 
   .recipe-steps .icon
   {
-    width: 34px;
-    height: 34px;
+    width: 38px;
+    height: 38px;
     float: left;
     margin: 4px 0;
     display: block;
     text-align: center;
-    font-size: 23px;
+    font-size: 25px;
     color: white;
   }
 
+  .nav-link-text {
+    font-size: 15px;
+  }
   .recipe-steps .icon-fail
   {
     background-color: #c00;

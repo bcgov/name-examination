@@ -18,8 +18,10 @@
 
   export default {
     name: "find",
-    data:{
-      visble: true
+    data: function () {
+      return {
+        visble: true
+      }
     },
     computed: {
       auth() {

@@ -147,15 +147,8 @@
   import internalcomments from "@/components/application/Examine/InternalComments.vue";
   import Multiselect from 'vue-multiselect';
 
-  const myMixin = {
-    created(){
-      console.log("It works!")
-    }
-  }
-
   export default {
     name: "Decision",
-    mixins: [myMixin],
     data: function ()
     {
       return {
@@ -255,6 +248,7 @@
           instructions: "Consent Required.",
           consent_required: true,
           display_string: "Consent Required",
+          id: "CONSENTREQUIRED",
         });
 
         return arr_conditions;
@@ -304,11 +298,27 @@
 
         // CONFLICTS
         for (var i = 0; i < this.conflicts_selected.length; i++) {
-          retval.push('Rejected due to conflict with ' + this.conflicts_selected[i].text);
+
+          // check whether "Consent Required" condition is set - if so, set message re. "Requires consent from..."
+          if (this.consent_required_condition_set) {
+            retval.push('Consent required from ' + this.conflicts_selected[i].text);
+          }
+
+          // if "Consent Required" condition is not set, set message re. "Rejected due..."
+          else {
+            retval.push('Rejected due to conflict with ' + this.conflicts_selected[i].text);
+          }
         }
 
         // CONDITIONS
         for (var i = 0; i < this.conditions_selected.length; i++) {
+
+          // if this is the "Consent Required" condition, and there are conflicts, do not set
+          // "Consent Required" messgage, because it is redundant with messaging re. conflicts.
+          if (this.conditions_selected[i].id == 'CONSENTREQUIRED' && this.conflicts_selected.length > 0) {
+            continue;
+          }
+
           if (this.conditions_selected[i].phrase !== undefined && this.conditions_selected[i].phrase !== '') {
             retval.push(this.conditions_selected[i].phrase + ' - ' + this.conditions_selected[i].instructions);
           }
@@ -361,7 +371,12 @@
           //this.customer_message_override = value;
 
         }
-      }
+      },
+      consent_required_condition_set() {
+        // is the "Consent Required" condition selected in Conditions dropdown?
+        if (this.conditions_selected.filter(findArrValueByAttr('CONSENTREQUIRED', 'id')).length > 0) return true;
+        else return false;
+      },
     },
     components: {
       internalcomments,
@@ -447,7 +462,11 @@
           // if there were conflicts selected but this is an approval, this will result in
           // accidental "rejected due to conflict" messaging. Remove it by clearing the selected
           // conflicts (Issue #767).
-          this.conflicts_selected = [];
+          // Do NOT clear the conflicts if the "Consent Required" condition is also set - then it's
+          // intentional.
+          if (!this.consent_required_condition_set) {
+            this.conflicts_selected = [];
+          }
         }
         else {
           this.currentNameObj.state = 'REJECTED';
