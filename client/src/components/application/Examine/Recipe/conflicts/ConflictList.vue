@@ -30,15 +30,20 @@
     },
     computed: {
       conflictData() {
-          var data = [{ text:'< no exact match >' }];
-          if (this.$store.getters.exactMatchesConflicts && this.$store.getters.exactMatchesConflicts.length > 0) {
-              data = this.$store.getters.exactMatchesConflicts
-          }
-          data = data.concat([{ text:'***' }])
-          if (this.$store.getters.conflictList && this.$store.getters.conflictList.length > 0) {
-              data = data.concat(this.$store.getters.conflictList)
-          }
-          return data;
+        var data = [{ text:'< no exact match >' }];
+        if (this.$store.getters.exactMatchesConflicts && this.$store.getters.exactMatchesConflicts.length > 0) {
+          data = this.$store.getters.exactMatchesConflicts;
+        }
+        data = data.concat([{ text:'***' }]);
+        if (this.$store.getters.synonymMatchesConflicts && this.$store.getters.synonymMatchesConflicts.length)
+          data = data.concat(this.$store.getters.synonymMatchesConflicts);
+        else
+          data = data.concat([{ text:'No synonym match' }]);
+        data = data.concat([{ text:'***' }]);
+        if (this.$store.getters.conflictList && this.$store.getters.conflictList.length > 0) {
+          data = data.concat(this.$store.getters.conflictList);
+        }
+        return data;
       },
     },
     mounted() {
@@ -65,11 +70,13 @@
     watch: {
       selectedConflict: {
         handler(value) {
-          if (value === '')
-            this.$store.commit('currentConflict', null);
-          else
-            this.$store.commit('currentConflict', value);
-          this.setConflictInfo();
+          if(value.source) {
+            if (value === '')
+              this.$store.commit('currentConflict', null);
+            else
+              this.$store.commit('currentConflict', value);
+            this.setConflictInfo();
+          }
         }
       },
       conflictData: {

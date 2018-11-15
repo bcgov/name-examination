@@ -60,6 +60,9 @@ export default {
     hasExactMatchesInfo() {
       return this.$store.getters.hasExactMatches;
     },
+    hasSynonymMatchesInfo() {
+      return this.$store.getters.hasExactMatches;
+    },
     conflictsInfo() {
       return this.$store.getters.conflictsJSON;
     },
@@ -78,8 +81,10 @@ export default {
       this.currentRecipeCard = recipeCard
     },
     setConflicts() {
-        var hasConflicts = this.hasExactMatchesInfo;
-        if (!hasConflicts) {
+        var hasConflicts = true;
+        var hasExactConflicts = this.hasExactMatchesInfo;
+        var hasSynConflicts = this.hasSynonymMatchesInfo;
+        if (!hasExactConflicts && !hasSynConflicts) {
             hasConflicts =
                 this.conflictsInfo !== null
                 && this.conflictsInfo != undefined
