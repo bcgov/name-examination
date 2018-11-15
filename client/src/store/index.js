@@ -172,6 +172,7 @@ export default new Vuex.Store({
     searchPerPage: 10,
 
     exactMatchesConflicts: [],
+    synonymMatchesConflicts: [],
     conflictList: null,
     conflictHighlighting: null,
     conflictNames: null,
@@ -764,16 +765,29 @@ export default new Vuex.Store({
   },
 
     setExactMatchesConflicts(state, jsonValue) {
-        var names = jsonValue['names']
-        state.exactMatchesConflicts = []
-        for (var i=0; i<names.length; i++) {
-            var entry = names[i];
-            state.exactMatchesConflicts.push({
-                text:entry.name,
-                nrNumber:entry.id,
-                source:entry.source
-            })
-        }
+      var names = jsonValue['names']
+      state.exactMatchesConflicts = []
+      for (var i=0; i<names.length; i++) {
+        var entry = names[i];
+        state.exactMatchesConflicts.push({
+          text:entry.name,
+          nrNumber:entry.id,
+          source:entry.source
+        })
+      }
+    },
+
+    setSynonymMatchesConflicts(state, json) {
+      state.synonymMatchesConflicts = [];
+      let names = json.names;
+      for (let i=0; i<names.length; i++) {
+        let entry = names[i];
+        state.synonymMatchesConflicts.push({
+          text:entry.name,
+          nrNumber:entry.id,
+          source:entry.source
+        })
+      }
     },
 
     currentConflict(state,value){
@@ -1316,6 +1330,7 @@ export default new Vuex.Store({
       console.log('running manual recipe with: ', searchStr);
       if( state.currentChoice != null) {
         this.dispatch('checkManualExactMatches',searchStr)
+        this.dispatch('checkManualSynonymMatches',searchStr)
         this.dispatch('checkManualConflicts',searchStr)
         this.dispatch('checkManualTrademarks',searchStr)
         this.dispatch('checkManualConditions',searchStr)
@@ -1336,6 +1351,22 @@ export default new Vuex.Store({
         commit('setExactMatchesConflicts', response.data)
       })
         .catch(error => console.log('ERROR (exact matches): ' + error))
+    },
+
+    checkManualSynonymMatches( {dispatch,commit,state}, query ) {
+
+      console.log('action: getting synonym matches for number: ' + state.compInfo.nrNumber + ' from solr')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
+      console.log('query', query);
+      const url = 'api/v1/requests/synonymbucket/'+query;
+      console.log('URL:' + url);
+      const vm = this;
+      dispatch('checkToken');
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        console.log('Check SYNONYM Match Response:', JSON.stringify(response.data))
+        commit('setSynonymMatchesConflicts', response.data)
+      })
+        .catch(error => console.log('ERROR (synonym matches): ' + error))
     },
 
     checkManualConflicts( {commit, state},searchStr ) {
@@ -1708,6 +1739,12 @@ export default new Vuex.Store({
     },
     hasExactMatches(state) {
       return state.exactMatchesConflicts ? state.exactMatchesConflicts.length > 0 : false;
+    },
+    synonymMatchesConflicts(state) {
+      return state.synonymMatchesConflicts
+    },
+    hasSynonymMatches(state) {
+      return state.synonymMatchesConflicts ? state.synonymMatchesConflicts.length > 0 : false;
     },
     conflictList(state) {
       return state.conflictList
