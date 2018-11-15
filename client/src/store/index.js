@@ -1342,8 +1342,10 @@ export default new Vuex.Store({
 
       console.log('action: getting exact matches for number: ' + state.compInfo.nrNumber + ' from solr')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      console.log('query', query.substring(1))
-      const url = '/api/v1/exact-match?query='+query.substring(1)
+      query = query.substring(0, 1) == '+' ? query.substring(1) : query;
+      query = encodeURIComponent(query)
+      console.log('query', query)
+      const url = '/api/v1/exact-match?query='+query
       console.log('URL:' + url)
       const vm = this
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
