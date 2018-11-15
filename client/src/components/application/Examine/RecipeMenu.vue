@@ -57,6 +57,9 @@ export default {
         this.$store.commit('currentRecipeCard', value);
       }
     },
+    hasExactMatchesInfo() {
+      return this.$store.getters.hasExactMatches;
+    },
     conflictsInfo() {
       return this.$store.getters.conflictsJSON;
     },
@@ -75,18 +78,19 @@ export default {
       this.currentRecipeCard = recipeCard
     },
     setConflicts() {
-      /*
-      If there are any conflicts, set to FAIL; otherwise PASS.
-       */
-      if (this.conflictsInfo == null || this.conflictsInfo == undefined) {
-        this.setPass('Conflict');
-      }
-      else if (this.conflictsInfo.names.length == 0) {
-        this.setPass('Conflict');
-      }
-      else {
-        this.setFail('Conflict');
-      }
+        var hasConflicts = this.hasExactMatchesInfo;
+        if (!hasConflicts) {
+            hasConflicts =
+                this.conflictsInfo !== null
+                && this.conflictsInfo != undefined
+                && this.conflictsInfo.names.length > 0
+        }
+        if (hasConflicts) {
+            this.setFail('Conflict')
+        }
+        else {
+            this.setPass('Conflict')
+        }
     },
     setConditions() {
       // if no restricted words -> call setPass
@@ -193,6 +197,9 @@ export default {
   watch: {
     conflictsInfo: function (val) {
       // set severity flag on recipe menu
+      this.setConflicts();
+    },
+    hasExactMatchesInfo: function() {
       this.setConflicts();
     },
     conditionInfo: function (val) {
@@ -314,4 +321,3 @@ export default {
     background-color: #38761d;
   }
 </style>
-

@@ -60,6 +60,11 @@ exports[`FindFilter.vue renders a FindFilter component 1`] = `
               >
                 REJECTED
               </option>
+              <option
+                value="COMPLETED"
+              >
+                COMPLETED
+              </option>
             </select>
           </th>
            
