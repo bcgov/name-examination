@@ -5,8 +5,8 @@
       <div class="row conflict-list-view">
         <select id="conflict-list" v-if="conflictData.length > 0"  v-model="selectedConflict" class="form-control" size="17" border="0"
                 @click="check_deselect" tabindex="2">
-          <option v-for="option in conflictData" :key="option.value"
-            v-bind:value="{nrNumber: option.nrNumber, text: option.text, source: option.source}">
+          <option v-for="(option, index) in conflictData" :key="option.value"
+            v-bind:value="{nrNumber: option.nrNumber, text: option.text, source: option.source, index: index}">
             {{ option.text }}
           </option>
 
@@ -38,7 +38,7 @@
         if (this.$store.getters.synonymMatchesConflicts && this.$store.getters.synonymMatchesConflicts.length)
           data = data.concat(this.$store.getters.synonymMatchesConflicts);
         else
-          data = data.concat([{ text:'No synonym match' }]);
+          data = data.concat([{ text:'< no synonym match >' }]);
         data = data.concat([{ text:'***' }]);
         if (this.$store.getters.conflictList && this.$store.getters.conflictList.length > 0) {
           data = data.concat(this.$store.getters.conflictList);
@@ -60,8 +60,8 @@
           this.$store.dispatch('getConflictInfo', this.selectedConflict);
       },
       setSelectedConflict() {
-        if (this.$store.getters.currentConflict == null && this.$store.getters.conflictList != null && this.$store.getters.conflictList[0] != null)
-          this.selectedConflict = this.$store.getters.conflictList[0];
+        if (this.$store.getters.currentConflict == null && this.conflictData && this.conflictData.length > 0)
+          this.selectedConflict = this.conflictData[0];
         else if (this.$store.getters.currentConflict != null)
           this.selectedConflict = this.$store.getters.currentConflict;
       }
@@ -70,13 +70,12 @@
     watch: {
       selectedConflict: {
         handler(value) {
-          if(value.source) {
-            if (value === '')
-              this.$store.commit('currentConflict', null);
-            else
-              this.$store.commit('currentConflict', value);
-            this.setConflictInfo();
-          }
+          console.log('selectedConflict watcher fired: ', value)
+          if (value.source)
+            this.$store.commit('currentConflict', value);
+          else
+            this.$store.commit('currentConflict', null);
+          this.setConflictInfo();
         }
       },
       conflictData: {
