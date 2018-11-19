@@ -28,6 +28,20 @@ exports[`ConflictList.vue renders a ConflictList component 1`] = `
         ***
       
       </option>
+      <option
+        value="[object Object]"
+      >
+        
+        No synonym match
+      
+      </option>
+      <option
+        value="[object Object]"
+      >
+        
+        ***
+      
+      </option>
     </select>
   </div>
 </div>

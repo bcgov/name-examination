@@ -58,12 +58,21 @@ describe('Exact-Match Conflicts', () => {
             data.apiSandbox.getStub.withArgs('/api/v1/requests/1', sinon.match.any).returns(
                 new Promise((resolve) => resolve({ data: {} }))
             )
-            data.apiSandbox.getStub.withArgs('/api/v1/exact-match?query=incredible name inc', sinon.match.any).returns(
+            data.apiSandbox.getStub.withArgs('/api/v1/exact-match?query='+encodeURIComponent('incredible name inc'), sinon.match.any).returns(
                 new Promise((resolve) => resolve({ data: {
                     names: [
                         { name:'Incredible Name LTD', id:'42', source:'moon' }
                     ],
                 } }))
+            )
+            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/+incredible name inc', sinon.match.any).returns(
+                new Promise((resolve) => {
+                    resolve({
+                        data: {
+                            names:[]
+                        }
+                    })
+                })
             )
             const Constructor = Vue.extend(App);
             data.instance = new Constructor({store:store, router:router});
@@ -89,7 +98,6 @@ describe('Exact-Match Conflicts', () => {
         it('displays exact-match conflicts first', ()=>{
             expect(data.vm.$el.querySelector('#conflict-list option:nth-child(1)').textContent.trim()).toEqual('Incredible Name LTD')
             expect(data.vm.$el.querySelector('#conflict-list option:nth-child(2)').textContent.trim()).toEqual('***')
-            expect(data.vm.$el.querySelector('#conflict-list option:nth-child(3)').textContent.trim()).toEqual('Incredible World LTD')
         })
 
         it('populates additional attributes as expected', ()=>{
@@ -97,7 +105,7 @@ describe('Exact-Match Conflicts', () => {
         })
 
         it('resists no exact match', (done)=>{
-            data.apiSandbox.getStub.withArgs('/api/v1/exact-match?query=incredible name inc', sinon.match.any).returns(
+            data.apiSandbox.getStub.withArgs('/api/v1/exact-match?query='+encodeURIComponent('incredible name inc'), sinon.match.any).returns(
                 new Promise((resolve) => resolve({ data: {
                     names: []
                 } }))
@@ -112,7 +120,6 @@ describe('Exact-Match Conflicts', () => {
                 setTimeout(()=>{
                     expect(data.vm.$el.querySelector('#conflict-list option:nth-child(1)').textContent.trim()).toEqual('< no exact match >')
                     expect(data.vm.$el.querySelector('#conflict-list option:nth-child(2)').textContent.trim()).toEqual('***')
-                    expect(data.vm.$el.querySelector('#conflict-list option:nth-child(3)').textContent.trim()).toEqual('Incredible World LTD')
                     done();
                 }, 1000)
             }, 1000)
@@ -149,7 +156,7 @@ describe('Exact-Match Conflicts', () => {
                     response: {}
                 } }))
             )
-            data.apiSandbox.getStub.withArgs('/api/v1/exact-match?query=incredible name inc', sinon.match.any).returns(
+            data.apiSandbox.getStub.withArgs('/api/v1/exact-match?query='+encodeURIComponent('incredible name inc'), sinon.match.any).returns(
                 new Promise((resolve) => resolve({ data: {
                     names: []
                 } }))

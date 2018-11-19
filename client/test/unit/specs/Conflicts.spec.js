@@ -58,10 +58,19 @@ describe('Conflicts', () => {
             data.apiSandbox.getStub.withArgs('/api/v1/requests/1', sinon.match.any).returns(
                 new Promise((resolve) => resolve({ data: {} }))
             )
-            data.apiSandbox.getStub.withArgs('/api/v1/exact-match?query=incredible name inc', sinon.match.any).returns(
+            data.apiSandbox.getStub.withArgs('/api/v1/exact-match?query='+encodeURIComponent('incredible name inc'), sinon.match.any).returns(
                 new Promise((resolve) => resolve({ data: {
                     names: [],
                 } }))
+            )
+            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/+incredible name inc', sinon.match.any).returns(
+                new Promise((resolve) => {
+                    resolve({
+                        data: {
+                            names:[]
+                        }
+                    })
+                })
             )
             const Constructor = Vue.extend(App);
             data.instance = new Constructor({store:store, router:router});
