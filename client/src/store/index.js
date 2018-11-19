@@ -1360,7 +1360,7 @@ export default new Vuex.Store({
       console.log('action: getting synonym matches for number: ' + state.compInfo.nrNumber + ' from solr')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
       console.log('query', query);
-      const url = 'api/v1/requests/synonymbucket/'+query;
+      const url = '/api/v1/requests/synonymbucket/' + query;
       console.log('URL:' + url);
       const vm = this;
       dispatch('checkToken');
