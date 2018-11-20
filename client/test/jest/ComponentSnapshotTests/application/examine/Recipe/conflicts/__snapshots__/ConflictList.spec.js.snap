@@ -32,7 +32,7 @@ exports[`ConflictList.vue renders a ConflictList component 1`] = `
         value="[object Object]"
       >
         
-        No synonym match
+        &lt; no synonym match &gt;
       
       </option>
       <option

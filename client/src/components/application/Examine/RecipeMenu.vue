@@ -60,8 +60,8 @@ export default {
     hasExactMatchesInfo() {
       return this.$store.getters.hasExactMatches;
     },
-    hasSynonymMatchesInfo() {
-      return this.$store.getters.hasExactMatches;
+    synonymMatchesInfo() {
+      return this.$store.getters.synonymMatchesConflicts;
     },
     conflictsInfo() {
       return this.$store.getters.conflictsJSON;
@@ -80,11 +80,18 @@ export default {
     clickRecipeCard(recipeCard) {
       this.currentRecipeCard = recipeCard
     },
+    hasSynConflicts() {
+      let synMatchesList = this.synonymMatchesInfo;
+      for (let i=0; i<synMatchesList.length; i++) {
+        if (synMatchesList[i].source)
+          return true;
+      }
+      return false;
+    },
     setConflicts() {
         var hasConflicts = true;
         var hasExactConflicts = this.hasExactMatchesInfo;
-        var hasSynConflicts = this.hasSynonymMatchesInfo;
-        if (!hasExactConflicts && !hasSynConflicts) {
+        if (!hasExactConflicts && !this.hasSynConflicts()) {
             hasConflicts =
                 this.conflictsInfo !== null
                 && this.conflictsInfo != undefined

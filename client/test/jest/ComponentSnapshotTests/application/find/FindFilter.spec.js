@@ -4,8 +4,8 @@ Vue.use(require('vue-shortkey'))
 import { shallowMount } from '@vue/test-utils';
 import FindFilter from '@/components/application/Find/findFilter';
 import store from '@/store'
-import Datatable from 'vue2-datatable-component'
-Vue.use(Datatable)
+import BootstrapVue from 'bootstrap-vue'
+Vue.use(BootstrapVue)
 
 describe('FindFilter.vue', () => {
 

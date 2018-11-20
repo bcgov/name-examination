@@ -1178,7 +1178,7 @@ export default new Vuex.Store({
     },
 
     getConflictInfo ({state,commit},value) {
-      if (value.nrNumber === undefined || value.nrNumber === null) { return; }
+      if (value == null || value.nrNumber == null) { return; }
 
       console.log('Getting Conflict Info')
       commit('currentConflict', value);
@@ -1743,10 +1743,7 @@ export default new Vuex.Store({
       return state.exactMatchesConflicts ? state.exactMatchesConflicts.length > 0 : false;
     },
     synonymMatchesConflicts(state) {
-      return state.synonymMatchesConflicts
-    },
-    hasSynonymMatches(state) {
-      return state.synonymMatchesConflicts ? state.synonymMatchesConflicts.length > 0 : false;
+      return state.synonymMatchesConflicts;
     },
     conflictList(state) {
       return state.conflictList
