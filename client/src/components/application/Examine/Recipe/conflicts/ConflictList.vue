@@ -61,7 +61,12 @@
       },
       setSelectedConflict() {
         if (this.$store.getters.currentConflict == null && this.conflictData && this.conflictData.length > 0)
-          this.selectedConflict = this.conflictData[0];
+          this.selectedConflict = {
+              index:0,
+              text:this.conflictData[0].text,
+              source:this.conflictData[0].source,
+              nrNumber:this.conflictData[0].nrNumber
+          }
         else if (this.$store.getters.currentConflict != null)
           this.selectedConflict = this.$store.getters.currentConflict;
       }

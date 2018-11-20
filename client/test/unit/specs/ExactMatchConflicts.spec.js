@@ -65,6 +65,9 @@ describe('Exact-Match Conflicts', () => {
                     ],
                 } }))
             )
+            data.apiSandbox.getStub.withArgs('/api/v1/requests/42', sinon.match.any).returns(
+                new Promise((resolve) => resolve({ data: { names:[] } }))
+            )
             data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/+incredible name inc', sinon.match.any).returns(
                 new Promise((resolve) => {
                     resolve({
@@ -87,7 +90,7 @@ describe('Exact-Match Conflicts', () => {
             }, 1000)
         })
 
-        it('displays general conflicts', ()=>{
+        it.only('displays general conflicts', ()=>{
             expect(data.vm.$el.querySelector('#conflict-list').textContent).toContain('Incredible World LTD')
         })
 
