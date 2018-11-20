@@ -71,7 +71,7 @@
       selectedConflict: {
         handler(value) {
           console.log('selectedConflict watcher fired: ', value)
-          if (value.source)
+          if (value && value.source)
             this.$store.commit('currentConflict', value);
           else
             this.$store.commit('currentConflict', null);
