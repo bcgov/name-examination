@@ -28,9 +28,25 @@ let givenQueue = (given, data)=>{
                             userId: options.user
                         }
                     })
-                    data.queueIndex++;
                 })
             )
+            data.apiSandbox.getStub.withArgs('/api/v1/exact-match?query='+data.name(data.queueIndex), sinon.match.any).returns(
+                new Promise((resolve) => {
+                    resolve({
+                        data: {
+                            names:[
+                                { choice:1, state:'NE', name:data.name(data.queueIndex) }
+                            ],
+                            state: 'INPROGRESS',
+                            requestTypeCd: 'CR',
+                            applicants: '',
+                            nwpta: [],
+                            userId: options.user
+                        }
+                    })
+                })
+            )
+            data.queueIndex++;
         }
     })
 }

@@ -3,7 +3,7 @@
 
     <div class="col conflict-list-parent-col">
       <div class="row conflict-list-view">
-        <select v-if="conflictData.length > 0"  v-model="selectedConflict" class="form-control" size="17" border="0"
+        <select id="conflict-list" v-if="conflictData.length > 0"  v-model="selectedConflict" class="form-control" size="17" border="0"
                 @click="check_deselect" tabindex="2">
           <option v-for="option in conflictData" :key="option.value"
             v-bind:value="{nrNumber: option.nrNumber, text: option.text, source: option.source}">
@@ -30,7 +30,15 @@
     },
     computed: {
       conflictData() {
-        return this.$store.getters.conflictList;
+          var data = [{ text:'< no exact match >' }];
+          if (this.$store.getters.exactMatchesConflicts && this.$store.getters.exactMatchesConflicts.length > 0) {
+              data = this.$store.getters.exactMatchesConflicts
+          }
+          data = data.concat([{ text:'***' }])
+          if (this.$store.getters.conflictList && this.$store.getters.conflictList.length > 0) {
+              data = data.concat(this.$store.getters.conflictList)
+          }
+          return data;
       },
     },
     mounted() {

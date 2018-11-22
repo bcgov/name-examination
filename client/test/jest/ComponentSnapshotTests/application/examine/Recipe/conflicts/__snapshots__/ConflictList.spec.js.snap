@@ -10,9 +10,25 @@ exports[`ConflictList.vue renders a ConflictList component 1`] = `
     <select
       border="0"
       class="form-control"
+      id="conflict-list"
       size="17"
       tabindex="2"
-    />
+    >
+      <option
+        value="[object Object]"
+      >
+        
+        &lt; no exact match &gt;
+      
+      </option>
+      <option
+        value="[object Object]"
+      >
+        
+        ***
+      
+      </option>
+    </select>
   </div>
 </div>
 `;

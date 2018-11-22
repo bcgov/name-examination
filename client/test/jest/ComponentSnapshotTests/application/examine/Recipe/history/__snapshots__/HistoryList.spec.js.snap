@@ -7,12 +7,11 @@ exports[`HistoryList.vue renders a HistoryList component 1`] = `
   <div
     class="row history-list-view"
   >
-    <select
-      border="0"
-      class="form-control"
-      size="17"
-      tabindex="6"
-    />
+    <div
+      class="empty-list"
+    >
+      ( No data )
+    </div>
   </div>
 </div>
 `;
