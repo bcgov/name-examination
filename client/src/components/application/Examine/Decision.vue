@@ -247,14 +247,6 @@
           return el.instructions !== '' && el.instructions !== null
         });
 
-        // manually add "CONSENT REQUIRED" condition
-        arr_conditions.push({
-          instructions: "Consent Required.",
-          consent_required: true,
-          display_string: "Consent Required",
-          id: "CONSENTREQUIRED",
-        });
-
         return arr_conditions;
 
       },
@@ -317,12 +309,6 @@
         // CONDITIONS
         for (var i = 0; i < this.conditions_selected.length; i++) {
 
-          // if this is the "Consent Required" condition, and there are conflicts, do not set
-          // "Consent Required" messgage, because it is redundant with messaging re. conflicts.
-          if (this.conditions_selected[i].id == 'CONSENTREQUIRED' && this.conflicts_selected.length > 0) {
-            continue;
-          }
-
           if (this.conditions_selected[i].phrase !== undefined && this.conditions_selected[i].phrase !== '') {
             retval.push(this.conditions_selected[i].phrase + ' - ' + this.conditions_selected[i].instructions);
           }
@@ -377,8 +363,8 @@
         }
       },
       consent_required_condition_set() {
-        // is the "Consent Required" condition selected in Conditions dropdown?
-        if (this.conditions_selected.filter(findArrValueByAttr('CONSENTREQUIRED', 'id')).length > 0) return true;
+        // is the "Consent Required" checkbox selected?
+        if (this.acceptance_will_be_conditional) return true;
         else return false;
       },
     },
@@ -424,7 +410,7 @@
           }
         }
 
-        this.$store.commit('acceptance_will_be_conditional', retval);
+        this.$store.commit('acceptance_will_be_conditional', retval || this.acceptance_will_be_conditional);
       },
       exactMatchesConflicts: function (val) {
         console.log('synonymMatchesConflicts watcher fired: ',val);
@@ -459,19 +445,20 @@
       nameAcceptReject() {
         // save decision text, state, decision comment, and up to three conflicts
 
-
         if (this.decision_made == 'APPROVED') {
           this.currentNameObj.state = 'APPROVED'; // accepted
 
           // conditionally accepted if any conditions selected with condition_required flag TRUE
           for (var i = 0; i < this.conditions_selected.length; i++) {
             var record = this.conditions_selected[i];
-            if (record.consent_required) {
+            if (record.consent_required && this.acceptance_will_be_conditional) {
               this.currentNameObj.state = 'CONDITION';
               break;
             }
           }
-
+          if (this.acceptance_will_be_conditional) {
+            this.currentNameObj.state = 'CONDITION'
+          }
           // if there were conflicts selected but this is an approval, this will result in
           // accidental "rejected due to conflict" messaging. Remove it by clearing the selected
           // conflicts (Issue #767).

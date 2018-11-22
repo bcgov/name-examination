@@ -3,63 +3,11 @@
   <div>
     <div class="name-sect">
       <div class="row">
-        <div class="col">
-
-          <div id="top-buttons">
-
-            <!-- GET NEXT button -->
-            <button v-shortkey="['alt', 'n']" @shortkey="getNextCompany()" class="btn btn-sm btn-secondary" id="examine-get-next-button"
-                    v-if="!is_making_decision && !is_my_current_nr"
-                    @click="getNextCompany()" >Get <u>N</u>ext</button>
-
-            <!-- CANCEL button -->
-            <button class="btn btn-sm btn-danger" id="examine-cancel-button"
-                    v-if="!is_making_decision && !is_cancelled && !is_approved_expired && !is_consumed" data-toggle="modal" data-target="#add-cancel-comment-modal">
-              Cancel Request</button>
-
-            <!-- HOLD button -->
-            <button v-shortkey="['alt', 'h']" @shortkey="holdRequest()" class="btn btn-sm btn-warning" id="examine-hold-button"
-                    v-if="!is_making_decision && is_my_current_nr"
-                    @click="holdRequest()"><u>H</u>old</button>
-
-            <!-- DECISION button -->
-            <button v-shortkey="['alt', 'd']" @shortkey="startDecision()" class="btn btn-sm btn-primary" id="examine-decide-button"
-                    v-if="!is_making_decision && !is_complete && is_my_current_nr"
-                    @click="startDecision()"><u>D</u>ecision</button>
-
-            <!-- ACCEPT/REJECT/CANCEL DECISION buttons -->
-            <button v-shortkey="['alt', 'a']" @shortkey="nameAccept()" class="btn btn-sm btn-primary" id="decision-approve-button"
-                    v-if="is_making_decision" @click="nameAccept()">
-              <span v-if="acceptance_will_be_conditional">Conditionally </span><u>A</u>pprove
-            </button>
-            <button v-shortkey="['alt', 'r']" @shortkey="nameReject()" class="btn btn-sm btn-danger" id="decision-reject-button"
-                    v-if="is_making_decision" @click="nameReject()" ><u>R</u>eject
-            </button>
-            <button v-shortkey="['alt', 'c']" @shortkey="is_making_decision=false" class="btn btn-sm btn-secondary" id="decision-cancel-button"
-                    v-if="is_making_decision" @click="is_making_decision=false">Ba<u>c</u>k
-            </button>
-
-            <!-- RE-OPEN (un-furnished) button -->
-            <button class="btn btn-sm btn-danger" id="examine-re-open-button"
-                    v-if="is_complete && !is_furnished && !is_cancelled && !is_approved_expired" @click="reOpen()" >
-              Re-Open</button>
-
-            <!-- RESET (from furnished) button -->
-            <button class="btn btn-sm btn-danger" id="examine-reset-button"
-                    v-if="is_complete && is_furnished && !is_cancelled && !is_approved_expired" @click="reset()">
-              RESET</button>
-
-            <!-- EXAMINE button - to claim/examine an NR that is on hold -->
-            <button class="btn btn-sm btn-primary" id="examine-button" v-if="can_claim"
-                    @click="claimNR()" >Examine</button>
-
-
-          </div>
-
+        <div class="col-8">
           <table>
             <tr class="name-option"
-                v-bind:class="{'active-name-option': currentChoice==1,
-                               accepted: compName1.state == 'APPROVED'}">
+                v-bind:class="{'active-name-option': currentChoice===1,
+                               accepted: compName1.state === 'APPROVED'}">
               <td>1.</td>
               <td id="name1">
                 {{ compName1.name }}
@@ -71,8 +19,8 @@
               </td>
             </tr>
             <tr class="name-option"
-                v-bind:class="{'active-name-option': currentChoice==2,
-                               accepted: compName2.state == 'APPROVED'}">
+                v-bind:class="{'active-name-option': currentChoice===2,
+                               accepted: compName2.state === 'APPROVED'}">
               <td>2.</td>
               <td id="name2">
                 {{ compName2.name }}
@@ -84,8 +32,8 @@
               </td>
             </tr>
             <tr class="name-option"
-                v-bind:class="{'active-name-option': currentChoice==3,
-                               accepted: compName3.state == 'APPROVED'}">
+                v-bind:class="{'active-name-option': currentChoice===3,
+                               accepted: compName3.state === 'APPROVED'}">
               <td>3.</td>
               <td id="name3" >
                 {{ compName3.name }}
@@ -97,7 +45,85 @@
               </td>
             </tr>
           </table>
+        </div>
+        <div class="col">
+          <div id="top-buttons" class="row top-button-row text-right">
 
+            <!-- RE-OPEN (un-furnished) button -->
+            <button class="btn btn-sm btn-danger col" id="examine-re-open-button"
+                    v-if="is_complete && !is_furnished && !is_cancelled && !is_approved_expired" @click="reOpen()" >
+              Re-Open</button>
+
+            <!-- RESET (from furnished) button -->
+            <button class="btn btn-sm btn-danger col" id="examine-reset-button"
+                    v-if="is_complete && is_furnished && !is_cancelled && !is_approved_expired" @click="reset()">
+              RESET</button>
+
+            <!-- EXAMINE button - to claim/examine an NR that is on hold -->
+            <button class="btn btn-sm btn-primary col" id="examine-button" v-if="can_claim"
+                    @click="claimNR()" >Examine</button>
+
+              <!-- DECISION button -->
+            <button v-shortkey="['alt', 'd']" @shortkey="startDecision()" class="btn btn-sm btn-primary col" id="examine-decide-button"
+                    v-if="!is_making_decision && !is_complete && is_my_current_nr"
+                    @click="startDecision()"><u>D</u>ecision</button>
+
+             <!-- HOLD button -->
+            <button v-shortkey="['alt', 'h']" @shortkey="holdRequest()" class="btn btn-sm btn-warning col" id="examine-hold-button"
+                    v-if="!is_making_decision && is_my_current_nr"
+                    @click="holdRequest()"><u>H</u>old</button>
+
+            <!-- CANCEL button -->
+            <button class="btn btn-sm btn-danger col" id="examine-cancel-button"
+                    v-if="!is_making_decision && !is_cancelled && !is_approved_expired && !is_consumed" data-toggle="modal" data-target="#add-cancel-comment-modal">
+              Cancel Request</button>
+
+            <!-- GET NEXT button -->
+            <button v-shortkey="['alt', 'n']" @shortkey="getNextCompany()" class="btn btn-sm btn-secondary col" id="examine-get-next-button"
+                    v-if="!is_making_decision && !is_my_current_nr"
+                    @click="getNextCompany()" >Get <u>N</u>ext</button>
+
+            <!-- ACCEPT/REJECT/CANCEL DECISION buttons -->
+            <button v-shortkey="['alt', 'c']" @shortkey="is_making_decision=false" class="btn btn-sm btn-secondary col" id="decision-cancel-button"
+                    v-if="is_making_decision" @click="is_making_decision=false">Ba<u>c</u>k
+            </button>
+
+            <button v-shortkey="['alt', 'r']" @shortkey="nameReject()" class="btn btn-sm btn-danger col" id="decision-reject-button"
+                    v-if="is_making_decision" @click="nameReject()" ><u>R</u>eject
+            </button>
+
+            <button v-if="is_making_decision" v-shortkey="['alt', 'a']" @shortkey="nameAccept()" class="btn btn-sm btn-primary condition-button col" id="decision-approve-button"
+                       @click="nameAccept()">
+                <span v-if="consent_required">Conditionally </span><u>A</u>pprove
+                </button>
+
+          </div>
+          <div v-if="is_making_decision && !is_complete "  class="row top-button-row text-right condition-checkbox-row">
+            <div class="col"></div>
+
+            <div class="col condition-checkbox-group">
+                 <b-form-checkbox
+                      class="condition-checkbox"
+                      v-model="consent_required"
+                 >
+                Consent required
+                </b-form-checkbox>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div v-if="!is_making_decision && !is_complete" id="manual-search">
+            <form class="form-inline" @submit.prevent="onSubmit">
+              <input ref="search" type="text" class="search form-control" v-model="searchStr"  v-shortkey="['alt', 's']" @shortkey="setFocus()" tabindex="1">
+              <button class="btn-search" type="submit"><i class="fa fa-search" tabindex="8"/></button>
+              <button class="btn-reset" v-if="is_running_manual_search" @click="resetSearchStr" tabindex="7">
+                <i class="fa fa-times" /></button>
+            </form>
+          </div>
+        </div>
+        <div class="col">
           <div>
             <span class="float-right" style="margin-left: 10px;" v-if="!is_making_decision && !is_complete && is_my_current_nr">
               <button v-shortkey="['alt', 'a']" @shortkey="quickApprove()" class="btn btn-sm btn-outline-primary" id="examine-quick-approve-button"
@@ -107,47 +133,38 @@
               <button v-shortkey="['alt', 'e']" @shortkey="rejectDescriptive()" class="btn btn-sm btn-outline-danger" id="examine-reject-descriptive-button"
                       @click="rejectDescriptive">Reject D<u>e</u>scriptive</button>
             </span>
-            <div v-if="!is_making_decision && !is_complete" id="manual-search">
-              <form class="form-inline" @submit.prevent="onSubmit">
-                <input ref="search" type="text" class="search form-control" v-model="searchStr"  v-shortkey="['alt', 's']" @shortkey="setFocus()" tabindex="1">
-                <button class="btn-search" type="submit"><i class="fa fa-search" tabindex="8"/></button>
-                <button class="btn-reset" v-if="is_running_manual_search" @click="resetSearchStr" tabindex="7">
-                  <i class="fa fa-times" /></button>
-              </form>
-            </div>
           </div>
 
         </div>
 
       </div>
-
-    </div>
 
     <!-- CANCEL COMMENT popup -->
-    <div class="modal fade" id="add-cancel-comment-modal" tabindex="-1" role="dialog">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Please give a comment to explain why this NR is being CANCELLED</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <textarea id="cancel-comment-text" class="form-control" rows="10"
-                      v-model="cancel_comment_display"></textarea>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-sm btn-secondary"
-                    data-dismiss="modal" @click="cancelNrCancel">Cancel</button>
-            <button type="button" id="cancel-nr-after-comment-button" class="btn btn-sm btn-danger" disabled="true"
-                    data-dismiss="modal" @click="cancelNr">CANCEL REQUEST</button>
+      <div class="row">
+        <div class="modal fade" id="add-cancel-comment-modal" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Please give a comment to explain why this NR is being CANCELLED</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <textarea id="cancel-comment-text" class="form-control" rows="10"
+                          v-model="cancel_comment_display"></textarea>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary"
+                        data-dismiss="modal" @click="cancelNrCancel">Cancel</button>
+                <button type="button" id="cancel-nr-after-comment-button" class="btn btn-sm btn-danger" disabled="true"
+                        data-dismiss="modal" @click="cancelNr">CANCEL REQUEST</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-
-
   </div>
 </template>
 
@@ -164,6 +181,7 @@
         cancel_comment_display: "",
         resetting: false,
         searching: false,
+        consent_required: false,
       }
     },
     computed: {
@@ -221,9 +239,6 @@
         set: function(value) {
           this.$store.commit('is_making_decision', value);
         }
-      },
-      acceptance_will_be_conditional() {
-        return this.$store.getters.acceptance_will_be_conditional;
       },
       can_claim() {
         console.log('got to can_claim with status ' + this.currentState);
@@ -384,6 +399,7 @@
       },
       startDecision() {
         this.$store.state.is_making_decision = true;
+        this.consent_required = false;
       },
       nameAccept() {
         this.$store.commit('decision_made', 'APPROVED');
@@ -528,6 +544,9 @@
       },
     },
     watch: {
+      consent_required: function(val) {
+        this.$store.commit('acceptance_will_be_conditional', val);
+      },
       cancel_comment_display: function(val) {
         console.log('cancel_comment_display watcher fired:' + val)
         if (val)
@@ -609,13 +628,28 @@
     font-weight: bold;
   }
 
-  #top-buttons {
+  .top-button-row {
     float: right;
     margin: 10px 0 10px 10px;
   }
-  #top-buttons button {
+  .top-button-row button {
     float: right;
     margin-left: 5px;
+  }
+
+  .condition-checkbox-row {
+    margin: 0;
+  }
+
+  .condition-checkbox-group {
+    padding:0;
+    min-width: 155px;
+    margin: 0;
+    text-align: left;
+  }
+
+  .condition-button {
+    min-width: 155px;
   }
 
   .name-option > td {
