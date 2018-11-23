@@ -64,7 +64,7 @@ describe('Synonym-Match Conflicts', () => {
                     names: [],
                 } }))
             )
-            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/+incredible name inc', sinon.match.any).returns(
+            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/ incredible name inc', sinon.match.any).returns(
                 new Promise((resolve) => {
                     resolve({
                         data: {
@@ -109,14 +109,14 @@ describe('Synonym-Match Conflicts', () => {
 
         it('populates additional attributes as expected', ()=>{
             expect(data.instance.$store.state.synonymMatchesConflicts).toEqual([{"nrNumber": undefined,
-              "source": undefined, "text": "----INCREDIBLE NAME INC*"},
-              {"nrNumber": undefined, "source": undefined, "text": "----INCREDIBLE NAME*"},
-              {"nrNumber": undefined, "source": undefined, "text": "----INCREDIBLE*"},
-              {"nrNumber": "0793638", "source": "CORP", "text": "INCREDIBLE STEPS RECORDS, INC."}])
+                "source": undefined, "text": "----INCREDIBLE NAME INC*"},
+                {"nrNumber": undefined, "source": undefined, "text": "----INCREDIBLE NAME*"},
+                {"nrNumber": undefined, "source": undefined, "text": "----INCREDIBLE*"},
+                {"nrNumber": "0793638", "source": "CORP", "text": "INCREDIBLE STEPS RECORDS, INC."}])
         })
 
         it('resists no synonym match', (done)=>{
-            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/+incredible name inc', sinon.match.any).returns(
+            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/ incredible name inc', sinon.match.any).returns(
                 new Promise((resolve) => resolve({ data: {
                     names: []
                 } }))
@@ -167,7 +167,7 @@ describe('Synonym-Match Conflicts', () => {
                     response: {}
                 } }))
             )
-            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/+incredible name inc', sinon.match.any).returns(
+            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/ incredible name inc', sinon.match.any).returns(
                 new Promise((resolve) => resolve({ data: {
                     names: []
                 } }))
