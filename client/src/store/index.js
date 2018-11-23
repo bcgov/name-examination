@@ -1329,8 +1329,30 @@ export default new Vuex.Store({
     runManualRecipe({dispatch,state},searchStr) {
       console.log('running manual recipe with: ', searchStr);
       if( state.currentChoice != null) {
-        this.dispatch('checkManualExactMatches',searchStr)
-        this.dispatch('checkManualSynonymMatches',searchStr)
+        this.dispatch('checkManualExactMatches',searchStr
+          .replace(' \/','\/')
+          .replace('(', '')
+          .replace(')', '')
+          .replace(']', '')
+          .replace('[', '')
+          .replace('}', '')
+          .replace('{', ''));
+        this.dispatch('checkManualSynonymMatches',searchStr
+          .replace('\/',' ')
+          .replace('\\',' ')
+          .replace('&', ' ')
+          .replace('+', ' ')
+          .replace('-', ' ')
+          .replace('(', '')
+          .replace(')', '')
+          .replace('}', '')
+          .replace('{', '')
+          .replace(']', '')
+          .replace('[', '')
+          .replace('?','')
+          .replace('#','')
+          .replace('%', '')
+          .replace('@', ''));
         this.dispatch('checkManualConflicts',searchStr)
         this.dispatch('checkManualTrademarks',searchStr)
         this.dispatch('checkManualConditions',searchStr)
@@ -1359,13 +1381,11 @@ export default new Vuex.Store({
 
       console.log('action: getting synonym matches for number: ' + state.compInfo.nrNumber + ' from solr')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-      console.log('query', query);
       const url = '/api/v1/requests/synonymbucket/' + query;
       console.log('URL:' + url);
       const vm = this;
       dispatch('checkToken');
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        console.log('Check SYNONYM Match Response:', JSON.stringify(response.data))
         commit('setSynonymMatchesConflicts', response.data)
       })
         .catch(error => console.log('ERROR (synonym matches): ' + error))
