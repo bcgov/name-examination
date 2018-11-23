@@ -933,7 +933,6 @@ export default new Vuex.Store({
         commit('loadpostgresNo',response.data)
       })
     },
-git 
     getpostgrescompInfo ({dispatch,commit},nrNumber) {
       console.log('action: getting data for company number: ' + nrNumber + ' from postgres')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
