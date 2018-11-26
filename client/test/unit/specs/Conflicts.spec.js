@@ -1,4 +1,3 @@
-/*eslint-disable*/
 import staticFilesServer from '../static.files.server';
 import { createApiSandbox, sinon } from '../../features/specs/support/api.stubs'
 import Vue from 'vue';
@@ -51,7 +50,7 @@ describe('Conflicts', () => {
                 new Promise((resolve) => resolve({ data: {
                     setConflicts: {},
                     names: [
-                        { id:1, name:'Incredible World LTD', source:'CORP' }
+                        { id:1, name:'Incredible World LTD' }
                     ],
                     response: {}
                 } }))
@@ -64,7 +63,7 @@ describe('Conflicts', () => {
                     names: [],
                 } }))
             )
-            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/ incredible name inc', sinon.match.any).returns(
+            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/+incredible name inc', sinon.match.any).returns(
                 new Promise((resolve) => {
                     resolve({
                         data: {
