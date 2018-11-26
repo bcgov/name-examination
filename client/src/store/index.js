@@ -1342,12 +1342,12 @@ export default new Vuex.Store({
 
       console.log('action: getting exact matches for number: ' + state.compInfo.nrNumber + ' from solr')
       query = query.replace(' \/','\/')
-          .replace('/(/g', '')
-          .replace('/)/g', '')
-          .replace('/]/g', '')
-          .replace('/[/g', '')
-          .replace('/}/g', '')
-          .replace('/{/g', '')
+          .replace(/\(/g, '')
+          .replace(/\)/g, '')
+          .replace(/]/g, '')
+          .replace(/\[/g, '')
+          .replace(/}/g, '')
+          .replace(/{/g, '')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       query = query.substring(0, 1) == '+' ? query.substring(1) : query;
       query = encodeURIComponent(query)
