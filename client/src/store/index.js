@@ -1329,8 +1329,8 @@ export default new Vuex.Store({
     runManualRecipe({dispatch,state},searchStr) {
       console.log('running manual recipe with: ', searchStr);
       if( state.currentChoice != null) {
-        this.dispatch('checkManualExactMatches',searchStr)
-        this.dispatch('checkManualSynonymMatches',searchStr)
+        this.dispatch('checkManualExactMatches',searchStr);
+        this.dispatch('checkManualSynonymMatches',searchStr);
         this.dispatch('checkManualConflicts',searchStr)
         this.dispatch('checkManualTrademarks',searchStr)
         this.dispatch('checkManualConditions',searchStr)
@@ -1341,6 +1341,13 @@ export default new Vuex.Store({
     checkManualExactMatches( {commit, state}, query ) {
 
       console.log('action: getting exact matches for number: ' + state.compInfo.nrNumber + ' from solr')
+      query = query.replace(' \/','\/')
+          .replace(/\(/g, '')
+          .replace(/\)/g, '')
+          .replace(/]/g, '')
+          .replace(/\[/g, '')
+          .replace(/}/g, '')
+          .replace(/{/g, '')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       query = query.substring(0, 1) == '+' ? query.substring(1) : query;
       query = encodeURIComponent(query)
@@ -1358,14 +1365,27 @@ export default new Vuex.Store({
     checkManualSynonymMatches( {dispatch,commit,state}, query ) {
 
       console.log('action: getting synonym matches for number: ' + state.compInfo.nrNumber + ' from solr')
+      query = query.replace(/\//g,' ')
+          .replace(/\\/g,' ')
+          .replace(/&/g, ' ')
+          .replace(/\+/g, ' ')
+          .replace(/\-/g, ' ')
+          .replace(/\(/g, '')
+          .replace(/\)/g, '')
+          .replace(/}/g, '')
+          .replace(/{/g, '')
+          .replace(/]/g, '')
+          .replace(/\[/g, '')
+          .replace(/\?/g,'')
+          .replace(/#/g,'')
+          .replace(/%/g, '')
+          .replace(/@/g, '');
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-      console.log('query', query);
       const url = '/api/v1/requests/synonymbucket/' + query;
       console.log('URL:' + url);
       const vm = this;
       dispatch('checkToken');
       return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        console.log('Check SYNONYM Match Response:', JSON.stringify(response.data))
         commit('setSynonymMatchesConflicts', response.data)
       })
         .catch(error => console.log('ERROR (synonym matches): ' + error))
