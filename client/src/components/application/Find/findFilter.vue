@@ -31,11 +31,15 @@
                 </select>
               </th>
               <th>
-                <select id="search-filter-submittedDate" v-model="interval" class="form-control">
-                      <option v-for="option in timeIntervals" :value="option">{{option}}</option>
+                <select id="search-filter-submittedDate" v-model="submittedInterval" class="form-control">
+                      <option v-for="option in submittedDateIntervals" :value="option">{{option}}</option>
                 </select>
               </th>
-              <th></th>
+              <th>
+                <select id="search-filter-lastUpdate" v-model="lastUpdateInterval" class="form-control">
+                      <option v-for="option in lastUpdateIntervals" :value="option">{{option}}</option>
+                </select>
+              </th>
               <th></th>
             </tr>
           </thead>
@@ -123,9 +127,12 @@ export default {
       notificationType:['All','Notified','Not Notified'],
       compName: '',
       selectedNR: '',
-      interval: '30 days',
-      timeIntervals:['Today','7 days','30 days','90 days','1 year','3 years','5 years','All'],
-      searchQuery: '?order=priorityCd:desc,submittedDate:asc&queue=hold&ranking=All&notification=All&interval=30 days&rows=10',
+      submittedInterval: '30 days',
+      submittedDateIntervals:['Today','7 days','30 days','90 days','1 year','3 years','5 years','All'],
+      lastUpdateInterval: 'All',
+      lastUpdateIntervals:['Today','Yesterday','2 days','7 days','30 days','All'],
+      searchQuery: '?order=priorityCd:desc,submittedDate:asc&queue=hold&ranking=All&notification=All&' +
+                   'submittedInterval=30 days&lastUpdateInterval=All&rows=10',
       clearing: false,
       mounting: false,
     }
@@ -179,12 +186,20 @@ export default {
         this.$store.commit('searchNotification',val);
       }
     },
-    currentInterval: {
+    currentSubmittedInterval: {
       get: function () {
-        return this.$store.state.searchInterval;
+        return this.$store.state.searchSubmittedInterval;
       },
       set: function (val) {
-        this.$store.commit('searchInterval',val);
+        this.$store.commit('searchSubmittedInterval',val);
+      }
+    },
+    currentLastUpdatedInterval: {
+      get: function () {
+        return this.$store.state.searchLastUpdatedInterval;
+      },
+      set: function (val) {
+        this.$store.commit('searchLastUpdatedInterval',val);
       }
     },
     currentPerPage: {
@@ -382,8 +397,10 @@ export default {
           this.ranking = 'All';
         else if (this.notification !== 'All')
           this.notification = 'All';
-        else if (this.interval !== '30 days')
-          this.interval = '30 days';
+        else if (this.submittedInterval !== '30 days')
+          this.submittedInterval = '30 days';
+        else if (this.lastUpdateInterval !== 'All')
+          this.lastUpdateInterval = 'All';
         else if (this.perPage !== 10)
           this.perPage = 10;
         else {
@@ -401,8 +418,10 @@ export default {
           this.ranking = this.currentRanking;
         else if (this.notification !== this.currentNotification)
           this.notification = this.currentNotification;
-        else if (this.interval !== this.currentInterval)
-          this.interval = this.currentInterval;
+        else if (this.submittedInterval !== this.currentSubmittedInterval)
+          this.submittedInterval = this.currentSubmittedInterval;
+        else if (this.lastUpdateInterval !== this.currentLastUpdatedInterval)
+          this.lastUpdateInterval = this.currentLastUpdatedInterval;
         else if (this.perPage !== this.currentPerPage)
           this.perPage = this.currentPerPage;
         else if (this.currentPage !== this.storeCurrentPage)
@@ -534,10 +553,15 @@ export default {
       this.currentNotification = val;
       this.updateQuery('notification',val);
     },
-    interval: function (val) {
-      console.log('interval watcher fired: ', val);
-      this.currentInterval = val;
-      this.updateQuery('interval',val);
+    submittedInterval: function (val) {
+      console.log('submittedInterval watcher fired: ', val);
+      this.currentSubmittedInterval = val;
+      this.updateQuery('submittedInterval',val);
+    },
+    lastUpdateInterval: function (val) {
+      console.log('lastUpdateInterval watcher fired: ', val);
+      this.currentLastUpdatedInterval = val;
+      this.updateQuery('lastUpdateInterval',val);
     }
   },
 }
@@ -612,6 +636,9 @@ export default {
     height: 30px !important;
   }
   #search-filter-submittedDate {
+    height: 30px !important;
+  }
+  #search-filter-lastUpdate {
     height: 30px !important;
   }
 

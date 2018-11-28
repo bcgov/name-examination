@@ -160,14 +160,16 @@ export default new Vuex.Store({
       issue_Format_Text: null
     },
 
-    searchQuery: '?order=priorityCd:desc,submittedDate:asc&queue=hold&ranking=All&notification=All&interval=All&rows=10',
+    searchQuery: '?order=priorityCd:desc,submittedDate:asc&queue=hold&ranking=All&notification=All&' +
+                 'submittedInterval=30 days&lastUpdateInterval=All&rows=10',
     searchState: 'HOLD',
     searchNr: '',
     searchUsername: '',
     searchCompName: '',
     searchRanking: 'All',
     searchNotification: 'All',
-    searchInterval: '30 days',
+    searchSubmittedInterval: '30 days',
+    searchLastUpdatedInterval: 'All',
     searchCurrentPage: 1,
     searchPerPage: 10,
 
@@ -335,8 +337,11 @@ export default new Vuex.Store({
     searchNotification(state,value) {
       state.searchNotification = value;
     },
-    searchInterval(state,value) {
-      state.searchInterval = value;
+    searchSubmittedInterval(state,value) {
+      state.searchSubmittedInterval = value;
+    },
+    searchLastUpdatedInterval(state,value) {
+      state.searchLastUpdatedInterval = value;
     },
     searchCurrentPage(state,value) {
       state.searchCurrentPage = value;
@@ -1228,69 +1233,6 @@ export default new Vuex.Store({
         .catch(error => this.dispatch('checkError',{errors:[{code:404, message:{"NR Info Error":["NR info could not be displayed because it isn't loaded in postgres yet."]}}]}))
     },
 
-    runRecipe({dispatch,state}) {
-      if( state.currentChoice != null) {
-        this.dispatch('checkConflicts')
-        this.dispatch('checkTrademarks')
-        this.dispatch('checkConditions')
-        this.dispatch('checkHistories')
-      }
-    },
-
-    checkConflicts( {commit, state} ) {
-      console.log('action: getting conflicts for company number: ' + state.compInfo.nrNumber + ' from solr')
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/analysis/' + state.currentChoice + '/conflicts'
-      console.log('URL:' + url)
-      const vm = this
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        console.log('Check Conflicts Response:' + response.data)
-        commit('loadConflictsJSON',response.data)
-        commit('setConflicts',response.data)
-      })
-        .catch(error => console.log('ERROR: ' + error))
-    },
-
-    checkConditions( {commit, state} ) {
-
-      console.log('action: getting restricted words and conditions for company number: ' + state.compInfo.nrNumber + ' from solr')
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/analysis/' + state.currentChoice + '/restricted_words'
-      console.log('URL:' + url)
-      const vm = this
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        console.log('Check Conditions Response:' + response.data)
-        commit('loadConditionsJSON',response.data)
-      })
-        .catch(error => console.log('ERROR: ' + error))
-    },
-
-    checkHistories( {commit, state} ) {
-      console.log('action: getting history for company number: ' + state.compInfo.nrNumber + ' from solr')
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/analysis/' + state.currentChoice + '/histories'
-      console.log('URL:' + url)
-      const vm = this
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        console.log('Check Histories Response:' + response.data)
-        commit('loadHistoriesJSON',response.data)
-      })
-        .catch(error => console.log('ERROR: ' + error))
-    },
-
-    checkTrademarks( {commit, state} ) {
-      console.log('action: getting trademarks for company number: ' + state.compInfo.nrNumber + ' from solr')
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/analysis/' + state.currentChoice + '/trademarks'
-      console.log('URL:' + url)
-      const vm = this
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        console.log('Check Trademarks Response:' + response.data)
-        commit('loadTrademarksJSON',response.data)
-      })
-        .catch(error => console.log('ERROR: ' + error))
-    },
-
     getSearchDataJSON( {commit, state}, val) {
      console.log('action: get search Data');
      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
@@ -1331,7 +1273,6 @@ export default new Vuex.Store({
       if( state.currentChoice != null) {
         this.dispatch('checkManualExactMatches',searchStr)
         this.dispatch('checkManualSynonymMatches',searchStr)
-        this.dispatch('checkManualConflicts',searchStr)
         this.dispatch('checkManualTrademarks',searchStr)
         this.dispatch('checkManualConditions',searchStr)
         this.dispatch('checkManualHistories',searchStr)
@@ -1371,6 +1312,7 @@ export default new Vuex.Store({
         .catch(error => console.log('ERROR (synonym matches): ' + error))
     },
 
+    // not being called anymore
     checkManualConflicts( {commit, state},searchStr ) {
       console.log('action: manual check of conflicts for company number: ' + state.compInfo.nrNumber + ' from solr')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
