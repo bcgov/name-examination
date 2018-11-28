@@ -188,7 +188,43 @@ exports[`FindFilter.vue renders a FindFilter component 1`] = `
             </select>
           </th>
            
-          <th />
+          <th>
+            <select
+              class="form-control"
+              id="search-filter-lastUpdate"
+            >
+              <option
+                value="Today"
+              >
+                Today
+              </option>
+              <option
+                value="Yesterday"
+              >
+                Yesterday
+              </option>
+              <option
+                value="2 days"
+              >
+                2 days
+              </option>
+              <option
+                value="7 days"
+              >
+                7 days
+              </option>
+              <option
+                value="30 days"
+              >
+                30 days
+              </option>
+              <option
+                value="All"
+              >
+                All
+              </option>
+            </select>
+          </th>
            
           <th />
         </tr>
