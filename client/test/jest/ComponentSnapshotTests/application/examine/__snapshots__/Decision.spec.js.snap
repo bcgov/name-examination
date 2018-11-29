@@ -57,6 +57,7 @@ exports[`Decision.vue renders a Decision view 1`] = `
         multiple="true"
         name=""
         opendirection=""
+        options=""
         placeholder=""
         selectedlabel=""
         selectgrouplabel="Press enter to select group"
