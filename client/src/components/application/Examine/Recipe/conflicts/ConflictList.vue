@@ -40,9 +40,6 @@
         else
           data = data.concat([{ text:'< no synonym match >' }]);
         data = data.concat([{ text:'***' }]);
-        if (this.$store.getters.conflictList && this.$store.getters.conflictList.length > 0) {
-          data = data.concat(this.$store.getters.conflictList);
-        }
         return data;
       },
     },

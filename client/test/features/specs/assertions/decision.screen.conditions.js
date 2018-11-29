@@ -1,3 +1,4 @@
+/*eslint-disable*/
 let heSeesTheSelectedConditionInDecisionScreen = (then, data)=>{
     then(/^he sees the selected condition about (.*)/, (word) => {
         let item = data.vm.$el.querySelector('div.lower-section div.namePage span div.row div div div.multiselect div.multiselect__tags-wrap')

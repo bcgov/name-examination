@@ -175,9 +175,9 @@ export default new Vuex.Store({
 
     exactMatchesConflicts: [],
     synonymMatchesConflicts: [],
-    conflictList: null,
-    conflictHighlighting: null,
-    conflictNames: null,
+    conflictList: [],
+    conflictHighlighting: [],
+    conflictNames: [],
     conflictResponse: null,
 
     conflictsJSON: null,
@@ -745,6 +745,7 @@ export default new Vuex.Store({
       state.compInfo.nrNumber = value
     },
 
+    // not used
     setConflicts(state,conflictJSon) {
       console.log('setting conflict values')
       //TODO - Mutations: interate thru list of conflicts
@@ -767,6 +768,8 @@ export default new Vuex.Store({
         state.conflictList.push({nrNumber: mID, text: state.conflictNames[c].name, source: state.conflictNames[c].source})
         c++
       }
+
+
   },
 
     setExactMatchesConflicts(state, jsonValue) {
@@ -1273,6 +1276,7 @@ export default new Vuex.Store({
       if( state.currentChoice != null) {
         this.dispatch('checkManualExactMatches',searchStr)
         this.dispatch('checkManualSynonymMatches',searchStr)
+        // this.dispatch('checkManualConflicts',searchStr)
         this.dispatch('checkManualTrademarks',searchStr)
         this.dispatch('checkManualConditions',searchStr)
         this.dispatch('checkManualHistories',searchStr)
@@ -1312,7 +1316,7 @@ export default new Vuex.Store({
         .catch(error => console.log('ERROR (synonym matches): ' + error))
     },
 
-    // not being called anymore
+    // not used
     checkManualConflicts( {commit, state},searchStr ) {
       console.log('action: manual check of conflicts for company number: ' + state.compInfo.nrNumber + ' from solr')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')

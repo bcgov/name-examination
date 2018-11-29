@@ -1,3 +1,4 @@
+/*eslint-disable*/
 module.exports = {
   cleanState: () => {
     return {
@@ -156,9 +157,11 @@ module.exports = {
       searchQuerySpecial: '?order=priorityCd:desc,submittedDate:asc&queue=hold&furnished=true&unfurnished=true&rows=10',
       searchState: 'HOLD',
 
-      conflictList: null,
-      conflictHighlighting: null,
-      conflictNames: null,
+      exactMatchesConflicts: [],
+      synonymMatchesConflicts: [],
+      conflictList: [],
+      conflictHighlighting: [],
+      conflictNames: [],
       conflictResponse: null,
 
       conflictsJSON: null,
