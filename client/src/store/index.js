@@ -1239,7 +1239,9 @@ export default new Vuex.Store({
     getSearchDataJSON( {commit, state}, val) {
      console.log('action: get search Data');
      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-     const url = '/api/v1/requests' + val;
+     // current hour passed in via front end because server is in utc time (for last update and submitted date filters
+     var currentDate = new Date();
+     const url = '/api/v1/requests' + val + '&hour=' + currentDate.getHours();
      console.log('Search Query:' + val);
      const vm = this;
      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
