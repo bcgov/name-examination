@@ -478,7 +478,7 @@
         this.$store.dispatch('resetValues');
         this.$store.dispatch('runManualRecipe', this.searchStr);
 
-        if (this.searchStr != '+' + this.currentName) this.is_running_manual_search = true;
+        if (this.searchStr != this.currentName) this.is_running_manual_search = true;
       },
       resetSearchStr(){
         this.searching = true;
@@ -508,7 +508,7 @@
       },
       setManualSearchStr(val) {
         console.log('setManualSearchStr() called with ' + val);
-        this.searchStr =  "+" + val;
+        this.searchStr =  val;
       },
       addNewComment(value) {
         // create new comment object with just text, and add it to list of comments in data structure
