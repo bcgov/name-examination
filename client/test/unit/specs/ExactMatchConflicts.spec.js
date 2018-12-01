@@ -69,7 +69,7 @@ describe('Exact-Match Conflicts', () => {
             data.apiSandbox.getStub.withArgs('/api/v1/requests/42', sinon.match.any).returns(
                 new Promise((resolve) => resolve({ data: { names:[] } }))
             )
-            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/ incredible name inc', sinon.match.any).returns(
+            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc', sinon.match.any).returns(
                 new Promise((resolve) => {
                     resolve({
                         data: {
