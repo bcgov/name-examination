@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import sinon from 'sinon';
 import axios from '@/axios-auth.js';
 import store from '@/store'

@@ -157,6 +157,7 @@
         decision_reasons_selected: [],
         trademarks_selected: [],
         customer_message_override: null,
+        conflictList: []
       }
     },
     computed: {
@@ -187,8 +188,11 @@
           this.$store.dispatch('currentNameObj', value);
         }
       },
-      conflictList() {
-        return this.$store.getters.conflictList;
+      exactMatchesConflicts() {
+        return this.$store.getters.exactMatchesConflicts;
+      },
+      synonymMatchesConflicts() {
+        return this.$store.getters.synonymMatchesConflicts;
       },
       currentConflict() {
         return this.$store.getters.currentConflict;
@@ -387,6 +391,7 @@
       if (this.currentConflict !== null && this.currentConflict !== undefined) {
         this.conflicts_selected.push(this.currentConflict);
       }
+      this.setConflictList();
 
       // pre-select the condition from the display screen
       if (this.currentCondition !== null && this.currentCondition !== undefined) {
@@ -421,6 +426,14 @@
 
         this.$store.commit('acceptance_will_be_conditional', retval);
       },
+      exactMatchesConflicts: function (val) {
+        console.log('synonymMatchesConflicts watcher fired: ',val);
+        this.setConflictList();
+      },
+      synonymMatchesConflicts: function (val) {
+        console.log('synonymMatchesConflicts watcher fired: ',val);
+        this.setConflictList();
+      }
     },
     methods: {
       clearCustomerMessagOverride() {
@@ -497,6 +510,24 @@
         this.$store.dispatch('nameAcceptReject');
         this.decision_made = null;
         this.is_making_decision = false;
+      },
+      setConflictList() {
+        let conflictList = [];
+        let exactMatches = this.exactMatchesConflicts;
+        let synonymMatches = this.synonymMatchesConflicts;
+        let seenNRs = [];
+
+        for (let i=0; i<exactMatches.length; i++) {
+          seenNRs.push(exactMatches[i].nrNumber);
+          conflictList.push(exactMatches[i])
+        }
+        for (let i=0; i<synonymMatches.length; i++) {
+          if (synonymMatches[i].nrNumber != undefined && !seenNRs.includes(synonymMatches[i].nrNumber)) {
+            seenNRs.push(synonymMatches[i].nrNumber);
+            conflictList.push(synonymMatches[i])
+          }
+        }
+        this.conflictList = conflictList;
       },
     },
   }
