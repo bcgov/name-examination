@@ -63,9 +63,6 @@ export default {
     synonymMatchesInfo() {
       return this.$store.getters.synonymMatchesConflicts;
     },
-    conflictsInfo() {
-      return this.$store.getters.conflictsJSON;
-    },
     conditionInfo() {
       return this.$store.getters.conditionsJSON;
     },
@@ -83,26 +80,16 @@ export default {
     hasSynConflicts() {
       let synMatchesList = this.synonymMatchesInfo;
       for (let i=0; i<synMatchesList.length; i++) {
-        if (synMatchesList[i].source)
+        if (synMatchesList[i].source != undefined)
           return true;
       }
       return false;
     },
     setConflicts() {
-        var hasConflicts = true;
-        var hasExactConflicts = this.hasExactMatchesInfo;
-        if (!hasExactConflicts && !this.hasSynConflicts()) {
-            hasConflicts =
-                this.conflictsInfo !== null
-                && this.conflictsInfo != undefined
-                && this.conflictsInfo.names.length > 0
-        }
-        if (hasConflicts) {
-            this.setFail('Conflict')
-        }
-        else {
-            this.setPass('Conflict')
-        }
+      if (this.hasExactMatchesInfo || this.hasSynConflicts())
+        this.setFail('Conflict');
+      else
+        this.setPass('Conflict');
     },
     setConditions() {
       // if no restricted words -> call setPass
@@ -207,7 +194,7 @@ export default {
     }
   },
   watch: {
-    conflictsInfo: function (val) {
+    synonymMatchesInfo: function (val) {
       // set severity flag on recipe menu
       this.setConflicts();
     },
