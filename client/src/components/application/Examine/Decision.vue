@@ -164,6 +164,9 @@
       acceptance_will_be_conditional() {
         return this.$store.getters.acceptance_will_be_conditional;
       },
+      require_consent_or_condition_set() {
+        return this.$store.getters.require_consent_or_condition
+      },
       is_making_decision: {
         get: function() {
           return this.$store.getters.is_making_decision;
@@ -296,7 +299,7 @@
         for (var i = 0; i < this.conflicts_selected.length; i++) {
 
           // check whether "Consent Required" condition is set - if so, set message re. "Requires consent from..."
-          if (this.consent_required_condition_set) {
+          if (this.require_consent_or_condition_set) {
             retval.push('Consent required from ' + this.conflicts_selected[i].text);
           }
 
@@ -327,6 +330,7 @@
           retval.push(this.decision_reasons_selected[i].reason);
         }
 
+
         return retval;
 
       },
@@ -343,14 +347,10 @@
 
           } else {
             // otherwise build out formatted text with line breaks...
-            var retval = '';
 
             for (var i = 0; i < this.customer_message.length; i++) {
               retval += this.customer_message[i] + '\n\n';
             }
-
-            return retval;
-
           }
         },
         set: function (value) {
@@ -361,11 +361,6 @@
           //this.customer_message_override = value;
 
         }
-      },
-      consent_required_condition_set() {
-        // is the "Consent Required" checkbox selected?
-        if (this.acceptance_will_be_conditional) return true;
-        else return false;
       },
     },
     components: {
@@ -382,35 +377,41 @@
       // pre-select the condition from the display screen
       if (this.currentCondition !== null && this.currentCondition !== undefined) {
         this.conditions_selected.push(this.currentCondition);
+              // reset the conditional acceptance flag
+        this.$store.commit('require_consent_or_condition', true);
       }
-
 
       // pre-select the trademark from the display screen
       if (this.currentTrademark !== null && this.currentTrademark !== undefined) {
         this.trademarks_selected.push(this.currentTrademark);
       }
 
-      // reset the conditional acceptance flag
-      this.$store.commit('acceptance_will_be_conditional', false);
-
-
     },
     watch: {
       decision_made: function() {
         this.nameAcceptReject();
       },
-      conditions_selected: function () {
+      conditions_selected: function (current_state, prev_state) {
         // set state variable indicating whether acceptance will be conditional or not
+        let condition_selected = false;
+        let consent_required = this.require_consent_or_condition_set;
 
-        var retval = false;
+        if (this.conditions_selected.length === 0) {
+          consent_required = false;
+        }
+
         for (var i = 0; i < this.conditions_selected.length; i++) {
           if (this.conditions_selected[i].consent_required) {
-            retval = true;
+            if (this.conditions_selected.length === 1 && !prev_state || prev_state.length !== 2) {
+              consent_required = true;
+            }
+            condition_selected = true;
             break;
           }
         }
 
-        this.$store.commit('acceptance_will_be_conditional', retval || this.acceptance_will_be_conditional);
+        this.$store.commit('require_consent_or_condition', consent_required);
+        this.$store.commit('acceptance_will_be_conditional', condition_selected && consent_required);
       },
       exactMatchesConflicts: function (val) {
         console.log('synonymMatchesConflicts watcher fired: ',val);
@@ -449,22 +450,16 @@
           this.currentNameObj.state = 'APPROVED'; // accepted
 
           // conditionally accepted if any conditions selected with condition_required flag TRUE
-          for (var i = 0; i < this.conditions_selected.length; i++) {
-            var record = this.conditions_selected[i];
-            if (record.consent_required && this.acceptance_will_be_conditional) {
-              this.currentNameObj.state = 'CONDITION';
-              break;
-            }
-          }
-          if (this.acceptance_will_be_conditional) {
+          if (this.acceptance_will_be_conditional && this.require_consent_or_condition_set) {
             this.currentNameObj.state = 'CONDITION'
           }
+
           // if there were conflicts selected but this is an approval, this will result in
           // accidental "rejected due to conflict" messaging. Remove it by clearing the selected
           // conflicts (Issue #767).
           // Do NOT clear the conflicts if the "Consent Required" condition is also set - then it's
           // intentional.
-          if (!this.consent_required_condition_set) {
+          if (!this.require_consent_or_condition_set) {
             this.conflicts_selected = [];
           }
         }

@@ -3,7 +3,7 @@
   <div>
     <div class="name-sect">
       <div class="row">
-        <div class="col-8">
+        <div class="col-7">
           <table>
             <tr class="name-option"
                 v-bind:class="{'active-name-option': currentChoice===1,
@@ -47,66 +47,70 @@
           </table>
         </div>
         <div class="col">
-          <div id="top-buttons" class="row top-button-row text-right">
+          <div id="top-buttons" class="d-flex flex-row-reverse top-button-row ">
 
-            <!-- RE-OPEN (un-furnished) button -->
-            <button class="btn btn-sm btn-danger col" id="examine-re-open-button"
-                    v-if="is_complete && !is_furnished && !is_cancelled && !is_approved_expired" @click="reOpen()" >
-              Re-Open</button>
 
-            <!-- RESET (from furnished) button -->
-            <button class="btn btn-sm btn-danger col" id="examine-reset-button"
-                    v-if="is_complete && is_furnished && !is_cancelled && !is_approved_expired" @click="reset()">
-              RESET</button>
+            <!-- GET NEXT button -->
+            <button v-shortkey="['alt', 'n']" @shortkey="getNextCompany()" class="btn btn-sm btn-secondary p2" id="examine-get-next-button"
+                    v-if="!is_making_decision && !is_my_current_nr"
+                    @click="getNextCompany()" >Get <u>N</u>ext</button>
 
-            <!-- EXAMINE button - to claim/examine an NR that is on hold -->
-            <button class="btn btn-sm btn-primary col" id="examine-button" v-if="can_claim"
-                    @click="claimNR()" >Examine</button>
 
-              <!-- DECISION button -->
-            <button v-shortkey="['alt', 'd']" @shortkey="startDecision()" class="btn btn-sm btn-primary col" id="examine-decide-button"
-                    v-if="!is_making_decision && !is_complete && is_my_current_nr"
-                    @click="startDecision()"><u>D</u>ecision</button>
 
              <!-- HOLD button -->
-            <button v-shortkey="['alt', 'h']" @shortkey="holdRequest()" class="btn btn-sm btn-warning col" id="examine-hold-button"
+            <button v-shortkey="['alt', 'h']" @shortkey="holdRequest()" class="btn btn-sm btn-warning p2" id="examine-hold-button"
                     v-if="!is_making_decision && is_my_current_nr"
                     @click="holdRequest()"><u>H</u>old</button>
 
             <!-- CANCEL button -->
-            <button class="btn btn-sm btn-danger col" id="examine-cancel-button"
+            <button class="btn btn-sm btn-danger p2" id="examine-cancel-button"
                     v-if="!is_making_decision && !is_cancelled && !is_approved_expired && !is_consumed" data-toggle="modal" data-target="#add-cancel-comment-modal">
               Cancel Request</button>
 
-            <!-- GET NEXT button -->
-            <button v-shortkey="['alt', 'n']" @shortkey="getNextCompany()" class="btn btn-sm btn-secondary col" id="examine-get-next-button"
-                    v-if="!is_making_decision && !is_my_current_nr"
-                    @click="getNextCompany()" >Get <u>N</u>ext</button>
+             <!-- EXAMINE button - to claim/examine an NR that is on hold -->
+            <button class="btn btn-sm btn-primary p2" id="examine-button" v-if="can_claim"
+                    @click="claimNR()" >Examine</button>
+
+              <!-- DECISION button -->
+            <button v-shortkey="['alt', 'd']" @shortkey="startDecision()" class="btn btn-sm btn-primary" id="examine-decide-button"
+                    v-if="!is_making_decision && !is_complete && is_my_current_nr"
+                    @click="startDecision()"><u>D</u>ecision</button>
+
+
+              <!-- RE-OPEN (un-furnished) button -->
+            <button class="btn btn-sm btn-danger p2" id="examine-re-open-button"
+                    v-if="is_complete && !is_furnished && !is_cancelled && !is_approved_expired" @click="reOpen()" >
+              Re-Open</button>
+
+            <!-- RESET (from furnished) button -->
+            <button class="btn btn-sm btn-danger p2" id="examine-reset-button"
+                    v-if="is_complete && is_furnished && !is_cancelled && !is_approved_expired" @click="reset()">
+              RESET</button>
 
             <!-- ACCEPT/REJECT/CANCEL DECISION buttons -->
-            <button v-shortkey="['alt', 'c']" @shortkey="is_making_decision=false" class="btn btn-sm btn-secondary col" id="decision-cancel-button"
-                    v-if="is_making_decision" @click="is_making_decision=false">Ba<u>c</u>k
-            </button>
+            <button v-if="is_making_decision && !message_has_rejection" v-shortkey="['alt', 'a']" @shortkey="nameAccept()" class="btn btn-sm btn-primary p2" id="decision-approve-button"
+                       @click="nameAccept()">
+                <u>A</u>pprove
+                </button>
 
-            <button v-shortkey="['alt', 'r']" @shortkey="nameReject()" class="btn btn-sm btn-danger col" id="decision-reject-button"
+            <button v-shortkey="['alt', 'r']" @shortkey="nameReject()" class="btn btn-sm btn-danger p2" id="decision-reject-button"
                     v-if="is_making_decision" @click="nameReject()" ><u>R</u>eject
             </button>
 
-            <button v-if="is_making_decision" v-shortkey="['alt', 'a']" @shortkey="nameAccept()" class="btn btn-sm btn-primary condition-button col" id="decision-approve-button"
-                       @click="nameAccept()">
-                <span v-if="consent_required">Conditionally </span><u>A</u>pprove
-                </button>
+             <button v-shortkey="['alt', 'c']" @shortkey="is_making_decision=false" class="btn btn-sm btn-secondary p2 back-button " id="decision-cancel-button"
+                    v-if="is_making_decision" @click="is_making_decision=false">Ba<u>c</u>k
+            </button>
+
 
           </div>
-          <div v-if="is_making_decision && !is_complete "  class="row top-button-row text-right condition-checkbox-row">
-            <div class="col"></div>
+          <div v-if="is_making_decision"  class="d-flex flex-row-reverse">
 
-            <div class="col condition-checkbox-group">
+            <div class="condition-checkbox-group p2">
                  <b-form-checkbox
                       class="condition-checkbox"
                       v-model="consent_required"
                  >
-                Consent required
+                Include Consent / Condition
                 </b-form-checkbox>
             </div>
           </div>
@@ -181,7 +185,6 @@
         cancel_comment_display: "",
         resetting: false,
         searching: false,
-        consent_required: false,
       }
     },
     computed: {
@@ -341,6 +344,14 @@
       consumptionDate() {
         return this.$store.getters.consumptionDate;
       },
+      consent_required: {
+        get: function() {
+          return this.$store.getters.require_consent_or_condition
+        },
+        set: function(value) {
+          this.$store.commit('require_consent_or_condition', value);
+        }
+      }
     },
     mounted() {
       console.log('Compname Mounted')
@@ -399,7 +410,6 @@
       },
       startDecision() {
         this.$store.state.is_making_decision = true;
-        this.consent_required = false;
       },
       nameAccept() {
         this.$store.commit('decision_made', 'APPROVED');
@@ -544,9 +554,6 @@
       },
     },
     watch: {
-      consent_required: function(val) {
-        this.$store.commit('acceptance_will_be_conditional', val);
-      },
       cancel_comment_display: function(val) {
         console.log('cancel_comment_display watcher fired:' + val)
         if (val)
@@ -629,27 +636,22 @@
   }
 
   .top-button-row {
-    float: right;
     margin: 10px 0 10px 10px;
   }
-  .top-button-row button {
-    float: right;
-    margin-left: 5px;
-  }
 
-  .condition-checkbox-row {
-    margin: 0;
+  .top-button-row button {
+    margin-left: 15px;
+    padding: 5px 20px 5px 20px;
   }
 
   .condition-checkbox-group {
-    padding:0;
-    min-width: 155px;
-    margin: 0;
+    padding: 0;
+    margin: 25px 0 0 0;
     text-align: left;
   }
 
-  .condition-button {
-    min-width: 155px;
+  .back-button {
+    margin-right: 30px;
   }
 
   .name-option > td {
