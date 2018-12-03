@@ -86,13 +86,13 @@ describe('Conflicts', () => {
             }, 1000)
         })
 
-        it('displays general conflicts', ()=>{
-            expect(data.vm.$el.querySelector('#conflict-list').textContent).toContain('Incredible World LTD')
+        it('does NOT general conflicts (garbage bucket)', ()=>{
+            expect(data.vm.$el.querySelector('#conflict-list').textContent.search('Incredible World LTD')).toBe(-1);
         })
 
-        it('changes conflicts tab to red', ()=>{
-            expect(document.getElementById('Conflict1').className).toEqual('icon icon-fail')
-            expect(document.getElementById('Conflict2').className).toEqual('fa fa-times')
+        it('does NOT change conflicts tab to red', ()=>{
+            expect(document.getElementById('Conflict1').className).toEqual('icon icon-pass')
+            expect(document.getElementById('Conflict2').className).toEqual('fa fa-check')
         })
 
         it('defaults tab to green', (done)=>{

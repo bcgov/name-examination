@@ -47,15 +47,6 @@ describe('Synonym-Match Conflicts', () => {
                     })
                 })
             )
-            data.apiSandbox.postStub.withArgs('/api/v1/documents:conflicts', sinon.match.any).returns(
-                new Promise((resolve) => resolve({ data: {
-                    setConflicts: {},
-                    names: [
-                        { id:1, name:'Incredible World LTD' }
-                    ],
-                    response: {}
-                } }))
-            )
             data.apiSandbox.getStub.withArgs('/api/v1/requests/1', sinon.match.any).returns(
                 new Promise((resolve) => resolve({ data: {} }))
             )
@@ -89,10 +80,6 @@ describe('Synonym-Match Conflicts', () => {
                     done();
                 }, 1000)
             }, 1000)
-        })
-
-        it('displays general conflicts', ()=>{
-            expect(data.vm.$el.querySelector('#conflict-list').textContent).toContain('Incredible World LTD')
         })
 
         it('displays synonym-match conflicts', ()=>{
@@ -137,13 +124,6 @@ describe('Synonym-Match Conflicts', () => {
         })
 
         it('changes conflicts tab to red', (done)=>{
-            data.apiSandbox.postStub.withArgs('/api/v1/documents:conflicts', sinon.match.any).returns(
-                new Promise((resolve) => resolve({ data: {
-                    setConflicts: {},
-                    names: [],
-                    response: {}
-                } }))
-            )
             const Constructor = Vue.extend(App);
             data.instance = new Constructor({store:store, router:router});
             data.vm = data.instance.$mount(document.getElementById('app'));
