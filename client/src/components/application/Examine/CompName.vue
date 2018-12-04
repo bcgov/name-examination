@@ -88,7 +88,7 @@
               RESET</button>
 
             <!-- ACCEPT/REJECT/CANCEL DECISION buttons -->
-            <button v-if="is_making_decision && !message_has_rejection" v-shortkey="['alt', 'a']" @shortkey="nameAccept()" class="btn btn-sm btn-primary p2" id="decision-approve-button"
+            <button v-if="is_making_decision" v-shortkey="['alt', 'a']" @shortkey="nameAccept()" class="btn btn-sm btn-primary p2" id="decision-approve-button"
                        @click="nameAccept()">
                 <u>A</u>pprove
                 </button>

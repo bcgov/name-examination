@@ -39,7 +39,6 @@ export default new Vuex.Store({
     decision_made: null,
     acceptance_will_be_conditional: false,
     require_consent_or_condition: false,
-    customer_message_in_progress: "",
     is_header_shown: false,
     furnished: null,
     listPriorities: null, // DROP LIST

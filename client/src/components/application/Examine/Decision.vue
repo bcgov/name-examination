@@ -347,10 +347,13 @@
 
           } else {
             // otherwise build out formatted text with line breaks...
+            var retval = '';
 
             for (var i = 0; i < this.customer_message.length; i++) {
               retval += this.customer_message[i] + '\n\n';
             }
+
+            return retval;
           }
         },
         set: function (value) {
@@ -402,7 +405,7 @@
 
         for (var i = 0; i < this.conditions_selected.length; i++) {
           if (this.conditions_selected[i].consent_required) {
-            if (this.conditions_selected.length === 1 && !prev_state || prev_state.length !== 2) {
+            if (this.conditions_selected.length === 1 && !prev_state || prev_state.length === 0) {
               consent_required = true;
             }
             condition_selected = true;
