@@ -55,7 +55,7 @@ describe('Synonym-Match Conflicts', () => {
                     names: [],
                 } }))
             )
-            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/ incredible name inc', sinon.match.any).returns(
+            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc', sinon.match.any).returns(
                 new Promise((resolve) => {
                     resolve({
                         data: {
@@ -103,7 +103,7 @@ describe('Synonym-Match Conflicts', () => {
         })
 
         it('resists no synonym match', (done)=>{
-            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/ incredible name inc', sinon.match.any).returns(
+            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc', sinon.match.any).returns(
                 new Promise((resolve) => resolve({ data: {
                     names: []
                 } }))
@@ -147,7 +147,7 @@ describe('Synonym-Match Conflicts', () => {
                     response: {}
                 } }))
             )
-            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/ incredible name inc', sinon.match.any).returns(
+            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc', sinon.match.any).returns(
                 new Promise((resolve) => resolve({ data: {
                     names: []
                 } }))
