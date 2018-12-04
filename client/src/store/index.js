@@ -38,6 +38,7 @@ export default new Vuex.Store({
     is_making_decision: false,
     decision_made: null,
     acceptance_will_be_conditional: false,
+    require_consent_or_condition: false,
     is_header_shown: false,
     furnished: null,
     listPriorities: null, // DROP LIST
@@ -213,6 +214,9 @@ export default new Vuex.Store({
     },
     acceptance_will_be_conditional(state, value) {
       state.acceptance_will_be_conditional = value;
+    },
+    require_consent_or_condition(state, value) {
+      state.require_consent_or_condition = value;
     },
     currentState(state, value) {
       state.currentState = value;
@@ -1441,6 +1445,7 @@ export default new Vuex.Store({
       state.is_making_decision = false;
       state.decision_made = null;
       state.acceptance_will_be_conditional = false;
+      state.require_consent_or_condition = false;
       state.is_header_shown = false;
 
     },
@@ -1481,6 +1486,9 @@ export default new Vuex.Store({
     },
     acceptance_will_be_conditional(state) {
       return state.acceptance_will_be_conditional;
+    },
+    require_consent_or_condition(state) {
+      return state.require_consent_or_condition;
     },
     is_header_shown(state) {
       return state.is_header_shown
