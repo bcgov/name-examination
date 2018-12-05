@@ -65,12 +65,6 @@ describe('store > checkManualSynonymMatches', () => {
         expect(SynonymMatch.lastCall.args[0]).toEqual('/api/v1/requests/synonymbucket/dog  cat fish bear')
     })
 
-    it('removes @', ()=>{
-        store.dispatch('checkManualSynonymMatches', 'dog @ cat@ @fish bear')
-
-        expect(SynonymMatch.lastCall.args[0]).toEqual('/api/v1/requests/synonymbucket/dog  cat fish bear')
-    })
-
     it('removes %', ()=>{
         store.dispatch('checkManualSynonymMatches', 'dog % cat% %fish bear')
 
