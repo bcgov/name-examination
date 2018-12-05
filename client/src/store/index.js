@@ -1325,7 +1325,6 @@ export default new Vuex.Store({
           .replace(/\?/g,'')
           .replace(/#/g,'')
           .replace(/%/g, '')
-          .replace(/@/g, '');
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
       const url = '/api/v1/requests/synonymbucket/' + query;
       console.log('URL:' + url);
