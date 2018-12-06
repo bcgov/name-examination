@@ -66,8 +66,8 @@
                 <span class="name-state-icon" v-html="setIcon(compName1.state)"></span>
                 <button class="btn btn-undo" v-if="is_undoable_1"
                         v-on:click="undoDecision(1)">Undo Decision</button>
-                <span id="decision-text1" class="decision-text"
-                        v-bind:class="{'completed-decision-text': is_complete}">{{ compName1.decision_text }}</span>
+                <span class="decision-text"
+                        v-bind:class="{'completed-decision-text': is_complete}">{{ decision_1 }}</span>
               </td>
             </tr>
             <tr class="name-option"
@@ -79,8 +79,8 @@
                 <span class="name-state-icon" v-html="setIcon(compName2.state)"></span>
                 <button class="btn btn-undo" v-if="is_undoable_2"
                         v-on:click="undoDecision(2)">Undo Decision</button>
-                <span id="decision-text2" class="decision-text"
-                        v-bind:class="{'completed-decision-text': is_complete}">{{ compName2.decision_text }}</span>
+                <span class="decision-text"
+                        v-bind:class="{'completed-decision-text': is_complete}">{{ decision_2 }}</span>
               </td>
             </tr>
             <tr class="name-option"
@@ -93,7 +93,7 @@
                 <button class="btn btn-undo" v-if="is_undoable_3"
                         v-on:click="undoDecision(3)">Undo Decision</button>
                 <span id="decision-text3" class="decision-text"
-                      v-bind:class="{'completed-decision-text': is_complete}">{{ compName3.decision_text }}</span>
+                      v-bind:class="{'completed-decision-text': is_complete}">{{ decision_3 }}</span>
               </td>
             </tr>
           </table>
@@ -249,6 +249,15 @@
       compName3State() {
         return this.$store.getters.compName3.state;
       },
+       decision_1() {
+        return this.decisionReasonOrConflictList(this.compName1);
+      },
+       decision_2() {
+        return this.decisionReasonOrConflictList(this.compName2);
+      },
+       decision_3() {
+        return this.decisionReasonOrConflictList(this.compName3);
+      },
       currentNameObj: {
         get: function() {
           return this.$store.getters.currentNameObj;
@@ -332,6 +341,42 @@
       this.setManualSearchStr(this.currentName);
     },
     methods: {
+      /**
+       * decisionReasonOrConflictList:  gets the decision reason(s) whether or not there's anything in the decision text field.
+       * In some older NRs, there is no decision reason text.  In these cases we want to display the list of conflicts instead.
+       */
+       decisionReasonOrConflictList: function (compname) {
+
+          if (!compname) {
+              return;
+          }
+
+          if (this.is_complete) {
+
+              if (compname.decision_text) {
+                return compname.decision_text;
+              } else {
+                return this.getConflictList(compname);
+              }
+          } else {
+              return compname.decision_text
+          }
+      },
+      getConflictList(compname) {
+          if (!compname.conflict1) {
+              return;
+          }
+
+          let reasons = `Rejected due to conflicts:\n${compname.conflict1}`;
+          if (compname.conflict2) {
+              reasons += ", " + compname.conflict2;
+          }
+          if (compname.conflict3) {
+              reasons += ", " + compname.conflict3;
+          }
+
+          return reasons;
+      },
       getNextCompany() {
         this.$store.dispatch('resetValues');
         this.searching = true;
@@ -433,7 +478,7 @@
         this.$store.dispatch('resetValues');
         this.$store.dispatch('runManualRecipe', this.searchStr);
 
-        if (this.searchStr != '+' + this.currentName) this.is_running_manual_search = true;
+        if (this.searchStr != this.currentName) this.is_running_manual_search = true;
       },
       resetSearchStr(){
         this.searching = true;
@@ -463,7 +508,7 @@
       },
       setManualSearchStr(val) {
         console.log('setManualSearchStr() called with ' + val);
-        this.searchStr =  "+" + val;
+        this.searchStr =  val;
       },
       addNewComment(value) {
         // create new comment object with just text, and add it to list of comments in data structure
@@ -494,10 +539,8 @@
         console.log('compName1 watcher fired:' + val)
         if (this.resetting) {
           if (this.compName2 != undefined && this.compName2State != 'NE') {
-            console.log("***** Resetting");
             this.$store.dispatch('resetDecision', 2);
           } else {
-            console.log("***** Not Resetting?")
             this.addNewComment(this.add_comment_display);
           }
         }
