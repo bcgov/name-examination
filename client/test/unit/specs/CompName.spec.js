@@ -93,4 +93,41 @@ describe('CompName.vue', () => {
         })
     })
 
+    describe('Display conflicts if there is no decision reason', ()=> {
+      let sandbox;
+      let vm;
+
+      beforeEach((done) => {
+        sandbox = sinon.createSandbox();
+        instance.$store.state.currentState = 'APPROVED';
+        instance.$store.state.compInfo.compNames = {
+          compName1:
+            {
+              choice: 1,
+              name: "Bad Name",
+              state: 'REJECTED',
+              decision_text: "",
+              conflict1: "Bada Boom Bad Name",
+              conflict2: "Bad Dudes Name",
+            },
+          compName2: { choice: 2, name: "Good Name", state: 'ACCEPTED' },
+          compName3: { choice: 3, name: null, state: 'NE' }
+        };
+        vm = instance.$mount();
+        setTimeout(() => {
+          done();
+        }, 100)
+      });
+
+      afterEach(() => {
+        sandbox.restore()
+      });
+
+      it('displays conflicts when there are no deision reasons', () => {
+        expect(vm.$el.querySelectorAll('.completed-decision-text')).not.toBeNull();
+        expect(vm.$el.querySelectorAll('.completed-decision-text')[0].innerHTML).toContain('Bada Boom Bad Name');
+        expect(vm.$el.querySelectorAll('.completed-decision-text')[0].innerHTML).toContain('Bad Dudes Name');
+      })
+    })
+
 });

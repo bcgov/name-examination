@@ -55,7 +55,7 @@ describe('Synonym-Match Conflicts', () => {
                     names: [],
                 } }))
             )
-            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/+incredible name inc', sinon.match.any).returns(
+            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc', sinon.match.any).returns(
                 new Promise((resolve) => {
                     resolve({
                         data: {
@@ -96,14 +96,14 @@ describe('Synonym-Match Conflicts', () => {
 
         it('populates additional attributes as expected', ()=>{
             expect(data.instance.$store.state.synonymMatchesConflicts).toEqual([{"nrNumber": undefined,
-              "source": undefined, "text": "----INCREDIBLE NAME INC*"},
-              {"nrNumber": undefined, "source": undefined, "text": "----INCREDIBLE NAME*"},
-              {"nrNumber": undefined, "source": undefined, "text": "----INCREDIBLE*"},
-              {"nrNumber": "0793638", "source": "CORP", "text": "INCREDIBLE STEPS RECORDS, INC."}])
+                "source": undefined, "text": "----INCREDIBLE NAME INC*"},
+                {"nrNumber": undefined, "source": undefined, "text": "----INCREDIBLE NAME*"},
+                {"nrNumber": undefined, "source": undefined, "text": "----INCREDIBLE*"},
+                {"nrNumber": "0793638", "source": "CORP", "text": "INCREDIBLE STEPS RECORDS, INC."}])
         })
 
         it('resists no synonym match', (done)=>{
-            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/+incredible name inc', sinon.match.any).returns(
+            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc', sinon.match.any).returns(
                 new Promise((resolve) => resolve({ data: {
                     names: []
                 } }))
@@ -134,6 +134,34 @@ describe('Synonym-Match Conflicts', () => {
                 setTimeout(()=>{
                     expect(document.getElementById('Conflict1').className).toEqual('icon icon-fail')
                     expect(document.getElementById('Conflict2').className).toEqual('fa fa-times')
+                    done();
+                }, 1000)
+            }, 1000)
+        })
+
+        it('defaults to green', (done)=>{
+            data.apiSandbox.postStub.withArgs('/api/v1/documents:conflicts', sinon.match.any).returns(
+                new Promise((resolve) => resolve({ data: {
+                    setConflicts: {},
+                    names: [],
+                    response: {}
+                } }))
+            )
+            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc', sinon.match.any).returns(
+                new Promise((resolve) => resolve({ data: {
+                    names: []
+                } }))
+            )
+            const Constructor = Vue.extend(App);
+            data.instance = new Constructor({store:store, router:router});
+            data.vm = data.instance.$mount(document.getElementById('app'));
+            setTimeout(()=>{
+                data.instance.$store.state.userId = 'Joe'
+                sessionStorage.setItem('AUTHORIZED', true)
+                router.push('/nameExamination')
+                setTimeout(()=>{
+                    expect(document.getElementById('Conflict1').className).toEqual('icon icon-pass')
+                    expect(document.getElementById('Conflict2').className).toEqual('fa fa-check')
                     done();
                 }, 1000)
             }, 1000)

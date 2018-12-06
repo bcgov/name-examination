@@ -74,7 +74,6 @@ exports[`CompName.vue  renders a CompName component 1`] = `
                
               <span
                 class="decision-text"
-                id="decision-text1"
               >
                 
               </span>
@@ -102,7 +101,6 @@ exports[`CompName.vue  renders a CompName component 1`] = `
                
               <span
                 class="decision-text"
-                id="decision-text2"
               >
                 
               </span>
