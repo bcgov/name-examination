@@ -565,7 +565,10 @@ export default {
       edit() {
         // if this isn't the user's INPROGRESS, make it that
         if (!this.is_my_current_nr && !this.is_closed) {
-          this.$store.dispatch('updateNRState', 'INPROGRESS');
+
+          // track the previous state if it's currently in DRAFT (otherwise do not)
+          if (this.$store.state.currentState == 'DRAFT') this.updateNRStatePreviousState('INPROGRESS', 'DRAFT');
+          else this.$store.dispatch('updateNRState', 'INPROGRESS');
         }
 
         // KBM - REMOVED per ticket #970
@@ -612,6 +615,12 @@ export default {
         if (this.$refs.nwpta_ab != undefined) this.$refs.nwpta_ab.adjustUponSave();
         if (this.$refs.nwpta_sk != undefined) this.$refs.nwpta_sk.adjustUponSave();
 
+        // set the state back if it was DRAFT, and clear previous value
+        if (this.$store.state.previousStateCd == 'DRAFT') {
+          this.$store.state.currentState = this.$store.state.previousStateCd;
+          this.$store.state.previousStateCd = null;
+        }
+
         this.$store.dispatch('updateRequest');
         this.$store.state.is_editing = false;
 
@@ -620,7 +629,11 @@ export default {
 
       },
       cancelSave() {
-        this.$store.dispatch('getpostgrescompInfo',this.nrNumber)
+        // set the state back to the previous state - only when previous state is DRAFT
+        // - otherwise just get original data
+        if (this.$store.state.previousStateCd == 'DRAFT') this.revertToPreviousState();
+        else this.$store.dispatch('getpostgrescompInfo',this.nrNumber)
+
         this.$store.state.is_editing = false;
       },
       buildAdditionalInfo() {
@@ -738,6 +751,42 @@ export default {
             this.is_cp_nwpta_type = rules.is_cp_nwpta_type;
           }
         }
+      },
+
+      // Update NR State and Previous State
+      updateNRStatePreviousState (nrState, previousState) {
+        console.log('Updating Examination state (plus prev state) for number ' + this.nrNumber + ' to ' + nrState)
+        const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+        const url = '/api/v1/requests/' + this.nrNumber;
+
+        // save off nrNumber and $store because can't refer to "this" inside axios response
+        var nrNumber = this.nrNumber;
+        var store = this.$store;
+
+        axios.patch(url,{"previousStateCd": previousState, "state": nrState} ,{headers: {Authorization: `Bearer ${myToken}`}})
+          .then(function(response){
+            console.log('state updated to ' + nrState + ' for ' + nrNumber);
+            store.dispatch('getpostgrescompInfo', nrNumber);
+          })
+          .catch(error => console.log('ERROR: ' + error))
+      },
+
+      // set current state to previous state, and clear previous state field
+      revertToPreviousState () {
+        console.log('Updating Examination state & prev state for number ' + this.nrNumber);
+        const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
+        const url = '/api/v1/requests/' + this.nrNumber;
+
+        // save off nrNumber and $store because can't refer to "this" inside axios response
+        var nrNumber = this.nrNumber;
+        var store = this.$store;
+
+        axios.patch(url,{"state": this.$store.state.previousStateCd, "previousStateCd": null} ,{headers: {Authorization: `Bearer ${myToken}`}})
+          .then(function(response){
+            console.log('state reverted to ' + store.state.previousStateCd + ' for ' + nrNumber);
+            store.dispatch('getpostgrescompInfo', nrNumber);
+          })
+          .catch(error => console.log('ERROR: ' + error))
       },
     },
     watch: {
