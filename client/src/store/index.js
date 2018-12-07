@@ -26,6 +26,7 @@ export default new Vuex.Store({
       choice: null,
     },
     currentState: null, // NR - APPROVED, REJECTED, INPROGRESS ETC...
+    previousStateCd: null,
 
     currentConflict: null, // the conflict name currently in focus
     currentCondition: null, // the condition currently in focus
@@ -467,6 +468,7 @@ export default new Vuex.Store({
 
       console.log('Still loading')
       state.currentState = dbcompanyInfo.state;
+      state.previousStateCd = dbcompanyInfo.previousStateCd;
       state.compInfo.requestType = dbcompanyInfo.requestTypeCd
 
 
@@ -679,6 +681,7 @@ export default new Vuex.Store({
       if (state.additionalCompInfo.nwpta_ab.partnerJurisdictionTypeCd !== null) state.nrData.nwpta.push(state.additionalCompInfo.nwpta_ab);
       if (state.additionalCompInfo.nwpta_sk.partnerJurisdictionTypeCd !== null) state.nrData.nwpta.push(state.additionalCompInfo.nwpta_sk);
       state.nrData.state =  state.currentState
+      state.nrData.previousStateCd = state.previousStateCd;
       state.nrData.userId = state.examiner
       state.nrData.priorityCd = state.priority
       //state.reservationCount = dbcompanyInfo.reservationCount
