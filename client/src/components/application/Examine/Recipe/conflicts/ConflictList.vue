@@ -155,11 +155,17 @@
   }
 
   /* when selected, highlight synonym matches in blue */
-  .conflict-list-view option.conflict-result:checked {
+  #conflict-list option.conflict-result:checked {
+    background: #b3d9ff linear-gradient(0deg, #b3d9ff 0%, #b3d9ff 100%);
+  }
+  #conflict-list:focus option.conflict-result:checked {
     background: #3979bd linear-gradient(0deg, #3979bd 0%, #3979bd 100%);
   }
   /* when selected, highlight exact match in red */
-  .conflict-list-view option.conflict-exact-match:checked {
+  #conflict-list option.conflict-exact-match:checked {
+    background: #ff9999 linear-gradient(0deg, #ff9999 0%, #ff9999 100%);
+  }
+  #conflict-list:focus option.conflict-exact-match:checked {
     background: red linear-gradient(0deg, red 0%, red 100%);
   }
 
