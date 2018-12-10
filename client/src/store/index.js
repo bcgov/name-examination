@@ -176,6 +176,7 @@ export default new Vuex.Store({
 
     exactMatchesConflicts: [],
     synonymMatchesConflicts: [],
+    phoneticMatchesConflicts: [],
     conflictList: [],
     conflictHighlighting: [],
     conflictNames: [],
@@ -789,6 +790,19 @@ export default new Vuex.Store({
       }
     },
 
+    setPhoneticMatchesConflicts(state, jsonValue) {
+      var names = jsonValue['names']
+      state.phoneticMatchesConflicts = []
+      for (var i=0; i<names.length; i++) {
+        var entry = names[i];
+        state.phoneticMatchesConflicts.push({
+          text:entry.name,
+          nrNumber:entry.id,
+          source:entry.source
+        })
+      }
+    },
+
     setSynonymMatchesConflicts(state, json) {
       state.synonymMatchesConflicts = [];
       let names = json.names;
@@ -1307,11 +1321,39 @@ export default new Vuex.Store({
       if( state.currentChoice != null) {
         this.dispatch('checkManualExactMatches',searchStr)
         this.dispatch('checkManualSynonymMatches',searchStr)
+        this.dispatch('checkManualPhoneticMatches',searchStr)
         // this.dispatch('checkManualConflicts',searchStr)
         this.dispatch('checkManualTrademarks',searchStr)
         this.dispatch('checkManualConditions',searchStr)
         this.dispatch('checkManualHistories',searchStr)
       }
+    },
+
+    checkManualPhoneticMatches( {commit, state}, query ) {
+        console.log('action: getting phonetic matches for number: ' + state.compInfo.nrNumber + ' from solr')
+        query = query
+            .replace(/\//g,' ')
+            .replace(/ \//g,' ')
+            .replace(/\\/g,' ')
+            .replace(/\+/g, ' ')
+            .replace(/\-/g, ' ')
+            .replace(/\(/g, '')
+            .replace(/\)/g, '')
+            .replace(/]/g, '')
+            .replace(/\[/g, '')
+            .replace(/}/g, '')
+            .replace(/{/g, '')
+        const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+        query = encodeURIComponent(query)
+        console.log('query', query)
+        const url = '/api/v1/sounds-like?query='+query
+        console.log('URL:' + url)
+        const vm = this
+        return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+          console.log('Check Phonetic Match Response:', JSON.stringify(response.data))
+          commit('setPhoneticMatchesConflicts', response.data)
+        })
+          .catch(error => console.log('ERROR (exact matches): ' + error))
     },
 
     checkManualExactMatches( {commit, state}, query ) {
@@ -1737,6 +1779,12 @@ export default new Vuex.Store({
     },
     hasExactMatches(state) {
       return state.exactMatchesConflicts ? state.exactMatchesConflicts.length > 0 : false;
+    },
+    phoneticMatchesConflicts(state) {
+      return state.phoneticMatchesConflicts
+    },
+    hasPhoneticMatches(state) {
+      return state.phoneticMatchesConflicts ? state.phoneticMatchesConflicts.length > 0 : false;
     },
     synonymMatchesConflicts(state) {
       return state.synonymMatchesConflicts;

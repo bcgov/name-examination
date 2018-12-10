@@ -60,6 +60,9 @@ export default {
     hasExactMatchesInfo() {
       return this.$store.getters.hasExactMatches;
     },
+    hasPhoneticMatchesInfo() {
+      return this.$store.getters.hasPhoneticMatches;
+    },
     synonymMatchesInfo() {
       return this.$store.getters.synonymMatchesConflicts;
     },
@@ -86,7 +89,7 @@ export default {
       return false;
     },
     setConflicts() {
-      if (this.hasExactMatchesInfo || this.hasSynConflicts())
+      if (this.hasExactMatchesInfo || this.hasSynConflicts() || this.hasPhoneticMatchesInfo)
         this.setFail('Conflict');
       else
         this.setPass('Conflict');
@@ -199,6 +202,9 @@ export default {
       this.setConflicts();
     },
     hasExactMatchesInfo: function() {
+      this.setConflicts();
+    },
+    hasPhoneticMatchesInfo: function() {
       this.setConflicts();
     },
     conditionInfo: function (val) {

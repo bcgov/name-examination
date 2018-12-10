@@ -54,6 +54,17 @@
           data = data.concat(this.$store.getters.synonymMatchesConflicts);
         else
           data = data.concat([{ text:'No Match', class: 'conflict-no-match' }]);
+
+        // add Phonetic Match header
+        data = data.concat([{ text: 'Phonetic Match', class: 'phonetic-match-title'}]);
+
+        // add Phonetic Match data
+        if (this.$store.getters.phoneticMatchesConflicts && this.$store.getters.phoneticMatchesConflicts.length > 0) {
+          data = data.concat(this.$store.getters.phoneticMatchesConflicts);
+        } else {
+          data = data.concat([{ text:'No Match', class: 'conflict-no-match' }]);
+        }
+
         return data;
       },
     },
@@ -118,7 +129,7 @@
     height: 100%;
   }
 
-  .exact-match-title, .synonym-match-title {
+  .exact-match-title, .synonym-match-title, .phonetic-match-title {
     background-color: #dedede;
     font-weight: bold;
     padding: 8px 5px;

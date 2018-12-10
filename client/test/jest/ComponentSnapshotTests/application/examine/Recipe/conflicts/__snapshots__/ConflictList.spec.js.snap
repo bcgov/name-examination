@@ -50,6 +50,20 @@ exports[`ConflictList.vue renders a ConflictList component 1`] = `
         No Match
       
       </option>
+      <option
+        value="[object Object]"
+      >
+        
+        &lt; no phonetic match &gt;
+      
+      </option>
+      <option
+        value="[object Object]"
+      >
+        
+        ***
+      
+      </option>
     </select>
   </div>
 </div>

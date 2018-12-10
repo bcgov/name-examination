@@ -158,6 +158,7 @@ module.exports = {
       searchState: 'HOLD',
 
       exactMatchesConflicts: [],
+      phoneticMatchesConflicts: [],
       synonymMatchesConflicts: [],
       conflictList: [],
       conflictHighlighting: [],

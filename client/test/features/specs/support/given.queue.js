@@ -46,6 +46,15 @@ let givenQueue = (given, data)=>{
                     })
                 })
             )
+            data.apiSandbox.getStub.withArgs('/api/v1/sounds-like?query='+encodeURIComponent(data.name(data.queueIndex)), sinon.match.any).returns(
+                new Promise((resolve) => {
+                    resolve({
+                        data: {
+                            names:[]
+                        }
+                    })
+                })
+            )
             data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/' + data.name(data.queueIndex).replace('&',' '), sinon.match.any).returns(
                 new Promise((resolve) => {
                     resolve({
