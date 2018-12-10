@@ -86,13 +86,12 @@ describe('Exact-Match Conflicts', () => {
             expect(data.vm.$el.querySelector('#conflict-list').textContent).toContain('Incredible Name LTD')
         })
 
-        it('displays exact-match conflicts first', ()=>{
-            expect(data.vm.$el.querySelector('#conflict-list option:nth-child(1)').textContent.trim()).toEqual('Incredible Name LTD')
-            expect(data.vm.$el.querySelector('#conflict-list option:nth-child(2)').textContent.trim()).toEqual('***')
+        it('displays exact-match conflicts first (after title)', ()=>{
+            expect(data.vm.$el.querySelector('#conflict-list option:nth-child(2)').textContent.trim()).toEqual('Incredible Name LTD')
         })
 
         it('populates additional attributes as expected', ()=>{
-            expect(data.instance.$store.state.exactMatchesConflicts).toEqual([{ text:'Incredible Name LTD', nrNumber:'42', source:'moon' }])
+            expect(data.instance.$store.state.exactMatchesConflicts).toEqual([{ class: "conflict-result conflict-exact-match", text:'Incredible Name LTD', nrNumber:'42', source:'moon' }])
         })
 
         it('resists no exact match', (done)=>{
@@ -109,8 +108,7 @@ describe('Exact-Match Conflicts', () => {
                 sessionStorage.setItem('AUTHORIZED', true)
                 router.push('/nameExamination')
                 setTimeout(()=>{
-                    expect(data.vm.$el.querySelector('#conflict-list option:nth-child(1)').textContent.trim()).toEqual('< no exact match >')
-                    expect(data.vm.$el.querySelector('#conflict-list option:nth-child(2)').textContent.trim()).toEqual('***')
+                    expect(data.vm.$el.querySelector('#conflict-list option:nth-child(2)').textContent.trim()).toEqual('No Exact Match')
                     done();
                 }, 1000)
             }, 1000)

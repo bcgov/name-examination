@@ -783,7 +783,8 @@ export default new Vuex.Store({
         state.exactMatchesConflicts.push({
           text:entry.name,
           nrNumber:entry.id,
-          source:entry.source
+          source:entry.source,
+          class: 'conflict-result conflict-exact-match',
         })
       }
     },
@@ -791,13 +792,39 @@ export default new Vuex.Store({
     setSynonymMatchesConflicts(state, json) {
       state.synonymMatchesConflicts = [];
       let names = json.names;
+      var additionalRow = null;
+
       for (let i=0; i<names.length; i++) {
         let entry = names[i];
+        additionalRow = null;
+
+        // is this a synonym header? if so adjust and add class
+        if (entry.source == null) {
+          entry.name = entry.name.replace('----', '');
+          entry.name = entry.name.replace('synonyms:', '');
+          entry.class = 'conflict-synonym-title';
+
+          // if the next element is not a match, add a no results record
+          if (names[i+1].source == null) {
+            additionalRow = {
+              text: 'No Match',
+              source: null,
+              class: 'conflict-no-match',
+            }
+          }
+        }
+        else {
+          entry.class = 'conflict-result';
+        }
+
         state.synonymMatchesConflicts.push({
           text:entry.name,
           nrNumber:entry.id,
-          source:entry.source
-        })
+          source:entry.source,
+          class: entry.class,
+        });
+
+        if (additionalRow) state.synonymMatchesConflicts.push(additionalRow);
       }
     },
 
