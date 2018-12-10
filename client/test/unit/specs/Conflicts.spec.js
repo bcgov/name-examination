@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import staticFilesServer from '../static.files.server';
 import { createApiSandbox, sinon } from '../../features/specs/support/api.stubs'
 import Vue from 'vue';
@@ -50,7 +51,7 @@ describe('Conflicts', () => {
                 new Promise((resolve) => resolve({ data: {
                     setConflicts: {},
                     names: [
-                        { id:1, name:'Incredible World LTD' }
+                        { id:1, name:'Incredible World LTD', source:'CORP' }
                     ],
                     response: {}
                 } }))
@@ -58,10 +59,19 @@ describe('Conflicts', () => {
             data.apiSandbox.getStub.withArgs('/api/v1/requests/1', sinon.match.any).returns(
                 new Promise((resolve) => resolve({ data: {} }))
             )
-            data.apiSandbox.getStub.withArgs('/api/v1/exact-match?query=incredible name inc', sinon.match.any).returns(
+            data.apiSandbox.getStub.withArgs('/api/v1/exact-match?query='+encodeURIComponent('incredible name inc'), sinon.match.any).returns(
                 new Promise((resolve) => resolve({ data: {
                     names: [],
                 } }))
+            )
+            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc', sinon.match.any).returns(
+                new Promise((resolve) => {
+                    resolve({
+                        data: {
+                            names:[]
+                        }
+                    })
+                })
             )
             const Constructor = Vue.extend(App);
             data.instance = new Constructor({store:store, router:router});
@@ -76,13 +86,13 @@ describe('Conflicts', () => {
             }, 1000)
         })
 
-        it('displays general conflicts', ()=>{
-            expect(data.vm.$el.querySelector('#conflict-list').textContent).toContain('Incredible World LTD')
+        it('does NOT general conflicts (garbage bucket)', ()=>{
+            expect(data.vm.$el.querySelector('#conflict-list').textContent.search('Incredible World LTD')).toBe(-1);
         })
 
-        it('changes conflicts tab to red', ()=>{
-            expect(document.getElementById('Conflict1').className).toEqual('icon icon-fail')
-            expect(document.getElementById('Conflict2').className).toEqual('fa fa-times')
+        it('does NOT change conflicts tab to red', ()=>{
+            expect(document.getElementById('Conflict1').className).toEqual('icon icon-pass')
+            expect(document.getElementById('Conflict2').className).toEqual('fa fa-check')
         })
 
         it('defaults tab to green', (done)=>{

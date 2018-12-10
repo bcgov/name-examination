@@ -11,7 +11,7 @@ import App from '@/App.vue';
 import store from '@/store'
 import router from '@/router'
 
-describe('Exact-Match Conflicts', () => {
+describe('Synonym-Match Conflicts', () => {
 
     let data = {};
 
@@ -52,19 +52,19 @@ describe('Exact-Match Conflicts', () => {
             )
             data.apiSandbox.getStub.withArgs('/api/v1/exact-match?query='+encodeURIComponent('incredible name inc'), sinon.match.any).returns(
                 new Promise((resolve) => resolve({ data: {
-                    names: [
-                        { name:'Incredible Name LTD', id:'42', source:'moon' }
-                    ],
+                    names: [],
                 } }))
-            )
-            data.apiSandbox.getStub.withArgs('/api/v1/requests/42', sinon.match.any).returns(
-                new Promise((resolve) => resolve({ data: { names:[] } }))
             )
             data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc', sinon.match.any).returns(
                 new Promise((resolve) => {
                     resolve({
                         data: {
-                            names:[]
+                            names:[
+                              {name: '----INCREDIBLE NAME INC*'},
+                              {name: '----INCREDIBLE NAME*'},
+                              {name: '----INCREDIBLE*'},
+                              {id:"0793638",name:"INCREDIBLE STEPS RECORDS, INC.",score:1.0,source:"CORP"}
+                            ]
                         }
                     })
                 })
@@ -82,21 +82,28 @@ describe('Exact-Match Conflicts', () => {
             }, 1000)
         })
 
-        it('displays exact-match conflicts', ()=>{
-            expect(data.vm.$el.querySelector('#conflict-list').textContent).toContain('Incredible Name LTD')
+        it('displays synonym-match conflicts', ()=>{
+            expect(data.vm.$el.querySelector('#conflict-list').textContent).toContain('INCREDIBLE STEPS RECORDS, INC.')
         })
 
-        it('displays exact-match conflicts first', ()=>{
-            expect(data.vm.$el.querySelector('#conflict-list option:nth-child(1)').textContent.trim()).toEqual('Incredible Name LTD')
+        it('displays synonym-match conflicts after exact match list', ()=>{
             expect(data.vm.$el.querySelector('#conflict-list option:nth-child(2)').textContent.trim()).toEqual('***')
+            expect(data.vm.$el.querySelector('#conflict-list option:nth-child(3)').textContent.trim()).toEqual('----INCREDIBLE NAME INC*');
+            expect(data.vm.$el.querySelector('#conflict-list option:nth-child(4)').textContent.trim()).toEqual('----INCREDIBLE NAME*');
+            expect(data.vm.$el.querySelector('#conflict-list option:nth-child(5)').textContent.trim()).toEqual('----INCREDIBLE*');
+            expect(data.vm.$el.querySelector('#conflict-list option:nth-child(6)').textContent.trim()).toEqual('INCREDIBLE STEPS RECORDS, INC.');
         })
 
         it('populates additional attributes as expected', ()=>{
-            expect(data.instance.$store.state.exactMatchesConflicts).toEqual([{ text:'Incredible Name LTD', nrNumber:'42', source:'moon' }])
+            expect(data.instance.$store.state.synonymMatchesConflicts).toEqual([{"nrNumber": undefined,
+                "source": undefined, "text": "----INCREDIBLE NAME INC*"},
+                {"nrNumber": undefined, "source": undefined, "text": "----INCREDIBLE NAME*"},
+                {"nrNumber": undefined, "source": undefined, "text": "----INCREDIBLE*"},
+                {"nrNumber": "0793638", "source": "CORP", "text": "INCREDIBLE STEPS RECORDS, INC."}])
         })
 
-        it('resists no exact match', (done)=>{
-            data.apiSandbox.getStub.withArgs('/api/v1/exact-match?query='+encodeURIComponent('incredible name inc'), sinon.match.any).returns(
+        it('resists no synonym match', (done)=>{
+            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc', sinon.match.any).returns(
                 new Promise((resolve) => resolve({ data: {
                     names: []
                 } }))
@@ -109,8 +116,8 @@ describe('Exact-Match Conflicts', () => {
                 sessionStorage.setItem('AUTHORIZED', true)
                 router.push('/nameExamination')
                 setTimeout(()=>{
-                    expect(data.vm.$el.querySelector('#conflict-list option:nth-child(1)').textContent.trim()).toEqual('< no exact match >')
-                    expect(data.vm.$el.querySelector('#conflict-list option:nth-child(2)').textContent.trim()).toEqual('***')
+                    expect(data.vm.$el.querySelector('#conflict-list option:nth-child(3)').textContent.trim()).toEqual('< no synonym match >')
+                    expect(data.vm.$el.querySelector('#conflict-list option:nth-child(4)').textContent.trim()).toEqual('***')
                     done();
                 }, 1000)
             }, 1000)
@@ -133,7 +140,14 @@ describe('Exact-Match Conflicts', () => {
         })
 
         it('defaults to green', (done)=>{
-            data.apiSandbox.getStub.withArgs('/api/v1/exact-match?query='+encodeURIComponent('incredible name inc'), sinon.match.any).returns(
+            data.apiSandbox.postStub.withArgs('/api/v1/documents:conflicts', sinon.match.any).returns(
+                new Promise((resolve) => resolve({ data: {
+                    setConflicts: {},
+                    names: [],
+                    response: {}
+                } }))
+            )
+            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc', sinon.match.any).returns(
                 new Promise((resolve) => resolve({ data: {
                     names: []
                 } }))

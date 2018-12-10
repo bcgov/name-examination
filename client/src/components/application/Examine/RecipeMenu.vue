@@ -60,8 +60,8 @@ export default {
     hasExactMatchesInfo() {
       return this.$store.getters.hasExactMatches;
     },
-    conflictsInfo() {
-      return this.$store.getters.conflictsJSON;
+    synonymMatchesInfo() {
+      return this.$store.getters.synonymMatchesConflicts;
     },
     conditionInfo() {
       return this.$store.getters.conditionsJSON;
@@ -77,20 +77,19 @@ export default {
     clickRecipeCard(recipeCard) {
       this.currentRecipeCard = recipeCard
     },
+    hasSynConflicts() {
+      let synMatchesList = this.synonymMatchesInfo;
+      for (let i=0; i<synMatchesList.length; i++) {
+        if (synMatchesList[i].source != undefined)
+          return true;
+      }
+      return false;
+    },
     setConflicts() {
-        var hasConflicts = this.hasExactMatchesInfo;
-        if (!hasConflicts) {
-            hasConflicts =
-                this.conflictsInfo !== null
-                && this.conflictsInfo != undefined
-                && this.conflictsInfo.names.length > 0
-        }
-        if (hasConflicts) {
-            this.setFail('Conflict')
-        }
-        else {
-            this.setPass('Conflict')
-        }
+      if (this.hasExactMatchesInfo || this.hasSynConflicts())
+        this.setFail('Conflict');
+      else
+        this.setPass('Conflict');
     },
     setConditions() {
       // if no restricted words -> call setPass
@@ -195,7 +194,7 @@ export default {
     }
   },
   watch: {
-    conflictsInfo: function (val) {
+    synonymMatchesInfo: function (val) {
       // set severity flag on recipe menu
       this.setConflicts();
     },

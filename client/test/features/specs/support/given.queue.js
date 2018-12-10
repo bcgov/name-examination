@@ -30,7 +30,7 @@ let givenQueue = (given, data)=>{
                     })
                 })
             )
-            data.apiSandbox.getStub.withArgs('/api/v1/exact-match?query='+data.name(data.queueIndex), sinon.match.any).returns(
+            data.apiSandbox.getStub.withArgs('/api/v1/exact-match?query='+encodeURIComponent(data.name(data.queueIndex)), sinon.match.any).returns(
                 new Promise((resolve) => {
                     resolve({
                         data: {
@@ -42,6 +42,15 @@ let givenQueue = (given, data)=>{
                             applicants: '',
                             nwpta: [],
                             userId: options.user
+                        }
+                    })
+                })
+            )
+            data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/' + data.name(data.queueIndex).replace('&',' '), sinon.match.any).returns(
+                new Promise((resolve) => {
+                    resolve({
+                        data: {
+                            names:[]
                         }
                     })
                 })

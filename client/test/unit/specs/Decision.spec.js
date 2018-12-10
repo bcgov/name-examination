@@ -237,6 +237,53 @@ describe('Decision.vue', () => {
 
   });
 
+  describe('When there are possible conflicts dropdown', () => {
+    beforeEach(() => {
+
+      instance.$store.state.exactMatchesConflicts = [
+        {
+          text:'conflict1',
+          nrNumber:'NR1111',
+          source:'CORP'
+        }
+      ];
+      instance.$store.state.synonymMatchesConflicts = [
+        {
+          text: 'conflict2',
+          nrNumber: 'NR2222',
+          source: 'CORP'
+        }
+      ];
+
+      vm = instance.$mount();
+      setTimeout(()=>{
+        done();
+      }, 100)
+
+    });
+
+    it('displays the conflicts in exactMatch and synonymMatch in the dropdown', () => {
+      expect(instance.conflictList).toEqual(
+        [
+          {
+            text:'conflict1',
+            nrNumber:'NR1111',
+            source:'CORP'
+          },
+          {
+            text: 'conflict2',
+            nrNumber: 'NR2222',
+            source: 'CORP'
+          }
+        ]
+      );
+
+      expect(vm.$el.querySelector('div.multiselect:nth-child(2) div.multiselect__content-wrapper ul li:nth-child(1)').textContent).toEqual('conflict1 - NR1111 ');
+      expect(vm.$el.querySelector('div.multiselect:nth-child(2) div.multiselect__content-wrapper ul li:nth-child(2)').textContent).toEqual('conflict2 - NR2222 ');
+    });
+
+  });
+
 });
 
 

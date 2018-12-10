@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import sinon from 'sinon';
 import axios from '@/axios-auth.js';
 
@@ -12,13 +13,13 @@ module.exports = {
         sandbox.getStub.withArgs('/api/v1/requests/decisionreasons', sinon.match.any).returns(
             new Promise((resolve) => resolve({ data: [] }))
         )
-        sandbox.postStub.withArgs('/api/v1/documents:conflicts', sinon.match.any).returns(
-            new Promise((resolve) => resolve({ data: {
-                setConflicts: {},
-                names: [],
-                response: {}
-            } }))
-        )
+        // sandbox.postStub.withArgs('/api/v1/documents:conflicts', sinon.match.any).returns(
+        //     new Promise((resolve) => resolve({ data: {
+        //         setConflicts: {},
+        //         names: [],
+        //         response: {}
+        //     } }))
+        // )
         sandbox.postStub.withArgs('/api/v1/documents:trademarks', sinon.match.any).returns(
             new Promise((resolve) => resolve({ data: {
                 names: []
