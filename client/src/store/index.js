@@ -798,7 +798,8 @@ export default new Vuex.Store({
         state.phoneticMatchesConflicts.push({
           text:entry.name,
           nrNumber:entry.id,
-          source:entry.source
+          source:entry.source,
+          class: 'conflict-result conflict-phonetic-match'
         })
       }
     },
