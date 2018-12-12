@@ -5,8 +5,10 @@
       <div class="row conflict-list-view">
         <select id="conflict-list" v-if="conflictData.length > 0"  v-model="selectedConflict" class="form-control" size="17" border="0"
                 @click="check_deselect" tabindex="2">
-          <option v-for="(option, index) in conflictData" :key="option.value"
-            v-bind:value="{nrNumber: option.nrNumber, text: option.text, source: option.source, index: index}">
+          <option v-for="(option, index) in conflictData" :key="option.value" :class="option.class"
+            v-bind:value="{nrNumber: option.nrNumber, text: option.text, source: option.source, index: index}"
+            v-bind:disabled="!option.source"
+          >
             {{ option.text }}
           </option>
 
@@ -30,16 +32,28 @@
     },
     computed: {
       conflictData() {
-        var data = [{ text:'< no exact match >' }];
+
+        var data = [];
+
+        // add Exact Match header
+        data = data.concat([{ text: 'Exact Match', class: 'exact-match-title'}]);
+
+        // add Exact Match data
         if (this.$store.getters.exactMatchesConflicts && this.$store.getters.exactMatchesConflicts.length > 0) {
-          data = this.$store.getters.exactMatchesConflicts;
+          data = data.concat(this.$store.getters.exactMatchesConflicts);
         }
-        data = data.concat([{ text:'***' }]);
+        else {
+          data = data.concat([{ text:'No Exact Match', class: 'conflict-no-match' }]);
+        }
+
+        // add Synonym Match header
+        data = data.concat([{ text: 'Exact Word Order + Synonym Match', class: 'synonym-match-title'}]);
+
+        // add Synonym Match data
         if (this.$store.getters.synonymMatchesConflicts && this.$store.getters.synonymMatchesConflicts.length)
           data = data.concat(this.$store.getters.synonymMatchesConflicts);
         else
-          data = data.concat([{ text:'< no synonym match >' }]);
-        data = data.concat([{ text:'***' }]);
+          data = data.concat([{ text:'No Match', class: 'conflict-no-match' }]);
         return data;
       },
     },
@@ -57,13 +71,16 @@
           this.$store.dispatch('getConflictInfo', this.selectedConflict);
       },
       setSelectedConflict() {
-        if (this.$store.getters.currentConflict == null && this.conflictData && this.conflictData.length > 0)
+        if (this.$store.getters.currentConflict == null && this.conflictData &&
+          this.conflictData.length > 1 && this.conflictData[1].source
+        ) {
           this.selectedConflict = {
-              index:0,
-              text:this.conflictData[0].text,
-              source:this.conflictData[0].source,
-              nrNumber:this.conflictData[0].nrNumber
+              index:1,
+              text:this.conflictData[1].text,
+              source:this.conflictData[1].source,
+              nrNumber:this.conflictData[1].nrNumber
           }
+        }
         else if (this.$store.getters.currentConflict != null)
           this.selectedConflict = this.$store.getters.currentConflict;
       }
@@ -101,8 +118,55 @@
     height: 100%;
   }
 
-  .conflict-list-view option {
+  .exact-match-title, .synonym-match-title {
+    background-color: #dedede;
+    font-weight: bold;
+    padding: 8px 5px;
+    color: black;
+  }
+  .synonym-match-title {
+    margin-top: 10px;
+  }
+
+  .conflict-synonym-title {
     padding: 5px;
+    margin-top: 5px;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: black;
+  }
+
+  .conflict-result, .conflict-no-match {
+    padding: 5px;
+    padding-left: 40px;
+  }
+
+  .conflict-no-match {
+    color: #CCC;
+  }
+
+  .conflict-result {
+    color: #3979bd;
+  }
+
+  .conflict-exact-match {
+    color: red;
+    font-weight: bold;
+  }
+
+  /* when selected, highlight synonym matches in blue */
+  #conflict-list option.conflict-result:checked {
+    background: #b3d9ff linear-gradient(0deg, #b3d9ff 0%, #b3d9ff 100%);
+  }
+  #conflict-list:focus option.conflict-result:checked {
+    background: #3979bd linear-gradient(0deg, #3979bd 0%, #3979bd 100%);
+  }
+  /* when selected, highlight exact match in red */
+  #conflict-list option.conflict-exact-match:checked {
+    background: #ff9999 linear-gradient(0deg, #ff9999 0%, #ff9999 100%);
+  }
+  #conflict-list:focus option.conflict-exact-match:checked {
+    background: red linear-gradient(0deg, red 0%, red 100%);
   }
 
   h3, h2 {
