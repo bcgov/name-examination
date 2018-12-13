@@ -1317,7 +1317,6 @@ export default new Vuex.Store({
     checkManualExactMatches( {commit, state}, query ) {
 
       console.log('action: getting exact matches for number: ' + state.compInfo.nrNumber + ' from solr')
-      console.log('query: ********', query)
       query = query.replace(' \/','\/')
           .replace(/\(/g, '')
           .replace(/\)/g, '')
@@ -1326,8 +1325,7 @@ export default new Vuex.Store({
           .replace(/}/g, '')
           .replace(/{/g, '')
           .replace(/(^|\s+)(\$+(\s|$)+)+/g, '$1dollar$3')
-        console.log('query2 ******', query)
-          query = query.replace(/(^|\s+)(¢+(\s|$)+)+/g, '$1cent$3')
+          .replace(/(^|\s+)(¢+(\s|$)+)+/g, '$1cent$3')
           .replace(/\$/g, 's')
           .replace(/¢/g, 'c')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
