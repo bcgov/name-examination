@@ -1317,6 +1317,7 @@ export default new Vuex.Store({
     checkManualExactMatches( {commit, state}, query ) {
 
       console.log('action: getting exact matches for number: ' + state.compInfo.nrNumber + ' from solr')
+      console.log('query: ********', query)
       query = query.replace(' \/','\/')
           .replace(/\(/g, '')
           .replace(/\)/g, '')
@@ -1324,10 +1325,11 @@ export default new Vuex.Store({
           .replace(/\[/g, '')
           .replace(/}/g, '')
           .replace(/{/g, '')
-          .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
-          .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
-          .replace(/\$/g, 'S')
-          .replace(/¢/g,'C')
+          .replace(/(^|\s+)(\$+(\s|$)+)+/g, '$1dollar$3')
+        console.log('query2 ******', query)
+          query = query.replace(/(^|\s+)(¢+(\s|$)+)+/g, '$1cent$3')
+          .replace(/\$/g, 's')
+          .replace(/¢/g, 'c')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       query = query.substring(0, 1) == '+' ? query.substring(1) : query;
       query = encodeURIComponent(query)
@@ -1359,10 +1361,10 @@ export default new Vuex.Store({
           .replace(/\?/g,'')
           .replace(/#/g,'')
           .replace(/%/g, '')
-          .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
-          .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
-          .replace(/\$/g, 'S')
-          .replace(/¢/g,'C')
+          .replace(/(^| )(\$+(\s|$)+)+/g, '$1dollar$3')
+          .replace(/(^| )(¢+(\s|$)+)+/g, '$1cent$3')
+          .replace(/\$/g, 's')
+          .replace(/¢/g,'c')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
       const url = '/api/v1/requests/synonymbucket/' + query;
       console.log('URL:' + url);

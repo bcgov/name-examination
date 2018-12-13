@@ -47,6 +47,12 @@ describe('store > checkManualSynonymMatches', () => {
         expect(SynonymMatch.lastCall.args[0]).toEqual('/api/v1/requests/synonymbucket/dog cat  fish   bear')
     })
 
+    it('replaces $ and ¢ with a dollar and cent, or s and c', ()=>{
+        store.dispatch('checkManualSynonymMatches', 'big $ $tore ¢ a¢¢eptable ')
+
+        expect(SynonymMatch.lastCall.args[0]).toEqual('/api/v1/requests/synonymbucket/big dollar store cent acceptable ')
+    })
+
     it('removes brackets', ()=>{
         store.dispatch('checkManualSynonymMatches', 'dog (cat) {fish} [bear]')
 

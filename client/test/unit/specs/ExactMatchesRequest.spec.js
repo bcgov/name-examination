@@ -33,4 +33,10 @@ describe('store > checkManualExactMatches', () => {
         expect(exactMatch.lastCall.args[0]).toEqual('/api/v1/exact-match?query=dog%26cat')
     })
 
+    it('changes the money symbols', ()=>{
+        store.dispatch('checkManualExactMatches', 'my $ $tore ¢ a¢¢ept ')
+
+        expect(exactMatch.lastCall.args[0]).toEqual('/api/v1/exact-match?query=my%20dollar%20store%20cent%20accept%20')
+    })
+
 })
