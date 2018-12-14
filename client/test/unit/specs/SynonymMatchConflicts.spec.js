@@ -87,19 +87,23 @@ describe('Synonym-Match Conflicts', () => {
         })
 
         it('displays synonym-match conflicts after exact match list', ()=>{
-            expect(data.vm.$el.querySelector('#conflict-list option:nth-child(2)').textContent.trim()).toEqual('***')
-            expect(data.vm.$el.querySelector('#conflict-list option:nth-child(3)').textContent.trim()).toEqual('----INCREDIBLE NAME INC*');
-            expect(data.vm.$el.querySelector('#conflict-list option:nth-child(4)').textContent.trim()).toEqual('----INCREDIBLE NAME*');
-            expect(data.vm.$el.querySelector('#conflict-list option:nth-child(5)').textContent.trim()).toEqual('----INCREDIBLE*');
-            expect(data.vm.$el.querySelector('#conflict-list option:nth-child(6)').textContent.trim()).toEqual('INCREDIBLE STEPS RECORDS, INC.');
+            expect(data.vm.$el.querySelector('#conflict-list option:nth-child(3)').textContent.trim()).toContain('Synonym Match')
+            expect(data.vm.$el.querySelector('#conflict-list option:nth-child(4)').textContent.trim()).toEqual('INCREDIBLE NAME INC*');
+            expect(data.vm.$el.querySelector('#conflict-list option:nth-child(5)').textContent.trim()).toEqual('No Match');
+            expect(data.vm.$el.querySelector('#conflict-list option:nth-child(6)').textContent.trim()).toEqual('INCREDIBLE NAME*');
+            expect(data.vm.$el.querySelector('#conflict-list option:nth-child(7)').textContent.trim()).toEqual('No Match');
+            expect(data.vm.$el.querySelector('#conflict-list option:nth-child(8)').textContent.trim()).toEqual('INCREDIBLE*');
+            expect(data.vm.$el.querySelector('#conflict-list option:nth-child(9)').textContent.trim()).toEqual('INCREDIBLE STEPS RECORDS, INC.');
         })
 
         it('populates additional attributes as expected', ()=>{
-            expect(data.instance.$store.state.synonymMatchesConflicts).toEqual([{"nrNumber": undefined,
-                "source": undefined, "text": "----INCREDIBLE NAME INC*"},
-                {"nrNumber": undefined, "source": undefined, "text": "----INCREDIBLE NAME*"},
-                {"nrNumber": undefined, "source": undefined, "text": "----INCREDIBLE*"},
-                {"nrNumber": "0793638", "source": "CORP", "text": "INCREDIBLE STEPS RECORDS, INC."}])
+            expect(data.instance.$store.state.synonymMatchesConflicts).toEqual([
+                {"class": "conflict-synonym-title", "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE NAME INC*"},
+                {"class": "conflict-no-match", "source": null, "text": "No Match"},
+                {"class": "conflict-synonym-title", "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE NAME*"},
+                {"class": "conflict-no-match", "source": null, "text": "No Match"},
+                {"class": "conflict-synonym-title", "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE*"},
+                {"class": "conflict-result", "nrNumber": "0793638", "source": "CORP", "text": "INCREDIBLE STEPS RECORDS, INC."}])
         })
 
         it('resists no synonym match', (done)=>{
@@ -116,8 +120,7 @@ describe('Synonym-Match Conflicts', () => {
                 sessionStorage.setItem('AUTHORIZED', true)
                 router.push('/nameExamination')
                 setTimeout(()=>{
-                    expect(data.vm.$el.querySelector('#conflict-list option:nth-child(3)').textContent.trim()).toEqual('< no synonym match >')
-                    expect(data.vm.$el.querySelector('#conflict-list option:nth-child(4)').textContent.trim()).toEqual('***')
+                    expect(data.vm.$el.querySelector('#conflict-list option:nth-child(4)').textContent.trim()).toEqual('No Match')
                     done();
                 }, 1000)
             }, 1000)
