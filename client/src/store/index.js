@@ -792,7 +792,7 @@ export default new Vuex.Store({
     setSynonymMatchesConflicts(state, json) {
       state.synonymMatchesConflicts = [];
       let names = json.names;
-      var additionalRow = null;
+      let additionalRow = null;
 
       for (let i=0; i<names.length; i++) {
         let entry = names[i];
