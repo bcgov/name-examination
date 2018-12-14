@@ -36,7 +36,7 @@ describe('store > checkManualExactMatches', () => {
     it('changes the money symbols', ()=>{
         store.dispatch('checkManualExactMatches', 'my $ $tore ¢ a¢¢ept ')
 
-        expect(exactMatch.lastCall.args[0]).toEqual('/api/v1/exact-match?query=my%20dollar%20store%20cent%20accept%20')
+        expect(exactMatch.lastCall.args[0]).toEqual('/api/v1/exact-match?query=my%20DOLLAR%20Store%20CENT%20aCCept%20')
     })
 
 })

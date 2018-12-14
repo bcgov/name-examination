@@ -50,7 +50,7 @@ describe('store > checkManualSynonymMatches', () => {
     it('replaces $ and ¢ with a dollar and cent, or s and c', ()=>{
         store.dispatch('checkManualSynonymMatches', 'big $ $tore ¢ a¢¢eptable ')
 
-        expect(SynonymMatch.lastCall.args[0]).toEqual('/api/v1/requests/synonymbucket/big dollar store cent acceptable ')
+        expect(SynonymMatch.lastCall.args[0]).toEqual('/api/v1/requests/synonymbucket/big DOLLAR Store CENT aCCeptable ')
     })
 
     it('removes brackets', ()=>{

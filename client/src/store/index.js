@@ -1324,10 +1324,10 @@ export default new Vuex.Store({
           .replace(/\[/g, '')
           .replace(/}/g, '')
           .replace(/{/g, '')
-          .replace(/(^|\s+)(\$+(\s|$)+)+/g, '$1dollar$3')
-          .replace(/(^|\s+)(¢+(\s|$)+)+/g, '$1cent$3')
-          .replace(/\$/g, 's')
-          .replace(/¢/g, 'c')
+          .replace(/(^|\s+)(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+          .replace(/(^|\s+)(¢+(\s|$)+)+/g, '$1CENT$3')
+          .replace(/\$/g, 'S')
+          .replace(/¢/g, 'C')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       query = query.substring(0, 1) == '+' ? query.substring(1) : query;
       query = encodeURIComponent(query)
@@ -1359,10 +1359,10 @@ export default new Vuex.Store({
           .replace(/\?/g,'')
           .replace(/#/g,'')
           .replace(/%/g, '')
-          .replace(/(^| )(\$+(\s|$)+)+/g, '$1dollar$3')
-          .replace(/(^| )(¢+(\s|$)+)+/g, '$1cent$3')
-          .replace(/\$/g, 's')
-          .replace(/¢/g,'c')
+          .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+          .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+          .replace(/\$/g, 'S')
+          .replace(/¢/g,'C')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
       const url = '/api/v1/requests/synonymbucket/' + query;
       console.log('URL:' + url);
