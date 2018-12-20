@@ -820,6 +820,7 @@ export default new Vuex.Store({
       }
 	  var count = 0
 	  var stopCollapsing = false
+	  var collapseCount = 2
 	  for (let i=state.synonymMatchesConflicts.length-1; i>=0; i--){
 		  let entry = state.synonymMatchesConflicts[i]
 		  if (! stopCollapsing) {
@@ -830,7 +831,10 @@ export default new Vuex.Store({
 			  if (entry.class == 'conflict-synonym-title') {
 				  entry.count = count
 				  count = 0
-				  stopCollapsing = true
+				  collapseCount --
+				  if (collapseCount == 0) {
+					  stopCollapsing = true
+				  }
 				  if (entry.count > 0) {
 				  	entry.class = 'conflict-synonym-title collapsible collapsed'
 				  }

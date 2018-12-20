@@ -17,6 +17,9 @@ describe('ConflictList.vue synonym matches expand/collapse', () => {
 			{ name:'second title - meta2' },
 			{ name:'second match #1', source:'CORP' },
 			{ name:'second match #2', source:'CORP' },
+			{ name:'third title - meta3' },
+			{ name:'third match #1', source:'CORP' },
+			{ name:'third match #2', source:'CORP' },
 		] })
 		data = vm.$store.getters.synonymMatchesConflicts
 	})
