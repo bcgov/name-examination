@@ -87,7 +87,7 @@ describe('Exact-Match Conflicts', () => {
         })
 
         it('displays exact-match conflicts first (after title)', ()=>{
-            expect(data.vm.$el.querySelector('#conflict-list option:nth-child(2)').textContent.trim()).toEqual('Incredible Name LTD')
+            expect(data.vm.$el.querySelector('#conflict-list div:nth-child(2)').textContent.trim()).toEqual('Incredible Name LTD')
         })
 
         it('populates additional attributes as expected', ()=>{
@@ -108,7 +108,7 @@ describe('Exact-Match Conflicts', () => {
                 sessionStorage.setItem('AUTHORIZED', true)
                 router.push('/nameExamination')
                 setTimeout(()=>{
-                    expect(data.vm.$el.querySelector('#conflict-list option:nth-child(2)').textContent.trim()).toEqual('No Exact Match')
+                    expect(data.vm.$el.querySelector('#conflict-list div:nth-child(2)').textContent.trim()).toEqual('No Exact Match')
                     done();
                 }, 1000)
             }, 1000)
