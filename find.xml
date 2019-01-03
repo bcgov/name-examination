@@ -1,7 +1,7 @@
 <application>
   <component name="FindSettings">
-    <option name="customScope" value="Project 'api'" />
-    <option name="defaultScopeName" value="Project 'api'" />
-    <option name="SEARCH_SCOPE" value="Project 'api'" />
+    <option name="customScope" value="File '...\tests\seeds.py [nro-legacy]'" />
+    <option name="defaultScopeName" value="File '...\tests\seeds.py [nro-legacy]'" />
+    <option name="SEARCH_SCOPE" value="File '...\tests\seeds.py [nro-legacy]'" />
   </component>
 </application>
