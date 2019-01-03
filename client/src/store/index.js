@@ -792,40 +792,68 @@ export default new Vuex.Store({
     setSynonymMatchesConflicts(state, json) {
       state.synonymMatchesConflicts = [];
       let names = json.names;
-      var additionalRow = null;
+      let additionalRow = null;
 
       for (let i=0; i<names.length; i++) {
         let entry = names[i];
         additionalRow = null;
 
-        // is this a synonym header? if so adjust and add class
         if (entry.source == null) {
           entry.name = entry.name.replace('----', '');
           entry.name = entry.name.replace('synonyms:', '');
+		  entry.meta = entry.name.substring(entry.name.lastIndexOf('-')+1).trim()
+		  entry.name = entry.name.substring(0, entry.name.lastIndexOf('-')).trim()
           entry.class = 'conflict-synonym-title';
-
-          // if the next element is not a match, add a no results record
-          if (names[i+1].source == null) {
-            additionalRow = {
-              text: 'No Match',
-              source: null,
-              class: 'conflict-no-match',
-            }
-          }
         }
         else {
           entry.class = 'conflict-result';
         }
 
         state.synonymMatchesConflicts.push({
+		  count:0,
           text:entry.name,
+		  meta:entry.meta,
           nrNumber:entry.id,
           source:entry.source,
           class: entry.class,
         });
-
-        if (additionalRow) state.synonymMatchesConflicts.push(additionalRow);
       }
+	  var count = 0
+	  var stopCollapsing = false
+	  var collapseCount = 2
+	  for (let i=state.synonymMatchesConflicts.length-1; i>=0; i--){
+		  let entry = state.synonymMatchesConflicts[i]
+		  if (! stopCollapsing) {
+			  if (entry.class == 'conflict-result') {
+				  entry.class = 'conflict-result conflict-result-hidden'
+				  count ++
+			  }
+			  if (entry.class == 'conflict-synonym-title') {
+				  entry.count = count
+				  count = 0
+				  collapseCount --
+				  if (collapseCount == 0) {
+					  stopCollapsing = true
+				  }
+				  if (entry.count > 0) {
+				  	entry.class = 'conflict-synonym-title collapsible collapsed'
+				  }
+			  }
+		  }
+		  else {
+			  if (entry.class == 'conflict-result') {
+				  entry.class = 'conflict-result conflict-result-displayed'
+				  count ++
+			  }
+			  if (entry.class == 'conflict-synonym-title') {
+				  entry.count = count
+				  count = 0
+				  if (entry.count > 0) {
+				  	entry.class = 'conflict-synonym-title collapsible expanded'
+				  }
+			  }
+		  }
+	  }
     },
 
     currentConflict(state,value){
@@ -1324,6 +1352,10 @@ export default new Vuex.Store({
           .replace(/\[/g, '')
           .replace(/}/g, '')
           .replace(/{/g, '')
+          .replace(/(^|\s+)(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+          .replace(/(^|\s+)(¢+(\s|$)+)+/g, '$1CENT$3')
+          .replace(/\$/g, 'S')
+          .replace(/¢/g, 'C')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       query = query.substring(0, 1) == '+' ? query.substring(1) : query;
       query = encodeURIComponent(query)
@@ -1355,6 +1387,10 @@ export default new Vuex.Store({
           .replace(/\?/g,'')
           .replace(/#/g,'')
           .replace(/%/g, '')
+          .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+          .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+          .replace(/\$/g, 'S')
+          .replace(/¢/g,'C')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
       const url = '/api/v1/requests/synonymbucket/' + query;
       console.log('URL:' + url);
