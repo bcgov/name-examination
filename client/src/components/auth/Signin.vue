@@ -12,9 +12,14 @@
           userName: ''
         }
     },
+
     mounted() {
-      var authorized = sessionStorage.getItem("AUTHORIZED");
-      var keycloak
+      let authorized = sessionStorage.getItem("AUTHORIZED");
+      let keycloak;
+      const EXAMINER = 'names_approver';
+      const STAFF = 'names_editor';
+      const VIEWER = 'names_viewer';
+      const ALLOWED_ROLES = [EXAMINER, STAFF, VIEWER]
 
       if (!authorized) {
         //keycloak = Keycloak('static/keycloak/sbcKey.json');
@@ -23,6 +28,7 @@
 
         var token
         const vm = this
+        console.log("MOUNTED THIS", this)
 
         keycloak.init({token: token, onLoad: 'login-required'}).success(function (authenticated) {
           if (authenticated) {
@@ -30,28 +36,31 @@
 
             sessionStorage.setItem('KEYCLOAK_TOKEN', keycloak.token);
             sessionStorage.setItem('KEYCLOAK_REFRESH', keycloak.refreshToken);
-            localStorage.setItem('KEYCLOAK_EXPIRES', keycloak.tokenParsed.exp * 1000);
-            localStorage.setItem('USER_ROLE',keycloak.tokenParsed.user_role)
-            if(keycloak.tokenParsed.user_role == undefined){
+            sessionStorage.setItem('KEYCLOAK_EXPIRES', keycloak.tokenParsed.exp * 1000);
+            let roles = keycloak.realmAccess.roles.filter(role => ALLOWED_ROLES.includes(role));
+            sessionStorage.setItem('USER_ROLES', roles);
+
+            if(!roles || roles.length === 0) {
+              console.log('********** DANGER, WILL ROBINSON, DANGER! logging out... because user has a token but no ROLE!')
               sessionStorage.setItem("AUTHORIZED", false);
-            }else {
+            } else {
+              console.log('Authorized role(s) for user!');
               sessionStorage.setItem("AUTHORIZED", true);
-            }
-            //TODO-erase this once rolls creaated
-            sessionStorage.setItem("AUTHORIZED", true);
+
 
             // Get user profile
             keycloak.loadUserProfile().success(function (userProfile) {
               app.userName = userProfile.username;
-              localStorage.setItem('USERNAME', app.userName);
+              sessionStorage.setItem('USERNAME', app.userName);
 
-              console.log('set logion values in store')
+              console.log('set login values');
               vm.$store.commit('setLoginValues')
 
-            });
+              });
 
-            // everthing is good, re-direct to home page
-            vm.$router.push("/home")
+              // everthing is good, re-direct to home page
+              vm.$router.push("/home")
+            }
 
           } else {
             alert('not authenticated');
