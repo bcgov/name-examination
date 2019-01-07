@@ -13,7 +13,7 @@ export default new Vuex.Store({
 
     myKeycloak: null,
     userId: null,
-    user_role: null,
+    user_roles: null,
     authorized: false,
     email: null,
     errorJSON: null,
@@ -203,7 +203,6 @@ export default new Vuex.Store({
       state.compInfo.requestType = value;
     },
     is_my_current_nr (state, value) {
-      console.log('got to mutation with value ' + value);
       state.is_my_current_nr = value;
     },
     is_making_decision(state, value) {
@@ -875,8 +874,8 @@ export default new Vuex.Store({
     },
 
     setLoginValues(state){
-      state.userId=localStorage.getItem('USERNAME')
-      state.user_role=localStorage.getItem('USER_ROLE')
+      state.userId=sessionStorage.getItem('USERNAME')
+      state.user_roles=sessionStorage.getItem('USER_ROLES')
       state.authorized=sessionStorage.getItem('AUTHORIZED')
     },
 
@@ -893,9 +892,9 @@ export default new Vuex.Store({
       sessionStorage.removeItem('KEYCLOAK_REFRESH')
       sessionStorage.removeItem('KEYCLOAK_TOKEN')
       sessionStorage.removeItem('AUTHORIZED')
-      localStorage.removeItem('KEYCLOAK_EXPIRES')
-      localStorage.removeItem('USERNAME')
-      localStorage.removeItem('USER_ROLE')
+      sessionStorage.removeItem('KEYCLOAK_EXPIRES')
+      sessionStorage.removeItem('USERNAME')
+      sessionStorage.removeItem('USER_ROLES')
 
     },
 
@@ -920,9 +919,9 @@ export default new Vuex.Store({
     tryAutoLogin ({commit}) {
     },
 
-    checkToken({dispatch, state}){
+    checkToken({dispatch, state}) {
       // checks if keycloak object exists - if not then state is unstable, force logout
-      if(state.myKeycloak==null){
+      if (state.myKeycloak==null) {
         console.log('myKeycloak is null')
         //TODO - reset everything and force login???
         //should only be null when first logging on (async keycloak)- if it becomes null somehow should we force another login?
@@ -937,11 +936,11 @@ export default new Vuex.Store({
 
       console.log('Token expires in ' + expiresIn + 'seconds, updating')
 
-      if(expiresIn < 1700 && expiresIn > 0) {
+      if (expiresIn < 1700 && expiresIn > 0) {
         console.log('Updating Token')
         dispatch('updateToken')
 
-      }else if(expiresIn < 0) {
+      } else if(expiresIn < 0) {
         //TODO - reset everything and force login???
         console.log('Force Logout')
         dispatch('logout')
@@ -950,13 +949,13 @@ export default new Vuex.Store({
       }
     },
 
-    updateToken({commit, state}){
+    updateToken({commit, state}) {
       const vm = this;
       state.myKeycloak.updateToken(-1).success(function (refreshed) {
         if (refreshed) {
           sessionStorage.setItem('KEYCLOAK_TOKEN', state.myKeycloak.token);
           sessionStorage.setItem('KEYCLOAK_REFRESH', state.myKeycloak.refreshToken);
-          localStorage.setItem('KEYCLOAK_EXPIRES', state.myKeycloak.tokenParsed.exp * 1000);
+          sessionStorage.setItem('KEYCLOAK_EXPIRES', state.myKeycloak.tokenParsed.exp * 1000);
         } else {
           console.log('Token is still valid, not refreshed');
         }
