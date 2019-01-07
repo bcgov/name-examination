@@ -28,7 +28,6 @@
 
         var token
         const vm = this
-        console.log("MOUNTED THIS", this)
 
         keycloak.init({token: token, onLoad: 'login-required'}).success(function (authenticated) {
           if (authenticated) {
@@ -46,7 +45,6 @@
             } else {
               console.log('Authorized role(s) for user!');
               sessionStorage.setItem("AUTHORIZED", true);
-
 
             // Get user profile
             keycloak.loadUserProfile().success(function (userProfile) {
