@@ -47,12 +47,12 @@
               sessionStorage.setItem("AUTHORIZED", true);
 
             // Get user profile
-            keycloak.loadUserProfile().success(function (userProfile) {
-              app.userName = userProfile.username;
-              sessionStorage.setItem('USERNAME', app.userName);
+              keycloak.loadUserProfile().success(function (userProfile) {
+                app.userName = userProfile.username;
+                sessionStorage.setItem('USERNAME', app.userName);
 
-              console.log('set login values');
-              vm.$store.commit('setLoginValues')
+                console.log('set login values');
+                vm.$store.commit('setLoginValues')
 
               });
 
