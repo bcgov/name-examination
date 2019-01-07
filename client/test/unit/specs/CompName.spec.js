@@ -38,6 +38,9 @@ describe('CompName.vue', () => {
                 compName3: {choice: 3, name: null, state: 'NE'}
             };
 
+            // set current name
+            instance.$store.commit('currentNameObj', instance.$store.getters.compName2);
+
             vm = instance.$mount();
             setTimeout(()=>{
                 done();
@@ -129,5 +132,139 @@ describe('CompName.vue', () => {
         expect(vm.$el.querySelectorAll('.completed-decision-text')[0].innerHTML).toContain('Bad Dudes Name');
       })
     })
+
+    describe('Reset & Re-Open', ()=> {
+      let vm;
+
+      let click = function(id) {
+        let button = vm.$el.querySelector(id);
+        let window = button.ownerDocument.defaultView;
+        var click = new window.Event('click');
+        button.dispatchEvent(click);
+      };
+
+      beforeEach((done) => {
+
+        // stub out updateRequest action from index - we don't care what it does and it errors during testing
+        instance.$store._actions.updateRequest[0] = sinon.stub();
+
+        instance.$store.state.currentState = 'APPROVED';
+        instance.$store.state.compInfo.compNames = {
+          compName1:
+            {
+              choice: 1,
+              name: "Bad Name",
+              state: 'REJECTED',
+              decision_text: "Nope.",
+              conflict1: "Bada Boom Bad Name",
+              conflict1_num: 123,
+              conflict2: "Bad Dudes Name",
+              conflict2_num: 456,
+              conflict3: null,
+              conflict3_num: null,
+            },
+          compName2:
+            {
+              choice: 2,
+              name: "Good Name",
+              state: 'APPROVED',
+              comment: {
+                comment: 'My internal decision comment.',
+              },
+              decision_text: "Good work.",
+              conflict1: null,
+              conflict2: null,
+              conflict3: null,
+            },
+          compName3:
+            {
+              choice: 3,
+              name: "Whatever",
+              state: 'NE',
+              decision_text: null,
+              conflict1: null,
+              conflict2: null,
+              conflict3: null,
+            },
+        };
+        vm = instance.$mount();
+        setTimeout(() => {
+          done();
+        }, 100)
+      });
+
+      afterEach((done) => {
+        setTimeout(()=> {
+          done();
+        }, 100)
+      });
+
+      describe('Reset', ()=> {
+
+        beforeEach(() => {
+          instance.$store.state.furnished = "Y";
+        });
+
+        it('displays RESET button and not RE-OPEN button', () => {
+          expect(vm.$el.querySelector('#examine-reset-button')).not.toBeNull();
+          expect(vm.$el.querySelector('#examine-re-open-button')).toBeNull();
+        });
+
+
+        it('Resets NR status upon reset', () => {
+          click('#examine-reset-button');
+
+          setTimeout(() => {
+            expect(instance.$store.state.currentState).toEqual("INPROGRESS");
+          }, 10)
+        });
+
+        it('keeps decision data upon reset', () => {
+          click('#examine-reset-button');
+
+          setTimeout(() => {
+            expect(instance.$store.state.compInfo.compNames.compName1.state).toEqual("REJECTED");
+            expect(instance.$store.state.compInfo.compNames.compName1.decision_text).toEqual("Nope.");
+            expect(instance.$store.state.compInfo.compNames.compName1.conflict1).toEqual("Bada Boom Bad Name");
+            expect(instance.$store.state.compInfo.compNames.compName1.conflict1_num).toEqual(123);
+            expect(instance.$store.state.compInfo.compNames.compName2.comment.comment).toEqual("My internal decision comment.");
+          }, 10);
+        });
+
+      }); // end RESET
+
+      describe('Re-Open', ()=> {
+        beforeEach(() => {
+          instance.$store.state.furnished = "N";
+        });
+
+        it('displays RE-OPEN button and not RESET button', () => {
+          expect(vm.$el.querySelector('#examine-reset-button')).toBeNull();
+          expect(vm.$el.querySelector('#examine-re-open-button')).not.toBeNull();
+        });
+
+
+        it('Re-opens NR status upon button click', () => {
+          click('#examine-re-open-button');
+
+          setTimeout(() => {
+            expect(instance.$store.state.currentState).toEqual("INPROGRESS");
+          }, 10)
+        });
+
+        it('keeps decision data upon re-open', () => {
+          click('#examine-re-open-button');
+
+          setTimeout(() => {
+            expect(instance.$store.state.compInfo.compNames.compName1.state).toEqual("REJECTED");
+            expect(instance.$store.state.compInfo.compNames.compName1.decision_text).toEqual("Nope.");
+            expect(instance.$store.state.compInfo.compNames.compName1.conflict1).toEqual("Bada Boom Bad Name");
+            expect(instance.$store.state.compInfo.compNames.compName1.conflict1_num).toEqual(123);
+            expect(instance.$store.state.compInfo.compNames.compName2.comment.comment).toEqual("My internal decision comment.");
+          }, 10);
+        });
+
+      }); // end RE-OPEN
+    });
 
 });
