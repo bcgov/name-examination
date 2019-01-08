@@ -1720,7 +1720,6 @@ export default new Vuex.Store({
     },
     userHasEditRole(state) {
        let roles = state.user_roles;
-       console.log("USER ROLES::::: WHAT THE FUCK", roles)
        return roles.includes('names_approver') || roles.includes('names_editor')
     },
     userHasAproverRole(state) {
