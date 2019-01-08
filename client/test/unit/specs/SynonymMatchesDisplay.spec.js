@@ -25,15 +25,15 @@ describe('ConflictList.vue synonym matches expand/collapse', () => {
 	})
 
     it('is available', ()=>{
-        vm.expand_collapse({ text: 'second title'})
+      vm.expand_collapse({ text: 'second title'}, 'synonym')
 
-		expect(data[2].class).toEqual('conflict-synonym-title collapsible expanded')
-		expect(data[3].class).toEqual('conflict-result conflict-result-displayed')
-		expect(data[4].class).toEqual('conflict-result conflict-result-displayed')
+      expect(data[2].class).toEqual('conflict-synonym-title collapsible expanded')
+      expect(data[3].class).toEqual('conflict-result conflict-result-displayed')
+      expect(data[4].class).toEqual('conflict-result conflict-result-displayed')
     })
     it('toggles as expected', ()=>{
-		vm.expand_collapse({ text: 'second title'})
-		vm.expand_collapse({ text: 'second title'})
+		vm.expand_collapse({ text: 'second title'}, 'synonym')
+		vm.expand_collapse({ text: 'second title'}, 'synonym')
 
 		expect(data[2].class).toEqual('conflict-synonym-title collapsible collapsed')
 		expect(data[3].class).toEqual('conflict-result conflict-result-hidden')

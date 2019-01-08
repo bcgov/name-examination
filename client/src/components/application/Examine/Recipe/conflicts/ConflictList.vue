@@ -5,39 +5,81 @@
       <div class="row conflict-list-view">
         <div id="conflict-list" v-if="conflictData.length > 0"  class="form-control" size="17" border="0"
                 tabindex="2" style="overflow-y: scroll; max-height:480px">
-          <div v-for="(option, index) in conflictData" :key="option.value" :class="option.class"
-            @click="clic(option)"
-          >
-		  	<template v-if="option.class == 'conflict-synonym-title'">
-				<div style="float:left; max-width:80%">
-					<span class="conflict-title">{{ option.text }}</span>
-					<span class="conflict-meta"> - {{ option.meta }}</span>
-				</div>
-				<div style="text-align:right; display:block; width:auto">
-					{{ option.count }}
-					<i class="fa fa-chevron-down" style="background-color:white; color:white" />
-				</div>
-			</template>
-			<template v-else-if="option.class.indexOf('conflict-synonym-title collapsible')==0">
-				<div style="float:left; max-width:80%">
-					<span class="conflict-title">{{ option.text }}</span>
-					<span class="conflict-meta"> - {{ option.meta }}</span>
-				</div>
-				<div v-if="option.class.indexOf('collapsible collapsed') != -1" style="text-align:right; display:block; width:auto">
-					{{ option.count }}
-					<i class="fa fa-chevron-down"/>
-				</div>
-				<div v-else style="text-align:right; display:block; width:auto">
-					{{ option.count }}
-					<i class="fa fa-chevron-up"/>
-				</div>
-			</template>
-			<template v-else>
-				<div>{{ option.text }}</div>
-			</template>
-		</div>
+          <div v-for="(option, index) in conflictData" :key="option.value" :class="option.class" @click="clic(option)">
+            <template v-if="option.class == 'conflict-synonym-title'">
+              <div style="float:left; max-width:80%">
+                <span class="conflict-title">{{ option.text }}</span>
+                <span class="conflict-meta"> - {{ option.meta }}</span>
+              </div>
+              <div style="text-align:right; display:block; width:auto">
+                {{ option.count }}
+                <i class="fa fa-chevron-down" style="background-color:white; color:white" />
+              </div>
+            </template>
+            <template v-else-if="option.class.indexOf('conflict-synonym-title collapsible')==0">
+              <div style="float:left; max-width:80%">
+                <span class="conflict-title">{{ option.text }}</span>
+                <span class="conflict-meta"> - {{ option.meta }}</span>
+              </div>
+              <div v-if="option.class.indexOf('collapsible collapsed') != -1" style="text-align:right; display:block; width:auto">
+                {{ option.count }}
+                <i class="fa fa-chevron-down"/>
+              </div>
+              <div v-else style="text-align:right; display:block; width:auto">
+                {{ option.count }}
+                <i class="fa fa-chevron-up"/>
+              </div>
+            </template>
+            <template v-else-if="option.class == 'conflict-cobrs-phonetic-title'">
+              <div style="float:left; max-width:80%">
+                <span class="conflict-title">{{ option.text }}</span>
+              </div>
+              <div style="text-align:right; display:block; width:auto">
+                {{ option.count }}
+                <i class="fa fa-chevron-down" style="background-color:white; color:white" />
+              </div>
+            </template>
+            <template v-else-if="option.class.indexOf('conflict-cobrs-phonetic-title collapsible')==0">
+              <div style="float:left; max-width:80%">
+                <span class="conflict-title">{{ option.text }}</span>
+              </div>
+              <div v-if="option.class.indexOf('collapsible collapsed') != -1" style="text-align:right; display:block; width:auto">
+                {{ option.count }}
+                <i class="fa fa-chevron-down"/>
+              </div>
+              <div v-else style="text-align:right; display:block; width:auto">
+                {{ option.count }}
+                <i class="fa fa-chevron-up"/>
+              </div>
+            </template>
+            <template v-else-if="option.class == 'conflict-phonetic-title'">
+              <div style="float:left; max-width:80%">
+                <span class="conflict-title">{{ option.text }}</span>
+              </div>
+              <div style="text-align:right; display:block; width:auto">
+                {{ option.count }}
+                <i class="fa fa-chevron-down" style="background-color:white; color:white" />
+              </div>
+            </template>
+            <template v-else-if="option.class.indexOf('conflict-phonetic-title collapsible')==0">
+              <div style="float:left; max-width:80%">
+                <span class="conflict-title">{{ option.text }}</span>
+              </div>
+              <div v-if="option.class.indexOf('collapsible collapsed') != -1" style="text-align:right; display:block; width:auto">
+                {{ option.count }}
+                <i class="fa fa-chevron-down"/>
+              </div>
+              <div v-else style="text-align:right; display:block; width:auto">
+                {{ option.count }}
+                <i class="fa fa-chevron-up"/>
+              </div>
+            </template>
+            <template v-else>
+              <div>{{ option.text }}</div>
+            </template>
+		      </div>
 
-	</div>
+	      </div>
         <div v-else class="empty-list">( No data )</div>
 
       </div>
@@ -79,11 +121,25 @@
         // add Synonym Match data
         if (this.$store.getters.synonymMatchesConflicts && this.$store.getters.synonymMatchesConflicts.length) {
           data = data.concat(this.$store.getters.synonymMatchesConflicts);
-	  	}
+        }
+        // add cobrs phonetic match header
+        data = data.concat([{ text: 'Character Swap Match', class: 'cobrs-phonetic-match-title'}]);
+
+        // add cobrs phonetic data
+        if (this.$store.getters.cobrsPhoneticConflicts && this.$store.getters.cobrsPhoneticConflicts.length) {
+          data = data.concat(this.$store.getters.cobrsPhoneticConflicts);
+	  	  }
+        // add phonetic match header
+        data = data.concat([{ text: 'Phonetic Match (experimental)', class: 'phonetic-match-title'}]);
+
+        // add phonetic data
+        if (this.$store.getters.phoneticConflicts && this.$store.getters.phoneticConflicts.length) {
+          data = data.concat(this.$store.getters.phoneticConflicts);
+	  	  }
         else
           data = data.concat([{ text:'No Match', class: 'conflict-no-match' }]);
 
-		this.conflictEntries = data
+		    this.conflictEntries = data
 
         return data;
       },
@@ -96,7 +152,13 @@
     methods: {
 		clic(what) {
 			if (what.class.indexOf('conflict-synonym-title collapsible') == 0) {
-				this.expand_collapse(what)
+				this.expand_collapse(what, 'synonym')
+			}
+			if (what.class.indexOf('conflict-cobrs-phonetic-title collapsible') == 0) {
+				this.expand_collapse(what,'cobrsPhonetic')
+			}
+			if (what.class.indexOf('conflict-phonetic-title collapsible') == 0) {
+				this.expand_collapse(what,'phonetic')
 			}
 			if (what.class.indexOf('conflict-result') == 0) {
 				this.unselectPreviousSelection()
@@ -116,33 +178,80 @@
 				}
 			}
 		},
-		expand_collapse(what) {
+		expand_collapse(what, bucket) {
 			let toggleIt = false
-			for (let i=0; i<this.$store.getters.synonymMatchesConflicts.length; i++){
-				let entry = this.$store.getters.synonymMatchesConflicts[i]
-				if (entry.class.indexOf('conflict-synonym-title collapsible') == 0){
-					if (entry.text == what.text) {
-						toggleIt = true
-						if (entry.class == 'conflict-synonym-title collapsible collapsed') {
-							entry.class = 'conflict-synonym-title collapsible expanded'
-						}
-						else {
-							entry.class = 'conflict-synonym-title collapsible collapsed'
-						}
-					}
-					else {
-						toggleIt = false
-					}
-				}
-				if (entry.class.indexOf('conflict-result') != -1 && toggleIt) {
-					if (entry.class.indexOf('conflict-result-hidden') != -1) {
-						entry.class = entry.class.replace('conflict-result-hidden', 'conflict-result-displayed')
-					}
-					else {
-						entry.class = entry.class.replace('conflict-result-displayed', 'conflict-result-hidden')
-					}
-				}
-			}
+      if (bucket == 'synonym') {
+        for (let i = 0; i < this.$store.getters.synonymMatchesConflicts.length; i++) {
+          let entry = this.$store.getters.synonymMatchesConflicts[i]
+          if (entry.class.indexOf('conflict-synonym-title collapsible') == 0) {
+            if (entry.text == what.text) {
+              toggleIt = true
+              if (entry.class == 'conflict-synonym-title collapsible collapsed') {
+                entry.class = 'conflict-synonym-title collapsible expanded'
+              } else {
+                entry.class = 'conflict-synonym-title collapsible collapsed'
+              }
+            } else {
+              toggleIt = false
+            }
+          }
+          if (entry.class.indexOf('conflict-result') != -1 && toggleIt) {
+            if (entry.class.indexOf('conflict-result-hidden') != -1) {
+              entry.class = entry.class.replace('conflict-result-hidden', 'conflict-result-displayed')
+            } else {
+              entry.class = entry.class.replace('conflict-result-displayed', 'conflict-result-hidden')
+            }
+          }
+        }
+      }
+      if (bucket == 'cobrsPhonetic') {
+        for (let i = 0; i < this.$store.getters.cobrsPhoneticConflicts.length; i++) {
+          let entry = this.$store.getters.cobrsPhoneticConflicts[i]
+          if (entry.class.indexOf('conflict-cobrs-phonetic-title collapsible') == 0) {
+            if (entry.text == what.text) {
+              toggleIt = true
+              if (entry.class == 'conflict-cobrs-phonetic-title collapsible collapsed') {
+                entry.class = 'conflict-cobrs-phonetic-title collapsible expanded'
+              } else {
+                entry.class = 'conflict-cobrs-phonetic-title collapsible collapsed'
+              }
+            } else {
+              toggleIt = false
+            }
+          }
+          if (entry.class.indexOf('conflict-result') != -1 && toggleIt) {
+            if (entry.class.indexOf('conflict-result-hidden') != -1) {
+              entry.class = entry.class.replace('conflict-result-hidden', 'conflict-result-displayed')
+            } else {
+              entry.class = entry.class.replace('conflict-result-displayed', 'conflict-result-hidden')
+            }
+          }
+        }
+      }
+      if (bucket == 'phonetic') {
+        for (let i = 0; i < this.$store.getters.phoneticConflicts.length; i++) {
+          let entry = this.$store.getters.phoneticConflicts[i]
+          if (entry.class.indexOf('conflict-phonetic-title collapsible') == 0) {
+            if (entry.text == what.text) {
+              toggleIt = true
+              if (entry.class == 'conflict-phonetic-title collapsible collapsed') {
+                entry.class = 'conflict-phonetic-title collapsible expanded'
+              } else {
+                entry.class = 'conflict-phonetic-title collapsible collapsed'
+              }
+            } else {
+              toggleIt = false
+            }
+          }
+          if (entry.class.indexOf('conflict-result') != -1 && toggleIt) {
+            if (entry.class.indexOf('conflict-result-hidden') != -1) {
+              entry.class = entry.class.replace('conflict-result-hidden', 'conflict-result-displayed')
+            } else {
+              entry.class = entry.class.replace('conflict-result-displayed', 'conflict-result-hidden')
+            }
+          }
+        }
+      }
 		},
       check_deselect() {
         if (this.$store.getters.currentConflict === this.selectedConflict) {
@@ -203,7 +312,7 @@
     height: 100%;
   }
 
-  .exact-match-title, .synonym-match-title {
+  .exact-match-title, .synonym-match-title, .cobrs-phonetic-match-title, .phonetic-match-title {
     background-color: #dedede;
     font-weight: bold;
     padding: 8px 5px;
@@ -212,8 +321,28 @@
   .synonym-match-title {
     margin-top: 10px;
   }
+  .cobrs-phonetic-match-title {
+    margin-top: 10px;
+  }
+  .phonetic-match-title {
+    margin-top: 10px;
+  }
 
   .conflict-synonym-title {
+    padding: 5px;
+    margin-top: 5px;
+    text-transform: uppercase;
+    color: black;
+  }
+
+  .conflict-cobrs-phonetic-title {
+    padding: 5px;
+    margin-top: 5px;
+    text-transform: uppercase;
+    color: black;
+  }
+
+  .conflict-phonetic-title {
     padding: 5px;
     margin-top: 5px;
     text-transform: uppercase;
