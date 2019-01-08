@@ -176,6 +176,8 @@ export default new Vuex.Store({
 
     exactMatchesConflicts: [],
     synonymMatchesConflicts: [],
+    cobrsPhoneticConflicts: [],
+    phoneticConflicts: [],
     conflictList: [],
     conflictHighlighting: [],
     conflictNames: [],
@@ -818,42 +820,170 @@ export default new Vuex.Store({
           class: entry.class,
         });
       }
-	  var count = 0
-	  var stopCollapsing = false
-	  var collapseCount = 2
-	  for (let i=state.synonymMatchesConflicts.length-1; i>=0; i--){
-		  let entry = state.synonymMatchesConflicts[i]
-		  if (! stopCollapsing) {
-			  if (entry.class == 'conflict-result') {
-				  entry.class = 'conflict-result conflict-result-hidden'
-				  count ++
-			  }
-			  if (entry.class == 'conflict-synonym-title') {
-				  entry.count = count
-				  count = 0
-				  collapseCount --
-				  if (collapseCount == 0) {
-					  stopCollapsing = true
-				  }
-				  if (entry.count > 0) {
-				  	entry.class = 'conflict-synonym-title collapsible collapsed'
-				  }
-			  }
-		  }
-		  else {
-			  if (entry.class == 'conflict-result') {
-				  entry.class = 'conflict-result conflict-result-displayed'
-				  count ++
-			  }
-			  if (entry.class == 'conflict-synonym-title') {
-				  entry.count = count
-				  count = 0
-				  if (entry.count > 0) {
-				  	entry.class = 'conflict-synonym-title collapsible expanded'
-				  }
-			  }
-		  }
-	  }
+      var count = 0
+      var stopCollapsing = false
+      var collapseCount = 2
+      for (let i=state.synonymMatchesConflicts.length-1; i>=0; i--){
+        let entry = state.synonymMatchesConflicts[i]
+        if (! stopCollapsing) {
+          if (entry.class == 'conflict-result') {
+            entry.class = 'conflict-result conflict-result-hidden'
+            count ++
+          }
+          if (entry.class == 'conflict-synonym-title') {
+            entry.count = count
+            count = 0
+            collapseCount --
+            if (collapseCount == 0) {
+              stopCollapsing = true
+            }
+            if (entry.count > 0) {
+              entry.class = 'conflict-synonym-title collapsible collapsed'
+            }
+          }
+        }
+        else {
+          if (entry.class == 'conflict-result') {
+            entry.class = 'conflict-result conflict-result-displayed'
+            count ++
+          }
+          if (entry.class == 'conflict-synonym-title') {
+            entry.count = count
+            count = 0
+            if (entry.count > 0) {
+              entry.class = 'conflict-synonym-title collapsible expanded'
+            }
+          }
+        }
+      }
+    },
+
+    setCobrsPhoneticConflicts(state, json) {
+      state.cobrsPhoneticConflicts = [];
+      let names = json.names;
+      let additionalRow = null;
+
+      for (let i=0; i<names.length; i++) {
+        let entry = names[i];
+        additionalRow = null;
+
+        if (entry.source == null) {
+          entry.name = entry.name.replace('----', '');
+          entry.name = entry.name.replace('synonyms:', '');
+          entry.class = 'conflict-cobrs-phonetic-title';
+        }
+        else {
+          entry.class = 'conflict-result';
+        }
+
+        state.cobrsPhoneticConflicts.push({
+          count:0,
+          text:entry.name,
+          meta:entry.meta,
+          nrNumber:entry.id,
+          source:entry.source,
+          class: entry.class,
+        });
+      }
+      var count = 0
+      var stopCollapsing = false
+      var collapseCount = 2
+      for (let i=state.cobrsPhoneticConflicts.length-1; i>=0; i--){
+        let entry = state.cobrsPhoneticConflicts[i]
+        if (! stopCollapsing) {
+          if (entry.class == 'conflict-result') {
+            entry.class = 'conflict-result conflict-result-hidden'
+            count ++
+          }
+          if (entry.class == 'conflict-cobrs-phonetic-title') {
+            entry.count = count
+            count = 0
+            collapseCount --
+            if (collapseCount == 0) {
+              stopCollapsing = true
+            }
+            if (entry.count > 0) {
+              entry.class = 'conflict-cobrs-phonetic-title collapsible collapsed'
+            }
+          }
+        } else {
+          if (entry.class == 'conflict-result') {
+            entry.class = 'conflict-result conflict-result-displayed'
+            count ++
+          }
+          if (entry.class == 'conflict-cobrs-phonetic-title') {
+            entry.count = count
+            count = 0
+            if (entry.count > 0) {
+              entry.class = 'conflict-cobrs-phonetic-title collapsible expanded'
+            }
+          }
+        }
+      }
+    },
+
+    setPhoneticConflicts(state, json) {
+      state.phoneticConflicts = [];
+      let names = json.names;
+      let additionalRow = null;
+
+      for (let i=0; i<names.length; i++) {
+        let entry = names[i];
+        additionalRow = null;
+
+        if (entry.source == null) {
+          entry.name = entry.name.replace('----', '');
+          entry.name = entry.name.replace('synonyms:', '');
+          entry.class = 'conflict-phonetic-title';
+        }
+        else {
+          entry.class = 'conflict-result';
+        }
+
+        state.phoneticConflicts.push({
+          count:0,
+          text:entry.name,
+          meta:entry.meta,
+          nrNumber:entry.id,
+          source:entry.source,
+          class: entry.class,
+        });
+      }
+      var count = 0
+      var stopCollapsing = false
+      var collapseCount = 2
+      for (let i=state.phoneticConflicts.length-1; i>=0; i--){
+        let entry = state.phoneticConflicts[i]
+        if (! stopCollapsing) {
+          if (entry.class == 'conflict-result') {
+            entry.class = 'conflict-result conflict-result-hidden'
+            count ++
+          }
+          if (entry.class == 'conflict-phonetic-title') {
+            entry.count = count
+            count = 0
+            collapseCount --
+            if (collapseCount == 0) {
+              stopCollapsing = true
+            }
+            if (entry.count > 0) {
+              entry.class = 'conflict-phonetic-title collapsible collapsed'
+            }
+          }
+        } else {
+          if (entry.class == 'conflict-result') {
+            entry.class = 'conflict-result conflict-result-displayed'
+            count ++
+          }
+          if (entry.class == 'conflict-phonetic-title') {
+            entry.count = count
+            count = 0
+            if (entry.count > 0) {
+              entry.class = 'conflict-phonetic-title collapsible expanded'
+            }
+          }
+        }
+      }
     },
 
     currentConflict(state,value){
@@ -1335,6 +1465,8 @@ export default new Vuex.Store({
       if( state.currentChoice != null) {
         this.dispatch('checkManualExactMatches',searchStr)
         this.dispatch('checkManualSynonymMatches',searchStr)
+        this.dispatch('checkManualCobrsPhoneticMatches',searchStr)
+        this.dispatch('checkManualPhoneticMatches',searchStr)
         // this.dispatch('checkManualConflicts',searchStr)
         this.dispatch('checkManualTrademarks',searchStr)
         this.dispatch('checkManualConditions',searchStr)
@@ -1400,6 +1532,72 @@ export default new Vuex.Store({
         commit('setSynonymMatchesConflicts', response.data)
       })
         .catch(error => console.log('ERROR (synonym matches): ' + error))
+    },
+
+    checkManualCobrsPhoneticMatches( {dispatch,commit,state}, query ) {
+
+      console.log('action: getting CobrsPhonetic matches for number: ' + state.compInfo.nrNumber + ' from solr')
+      query = query.replace(/\//g,' ')
+          .replace(/\\/g,' ')
+          .replace(/&/g, ' ')
+          .replace(/\+/g, ' ')
+          .replace(/\-/g, ' ')
+          .replace(/\(/g, '')
+          .replace(/\)/g, '')
+          .replace(/}/g, '')
+          .replace(/{/g, '')
+          .replace(/]/g, '')
+          .replace(/\[/g, '')
+          .replace(/\?/g,'')
+          .replace(/#/g,'')
+          .replace(/%/g, '')
+          .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+          .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+          .replace(/\$/g, 'S')
+          .replace(/¢/g,'C')
+
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
+      const url = '/api/v1/requests/cobrsphonetics/' + query;
+      console.log('URL:' + url);
+      const vm = this;
+      dispatch('checkToken');
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        commit('setCobrsPhoneticConflicts', response.data)
+      })
+        .catch(error => console.log('ERROR (CobrsPhonetic matches): ' + error))
+    },
+
+    checkManualPhoneticMatches( {dispatch,commit,state}, query ) {
+
+      console.log('action: getting Phonetic matches for number: ' + state.compInfo.nrNumber + ' from solr')
+      query = query.replace(/\//g,' ')
+          .replace(/\\/g,' ')
+          .replace(/&/g, ' ')
+          .replace(/\+/g, ' ')
+          .replace(/\-/g, ' ')
+          .replace(/\(/g, '')
+          .replace(/\)/g, '')
+          .replace(/}/g, '')
+          .replace(/{/g, '')
+          .replace(/]/g, '')
+          .replace(/\[/g, '')
+          .replace(/\?/g,'')
+          .replace(/#/g,'')
+          .replace(/%/g, '')
+          .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+          .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+          .replace(/\$/g, 'S')
+          .replace(/¢/g,'C')
+
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
+      const url = '/api/v1/requests/phonetics/' + query;
+      console.log('URL:' + url);
+      const vm = this;
+      dispatch('checkToken');
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        commit('setPhoneticConflicts', response.data)
+      })
+        .catch(error => console.log('ERROR (Phonetic matches): ' + error))
     },
 
     // not used
@@ -1776,6 +1974,12 @@ export default new Vuex.Store({
     },
     synonymMatchesConflicts(state) {
       return state.synonymMatchesConflicts;
+    },
+    cobrsPhoneticConflicts(state) {
+      return state.cobrsPhoneticConflicts;
+    },
+    phoneticConflicts(state) {
+      return state.phoneticConflicts;
     },
     conflictList(state) {
       return state.conflictList

@@ -63,6 +63,12 @@ export default {
     synonymMatchesInfo() {
       return this.$store.getters.synonymMatchesConflicts;
     },
+    cobrsPhoneticConflicts() {
+      return this.$store.getters.cobrsPhoneticConflicts;
+    },
+    phoneticConflicts() {
+      return this.$store.getters.phoneticConflicts;
+    },
     conditionInfo() {
       return this.$store.getters.conditionsJSON;
     },
@@ -78,15 +84,31 @@ export default {
       this.currentRecipeCard = recipeCard
     },
     hasSynConflicts() {
-      let synMatchesList = this.synonymMatchesInfo;
-      for (let i=0; i<synMatchesList.length; i++) {
-        if (synMatchesList[i].source != undefined)
+      let matchesList = this.synonymMatchesInfo;
+      for (let i=0; i<matchesList.length; i++) {
+        if (matchesList[i].source != undefined)
+          return true;
+      }
+      return false;
+    },
+    hasCobrsPhonConflicts() {
+      let matchesList = this.cobrsPhoneticConflicts;
+      for (let i=0; i<matchesList.length; i++) {
+        if (matchesList[i].source != undefined)
+          return true;
+      }
+      return false;
+    },
+    hasPhonConflicts() {
+      let matchesList = this.phoneticConflicts;
+      for (let i=0; i<matchesList.length; i++) {
+        if (matchesList[i].source != undefined)
           return true;
       }
       return false;
     },
     setConflicts() {
-      if (this.hasExactMatchesInfo || this.hasSynConflicts())
+      if (this.hasExactMatchesInfo || this.hasSynConflicts() || this.hasCobrsPhonConflicts() || this.hasPhonConflicts())
         this.setFail('Conflict');
       else
         this.setPass('Conflict');
@@ -194,6 +216,14 @@ export default {
     }
   },
   watch: {
+    phoneticConflicts: function (val) {
+      // set severity flag on recipe menu
+      this.setConflicts();
+    },
+    cobrsPhoneticConflicts: function (val) {
+      // set severity flag on recipe menu
+      this.setConflicts();
+    },
     synonymMatchesInfo: function (val) {
       // set severity flag on recipe menu
       this.setConflicts();
