@@ -13,7 +13,7 @@ export default new Vuex.Store({
 
     myKeycloak: null,
     userId: null,
-    user_role: null,
+    user_roles: [],
     authorized: false,
     email: null,
     errorJSON: null,
@@ -34,7 +34,7 @@ export default new Vuex.Store({
     currentHistory: null,  //NR number of history name selected
 
     currentRecipeCard: null,
-    is_my_current_nr: null,
+    is_my_current_nr: false,
     is_editing: false,
     is_making_decision: false,
     decision_made: null,
@@ -1005,8 +1005,8 @@ export default new Vuex.Store({
     },
 
     setLoginValues(state){
-      state.userId=localStorage.getItem('USERNAME')
-      state.user_role=localStorage.getItem('USER_ROLE')
+      state.userId=sessionStorage.getItem('USERNAME')
+      state.user_roles=sessionStorage.getItem('USER_ROLES')
       state.authorized=sessionStorage.getItem('AUTHORIZED')
     },
 
@@ -1023,9 +1023,9 @@ export default new Vuex.Store({
       sessionStorage.removeItem('KEYCLOAK_REFRESH')
       sessionStorage.removeItem('KEYCLOAK_TOKEN')
       sessionStorage.removeItem('AUTHORIZED')
-      localStorage.removeItem('KEYCLOAK_EXPIRES')
-      localStorage.removeItem('USERNAME')
-      localStorage.removeItem('USER_ROLE')
+      sessionStorage.removeItem('KEYCLOAK_EXPIRES')
+      sessionStorage.removeItem('USERNAME')
+      sessionStorage.removeItem('USER_ROLES')
 
     },
 
@@ -1086,7 +1086,7 @@ export default new Vuex.Store({
         if (refreshed) {
           sessionStorage.setItem('KEYCLOAK_TOKEN', state.myKeycloak.token);
           sessionStorage.setItem('KEYCLOAK_REFRESH', state.myKeycloak.refreshToken);
-          localStorage.setItem('KEYCLOAK_EXPIRES', state.myKeycloak.tokenParsed.exp * 1000);
+          sessionStorage.setItem('KEYCLOAK_EXPIRES', state.myKeycloak.tokenParsed.exp * 1000);
         } else {
           console.log('Token is still valid, not refreshed');
         }
@@ -1717,6 +1717,15 @@ export default new Vuex.Store({
     },
     userId(state) {
       return state.userId;
+    },
+    userHasEditRole(state) {
+       let roles = state.user_roles;
+       console.log("USER ROLES::::: WHAT THE FUCK", roles)
+       return roles.includes('names_approver') || roles.includes('names_editor')
+    },
+    userHasAproverRole(state) {
+       let roles = state.user_roles;
+       return roles.includes('names_approver')
     },
     is_my_current_nr(state) {
       // set flag indicating whether you own this NR and it's in progress

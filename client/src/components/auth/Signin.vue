@@ -30,9 +30,9 @@
 
             sessionStorage.setItem('KEYCLOAK_TOKEN', keycloak.token);
             sessionStorage.setItem('KEYCLOAK_REFRESH', keycloak.refreshToken);
-            localStorage.setItem('KEYCLOAK_EXPIRES', keycloak.tokenParsed.exp * 1000);
-            localStorage.setItem('USER_ROLE',keycloak.tokenParsed.user_role)
-            if(keycloak.tokenParsed.user_role == undefined){
+            sessionStorage.setItem('KEYCLOAK_EXPIRES', keycloak.tokenParsed.exp * 1000);
+            sessionStorage.setItem('USER_ROLES',keycloak.tokenParsed.user_roles)
+            if(keycloak.tokenParsed.user_roles == undefined){
               sessionStorage.setItem("AUTHORIZED", false);
             }else {
               sessionStorage.setItem("AUTHORIZED", true);
@@ -43,7 +43,7 @@
             // Get user profile
             keycloak.loadUserProfile().success(function (userProfile) {
               app.userName = userProfile.username;
-              localStorage.setItem('USERNAME', app.userName);
+              sessionStorage.setItem('USERNAME', app.userName);
 
               console.log('set logion values in store')
               vm.$store.commit('setLoginValues')
