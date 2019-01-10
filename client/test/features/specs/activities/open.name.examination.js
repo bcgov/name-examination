@@ -8,15 +8,19 @@ import App from '@/App.vue';
 import store from '@/store'
 import router from '@/router'
 import { cleanState } from '../support/clean.state'
+import sinon from "sinon";
 
 let openNameExamination = (when, data)=>{
     when(/^(.*) accesses Name examination$/, (userId) => {
-        data.stubApi({ user:userId })
+        data.stubApi({ user:userId, user_roles: ['names_approver'] })
         return new Promise((done) => {
             const Constructor = Vue.extend(App);
             store.replaceState(cleanState())
             data.instance = new Constructor({store:store, router:router});
             data.vm = data.instance.$mount(document.getElementById('app'));
+            sessionStorage.setItem('USER_ROLES', ['names_approver']);
+            data.vm.$store.commit('setLoginValues');
+
             setTimeout(()=>{
                 data.instance.$store.state.userId = userId
                 sessionStorage.setItem('AUTHORIZED', true)

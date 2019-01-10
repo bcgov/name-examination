@@ -11,6 +11,7 @@ describe('StdHeader.vue', () => {
     let store;
     let mount = ()=>{
         sessionStorage.setItem('AUTHORIZED', true)
+        sessionStorage.setItem('USER_ROLES', ['names_approver'])
         const Constructor = Vue.extend(StdHeader);
         instance = new Constructor({store:store, router:router});
         let app = document.createElement('DIV')
@@ -30,6 +31,8 @@ describe('StdHeader.vue', () => {
         store = {
             getters: {
                 isAuthenticated: true,
+                userHasEditRole: true,
+                userHasApproverRole: true,
                 userId: 'max'
             }
         }
@@ -44,7 +47,9 @@ describe('StdHeader.vue', () => {
         beforeEach(() => {
             store = {
                 getters: {
-                    isAuthenticated: true
+                    isAuthenticated: true,
+                    userHasApproverRole: true,
+                    userHasEditRole: true
                 },
             }
             vm = mount();
@@ -119,6 +124,8 @@ describe('StdHeader.vue', () => {
             store = {
                 getters: {
                   isAuthenticated: true,
+                  userHasApproverRole: true,
+                  userHasEditRole: true
                 },
                 dispatch: function(message, value) {
                     messageSentToStore = message;
@@ -176,7 +183,9 @@ describe('StdHeader.vue', () => {
         beforeEach(()=>{
             store = {
                 getters: {
-                    isAuthenticated: true
+                    isAuthenticated: true,
+                    userHasApproverRole: true,
+                    userHasEditRole: true
                 },
                 dispatch: function(message, value) {
                     messageSentToStore = message;

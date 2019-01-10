@@ -14,26 +14,9 @@ exports[`CompName.vue  renders a CompName component 1`] = `
         <div
           id="top-buttons"
         >
-          <button
-            class="btn btn-sm btn-secondary"
-            id="examine-get-next-button"
-          >
-            Get 
-            <u>
-              N
-            </u>
-            ext
-          </button>
+          <!---->
            
-          <button
-            class="btn btn-sm btn-danger"
-            data-target="#add-cancel-comment-modal"
-            data-toggle="modal"
-            id="examine-cancel-button"
-          >
-            
-            Cancel Request
-          </button>
+          <!---->
            
           <!---->
            
@@ -139,31 +122,7 @@ exports[`CompName.vue  renders a CompName component 1`] = `
         <div>
           <!---->
            
-          <div
-            id="manual-search"
-          >
-            <form
-              class="form-inline"
-            >
-              <input
-                class="search form-control"
-                tabindex="1"
-                type="text"
-              />
-               
-              <button
-                class="btn-search"
-                type="submit"
-              >
-                <i
-                  class="fa fa-search"
-                  tabindex="8"
-                />
-              </button>
-               
-              <!---->
-            </form>
-          </div>
+          <!---->
         </div>
       </div>
     </div>
