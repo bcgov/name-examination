@@ -13,9 +13,9 @@ describe('RequestInfoHeader.vue', () => {
   let instance;
 
   beforeEach(() => {
-    localStorage.setItem('USERNAME', 'tester');
-    localStorage.setItem('USER_ROLE', 'test');
-    localStorage.setItem('AUTHORIZED', 'true');
+    sessionStorage.setItem('USERNAME', 'tester');
+    sessionStorage.setItem('USER_ROLES', 'test');
+    sessionStorage.setItem('AUTHORIZED', 'true');
     const Constructor = Vue.extend(RequestInfoHeader);
     instance = new Constructor({store: store});
     instance.$store.state.myKeycloak = {}
