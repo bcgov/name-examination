@@ -8,7 +8,6 @@ import App from '@/App.vue';
 import store from '@/store'
 import router from '@/router'
 import { cleanState } from '../support/clean.state'
-import sinon from "sinon";
 
 let openNameExamination = (when, data)=>{
     when(/^(.*) accesses Name examination$/, (userId) => {
