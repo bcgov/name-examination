@@ -77,5 +77,9 @@ describe('store > checkManualCobrsPhoneticMatches', () => {
         expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/cobrsphonetics/dog  cat fish bear')
     })
 
+    it('escape special characters', ()=>{
+        store.dispatch('checkManualCobrsPhoneticMatches', '/?.><\\\'\":;\\|][}{=+_-)(*&^%$#@!~`ATHENAE/?.><\\\'\":;\\|][}{=+_-)(*&^%$#@!~`UM 139 LTD./?.><\\\'":;\\|][}{=+_-)(*&^%$#@!~`')
 
+        expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/cobrsphonetics/ .>< \'; = _ * S@ATHENAE .>< \'; = _ * S@UM 139 LTD. .>< \'; = _ * S@')
+    })
 })

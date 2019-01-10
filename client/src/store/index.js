@@ -205,7 +205,6 @@ export default new Vuex.Store({
       state.compInfo.requestType = value;
     },
     is_my_current_nr (state, value) {
-      console.log('got to mutation with value ' + value);
       state.is_my_current_nr = value;
     },
     is_making_decision(state, value) {
@@ -1050,9 +1049,9 @@ export default new Vuex.Store({
     tryAutoLogin ({commit}) {
     },
 
-    checkToken({dispatch, state}){
+    checkToken({dispatch, state}) {
       // checks if keycloak object exists - if not then state is unstable, force logout
-      if(state.myKeycloak==null){
+      if (state.myKeycloak==null) {
         console.log('myKeycloak is null')
         //TODO - reset everything and force login???
         //should only be null when first logging on (async keycloak)- if it becomes null somehow should we force another login?
@@ -1067,11 +1066,11 @@ export default new Vuex.Store({
 
       console.log('Token expires in ' + expiresIn + 'seconds, updating')
 
-      if(expiresIn < 1700 && expiresIn > 0) {
+      if (expiresIn < 1700 && expiresIn > 0) {
         console.log('Updating Token')
         dispatch('updateToken')
 
-      }else if(expiresIn < 0) {
+      } else if(expiresIn < 0) {
         //TODO - reset everything and force login???
         console.log('Force Logout')
         dispatch('logout')
@@ -1080,7 +1079,7 @@ export default new Vuex.Store({
       }
     },
 
-    updateToken({commit, state}){
+    updateToken({commit, state}) {
       const vm = this;
       state.myKeycloak.updateToken(-1).success(function (refreshed) {
         if (refreshed) {
@@ -1478,16 +1477,13 @@ export default new Vuex.Store({
 
       console.log('action: getting exact matches for number: ' + state.compInfo.nrNumber + ' from solr')
       query = query.replace(' \/','\/')
-          .replace(/\(/g, '')
-          .replace(/\)/g, '')
-          .replace(/]/g, '')
-          .replace(/\[/g, '')
-          .replace(/}/g, '')
-          .replace(/{/g, '')
           .replace(/(^|\s+)(\$+(\s|$)+)+/g, '$1DOLLAR$3')
           .replace(/(^|\s+)(¢+(\s|$)+)+/g, '$1CENT$3')
           .replace(/\$/g, 'S')
           .replace(/¢/g, 'C')
+          .replace(/\\/g, '')
+          .replace(/\//g, '')
+          .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       query = query.substring(0, 1) == '+' ? query.substring(1) : query;
       query = encodeURIComponent(query)
@@ -1506,23 +1502,15 @@ export default new Vuex.Store({
 
       console.log('action: getting synonym matches for number: ' + state.compInfo.nrNumber + ' from solr')
       query = query.replace(/\//g,' ')
-          .replace(/\\/g,' ')
-          .replace(/&/g, ' ')
-          .replace(/\+/g, ' ')
-          .replace(/\-/g, ' ')
-          .replace(/\(/g, '')
-          .replace(/\)/g, '')
-          .replace(/}/g, '')
-          .replace(/{/g, '')
-          .replace(/]/g, '')
-          .replace(/\[/g, '')
-          .replace(/\?/g,'')
-          .replace(/#/g,'')
-          .replace(/%/g, '')
-          .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
-          .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
-          .replace(/\$/g, 'S')
-          .replace(/¢/g,'C')
+                .replace(/\\/g,' ')
+                .replace(/&/g, ' ')
+                .replace(/\+/g, ' ')
+                .replace(/\-/g, ' ')
+                .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+                .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+                .replace(/\$/g, 'S')
+                .replace(/¢/g,'C')
+                .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
       const url = '/api/v1/requests/synonymbucket/' + query;
       console.log('URL:' + url);
@@ -1542,20 +1530,11 @@ export default new Vuex.Store({
           .replace(/&/g, ' ')
           .replace(/\+/g, ' ')
           .replace(/\-/g, ' ')
-          .replace(/\(/g, '')
-          .replace(/\)/g, '')
-          .replace(/}/g, '')
-          .replace(/{/g, '')
-          .replace(/]/g, '')
-          .replace(/\[/g, '')
-          .replace(/\?/g,'')
-          .replace(/#/g,'')
-          .replace(/%/g, '')
           .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
           .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
           .replace(/\$/g, 'S')
           .replace(/¢/g,'C')
-
+          .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
       const url = '/api/v1/requests/cobrsphonetics/' + query;
       console.log('URL:' + url);
@@ -1575,20 +1554,11 @@ export default new Vuex.Store({
           .replace(/&/g, ' ')
           .replace(/\+/g, ' ')
           .replace(/\-/g, ' ')
-          .replace(/\(/g, '')
-          .replace(/\)/g, '')
-          .replace(/}/g, '')
-          .replace(/{/g, '')
-          .replace(/]/g, '')
-          .replace(/\[/g, '')
-          .replace(/\?/g,'')
-          .replace(/#/g,'')
-          .replace(/%/g, '')
           .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
           .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
           .replace(/\$/g, 'S')
           .replace(/¢/g,'C')
-
+          .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
       const url = '/api/v1/requests/phonetics/' + query;
       console.log('URL:' + url);
@@ -1636,6 +1606,16 @@ export default new Vuex.Store({
       const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
       const url = '/api/v1/documents:histories'
       console.log('URL:' + url)
+      searchStr = searchStr.replace(/\//g,' ')
+          .replace(/\\/g,' ')
+          .replace(/&/g, ' ')
+          .replace(/\+/g, ' ')
+          .replace(/\-/g, ' ')
+          .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+          .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+          .replace(/\$/g, 'S')
+          .replace(/¢/g,'C')
+          .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
       const vm = this
       return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {
         console.log('Check Manual Histories Response:' + response.data)
@@ -1650,6 +1630,25 @@ export default new Vuex.Store({
       const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
       const url = '/api/v1/documents:trademarks'
       console.log('URL:' + url)
+      searchStr = searchStr.replace(/\//g,' ')
+          .replace(/\\/g,' ')
+          .replace(/&/g, ' ')
+          .replace(/\+/g, ' ')
+          .replace(/\-/g, ' ')
+          .replace(/\(/g, '')
+          .replace(/\)/g, '')
+          .replace(/}/g, '')
+          .replace(/{/g, '')
+          .replace(/]/g, '')
+          .replace(/\[/g, '')
+          .replace(/\?/g,'')
+          .replace(/#/g,'')
+          .replace(/%/g, '')
+          .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+          .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+          .replace(/\$/g, 'S')
+          .replace(/¢/g,'C')
+          .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
       const vm = this
       return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {
         console.log('Check Manual Trademarks Response:' + response.data)
