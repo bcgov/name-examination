@@ -1722,7 +1722,7 @@ export default new Vuex.Store({
        let roles = state.user_roles;
        return roles.includes('names_approver') || roles.includes('names_editor')
     },
-    userHasAproverRole(state) {
+    userHasApproverRole(state) {
        let roles = state.user_roles;
        return roles.includes('names_approver')
     },

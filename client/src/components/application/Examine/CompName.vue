@@ -9,12 +9,12 @@
 
             <!-- GET NEXT button -->
             <button v-shortkey="['alt', 'n']" @shortkey="getNextCompany()" class="btn btn-sm btn-secondary" id="examine-get-next-button"
-                    v-if="!is_making_decision && !is_my_current_nr"
+                    v-if="userIsAnExaminer && !is_making_decision && !is_my_current_nr"
                     @click="getNextCompany()" >Get <u>N</u>ext</button>
 
             <!-- CANCEL button -->
             <button class="btn btn-sm btn-danger" id="examine-cancel-button"
-                    v-if="!is_making_decision && !is_cancelled && !is_approved_expired && !is_consumed" data-toggle="modal" data-target="#add-cancel-comment-modal">
+                    v-if="canCancel && !is_making_decision && !is_cancelled && !is_approved_expired && !is_consumed" data-toggle="modal" data-target="#add-cancel-comment-modal">
               Cancel Request</button>
 
             <!-- HOLD button -->
@@ -24,12 +24,12 @@
 
             <!-- DECISION button -->
             <button v-shortkey="['alt', 'd']" @shortkey="startDecision()" class="btn btn-sm btn-primary" id="examine-decide-button"
-                    v-if="!is_making_decision && !is_complete && is_my_current_nr"
+                    v-if="userIsAnExaminer && !is_making_decision && !is_complete && is_my_current_nr"
                     @click="startDecision()"><u>D</u>ecision</button>
 
             <!-- ACCEPT/REJECT/CANCEL DECISION buttons -->
             <button v-shortkey="['alt', 'a']" @shortkey="nameAccept()" class="btn btn-sm btn-primary" id="decision-approve-button"
-                    v-if="is_making_decision" @click="nameAccept()">
+                    v-if="userIsAnExaminer && is_making_decision" @click="nameAccept()">
               <span v-if="acceptance_will_be_conditional">Conditionally </span><u>A</u>pprove
             </button>
             <button v-shortkey="['alt', 'r']" @shortkey="nameReject()" class="btn btn-sm btn-danger" id="decision-reject-button"
@@ -41,12 +41,12 @@
 
             <!-- RE-OPEN (un-furnished) button -->
             <button class="btn btn-sm btn-danger" id="examine-re-open-button"
-                    v-if="is_complete && !is_furnished && !is_cancelled && !is_approved_expired" @click="reOpen()" >
+                    v-if="userCanEdit && is_complete && !is_furnished && !is_cancelled && !is_approved_expired" @click="reOpen()" >
               Re-Open</button>
 
             <!-- RESET (from furnished) button -->
             <button class="btn btn-sm btn-danger" id="examine-reset-button"
-                    v-if="is_complete && is_furnished && !is_cancelled && !is_approved_expired" @click="reset()">
+                    v-if="userCanEdit && is_complete && is_furnished && !is_cancelled && !is_approved_expired" @click="reset()">
               RESET</button>
 
             <!-- EXAMINE button - to claim/examine an NR that is on hold -->
@@ -99,7 +99,7 @@
           </table>
 
           <div>
-            <span class="float-right" style="margin-left: 10px;" v-if="!is_making_decision && !is_complete && is_my_current_nr">
+            <span class="float-right" style="margin-left: 10px;" v-if="userIsAnExaminer && !is_making_decision && !is_complete && is_my_current_nr">
               <button v-shortkey="['alt', 'a']" @shortkey="quickApprove()" class="btn btn-sm btn-outline-primary" id="examine-quick-approve-button"
                       @click="quickApprove">Quick <u>A</u>pprove</button>
               <button  v-shortkey="['alt', 'i']" @shortkey="rejectDistinctive()" class="btn btn-sm btn-outline-danger" id="examine-reject-distinctive-button"
@@ -107,7 +107,7 @@
               <button v-shortkey="['alt', 'e']" @shortkey="rejectDescriptive()" class="btn btn-sm btn-outline-danger" id="examine-reject-descriptive-button"
                       @click="rejectDescriptive">Reject D<u>e</u>scriptive</button>
             </span>
-            <div v-if="!is_making_decision && !is_complete" id="manual-search">
+            <div v-if="userCanEdit && !is_making_decision && !is_complete" id="manual-search">
               <form class="form-inline" @submit.prevent="onSubmit">
                 <input ref="search" type="text" class="search form-control" v-model="searchStr"  v-shortkey="['alt', 's']" @shortkey="setFocus()" tabindex="1">
                 <button class="btn-search" type="submit"><i class="fa fa-search" tabindex="8"/></button>
@@ -181,6 +181,15 @@
       userId() {
         return this.$store.getters.userId;
       },
+      userIsAnExaminer() {
+        return this.$store.getters.userHasApproverRole;
+      },
+      userCanEdit() {
+        return this.$store.getters.userHasEditRole;
+      },
+      canCancel() {
+        return this.userIsAnExaminer || (this.userCanEdit && ['DRAFT'].indexOf(this.currentState) > -1);
+      },
       is_my_current_nr() {
         return this.$store.getters.is_my_current_nr;
       },
@@ -228,7 +237,7 @@
       can_claim() {
         console.log('got to can_claim with status ' + this.currentState);
         // can this user claim the NR? Based on state.
-        if (['DRAFT', 'HOLD'].indexOf(this.currentState) > -1) return true;
+        if (this.userCanEdit && ['DRAFT', 'HOLD'].indexOf(this.currentState) > -1) return true;
         else return false;
       },
       compName1() {
@@ -440,6 +449,9 @@
 
         // if the NR is closed in any way, a name is not undoable - the NR will have to be
         // re-opened first.
+
+        if (!this.userIsAnExaminer) return false;
+
         if (!this.is_my_current_nr) return false;
 
         // if the NR is furnished, nothing is undoable
