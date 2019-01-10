@@ -36,7 +36,7 @@
             sessionStorage.setItem('KEYCLOAK_TOKEN', keycloak.token);
             sessionStorage.setItem('KEYCLOAK_REFRESH', keycloak.refreshToken);
             sessionStorage.setItem('KEYCLOAK_EXPIRES', keycloak.tokenParsed.exp * 1000);
-            // **** DO NOT COMMIT THIS: **** ////
+
             let roles =  keycloak.realmAccess.roles.filter(role => ALLOWED_ROLES.includes(role));
             sessionStorage.setItem('USER_ROLES', roles);
 
