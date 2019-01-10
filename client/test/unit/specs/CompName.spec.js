@@ -250,6 +250,7 @@ describe('CompName.vue', () => {
 
       beforeEach((done) => {
         instance.$store.state.currentState = 'HOLD';
+        instance.$store.state.furnished = 'N';
         instance.$store.state.compInfo.compNames = {
           compName1:
             {
@@ -285,7 +286,6 @@ describe('CompName.vue', () => {
          expect(vm.$el.querySelector('#examine-cancel-button')).toBeNull();
          expect(vm.$el.querySelector('#examine-re-open-button')).toBeNull();
          expect(vm.$el.querySelector('#examine-button')).toBeNull();
-         expect(vm.$el.querySelector('#examine-reset-button')).toBeNull();
       });
 
       it('hides the search field for a view-only user', () => {
@@ -335,5 +335,153 @@ describe('CompName.vue', () => {
       });
 
     });
+
+   describe('Viewers cannot see the reset button for a furnished completed NR', () => {
+      let sandbox;
+      let vm;
+
+      beforeEach((done) => {
+        instance.$store.state.currentState = 'APPROVED';
+        instance.$store.state.furnished = 'Y';
+        instance.$store.state.compInfo.compNames = {
+          compName1:
+            {
+              choice: 1,
+              name: "Bad Name",
+              state: 'REJECTED'
+            },
+          compName2: { choice: 2, name: "They Named a Language after ME", state: 'APPROVED' },
+          compName3: { choice: 3, name: null, state: 'NE' }
+        };
+        vm = instance.$mount();
+        sessionStorage.setItem('USER_ROLES', ['names_viewer']);
+        sessionStorage.setItem('USERNAME', 'AdaLovelace');
+        vm.$store.commit('setLoginValues');
+
+        sandbox = sinon.createSandbox();
+        setTimeout(() => {
+          done();
+        }, 100)
+      });
+
+      afterEach(() => {
+        sandbox.restore()
+      });
+
+      it('hides the reset button from a view-only user', () => {
+         expect(vm.$el.querySelector('#examine-reset-button')).toBeNull();
+      });
+   });
+
+   describe('Editors can see the reset button for a completed, furnished NR', () => {
+      let sandbox;
+      let vm;
+
+      beforeEach((done) => {
+        instance.$store.state.currentState = 'APPROVED';
+        instance.$store.state.furnished = 'Y';
+        instance.$store.state.compInfo.compNames = {
+          compName1:
+            {
+              choice: 1,
+              name: "Bad Name",
+              state: 'REJECTED'
+            },
+          compName2: { choice: 2, name: "They Named a Language after ME", state: 'APPROVED' },
+          compName3: { choice: 3, name: null, state: 'NE' }
+        };
+        vm = instance.$mount();
+        sessionStorage.setItem('USER_ROLES', ['names_editor']);
+        sessionStorage.setItem('USERNAME', 'Ada');
+        vm.$store.commit('setLoginValues');
+
+        sandbox = sinon.createSandbox();
+        setTimeout(() => {
+          done();
+        }, 100)
+      });
+
+      afterEach(() => {
+        sandbox.restore()
+      });
+
+      it('Shows the reset button for staff/editor', () => {
+         expect(vm.$el.querySelector('#examine-reset-button').textContent.trim()).toEqual('RESET');
+      });
+   })
+
+  describe('Viewers cannot see the reopen button for a completed NR', () => {
+      let sandbox;
+      let vm;
+
+      beforeEach((done) => {
+        instance.$store.state.currentState = 'APPROVED';
+        instance.$store.state.furnished = 'Y';
+        instance.$store.state.compInfo.compNames = {
+          compName1:
+            {
+              choice: 1,
+              name: "Bad Name",
+              state: 'REJECTED'
+            },
+          compName2: { choice: 2, name: "They Named a Language after ME", state: 'APPROVED' },
+          compName3: { choice: 3, name: null, state: 'NE' }
+        };
+        vm = instance.$mount();
+        sessionStorage.setItem('USER_ROLES', ['names_viewer']);
+        sessionStorage.setItem('USERNAME', 'AdaLovelace');
+        vm.$store.commit('setLoginValues');
+
+        sandbox = sinon.createSandbox();
+        setTimeout(() => {
+          done();
+        }, 100)
+      });
+
+      afterEach(() => {
+        sandbox.restore()
+      });
+
+      it('hides the reset button from a view-only user', () => {
+         expect(vm.$el.querySelector('#examine-re-open-button')).toBeNull();
+      });
+   });
+
+   describe('Editors can see the reopen button for a completed, unfurnished NR', () => {
+      let sandbox;
+      let vm;
+
+      beforeEach((done) => {
+        instance.$store.state.currentState = 'APPROVED';
+        instance.$store.state.furnished = 'N';
+        instance.$store.state.compInfo.compNames = {
+          compName1:
+            {
+              choice: 1,
+              name: "Bad Name",
+              state: 'REJECTED'
+            },
+          compName2: { choice: 2, name: "They Named a Language after ME", state: 'APPROVED' },
+          compName3: { choice: 3, name: null, state: 'NE' }
+        };
+        vm = instance.$mount();
+        sessionStorage.setItem('USER_ROLES', ['names_editor']);
+        sessionStorage.setItem('USERNAME', 'Ada');
+        vm.$store.commit('setLoginValues');
+
+        sandbox = sinon.createSandbox();
+        setTimeout(() => {
+          done();
+        }, 100)
+      });
+
+      afterEach(() => {
+        sandbox.restore()
+      });
+
+      it('Shows the reset button for staff/editor', () => {
+         expect(vm.$el.querySelector('#examine-re-open-button').textContent.trim()).toEqual('Re-Open');
+      });
+   })
 
 });
