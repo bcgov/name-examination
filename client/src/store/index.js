@@ -13,7 +13,7 @@ export default new Vuex.Store({
 
     myKeycloak: null,
     userId: null,
-    user_roles: null,
+    user_roles: [],
     authorized: false,
     email: null,
     errorJSON: null,
@@ -34,7 +34,7 @@ export default new Vuex.Store({
     currentHistory: null,  //NR number of history name selected
 
     currentRecipeCard: null,
-    is_my_current_nr: null,
+    is_my_current_nr: false,
     is_editing: false,
     is_making_decision: false,
     decision_made: null,
@@ -1716,6 +1716,14 @@ export default new Vuex.Store({
     },
     userId(state) {
       return state.userId;
+    },
+    userHasEditRole(state) {
+       let roles = state.user_roles;
+       return roles.includes('names_approver') || roles.includes('names_editor')
+    },
+    userHasAproverRole(state) {
+       let roles = state.user_roles;
+       return roles.includes('names_approver')
     },
     is_my_current_nr(state) {
       // set flag indicating whether you own this NR and it's in progress

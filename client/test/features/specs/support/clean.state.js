@@ -6,7 +6,7 @@ module.exports = {
 
       myKeycloak: {},
       userId: null,
-      user_roles: null,
+      user_roles: [],
       authorized: false,
       email: null,
       errorJSON: null,

@@ -14,8 +14,9 @@ describe('RequestInfoHeader.vue', () => {
 
   beforeEach(() => {
     sessionStorage.setItem('USERNAME', 'tester');
-    sessionStorage.setItem('USER_ROLES', 'test');
+    sessionStorage.setItem('USER_ROLES', ['names_approver']);
     sessionStorage.setItem('AUTHORIZED', 'true');
+
     const Constructor = Vue.extend(RequestInfoHeader);
     instance = new Constructor({store: store});
     instance.$store.state.myKeycloak = {}
@@ -650,6 +651,77 @@ describe('RequestInfoHeader.vue', () => {
       });
     });
 
+    describe('Edit button hiding testing', () => {
+
+          beforeEach((done) => {
+            sessionStorage.setItem('USER_ROLES', ['names_approver']);
+            sessionStorage.setItem('USERNAME', 'max')
+            vm = instance.$mount();
+            vm.$store.commit('setLoginValues');
+            vm.$store.commit('nrNumber','NR 2000948');
+            setTimeout(()=>{
+              done();
+            }, 100)
+          });
+
+          describe('I cannot edit when it is not my NR in progress', () => {
+
+            it('hides the edit button', () => {
+              console.log('START check edit for not my NR in progress');
+              expect(vm.$el.querySelector('#nr-details-edit-button')).toBeNull();
+              console.log('finished');
+
+            });
+          });
+      });
+
+    describe('Edit button visible testing', () => {
+
+          beforeEach((done) => {
+            sessionStorage.setItem('USER_ROLES', ['names_approver']);
+            sessionStorage.setItem('USERNAME', 'tester')
+            vm = instance.$mount();
+            vm.$store.commit('setLoginValues');
+            vm.$store.commit('nrNumber','NR 2000948');
+            setTimeout(()=>{
+              done();
+            }, 100)
+          });
+
+          describe('editability testing', () => {
+
+            it('shows the edit button', () => {
+              console.log('START check edit for not my NR in progress');
+              expect(vm.$el.querySelector('#nr-details-edit-button').textContent).toEqual('Edit');
+              console.log('finished');
+
+            });
+          });
+      });
+
+      describe('Edit button visible for staff testing', () => {
+
+          beforeEach((done) => {
+            sessionStorage.setItem('USER_ROLES', ['names_editor']);
+            sessionStorage.setItem('USERNAME', 'tester')
+            vm = instance.$mount();
+            vm.$store.commit('setLoginValues');
+            vm.$store.commit('nrNumber','NR 2000948');
+            setTimeout(()=>{
+              done();
+            }, 100)
+          });
+
+          describe('editability testing', () => {
+
+            it('shows the edit button for a staff member who is currently editing', () => {
+              console.log('START check edit for not my NR in progress');
+              expect(vm.$el.querySelector('#nr-details-edit-button').textContent).toEqual('Edit');
+              console.log('finished');
+
+            });
+          });
+      });
   });
 
   describe('Testing Editing the NR after complete', () => {
@@ -870,6 +942,50 @@ describe('RequestInfoHeader.vue', () => {
       });
     });
 
+  });
+
+  describe('Testing View-only users cannot see the Edit button even when the NR is in DRAFT', () => {
+    let vm;
+    let sandbox;
+
+    beforeEach((done) => {
+      sessionStorage.setItem('USER_ROLES', ['names_viewer']);
+      sandbox = sinon.createSandbox();
+      vm = instance.$mount();
+      vm.$store.commit('setLoginValues');
+      setTimeout(() => {
+        done();
+      }, 100)
+    });
+    afterEach(() => {
+      sandbox.restore();
+    });
+
+    it('Does not has the edit button for a viewer', () => {
+      expect(vm.$el.querySelector('#nr-details-edit-button')).toBeNull();
+    });
+  });
+
+  describe('Testing Staff (edit but not examine) users can see the Edit button when the NR is in DRAFT', () => {
+    let vm;
+    let sandbox;
+
+    beforeEach((done) => {
+      sessionStorage.setItem('USER_ROLES', ['names_editor']);
+      sandbox = sinon.createSandbox();
+      vm = instance.$mount();
+      vm.$store.commit('setLoginValues');
+      setTimeout(() => {
+        done();
+      }, 100)
+    });
+    afterEach(() => {
+      sandbox.restore();
+    });
+
+    it('has the edit button for a staff member', () => {
+      expect(vm.$el.querySelector('#nr-details-edit-button').textContent).toEqual('Edit');
+    });
   });
 
 });

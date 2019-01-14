@@ -367,10 +367,8 @@ export default {
         return  this.$store.getters.is_editing;
       },
       can_edit() {
-        // user can edit this if it is open (DRAFT, HOLD) or their INPROGRESS. If it is DRAFT or
-        // HOLD, clicking edit button will switch it to their INPROGRESS (in edit() f'n).
         if (this.is_my_current_nr) return true;
-        if (['DRAFT', 'HOLD', 'REJECTED', 'APPROVED', 'CONDITIONAL'].indexOf(this.nr_status) > -1) return true;
+        if (this.$store.getters.userHasEditRole && ['DRAFT', 'HOLD', 'REJECTED', 'APPROVED', 'CONDITIONAL'].indexOf(this.nr_status) > -1 ) return true;
         return false;
       },
       is_closed() {
@@ -687,6 +685,7 @@ export default {
 
         if (newAddInfo != '') this.additionalInfo = newAddInfo + '\n' + this.additionalInfo;
       },
+
       addNewComment() {
 
         // do nothing if comment is blank
@@ -702,6 +701,7 @@ export default {
         // clear newComment field for next comment added in this session
         this.newComment = null;
       },
+
       validate() {
         /*
         Validate form using vuelidate.
@@ -727,6 +727,7 @@ export default {
         return !this.$v.$invalid && !this.$refs.clientinfoview.$v.$invalid &&
           !nwpta_ab_invalid && !nwpta_sk_invalid;
       },
+
       checkReqTypeRules(val) {
 
         if (this.requestTypeRules != null) {
