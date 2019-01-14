@@ -368,7 +368,7 @@ export default {
       },
       can_edit() {
         if (this.is_my_current_nr) return true;
-        if (this.$store.getters.userHasEditRole && ['DRAFT', 'HOLD', 'REJECTED', 'APPROVED', 'CONDITIONAL', 'EXPIRED'].indexOf(this.nr_status) > -1 ) return true;
+        if (this.$store.getters.userHasEditRole && ['DRAFT', 'HOLD', 'REJECTED', 'APPROVED', 'CONDITIONAL'].indexOf(this.nr_status) > -1 ) return true;
         return false;
       },
       is_closed() {
