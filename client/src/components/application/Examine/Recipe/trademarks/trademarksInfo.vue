@@ -44,7 +44,7 @@
       },
     },
     methods: {
-      createDataList(trademarksInfo, rows=10, offset=0){
+      createDataList(trademarksInfo, rows=10, offset=0) {
         if(trademarksInfo == null)
           return [];
 

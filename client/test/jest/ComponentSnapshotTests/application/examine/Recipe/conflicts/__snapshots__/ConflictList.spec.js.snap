@@ -37,6 +37,20 @@ exports[`ConflictList.vue renders a ConflictList component 1`] = `
         </div>
       </div>
       <div
+        class="cobrs-phonetic-match-title"
+      >
+        <div>
+          Character Swap Match
+        </div>
+      </div>
+      <div
+        class="phonetic-match-title"
+      >
+        <div>
+          Phonetic Match (experimental)
+        </div>
+      </div>
+      <div
         class="conflict-no-match"
       >
         <div>

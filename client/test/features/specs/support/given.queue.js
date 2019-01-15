@@ -55,6 +55,24 @@ let givenQueue = (given, data)=>{
                     })
                 })
             )
+            data.apiSandbox.getStub.withArgs('/api/v1/requests/cobrsphonetics/' + data.name(data.queueIndex).replace('&',' '), sinon.match.any).returns(
+                new Promise((resolve) => {
+                    resolve({
+                        data: {
+                            names:[]
+                        }
+                    })
+                })
+            )
+            data.apiSandbox.getStub.withArgs('/api/v1/requests/phonetics/' + data.name(data.queueIndex).replace('&',' '), sinon.match.any).returns(
+                new Promise((resolve) => {
+                    resolve({
+                        data: {
+                            names:[]
+                        }
+                    })
+                })
+            )
             data.queueIndex++;
         }
     })

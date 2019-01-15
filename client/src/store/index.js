@@ -13,7 +13,7 @@ export default new Vuex.Store({
 
     myKeycloak: null,
     userId: null,
-    user_role: null,
+    user_roles: [],
     authorized: false,
     email: null,
     errorJSON: null,
@@ -34,7 +34,7 @@ export default new Vuex.Store({
     currentHistory: null,  //NR number of history name selected
 
     currentRecipeCard: null,
-    is_my_current_nr: null,
+    is_my_current_nr: false,
     is_editing: false,
     is_making_decision: false,
     decision_made: null,
@@ -176,6 +176,8 @@ export default new Vuex.Store({
 
     exactMatchesConflicts: [],
     synonymMatchesConflicts: [],
+    cobrsPhoneticConflicts: [],
+    phoneticConflicts: [],
     conflictList: [],
     conflictHighlighting: [],
     conflictNames: [],
@@ -203,7 +205,6 @@ export default new Vuex.Store({
       state.compInfo.requestType = value;
     },
     is_my_current_nr (state, value) {
-      console.log('got to mutation with value ' + value);
       state.is_my_current_nr = value;
     },
     is_making_decision(state, value) {
@@ -822,42 +823,170 @@ export default new Vuex.Store({
           class: entry.class,
         });
       }
-	  var count = 0
-	  var stopCollapsing = false
-	  var collapseCount = 2
-	  for (let i=state.synonymMatchesConflicts.length-1; i>=0; i--){
-		  let entry = state.synonymMatchesConflicts[i]
-		  if (! stopCollapsing) {
-			  if (entry.class == 'conflict-result') {
-				  entry.class = 'conflict-result conflict-result-hidden'
-				  count ++
-			  }
-			  if (entry.class == 'conflict-synonym-title') {
-				  entry.count = count
-				  count = 0
-				  collapseCount --
-				  if (collapseCount == 0) {
-					  stopCollapsing = true
-				  }
-				  if (entry.count > 0) {
-				  	entry.class = 'conflict-synonym-title collapsible collapsed'
-				  }
-			  }
-		  }
-		  else {
-			  if (entry.class == 'conflict-result') {
-				  entry.class = 'conflict-result conflict-result-displayed'
-				  count ++
-			  }
-			  if (entry.class == 'conflict-synonym-title') {
-				  entry.count = count
-				  count = 0
-				  if (entry.count > 0) {
-				  	entry.class = 'conflict-synonym-title collapsible expanded'
-				  }
-			  }
-		  }
-	  }
+      var count = 0
+      var stopCollapsing = false
+      var collapseCount = 2
+      for (let i=state.synonymMatchesConflicts.length-1; i>=0; i--){
+        let entry = state.synonymMatchesConflicts[i]
+        if (! stopCollapsing) {
+          if (entry.class == 'conflict-result') {
+            entry.class = 'conflict-result conflict-result-hidden'
+            count ++
+          }
+          if (entry.class == 'conflict-synonym-title') {
+            entry.count = count
+            count = 0
+            collapseCount --
+            if (collapseCount == 0) {
+              stopCollapsing = true
+            }
+            if (entry.count > 0) {
+              entry.class = 'conflict-synonym-title collapsible collapsed'
+            }
+          }
+        }
+        else {
+          if (entry.class == 'conflict-result') {
+            entry.class = 'conflict-result conflict-result-displayed'
+            count ++
+          }
+          if (entry.class == 'conflict-synonym-title') {
+            entry.count = count
+            count = 0
+            if (entry.count > 0) {
+              entry.class = 'conflict-synonym-title collapsible expanded'
+            }
+          }
+        }
+      }
+    },
+
+    setCobrsPhoneticConflicts(state, json) {
+      state.cobrsPhoneticConflicts = [];
+      let names = json.names;
+      let additionalRow = null;
+
+      for (let i=0; i<names.length; i++) {
+        let entry = names[i];
+        additionalRow = null;
+
+        if (entry.source == null) {
+          entry.name = entry.name.replace('----', '');
+          entry.name = entry.name.replace('synonyms:', '');
+          entry.class = 'conflict-cobrs-phonetic-title';
+        }
+        else {
+          entry.class = 'conflict-result';
+        }
+
+        state.cobrsPhoneticConflicts.push({
+          count:0,
+          text:entry.name,
+          meta:entry.meta,
+          nrNumber:entry.id,
+          source:entry.source,
+          class: entry.class,
+        });
+      }
+      var count = 0
+      var stopCollapsing = false
+      var collapseCount = 2
+      for (let i=state.cobrsPhoneticConflicts.length-1; i>=0; i--){
+        let entry = state.cobrsPhoneticConflicts[i]
+        if (! stopCollapsing) {
+          if (entry.class == 'conflict-result') {
+            entry.class = 'conflict-result conflict-result-hidden'
+            count ++
+          }
+          if (entry.class == 'conflict-cobrs-phonetic-title') {
+            entry.count = count
+            count = 0
+            collapseCount --
+            if (collapseCount == 0) {
+              stopCollapsing = true
+            }
+            if (entry.count > 0) {
+              entry.class = 'conflict-cobrs-phonetic-title collapsible collapsed'
+            }
+          }
+        } else {
+          if (entry.class == 'conflict-result') {
+            entry.class = 'conflict-result conflict-result-displayed'
+            count ++
+          }
+          if (entry.class == 'conflict-cobrs-phonetic-title') {
+            entry.count = count
+            count = 0
+            if (entry.count > 0) {
+              entry.class = 'conflict-cobrs-phonetic-title collapsible expanded'
+            }
+          }
+        }
+      }
+    },
+
+    setPhoneticConflicts(state, json) {
+      state.phoneticConflicts = [];
+      let names = json.names;
+      let additionalRow = null;
+
+      for (let i=0; i<names.length; i++) {
+        let entry = names[i];
+        additionalRow = null;
+
+        if (entry.source == null) {
+          entry.name = entry.name.replace('----', '');
+          entry.name = entry.name.replace('synonyms:', '');
+          entry.class = 'conflict-phonetic-title';
+        }
+        else {
+          entry.class = 'conflict-result';
+        }
+
+        state.phoneticConflicts.push({
+          count:0,
+          text:entry.name,
+          meta:entry.meta,
+          nrNumber:entry.id,
+          source:entry.source,
+          class: entry.class,
+        });
+      }
+      var count = 0
+      var stopCollapsing = false
+      var collapseCount = 2
+      for (let i=state.phoneticConflicts.length-1; i>=0; i--){
+        let entry = state.phoneticConflicts[i]
+        if (! stopCollapsing) {
+          if (entry.class == 'conflict-result') {
+            entry.class = 'conflict-result conflict-result-hidden'
+            count ++
+          }
+          if (entry.class == 'conflict-phonetic-title') {
+            entry.count = count
+            count = 0
+            collapseCount --
+            if (collapseCount == 0) {
+              stopCollapsing = true
+            }
+            if (entry.count > 0) {
+              entry.class = 'conflict-phonetic-title collapsible collapsed'
+            }
+          }
+        } else {
+          if (entry.class == 'conflict-result') {
+            entry.class = 'conflict-result conflict-result-displayed'
+            count ++
+          }
+          if (entry.class == 'conflict-phonetic-title') {
+            entry.count = count
+            count = 0
+            if (entry.count > 0) {
+              entry.class = 'conflict-phonetic-title collapsible expanded'
+            }
+          }
+        }
+      }
     },
 
     currentConflict(state,value){
@@ -879,8 +1008,8 @@ export default new Vuex.Store({
     },
 
     setLoginValues(state){
-      state.userId=localStorage.getItem('USERNAME')
-      state.user_role=localStorage.getItem('USER_ROLE')
+      state.userId=sessionStorage.getItem('USERNAME')
+      state.user_roles=sessionStorage.getItem('USER_ROLES')
       state.authorized=sessionStorage.getItem('AUTHORIZED')
     },
 
@@ -897,9 +1026,9 @@ export default new Vuex.Store({
       sessionStorage.removeItem('KEYCLOAK_REFRESH')
       sessionStorage.removeItem('KEYCLOAK_TOKEN')
       sessionStorage.removeItem('AUTHORIZED')
-      localStorage.removeItem('KEYCLOAK_EXPIRES')
-      localStorage.removeItem('USERNAME')
-      localStorage.removeItem('USER_ROLE')
+      sessionStorage.removeItem('KEYCLOAK_EXPIRES')
+      sessionStorage.removeItem('USERNAME')
+      sessionStorage.removeItem('USER_ROLES')
 
     },
 
@@ -924,9 +1053,9 @@ export default new Vuex.Store({
     tryAutoLogin ({commit}) {
     },
 
-    checkToken({dispatch, state}){
+    checkToken({dispatch, state}) {
       // checks if keycloak object exists - if not then state is unstable, force logout
-      if(state.myKeycloak==null){
+      if (state.myKeycloak==null) {
         console.log('myKeycloak is null')
         //TODO - reset everything and force login???
         //should only be null when first logging on (async keycloak)- if it becomes null somehow should we force another login?
@@ -941,11 +1070,11 @@ export default new Vuex.Store({
 
       console.log('Token expires in ' + expiresIn + 'seconds, updating')
 
-      if(expiresIn < 1700 && expiresIn > 0) {
+      if (expiresIn < 1700 && expiresIn > 0) {
         console.log('Updating Token')
         dispatch('updateToken')
 
-      }else if(expiresIn < 0) {
+      } else if(expiresIn < 0) {
         //TODO - reset everything and force login???
         console.log('Force Logout')
         dispatch('logout')
@@ -954,13 +1083,13 @@ export default new Vuex.Store({
       }
     },
 
-    updateToken({commit, state}){
+    updateToken({commit, state}) {
       const vm = this;
       state.myKeycloak.updateToken(-1).success(function (refreshed) {
         if (refreshed) {
           sessionStorage.setItem('KEYCLOAK_TOKEN', state.myKeycloak.token);
           sessionStorage.setItem('KEYCLOAK_REFRESH', state.myKeycloak.refreshToken);
-          localStorage.setItem('KEYCLOAK_EXPIRES', state.myKeycloak.tokenParsed.exp * 1000);
+          sessionStorage.setItem('KEYCLOAK_EXPIRES', state.myKeycloak.tokenParsed.exp * 1000);
         } else {
           console.log('Token is still valid, not refreshed');
         }
@@ -1302,6 +1431,8 @@ export default new Vuex.Store({
       if( state.currentChoice != null) {
         this.dispatch('checkManualExactMatches',searchStr)
         this.dispatch('checkManualSynonymMatches',searchStr)
+        this.dispatch('checkManualCobrsPhoneticMatches',searchStr)
+        this.dispatch('checkManualPhoneticMatches',searchStr)
         // this.dispatch('checkManualConflicts',searchStr)
         this.dispatch('checkManualTrademarks',searchStr)
         this.dispatch('checkManualConditions',searchStr)
@@ -1313,16 +1444,13 @@ export default new Vuex.Store({
 
       console.log('action: getting exact matches for number: ' + state.compInfo.nrNumber + ' from solr')
       query = query.replace(' \/','\/')
-          .replace(/\(/g, '')
-          .replace(/\)/g, '')
-          .replace(/]/g, '')
-          .replace(/\[/g, '')
-          .replace(/}/g, '')
-          .replace(/{/g, '')
           .replace(/(^|\s+)(\$+(\s|$)+)+/g, '$1DOLLAR$3')
           .replace(/(^|\s+)(¢+(\s|$)+)+/g, '$1CENT$3')
           .replace(/\$/g, 'S')
           .replace(/¢/g, 'C')
+          .replace(/\\/g, '')
+          .replace(/\//g, '')
+          .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       query = query.substring(0, 1) == '+' ? query.substring(1) : query;
       query = encodeURIComponent(query)
@@ -1341,23 +1469,15 @@ export default new Vuex.Store({
 
       console.log('action: getting synonym matches for number: ' + state.compInfo.nrNumber + ' from solr')
       query = query.replace(/\//g,' ')
-          .replace(/\\/g,' ')
-          .replace(/&/g, ' ')
-          .replace(/\+/g, ' ')
-          .replace(/\-/g, ' ')
-          .replace(/\(/g, '')
-          .replace(/\)/g, '')
-          .replace(/}/g, '')
-          .replace(/{/g, '')
-          .replace(/]/g, '')
-          .replace(/\[/g, '')
-          .replace(/\?/g,'')
-          .replace(/#/g,'')
-          .replace(/%/g, '')
-          .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
-          .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
-          .replace(/\$/g, 'S')
-          .replace(/¢/g,'C')
+                .replace(/\\/g,' ')
+                .replace(/&/g, ' ')
+                .replace(/\+/g, ' ')
+                .replace(/\-/g, ' ')
+                .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+                .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+                .replace(/\$/g, 'S')
+                .replace(/¢/g,'C')
+                .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
       const url = '/api/v1/requests/synonymbucket/' + query;
       console.log('URL:' + url);
@@ -1367,6 +1487,54 @@ export default new Vuex.Store({
         commit('setSynonymMatchesConflicts', response.data)
       })
         .catch(error => console.log('ERROR (synonym matches): ' + error))
+    },
+
+    checkManualCobrsPhoneticMatches( {dispatch,commit,state}, query ) {
+
+      console.log('action: getting CobrsPhonetic matches for number: ' + state.compInfo.nrNumber + ' from solr')
+      query = query.replace(/\//g,' ')
+          .replace(/\\/g,' ')
+          .replace(/&/g, ' ')
+          .replace(/\+/g, ' ')
+          .replace(/\-/g, ' ')
+          .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+          .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+          .replace(/\$/g, 'S')
+          .replace(/¢/g,'C')
+          .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
+      const url = '/api/v1/requests/cobrsphonetics/' + query;
+      console.log('URL:' + url);
+      const vm = this;
+      dispatch('checkToken');
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        commit('setCobrsPhoneticConflicts', response.data)
+      })
+        .catch(error => console.log('ERROR (CobrsPhonetic matches): ' + error))
+    },
+
+    checkManualPhoneticMatches( {dispatch,commit,state}, query ) {
+
+      console.log('action: getting Phonetic matches for number: ' + state.compInfo.nrNumber + ' from solr')
+      query = query.replace(/\//g,' ')
+          .replace(/\\/g,' ')
+          .replace(/&/g, ' ')
+          .replace(/\+/g, ' ')
+          .replace(/\-/g, ' ')
+          .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+          .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+          .replace(/\$/g, 'S')
+          .replace(/¢/g,'C')
+          .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
+      const url = '/api/v1/requests/phonetics/' + query;
+      console.log('URL:' + url);
+      const vm = this;
+      dispatch('checkToken');
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+        commit('setPhoneticConflicts', response.data)
+      })
+        .catch(error => console.log('ERROR (Phonetic matches): ' + error))
     },
 
     // not used
@@ -1405,6 +1573,16 @@ export default new Vuex.Store({
       const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
       const url = '/api/v1/documents:histories'
       console.log('URL:' + url)
+      searchStr = searchStr.replace(/\//g,' ')
+          .replace(/\\/g,' ')
+          .replace(/&/g, ' ')
+          .replace(/\+/g, ' ')
+          .replace(/\-/g, ' ')
+          .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+          .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+          .replace(/\$/g, 'S')
+          .replace(/¢/g,'C')
+          .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
       const vm = this
       return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {
         console.log('Check Manual Histories Response:' + response.data)
@@ -1419,6 +1597,25 @@ export default new Vuex.Store({
       const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
       const url = '/api/v1/documents:trademarks'
       console.log('URL:' + url)
+      searchStr = searchStr.replace(/\//g,' ')
+          .replace(/\\/g,' ')
+          .replace(/&/g, ' ')
+          .replace(/\+/g, ' ')
+          .replace(/\-/g, ' ')
+          .replace(/\(/g, '')
+          .replace(/\)/g, '')
+          .replace(/}/g, '')
+          .replace(/{/g, '')
+          .replace(/]/g, '')
+          .replace(/\[/g, '')
+          .replace(/\?/g,'')
+          .replace(/#/g,'')
+          .replace(/%/g, '')
+          .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+          .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+          .replace(/\$/g, 'S')
+          .replace(/¢/g,'C')
+          .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
       const vm = this
       return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {
         console.log('Check Manual Trademarks Response:' + response.data)
@@ -1486,6 +1683,14 @@ export default new Vuex.Store({
     },
     userId(state) {
       return state.userId;
+    },
+    userHasEditRole(state) {
+       let roles = state.user_roles;
+       return roles.includes('names_approver') || roles.includes('names_editor')
+    },
+    userHasApproverRole(state) {
+       let roles = state.user_roles;
+       return roles.includes('names_approver')
     },
     is_my_current_nr(state) {
       // set flag indicating whether you own this NR and it's in progress
@@ -1743,6 +1948,12 @@ export default new Vuex.Store({
     },
     synonymMatchesConflicts(state) {
       return state.synonymMatchesConflicts;
+    },
+    cobrsPhoneticConflicts(state) {
+      return state.cobrsPhoneticConflicts;
+    },
+    phoneticConflicts(state) {
+      return state.phoneticConflicts;
     },
     conflictList(state) {
       return state.conflictList
