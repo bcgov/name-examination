@@ -409,8 +409,8 @@ export default new Vuex.Store({
             state.compInfo.compNames.compName1.decision_text = record.decision_text
             state.compInfo.compNames.compName1.comment = record.comment
 
-            // if this name is not yet examined, set it as current name
-            if (record.state == 'NE') {
+            // if this name is not yet examined or it is approved (in case of reset/re-open), set it as current name
+            if (record.state == 'NE' || record.state == 'APPROVED') {
               console.log('Set current name to name #1');
               this.dispatch('setCurrentName',record);
             }
@@ -427,8 +427,8 @@ export default new Vuex.Store({
             state.compInfo.compNames.compName2.decision_text = record.decision_text
             state.compInfo.compNames.compName2.comment = record.comment
 
-            // if this name is not yet examined, set it as current name
-            if (record.state == 'NE' &&
+            // if this name is not yet examined or it is approved (in case of reset/re-open), set it as current name
+            if ((record.state == 'NE' || record.state == 'APPROVED') &&
               (record.choice < state.currentChoice || state.currentChoice == null)
             ) {
               console.log('Set current name to name #2');
@@ -447,8 +447,8 @@ export default new Vuex.Store({
             state.compInfo.compNames.compName3.decision_text = record.decision_text
             state.compInfo.compNames.compName3.comment = record.comment
 
-            // if this name is not yet examined, set it as current name
-            if (record.state == 'NE' &&
+            // if this name is not yet examined or it is approved (in case of reset/re-open), set it as current name
+            if ((record.state == 'NE' || record.state == 'APPROVED') &&
               (record.choice < state.currentChoice || state.currentChoice == null)
             ) {
               this.dispatch('setCurrentName',record);
@@ -726,6 +726,10 @@ export default new Vuex.Store({
         // also set currentName and currentChoice
         state.currentName = value.name;
         state.currentChoice = value.choice;
+      }
+      else {
+        state.currentName = null;
+        state.currentChoice = null;
       }
     },
     currentChoice(state,value){
@@ -1270,43 +1274,6 @@ export default new Vuex.Store({
             })
             .catch(error => console.log('ERROR: ' + error))
       },
-
-    resetDecision({dispatch,state}, nameChoice) {
-
-      var objName = {}
-      if (nameChoice == 1) objName = this.getters.compName1;
-      if (nameChoice == 2) objName = this.getters.compName2;
-      if (nameChoice == 3) objName = this.getters.compName3;
-
-      objName.state = 'NE';
-      objName.conflict1 = null;
-      objName.conflict2 = null;
-      objName.conflict3 = null;
-      objName.conflict1_num = null;
-      objName.conflict2_num = null;
-      objName.conflict3_num = null;
-      objName.decision_text = null;
-      objName.comment = null;
-
-      // set current name to selection which re-sets the manual search string
-      dispatch('setCurrentName',objName.name)
-    },
-
-    revertLastDecision({state}) {
-      // TODO - RE-EVALUATE IN TERMS OF 'UNDO' VS 'REVERT'
-      console.log('Revert last decision');
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-      const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/names/' + nameNumber;
-
-      axios.put(url, {headers: {Authorization: `Bearer ${myToken}`}},{"name": nameData} )
-           .then(function(response){
-             console.log(response);
-
-             // get full NR from scratch
-             this.getpostgrescompInfo(state.compInfo.nrNumber);
-            })
-            .catch(error => console.log('ERROR: ' + error))
-    },
 
     loadDropdowns( {commit, state} ) {
       var json_files_path = 'static/ui_dropdowns/';
