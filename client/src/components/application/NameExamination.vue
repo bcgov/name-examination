@@ -17,7 +17,7 @@
 
       <!-- msg re. in progress with someone else -->
       <div class="alert alert-warning examiner-warning"
-           v-if="currentState == 'INPROGRESS' && examiner != userId && auth">
+           v-if="(currentState == 'INPROGRESS') && (examiner != userId) && auth">
         This NR is being examined by {{ examiner }}.
       </div>
 
