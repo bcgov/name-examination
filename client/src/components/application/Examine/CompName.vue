@@ -411,15 +411,15 @@
         this.$store.commit('currentCondition', null);
       },
       reOpen() {
-        // set current state to INPROGRESS
-        this.$store.commit('currentState', 'INPROGRESS');
+        // set current state to DRAFT
+        this.$store.commit('currentState', 'DRAFT');
 
         // update request in database
         this.$store.dispatch('updateRequest');
       },
       reset() {
-        // set current state to INPROGRESS and clear furnished flag
-        this.$store.commit('currentState', 'INPROGRESS');
+        // set current state to DRAFT and clear furnished flag
+        this.$store.commit('currentState', 'DRAFT');
         this.$store.commit('furnished', 'N');
 
         // update request in database

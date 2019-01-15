@@ -566,7 +566,7 @@ describe('CompName.vue', () => {
           click('#examine-reset-button');
 
           setTimeout(() => {
-            expect(instance.$store.state.currentState).toEqual("INPROGRESS");
+            expect(instance.$store.state.currentState).toEqual("DRAFT");
           }, 10)
         });
 
@@ -599,7 +599,7 @@ describe('CompName.vue', () => {
           click('#examine-re-open-button');
 
           setTimeout(() => {
-            expect(instance.$store.state.currentState).toEqual("INPROGRESS");
+            expect(instance.$store.state.currentState).toEqual("DRAFT");
           }, 10)
         });
 
