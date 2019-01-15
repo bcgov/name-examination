@@ -188,7 +188,7 @@
         return this.$store.getters.userHasEditRole;
       },
       canCancel() {
-        return this.userIsAnExaminer || (this.userCanEdit && ['DRAFT'].indexOf(this.currentState) > -1);
+        return this.userCanEdit;
       },
       is_my_current_nr() {
         return this.$store.getters.is_my_current_nr;

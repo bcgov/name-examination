@@ -230,10 +230,6 @@ describe('CompName.vue', () => {
          expect(vm.$el.querySelector('#examine-get-next-button')).toBeNull();
       });
 
-      it('Hides the cancel button for an editor user when NR is not in DRAFT state', () => {
-         expect(vm.$el.querySelector('#examine-cancel-button')).toBeNull();
-      });
-
       it('hides the undo buttons for an editor user', () => {
          expect(vm.$el.querySelector('#name1 button')).toBeNull();
          expect(vm.$el.querySelector('#name2 button')).toBeNull();
