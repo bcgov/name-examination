@@ -804,26 +804,41 @@ export default new Vuex.Store({
       state.synonymMatchesConflicts = [];
       let names = json.names;
       let additionalRow = null;
-
+      let entry = null;
+      let name_stems = null
+      let synonym_stem = null
       for (let i=0; i<names.length; i++) {
-        let entry = names[i];
+        name_stems = names[i].stem;
+        console.log('here: ', names[i])
+        if (names[i].name[0].name != null) {
+          entry = names[i].name[0];
+          synonym_stem = names[i].name[1]
+        } else {
+          entry = names[i];
+        }
+        console.log('entry: ', entry)
         additionalRow = null;
 
         if (entry.source == null) {
           entry.name = entry.name.replace('----', '');
           entry.name = entry.name.replace('synonyms:', '');
-		  entry.meta = entry.name.substring(entry.name.lastIndexOf('-')+1).trim()
-		  entry.name = entry.name.substring(0, entry.name.lastIndexOf('-')).trim()
+		      entry.meta = entry.name.substring(entry.name.lastIndexOf('-')+1).trim()
+		      entry.name = entry.name.substring(0, entry.name.lastIndexOf('-')).trim()
           entry.class = 'conflict-synonym-title';
         }
         else {
           entry.class = 'conflict-result';
+          entry.name = entry.name
         }
 
+        for (let i=0; i<name_stems; i++) {
+          stem_len = name_stems[i].length;
+          stem_index = entry.name.indexOf(name_stems[i])
+        }
         state.synonymMatchesConflicts.push({
-		  count:0,
+		      count:0,
           text:entry.name,
-		  meta:entry.meta,
+		      meta:entry.meta,
           nrNumber:entry.id,
           source:entry.source,
           class: entry.class,
