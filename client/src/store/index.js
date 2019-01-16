@@ -44,7 +44,7 @@ export default new Vuex.Store({
     listPriorities: null, // DROP LIST
     listJurisdictions: null, // DROP LIST
     listRequestTypes: null, // DROP LIST
-    listDecisionReasons: null,
+    listDecisionReasons: [],
 
     requestTypeRules: null, // list of request type rules, internal use only no display
 
@@ -169,7 +169,7 @@ export default new Vuex.Store({
     searchCompName: '',
     searchRanking: 'All',
     searchNotification: 'All',
-    searchSubmittedInterval: '30 days',
+    searchSubmittedInterval: 'All',
     searchLastUpdatedInterval: 'All',
     searchCurrentPage: 1,
     searchPerPage: 10,
