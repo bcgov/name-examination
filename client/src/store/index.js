@@ -44,7 +44,7 @@ export default new Vuex.Store({
     listPriorities: null, // DROP LIST
     listJurisdictions: null, // DROP LIST
     listRequestTypes: null, // DROP LIST
-    listDecisionReasons: [],
+    listDecisionReasons: null,
 
     requestTypeRules: null, // list of request type rules, internal use only no display
 
