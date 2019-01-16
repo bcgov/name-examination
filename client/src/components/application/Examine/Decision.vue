@@ -244,7 +244,7 @@
         */
 
         var arr_conditions = this.conditions.filter(function (el) {
-          return el.instructions !== '' && el.instructions !== null && el.instructions !== undefined
+          return el.instructions !== '' && el.instructions !== null
         });
 
         // manually add "CONSENT REQUIRED" condition
@@ -282,7 +282,7 @@
       },
       trademarks() {
         try {
-          if (this.$store.getters.trademarksJSON) {
+          if (this.$store.getters.trademarksJSON !== null) {
             return this.$store.getters.trademarksJSON.names;
           }
           else return []
