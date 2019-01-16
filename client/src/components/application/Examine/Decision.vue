@@ -14,7 +14,6 @@
           track-by="phrase"
           :close-on-select="true"
           deselectLabel=""
-          limittext="function(t){return'and '.concat(t,' more')}"
           selectLabel=""
           selectedLabel=""
           placeholder=""
@@ -33,7 +32,6 @@
           :max="3"
           :close-on-select="true"
           deselectLabel=""
-          limittext="function(t){return'and '.concat(t,' more')}"
           selectLabel=""
           selectedLabel=""
           placeholder=""
@@ -53,7 +51,6 @@
           track-by="name"
           :close-on-select="true"
           deselectLabel=""
-          limittext="function(t){return'and '.concat(t,' more')}"
           selectLabel=""
           selectedLabel=""
           placeholder=""
@@ -72,7 +69,6 @@
           track-by="name"
           :close-on-select="true"
           deselectLabel=""
-          limittext="function(t){return'and '.concat(t,' more')}"
           selectLabel=""
           selectedLabel=""
           placeholder=""
@@ -248,7 +244,7 @@
         */
 
         var arr_conditions = this.conditions.filter(function (el) {
-          return el.instructions !== '' && el.instructions !== null
+          return el.instructions !== '' && el.instructions !== null && el.instructions !== undefined
         });
 
         // manually add "CONSENT REQUIRED" condition
@@ -286,7 +282,7 @@
       },
       trademarks() {
         try {
-          if (this.$store.getters.trademarksJSON !== null) {
+          if (this.$store.getters.trademarksJSON) {
             return this.$store.getters.trademarksJSON.names;
           }
           else return []
