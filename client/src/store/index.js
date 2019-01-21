@@ -41,6 +41,7 @@ export default new Vuex.Store({
     acceptance_will_be_conditional: false,
     is_header_shown: false,
     furnished: null,
+    hasBeenReset: null,
     listPriorities: null, // DROP LIST
     listJurisdictions: null, // DROP LIST
     listRequestTypes: null, // DROP LIST
@@ -354,6 +355,9 @@ export default new Vuex.Store({
     furnished(state,value) {
       state.furnished = value;
     },
+    hasBeenReset(state,value) {
+      state.hasBeenReset = value;
+    },
     clearAuthData (state) {
       state.userId = null
       state.authorized = null
@@ -540,6 +544,7 @@ export default new Vuex.Store({
       state.previousNr = dbcompanyInfo.previousNr
       state.corpNum = dbcompanyInfo.corpNum
       state.furnished = dbcompanyInfo.furnished
+      state.hasBeenReset = dbcompanyInfo.hasBeenReset
 
       console.log('Setting nwpta data in state variables')
       // cycle through nwpta entries
@@ -693,6 +698,7 @@ export default new Vuex.Store({
       state.nrData.previousNr = state.previousNr
       state.nrData.corpNum = state.corpNum
       state.nrData.furnished = state.furnished
+      state.nrData.hasBeenReset = state.hasBeenReset
     },
 
     loadCompanyIssues(state, dbcompanyIssues) {
@@ -1699,6 +1705,9 @@ export default new Vuex.Store({
     },
     furnished(state) {
       return state.furnished;
+    },
+    hasBeenReset(state) {
+      return state.hasBeenReset;
     },
     is_complete(state) {
       // indicates a complete NR
