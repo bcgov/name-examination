@@ -413,6 +413,7 @@
       reOpen() {
         // set current state to DRAFT
         this.$store.commit('currentState', 'DRAFT');
+        this.$store.commit('hasBeenReset', true);
 
         // update request in database
         this.$store.dispatch('updateRequest');
