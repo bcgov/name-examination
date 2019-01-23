@@ -8,7 +8,7 @@
           <div v-for="(option, index) in conflictData" :key="option.value" :class="option.class" @click="clic(option)">
             <template v-if="option.class == 'conflict-synonym-title'">
               <div style="float:left; max-width:80%">
-                <span class="conflict-title">{{ option.text }}</span>
+                <span v-html="option.text" class="conflict-title"></span>
                 <span class="conflict-meta"> - {{ option.meta }}</span>
               </div>
               <div style="text-align:right; display:block; width:auto">
@@ -18,7 +18,7 @@
             </template>
             <template v-else-if="option.class.indexOf('conflict-synonym-title collapsible')==0">
               <div style="float:left; max-width:80%">
-                <span class="conflict-title">{{ option.text }}</span>
+                <span v-html="option.text" class="conflict-title"></span>
                 <span class="conflict-meta"> - {{ option.meta }}</span>
               </div>
               <div v-if="option.class.indexOf('collapsible collapsed') != -1" style="text-align:right; display:block; width:auto">
@@ -75,7 +75,7 @@
               </div>
             </template>
             <template v-else>
-              <div>{{ option.text }}</div>
+              <div v-html="option.text"></div>
             </template>
 		      </div>
 
@@ -411,4 +411,12 @@
     font-size: 14px;
   }
 
+</style>
+<style>
+  .stem-highlight {
+    color: #28a745;
+  }
+  .synonym-stem-highlight {
+    color: #e0a800;
+  }
 </style>

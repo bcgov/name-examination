@@ -806,35 +806,69 @@ export default new Vuex.Store({
       let additionalRow = null;
       let entry = null;
       let name_stems = null
-      let synonym_stem = null
+      let synonym_stems = null
       for (let i=0; i<names.length; i++) {
-        name_stems = names[i].stem;
         console.log('here: ', names[i])
-        if (names[i].name[0].name != null) {
-          entry = names[i].name[0];
-          synonym_stem = names[i].name[1]
+        if (names[i].name_info.source != null) {
+          console.log('result')
+          entry = names[i].name_info;
+          synonym_stems = names[i].stems
         } else {
-          entry = names[i];
+          console.log('title')
+          name_stems = names[i].stems;
+          entry = names[i].name_info;
         }
         console.log('entry: ', entry)
         additionalRow = null;
 
         if (entry.source == null) {
-          entry.name = entry.name.replace('----', '');
-          entry.name = entry.name.replace('synonyms:', '');
-		      entry.meta = entry.name.substring(entry.name.lastIndexOf('-')+1).trim()
-		      entry.name = entry.name.substring(0, entry.name.lastIndexOf('-')).trim()
+		      entry.meta = entry.name.substring(entry.name.lastIndexOf('-')+1).trim();
           entry.class = 'conflict-synonym-title';
-        }
-        else {
+		      entry.name = entry.name.replace('----', '');
+		      let syn_index = entry.name.indexOf('synonyms:');
+		      if (syn_index != -1) {
+		        let last_bracket_indx = entry.name.lastIndexOf(')');
+            let synonym_clause = entry.name.substring(syn_index+10, last_bracket_indx);
+            // '<span class="synonym-stem-highlight">' + entry.name.substring(syn_index, entry.name.length) + '</span>');
+            console.log(synonym_clause)
+            let synonym_list = synonym_clause.split(',');
+
+            for (var syn=0; syn<synonym_list.length; syn++) {
+              for (var wrd = 0; wrd < name_stems.length; wrd++) {
+                if (synonym_list[syn].toUpperCase().includes(name_stems[wrd].toUpperCase())) {
+                  name_stems.splice(wrd, 1);
+                  wrd--;
+                }
+              }
+              entry.name = entry.name.toUpperCase().replace(synonym_list[syn].toUpperCase(),'<span class="synonym-stem-highlight">'+ synonym_list[syn].toUpperCase() +'</span>');
+            }
+            entry.name = entry.name.toUpperCase().replace('SYNONYMS:', '');
+          }
+		      entry.name = entry.name.substring(0, entry.name.lastIndexOf('-')).trim();
+
+        } else {
           entry.class = 'conflict-result';
-          entry.name = entry.name
         }
 
-        for (let i=0; i<name_stems; i++) {
-          stem_len = name_stems[i].length;
-          stem_index = entry.name.indexOf(name_stems[i])
+        console.log('name stems: ', name_stems)
+        let k=0;
+        for (k=0;k<name_stems.length;k++) {
+          console.log(entry.name.toUpperCase())
+          console.log(name_stems[k].toUpperCase())
+          entry.name = entry.name.toUpperCase().replace(name_stems[k].toUpperCase(), '<span class="stem-highlight">' + name_stems[k].toUpperCase() +'</span>');
+          if (synonym_stems != undefined && synonym_stems.indexOf(name_stems[k].toUpperCase()) != -1) {
+            synonym_stems.splice(synonym_stems.indexOf(name_stems[k].toUpperCase()), 1);
+          }
         }
+        console.log('synonym stems: ', synonym_stems)
+        if (synonym_stems != undefined) {
+          for (k = 0; k < synonym_stems.length; k++) {
+            entry.name = entry.name.toUpperCase().replace(synonym_stems[k].toUpperCase(), '<span class="synonym-stem-highlight">' + synonym_stems[k].toUpperCase() + '</span>');
+          }
+        }
+        entry.name = entry.name.replace(/SYNONYM-STEM-HIGHLIGHT/g,'synonym-stem-highlight');
+        entry.name = entry.name.replace(/STEM-HIGHLIGHT/g,'stem-highlight');
+
         state.synonymMatchesConflicts.push({
 		      count:0,
           text:entry.name,
@@ -1500,7 +1534,7 @@ export default new Vuex.Store({
                 .replace(/¢/g,'C')
                 .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-      const url = '/api/v1/requests/synonymbucket/' + query;
+      const url = 'api/v1/requests/synonymbucket/' + query;
       console.log('URL:' + url);
       const vm = this;
       dispatch('checkToken');
