@@ -199,7 +199,7 @@ export default new Vuex.Store({
                     approved: {response: {numfound: ''}},
                     conditional: {response: {numfound: ''}},
                     rejected: {response: {numfound: ''}}
-    }
+    },
   },
   mutations: {
     requestType (state, value) {
@@ -805,22 +805,23 @@ export default new Vuex.Store({
       let names = json.names;
       let additionalRow = null;
       let entry = null;
-      let name_stems = null
+      let name_stems = []
       let synonym_stems = null
+      let wildcard_stack = false
       for (let i=0; i<names.length; i++) {
-        console.log('here: ', names[i])
         if (names[i].name_info.source != null) {
-          console.log('result')
+          //stack conflict
           entry = names[i].name_info;
           synonym_stems = names[i].stems
+
         } else {
-          console.log('title')
+          // stack title
           name_stems = names[i].stems;
           entry = names[i].name_info;
-        }
-        console.log('entry: ', entry)
-        additionalRow = null;
 
+          wildcard_stack = (entry.name.lastIndexOf('*') > 0)
+        }
+        additionalRow = null;
         if (entry.source == null) {
 		      entry.meta = entry.name.substring(entry.name.lastIndexOf('-')+1).trim();
           entry.class = 'conflict-synonym-title';
@@ -830,7 +831,6 @@ export default new Vuex.Store({
 		        let last_bracket_indx = entry.name.lastIndexOf(')');
             let synonym_clause = entry.name.substring(syn_index+10, last_bracket_indx);
             // '<span class="synonym-stem-highlight">' + entry.name.substring(syn_index, entry.name.length) + '</span>');
-            console.log(synonym_clause)
             let synonym_list = synonym_clause.split(',');
 
             for (var syn=0; syn<synonym_list.length; syn++) {
@@ -850,17 +850,18 @@ export default new Vuex.Store({
           entry.class = 'conflict-result';
         }
 
-        console.log('name stems: ', name_stems)
         let k=0;
-        for (k=0;k<name_stems.length;k++) {
-          console.log(entry.name.toUpperCase())
-          console.log(name_stems[k].toUpperCase())
-          entry.name = entry.name.toUpperCase().replace(name_stems[k].toUpperCase(), '<span class="stem-highlight">' + name_stems[k].toUpperCase() +'</span>');
-          if (synonym_stems != undefined && synonym_stems.indexOf(name_stems[k].toUpperCase()) != -1) {
-            synonym_stems.splice(synonym_stems.indexOf(name_stems[k].toUpperCase()), 1);
+
+        if (!wildcard_stack) {
+          for (k = 0; k < name_stems.length; k++) {
+            console.log(entry.name.toUpperCase())
+            console.log(name_stems[k].toUpperCase())
+            entry.name = entry.name.toUpperCase().replace(name_stems[k].toUpperCase(), '<span class="stem-highlight">' + name_stems[k].toUpperCase() + '</span>');
+            if (synonym_stems != undefined && synonym_stems.indexOf(name_stems[k].toUpperCase()) != -1) {
+              synonym_stems.splice(synonym_stems.indexOf(name_stems[k].toUpperCase()), 1);
+            }
           }
         }
-        console.log('synonym stems: ', synonym_stems)
         if (synonym_stems != undefined) {
           for (k = 0; k < synonym_stems.length; k++) {
             entry.name = entry.name.toUpperCase().replace(synonym_stems[k].toUpperCase(), '<span class="synonym-stem-highlight">' + synonym_stems[k].toUpperCase() + '</span>');
@@ -868,7 +869,6 @@ export default new Vuex.Store({
         }
         entry.name = entry.name.replace(/SYNONYM-STEM-HIGHLIGHT/g,'synonym-stem-highlight');
         entry.name = entry.name.replace(/STEM-HIGHLIGHT/g,'stem-highlight');
-
         state.synonymMatchesConflicts.push({
 		      count:0,
           text:entry.name,
@@ -920,9 +920,8 @@ export default new Vuex.Store({
       state.cobrsPhoneticConflicts = [];
       let names = json.names;
       let additionalRow = null;
-
       for (let i=0; i<names.length; i++) {
-        let entry = names[i];
+        let entry = names[i]['name_info'];
         additionalRow = null;
 
         if (entry.source == null) {
@@ -933,7 +932,6 @@ export default new Vuex.Store({
         else {
           entry.class = 'conflict-result';
         }
-
         state.cobrsPhoneticConflicts.push({
           count:0,
           text:entry.name,
@@ -986,7 +984,7 @@ export default new Vuex.Store({
       let additionalRow = null;
 
       for (let i=0; i<names.length; i++) {
-        let entry = names[i];
+        let entry = names[i]['name_info'];
         additionalRow = null;
 
         if (entry.source == null) {
@@ -1534,7 +1532,7 @@ export default new Vuex.Store({
                 .replace(/¢/g,'C')
                 .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-      const url = 'api/v1/requests/synonymbucket/' + query;
+      const url = '/api/v1/requests/synonymbucket/' + query;
       console.log('URL:' + url);
       const vm = this;
       dispatch('checkToken');

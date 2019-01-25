@@ -60,9 +60,9 @@ describe('PhoneticMatches', () => {
                     resolve({
                         data: {
                             names:[
-                              {name: '----INCREDIBLE NAME INC - meta1'},
-                              {name: '----INCREDIBLE NAME - meta2'},
-                              {name: '----INCREDIBLE - meta3'},
+                              {name_info:{name: '----INCREDIBLE NAME INC - meta1'},stems:[]},
+                              {name_info:{name: '----INCREDIBLE NAME - meta2'},stems:[]},
+                              {name_info:{name: '----INCREDIBLE - meta3'},stems:[]},
                             ]
                         }
                     })
@@ -73,10 +73,10 @@ describe('PhoneticMatches', () => {
                     resolve({
                         data: {
                             names:[
-                              {name: '----INCREDIBLE NAME INC'},
-                              {name: '----INCREDIBLE NAME'},
-                              {name: '----INCREDIBLE'},
-                              {id:"0793638",name:"INCREDYBLE STEPS RECORDS, INC.",score:1.0,source:"CORP"}
+                              {name_info:{name: '----INCREDIBLE NAME INC'},stems:[]},
+                              {name_info:{name: '----INCREDIBLE NAME'},stems:[]},
+                              {name_info:{name: '----INCREDIBLE'},stems:[]},
+                              {name_info:{id:"0793638",name:"INCREDYBLE STEPS RECORDS, INC.",score:1.0,source:"CORP"},stems:[]}
                             ]
                         }
                     })
@@ -87,10 +87,10 @@ describe('PhoneticMatches', () => {
                     resolve({
                         data: {
                             names:[
-                              {name: '----INCREDIBLE NAME INC'},
-                              {name: '----INCREDIBLE NAME'},
-                              {name: '----INCREDIBLE'},
-                              {id:"0893638",name:"INKREDABLE STEPS RECORDS, INC.",score:1.0,source:"CORP"}
+                              {name_info:{name: '----INCREDIBLE NAME INC'},stems:[]},
+                              {name_info:{name: '----INCREDIBLE NAME'},stems:[]},
+                              {name_info:{name: '----INCREDIBLE'},stems:[]},
+                              {name_info:{id:"0893638",name:"INKREDABLE STEPS RECORDS, INC.",score:1.0,source:"CORP"},stems:[]}
                             ]
                         }
                     })

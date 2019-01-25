@@ -12,14 +12,14 @@ describe('ConflictList.vue cobrs phonetic matches expand/collapse', () => {
 		const Constructor = Vue.extend(ConflictList);
 		vm = new Constructor({store:store}).$mount();
 		store.commit('setCobrsPhoneticConflicts', { names:[
-			{ name:'first title' },
-			{ name:'first match', source:'CORP' },
-			{ name:'second title' },
-			{ name:'second match #1', source:'CORP' },
-			{ name:'second match #2', source:'CORP' },
-			{ name:'third title' },
-			{ name:'third match #1', source:'CORP' },
-			{ name:'third match #2', source:'CORP' },
+			{name_info:{ name:'first title' },stems:[]},
+      {name_info:{ name:'first match', source:'CORP' },stems:[]},
+      {name_info:{ name:'second title'},stems:[]},
+      {name_info:{ name:'second match', source:'CORP' },stems:[]},
+      {name_info:{ name:'second match #2', source:'CORP' },stems:[]},
+      {name_info:{ name:'third title'},stems:[]},
+      {name_info:{ name:'third match', source:'CORP' },stems:[]},
+      {name_info:{ name:'third match #2', source:'CORP' },stems:[]},
 		] })
 		data = vm.$store.getters.cobrsPhoneticConflicts
 	})
