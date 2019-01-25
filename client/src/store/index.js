@@ -851,15 +851,12 @@ export default new Vuex.Store({
         }
 
         let k=0;
-
-        if (!wildcard_stack) {
-          for (k = 0; k < name_stems.length; k++) {
-            console.log(entry.name.toUpperCase())
-            console.log(name_stems[k].toUpperCase())
+        for (k = 0; k < name_stems.length; k++) {
+          if (!wildcard_stack) {
             entry.name = entry.name.toUpperCase().replace(name_stems[k].toUpperCase(), '<span class="stem-highlight">' + name_stems[k].toUpperCase() + '</span>');
-            if (synonym_stems != undefined && synonym_stems.indexOf(name_stems[k].toUpperCase()) != -1) {
-              synonym_stems.splice(synonym_stems.indexOf(name_stems[k].toUpperCase()), 1);
-            }
+          }
+          if (synonym_stems != undefined && synonym_stems.indexOf(name_stems[k].toUpperCase()) != -1) {
+            synonym_stems.splice(synonym_stems.indexOf(name_stems[k].toUpperCase()), 1);
           }
         }
         if (synonym_stems != undefined) {
