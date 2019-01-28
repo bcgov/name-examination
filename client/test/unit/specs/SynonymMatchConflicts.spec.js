@@ -89,7 +89,6 @@ describe('Synonym-Match Conflicts', () => {
 
         it('displays synonym-match conflicts after exact match list', ()=>{
             var content = data.vm.$el.querySelector('#conflict-list').textContent.trim()
-
             expect(content.indexOf('fake exact match')).not.toEqual(-1)
             expect(content.indexOf('Synonym Match')).not.toEqual(-1)
             expect(content.indexOf('fake exact match') < content.indexOf('Synonym Match')).toEqual(true)
@@ -97,10 +96,11 @@ describe('Synonym-Match Conflicts', () => {
 
         it('populates additional attributes as expected', ()=>{
             expect(data.instance.$store.state.synonymMatchesConflicts).toEqual([
-                {"class": "conflict-synonym-title", "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE NAME BLA*", "meta":"meta1", "count":0},
-                {"class": "conflict-synonym-title", "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE NAME*", "meta":"meta2", "count":0},
-                {"class": "conflict-synonym-title collapsible collapsed", "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE*", "meta":"meta3", "count":1},
-                {"class": "conflict-result conflict-result-hidden", "nrNumber": "0793638", "source": "CORP", "text": "INCREDIBLE STEPS RECORDS, INC.", "meta":undefined, "count":0}])
+              {"class": "conflict-synonym-title", "count": 0, "highlightedText": "INCREDIBLE NAME BLA*", "meta": "meta1", "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE NAME BLA*"},
+              {"class": "conflict-synonym-title", "count": 0, "highlightedText": "INCREDIBLE NAME*", "meta": "meta2", "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE NAME*"},
+              {"class": "conflict-synonym-title collapsible collapsed", "count": 1, "highlightedText": "INCREDIBLE*", "meta": "meta3", "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE*"},
+              {"class": "conflict-result conflict-result-hidden", "count": 0, "highlightedText": "INCREDIBLE STEPS RECORDS, INC.", "meta": undefined, "nrNumber": "0793638", "source": "CORP", "text": "INCREDIBLE STEPS RECORDS, INC."}]
+)
         })
 
         it('highlights the stems properly', (done)=>{
@@ -126,16 +126,15 @@ describe('Synonym-Match Conflicts', () => {
                 sessionStorage.setItem('AUTHORIZED', true)
                 router.push('/nameExamination')
                 setTimeout(()=>{
-                    expect(data.instance.$store.state.synonymMatchesConflicts).toEqual([
-                      {"class": "conflict-synonym-title collapsible expanded", "count": 3, "meta": "meta1", "nrNumber": undefined, "source": undefined, "text": "<SPAN CLASS=\"stem-highlight\">PACIF</SPAN>IC <SPAN CLASS=\"stem-highlight\">LUMB</SPAN>ER <span class=\"stem-highlight\">CONSTRUCT</span>ION"},
-                      {"class": "conflict-result conflict-result-displayed", "count": 0, "meta": undefined, "nrNumber": "0193638", "source": "CORP", "text": "<SPAN CLASS=\"stem-highlight\"><SPAN CLASS=\"synonym-stem-highlight\">PACIF</SPAN></SPAN>IC <SPAN CLASS=\"stem-highlight\"><SPAN CLASS=\"synonym-stem-highlight\">LUMB</SPAN></SPAN>ER <span class=\"synonym-stem-highlight\">DEVELOP</span>MENTS"},
-                      {"class": "conflict-result conflict-result-displayed", "count": 0, "meta": undefined, "nrNumber": "0293638", "source": "CORP", "text": "<SPAN CLASS=\"stem-highlight\"><SPAN CLASS=\"synonym-stem-highlight\">PACIF</SPAN></SPAN>IC <SPAN CLASS=\"synonym-stem-highlight\">LOG</SPAN> <SPAN CLASS=\"stem-highlight\"><span class=\"synonym-stem-highlight\">CONSTRUCT</span></SPAN>ION"},
-                      {"class": "conflict-result conflict-result-displayed", "count": 0, "meta": undefined, "nrNumber": "0393638", "source": "CORP", "text": "<SPAN CLASS=\"stem-highlight\"><SPAN CLASS=\"synonym-stem-highlight\">PACIF</SPAN></SPAN>IC <SPAN CLASS=\"synonym-stem-highlight\">LOG</SPAN> <span class=\"synonym-stem-highlight\">RENO</span>VATIONS"},
-                      {"class": "conflict-synonym-title collapsible collapsed", "count": 1, "meta": "meta2", "nrNumber": undefined, "source": undefined, "text": "<SPAN CLASS=\"stem-highlight\"><SPAN CLASS=\"synonym-stem-highlight\">PACIF</SPAN></SPAN>IC <SPAN CLASS=\"stem-highlight\">LUMB</SPAN>ER (CONSTRUCTION)"},
-                      {"class": "conflict-result conflict-result-hidden", "count": 0, "meta": undefined, "nrNumber": "0493638", "source": "CORP", "text": "<SPAN CLASS=\"stem-highlight\"><SPAN CLASS=\"synonym-stem-highlight\">PACIF</SPAN></SPAN>IC <SPAN CLASS=\"stem-highlight\"><SPAN CLASS=\"synonym-stem-highlight\">LUMB</SPAN></SPAN>ER WORD1 WORD2 WORD3 WORD4 <span class=\"synonym-stem-highlight\">RENO</span>VATIONS"},
-                      {"class": "conflict-synonym-title collapsible collapsed", "count": 1, "meta": "meta3", "nrNumber": undefined, "source": undefined, "text": "<SPAN CLASS=\"stem-highlight\"><SPAN CLASS=\"synonym-stem-highlight\">PACIF</SPAN></SPAN>IC (<SPAN CLASS=\"synonym-stem-highlight\">LUMB</SPAN>ER, CONSTRUCTION)"},
-                      {"class": "conflict-result conflict-result-hidden", "count": 0, "meta": undefined, "nrNumber": "0593638", "source": "CORP", "text": "<SPAN CLASS=\"stem-highlight\"><SPAN CLASS=\"synonym-stem-highlight\">PACIF</SPAN></SPAN>IC WORD1 WORD2 WORD3 WORD4 <SPAN CLASS=\"synonym-stem-highlight\">LUMB</SPAN>ER <span class=\"synonym-stem-highlight\">RENO</span>VATIONS"}
-                    ]
+                    expect(data.instance.$store.state.synonymMatchesConflicts).toEqual( [
+                      {"class": "conflict-synonym-title collapsible expanded", "count": 3, "highlightedText": "<SPAN CLASS=\"stem-highlight\">PACIF</SPAN>IC <SPAN CLASS=\"stem-highlight\">LUMB</SPAN>ER <span class=\"stem-highlight\">CONSTRUCT</span>ION", "meta": "meta1", "nrNumber": undefined, "source": undefined, "text": "PACIFIC LUMBER CONSTRUCTION"},
+                      {"class": "conflict-result conflict-result-displayed", "count": 0, "highlightedText": "<SPAN CLASS=\"stem-highlight\"><SPAN CLASS=\"synonym-stem-highlight\">PACIF</SPAN></SPAN>IC <SPAN CLASS=\"stem-highlight\"><SPAN CLASS=\"synonym-stem-highlight\">LUMB</SPAN></SPAN>ER <span class=\"synonym-stem-highlight\">DEVELOP</span>MENTS", "meta": undefined, "nrNumber": "0193638", "source": "CORP", "text": "PACIFIC LUMBER DEVELOPMENTS"},
+                      {"class": "conflict-result conflict-result-displayed", "count": 0, "highlightedText": "<SPAN CLASS=\"stem-highlight\"><SPAN CLASS=\"synonym-stem-highlight\">PACIF</SPAN></SPAN>IC <SPAN CLASS=\"synonym-stem-highlight\">LOG</SPAN> <SPAN CLASS=\"stem-highlight\"><span class=\"synonym-stem-highlight\">CONSTRUCT</span></SPAN>ION", "meta": undefined, "nrNumber": "0293638", "source": "CORP", "text": "PACIFIC LOG CONSTRUCTION"},
+                      {"class": "conflict-result conflict-result-displayed", "count": 0, "highlightedText": "<SPAN CLASS=\"stem-highlight\"><SPAN CLASS=\"synonym-stem-highlight\">PACIF</SPAN></SPAN>IC <SPAN CLASS=\"synonym-stem-highlight\">LOG</SPAN> <span class=\"synonym-stem-highlight\">RENO</span>VATIONS", "meta": undefined, "nrNumber": "0393638", "source": "CORP", "text": "PACIFIC LOG RENOVATIONS"},
+                      {"class": "conflict-synonym-title collapsible collapsed", "count": 1, "highlightedText": "<SPAN CLASS=\"stem-highlight\"><SPAN CLASS=\"synonym-stem-highlight\">PACIF</SPAN></SPAN>IC <SPAN CLASS=\"stem-highlight\">LUMB</SPAN>ER (CONSTRUCTION)", "meta": "meta2", "nrNumber": undefined, "source": undefined, "text": "PACIFIC LUMBER (CONSTRUCTION)"},
+                      {"class": "conflict-result conflict-result-hidden", "count": 0, "highlightedText": "<SPAN CLASS=\"stem-highlight\"><SPAN CLASS=\"synonym-stem-highlight\">PACIF</SPAN></SPAN>IC <SPAN CLASS=\"stem-highlight\"><SPAN CLASS=\"synonym-stem-highlight\">LUMB</SPAN></SPAN>ER WORD1 WORD2 WORD3 WORD4 <span class=\"synonym-stem-highlight\">RENO</span>VATIONS", "meta": undefined, "nrNumber": "0493638", "source": "CORP", "text": "PACIFIC LUMBER WORD1 WORD2 WORD3 WORD4 RENOVATIONS"},
+                      {"class": "conflict-synonym-title collapsible collapsed", "count": 1, "highlightedText": "<SPAN CLASS=\"stem-highlight\"><SPAN CLASS=\"synonym-stem-highlight\">PACIF</SPAN></SPAN>IC (<SPAN CLASS=\"synonym-stem-highlight\">LUMB</SPAN>ER, CONSTRUCTION)", "meta": "meta3", "nrNumber": undefined, "source": undefined, "text": "PACIFIC (LUMBER, CONSTRUCTION)"},
+                      {"class": "conflict-result conflict-result-hidden", "count": 0, "highlightedText": "<SPAN CLASS=\"stem-highlight\"><SPAN CLASS=\"synonym-stem-highlight\">PACIF</SPAN></SPAN>IC WORD1 WORD2 WORD3 WORD4 <SPAN CLASS=\"synonym-stem-highlight\">LUMB</SPAN>ER <span class=\"synonym-stem-highlight\">RENO</span>VATIONS", "meta": undefined, "nrNumber": "0593638", "source": "CORP", "text": "PACIFIC WORD1 WORD2 WORD3 WORD4 LUMBER RENOVATIONS"}]
 )
                     done();
                 }, 1000)

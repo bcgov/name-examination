@@ -109,10 +109,10 @@ describe('CobrsPhoneticMatches', () => {
 
         it('populates additional attributes as expected', ()=>{
             expect(data.instance.$store.state.cobrsPhoneticConflicts).toEqual([
-                {"class": "conflict-cobrs-phonetic-title", "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE NAME INC", "meta":undefined, "count":0},
-                {"class": "conflict-cobrs-phonetic-title", "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE NAME", "meta":undefined, "count":0},
-                {"class": "conflict-cobrs-phonetic-title collapsible collapsed", "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE", "meta":undefined, "count":1},
-                {"class": "conflict-result conflict-result-hidden", "nrNumber": "0793638", "source": "CORP", "text": "INCREDYBLE STEPS RECORDS, INC.", "count":0}])
+              {"class": "conflict-cobrs-phonetic-title", "count": 0, "highlightedText": "INCREDIBLE NAME INC", "meta": undefined, "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE NAME INC"},
+              {"class": "conflict-cobrs-phonetic-title", "count": 0, "highlightedText": "INCREDIBLE NAME", "meta": undefined, "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE NAME"},
+              {"class": "conflict-cobrs-phonetic-title collapsible collapsed", "count": 1, "highlightedText": "INCREDIBLE", "meta": undefined, "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE"},
+              {"class": "conflict-result conflict-result-hidden", "count": 0, "highlightedText": "INCREDYBLE STEPS RECORDS, INC.", "meta": undefined, "nrNumber": "0793638", "source": "CORP", "text": "INCREDYBLE STEPS RECORDS, INC."}])
         })
 
         it('changes conflicts tab to red', (done)=>{

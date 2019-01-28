@@ -793,6 +793,7 @@ export default new Vuex.Store({
         var entry = names[i];
         state.exactMatchesConflicts.push({
           text:entry.name,
+          highlightedText: entry.name,
           nrNumber:entry.id,
           source:entry.source,
           class: 'conflict-result conflict-exact-match',
@@ -802,6 +803,7 @@ export default new Vuex.Store({
 
     setSynonymMatchesConflicts(state, json) {
       state.synonymMatchesConflicts = [];
+      state.synonymHighlightedMatches = [];
       let names = json.names;
       let additionalRow = null;
       let entry = null;
@@ -868,7 +870,8 @@ export default new Vuex.Store({
         entry.name = entry.name.replace(/STEM-HIGHLIGHT/g,'stem-highlight');
         state.synonymMatchesConflicts.push({
 		      count:0,
-          text:entry.name,
+          text:entry.name.replace(/<SPAN CLASS="SYNONYM\-STEM\-HIGHLIGHT">|<SPAN CLASS="STEM\-HIGHLIGHT">|<\/SPAN>/gi, ''),
+          highlightedText:entry.name,
 		      meta:entry.meta,
           nrNumber:entry.id,
           source:entry.source,
@@ -932,6 +935,7 @@ export default new Vuex.Store({
         state.cobrsPhoneticConflicts.push({
           count:0,
           text:entry.name,
+          highlightedText: entry.name,
           meta:entry.meta,
           nrNumber:entry.id,
           source:entry.source,
@@ -996,6 +1000,7 @@ export default new Vuex.Store({
         state.phoneticConflicts.push({
           count:0,
           text:entry.name,
+          highlightedText:entry.name,
           meta:entry.meta,
           nrNumber:entry.id,
           source:entry.source,
