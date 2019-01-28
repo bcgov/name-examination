@@ -159,6 +159,8 @@ module.exports = {
 
       exactMatchesConflicts: [],
       synonymMatchesConflicts: [],
+      cobrsPhoneticConflicts: [],
+      phoneticConflicts: [],
       conflictList: [],
       conflictHighlighting: [],
       conflictNames: [],

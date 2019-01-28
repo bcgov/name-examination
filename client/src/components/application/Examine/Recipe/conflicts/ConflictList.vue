@@ -8,7 +8,7 @@
           <div v-for="(option, index) in conflictData" :key="option.value" :class="option.class" @click="clic(option)">
             <template v-if="option.class == 'conflict-synonym-title'">
               <div style="float:left; max-width:80%">
-                <span class="conflict-title">{{ option.text }}</span>
+                <span v-html="option.highlightedText" class="conflict-title"></span>
                 <span class="conflict-meta"> - {{ option.meta }}</span>
               </div>
               <div style="text-align:right; display:block; width:auto">
@@ -18,7 +18,7 @@
             </template>
             <template v-else-if="option.class.indexOf('conflict-synonym-title collapsible')==0">
               <div style="float:left; max-width:80%">
-                <span class="conflict-title">{{ option.text }}</span>
+                <span v-html="option.highlightedText" class="conflict-title"></span>
                 <span class="conflict-meta"> - {{ option.meta }}</span>
               </div>
               <div v-if="option.class.indexOf('collapsible collapsed') != -1" style="text-align:right; display:block; width:auto">
@@ -75,7 +75,7 @@
               </div>
             </template>
             <template v-else>
-              <div>{{ option.text }}</div>
+              <div v-html="option.highlightedText"></div>
             </template>
 		      </div>
 
@@ -105,39 +105,39 @@
         var data = [];
 
         // add Exact Match header
-        data = data.concat([{ text: 'Exact Match', class: 'exact-match-title'}]);
+        data = data.concat([{ highlightedText: 'Exact Match', class: 'exact-match-title'}]);
 
         // add Exact Match data
         if (this.$store.getters.exactMatchesConflicts && this.$store.getters.exactMatchesConflicts.length > 0) {
           data = data.concat(this.$store.getters.exactMatchesConflicts);
         }
         else {
-          data = data.concat([{ text:'No Exact Match', class: 'conflict-no-match' }]);
+          data = data.concat([{ highlightedText:'No Exact Match', class: 'conflict-no-match' }]);
         }
 
         // add Synonym Match header
-        data = data.concat([{ text: 'Exact Word Order + Synonym Match', class: 'synonym-match-title'}]);
+        data = data.concat([{ highlightedText: 'Exact Word Order + Synonym Match', class: 'synonym-match-title'}]);
 
         // add Synonym Match data
         if (this.$store.getters.synonymMatchesConflicts && this.$store.getters.synonymMatchesConflicts.length) {
           data = data.concat(this.$store.getters.synonymMatchesConflicts);
         }
         // add cobrs phonetic match header
-        data = data.concat([{ text: 'Character Swap Match', class: 'cobrs-phonetic-match-title'}]);
+        data = data.concat([{ highlightedText: 'Character Swap Match', class: 'cobrs-phonetic-match-title'}]);
 
         // add cobrs phonetic data
         if (this.$store.getters.cobrsPhoneticConflicts && this.$store.getters.cobrsPhoneticConflicts.length) {
           data = data.concat(this.$store.getters.cobrsPhoneticConflicts);
 	  	  }
         // add phonetic match header
-        data = data.concat([{ text: 'Phonetic Match (experimental)', class: 'phonetic-match-title'}]);
+        data = data.concat([{ highlightedText: 'Phonetic Match (experimental)', class: 'phonetic-match-title'}]);
 
         // add phonetic data
         if (this.$store.getters.phoneticConflicts && this.$store.getters.phoneticConflicts.length) {
           data = data.concat(this.$store.getters.phoneticConflicts);
 	  	  }
         else
-          data = data.concat([{ text:'No Match', class: 'conflict-no-match' }]);
+          data = data.concat([{ highlightedText:'No Match', class: 'conflict-no-match' }]);
 
 		    this.conflictEntries = data
 
@@ -267,11 +267,12 @@
           this.conflictData.length > 1 && this.conflictData[1].source
         ) {
           this.selectedConflict = {
-              index:1,
-			  class:this.conflictData[1].class,
-              text:this.conflictData[1].text,
-              source:this.conflictData[1].source,
-              nrNumber:this.conflictData[1].nrNumber
+            index:1,
+            class:this.conflictData[1].class,
+            text:this.conflictData[1].text,
+            highlightedText:this.conflictData[1].highlightedText,
+            source:this.conflictData[1].source,
+            nrNumber:this.conflictData[1].nrNumber
           }
         }
         else if (this.$store.getters.currentConflict != null) {
@@ -411,4 +412,12 @@
     font-size: 14px;
   }
 
+</style>
+<style>
+  .stem-highlight {
+    color: #28a745;
+  }
+  .synonym-stem-highlight {
+    color: #e0a800;
+  }
 </style>

@@ -199,7 +199,7 @@ export default new Vuex.Store({
                     approved: {response: {numfound: ''}},
                     conditional: {response: {numfound: ''}},
                     rejected: {response: {numfound: ''}}
-    }
+    },
   },
   mutations: {
     requestType (state, value) {
@@ -793,6 +793,7 @@ export default new Vuex.Store({
         var entry = names[i];
         state.exactMatchesConflicts.push({
           text:entry.name,
+          highlightedText: entry.name,
           nrNumber:entry.id,
           source:entry.source,
           class: 'conflict-result conflict-exact-match',
@@ -802,28 +803,76 @@ export default new Vuex.Store({
 
     setSynonymMatchesConflicts(state, json) {
       state.synonymMatchesConflicts = [];
+      state.synonymHighlightedMatches = [];
       let names = json.names;
       let additionalRow = null;
-
+      let entry = null;
+      let name_stems = []
+      let synonym_stems = null
+      let wildcard_stack = false
       for (let i=0; i<names.length; i++) {
-        let entry = names[i];
-        additionalRow = null;
+        if (names[i].name_info.source != null) {
+          //stack conflict
+          entry = names[i].name_info;
+          synonym_stems = names[i].stems
 
-        if (entry.source == null) {
-          entry.name = entry.name.replace('----', '');
-          entry.name = entry.name.replace('synonyms:', '');
-		  entry.meta = entry.name.substring(entry.name.lastIndexOf('-')+1).trim()
-		  entry.name = entry.name.substring(0, entry.name.lastIndexOf('-')).trim()
-          entry.class = 'conflict-synonym-title';
+        } else {
+          // stack title
+          name_stems = names[i].stems;
+          entry = names[i].name_info;
+
+          wildcard_stack = (entry.name.lastIndexOf('*') > 0)
         }
-        else {
+        additionalRow = null;
+        if (entry.source == null) {
+		      entry.meta = entry.name.substring(entry.name.lastIndexOf('-')+1).trim();
+          entry.class = 'conflict-synonym-title';
+		      entry.name = entry.name.replace('----', '');
+		      let syn_index = entry.name.indexOf('synonyms:');
+		      if (syn_index != -1) {
+		        let last_bracket_indx = entry.name.lastIndexOf(')');
+            let synonym_clause = entry.name.substring(syn_index+10, last_bracket_indx);
+            // '<span class="synonym-stem-highlight">' + entry.name.substring(syn_index, entry.name.length) + '</span>');
+            let synonym_list = synonym_clause.split(',');
+
+            for (var syn=0; syn<synonym_list.length; syn++) {
+              for (var wrd = 0; wrd < name_stems.length; wrd++) {
+                if (synonym_list[syn].toUpperCase().includes(name_stems[wrd].toUpperCase())) {
+                  name_stems.splice(wrd, 1);
+                  wrd--;
+                }
+              }
+              entry.name = entry.name.toUpperCase().replace(synonym_list[syn].toUpperCase(),'<span class="synonym-stem-highlight">'+ synonym_list[syn].toUpperCase() +'</span>');
+            }
+            entry.name = entry.name.toUpperCase().replace('SYNONYMS:', '');
+          }
+		      entry.name = entry.name.substring(0, entry.name.lastIndexOf('-')).trim();
+
+        } else {
           entry.class = 'conflict-result';
         }
 
+        let k=0;
+        for (k = 0; k < name_stems.length; k++) {
+          if (!wildcard_stack) {
+            entry.name = entry.name.toUpperCase().replace(name_stems[k].toUpperCase(), '<span class="stem-highlight">' + name_stems[k].toUpperCase() + '</span>');
+          }
+          if (synonym_stems != undefined && synonym_stems.indexOf(name_stems[k].toUpperCase()) != -1) {
+            synonym_stems.splice(synonym_stems.indexOf(name_stems[k].toUpperCase()), 1);
+          }
+        }
+        if (synonym_stems != undefined) {
+          for (k = 0; k < synonym_stems.length; k++) {
+            entry.name = entry.name.toUpperCase().replace(synonym_stems[k].toUpperCase(), '<span class="synonym-stem-highlight">' + synonym_stems[k].toUpperCase() + '</span>');
+          }
+        }
+        entry.name = entry.name.replace(/SYNONYM-STEM-HIGHLIGHT/g,'synonym-stem-highlight');
+        entry.name = entry.name.replace(/STEM-HIGHLIGHT/g,'stem-highlight');
         state.synonymMatchesConflicts.push({
-		  count:0,
-          text:entry.name,
-		  meta:entry.meta,
+		      count:0,
+          text:entry.name.replace(/<SPAN CLASS="SYNONYM\-STEM\-HIGHLIGHT">|<SPAN CLASS="STEM\-HIGHLIGHT">|<\/SPAN>/gi, ''),
+          highlightedText:entry.name,
+		      meta:entry.meta,
           nrNumber:entry.id,
           source:entry.source,
           class: entry.class,
@@ -871,9 +920,8 @@ export default new Vuex.Store({
       state.cobrsPhoneticConflicts = [];
       let names = json.names;
       let additionalRow = null;
-
       for (let i=0; i<names.length; i++) {
-        let entry = names[i];
+        let entry = names[i]['name_info'];
         additionalRow = null;
 
         if (entry.source == null) {
@@ -884,10 +932,10 @@ export default new Vuex.Store({
         else {
           entry.class = 'conflict-result';
         }
-
         state.cobrsPhoneticConflicts.push({
           count:0,
           text:entry.name,
+          highlightedText: entry.name,
           meta:entry.meta,
           nrNumber:entry.id,
           source:entry.source,
@@ -937,7 +985,7 @@ export default new Vuex.Store({
       let additionalRow = null;
 
       for (let i=0; i<names.length; i++) {
-        let entry = names[i];
+        let entry = names[i]['name_info'];
         additionalRow = null;
 
         if (entry.source == null) {
@@ -952,6 +1000,7 @@ export default new Vuex.Store({
         state.phoneticConflicts.push({
           count:0,
           text:entry.name,
+          highlightedText:entry.name,
           meta:entry.meta,
           nrNumber:entry.id,
           source:entry.source,

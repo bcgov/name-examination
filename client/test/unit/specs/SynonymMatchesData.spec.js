@@ -14,14 +14,14 @@ describe('store > setSynonymMatchesConflicts', () => {
 		var data
 		beforeEach(()=>{
 			store.commit('setSynonymMatchesConflicts', { names:[
-				{ name:'first title' },
-				{ name:'first match', source:'CORP' },
-				{ name:'second title' },
-				{ name:'second match #1', source:'CORP' },
-				{ name:'second match #2', source:'CORP' },
-				{ name:'third title' },
-				{ name:'third match #1', source:'CORP' },
-				{ name:'third match #2', source:'CORP' },
+        {name_info:{ name:'first title - meta' },stems:[]},
+        {name_info:{ name:'first match', source:'CORP' },stems:[]},
+				{name_info:{ name:'second title - meta'},stems:[]},
+				{name_info:{ name:'second match', source:'CORP' },stems:[]},
+				{name_info:{ name:'second match #2', source:'CORP' },stems:[]},
+				{name_info:{ name:'third title - meta'},stems:[]},
+				{name_info:{ name:'third match', source:'CORP' },stems:[]},
+				{name_info:{ name:'third match #2', source:'CORP' },stems:[]},
 			] })
 			data = store.state.synonymMatchesConflicts
 		})
@@ -48,8 +48,8 @@ describe('store > setSynonymMatchesConflicts', () => {
 			var data
 			beforeEach(()=>{
 				store.commit('setSynonymMatchesConflicts', { names:[
-					{ name:'first title' },
-					{ name:'second title' }
+					{name_info:{ name:'first title - meta' },stems:[]},
+					{name_info:{ name:'second title - meta'},stems:[]}
 				] })
 				data = store.state.synonymMatchesConflicts
 			})

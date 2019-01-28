@@ -60,9 +60,9 @@ describe('PhoneticMatches', () => {
                     resolve({
                         data: {
                             names:[
-                              {name: '----INCREDIBLE NAME INC - meta1'},
-                              {name: '----INCREDIBLE NAME - meta2'},
-                              {name: '----INCREDIBLE - meta3'},
+                              {name_info:{name: '----INCREDIBLE NAME INC - meta1'},stems:[]},
+                              {name_info:{name: '----INCREDIBLE NAME - meta2'},stems:[]},
+                              {name_info:{name: '----INCREDIBLE - meta3'},stems:[]},
                             ]
                         }
                     })
@@ -73,10 +73,10 @@ describe('PhoneticMatches', () => {
                     resolve({
                         data: {
                             names:[
-                              {name: '----INCREDIBLE NAME INC'},
-                              {name: '----INCREDIBLE NAME'},
-                              {name: '----INCREDIBLE'},
-                              {id:"0793638",name:"INCREDYBLE STEPS RECORDS, INC.",score:1.0,source:"CORP"}
+                              {name_info:{name: '----INCREDIBLE NAME INC'},stems:[]},
+                              {name_info:{name: '----INCREDIBLE NAME'},stems:[]},
+                              {name_info:{name: '----INCREDIBLE'},stems:[]},
+                              {name_info:{id:"0793638",name:"INCREDYBLE STEPS RECORDS, INC.",score:1.0,source:"CORP"},stems:[]}
                             ]
                         }
                     })
@@ -87,10 +87,10 @@ describe('PhoneticMatches', () => {
                     resolve({
                         data: {
                             names:[
-                              {name: '----INCREDIBLE NAME INC'},
-                              {name: '----INCREDIBLE NAME'},
-                              {name: '----INCREDIBLE'},
-                              {id:"0893638",name:"INKREDABLE STEPS RECORDS, INC.",score:1.0,source:"CORP"}
+                              {name_info:{name: '----INCREDIBLE NAME INC'},stems:[]},
+                              {name_info:{name: '----INCREDIBLE NAME'},stems:[]},
+                              {name_info:{name: '----INCREDIBLE'},stems:[]},
+                              {name_info:{id:"0893638",name:"INKREDABLE STEPS RECORDS, INC.",score:1.0,source:"CORP"},stems:[]}
                             ]
                         }
                     })
@@ -123,10 +123,11 @@ describe('PhoneticMatches', () => {
 
         it('populates additional attributes as expected', ()=>{
             expect(data.instance.$store.state.phoneticConflicts).toEqual([
-                {"class": "conflict-phonetic-title", "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE NAME INC", "meta":undefined, "count":0},
-                {"class": "conflict-phonetic-title", "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE NAME", "meta":undefined, "count":0},
-                {"class": "conflict-phonetic-title collapsible collapsed", "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE", "meta":undefined, "count":1},
-                {"class": "conflict-result conflict-result-hidden", "nrNumber": "0893638", "source": "CORP", "text": "INKREDABLE STEPS RECORDS, INC.", "count":0}])
+              {"class": "conflict-phonetic-title", "count": 0, "highlightedText": "INCREDIBLE NAME INC", "meta": undefined, "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE NAME INC"},
+              {"class": "conflict-phonetic-title", "count": 0, "highlightedText": "INCREDIBLE NAME", "meta": undefined, "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE NAME"},
+              {"class": "conflict-phonetic-title collapsible collapsed", "count": 1, "highlightedText": "INCREDIBLE", "meta": undefined, "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE"},
+              {"class": "conflict-result conflict-result-hidden", "count": 0, "highlightedText": "INKREDABLE STEPS RECORDS, INC.", "meta": undefined, "nrNumber": "0893638", "source": "CORP", "text": "INKREDABLE STEPS RECORDS, INC."}]
+)
         })
 
         it('changes conflicts tab to red', (done)=>{

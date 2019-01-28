@@ -60,10 +60,10 @@ describe('CobrsPhoneticMatches', () => {
                     resolve({
                         data: {
                             names:[
-                              {name: '----INCREDIBLE NAME INC - meta1'},
-                              {name: '----INCREDIBLE NAME - meta2'},
-                              {name: '----INCREDIBLE - meta3'},
-                              {id:"0693638",name:"INCREDIBLE STEPS RECORDS, INC.",score:1.0,source:"CORP"}
+                              {name_info:{name: '----INCREDIBLE NAME INC - meta1'},stems:[]},
+                              {name_info:{name: '----INCREDIBLE NAME - meta2'},stems:[]},
+                              {name_info:{name: '----INCREDIBLE - meta3'},stems:[]},
+                              {name_info:{id:"0693638",name:"INCREDIBLE STEPS RECORDS, INC.",score:1.0,source:"CORP"},stems:[]}
                             ]
                         }
                     })
@@ -74,10 +74,10 @@ describe('CobrsPhoneticMatches', () => {
                     resolve({
                         data: {
                             names:[
-                              {name: '----INCREDIBLE NAME INC'},
-                              {name: '----INCREDIBLE NAME'},
-                              {name: '----INCREDIBLE'},
-                              {id:"0793638",name:"INCREDYBLE STEPS RECORDS, INC.",score:1.0,source:"CORP"}
+                              {name_info:{name: '----INCREDIBLE NAME INC'},stems:[]},
+                              {name_info:{name: '----INCREDIBLE NAME'},stems:[]},
+                              {name_info:{name: '----INCREDIBLE'},stems:[]},
+                              {name_info:{id:"0793638",name:"INCREDYBLE STEPS RECORDS, INC.",score:1.0,source:"CORP"},stems:[]}
                             ]
                         }
                     })
@@ -102,7 +102,6 @@ describe('CobrsPhoneticMatches', () => {
 
         it('displays cobrs-phonetics conflicts after synonym bucket list', ()=>{
             var content = data.vm.$el.querySelector('#conflict-list').textContent.trim()
-
             expect(content.indexOf('INCREDIBLE STEPS RECORDS, INC.')).not.toEqual(-1)
             expect(content.indexOf('Character Swap Match')).not.toEqual(-1)
             expect(content.indexOf('INCREDIBLE STEPS RECORDS, INC.') < content.indexOf('Character Swap Match')).toEqual(true)
@@ -110,10 +109,10 @@ describe('CobrsPhoneticMatches', () => {
 
         it('populates additional attributes as expected', ()=>{
             expect(data.instance.$store.state.cobrsPhoneticConflicts).toEqual([
-                {"class": "conflict-cobrs-phonetic-title", "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE NAME INC", "meta":undefined, "count":0},
-                {"class": "conflict-cobrs-phonetic-title", "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE NAME", "meta":undefined, "count":0},
-                {"class": "conflict-cobrs-phonetic-title collapsible collapsed", "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE", "meta":undefined, "count":1},
-                {"class": "conflict-result conflict-result-hidden", "nrNumber": "0793638", "source": "CORP", "text": "INCREDYBLE STEPS RECORDS, INC.", "count":0}])
+              {"class": "conflict-cobrs-phonetic-title", "count": 0, "highlightedText": "INCREDIBLE NAME INC", "meta": undefined, "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE NAME INC"},
+              {"class": "conflict-cobrs-phonetic-title", "count": 0, "highlightedText": "INCREDIBLE NAME", "meta": undefined, "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE NAME"},
+              {"class": "conflict-cobrs-phonetic-title collapsible collapsed", "count": 1, "highlightedText": "INCREDIBLE", "meta": undefined, "nrNumber": undefined, "source": undefined, "text": "INCREDIBLE"},
+              {"class": "conflict-result conflict-result-hidden", "count": 0, "highlightedText": "INCREDYBLE STEPS RECORDS, INC.", "meta": undefined, "nrNumber": "0793638", "source": "CORP", "text": "INCREDYBLE STEPS RECORDS, INC."}])
         })
 
         it('changes conflicts tab to red', (done)=>{

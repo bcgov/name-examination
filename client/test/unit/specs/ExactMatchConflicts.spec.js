@@ -91,7 +91,7 @@ describe('Exact-Match Conflicts', () => {
         })
 
         it('populates additional attributes as expected', ()=>{
-            expect(data.instance.$store.state.exactMatchesConflicts).toEqual([{ class: "conflict-result conflict-exact-match", text:'Incredible Name LTD', nrNumber:'42', source:'moon' }])
+            expect(data.instance.$store.state.exactMatchesConflicts).toEqual([{"class": "conflict-result conflict-exact-match", "highlightedText": "Incredible Name LTD", "nrNumber": "42", "source": "moon", "text": "Incredible Name LTD"}])
         })
 
         it('resists no exact match', (done)=>{
