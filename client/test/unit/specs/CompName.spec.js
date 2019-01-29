@@ -484,6 +484,44 @@ describe('CompName.vue', () => {
       });
    })
 
+   describe('Editors cannot see the examine button for a draft NR', () => {
+      let sandbox;
+      let vm;
+
+      beforeEach((done) => {
+        instance.$store.state.currentState = 'DRAFT';
+        instance.$store.state.furnished = 'N';
+        instance.$store.state.compInfo.compNames = {
+          compName1:
+            {
+              choice: 1,
+              name: "Bad Name",
+              state: 'REJECTED'
+            },
+          compName2: { choice: 2, name: "They Named a Language after ME", state: 'NE' },
+          compName3: { choice: 3, name: null, state: 'NE' }
+        };
+        vm = instance.$mount();
+        sessionStorage.setItem('USER_ROLES', ['names_editor']);
+        sessionStorage.setItem('USERNAME', 'Ada');
+        vm.$store.commit('setLoginValues');
+
+        sandbox = sinon.createSandbox();
+        setTimeout(() => {
+          done();
+        }, 100)
+      });
+
+      afterEach(() => {
+        sandbox.restore()
+      });
+
+      it('Hides the examine button for staff/editor', () => {
+         expect(vm.$el.querySelector('#examine-button')).toBeNull()
+      });
+   })
+
+
     describe('Reset & Re-Open', ()=> {
       let vm;
 

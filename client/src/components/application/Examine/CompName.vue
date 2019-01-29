@@ -245,7 +245,7 @@
       can_claim() {
         console.log('got to can_claim with status ' + this.currentState);
         // can this user claim the NR? Based on state.
-        if (this.userCanEdit && ['DRAFT', 'HOLD'].indexOf(this.currentState) > -1) return true;
+        if (this.userIsAnExaminer && ['DRAFT', 'HOLD'].indexOf(this.currentState) > -1) return true;
         else return false;
       },
       compName1() {
