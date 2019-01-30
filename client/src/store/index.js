@@ -827,7 +827,7 @@ export default new Vuex.Store({
 
           entry.meta = entry.name.substring(entry.name.lastIndexOf('-')+1).trim();
           entry.class = 'conflict-synonym-title';
-		      entry.name = entry.name.replace('----', '');
+		      entry.name = entry.name.replace('----', '').toUpperCase();
 		      let syn_index = entry.name.indexOf('synonyms:');
 		      if (syn_index != -1) {
 		        let last_bracket_indx = entry.name.lastIndexOf(')');
@@ -849,10 +849,7 @@ export default new Vuex.Store({
 		      entry.name = entry.name.substring(0, entry.name.lastIndexOf('-')).trim();
 
         }
-
-        entry.name = ' ' + entry.name.toUpperCase();
-        entry.name = entry.name.replace(/SYNONYM-STEM-HIGHLIGHT/gi,'synonym-stem-highlight');
-
+        entry.name = ' ' + entry.name;
         let k=0;
         for (k = 0; k < name_stems.length; k++) {
           if (!wildcard_stack) {
