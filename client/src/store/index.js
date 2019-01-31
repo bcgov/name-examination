@@ -830,7 +830,7 @@ export default new Vuex.Store({
           entry.meta = entry.name.substring(entry.name.lastIndexOf('-')+1).trim();
           entry.class = 'conflict-synonym-title';
 		      entry.name = entry.name.replace('----', '').toUpperCase();
-		      let syn_index = entry.name.indexOf('synonyms:');
+		      let syn_index = entry.name.indexOf('SYNONYMS:');
 		      if (syn_index != -1) {
 		        let last_bracket_indx = entry.name.lastIndexOf(')');
             let synonym_clause = entry.name.substring(syn_index+10, last_bracket_indx);
@@ -844,9 +844,9 @@ export default new Vuex.Store({
                   wrd--;
                 }
               }
-              entry.name = entry.name.toUpperCase().replace(synonym_list[syn].toUpperCase(),'<span class="synonym-stem-highlight">'+ synonym_list[syn].toUpperCase() +'</span>');
+              entry.name = entry.name.replace(synonym_list[syn].toUpperCase(),'<span class="synonym-stem-highlight">'+ synonym_list[syn].toUpperCase() +'</span>');
             }
-            entry.name = entry.name.toUpperCase().replace('SYNONYMS:', '');
+            entry.name = entry.name.replace('SYNONYMS:', '');
           }
 		      entry.name = entry.name.substring(0, entry.name.lastIndexOf('-')).trim();
 
