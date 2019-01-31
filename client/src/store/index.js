@@ -811,10 +811,12 @@ export default new Vuex.Store({
       let synonym_stems = null
       let wildcard_stack = false
       for (let i=0; i<names.length; i++) {
+        additionalRow = null;
         if (names[i].name_info.source != null) {
           //stack conflict
           entry = names[i].name_info;
           synonym_stems = names[i].stems
+          entry.class = 'conflict-result';
 
         } else {
           // stack title
@@ -822,12 +824,10 @@ export default new Vuex.Store({
           entry = names[i].name_info;
 
           wildcard_stack = (entry.name.lastIndexOf('*') > 0)
-        }
-        additionalRow = null;
-        if (entry.source == null) {
-		      entry.meta = entry.name.substring(entry.name.lastIndexOf('-')+1).trim();
+
+          entry.meta = entry.name.substring(entry.name.lastIndexOf('-')+1).trim();
           entry.class = 'conflict-synonym-title';
-		      entry.name = entry.name.replace('----', '');
+		      entry.name = entry.name.replace('----', '').toUpperCase();
 		      let syn_index = entry.name.indexOf('synonyms:');
 		      if (syn_index != -1) {
 		        let last_bracket_indx = entry.name.lastIndexOf(')');
@@ -848,14 +848,12 @@ export default new Vuex.Store({
           }
 		      entry.name = entry.name.substring(0, entry.name.lastIndexOf('-')).trim();
 
-        } else {
-          entry.class = 'conflict-result';
         }
-
+        entry.name = ' ' + entry.name;
         let k=0;
         for (k = 0; k < name_stems.length; k++) {
           if (!wildcard_stack) {
-            entry.name = entry.name.toUpperCase().replace(name_stems[k].toUpperCase(), '<span class="stem-highlight">' + name_stems[k].toUpperCase() + '</span>');
+            entry.name = entry.name.replace(' '+name_stems[k].toUpperCase(), '<span class="stem-highlight">' + ' ' + name_stems[k].toUpperCase() + '</span>');
           }
           if (synonym_stems != undefined && synonym_stems.indexOf(name_stems[k].toUpperCase()) != -1) {
             synonym_stems.splice(synonym_stems.indexOf(name_stems[k].toUpperCase()), 1);
@@ -863,15 +861,13 @@ export default new Vuex.Store({
         }
         if (synonym_stems != undefined) {
           for (k = 0; k < synonym_stems.length; k++) {
-            entry.name = entry.name.toUpperCase().replace(synonym_stems[k].toUpperCase(), '<span class="synonym-stem-highlight">' + synonym_stems[k].toUpperCase() + '</span>');
+            entry.name = entry.name.replace(' '+synonym_stems[k].toUpperCase(), '<span class="synonym-stem-highlight">' + ' ' + synonym_stems[k].toUpperCase() + '</span>');
           }
         }
-        entry.name = entry.name.replace(/SYNONYM-STEM-HIGHLIGHT/g,'synonym-stem-highlight');
-        entry.name = entry.name.replace(/STEM-HIGHLIGHT/g,'stem-highlight');
         state.synonymMatchesConflicts.push({
 		      count:0,
-          text:entry.name.replace(/<SPAN CLASS="SYNONYM\-STEM\-HIGHLIGHT">|<SPAN CLASS="STEM\-HIGHLIGHT">|<\/SPAN>/gi, ''),
-          highlightedText:entry.name,
+          text:entry.name.replace(/<SPAN CLASS="SYNONYM\-STEM\-HIGHLIGHT">|<SPAN CLASS="STEM\-HIGHLIGHT">|<\/SPAN>/gi, '').trim(),
+          highlightedText:entry.name.trim(),
 		      meta:entry.meta,
           nrNumber:entry.id,
           source:entry.source,
@@ -1532,7 +1528,7 @@ export default new Vuex.Store({
                 .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
                 .replace(/\$/g, 'S')
                 .replace(/¢/g,'C')
-                .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
+                .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?|,)/g, '')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
       const url = '/api/v1/requests/synonymbucket/' + query;
       console.log('URL:' + url);
