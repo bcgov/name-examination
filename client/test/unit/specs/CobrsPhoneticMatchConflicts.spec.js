@@ -98,6 +98,9 @@ describe('CobrsPhoneticMatches', () => {
 
         it('displays cobrs-phonetic-match conflicts', ()=>{
             expect(data.vm.$el.querySelector('#conflict-list').textContent).toContain('INCREDYBLE STEPS RECORDS, INC.')
+
+            // expect not to see spinner and results at the same time
+            expect(data.vm.$el.querySelector('#conflict-list .cobrs-phonetic-match-spinner').classList.contains('hidden'));
         })
 
         it('displays cobrs-phonetics conflicts after synonym bucket list', ()=>{

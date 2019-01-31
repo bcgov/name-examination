@@ -23,12 +23,20 @@ exports[`ConflictList.vue renders a ConflictList component 1`] = `
         </div>
       </div>
       <div
+        class="exact-match-spinner spinner-wrapper hidden"
+      >
+        <spinner-stub
+          classname="mini"
+        />
+      </div>
+      <div
         class="conflict-no-match"
       >
         <div>
           No Exact Match
         </div>
       </div>
+       
       <div
         class="synonym-match-title"
       >
@@ -37,6 +45,21 @@ exports[`ConflictList.vue renders a ConflictList component 1`] = `
         </div>
       </div>
       <div
+        class="synonym-match-spinner spinner-wrapper hidden"
+      >
+        <spinner-stub
+          classname="mini"
+        />
+      </div>
+      <div
+        class="conflict-no-match"
+      >
+        <div>
+          No Match
+        </div>
+      </div>
+       
+      <div
         class="cobrs-phonetic-match-title"
       >
         <div>
@@ -44,11 +67,33 @@ exports[`ConflictList.vue renders a ConflictList component 1`] = `
         </div>
       </div>
       <div
+        class="cobrs-phonetic-match-spinner spinner-wrapper hidden"
+      >
+        <spinner-stub
+          classname="mini"
+        />
+      </div>
+      <div
+        class="conflict-no-match"
+      >
+        <div>
+          No Match
+        </div>
+      </div>
+       
+      <div
         class="phonetic-match-title"
       >
         <div>
           Phonetic Match (experimental)
         </div>
+      </div>
+      <div
+        class="phonetic-match-spinner spinner-wrapper hidden"
+      >
+        <spinner-stub
+          classname="mini"
+        />
       </div>
       <div
         class="conflict-no-match"

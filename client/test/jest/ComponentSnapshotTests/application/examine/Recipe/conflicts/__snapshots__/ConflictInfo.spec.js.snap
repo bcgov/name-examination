@@ -8,6 +8,10 @@ exports[`ConflictInfo.vue renders a ConflictInfo component 1`] = `
     <div
       class="row ConflictInfo"
     >
+      <spinner-stub
+        classname="conflict-detail-spinner hidden"
+      />
+       
       <div
         class="col conflict-info-view"
       >

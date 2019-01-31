@@ -787,8 +787,9 @@ export default new Vuex.Store({
   },
 
     setExactMatchesConflicts(state, jsonValue) {
-      var names = jsonValue['names']
       state.exactMatchesConflicts = []
+      if (jsonValue == null) return;
+      var names = jsonValue['names'];
       for (var i=0; i<names.length; i++) {
         var entry = names[i];
         state.exactMatchesConflicts.push({
@@ -804,6 +805,7 @@ export default new Vuex.Store({
     setSynonymMatchesConflicts(state, json) {
       state.synonymMatchesConflicts = [];
       state.synonymHighlightedMatches = [];
+      if (json == null) return;
       let names = json.names;
       let additionalRow = null;
       let entry = null;
@@ -914,6 +916,7 @@ export default new Vuex.Store({
 
     setCobrsPhoneticConflicts(state, json) {
       state.cobrsPhoneticConflicts = [];
+      if (json == null) return;
       let names = json.names;
       let additionalRow = null;
       for (let i=0; i<names.length; i++) {
@@ -977,6 +980,7 @@ export default new Vuex.Store({
 
     setPhoneticConflicts(state, json) {
       state.phoneticConflicts = [];
+      if (json == null) return;
       let names = json.names;
       let additionalRow = null;
 
@@ -1409,7 +1413,7 @@ export default new Vuex.Store({
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + value.nrNumber
       const vm = this
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.conflict-detail-spinner'}).then(response => {
         console.log('Names Conflict response:' + response.data)
         commit('loadNamesConflictJSON',response.data )
       })
@@ -1421,7 +1425,7 @@ export default new Vuex.Store({
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/corporations/' + value.nrNumber
       const vm = this
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.conflict-detail-spinner'}).then(response => {
         console.log('Corp Conflict response:' + response.data)
         commit('loadCorpConflictJSON',response.data)
       })
@@ -1433,7 +1437,7 @@ export default new Vuex.Store({
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + value.nr_num
       const vm = this
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}, spinner: false}).then(response => {
         console.log('History info response:' + response.data)
         commit('loadHistoriesInfoJSON',response.data )
       })
@@ -1493,6 +1497,8 @@ export default new Vuex.Store({
 
     checkManualExactMatches( {commit, state}, query ) {
 
+      commit('setExactMatchesConflicts', null);
+
       console.log('action: getting exact matches for number: ' + state.compInfo.nrNumber + ' from solr')
       query = query.replace(' \/','\/')
           .replace(/(^|\s+)(\$+(\s|$)+)+/g, '$1DOLLAR$3')
@@ -1509,7 +1515,7 @@ export default new Vuex.Store({
       const url = '/api/v1/exact-match?query='+query
       console.log('URL:' + url)
       const vm = this
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.exact-match-spinner'}).then(response => {
         console.log('Check Exact Match Response:', JSON.stringify(response.data))
         commit('setExactMatchesConflicts', response.data)
       })
@@ -1517,6 +1523,8 @@ export default new Vuex.Store({
     },
 
     checkManualSynonymMatches( {dispatch,commit,state}, query ) {
+
+      commit('setSynonymMatchesConflicts', null);
 
       console.log('action: getting synonym matches for number: ' + state.compInfo.nrNumber + ' from solr')
       query = query.replace(/\//g,' ')
@@ -1534,13 +1542,15 @@ export default new Vuex.Store({
       console.log('URL:' + url);
       const vm = this;
       dispatch('checkToken');
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.synonym-match-spinner'}).then(response => {
         commit('setSynonymMatchesConflicts', response.data)
       })
         .catch(error => console.log('ERROR (synonym matches): ' + error))
     },
 
     checkManualCobrsPhoneticMatches( {dispatch,commit,state}, query ) {
+
+      commit('setCobrsPhoneticConflicts', null);
 
       console.log('action: getting CobrsPhonetic matches for number: ' + state.compInfo.nrNumber + ' from solr')
       query = query.replace(/\//g,' ')
@@ -1558,13 +1568,15 @@ export default new Vuex.Store({
       console.log('URL:' + url);
       const vm = this;
       dispatch('checkToken');
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        commit('setCobrsPhoneticConflicts', response.data)
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.cobrs-phonetic-match-spinner'}).then(response => {
+        commit('setCobrsPhoneticConflicts', response.data);
       })
         .catch(error => console.log('ERROR (CobrsPhonetic matches): ' + error))
     },
 
     checkManualPhoneticMatches( {dispatch,commit,state}, query ) {
+
+      commit('setPhoneticConflicts', null);
 
       console.log('action: getting Phonetic matches for number: ' + state.compInfo.nrNumber + ' from solr')
       query = query.replace(/\//g,' ')
@@ -1582,32 +1594,16 @@ export default new Vuex.Store({
       console.log('URL:' + url);
       const vm = this;
       dispatch('checkToken');
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.phonetic-match-spinner'}).then(response => {
         commit('setPhoneticConflicts', response.data)
       })
         .catch(error => console.log('ERROR (Phonetic matches): ' + error))
     },
 
-    // not used
-    checkManualConflicts( {commit, state},searchStr ) {
-      console.log('action: manual check of conflicts for company number: ' + state.compInfo.nrNumber + ' from solr')
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
-      const url = '/api/v1/documents:conflicts'
-      console.log('URL:' + url)
-      const vm = this
-      return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {
-        console.log('Check Manual Conflicts for ' + searchStr + ' - Response:' + response.data)
-        commit('loadConflictsJSON',response.data)
-        commit('setConflicts',response.data)
-      })
-        .catch(error => console.log('ERROR: ' + error))
-    },
-
     checkManualConditions( {commit, state},searchStr ) {
       console.log('action: manual check of restricted words and conditions for company number: ' + state.compInfo.nrNumber )
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
+      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.conditions-spinner'};
       const url = '/api/v1/documents:restricted_words'
       console.log('URL:' + url)
       const vm = this
@@ -1621,7 +1617,7 @@ export default new Vuex.Store({
     checkManualHistories( {commit, state},searchStr ) {
       console.log('action: manual check of history for company number: ' + state.compInfo.nrNumber + ' from solr')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
+      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.history-spinner'};
       const url = '/api/v1/documents:histories'
       console.log('URL:' + url)
       searchStr = searchStr.replace(/\//g,' ')
@@ -1645,7 +1641,7 @@ export default new Vuex.Store({
     checkManualTrademarks( {commit, state},searchStr ) {
       console.log('action: manual check of trademarks for company number: ' + state.compInfo.nrNumber + ' from solr')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
+      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.trademarks-spinner'};
       const url = '/api/v1/documents:trademarks'
       console.log('URL:' + url)
       searchStr = searchStr.replace(/\//g,' ')
@@ -1691,8 +1687,12 @@ export default new Vuex.Store({
 
     resetValues({state, commit}){
       // clear NR specific JSON data so that it can't get accidentally re-used by the next NR number
-      console.log('Deleting conflictsJSON from state')
+      console.log('Deleting conflict data from state');
       commit('loadConflictsJSON',null)
+      commit('setExactMatchesConflicts', null);
+      commit('setSynonymMatchesConflicts', null);
+      commit('setCobrsPhoneticConflicts', null);
+      commit('setPhoneticConflicts', null);
       commit('currentConflict', null)
 
       console.log('Deleting NamesConflictJSON from state')
