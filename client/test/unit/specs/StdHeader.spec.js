@@ -86,6 +86,34 @@ describe('StdHeader.vue', () => {
         })
     })
 
+    describe('Navigation menu when logged in as editor or viewer', ()=> {
+
+      it('does not offer a link to /nameExamination for editors', ()=>{
+        store = {
+          getters: {
+            isAuthenticated: true,
+            userHasApproverRole: false,
+            userHasEditRole: true
+          },
+        }
+        vm = mount();
+      console.log(vm.$el.querySelector('#nameExamine'))
+          expect(vm.$el.querySelector('#nameExamine')).toEqual(null);
+      })
+      it('does not offer a link to /nameExamination for viewers', ()=>{
+        store = {
+          getters: {
+            isAuthenticated: true,
+            userHasApproverRole: false,
+            userHasEditRole: false
+          },
+        }
+        vm = mount();
+        console.log(vm.$el.querySelector('#nameExamine'))
+          expect(vm.$el.querySelector('#nameExamine')).toEqual(null);
+      })
+    })
+
     describe('Navigation menu when not logged in', ()=>{
 
         beforeEach(() => {
