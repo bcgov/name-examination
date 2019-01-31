@@ -4,6 +4,8 @@
     <div class="container-fluid">
       <div class="row ConflictInfo">
 
+          <spinner className="conflict-detail-spinner hidden" />
+
           <div class="col conflict-info-view">
             <div v-if="is_corp" class="add-top-padding">
               <corpMatch />
@@ -28,10 +30,12 @@
 import nullMatch from '@/components/application/Examine/Recipe/conflicts/conflictInfoType/nullMatch.vue';
 import namesMatch from '@/components/application/Examine/Recipe/conflicts/conflictInfoType/namesMatch.vue';
 import corpMatch from '@/components/application/Examine/Recipe/conflicts/conflictInfoType/corpMatch.vue';
+import spinner from '@/components/application/spinner.vue';
 
   export default {
     name: 'ConflictInfo',
     components: {
+      spinner,
       namesMatch,
       corpMatch,
       nullMatch
@@ -67,7 +71,12 @@ import corpMatch from '@/components/application/Examine/Recipe/conflicts/conflic
     padding: 10px;
   }
 
-h3, h2 {
+  /* hide the panel content when spinner is showing, ie: results are loading */
+  .spinner:not(.hidden) + .conflict-info-view {
+    display: none;
+  }
+
+  h3, h2 {
     font-size: 15px;
   }
   p {

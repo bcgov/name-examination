@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col-6 add-top-padding">
         <h3>Conditions</h3>
-        <div>
+        <div id="decision-conditions-dropdown">
         <multiselect
           v-model="conditions_selected"
           :options="conditions_onlycustomerfacing"

@@ -4,6 +4,10 @@ exports[`HistoryList.vue renders a HistoryList component 1`] = `
 <div
   class="col history-list-parent-col"
 >
+  <spinner-stub
+    classname="history-spinner hidden"
+  />
+   
   <div
     class="row history-list-view"
   >

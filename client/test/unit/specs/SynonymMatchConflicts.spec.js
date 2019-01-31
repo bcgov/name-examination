@@ -85,6 +85,9 @@ describe('Synonym-Match Conflicts', () => {
 
         it('displays synonym-match conflicts', ()=>{
             expect(data.vm.$el.querySelector('#conflict-list').textContent).toContain('INCREDIBLE STEPS RECORDS, INC.')
+
+            // expect not to see spinner and results at the same time
+            expect(data.vm.$el.querySelector('#conflict-list .synonym-match-spinner').classList.contains('hidden'));
         })
 
         it('displays synonym-match conflicts after exact match list', ()=>{

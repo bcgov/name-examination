@@ -1,15 +1,24 @@
 /* eslint-disable */
 <template>
-   <span v-on:click="setSelection($event);">
-     <p v-if='has_trademarks'><datatable v-bind="$data" /></p>
+  <span>
+    <spinner className="trademarks-spinner hidden" />
+
+    <span id="trademarks-wrapper" v-on:click="setSelection($event);">
+      <p v-if='has_trademarks'><datatable v-bind="$data" /></p>
+    </span>
   </span>
 </template>
 
 <script>
 /* eslint-disable */
 
+  import spinner from '@/components/application/spinner.vue';
+
   export default {
     name: 'trademarkInfo',
+    components: {
+      spinner,
+    },
     data: () => ({
       tblClass: ['table-bordered', 'search-table'],
       columns: [
@@ -106,7 +115,10 @@
 </script>
 
 <style scoped>
-
+  /* hide the content when spinner is showing, ie: results are loading */
+  .spinner:not(.hidden) + #trademarks-wrapper {
+    display: none;
+  }
 </style>
 
 <!-- unscoped style -->

@@ -111,6 +111,9 @@ describe('PhoneticMatches', () => {
 
         it('displays phonetic-match conflicts', ()=>{
             expect(data.vm.$el.querySelector('#conflict-list').textContent).toContain('INKREDABLE STEPS RECORDS, INC.')
+
+            // expect not to see spinner and results at the same time
+            expect(data.vm.$el.querySelector('#conflict-list .phonetic-match-spinner').classList.contains('hidden'));
         })
 
         it('displays phonetic-match conflicts after cobrs-phonetic match list', ()=>{
