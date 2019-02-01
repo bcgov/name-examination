@@ -411,19 +411,54 @@
         this.$store.commit('currentCondition', null);
       },
       reOpen() {
-        // set current state to DRAFT
-        this.$store.commit('currentState', 'DRAFT');
+        /* Workflow:
+        If EXAMINER:
+         - move to INPROGRESS
+        If EDITOR (ADMIN):
+         - move to INPROGRESS with edit screen open
+         - upon save/cancel, move to DRAFT
+         */
+        if (this.userIsAnExaminer) {
+          this.$store.commit('currentState', 'INPROGRESS');
+        }
+        else {
+          this.$store.commit('currentState', 'INPROGRESS');
+
+          // initialize user in edit mode, with previous state set so NR gets set back to draft
+          //  when user is done changing name, adding comment, etc.
+          this.$store.state.previousStateCd = 'DRAFT';
+          this.$store.state.is_editing = true;
+        }
+
+        // set reset flag so name data is managed between Namex and NRO correctly
         this.$store.commit('hasBeenReset', true);
 
         // update request in database
         this.$store.dispatch('updateRequest');
       },
       reset() {
-        // set current state to DRAFT and clear furnished flag
-        this.$store.commit('currentState', 'DRAFT');
+        /* Workflow:
+        If EXAMINER:
+         - move to INPROGRESS
+        If EDITOR (ADMIN):
+         - move to INPROGRESS with edit screen open
+         - upon save/cancel, move to DRAFT
+         */
+        if (this.userIsAnExaminer) {
+          this.$store.commit('currentState', 'INPROGRESS');
+        }
+        else {
+          this.$store.commit('currentState', 'INPROGRESS');
+
+          // initialize user in edit mode, with previous state set so NR gets set back to draft
+          //  when user is done changing name, adding comment, etc.
+          this.$store.state.previousStateCd = 'DRAFT';
+          this.$store.state.is_editing = true;
+        }
+
         this.$store.commit('furnished', 'N');
 
-        // update request in database
+        // update request in database and NRO
         this.$store.dispatch('updateRequest');
       },
       claimNR() {
