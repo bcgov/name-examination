@@ -604,7 +604,7 @@ describe('CompName.vue', () => {
           click('#examine-reset-button');
 
           setTimeout(() => {
-            expect(instance.$store.state.currentState).toEqual("DRAFT");
+            expect(instance.$store.state.currentState).toEqual("INPROGRESS");
           }, 10)
         });
 
@@ -620,6 +620,24 @@ describe('CompName.vue', () => {
           }, 10);
         });
 
+        describe('For Editors', () => {
+          beforeEach((done) => {
+            sessionStorage.setItem('USER_ROLES', ['names_editor']);
+            vm.$store.commit('setLoginValues');
+            setTimeout(() => {
+              done();
+            }, 100)
+          });
+
+          it('NR is opened to edit screen', () => {
+            click('#examine-reset-button');
+
+            setTimeout(() => {
+              expect(instance.$store.state.is_editing).toEqual(true);
+            }, 10);
+
+          });
+        });
       }); // end RESET
 
       describe('Re-Open', ()=> {
@@ -637,7 +655,7 @@ describe('CompName.vue', () => {
           click('#examine-re-open-button');
 
           setTimeout(() => {
-            expect(instance.$store.state.currentState).toEqual("DRAFT");
+            expect(instance.$store.state.currentState).toEqual("INPROGRESS");
           }, 10)
         });
 
@@ -651,6 +669,25 @@ describe('CompName.vue', () => {
             expect(instance.$store.state.compInfo.compNames.compName1.conflict1_num).toEqual(123);
             expect(instance.$store.state.compInfo.compNames.compName2.comment.comment).toEqual("My internal decision comment.");
           }, 10);
+        });
+
+        describe('For Editors', () => {
+          beforeEach((done) => {
+            sessionStorage.setItem('USER_ROLES', ['names_editor']);
+            vm.$store.commit('setLoginValues');
+            setTimeout(() => {
+              done();
+            }, 100)
+          });
+
+          it('NR is opened to edit screen', () => {
+            click('#examine-re-open-button');
+
+            setTimeout(() => {
+              expect(instance.$store.state.is_editing).toEqual(true);
+            }, 10);
+
+          });
         });
 
       }); // end RE-OPEN
