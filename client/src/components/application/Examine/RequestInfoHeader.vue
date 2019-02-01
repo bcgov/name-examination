@@ -155,17 +155,21 @@
               <tr :class="{'form-group-error': $v.compName1.name.$error}">
                 <td>1.</td>
                 <td>
-                  <input v-model="compName1.name" class="form-control" :onchange="$v.compName1.name.$touch()" />
+                  <input id="namechoice-1-input" v-model="compName1.name" class="form-control" :onchange="$v.compName1.name.$touch()" />
                   <div class="error" v-if="!$v.compName1.name.required">The first name choice is required.</div>
                 </td>
               </tr>
               <tr>
                 <td>2.</td>
-                <td><input v-model="compName2.name" class="form-control" /></td>
+                <td>
+                  <input id="namechoice-2-input" v-model="compName2.name" class="form-control" :onchange="$v.compName2.name.$touch()"/>
+               </td>
               </tr>
               <tr>
                 <td>3.</td>
-                <td><input v-model="compName3.name" class="form-control" /></td>
+                <td>
+                  <input id="namechoice-3-input" :disabled="!this.$v.compName2.name.required" v-model="compName3.name" class="form-control"/>
+                </td>
               </tr>
             </table>
             <table v-else style="width: 100%;">
@@ -265,6 +269,14 @@ export default {
             required,
           }
         },
+      }
+
+      if (this.compName3) {
+        validations.compName2 = {
+          name: {
+            required
+          }
+        }
       }
 
       // validate jurisdiction if required
