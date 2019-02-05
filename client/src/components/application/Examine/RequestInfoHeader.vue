@@ -159,16 +159,17 @@
                   <div class="error" v-if="!$v.compName1.name.required">The first name choice is required.</div>
                 </td>
               </tr>
-              <tr>
+              <tr :class="{'form-group-error': $v.compName2.name.$error}">
                 <td>2.</td>
                 <td>
-                  <input id="namechoice-2-input" v-model="compName2.name" class="form-control" :onchange="$v.compName2.name.$touch()"/>
+                  <input id="namechoice-2-input" v-model="compName2.name" class="form-control" :onchange="$v.compName2.name.$touch()" >
+                     <div class="error" id="namechoice-2-input-error" v-if="$v.compName2.name.$error">The second name choice is required before a third choice.</div>
                </td>
               </tr>
               <tr>
                 <td>3.</td>
                 <td>
-                  <input id="namechoice-3-input" :disabled="!this.$v.compName2.name.required" v-model="compName3.name" class="form-control"/>
+                  <input id="namechoice-3-input" v-model="compName3.name" class="form-control" />
                 </td>
               </tr>
             </table>
@@ -241,7 +242,7 @@
 // ClientInfoHeader - editable component
 import clientinfoview from '@/components/application/Examine/client/ClientInfoHeader.vue';
 import nwpta from '@/components/application/Examine/nwpta/nwpta.vue';
-import { required } from 'vuelidate/lib/validators'
+import { required, requiredIf } from 'vuelidate/lib/validators'
 import axios from '@/axios-auth';
 
 
@@ -269,14 +270,14 @@ export default {
             required,
           }
         },
-      }
-
-      if (this.compName3) {
-        validations.compName2 = {
+        compName2: {
           name: {
-            required
+            required: requiredIf((value) => {
+              return (this.compName3.name && this.compName3.name.length !== 0)
+
+            }),
           }
-        }
+        },
       }
 
       // validate jurisdiction if required

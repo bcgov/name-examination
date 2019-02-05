@@ -983,23 +983,44 @@ describe('RequestInfoHeader.vue', () => {
     });
   });
 
-  describe('Testing making sure name choice 2 is filled before choice 3 can be filled', () => {
+  describe('Testing validation for empty name 2 when name 3 exists', () => {
     let vm;
 
     beforeEach((done) => {
       sessionStorage.setItem('USER_ROLES', ['names_editor']);
-      sessionStorage.setItem('USERNAME', 'max')
+      sessionStorage.setItem('USERNAME', 'max');
       vm = instance.$mount();
       vm.$store.state.is_editing = true;
+      vm.$store.state.compInfo = {
+        nrNumber: 12345,
+        compNames: {
+          compName1: {
+            choice: 1,
+            name: 'ONE',
+            state: 'NE',
+           },
+           compName2: {
+            choice: 2,
+            name: '',
+            state: 'NE',
+          },
+           compName3: {
+             choice: 3,
+             name: 'THREE',
+             state: 'NE',
+           },
+        },
+      }
       setTimeout(() => {
         done();
       }, 100)
     });
 
-    it.only('has the third name field and save disabled when the second is blank', () => {
-      console.log(vm.$el.querySelector('#namechoice-2-input'));
+    it('Editing the third name choice when the second is blank puts an error on the second field', () => {
       expect(vm.$el.querySelector('#namechoice-2-input').value).toEqual('');
-      expect(vm.$el.querySelector('#namechoice-3-input').disabled).toEqual(true);
+      expect(vm.$el.querySelector('#namechoice-3-input').value).toEqual('THREE');
+      expect(vm.$el.querySelector('#namechoice-2-input-error')).not.toBeNull();
+      expect(vm.$el.querySelector('#namechoice-2-input-error').innerHTML).toEqual('The second name choice is required before a third choice.');
     });
 
   });
