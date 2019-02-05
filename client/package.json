@@ -18,7 +18,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "bootstrap-vue": "^2.0.0-rc.11",
-    "vue": "^2.5.2",
+    "vue": "2.5.17",
     "vue-multiselect": "^2.1.0",
     "vue-router": "^3.0.1",
     "vue-shortkey": "^3.1.4",
@@ -82,7 +82,7 @@
     "vue-jest": "^1.0.2",
     "vue-loader": "^13.3.0",
     "vue-style-loader": "^3.0.1",
-    "vue-template-compiler": "^2.5.2",
+    "vue-template-compiler": "2.5.17",
     "webpack": "^3.6.0",
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dev-server": "^2.9.1",
