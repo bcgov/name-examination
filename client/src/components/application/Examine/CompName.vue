@@ -9,12 +9,12 @@
 
             <!-- GET NEXT button -->
             <button v-shortkey="['alt', 'n']" @shortkey="getNextCompany()" class="btn btn-sm btn-secondary" id="examine-get-next-button"
-                    v-if="!is_making_decision && !is_my_current_nr"
+                    v-if="userIsAnExaminer && !is_making_decision && !is_my_current_nr"
                     @click="getNextCompany()" >Get <u>N</u>ext</button>
 
             <!-- CANCEL button -->
             <button class="btn btn-sm btn-danger" id="examine-cancel-button"
-                    v-if="!is_making_decision && !is_cancelled && !is_approved_expired && !is_consumed" data-toggle="modal" data-target="#add-cancel-comment-modal">
+                    v-if="canCancel && !is_making_decision && !is_cancelled && !is_approved_expired && !is_consumed" data-toggle="modal" data-target="#add-cancel-comment-modal">
               Cancel Request</button>
 
             <!-- HOLD button -->
@@ -24,12 +24,12 @@
 
             <!-- DECISION button -->
             <button v-shortkey="['alt', 'd']" @shortkey="startDecision()" class="btn btn-sm btn-primary" id="examine-decide-button"
-                    v-if="!is_making_decision && !is_complete && is_my_current_nr"
+                    v-if="userIsAnExaminer && !is_making_decision && !is_complete && is_my_current_nr && !is_name_decision_made"
                     @click="startDecision()"><u>D</u>ecision</button>
 
             <!-- ACCEPT/REJECT/CANCEL DECISION buttons -->
             <button v-shortkey="['alt', 'a']" @shortkey="nameAccept()" class="btn btn-sm btn-primary" id="decision-approve-button"
-                    v-if="is_making_decision" @click="nameAccept()">
+                    v-if="userIsAnExaminer && is_making_decision" @click="nameAccept()">
               <span v-if="acceptance_will_be_conditional">Conditionally </span><u>A</u>pprove
             </button>
             <button v-shortkey="['alt', 'r']" @shortkey="nameReject()" class="btn btn-sm btn-danger" id="decision-reject-button"
@@ -41,12 +41,12 @@
 
             <!-- RE-OPEN (un-furnished) button -->
             <button class="btn btn-sm btn-danger" id="examine-re-open-button"
-                    v-if="is_complete && !is_furnished && !is_cancelled && !is_approved_expired" @click="reOpen()" >
+                    v-if="userCanEdit && is_complete && !is_furnished && !is_cancelled && !is_approved_expired" @click="reOpen()" >
               Re-Open</button>
 
             <!-- RESET (from furnished) button -->
             <button class="btn btn-sm btn-danger" id="examine-reset-button"
-                    v-if="is_complete && is_furnished && !is_cancelled && !is_approved_expired" @click="reset()">
+                    v-if="userCanEdit && is_complete && is_furnished && !is_cancelled && !is_approved_expired" @click="reset()">
               RESET</button>
 
             <!-- EXAMINE button - to claim/examine an NR that is on hold -->
@@ -99,7 +99,9 @@
           </table>
 
           <div>
-            <span class="float-right" style="margin-left: 10px;" v-if="!is_making_decision && !is_complete && is_my_current_nr">
+
+            <!-- QUICK APPROVE/REJECT BUTTONS -->
+            <span class="float-right" style="margin-left: 10px;" v-if="userIsAnExaminer && !is_making_decision && !is_complete && is_my_current_nr && !is_name_decision_made">
               <button v-shortkey="['alt', 'a']" @shortkey="quickApprove()" class="btn btn-sm btn-outline-primary" id="examine-quick-approve-button"
                       @click="quickApprove">Quick <u>A</u>pprove</button>
               <button  v-shortkey="['alt', 'i']" @shortkey="rejectDistinctive()" class="btn btn-sm btn-outline-danger" id="examine-reject-distinctive-button"
@@ -107,7 +109,9 @@
               <button v-shortkey="['alt', 'e']" @shortkey="rejectDescriptive()" class="btn btn-sm btn-outline-danger" id="examine-reject-descriptive-button"
                       @click="rejectDescriptive">Reject D<u>e</u>scriptive</button>
             </span>
-            <div v-if="!is_making_decision && !is_complete" id="manual-search">
+
+            <!-- MANUAL SEARCH -->
+            <div v-if="userCanEdit && !is_making_decision && !is_complete" id="manual-search">
               <form class="form-inline" @submit.prevent="onSubmit">
                 <input ref="search" type="text" class="search form-control" v-model="searchStr"  v-shortkey="['alt', 's']" @shortkey="setFocus()" tabindex="1">
                 <button class="btn-search" type="submit"><i class="fa fa-search" tabindex="8"/></button>
@@ -162,7 +166,6 @@
         is_running_manual_search: false,
         add_comment_display: "",
         cancel_comment_display: "",
-        resetting: false,
         searching: false,
       }
     },
@@ -180,6 +183,15 @@
       },
       userId() {
         return this.$store.getters.userId;
+      },
+      userIsAnExaminer() {
+        return this.$store.getters.userHasApproverRole;
+      },
+      userCanEdit() {
+        return this.$store.getters.userHasEditRole;
+      },
+      canCancel() {
+        return this.userCanEdit;
       },
       is_my_current_nr() {
         return this.$store.getters.is_my_current_nr;
@@ -222,13 +234,18 @@
           this.$store.commit('is_making_decision', value);
         }
       },
+      is_name_decision_made() {
+        // is a decision already made for the current name? Happens right after reset/re-open.
+        if (this.currentNameObj.state !== 'NE') return true;
+        else return false;
+      },
       acceptance_will_be_conditional() {
         return this.$store.getters.acceptance_will_be_conditional;
       },
       can_claim() {
         console.log('got to can_claim with status ' + this.currentState);
         // can this user claim the NR? Based on state.
-        if (['DRAFT', 'HOLD'].indexOf(this.currentState) > -1) return true;
+        if (this.userIsAnExaminer && ['DRAFT', 'HOLD'].indexOf(this.currentState) > -1) return true;
         else return false;
       },
       compName1() {
@@ -394,18 +411,55 @@
         this.$store.commit('currentCondition', null);
       },
       reOpen() {
-        this.$store.state.currentState = 'INPROGRESS';
-        this.$store.dispatch('resetDecision', 1);
-        this.$store.dispatch('resetDecision', 2);
-        this.$store.dispatch('resetDecision', 3);
+        /* Workflow:
+        If EXAMINER:
+         - move to INPROGRESS
+        If EDITOR (ADMIN):
+         - move to INPROGRESS with edit screen open
+         - upon save/cancel, move to DRAFT
+         */
+        if (this.userIsAnExaminer) {
+          this.$store.commit('currentState', 'INPROGRESS');
+        }
+        else {
+          this.$store.commit('currentState', 'INPROGRESS');
+
+          // initialize user in edit mode, with previous state set so NR gets set back to draft
+          //  when user is done changing name, adding comment, etc.
+          this.$store.state.previousStateCd = 'DRAFT';
+          this.$store.state.is_editing = true;
+        }
+
+        // set reset flag so name data is managed between Namex and NRO correctly
+        this.$store.commit('hasBeenReset', true);
+
+        // update request in database
         this.$store.dispatch('updateRequest');
       },
       reset() {
-        this.resetting = true;
-        if (this.compName1 != undefined)
-          this.$store.dispatch('resetDecision', 1);
-        else
-          console.log('Error no compName1 on this NR')
+        /* Workflow:
+        If EXAMINER:
+         - move to INPROGRESS
+        If EDITOR (ADMIN):
+         - move to INPROGRESS with edit screen open
+         - upon save/cancel, move to DRAFT
+         */
+        if (this.userIsAnExaminer) {
+          this.$store.commit('currentState', 'INPROGRESS');
+        }
+        else {
+          this.$store.commit('currentState', 'INPROGRESS');
+
+          // initialize user in edit mode, with previous state set so NR gets set back to draft
+          //  when user is done changing name, adding comment, etc.
+          this.$store.state.previousStateCd = 'DRAFT';
+          this.$store.state.is_editing = true;
+        }
+
+        this.$store.commit('furnished', 'N');
+
+        // update request in database and NRO
+        this.$store.dispatch('updateRequest');
       },
       claimNR() {
         this.$store.dispatch('updateNRState', 'INPROGRESS');
@@ -440,6 +494,9 @@
 
         // if the NR is closed in any way, a name is not undoable - the NR will have to be
         // re-opened first.
+
+        if (!this.userIsAnExaminer) return false;
+
         if (!this.is_my_current_nr) return false;
 
         // if the NR is furnished, nothing is undoable
@@ -535,52 +592,10 @@
         else
           $("#cancel-nr-after-comment-button").prop('disabled', true);
       },
-      compName1State: function (val) {
-        console.log('compName1 watcher fired:' + val)
-        if (this.resetting) {
-          if (this.compName2 != undefined && this.compName2State != 'NE') {
-            this.$store.dispatch('resetDecision', 2);
-          } else {
-            this.addNewComment(this.add_comment_display);
-          }
-        }
-      },
-      compName2State: function (val) {
-        console.log('compName2 watcher fired:' + val)
-        if (this.resetting) {
-          if (this.compName3 != undefined && this.compName3State != 'NE') {
-            this.$store.dispatch('resetDecision', 3);
-          } else
-            this.addNewComment(this.add_comment_display);
-        }
-      },
-      compName3State: function (val) {
-        console.log('compName3 watcher fired:' + val)
-        if (this.resetting)
-          this.addNewComment(this.add_comment_display);
-      },
       currentName: function (val) {
         console.log('CompName.currentName watcher fired:' + val)
         this.searching = true;
         this.setManualSearchStr(val);
-      },
-      currentState: function (val) {
-        console.log('CompName.currentState watcher fired:' + val)
-        if (this.resetting) {
-          this.resetting = false;
-          this.$store.dispatch('updateRequest');
-          this.add_comment_display = "";
-        }
-      },
-      internalComments: function (val) {
-        console.log('CompName.internalComments watcher fired:' + val)
-        if (this.resetting)
-          this.$store.commit('furnished', "N");
-      },
-      is_furnished: function (val) {
-        console.log('CompName.is_furnished watcher fired:' + val)
-        if (this.resetting && val === false)
-          this.$store.commit('currentState', 'INPROGRESS');
       },
       nrNumber: function (val) {
         console.log('CompName.nrNumber watcher fired:' + val)

@@ -2,6 +2,14 @@
 
 exports[`TrademarksInfo.vue renders a TrademarksInfo component 1`] = `
 <span>
-  <!---->
+  <spinner-stub
+    classname="trademarks-spinner hidden"
+  />
+   
+  <span
+    id="trademarks-wrapper"
+  >
+    <!---->
+  </span>
 </span>
 `;

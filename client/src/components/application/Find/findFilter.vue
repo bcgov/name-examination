@@ -127,12 +127,12 @@ export default {
       notificationType:['All','Notified','Not Notified'],
       compName: '',
       selectedNR: '',
-      submittedInterval: '30 days',
+      submittedInterval: 'All',
       submittedDateIntervals:['Today','7 days','30 days','90 days','1 year','3 years','5 years','All'],
       lastUpdateInterval: 'All',
       lastUpdateIntervals:['Today','Yesterday','2 days','7 days','30 days','All'],
       searchQuery: '?order=priorityCd:desc,submittedDate:asc&queue=hold&ranking=All&notification=All&' +
-                   'submittedInterval=30 days&lastUpdateInterval=All&rows=10',
+                   'submittedInterval=All&lastUpdateInterval=All&rows=10',
       clearing: false,
       mounting: false,
     }
@@ -397,8 +397,8 @@ export default {
           this.ranking = 'All';
         else if (this.notification !== 'All')
           this.notification = 'All';
-        else if (this.submittedInterval !== '30 days')
-          this.submittedInterval = '30 days';
+        else if (this.submittedInterval !== 'All')
+          this.submittedInterval = 'All';
         else if (this.lastUpdateInterval !== 'All')
           this.lastUpdateInterval = 'All';
         else if (this.perPage !== 10)

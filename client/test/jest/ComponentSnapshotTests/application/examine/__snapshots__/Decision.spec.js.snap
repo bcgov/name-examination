@@ -12,7 +12,9 @@ exports[`Decision.vue renders a Decision view 1`] = `
         Conditions
       </h3>
        
-      <div>
+      <div
+        id="decision-conditions-dropdown"
+      >
         <multiselect-stub
           close-on-select="true"
           custom-label="function () { [native code] }"

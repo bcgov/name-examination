@@ -30,6 +30,8 @@ describe('StdHeader.vue', () => {
         store = {
             getters: {
                 isAuthenticated: true,
+                userHasEditRole: true,
+                userHasApproverRole: true,
                 userId: 'max'
             }
         }
@@ -44,7 +46,9 @@ describe('StdHeader.vue', () => {
         beforeEach(() => {
             store = {
                 getters: {
-                    isAuthenticated: true
+                    isAuthenticated: true,
+                    userHasApproverRole: true,
+                    userHasEditRole: true
                 },
             }
             vm = mount();
@@ -80,6 +84,34 @@ describe('StdHeader.vue', () => {
         it('does not offer a link to sign in', ()=>{
             expect(vm.$el.querySelector('#header-login-button')).toEqual(null);
         })
+    })
+
+    describe('Navigation menu when logged in as editor or viewer', ()=> {
+
+      it('does not offer a link to /nameExamination for editors', ()=>{
+        store = {
+          getters: {
+            isAuthenticated: true,
+            userHasApproverRole: false,
+            userHasEditRole: true
+          },
+        }
+        vm = mount();
+      console.log(vm.$el.querySelector('#nameExamine'))
+          expect(vm.$el.querySelector('#nameExamine')).toEqual(null);
+      })
+      it('does not offer a link to /nameExamination for viewers', ()=>{
+        store = {
+          getters: {
+            isAuthenticated: true,
+            userHasApproverRole: false,
+            userHasEditRole: false
+          },
+        }
+        vm = mount();
+        console.log(vm.$el.querySelector('#nameExamine'))
+          expect(vm.$el.querySelector('#nameExamine')).toEqual(null);
+      })
     })
 
     describe('Navigation menu when not logged in', ()=>{
@@ -119,6 +151,8 @@ describe('StdHeader.vue', () => {
             store = {
                 getters: {
                   isAuthenticated: true,
+                  userHasApproverRole: true,
+                  userHasEditRole: true
                 },
                 dispatch: function(message, value) {
                     messageSentToStore = message;
@@ -176,7 +210,9 @@ describe('StdHeader.vue', () => {
         beforeEach(()=>{
             store = {
                 getters: {
-                    isAuthenticated: true
+                    isAuthenticated: true,
+                    userHasApproverRole: true,
+                    userHasEditRole: true
                 },
                 dispatch: function(message, value) {
                     messageSentToStore = message;

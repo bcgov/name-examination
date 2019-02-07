@@ -16,11 +16,21 @@ instance.interceptors.request.use(function (config) {
       cancelled. Otherwise we get orphaned timers that do not get cancelled when the response is
       returned, and the loading spinner never goes away.
    */
-  activeRequestsCounter++;
-  var loadingTimer = setTimeout(function () {
-    $('#loading-overlay').css('display', 'flex');
-  }, 1000);
-  config.loadingTimer = loadingTimer;
+  if (config.spinner == false) {
+    config.loadingTimer = null; // just null the timer value for use in response interceptor
+  }
+  // activate specific named spinner - commonly used in recipe steps - not timed, just turned on and off
+  else if (typeof(config.spinner) == "string") {
+    $(config.spinner).removeClass('hidden');
+  }
+  // activate main (page-blocking) spinner
+  else {
+    activeRequestsCounter++;
+    var loadingTimer = setTimeout(function () {
+      $('#loading-overlay').css('display', 'flex');
+    }, 1000);
+    config.loadingTimer = loadingTimer;
+  }
 
   store.dispatch('checkToken');
 
@@ -33,11 +43,19 @@ instance.interceptors.response.use(function (response) {
   2. Decrease the list of requests running timers.
   3. If there are no more requests that might still be running, hide the overlay.
    */
-  clearTimeout(response.config.loadingTimer);
-  activeRequestsCounter--;
-  if (activeRequestsCounter <= 0) {
-    activeRequestsCounter = 0;
-    $('#loading-overlay').css('display', 'none');
+  if (response.config.loadingTimer !== null) {
+
+    clearTimeout(response.config.loadingTimer);
+    activeRequestsCounter--;
+    if (activeRequestsCounter <= 0) {
+      activeRequestsCounter = 0;
+      $('#loading-overlay').css('display', 'none');
+    }
+  }
+
+  // turn off named spinner
+  if (typeof(response.config.spinner) == "string") {
+    $(response.config.spinner).addClass('hidden');
   }
 
   store.dispatch('checkToken');
@@ -55,11 +73,18 @@ instance.interceptors.response.use(function (response) {
   2. decrease the list of requests running timers
   3. if there are no more requests that might still be running, hide the overlay
    */
-  clearTimeout(error.config.loadingTimer);
-  activeRequestsCounter--;
-  if (activeRequestsCounter <= 0) {
-    activeRequestsCounter = 0;
-    $('#loading-overlay').css('display', 'none');
+  if (error.config.loadingTimer !== null) {
+    clearTimeout(error.config.loadingTimer);
+    activeRequestsCounter--;
+    if (activeRequestsCounter <= 0) {
+      activeRequestsCounter = 0;
+      $('#loading-overlay').css('display', 'none');
+    }
+  }
+
+  // turn off named spinner
+  if (error.config.spinner && typeof(error.config.spinner) == "string") {
+    $(error.config.spinner).addClass('hidden');
   }
 
   /* This code was never executed before implementing above, so commented out since untested.

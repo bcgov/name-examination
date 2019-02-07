@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col-6 add-top-padding">
         <h3>Conditions</h3>
-        <div>
+        <div id="decision-conditions-dropdown">
         <multiselect
           v-model="conditions_selected"
           :options="conditions_onlycustomerfacing"
@@ -193,6 +193,12 @@
       },
       synonymMatchesConflicts() {
         return this.$store.getters.synonymMatchesConflicts;
+      },
+      cobrsPhoneticConflicts() {
+        return this.$store.getters.cobrsPhoneticConflicts;
+      },
+      phoneticConflicts() {
+        return this.$store.getters.phoneticConflicts;
       },
       currentConflict() {
         return this.$store.getters.currentConflict;
@@ -515,16 +521,30 @@
         let conflictList = [];
         let exactMatches = this.exactMatchesConflicts;
         let synonymMatches = this.synonymMatchesConflicts;
+        let cobrsPhoneticConflicts = this.cobrsPhoneticConflicts;
+        let phoneticConflicts = this.phoneticConflicts;
         let seenNRs = [];
 
         for (let i=0; i<exactMatches.length; i++) {
           seenNRs.push(exactMatches[i].nrNumber);
-          conflictList.push(exactMatches[i])
+          conflictList.push(exactMatches[i]);
         }
         for (let i=0; i<synonymMatches.length; i++) {
           if (synonymMatches[i].nrNumber != undefined && !seenNRs.includes(synonymMatches[i].nrNumber)) {
             seenNRs.push(synonymMatches[i].nrNumber);
-            conflictList.push(synonymMatches[i])
+            conflictList.push(synonymMatches[i]);
+          }
+        }
+        for (let i=0; i<cobrsPhoneticConflicts.length; i++) {
+          if (cobrsPhoneticConflicts[i].nrNumber != undefined && !seenNRs.includes(cobrsPhoneticConflicts[i].nrNumber)) {
+            seenNRs.push(cobrsPhoneticConflicts[i].nrNumber);
+            conflictList.push(cobrsPhoneticConflicts[i]);
+          }
+        }
+        for (let i=0; i<phoneticConflicts.length; i++) {
+          if (phoneticConflicts[i].nrNumber != undefined && !seenNRs.includes(phoneticConflicts[i].nrNumber)) {
+            seenNRs.push(phoneticConflicts[i].nrNumber);
+            conflictList.push(phoneticConflicts[i]);
           }
         }
         this.conflictList = conflictList;

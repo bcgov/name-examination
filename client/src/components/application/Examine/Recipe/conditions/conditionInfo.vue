@@ -1,15 +1,23 @@
 /* eslint-disable */
 <template>
-  <span v-on:click="setSelection($event);">
-    <datatable v-bind="$data"/>
+  <span>
+    <spinner className="conditions-spinner hidden" />
+
+    <span id="conditions-wrapper" v-on:click="setSelection($event);">
+      <datatable v-bind="$data"/>
+    </span>
   </span>
 </template>
 
 <script>
 /* eslint-disable */
+  import spinner from '@/components/application/spinner.vue';
 
   export default {
     name: 'conditionInfo',
+    components: {
+      spinner,
+    },
     data: () => ({
       fixHeaderAndSetBodyMaxHeight: 300,
       tblStyle: 'table-layout: fixed',
@@ -155,6 +163,11 @@
     color: #c69500;
     width: 50px;
   }
+  /* hide the content when spinner is showing, ie: results are loading */
+  .spinner:not(.hidden) + #conditions-wrapper {
+    display: none;
+  }
+
 </style>
 
 <!-- unscoped style -->

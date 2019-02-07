@@ -6,7 +6,7 @@ module.exports = {
 
       myKeycloak: {},
       userId: null,
-      user_role: null,
+      user_roles: [],
       authorized: false,
       email: null,
       errorJSON: null,
@@ -159,6 +159,8 @@ module.exports = {
 
       exactMatchesConflicts: [],
       synonymMatchesConflicts: [],
+      cobrsPhoneticConflicts: [],
+      phoneticConflicts: [],
       conflictList: [],
       conflictHighlighting: [],
       conflictNames: [],

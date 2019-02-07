@@ -13,7 +13,7 @@ export default new Vuex.Store({
 
     myKeycloak: null,
     userId: null,
-    user_role: null,
+    user_roles: [],
     authorized: false,
     email: null,
     errorJSON: null,
@@ -34,13 +34,14 @@ export default new Vuex.Store({
     currentHistory: null,  //NR number of history name selected
 
     currentRecipeCard: null,
-    is_my_current_nr: null,
+    is_my_current_nr: false,
     is_editing: false,
     is_making_decision: false,
     decision_made: null,
     acceptance_will_be_conditional: false,
     is_header_shown: false,
     furnished: null,
+    hasBeenReset: null,
     listPriorities: null, // DROP LIST
     listJurisdictions: null, // DROP LIST
     listRequestTypes: null, // DROP LIST
@@ -169,13 +170,15 @@ export default new Vuex.Store({
     searchCompName: '',
     searchRanking: 'All',
     searchNotification: 'All',
-    searchSubmittedInterval: '30 days',
+    searchSubmittedInterval: 'All',
     searchLastUpdatedInterval: 'All',
     searchCurrentPage: 1,
     searchPerPage: 10,
 
     exactMatchesConflicts: [],
     synonymMatchesConflicts: [],
+    cobrsPhoneticConflicts: [],
+    phoneticConflicts: [],
     conflictList: [],
     conflictHighlighting: [],
     conflictNames: [],
@@ -196,14 +199,13 @@ export default new Vuex.Store({
                     approved: {response: {numfound: ''}},
                     conditional: {response: {numfound: ''}},
                     rejected: {response: {numfound: ''}}
-    }
+    },
   },
   mutations: {
     requestType (state, value) {
       state.compInfo.requestType = value;
     },
     is_my_current_nr (state, value) {
-      console.log('got to mutation with value ' + value);
       state.is_my_current_nr = value;
     },
     is_making_decision(state, value) {
@@ -353,6 +355,9 @@ export default new Vuex.Store({
     furnished(state,value) {
       state.furnished = value;
     },
+    hasBeenReset(state,value) {
+      state.hasBeenReset = value;
+    },
     clearAuthData (state) {
       state.userId = null
       state.authorized = null
@@ -408,8 +413,8 @@ export default new Vuex.Store({
             state.compInfo.compNames.compName1.decision_text = record.decision_text
             state.compInfo.compNames.compName1.comment = record.comment
 
-            // if this name is not yet examined, set it as current name
-            if (record.state == 'NE') {
+            // if this name is not yet examined or it is approved (in case of reset/re-open), set it as current name
+            if (record.state == 'NE' || record.state == 'APPROVED') {
               console.log('Set current name to name #1');
               this.dispatch('setCurrentName',record);
             }
@@ -426,8 +431,8 @@ export default new Vuex.Store({
             state.compInfo.compNames.compName2.decision_text = record.decision_text
             state.compInfo.compNames.compName2.comment = record.comment
 
-            // if this name is not yet examined, set it as current name
-            if (record.state == 'NE' &&
+            // if this name is not yet examined or it is approved (in case of reset/re-open), set it as current name
+            if ((record.state == 'NE' || record.state == 'APPROVED') &&
               (record.choice < state.currentChoice || state.currentChoice == null)
             ) {
               console.log('Set current name to name #2');
@@ -446,8 +451,8 @@ export default new Vuex.Store({
             state.compInfo.compNames.compName3.decision_text = record.decision_text
             state.compInfo.compNames.compName3.comment = record.comment
 
-            // if this name is not yet examined, set it as current name
-            if (record.state == 'NE' &&
+            // if this name is not yet examined or it is approved (in case of reset/re-open), set it as current name
+            if ((record.state == 'NE' || record.state == 'APPROVED') &&
               (record.choice < state.currentChoice || state.currentChoice == null)
             ) {
               this.dispatch('setCurrentName',record);
@@ -539,6 +544,7 @@ export default new Vuex.Store({
       state.previousNr = dbcompanyInfo.previousNr
       state.corpNum = dbcompanyInfo.corpNum
       state.furnished = dbcompanyInfo.furnished
+      state.hasBeenReset = dbcompanyInfo.hasBeenReset
 
       console.log('Setting nwpta data in state variables')
       // cycle through nwpta entries
@@ -692,6 +698,7 @@ export default new Vuex.Store({
       state.nrData.previousNr = state.previousNr
       state.nrData.corpNum = state.corpNum
       state.nrData.furnished = state.furnished
+      state.nrData.hasBeenReset = state.hasBeenReset
     },
 
     loadCompanyIssues(state, dbcompanyIssues) {
@@ -725,6 +732,10 @@ export default new Vuex.Store({
         // also set currentName and currentChoice
         state.currentName = value.name;
         state.currentChoice = value.choice;
+      }
+      else {
+        state.currentName = null;
+        state.currentChoice = null;
       }
     },
     currentChoice(state,value){
@@ -776,12 +787,14 @@ export default new Vuex.Store({
   },
 
     setExactMatchesConflicts(state, jsonValue) {
-      var names = jsonValue['names']
       state.exactMatchesConflicts = []
+      if (jsonValue == null) return;
+      var names = jsonValue['names'];
       for (var i=0; i<names.length; i++) {
         var entry = names[i];
         state.exactMatchesConflicts.push({
           text:entry.name,
+          highlightedText: entry.name,
           nrNumber:entry.id,
           source:entry.source,
           class: 'conflict-result conflict-exact-match',
@@ -791,69 +804,244 @@ export default new Vuex.Store({
 
     setSynonymMatchesConflicts(state, json) {
       state.synonymMatchesConflicts = [];
+      state.synonymHighlightedMatches = [];
+      if (json == null) return;
       let names = json.names;
       let additionalRow = null;
-
+      let entry = null;
+      let name_stems = []
+      let synonym_stems = null
+      let wildcard_stack = false
       for (let i=0; i<names.length; i++) {
-        let entry = names[i];
         additionalRow = null;
-
-        if (entry.source == null) {
-          entry.name = entry.name.replace('----', '');
-          entry.name = entry.name.replace('synonyms:', '');
-		  entry.meta = entry.name.substring(entry.name.lastIndexOf('-')+1).trim()
-		  entry.name = entry.name.substring(0, entry.name.lastIndexOf('-')).trim()
-          entry.class = 'conflict-synonym-title';
-        }
-        else {
+        if (names[i].name_info.source != null) {
+          //stack conflict
+          entry = names[i].name_info;
+          synonym_stems = names[i].stems
           entry.class = 'conflict-result';
-        }
 
+        } else {
+          // stack title
+          name_stems = names[i].stems;
+          entry = names[i].name_info;
+
+          wildcard_stack = (entry.name.lastIndexOf('*') > 0)
+
+          entry.meta = entry.name.substring(entry.name.lastIndexOf('-')+1).trim();
+          entry.class = 'conflict-synonym-title';
+		      entry.name = entry.name.replace('----', '').toUpperCase();
+		      let syn_index = entry.name.indexOf('SYNONYMS:');
+		      if (syn_index != -1) {
+		        let last_bracket_indx = entry.name.lastIndexOf(')');
+            let synonym_clause = entry.name.substring(syn_index+10, last_bracket_indx);
+            // '<span class="synonym-stem-highlight">' + entry.name.substring(syn_index, entry.name.length) + '</span>');
+            let synonym_list = synonym_clause.split(',');
+
+            for (var syn=0; syn<synonym_list.length; syn++) {
+              for (var wrd = 0; wrd < name_stems.length; wrd++) {
+                if (synonym_list[syn].toUpperCase().includes(name_stems[wrd].toUpperCase())) {
+                  name_stems.splice(wrd, 1);
+                  wrd--;
+                }
+              }
+              entry.name = entry.name.replace(synonym_list[syn].toUpperCase(),'<span class="synonym-stem-highlight">'+ synonym_list[syn].toUpperCase() +'</span>');
+            }
+            entry.name = entry.name.replace('SYNONYMS:', '');
+          }
+		      entry.name = entry.name.substring(0, entry.name.lastIndexOf('-')).trim();
+
+        }
+        entry.name = ' ' + entry.name;
+        let k=0;
+        for (k = 0; k < name_stems.length; k++) {
+          if (!wildcard_stack) {
+            entry.name = entry.name.replace(' '+name_stems[k].toUpperCase(), '<span class="stem-highlight">' + ' ' + name_stems[k].toUpperCase() + '</span>');
+          }
+          if (synonym_stems != undefined && synonym_stems.indexOf(name_stems[k].toUpperCase()) != -1) {
+            synonym_stems.splice(synonym_stems.indexOf(name_stems[k].toUpperCase()), 1);
+          }
+        }
+        if (synonym_stems != undefined) {
+          for (k = 0; k < synonym_stems.length; k++) {
+            entry.name = entry.name.replace(' '+synonym_stems[k].toUpperCase(), '<span class="synonym-stem-highlight">' + ' ' + synonym_stems[k].toUpperCase() + '</span>');
+          }
+        }
         state.synonymMatchesConflicts.push({
-		  count:0,
-          text:entry.name,
-		  meta:entry.meta,
+		      count:0,
+          text:entry.name.replace(/<SPAN CLASS="SYNONYM\-STEM\-HIGHLIGHT">|<SPAN CLASS="STEM\-HIGHLIGHT">|<\/SPAN>/gi, '').trim(),
+          highlightedText:entry.name.trim(),
+		      meta:entry.meta,
           nrNumber:entry.id,
           source:entry.source,
           class: entry.class,
         });
       }
-	  var count = 0
-	  var stopCollapsing = false
-	  var collapseCount = 2
-	  for (let i=state.synonymMatchesConflicts.length-1; i>=0; i--){
-		  let entry = state.synonymMatchesConflicts[i]
-		  if (! stopCollapsing) {
-			  if (entry.class == 'conflict-result') {
-				  entry.class = 'conflict-result conflict-result-hidden'
-				  count ++
-			  }
-			  if (entry.class == 'conflict-synonym-title') {
-				  entry.count = count
-				  count = 0
-				  collapseCount --
-				  if (collapseCount == 0) {
-					  stopCollapsing = true
-				  }
-				  if (entry.count > 0) {
-				  	entry.class = 'conflict-synonym-title collapsible collapsed'
-				  }
-			  }
-		  }
-		  else {
-			  if (entry.class == 'conflict-result') {
-				  entry.class = 'conflict-result conflict-result-displayed'
-				  count ++
-			  }
-			  if (entry.class == 'conflict-synonym-title') {
-				  entry.count = count
-				  count = 0
-				  if (entry.count > 0) {
-				  	entry.class = 'conflict-synonym-title collapsible expanded'
-				  }
-			  }
-		  }
-	  }
+      var count = 0
+      var stopCollapsing = false
+      var collapseCount = 2
+      for (let i=state.synonymMatchesConflicts.length-1; i>=0; i--){
+        let entry = state.synonymMatchesConflicts[i]
+        if (! stopCollapsing) {
+          if (entry.class == 'conflict-result') {
+            entry.class = 'conflict-result conflict-result-hidden'
+            count ++
+          }
+          if (entry.class == 'conflict-synonym-title') {
+            entry.count = count
+            count = 0
+            collapseCount --
+            if (collapseCount == 0) {
+              stopCollapsing = true
+            }
+            if (entry.count > 0) {
+              entry.class = 'conflict-synonym-title collapsible collapsed'
+            }
+          }
+        }
+        else {
+          if (entry.class == 'conflict-result') {
+            entry.class = 'conflict-result conflict-result-displayed'
+            count ++
+          }
+          if (entry.class == 'conflict-synonym-title') {
+            entry.count = count
+            count = 0
+            if (entry.count > 0) {
+              entry.class = 'conflict-synonym-title collapsible expanded'
+            }
+          }
+        }
+      }
+    },
+
+    setCobrsPhoneticConflicts(state, json) {
+      state.cobrsPhoneticConflicts = [];
+      if (json == null) return;
+      let names = json.names;
+      let additionalRow = null;
+      for (let i=0; i<names.length; i++) {
+        let entry = names[i]['name_info'];
+        additionalRow = null;
+
+        if (entry.source == null) {
+          entry.name = entry.name.replace('----', '');
+          entry.name = entry.name.replace('synonyms:', '');
+          entry.class = 'conflict-cobrs-phonetic-title';
+        }
+        else {
+          entry.class = 'conflict-result';
+        }
+        state.cobrsPhoneticConflicts.push({
+          count:0,
+          text:entry.name,
+          highlightedText: entry.name,
+          meta:entry.meta,
+          nrNumber:entry.id,
+          source:entry.source,
+          class: entry.class,
+        });
+      }
+      var count = 0
+      var stopCollapsing = false
+      var collapseCount = 2
+      for (let i=state.cobrsPhoneticConflicts.length-1; i>=0; i--){
+        let entry = state.cobrsPhoneticConflicts[i]
+        if (! stopCollapsing) {
+          if (entry.class == 'conflict-result') {
+            entry.class = 'conflict-result conflict-result-hidden'
+            count ++
+          }
+          if (entry.class == 'conflict-cobrs-phonetic-title') {
+            entry.count = count
+            count = 0
+            collapseCount --
+            if (collapseCount == 0) {
+              stopCollapsing = true
+            }
+            if (entry.count > 0) {
+              entry.class = 'conflict-cobrs-phonetic-title collapsible collapsed'
+            }
+          }
+        } else {
+          if (entry.class == 'conflict-result') {
+            entry.class = 'conflict-result conflict-result-displayed'
+            count ++
+          }
+          if (entry.class == 'conflict-cobrs-phonetic-title') {
+            entry.count = count
+            count = 0
+            if (entry.count > 0) {
+              entry.class = 'conflict-cobrs-phonetic-title collapsible expanded'
+            }
+          }
+        }
+      }
+    },
+
+    setPhoneticConflicts(state, json) {
+      state.phoneticConflicts = [];
+      if (json == null) return;
+      let names = json.names;
+      let additionalRow = null;
+
+      for (let i=0; i<names.length; i++) {
+        let entry = names[i]['name_info'];
+        additionalRow = null;
+
+        if (entry.source == null) {
+          entry.name = entry.name.replace('----', '');
+          entry.name = entry.name.replace('synonyms:', '');
+          entry.class = 'conflict-phonetic-title';
+        }
+        else {
+          entry.class = 'conflict-result';
+        }
+
+        state.phoneticConflicts.push({
+          count:0,
+          text:entry.name,
+          highlightedText:entry.name,
+          meta:entry.meta,
+          nrNumber:entry.id,
+          source:entry.source,
+          class: entry.class,
+        });
+      }
+      var count = 0
+      var stopCollapsing = false
+      var collapseCount = 2
+      for (let i=state.phoneticConflicts.length-1; i>=0; i--){
+        let entry = state.phoneticConflicts[i]
+        if (! stopCollapsing) {
+          if (entry.class == 'conflict-result') {
+            entry.class = 'conflict-result conflict-result-hidden'
+            count ++
+          }
+          if (entry.class == 'conflict-phonetic-title') {
+            entry.count = count
+            count = 0
+            collapseCount --
+            if (collapseCount == 0) {
+              stopCollapsing = true
+            }
+            if (entry.count > 0) {
+              entry.class = 'conflict-phonetic-title collapsible collapsed'
+            }
+          }
+        } else {
+          if (entry.class == 'conflict-result') {
+            entry.class = 'conflict-result conflict-result-displayed'
+            count ++
+          }
+          if (entry.class == 'conflict-phonetic-title') {
+            entry.count = count
+            count = 0
+            if (entry.count > 0) {
+              entry.class = 'conflict-phonetic-title collapsible expanded'
+            }
+          }
+        }
+      }
     },
 
     currentConflict(state,value){
@@ -875,8 +1063,8 @@ export default new Vuex.Store({
     },
 
     setLoginValues(state){
-      state.userId=localStorage.getItem('USERNAME')
-      state.user_role=localStorage.getItem('USER_ROLE')
+      state.userId=sessionStorage.getItem('USERNAME')
+      state.user_roles=sessionStorage.getItem('USER_ROLES')
       state.authorized=sessionStorage.getItem('AUTHORIZED')
     },
 
@@ -893,9 +1081,9 @@ export default new Vuex.Store({
       sessionStorage.removeItem('KEYCLOAK_REFRESH')
       sessionStorage.removeItem('KEYCLOAK_TOKEN')
       sessionStorage.removeItem('AUTHORIZED')
-      localStorage.removeItem('KEYCLOAK_EXPIRES')
-      localStorage.removeItem('USERNAME')
-      localStorage.removeItem('USER_ROLE')
+      sessionStorage.removeItem('KEYCLOAK_EXPIRES')
+      sessionStorage.removeItem('USERNAME')
+      sessionStorage.removeItem('USER_ROLES')
 
     },
 
@@ -920,9 +1108,9 @@ export default new Vuex.Store({
     tryAutoLogin ({commit}) {
     },
 
-    checkToken({dispatch, state}){
+    checkToken({dispatch, state}) {
       // checks if keycloak object exists - if not then state is unstable, force logout
-      if(state.myKeycloak==null){
+      if (state.myKeycloak==null) {
         console.log('myKeycloak is null')
         //TODO - reset everything and force login???
         //should only be null when first logging on (async keycloak)- if it becomes null somehow should we force another login?
@@ -937,11 +1125,11 @@ export default new Vuex.Store({
 
       console.log('Token expires in ' + expiresIn + 'seconds, updating')
 
-      if(expiresIn < 1700 && expiresIn > 0) {
+      if (expiresIn < 1700 && expiresIn > 0) {
         console.log('Updating Token')
         dispatch('updateToken')
 
-      }else if(expiresIn < 0) {
+      } else if(expiresIn < 0) {
         //TODO - reset everything and force login???
         console.log('Force Logout')
         dispatch('logout')
@@ -950,13 +1138,13 @@ export default new Vuex.Store({
       }
     },
 
-    updateToken({commit, state}){
+    updateToken({commit, state}) {
       const vm = this;
       state.myKeycloak.updateToken(-1).success(function (refreshed) {
         if (refreshed) {
           sessionStorage.setItem('KEYCLOAK_TOKEN', state.myKeycloak.token);
           sessionStorage.setItem('KEYCLOAK_REFRESH', state.myKeycloak.refreshToken);
-          localStorage.setItem('KEYCLOAK_EXPIRES', state.myKeycloak.tokenParsed.exp * 1000);
+          sessionStorage.setItem('KEYCLOAK_EXPIRES', state.myKeycloak.tokenParsed.exp * 1000);
         } else {
           console.log('Token is still valid, not refreshed');
         }
@@ -1142,43 +1330,6 @@ export default new Vuex.Store({
             .catch(error => console.log('ERROR: ' + error))
       },
 
-    resetDecision({dispatch,state}, nameChoice) {
-
-      var objName = {}
-      if (nameChoice == 1) objName = this.getters.compName1;
-      if (nameChoice == 2) objName = this.getters.compName2;
-      if (nameChoice == 3) objName = this.getters.compName3;
-
-      objName.state = 'NE';
-      objName.conflict1 = null;
-      objName.conflict2 = null;
-      objName.conflict3 = null;
-      objName.conflict1_num = null;
-      objName.conflict2_num = null;
-      objName.conflict3_num = null;
-      objName.decision_text = null;
-      objName.comment = null;
-
-      // set current name to selection which re-sets the manual search string
-      dispatch('setCurrentName',objName.name)
-    },
-
-    revertLastDecision({state}) {
-      // TODO - RE-EVALUATE IN TERMS OF 'UNDO' VS 'REVERT'
-      console.log('Revert last decision');
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-      const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/names/' + nameNumber;
-
-      axios.put(url, {headers: {Authorization: `Bearer ${myToken}`}},{"name": nameData} )
-           .then(function(response){
-             console.log(response);
-
-             // get full NR from scratch
-             this.getpostgrescompInfo(state.compInfo.nrNumber);
-            })
-            .catch(error => console.log('ERROR: ' + error))
-    },
-
     loadDropdowns( {commit, state} ) {
       var json_files_path = 'static/ui_dropdowns/';
 
@@ -1262,7 +1413,7 @@ export default new Vuex.Store({
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + value.nrNumber
       const vm = this
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.conflict-detail-spinner'}).then(response => {
         console.log('Names Conflict response:' + response.data)
         commit('loadNamesConflictJSON',response.data )
       })
@@ -1274,7 +1425,7 @@ export default new Vuex.Store({
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/corporations/' + value.nrNumber
       const vm = this
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.conflict-detail-spinner'}).then(response => {
         console.log('Corp Conflict response:' + response.data)
         commit('loadCorpConflictJSON',response.data)
       })
@@ -1286,7 +1437,7 @@ export default new Vuex.Store({
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/' + value.nr_num
       const vm = this
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}, spinner: false}).then(response => {
         console.log('History info response:' + response.data)
         commit('loadHistoriesInfoJSON',response.data )
       })
@@ -1335,6 +1486,8 @@ export default new Vuex.Store({
       if( state.currentChoice != null) {
         this.dispatch('checkManualExactMatches',searchStr)
         this.dispatch('checkManualSynonymMatches',searchStr)
+        this.dispatch('checkManualCobrsPhoneticMatches',searchStr)
+        this.dispatch('checkManualPhoneticMatches',searchStr)
         // this.dispatch('checkManualConflicts',searchStr)
         this.dispatch('checkManualTrademarks',searchStr)
         this.dispatch('checkManualConditions',searchStr)
@@ -1344,18 +1497,17 @@ export default new Vuex.Store({
 
     checkManualExactMatches( {commit, state}, query ) {
 
+      commit('setExactMatchesConflicts', null);
+
       console.log('action: getting exact matches for number: ' + state.compInfo.nrNumber + ' from solr')
       query = query.replace(' \/','\/')
-          .replace(/\(/g, '')
-          .replace(/\)/g, '')
-          .replace(/]/g, '')
-          .replace(/\[/g, '')
-          .replace(/}/g, '')
-          .replace(/{/g, '')
           .replace(/(^|\s+)(\$+(\s|$)+)+/g, '$1DOLLAR$3')
           .replace(/(^|\s+)(¢+(\s|$)+)+/g, '$1CENT$3')
           .replace(/\$/g, 'S')
           .replace(/¢/g, 'C')
+          .replace(/\\/g, '')
+          .replace(/\//g, '')
+          .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       query = query.substring(0, 1) == '+' ? query.substring(1) : query;
       query = encodeURIComponent(query)
@@ -1363,7 +1515,7 @@ export default new Vuex.Store({
       const url = '/api/v1/exact-match?query='+query
       console.log('URL:' + url)
       const vm = this
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.exact-match-spinner'}).then(response => {
         console.log('Check Exact Match Response:', JSON.stringify(response.data))
         commit('setExactMatchesConflicts', response.data)
       })
@@ -1372,8 +1524,127 @@ export default new Vuex.Store({
 
     checkManualSynonymMatches( {dispatch,commit,state}, query ) {
 
+      commit('setSynonymMatchesConflicts', null);
+
       console.log('action: getting synonym matches for number: ' + state.compInfo.nrNumber + ' from solr')
       query = query.replace(/\//g,' ')
+                .replace(/\\/g,' ')
+                .replace(/&/g, ' ')
+                .replace(/\+/g, ' ')
+                .replace(/\-/g, ' ')
+                .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+                .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+                .replace(/\$/g, 'S')
+                .replace(/¢/g,'C')
+                .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?|,)/g, '')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
+      const url = '/api/v1/requests/synonymbucket/' + query;
+      console.log('URL:' + url);
+      const vm = this;
+      dispatch('checkToken');
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.synonym-match-spinner'}).then(response => {
+        commit('setSynonymMatchesConflicts', response.data)
+      })
+        .catch(error => console.log('ERROR (synonym matches): ' + error))
+    },
+
+    checkManualCobrsPhoneticMatches( {dispatch,commit,state}, query ) {
+
+      commit('setCobrsPhoneticConflicts', null);
+
+      console.log('action: getting CobrsPhonetic matches for number: ' + state.compInfo.nrNumber + ' from solr')
+      query = query.replace(/\//g,' ')
+          .replace(/\\/g,' ')
+          .replace(/&/g, ' ')
+          .replace(/\+/g, ' ')
+          .replace(/\-/g, ' ')
+          .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+          .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+          .replace(/\$/g, 'S')
+          .replace(/¢/g,'C')
+          .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
+      const url = '/api/v1/requests/cobrsphonetics/' + query;
+      console.log('URL:' + url);
+      const vm = this;
+      dispatch('checkToken');
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.cobrs-phonetic-match-spinner'}).then(response => {
+        commit('setCobrsPhoneticConflicts', response.data);
+      })
+        .catch(error => console.log('ERROR (CobrsPhonetic matches): ' + error))
+    },
+
+    checkManualPhoneticMatches( {dispatch,commit,state}, query ) {
+
+      commit('setPhoneticConflicts', null);
+
+      console.log('action: getting Phonetic matches for number: ' + state.compInfo.nrNumber + ' from solr')
+      query = query.replace(/\//g,' ')
+          .replace(/\\/g,' ')
+          .replace(/&/g, ' ')
+          .replace(/\+/g, ' ')
+          .replace(/\-/g, ' ')
+          .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+          .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+          .replace(/\$/g, 'S')
+          .replace(/¢/g,'C')
+          .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
+      const url = '/api/v1/requests/phonetics/' + query;
+      console.log('URL:' + url);
+      const vm = this;
+      dispatch('checkToken');
+      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.phonetic-match-spinner'}).then(response => {
+        commit('setPhoneticConflicts', response.data)
+      })
+        .catch(error => console.log('ERROR (Phonetic matches): ' + error))
+    },
+
+    checkManualConditions( {commit, state},searchStr ) {
+      console.log('action: manual check of restricted words and conditions for company number: ' + state.compInfo.nrNumber )
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.conditions-spinner'};
+      const url = '/api/v1/documents:restricted_words'
+      console.log('URL:' + url)
+      const vm = this
+      return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {
+        console.log('Check Manual Conditions Response:' + response.data)
+        commit('loadConditionsJSON',response.data)
+      })
+        .catch(error => console.log('ERROR: ' + error))
+    },
+
+    checkManualHistories( {commit, state},searchStr ) {
+      console.log('action: manual check of history for company number: ' + state.compInfo.nrNumber + ' from solr')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.history-spinner'};
+      const url = '/api/v1/documents:histories'
+      console.log('URL:' + url)
+      searchStr = searchStr.replace(/\//g,' ')
+          .replace(/\\/g,' ')
+          .replace(/&/g, ' ')
+          .replace(/\+/g, ' ')
+          .replace(/\-/g, ' ')
+          .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+          .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+          .replace(/\$/g, 'S')
+          .replace(/¢/g,'C')
+          .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
+      const vm = this
+      return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {
+        console.log('Check Manual Histories Response:' + response.data)
+        commit('loadHistoriesJSON',response.data)
+      })
+        .catch(error => console.log('ERROR: ' + error))
+    },
+
+    checkManualTrademarks( {commit, state},searchStr ) {
+      console.log('action: manual check of trademarks for company number: ' + state.compInfo.nrNumber + ' from solr')
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.trademarks-spinner'};
+      const url = '/api/v1/documents:trademarks'
+      console.log('URL:' + url)
+      searchStr = searchStr.replace(/\//g,' ')
           .replace(/\\/g,' ')
           .replace(/&/g, ' ')
           .replace(/\+/g, ' ')
@@ -1391,67 +1662,7 @@ export default new Vuex.Store({
           .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
           .replace(/\$/g, 'S')
           .replace(/¢/g,'C')
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-      const url = '/api/v1/requests/synonymbucket/' + query;
-      console.log('URL:' + url);
-      const vm = this;
-      dispatch('checkToken');
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        commit('setSynonymMatchesConflicts', response.data)
-      })
-        .catch(error => console.log('ERROR (synonym matches): ' + error))
-    },
-
-    // not used
-    checkManualConflicts( {commit, state},searchStr ) {
-      console.log('action: manual check of conflicts for company number: ' + state.compInfo.nrNumber + ' from solr')
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
-      const url = '/api/v1/documents:conflicts'
-      console.log('URL:' + url)
-      const vm = this
-      return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {
-        console.log('Check Manual Conflicts for ' + searchStr + ' - Response:' + response.data)
-        commit('loadConflictsJSON',response.data)
-        commit('setConflicts',response.data)
-      })
-        .catch(error => console.log('ERROR: ' + error))
-    },
-
-    checkManualConditions( {commit, state},searchStr ) {
-      console.log('action: manual check of restricted words and conditions for company number: ' + state.compInfo.nrNumber )
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
-      const url = '/api/v1/documents:restricted_words'
-      console.log('URL:' + url)
-      const vm = this
-      return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {
-        console.log('Check Manual Conditions Response:' + response.data)
-        commit('loadConditionsJSON',response.data)
-      })
-        .catch(error => console.log('ERROR: ' + error))
-    },
-
-    checkManualHistories( {commit, state},searchStr ) {
-      console.log('action: manual check of history for company number: ' + state.compInfo.nrNumber + ' from solr')
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
-      const url = '/api/v1/documents:histories'
-      console.log('URL:' + url)
-      const vm = this
-      return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {
-        console.log('Check Manual Histories Response:' + response.data)
-        commit('loadHistoriesJSON',response.data)
-      })
-        .catch(error => console.log('ERROR: ' + error))
-    },
-
-    checkManualTrademarks( {commit, state},searchStr ) {
-      console.log('action: manual check of trademarks for company number: ' + state.compInfo.nrNumber + ' from solr')
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}};
-      const url = '/api/v1/documents:trademarks'
-      console.log('URL:' + url)
+          .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
       const vm = this
       return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {
         console.log('Check Manual Trademarks Response:' + response.data)
@@ -1476,8 +1687,12 @@ export default new Vuex.Store({
 
     resetValues({state, commit}){
       // clear NR specific JSON data so that it can't get accidentally re-used by the next NR number
-      console.log('Deleting conflictsJSON from state')
+      console.log('Deleting conflict data from state');
       commit('loadConflictsJSON',null)
+      commit('setExactMatchesConflicts', null);
+      commit('setSynonymMatchesConflicts', null);
+      commit('setCobrsPhoneticConflicts', null);
+      commit('setPhoneticConflicts', null);
       commit('currentConflict', null)
 
       console.log('Deleting NamesConflictJSON from state')
@@ -1520,6 +1735,14 @@ export default new Vuex.Store({
     userId(state) {
       return state.userId;
     },
+    userHasEditRole(state) {
+       let roles = state.user_roles;
+       return roles.includes('names_approver') || roles.includes('names_editor')
+    },
+    userHasApproverRole(state) {
+       let roles = state.user_roles;
+       return roles.includes('names_approver')
+    },
     is_my_current_nr(state) {
       // set flag indicating whether you own this NR and it's in progress
       if (state.currentState == 'INPROGRESS' && state.examiner == state.userId) return true;
@@ -1527,6 +1750,9 @@ export default new Vuex.Store({
     },
     furnished(state) {
       return state.furnished;
+    },
+    hasBeenReset(state) {
+      return state.hasBeenReset;
     },
     is_complete(state) {
       // indicates a complete NR
@@ -1776,6 +2002,12 @@ export default new Vuex.Store({
     },
     synonymMatchesConflicts(state) {
       return state.synonymMatchesConflicts;
+    },
+    cobrsPhoneticConflicts(state) {
+      return state.cobrsPhoneticConflicts;
+    },
+    phoneticConflicts(state) {
+      return state.phoneticConflicts;
     },
     conflictList(state) {
       return state.conflictList

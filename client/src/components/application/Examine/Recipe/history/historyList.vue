@@ -2,6 +2,9 @@
 <template>
 
     <div class="col history-list-parent-col">
+
+      <spinner className="history-spinner hidden" />
+
       <div class="row history-list-view">
 
         <select v-if="historyJSON.names.length > 0" v-model="selectedHistory" class="form-control" size="17" border="0" @click="check_deselect" tabindex="6">
@@ -21,8 +24,14 @@
 
 <script>
 /* eslint-disable */
+
+  import spinner from '@/components/application/spinner.vue';
+
   export default {
     name: 'historyList',
+    components: {
+      spinner,
+    },
     data: function() {
       return {
         selectedHistory: ''
@@ -96,6 +105,11 @@
 <style scoped>
 </style>
 <style>
+
+  /* hide the panel content when spinner is showing, ie: results are loading */
+  .spinner:not(.hidden) + .history-list-view {
+    display: none;
+  }
 
   .history-list-parent-col {
     min-width: 800px;

@@ -45,8 +45,8 @@
           <li class="nav-item">
             <a target="_blank" href="https://namex-solr-dev.pathfinder.gov.bc.ca" id="admin" class="nav-link">Admin</a>
           </li>
-          <li class="navbar-text divider">|</li>
-          <li class="nav-item">
+          <li v-if="userCanExamine" class="navbar-text divider">|</li>
+          <li v-if="userCanExamine" class="nav-item">
             <router-link to="/nameExamination" id="nameExamine" class="nav-link">Examine Names</router-link>
           </li>
           <li class="navbar-text divider">|</li>
@@ -87,6 +87,9 @@
       auth() {
         return this.$store.getters.isAuthenticated
       },
+      userCanExamine() {
+        return this.$store.getters.userHasApproverRole
+      }
     },
     methods: {
       onLogout() {
