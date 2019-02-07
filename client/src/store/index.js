@@ -1508,6 +1508,8 @@ export default new Vuex.Store({
           .replace(/\\/g, '')
           .replace(/\//g, '')
           .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
+          .replace(/[\+\-]{2,}/g, '')
+          .replace(/\s[\+\-]$/, '')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       query = query.substring(0, 1) == '+' ? query.substring(1) : query;
       query = encodeURIComponent(query)
