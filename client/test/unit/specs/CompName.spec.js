@@ -699,4 +699,340 @@ describe('CompName.vue', () => {
     }); // end RE-OPEN
   });
 
+  describe('Transitions Between NRs', () => {
+    let vm;
+    let sandbox;
+
+
+    let click = function (id) {
+      let button = vm.$el.querySelector(id);
+      let window = button.ownerDocument.defaultView;
+      var click = new window.Event('click');
+      button.dispatchEvent(click);
+    };
+
+    beforeEach((done) => {
+      sandbox = sinon.createSandbox();
+      sandbox.getStub = sandbox.stub(axios, 'get');
+
+
+      // stub out updateRequest action from index - we don't care what it does and it errors during testing
+      //instance.$store._actions.updateRequest[0] = sinon.stub();
+
+      // NR that is completed with one rejected name (conflict) and one approved name
+      sandbox.getStub.withArgs('/api/v1/requests/NR 2000951', sinon.match.any).returns(
+        new Promise((resolve) => resolve({
+          data:
+            {
+              additionalInfo: "More info",
+              applicants:
+                {
+                  addrLine1: "940 Blanshard Street",
+                  addrLine2: null,
+                  addrLine3: null,
+                  city: "Victoria",
+                  clientFirstName: null,
+                  clientLastName: null,
+                  contact: "John Test",
+                  countryTypeCd: "CA",
+                  declineNotificationInd: null,
+                  emailAddress: "testoutputs@gov.bc.ca",
+                  faxNumber: null,
+                  firstName: "John",
+                  lastName: "Test",
+                  middleName: null,
+                  partyId: 1822,
+                  phoneNumber: "2505555555",
+                  postalCd: "V8V4K8",
+                  stateProvinceCd: "BC"
+                },
+              comments: [],
+              consentFlag: null,
+              corpNum: null,
+              expirationDate: null,
+              furnished: "N",
+              id: 1822,
+              lastUpdate: "Thu, 18 Oct 2018 22:46:54 GMT",
+              names: [
+                {
+                  choice: 1,
+                  comment: null,
+                  conflict1: "MY FIRST CONFLICT",
+                  conflict1_num: "A1010101",
+                  conflict2: null,
+                  conflict2_num: null,
+                  conflict3: null,
+                  conflict3_num: null,
+                  consumptionDate: null,
+                  decision_text: "",
+                  name: "COLDSTREAM REFRIGERATION  HVAC SERVICES LIMITED",
+                  state: "REJECTED"
+                },
+                {
+                  choice: 2,
+                  comment: null,
+                  conflict1: null,
+                  conflict1_num: null,
+                  conflict2: null,
+                  conflict2_num: null,
+                  conflict3: null,
+                  conflict3_num: null,
+                  consumptionDate: null,
+                  decision_text: "",
+                  name: "NAME TWO",
+                  state: "APPROVED"
+                }],
+              natureBusinessInfo: "Nature of business can be pretty long so this one is more realistic. It even contains " +
+              "spaces and punctuation.",
+              nrNum: "NR 2000951",
+              nwpta: [],
+              previousNr: null,
+              previousRequestId: null,
+              previousStateCd: "DRAFT",
+              priorityCd: "Y",
+              requestTypeCd: "CR",
+              state: "APPROVED",
+              submitCount: 1,
+              submittedDate: "Wed, 17 Oct 2018 11:37:20 GMT",
+              submitter_userid: "",
+              userId: "tester",
+              xproJurisdiction: null
+            }
+        }))
+      );
+
+      // Un-examined NR #1
+      sandbox.getStub.withArgs('/api/v1/requests/NR 2000952', sinon.match.any).returns(
+        new Promise((resolve) => resolve({
+          data:
+            {
+              additionalInfo: "More info",
+              applicants:
+                {
+                  addrLine1: "940 Blanshard Street",
+                  addrLine2: null,
+                  addrLine3: null,
+                  city: "Victoria",
+                  clientFirstName: null,
+                  clientLastName: null,
+                  contact: "John Test",
+                  countryTypeCd: "CA",
+                  declineNotificationInd: null,
+                  emailAddress: "testoutputs@gov.bc.ca",
+                  faxNumber: null,
+                  firstName: "John",
+                  lastName: "Test",
+                  middleName: null,
+                  partyId: 1822,
+                  phoneNumber: "2505555555",
+                  postalCd: "V8V4K8",
+                  stateProvinceCd: "BC"
+                },
+              comments: [],
+              consentFlag: null,
+              corpNum: null,
+              expirationDate: null,
+              furnished: "N",
+              id: 1822,
+              lastUpdate: "Thu, 18 Oct 2018 22:46:54 GMT",
+              names: [
+                {
+                  choice: 1,
+                  comment: null,
+                  conflict1: null,
+                  conflict1_num: null,
+                  conflict2: null,
+                  conflict2_num: null,
+                  conflict3: null,
+                  conflict3_num: null,
+                  consumptionDate: null,
+                  decision_text: "",
+                  name: "NAME ONE",
+                  state: "NE"
+                }],
+              natureBusinessInfo: "Nature of business can be pretty long so this one is more realistic. It even contains " +
+              "spaces and punctuation.",
+              nrNum: "NR 2000952",
+              nwpta: [],
+              previousNr: null,
+              previousRequestId: null,
+              previousStateCd: "DRAFT",
+              priorityCd: "Y",
+              requestTypeCd: "CR",
+              state: "HOLD",
+              submitCount: 1,
+              submittedDate: "Wed, 17 Oct 2018 11:37:20 GMT",
+              submitter_userid: "",
+              userId: "tester",
+              xproJurisdiction: null
+            }
+        }))
+      );
+
+      // Un-examined NR #2
+      sandbox.getStub.withArgs('/api/v1/requests/NR 2000953', sinon.match.any).returns(
+        new Promise((resolve) => resolve({
+          data:
+            {
+              additionalInfo: "More info",
+              applicants:
+                {
+                  addrLine1: "940 Blanshard Street",
+                  addrLine2: null,
+                  addrLine3: null,
+                  city: "Victoria",
+                  clientFirstName: null,
+                  clientLastName: null,
+                  contact: "John Test",
+                  countryTypeCd: "CA",
+                  declineNotificationInd: null,
+                  emailAddress: "testoutputs@gov.bc.ca",
+                  faxNumber: null,
+                  firstName: "John",
+                  lastName: "Test",
+                  middleName: null,
+                  partyId: 1822,
+                  phoneNumber: "2505555555",
+                  postalCd: "V8V4K8",
+                  stateProvinceCd: "BC"
+                },
+              comments: [],
+              consentFlag: null,
+              corpNum: null,
+              expirationDate: null,
+              furnished: "N",
+              id: 1822,
+              lastUpdate: "Thu, 18 Oct 2018 22:46:54 GMT",
+              names: [
+                {
+                  choice: 1,
+                  comment: null,
+                  conflict1: null,
+                  conflict1_num: null,
+                  conflict2: null,
+                  conflict2_num: null,
+                  conflict3: null,
+                  conflict3_num: null,
+                  consumptionDate: null,
+                  decision_text: "",
+                  name: "NAME ONE ALPHA",
+                  state: "NE"
+                },
+                {
+                  choice: 2,
+                  comment: null,
+                  conflict1: null,
+                  conflict1_num: null,
+                  conflict2: null,
+                  conflict2_num: null,
+                  conflict3: null,
+                  conflict3_num: null,
+                  consumptionDate: null,
+                  decision_text: "",
+                  name: "NAME TWO ALPHA",
+                  state: "NE"
+                }],
+              natureBusinessInfo: "Nature of business can be pretty long so this one is more realistic. It even contains " +
+              "spaces and punctuation.",
+              nrNum: "NR 2000953",
+              nwpta: [],
+              previousNr: null,
+              previousRequestId: null,
+              previousStateCd: "DRAFT",
+              priorityCd: "Y",
+              requestTypeCd: "CR",
+              state: "HOLD",
+              submitCount: 1,
+              submittedDate: "Wed, 17 Oct 2018 11:37:20 GMT",
+              submitter_userid: "",
+              userId: "tester",
+              xproJurisdiction: null
+            }
+        }))
+      );
+
+
+      vm = instance.$mount();
+      setTimeout(() => {
+        done();
+      }, 100)
+    });
+
+    afterEach(() => {
+      sandbox.restore();
+    });
+
+    it('can load an NR (unexamined) with a clean slate after another (unexamined)', () => {
+
+      // load first NR
+      vm.$store.dispatch('getpostgrescompInfo', 'NR 2000952');
+      setTimeout(() => {
+
+        // expect name 1 to be from first NR
+        expect(vm.compName1.name).toEqual('NAME ONE');
+
+        // expect name 1 conflict 1 name and number to be null
+        expect(vm.compName1.conflict1).toEqual(null);
+        expect(vm.compName1.conflict1_num).toEqual(null);
+
+        // load second NR
+        vm.$store.dispatch('getpostgrescompInfo', 'NR 2000953');
+        setTimeout(() => {
+
+          // expect name 1 to be from second NR
+          expect(vm.compName1.name).toEqual('NAME ONE ALPHA');
+
+          // expect name 2 to be from first NR
+          expect(vm.compName2.name).toEqual('NAME TWO ALPHA');
+
+          // expect name 1 conflict 1 name and number to be null
+          expect(vm.compName1.conflict1).toEqual(null);
+          expect(vm.compName1.conflict1_num).toEqual(null);
+
+          // expect name 1 conflict 1 name and number to be null
+          expect(vm.compName2.conflict1).toEqual(null);
+          expect(vm.compName2.conflict1_num).toEqual(null);
+
+        }, 100)
+      }, 100)
+
+    });
+
+    it('can load an NR (unexamined) with a clean slate after another (examined)', () => {
+
+      // load first NR
+      vm.$store.dispatch('getpostgrescompInfo', 'NR 2000951');
+      setTimeout(() => {
+
+        // expect name 1 to be from first NR
+        expect(vm.compName1.name).toEqual('COLDSTREAM REFRIGERATION  HVAC SERVICES LIMITED');
+
+        // expect name 2 to be from first NR
+        expect(vm.compName2.name).toEqual('NAME TWO');
+
+        // expect name 1 conflict 1 name and number from first NR
+        expect(vm.compName1.conflict1).toEqual('MY FIRST CONFLICT');
+        expect(vm.compName1.conflict1_num).toEqual('A1010101');
+
+        // load second (unexamined) NR
+        vm.$store.dispatch('getpostgrescompInfo', 'NR 2000952');
+        setTimeout(() => {
+
+          // expect name 1 to be from second NR
+          expect(vm.compName1.name).toEqual('NAME ONE');
+
+          // expect name 2 to be null, ie: not left over from first NR
+          expect(vm.compName2.name).toEqual(null);
+
+          // expect name 1 conflict 1 name and number to be null
+          expect(vm.compName1.conflict1).toEqual(null);
+          expect(vm.compName1.conflict1_num).toEqual(null);
+
+        }, 100)
+      }, 100)
+
+
+    });
+  });
+
 });
