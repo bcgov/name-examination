@@ -1,5 +1,6 @@
 /* eslint-disable */
 import Vue from 'vue';
+
 Vue.use(require('vue-shortkey'))
 import Decision from '@/components/application/Examine/Decision';
 import store from '@/store'
@@ -9,7 +10,7 @@ describe('Decision.vue', () => {
   let instance;
   let vm;
 
-  let makeDecision = function(decision) {
+  let makeDecision = function (decision) {
     // Fake a decision being made, and return the decision text from before and after the decision
     // was made.
 
@@ -25,7 +26,7 @@ describe('Decision.vue', () => {
 
   beforeEach(() => {
     const Constructor = Vue.extend(Decision);
-    instance = new Constructor({store:store});
+    instance = new Constructor({store: store});
 
     instance.decision_made = null;
 
@@ -242,9 +243,9 @@ describe('Decision.vue', () => {
 
       instance.$store.state.exactMatchesConflicts = [
         {
-          text:'conflict1',
-          nrNumber:'NR1111',
-          source:'CORP'
+          text: 'conflict1',
+          nrNumber: 'NR1111',
+          source: 'CORP'
         }
       ];
       instance.$store.state.synonymMatchesConflicts = [
@@ -256,7 +257,7 @@ describe('Decision.vue', () => {
       ];
 
       vm = instance.$mount();
-      setTimeout(()=>{
+      setTimeout(() => {
         done();
       }, 100)
 
@@ -266,9 +267,9 @@ describe('Decision.vue', () => {
       expect(instance.conflictList).toEqual(
         [
           {
-            text:'conflict1',
-            nrNumber:'NR1111',
-            source:'CORP'
+            text: 'conflict1',
+            nrNumber: 'NR1111',
+            source: 'CORP'
           },
           {
             text: 'conflict2',
