@@ -1,6 +1,7 @@
 /* eslint-disable */
 import Vue from 'vue';
 import Vuelidate from 'vuelidate';
+
 Vue.use(require('vue-shortkey'));
 Vue.use(Vuelidate);
 
@@ -26,8 +27,8 @@ describe('RequestInfoHeader.vue', () => {
     let vm;
     let sandbox;
 
-    let click = function(id) {
-      console.log('ID: ',id)
+    let click = function (id) {
+      console.log('ID: ', id)
       let button = vm.$el.querySelector(id);
       let window = button.ownerDocument.defaultView;
       var click = new window.Event('click');
@@ -85,7 +86,7 @@ describe('RequestInfoHeader.vue', () => {
                   state: "NE"
                 }],
               natureBusinessInfo: "Nature of business can be pretty long so this one is more realistic. It even contains " +
-                "spaces and punctuation.",
+              "spaces and punctuation.",
               nrNum: "NR 2000948",
               nwpta: [],
               previousNr: null,
@@ -100,7 +101,7 @@ describe('RequestInfoHeader.vue', () => {
               userId: "tester",
               xproJurisdiction: null
             }
-          }))
+        }))
       );
       sandbox.stub(axios, 'get').withArgs('/api/v1/requests/NR 2000948', sinon.match.any).returns(
         new Promise((resolve) => resolve({
@@ -151,7 +152,7 @@ describe('RequestInfoHeader.vue', () => {
                   state: "NE"
                 }],
               natureBusinessInfo: "Nature of business can be pretty long so this one is more realistic. It even contains " +
-                "spaces and punctuation.",
+              "spaces and punctuation.",
               nrNum: "NR 2000948",
               nwpta: [],
               previousNr: null,
@@ -166,12 +167,12 @@ describe('RequestInfoHeader.vue', () => {
               userId: "tester",
               xproJurisdiction: null
             }
-          }))
+        }))
       );
       vm = instance.$mount();
       vm.$store.commit('setLoginValues');
-      vm.$store.commit('nrNumber','NR 2000948');
-      setTimeout(()=>{
+      vm.$store.commit('nrNumber', 'NR 2000948');
+      setTimeout(() => {
         done();
       }, 100)
     });
@@ -202,7 +203,7 @@ describe('RequestInfoHeader.vue', () => {
       expect(vm.$el.querySelector('#nr-details-show-hide-details-button').textContent.trim()).toEqual('Show Details  (b)');
       click('#nr-details-show-hide-details-button');
 
-      setTimeout(()=>{
+      setTimeout(() => {
         expect(vm.$el.querySelector('#nr-details-show-hide-details-button').textContent.trim()).toEqual('Hide Details (b)');
         expect(vm.$el.querySelector('newpta')).toBeDefined();
         expect(vm.$el.querySelector('#comments-div')).toBeDefined();
@@ -218,8 +219,8 @@ describe('RequestInfoHeader.vue', () => {
 
     let putCall, getCall, patchCall;
 
-    let click = function(id) {
-      console.log('ID: ',id)
+    let click = function (id) {
+      console.log('ID: ', id)
       let button = vm.$el.querySelector(id);
       let window = button.ownerDocument.defaultView;
       var click = new window.Event('click');
@@ -277,7 +278,7 @@ describe('RequestInfoHeader.vue', () => {
                   state: "NE"
                 }],
               natureBusinessInfo: "Nature of business can be pretty long so this one is more realistic. It even contains " +
-                "spaces and punctuation.",
+              "spaces and punctuation.",
               nrNum: "NR 2000950",
               nwpta: [],
               previousNr: null,
@@ -292,7 +293,7 @@ describe('RequestInfoHeader.vue', () => {
               userId: "tester",
               xproJurisdiction: null
             }
-          }))
+        }))
       );
       getCall = sandbox.stub(axios, 'get').withArgs('/api/v1/requests/NR 2000950', sinon.match.any).returns(
         new Promise((resolve) => resolve({
@@ -343,7 +344,7 @@ describe('RequestInfoHeader.vue', () => {
                   state: "NE"
                 }],
               natureBusinessInfo: "Nature of business can be pretty long so this one is more realistic. It even contains " +
-                "spaces and punctuation.",
+              "spaces and punctuation.",
               nrNum: "NR 2000948",
               nwpta: [],
               previousNr: null,
@@ -358,7 +359,7 @@ describe('RequestInfoHeader.vue', () => {
               userId: "tester",
               xproJurisdiction: null
             }
-          }))
+        }))
       );
       patchCall = sandbox.stub(axios, 'patch').withArgs('/api/v1/requests/NR 2000950', sinon.match.any).returns(
         new Promise((resolve) => resolve({
@@ -366,12 +367,12 @@ describe('RequestInfoHeader.vue', () => {
             {
               message: "Request:NR 2000950 - patched"
             }
-          }))
+        }))
       );
       vm = instance.$mount();
       vm.$store.commit('setLoginValues');
-      vm.$store.commit('nrNumber','NR 2000950');
-      setTimeout(()=>{
+      vm.$store.commit('nrNumber', 'NR 2000950');
+      setTimeout(() => {
         done();
       }, 100)
     });
@@ -383,12 +384,12 @@ describe('RequestInfoHeader.vue', () => {
 
       beforeEach((done) => {
         click('#nr-details-edit-button');
-        setTimeout(()=>{
+        setTimeout(() => {
           done();
         }, 100)
       });
       afterEach((done) => {
-        setTimeout(()=> {
+        setTimeout(() => {
           done();
         }, 100)
       });
@@ -396,7 +397,7 @@ describe('RequestInfoHeader.vue', () => {
       it('has the cancel button working properly', () => {
         console.log('CANCEL')
         click('#nr-details-cancel-button');
-        setTimeout(()=> {
+        setTimeout(() => {
           expect(vm.$el.querySelector('#nr-details-edit-button').textContent).toEqual('Edit');
           expect(vm.$el.querySelector('#nr-details-save-button')).toBeNull();
           expect(vm.$el.querySelector('#nr-details-cancel-button')).toBeNull();
@@ -439,8 +440,8 @@ describe('RequestInfoHeader.vue', () => {
 
     let putCall, getCall, patchCall;
 
-    let click = function(id) {
-      console.log('ID: ',id)
+    let click = function (id) {
+      console.log('ID: ', id)
       let button = vm.$el.querySelector(id);
       let window = button.ownerDocument.defaultView;
       var click = new window.Event('click');
@@ -498,7 +499,7 @@ describe('RequestInfoHeader.vue', () => {
                   state: "NE"
                 }],
               natureBusinessInfo: "Nature of business can be pretty long so this one is more realistic. It even contains " +
-                "spaces and punctuation.",
+              "spaces and punctuation.",
               nrNum: "NR 2000948",
               nwpta: [],
               previousNr: null,
@@ -513,7 +514,7 @@ describe('RequestInfoHeader.vue', () => {
               userId: "tester",
               xproJurisdiction: null
             }
-          }))
+        }))
       );
       getCall = sandbox.stub(axios, 'get').withArgs('/api/v1/requests/NR 2000948', sinon.match.any).returns(
         new Promise((resolve) => resolve({
@@ -564,7 +565,7 @@ describe('RequestInfoHeader.vue', () => {
                   state: "NE"
                 }],
               natureBusinessInfo: "Nature of business can be pretty long so this one is more realistic. It even contains " +
-                "spaces and punctuation.",
+              "spaces and punctuation.",
               nrNum: "NR 2000948",
               nwpta: [],
               previousNr: null,
@@ -579,7 +580,7 @@ describe('RequestInfoHeader.vue', () => {
               userId: "tester",
               xproJurisdiction: null
             }
-          }))
+        }))
       );
       patchCall = sandbox.stub(axios, 'patch').withArgs('/api/v1/requests/NR 2000948', sinon.match.any).returns(
         new Promise((resolve) => resolve({
@@ -587,12 +588,12 @@ describe('RequestInfoHeader.vue', () => {
             {
               message: "Request:NR 2000948 - patched"
             }
-          }))
+        }))
       );
       vm = instance.$mount();
       vm.$store.commit('setLoginValues');
-      vm.$store.commit('nrNumber','NR 2000948');
-      setTimeout(()=>{
+      vm.$store.commit('nrNumber', 'NR 2000948');
+      setTimeout(() => {
         done();
       }, 100)
     });
@@ -603,12 +604,12 @@ describe('RequestInfoHeader.vue', () => {
     describe('cancel/save testing', () => {
       beforeEach((done) => {
         click('#nr-details-edit-button');
-        setTimeout(()=>{
+        setTimeout(() => {
           done();
         }, 100)
       });
       afterEach((done) => {
-        setTimeout(()=> {
+        setTimeout(() => {
           done();
         }, 100)
       });
@@ -616,7 +617,7 @@ describe('RequestInfoHeader.vue', () => {
       it('has the cancel button working properly', () => {
         console.log('CANCEL')
         click('#nr-details-cancel-button');
-        setTimeout(()=> {
+        setTimeout(() => {
           expect(vm.$el.querySelector('#nr-details-edit-button').textContent).toEqual('Edit');
           expect(vm.$el.querySelector('#nr-details-save-button')).toBeNull();
           expect(vm.$el.querySelector('#nr-details-cancel-button')).toBeNull();
@@ -653,75 +654,75 @@ describe('RequestInfoHeader.vue', () => {
 
     describe('Edit button hiding testing', () => {
 
-          beforeEach((done) => {
-            sessionStorage.setItem('USER_ROLES', ['names_approver']);
-            sessionStorage.setItem('USERNAME', 'max')
-            vm = instance.$mount();
-            vm.$store.commit('setLoginValues');
-            vm.$store.commit('nrNumber','NR 2000948');
-            setTimeout(()=>{
-              done();
-            }, 100)
-          });
-
-          describe('I cannot edit when it is not my NR in progress', () => {
-
-            it('hides the edit button', () => {
-              console.log('START check edit for not my NR in progress');
-              expect(vm.$el.querySelector('#nr-details-edit-button')).toBeNull();
-              console.log('finished');
-
-            });
-          });
+      beforeEach((done) => {
+        sessionStorage.setItem('USER_ROLES', ['names_approver']);
+        sessionStorage.setItem('USERNAME', 'max')
+        vm = instance.$mount();
+        vm.$store.commit('setLoginValues');
+        vm.$store.commit('nrNumber', 'NR 2000948');
+        setTimeout(() => {
+          done();
+        }, 100)
       });
+
+      describe('I cannot edit when it is not my NR in progress', () => {
+
+        it('hides the edit button', () => {
+          console.log('START check edit for not my NR in progress');
+          expect(vm.$el.querySelector('#nr-details-edit-button')).toBeNull();
+          console.log('finished');
+
+        });
+      });
+    });
 
     describe('Edit button visible testing', () => {
 
-          beforeEach((done) => {
-            sessionStorage.setItem('USER_ROLES', ['names_approver']);
-            sessionStorage.setItem('USERNAME', 'tester')
-            vm = instance.$mount();
-            vm.$store.commit('setLoginValues');
-            vm.$store.commit('nrNumber','NR 2000948');
-            setTimeout(()=>{
-              done();
-            }, 100)
-          });
-
-          describe('editability testing', () => {
-
-            it('shows the edit button', () => {
-              console.log('START check edit for not my NR in progress');
-              expect(vm.$el.querySelector('#nr-details-edit-button').textContent).toEqual('Edit');
-              console.log('finished');
-
-            });
-          });
+      beforeEach((done) => {
+        sessionStorage.setItem('USER_ROLES', ['names_approver']);
+        sessionStorage.setItem('USERNAME', 'tester')
+        vm = instance.$mount();
+        vm.$store.commit('setLoginValues');
+        vm.$store.commit('nrNumber', 'NR 2000948');
+        setTimeout(() => {
+          done();
+        }, 100)
       });
 
-      describe('Edit button visible for staff testing', () => {
+      describe('editability testing', () => {
 
-          beforeEach((done) => {
-            sessionStorage.setItem('USER_ROLES', ['names_editor']);
-            sessionStorage.setItem('USERNAME', 'tester')
-            vm = instance.$mount();
-            vm.$store.commit('setLoginValues');
-            vm.$store.commit('nrNumber','NR 2000948');
-            setTimeout(()=>{
-              done();
-            }, 100)
-          });
+        it('shows the edit button', () => {
+          console.log('START check edit for not my NR in progress');
+          expect(vm.$el.querySelector('#nr-details-edit-button').textContent).toEqual('Edit');
+          console.log('finished');
 
-          describe('editability testing', () => {
-
-            it('shows the edit button for a staff member who is currently editing', () => {
-              console.log('START check edit for not my NR in progress');
-              expect(vm.$el.querySelector('#nr-details-edit-button').textContent).toEqual('Edit');
-              console.log('finished');
-
-            });
-          });
+        });
       });
+    });
+
+    describe('Edit button visible for staff testing', () => {
+
+      beforeEach((done) => {
+        sessionStorage.setItem('USER_ROLES', ['names_editor']);
+        sessionStorage.setItem('USERNAME', 'tester')
+        vm = instance.$mount();
+        vm.$store.commit('setLoginValues');
+        vm.$store.commit('nrNumber', 'NR 2000948');
+        setTimeout(() => {
+          done();
+        }, 100)
+      });
+
+      describe('editability testing', () => {
+
+        it('shows the edit button for a staff member who is currently editing', () => {
+          console.log('START check edit for not my NR in progress');
+          expect(vm.$el.querySelector('#nr-details-edit-button').textContent).toEqual('Edit');
+          console.log('finished');
+
+        });
+      });
+    });
   });
 
   describe('Testing Editing the NR after complete', () => {
@@ -730,8 +731,8 @@ describe('RequestInfoHeader.vue', () => {
 
     let putCall, getCall, patchCall;
 
-    let click = function(id) {
-      console.log('ID: ',id)
+    let click = function (id) {
+      console.log('ID: ', id)
       let button = vm.$el.querySelector(id);
       let window = button.ownerDocument.defaultView;
       var click = new window.Event('click');
@@ -789,7 +790,7 @@ describe('RequestInfoHeader.vue', () => {
                   state: "REJECTED"
                 }],
               natureBusinessInfo: "Nature of business can be pretty long so this one is more realistic. It even contains " +
-                "spaces and punctuation.",
+              "spaces and punctuation.",
               nrNum: "NR 2000952",
               nwpta: [],
               previousNr: null,
@@ -804,7 +805,7 @@ describe('RequestInfoHeader.vue', () => {
               userId: "tester",
               xproJurisdiction: null
             }
-          }))
+        }))
       );
       getCall = sandbox.stub(axios, 'get').withArgs('/api/v1/requests/NR 2000952', sinon.match.any).returns(
         new Promise((resolve) => resolve({
@@ -855,7 +856,7 @@ describe('RequestInfoHeader.vue', () => {
                   state: "REJECTED"
                 }],
               natureBusinessInfo: "Nature of business can be pretty long so this one is more realistic. It even contains " +
-                "spaces and punctuation.",
+              "spaces and punctuation.",
               nrNum: "NR 2000952",
               nwpta: [],
               previousNr: null,
@@ -870,7 +871,7 @@ describe('RequestInfoHeader.vue', () => {
               userId: "tester",
               xproJurisdiction: null
             }
-          }))
+        }))
       );
       patchCall = sandbox.stub(axios, 'patch').withArgs('/api/v1/requests/NR 2000952', sinon.match.any).returns(
         new Promise((resolve) => resolve({
@@ -878,12 +879,12 @@ describe('RequestInfoHeader.vue', () => {
             {
               message: "Request:NR 2000952 - patched"
             }
-          }))
+        }))
       );
       vm = instance.$mount();
       vm.$store.commit('setLoginValues');
-      vm.$store.commit('nrNumber','NR 2000952');
-      setTimeout(()=>{
+      vm.$store.commit('nrNumber', 'NR 2000952');
+      setTimeout(() => {
         done();
       }, 100)
     });
@@ -894,12 +895,12 @@ describe('RequestInfoHeader.vue', () => {
     describe('cancel/save testing', () => {
       beforeEach((done) => {
         click('#nr-details-edit-button');
-        setTimeout(()=>{
+        setTimeout(() => {
           done();
         }, 100)
       });
       afterEach((done) => {
-        setTimeout(()=> {
+        setTimeout(() => {
           done();
         }, 100)
       });
@@ -907,7 +908,7 @@ describe('RequestInfoHeader.vue', () => {
       it('has the cancel button working properly', () => {
         console.log('CANCEL')
         click('#nr-details-cancel-button');
-        setTimeout(()=> {
+        setTimeout(() => {
           expect(vm.$el.querySelector('#nr-details-edit-button').textContent).toEqual('Edit');
           expect(vm.$el.querySelector('#nr-details-save-button')).toBeNull();
           expect(vm.$el.querySelector('#nr-details-cancel-button')).toBeNull();
