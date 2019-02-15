@@ -67,6 +67,9 @@ export default new Vuex.Store({
           conflict1: null,
           conflict2: null,
           conflict3: null,
+          conflict1_num: null,
+          conflict2_num: null,
+          conflict3_num: null,
           decision_text: null,
           comment: null,
         },
@@ -78,6 +81,9 @@ export default new Vuex.Store({
           conflict1: null,
           conflict2: null,
           conflict3: null,
+          conflict1_num: null,
+          conflict2_num: null,
+          conflict3_num: null,
           decision_text: null,
           comment: null,
         },
@@ -89,6 +95,9 @@ export default new Vuex.Store({
           conflict1: null,
           conflict2: null,
           conflict3: null,
+          conflict1_num: null,
+          conflict2_num: null,
+          conflict3_num: null,
           decision_text: null,
           comment: null,
         },
@@ -384,6 +393,9 @@ export default new Vuex.Store({
       state.compInfo.compNames.compName2.conflict1 = null
       state.compInfo.compNames.compName2.conflict2 = null
       state.compInfo.compNames.compName2.conflict3 = null
+      state.compInfo.compNames.compName2.conflict1_num = null
+      state.compInfo.compNames.compName2.conflict2_num = null
+      state.compInfo.compNames.compName2.conflict3_num = null
       state.compInfo.compNames.compName2.decision_text = null
       state.compInfo.compNames.compName3.name = null
       state.compInfo.compNames.compName3.state = null
@@ -391,6 +403,9 @@ export default new Vuex.Store({
       state.compInfo.compNames.compName3.conflict1 = null
       state.compInfo.compNames.compName3.conflict2 = null
       state.compInfo.compNames.compName3.conflict3 = null
+      state.compInfo.compNames.compName3.conflict1_num = null
+      state.compInfo.compNames.compName3.conflict2_num = null
+      state.compInfo.compNames.compName3.conflict3_num = null
       state.compInfo.compNames.compName3.decision_text = null
 
       // clear current name choice, to be reset by new data below
@@ -410,6 +425,9 @@ export default new Vuex.Store({
             state.compInfo.compNames.compName1.conflict1 = record.conflict1
             state.compInfo.compNames.compName1.conflict2 = record.conflict2
             state.compInfo.compNames.compName1.conflict3 = record.conflict3
+            state.compInfo.compNames.compName1.conflict1_num = record.conflict1_num
+            state.compInfo.compNames.compName1.conflict2_num = record.conflict2_num
+            state.compInfo.compNames.compName1.conflict3_num = record.conflict3_num
             state.compInfo.compNames.compName1.decision_text = record.decision_text
             state.compInfo.compNames.compName1.comment = record.comment
 
@@ -428,6 +446,9 @@ export default new Vuex.Store({
             state.compInfo.compNames.compName2.conflict1 = record.conflict1
             state.compInfo.compNames.compName2.conflict2 = record.conflict2
             state.compInfo.compNames.compName2.conflict3 = record.conflict3
+            state.compInfo.compNames.compName2.conflict1_num = record.conflict1_num
+            state.compInfo.compNames.compName2.conflict2_num = record.conflict2_num
+            state.compInfo.compNames.compName2.conflict3_num = record.conflict3_num
             state.compInfo.compNames.compName2.decision_text = record.decision_text
             state.compInfo.compNames.compName2.comment = record.comment
 
@@ -448,6 +469,9 @@ export default new Vuex.Store({
             state.compInfo.compNames.compName3.conflict1 = record.conflict1
             state.compInfo.compNames.compName3.conflict2 = record.conflict2
             state.compInfo.compNames.compName3.conflict3 = record.conflict3
+            state.compInfo.compNames.compName3.conflict1_num = record.conflict1_num
+            state.compInfo.compNames.compName3.conflict2_num = record.conflict2_num
+            state.compInfo.compNames.compName3.conflict3_num = record.conflict3_num
             state.compInfo.compNames.compName3.decision_text = record.decision_text
             state.compInfo.compNames.compName3.comment = record.comment
 
