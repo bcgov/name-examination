@@ -809,15 +809,15 @@ export default new Vuex.Store({
       let names = json.names;
       let additionalRow = null;
       let entry = null;
-      let name_stems = []
-      let synonym_stems = null
-      let wildcard_stack = false
+      let name_stems = [];
+      let synonym_stems = null;
+      let wildcard_stack = false;
       for (let i=0; i<names.length; i++) {
         additionalRow = null;
         if (names[i].name_info.source != null) {
           //stack conflict
           entry = names[i].name_info;
-          synonym_stems = names[i].stems
+          synonym_stems = names[i].stems;
           entry.class = 'conflict-result';
 
         } else {
@@ -844,7 +844,8 @@ export default new Vuex.Store({
                   wrd--;
                 }
               }
-              entry.name = entry.name.replace(synonym_list[syn].toUpperCase(),'<span class="synonym-stem-highlight">'+ synonym_list[syn].toUpperCase() +'</span>');
+              var stem = new RegExp(synonym_list[syn], 'gi');
+              entry.name = entry.name.replace(stem,'<span class="synonym-stem-highlight">'+ synonym_list[syn].toUpperCase() +'</span>');
             }
             entry.name = entry.name.replace('SYNONYMS:', '');
           }
@@ -855,7 +856,8 @@ export default new Vuex.Store({
         let k=0;
         for (k = 0; k < name_stems.length; k++) {
           if (!wildcard_stack) {
-            entry.name = entry.name.replace(' '+name_stems[k].toUpperCase(), '<span class="stem-highlight">' + ' ' + name_stems[k].toUpperCase() + '</span>');
+            var stem = new RegExp(name_stems[k], 'gi');
+            entry.name = entry.name.replace(stem, '<span class="stem-highlight">' + name_stems[k].toUpperCase() + '</span>');
           }
           if (synonym_stems != undefined && synonym_stems.indexOf(name_stems[k].toUpperCase()) != -1) {
             synonym_stems.splice(synonym_stems.indexOf(name_stems[k].toUpperCase()), 1);
@@ -863,7 +865,8 @@ export default new Vuex.Store({
         }
         if (synonym_stems != undefined) {
           for (k = 0; k < synonym_stems.length; k++) {
-            entry.name = entry.name.replace(' '+synonym_stems[k].toUpperCase(), '<span class="synonym-stem-highlight">' + ' ' + synonym_stems[k].toUpperCase() + '</span>');
+            var stem = new RegExp(synonym_stems[k], 'gi');
+            entry.name = entry.name.replace(stem, '<span class="synonym-stem-highlight">' + synonym_stems[k].toUpperCase() + '</span>');
           }
         }
         state.synonymMatchesConflicts.push({
