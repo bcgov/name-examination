@@ -42,6 +42,6 @@ describe('store > checkManualExactMatches', () => {
     it('escape special characters', ()=>{
         store.dispatch('checkManualExactMatches', '/?.><\\\'\":;\\|][}{=+_-)(*&^%$#@!~`ATHENAE/?.><\\\'\":;\\|][}{=+_-)(*&^%$#@!~`UM 139 LTD./?.><\\\'":;\\|][}{=+_-)(*&^%$#@!~` +++++ ------')
 
-        expect(exactMatch.lastCall.args[0]).toEqual('/api/v1/exact-match?query=.%3E%3C\'%3B%3D%2B_-*%26S%40ATHENAE.%3E%3C\'%3B%3D%2B_-*%26S%40UM%20139%20LTD..%3E%3C\'%3B%3D%2B_-*%26S%40')
+        expect(exactMatch.lastCall.args[0]).toEqual('/api/v1/exact-match?query=.%3E%3C\'%3B%3D%2B_-*%26S%40ATHENAE.%3E%3C\'%3B%3D%2B_-*%26S%40UM%20139%20LTD..%3E%3C\'%3B%3D%2B_-*%26S%40%20%20')
     })
 })
