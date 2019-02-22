@@ -838,6 +838,12 @@ export default new Vuex.Store({
       let wildcard_stack = false
       for (let i=0; i<names.length; i++) {
         additionalRow = null;
+
+        // remove any empty string stem values - they are not valid
+        names[i].stems = names[i].stems.filter(function (elem) {
+          return elem != '';
+        });
+
         if (names[i].name_info.source != null) {
           //stack conflict
           entry = names[i].name_info;
