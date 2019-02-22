@@ -209,6 +209,7 @@ export default new Vuex.Store({
                     conditional: {response: {numfound: ''}},
                     rejected: {response: {numfound: ''}}
     },
+    exactPhrase: '*',
   },
   mutations: {
     requestType (state, value) {
@@ -367,11 +368,13 @@ export default new Vuex.Store({
     hasBeenReset(state,value) {
       state.hasBeenReset = value;
     },
+    exactPhrase(state,value) {
+      state.exactPhrase = value;
+    },
     clearAuthData (state) {
       state.userId = null
       state.authorized = null
     },
-
     loadpostgresNo(state, postgresData) {
         state.compInfo.nrNumber = postgresData.nameRequest
     },
@@ -1569,8 +1572,9 @@ export default new Vuex.Store({
                 .replace(/\$/g, 'S')
                 .replace(/¢/g,'C')
                 .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?|,)/g, '')
+      var exactPhrase = state.exactPhrase
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-      const url = '/api/v1/requests/synonymbucket/' + query;
+      const url = 'http://127.0.0.1:5000/api/v1/requests/synonymbucket/' + query + '/' + exactPhrase;
       console.log('URL:' + url);
       const vm = this;
       dispatch('checkToken');
@@ -2088,6 +2092,9 @@ export default new Vuex.Store({
     },
     errorJSON(state) {
       return state.errorJSON
+    },
+    exactPhrase(state) {
+      return state.exactPhrase;
     },
   }
 })
