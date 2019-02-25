@@ -209,7 +209,6 @@ export default new Vuex.Store({
                     conditional: {response: {numfound: ''}},
                     rejected: {response: {numfound: ''}}
     },
-    exactPhrase: '*',
   },
   mutations: {
     requestType (state, value) {
@@ -367,9 +366,6 @@ export default new Vuex.Store({
     },
     hasBeenReset(state,value) {
       state.hasBeenReset = value;
-    },
-    exactPhrase(state,value) {
-      state.exactPhrase = value;
     },
     clearAuthData (state) {
       state.userId = null
@@ -1514,17 +1510,17 @@ export default new Vuex.Store({
       commit('currentNameObj', objName);
     },
 
-    runManualRecipe({dispatch,state},searchStr) {
-      console.log('running manual recipe with: ', searchStr);
+    runManualRecipe({dispatch,state},searchObj) {
+      console.log('running manual recipe with: ', searchObj.searchStr, '/', searchObj.exactPhrase);
       if( state.currentChoice != null) {
-        this.dispatch('checkManualExactMatches',searchStr)
-        this.dispatch('checkManualSynonymMatches',searchStr)
-        this.dispatch('checkManualCobrsPhoneticMatches',searchStr)
-        this.dispatch('checkManualPhoneticMatches',searchStr)
+        this.dispatch('checkManualExactMatches',searchObj.searchStr)
+        this.dispatch('checkManualSynonymMatches',searchObj)
+        this.dispatch('checkManualCobrsPhoneticMatches',searchObj)
+        this.dispatch('checkManualPhoneticMatches',searchObj)
         // this.dispatch('checkManualConflicts',searchStr)
-        this.dispatch('checkManualTrademarks',searchStr)
-        this.dispatch('checkManualConditions',searchStr)
-        this.dispatch('checkManualHistories',searchStr)
+        this.dispatch('checkManualTrademarks',searchObj.searchStr)
+        this.dispatch('checkManualConditions',searchObj.searchStr)
+        this.dispatch('checkManualHistories',searchObj.searchStr)
       }
     },
 
@@ -1557,12 +1553,13 @@ export default new Vuex.Store({
         .catch(error => console.log('ERROR (exact matches): ' + error))
     },
 
-    checkManualSynonymMatches( {dispatch,commit,state}, query ) {
-
+    checkManualSynonymMatches( {dispatch,commit,state}, searchObj ) {
+      var searchStr = searchObj.searchStr;
+      var exactPhrase = searchObj.exactPhrase;
       commit('setSynonymMatchesConflicts', null);
 
       console.log('action: getting synonym matches for number: ' + state.compInfo.nrNumber + ' from solr')
-      query = query.replace(/\//g,' ')
+      searchStr = searchStr.replace(/\//g,' ')
                 .replace(/\\/g,' ')
                 .replace(/&/g, ' ')
                 .replace(/\+/g, ' ')
@@ -1572,9 +1569,10 @@ export default new Vuex.Store({
                 .replace(/\$/g, 'S')
                 .replace(/¢/g,'C')
                 .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?|,)/g, '')
-      var exactPhrase = state.exactPhrase
+      console.log('HERE3: ', exactPhrase)
+      if (exactPhrase == '') exactPhrase = '*';
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-      const url = 'http://127.0.0.1:5000/api/v1/requests/synonymbucket/' + query + '/' + exactPhrase;
+      const url = '/api/v1/requests/synonymbucket/' + searchStr + '/' + exactPhrase;
       console.log('URL:' + url);
       const vm = this;
       dispatch('checkToken');
@@ -1584,8 +1582,8 @@ export default new Vuex.Store({
         .catch(error => console.log('ERROR (synonym matches): ' + error))
     },
 
-    checkManualCobrsPhoneticMatches( {dispatch,commit,state}, query ) {
-
+    checkManualCobrsPhoneticMatches( {dispatch,commit,state}, searchObj ) {
+      var query = searchObj.searchStr;
       commit('setCobrsPhoneticConflicts', null);
 
       console.log('action: getting CobrsPhonetic matches for number: ' + state.compInfo.nrNumber + ' from solr')
@@ -1600,7 +1598,7 @@ export default new Vuex.Store({
           .replace(/¢/g,'C')
           .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-      const url = '/api/v1/requests/cobrsphonetics/' + query;
+      const url = '/api/v1/requests/cobrsphonetics/' + query + '/*';
       console.log('URL:' + url);
       const vm = this;
       dispatch('checkToken');
@@ -1610,8 +1608,8 @@ export default new Vuex.Store({
         .catch(error => console.log('ERROR (CobrsPhonetic matches): ' + error))
     },
 
-    checkManualPhoneticMatches( {dispatch,commit,state}, query ) {
-
+    checkManualPhoneticMatches( {dispatch,commit,state}, searchObj) {
+      var query = searchObj.searchStr;
       commit('setPhoneticConflicts', null);
 
       console.log('action: getting Phonetic matches for number: ' + state.compInfo.nrNumber + ' from solr')
@@ -1626,7 +1624,7 @@ export default new Vuex.Store({
           .replace(/¢/g,'C')
           .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-      const url = '/api/v1/requests/phonetics/' + query;
+      const url = '/api/v1/requests/phonetics/' + query + '/*';
       console.log('URL:' + url);
       const vm = this;
       dispatch('checkToken');
@@ -2092,9 +2090,6 @@ export default new Vuex.Store({
     },
     errorJSON(state) {
       return state.errorJSON
-    },
-    exactPhrase(state) {
-      return state.exactPhrase;
     },
   }
 })

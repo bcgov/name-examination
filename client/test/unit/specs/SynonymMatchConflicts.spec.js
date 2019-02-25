@@ -59,7 +59,7 @@ describe('Synonym-Match Conflicts', () => {
           }
         }))
       )
-      data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc', sinon.match.any).returns(
+      data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc/*', sinon.match.any).returns(
         new Promise((resolve) => {
           resolve({
             data: {
@@ -149,7 +149,7 @@ describe('Synonym-Match Conflicts', () => {
     })
 
     it('highlights the stems properly', (done) => {
-      data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc', sinon.match.any).returns(
+      data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc/*', sinon.match.any).returns(
         new Promise((resolve) => resolve({
           data: {
             names: [
@@ -294,7 +294,7 @@ describe('Synonym-Match Conflicts', () => {
     })
 
     it('handles unexpected/incorrect syn and stem data properly', (done) => {
-      data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc', sinon.match.any).returns(
+      data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc/*', sinon.match.any).returns(
         new Promise((resolve) => resolve({
           data: {
             names: [
@@ -471,7 +471,7 @@ describe('Synonym-Match Conflicts', () => {
           }
         }))
       )
-      data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc', sinon.match.any).returns(
+      data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc/*', sinon.match.any).returns(
         new Promise((resolve) => resolve({
           data: {
             names: []

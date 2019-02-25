@@ -16,70 +16,70 @@ describe('store > checkManualPhoneticMatches', () => {
   })
 
   it('replaces the plus with a space', () => {
-    store.dispatch('checkManualPhoneticMatches', '+dog+cat + fish+')
+    store.dispatch('checkManualPhoneticMatches', {searchStr:'+dog+cat + fish+',exactPhrase:''})
     // let lastCallList = CobrsPhonetic.lastCall
     // console.log(lastCallList)
     // console.log(lastCallList.args)
-    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/ dog cat   fish ')
+    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/ dog cat   fish /*')
   })
 
   it('keeps query as-is when there is no leading plus', () => {
-    store.dispatch('checkManualPhoneticMatches', 'dog')
+    store.dispatch('checkManualPhoneticMatches', {searchStr:'dog',exactPhrase:''})
 
-    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/dog')
+    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/dog/*')
   })
 
   it('replaces the & with a space', () => {
-    store.dispatch('checkManualPhoneticMatches', 'dog&cat & fish')
+    store.dispatch('checkManualPhoneticMatches', {searchStr:'dog&cat & fish',exactPhrase:''})
 
-    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/dog cat   fish')
+    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/dog cat   fish/*')
   })
 
   it('replaces / and \\ with a space', () => {
-    store.dispatch('checkManualPhoneticMatches', 'dog/cat /fish \\ bear\\')
+    store.dispatch('checkManualPhoneticMatches', {searchStr:'dog/cat /fish \\ bear\\',exactPhrase:''})
 
-    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/dog cat  fish   bear ')
+    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/dog cat  fish   bear /*')
   })
 
   it('replaces - with a space', () => {
-    store.dispatch('checkManualPhoneticMatches', 'dog-cat -fish - bear')
+    store.dispatch('checkManualPhoneticMatches', {searchStr:'dog-cat -fish - bear',exactPhrase:''})
 
-    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/dog cat  fish   bear')
+    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/dog cat  fish   bear/*')
   })
 
   it('replaces $ and ¢ with a dollar and cent, or s and c', () => {
-    store.dispatch('checkManualPhoneticMatches', 'big $ $tore ¢ a¢¢eptable ')
+    store.dispatch('checkManualPhoneticMatches', {searchStr:'big $ $tore ¢ a¢¢eptable ',exactPhrase:''})
 
-    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/big DOLLAR Store CENT aCCeptable ')
+    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/big DOLLAR Store CENT aCCeptable /*')
   })
 
   it('removes brackets', () => {
-    store.dispatch('checkManualPhoneticMatches', 'dog (cat) {fish} [bear]')
+    store.dispatch('checkManualPhoneticMatches', {searchStr:'dog (cat) {fish} [bear]',exactPhrase:''})
 
-    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/dog cat fish bear')
+    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/dog cat fish bear/*')
   })
 
   it('removes ?', () => {
-    store.dispatch('checkManualPhoneticMatches', 'dog ? cat? ?fish bear')
+    store.dispatch('checkManualPhoneticMatches', {searchStr:'dog ? cat? ?fish bear',exactPhrase:''})
 
-    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/dog  cat fish bear')
+    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/dog  cat fish bear/*')
   })
 
   it('removes #', () => {
-    store.dispatch('checkManualPhoneticMatches', 'dog # cat# #fish bear')
+    store.dispatch('checkManualPhoneticMatches', {searchStr:'dog # cat# #fish bear',exactPhrase:''})
 
-    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/dog  cat fish bear')
+    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/dog  cat fish bear/*')
   })
 
   it('removes %', () => {
-    store.dispatch('checkManualPhoneticMatches', 'dog % cat% %fish bear')
+    store.dispatch('checkManualPhoneticMatches', {searchStr:'dog % cat% %fish bear',exactPhrase:''})
 
-    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/dog  cat fish bear')
+    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/dog  cat fish bear/*')
   })
 
   it('escape special characters', () => {
-    store.dispatch('checkManualPhoneticMatches', '/?.><\\\'\":;\\|][}{=+_-)(*&^%$#@!~`ATHENAE/?.><\\\'\":;\\|][}{=+_-)(*&^%$#@!~`UM 139 LTD./?.><\\\'":;\\|][}{=+_-)(*&^%$#@!~`')
+    store.dispatch('checkManualPhoneticMatches', {searchStr:'/?.><\\\'\":;\\|][}{=+_-)(*&^%$#@!~`ATHENAE/?.><\\\'\":;\\|][}{=+_-)(*&^%$#@!~`UM 139 LTD./?.><\\\'":;\\|][}{=+_-)(*&^%$#@!~`',exactPhrase:''})
 
-    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/ .>< \'; = _ * S@ATHENAE .>< \'; = _ * S@UM 139 LTD. .>< \'; = _ * S@')
+    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/ .>< \'; = _ * S@ATHENAE .>< \'; = _ * S@UM 139 LTD. .>< \'; = _ * S@/*')
   })
 })

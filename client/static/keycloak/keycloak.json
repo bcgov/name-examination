@@ -1,10 +1,10 @@
 {
-  "realm": "nest",
-  "auth-server-url": "https://dev-sso.pathfinder.gov.bc.ca/auth",
+  "realm": "sbc",
+  "auth-server-url": "https://sso-dev.pathfinder.gov.bc.ca/auth",
   "ssl-required": "external",
-  "resource": "namex-DEV",
+  "resource": "NameX-Dev",
   "credentials": {
-    "secret": "1bb5bfc6-0fdd-4d77-b176-090d6cf39cf4"
+    "secret": "b05bae52-e0d3-4c42-9954-594b22d1d24b"
   },
   "use-resource-role-mappings": true
 }
