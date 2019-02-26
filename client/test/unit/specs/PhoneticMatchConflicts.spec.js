@@ -58,7 +58,7 @@ describe('PhoneticMatches', () => {
           }
         }))
       )
-      data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc', sinon.match.any).returns(
+      data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc/*', sinon.match.any).returns(
         new Promise((resolve) => {
           resolve({
             data: {
@@ -71,7 +71,7 @@ describe('PhoneticMatches', () => {
           })
         })
       )
-      data.apiSandbox.getStub.withArgs('/api/v1/requests/cobrsphonetics/incredible name inc', sinon.match.any).returns(
+      data.apiSandbox.getStub.withArgs('/api/v1/requests/cobrsphonetics/incredible name inc/*', sinon.match.any).returns(
         new Promise((resolve) => {
           resolve({
             data: {
@@ -92,7 +92,7 @@ describe('PhoneticMatches', () => {
           })
         })
       )
-      data.apiSandbox.getStub.withArgs('/api/v1/requests/phonetics/incredible name inc', sinon.match.any).returns(
+      data.apiSandbox.getStub.withArgs('/api/v1/requests/phonetics/incredible name inc/*', sinon.match.any).returns(
         new Promise((resolve) => {
           resolve({
             data: {
@@ -236,21 +236,21 @@ describe('PhoneticMatches', () => {
           }
         }))
       )
-      data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc', sinon.match.any).returns(
+      data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc/*', sinon.match.any).returns(
         new Promise((resolve) => resolve({
           data: {
             names: []
           }
         }))
       )
-      data.apiSandbox.getStub.withArgs('/api/v1/requests/cobrsphonetics/incredible name inc', sinon.match.any).returns(
+      data.apiSandbox.getStub.withArgs('/api/v1/requests/cobrsphonetics/incredible name inc/*', sinon.match.any).returns(
         new Promise((resolve) => resolve({
           data: {
             names: []
           }
         }))
       )
-      data.apiSandbox.getStub.withArgs('/api/v1/requests/phonetics/incredible name inc', sinon.match.any).returns(
+      data.apiSandbox.getStub.withArgs('/api/v1/requests/phonetics/incredible name inc/*', sinon.match.any).returns(
         new Promise((resolve) => resolve({
           data: {
             names: []
