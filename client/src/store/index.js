@@ -1569,7 +1569,6 @@ export default new Vuex.Store({
                 .replace(/\$/g, 'S')
                 .replace(/¢/g,'C')
                 .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?|,)/g, '')
-      console.log('HERE3: ', exactPhrase)
       if (exactPhrase == '') exactPhrase = '*';
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
       const url = '/api/v1/requests/synonymbucket/' + searchStr + '/' + exactPhrase;
