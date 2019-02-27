@@ -159,13 +159,18 @@
                   <div class="error" v-if="!$v.compName1.name.required">The first name choice is required.</div>
                 </td>
               </tr>
-              <tr>
+              <tr :class="{'form-group-error': $v.compName2.name.$error}">
                 <td>2.</td>
-                <td><input v-model="compName2.name" class="form-control" /></td>
+                <td>
+                  <input v-model="compName2.name" class="form-control" :onchange="$v.compName2.name.$touch()"/>
+                  <div class="error" v-if="$v.compName2 && !$v.compName2.name.required">To include a 3rd name choice the 2nd name choice is required.</div>
+                </td>
               </tr>
               <tr>
                 <td>3.</td>
-                <td><input v-model="compName3.name" class="form-control" /></td>
+                <td>
+                  <input v-model="compName3.name" class="form-control" :onchange="$v.compName2.name.$touch()"/>
+                </td>
               </tr>
             </table>
             <table v-else style="width: 100%;">
@@ -267,6 +272,24 @@ export default {
         },
       }
 
+      // if compName3 exists then compName2 must exist
+      console.log(this.compName3)
+      console.log('HERE1')
+      if (this.compName3.name) {
+        console.log('HERE2')
+        validations.compName2 = {
+          name: {
+            required,
+          }
+        }
+      } else {
+        validations.compName2 = {
+          name: {
+          }
+        }
+      }
+      console.log('AHA')
+
       // validate jurisdiction if required
       if (this.jurisdiction_required && !this.is_closed) {
         validations.jurisdiction = {
@@ -337,7 +360,7 @@ export default {
           },
         }
       }
-
+      console.log('end')
       return validations;
 
     },
