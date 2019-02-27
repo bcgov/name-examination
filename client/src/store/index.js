@@ -1133,7 +1133,7 @@ export default new Vuex.Store({
         dispatch('loadDropdowns');
 
         //load admin link
-        dispath('loadAdinLink',myArray)
+        dispatch('loadAdminLink',myArray)
 
       })
     },

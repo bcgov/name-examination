@@ -43,7 +43,7 @@
 
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <a target="_blank" href={{ adminURL }} id="admin" class="nav-link">Admin</a>
+            <a target="_blank" :href="adminURL" id="admin" class="nav-link">Admin</a>
           </li>
           <li v-if="userCanExamine" class="navbar-text divider">|</li>
           <li v-if="userCanExamine" class="nav-item">
