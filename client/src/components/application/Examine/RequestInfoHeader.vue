@@ -273,10 +273,7 @@ export default {
       }
 
       // if compName3 exists then compName2 must exist
-      console.log(this.compName3)
-      console.log('HERE1')
       if (this.compName3.name) {
-        console.log('HERE2')
         validations.compName2 = {
           name: {
             required,
@@ -288,7 +285,6 @@ export default {
           }
         }
       }
-      console.log('AHA')
 
       // validate jurisdiction if required
       if (this.jurisdiction_required && !this.is_closed) {
@@ -360,7 +356,6 @@ export default {
           },
         }
       }
-      console.log('end')
       return validations;
 
     },
