@@ -359,6 +359,7 @@
       // and coming back to same NR
       this.searching = true;
       this.setManualSearchStr(this.currentName);
+      this.exactPhrase = '';
     },
     methods: {
       /**
@@ -472,7 +473,6 @@
       },
       runManualRecipe(){
         console.log("Running manual recipe on " + this.searchStr + '/' + this.exactPhrase);
-        console.log('HERE2: ', this.exactPhrase)
         this.$store.dispatch('runManualRecipe', {searchStr:this.searchStr, exactPhrase:this.exactPhrase});
       },
       setIcon(name_state) {
@@ -537,7 +537,6 @@
       onSubmit()
       {
         this.$store.dispatch('resetValues');
-        console.log('HERE1: ', this.exactPhrase)
         this.$store.dispatch('runManualRecipe', {searchStr:this.searchStr, exactPhrase:this.exactPhrase});
 
         if (this.searchStr != this.currentName) this.is_running_manual_search = true;
@@ -602,6 +601,7 @@
         console.log('CompName.currentName watcher fired:' + val)
         this.searching = true;
         this.setManualSearchStr(val);
+        this.exactPhrase = '';
       },
       nrNumber: function (val) {
         console.log('CompName.nrNumber watcher fired:' + val)
