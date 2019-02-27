@@ -17,6 +17,7 @@ export default new Vuex.Store({
     authorized: false,
     email: null,
     errorJSON: null,
+    adminURL:null,
 
     //Interface settings
     currentChoice: null, // CURRENT NAME BEING EXAMINED (choice number)
@@ -1131,6 +1132,9 @@ export default new Vuex.Store({
         //load UI dropdowns from json files and database tables
         dispatch('loadDropdowns');
 
+        //load admin link
+        dispath('loadAdinLink',myArray)
+
       })
     },
 
@@ -1358,6 +1362,17 @@ export default new Vuex.Store({
             })
             .catch(error => console.log('ERROR: ' + error))
       },
+
+    loadAdminLink({state},myArray){
+      //Set Admin URL
+        if(myArray[0]['NODE_ENV']=='production') {
+          state.adminURL = 'https://namex-solr.pathfinder.gov.bc.ca'
+        } else if(myArray[0]['NODE_ENV']=='test') {
+          state.adminURL = 'https://namex-solr-test.pathfinder.gov.bc.ca'
+        } else {
+          state.adminURL = 'https://namex-solr-dev.pathfinder.gov.bc.ca'
+        }
+    },
 
     loadDropdowns( {commit, state} ) {
       var json_files_path = 'static/ui_dropdowns/';
@@ -2090,5 +2105,8 @@ export default new Vuex.Store({
     errorJSON(state) {
       return state.errorJSON
     },
+    adminURL(state){
+      return state.adminURL
+    }
   }
 })
