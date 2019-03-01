@@ -472,7 +472,6 @@
       },
       runManualRecipe(){
         console.log("Running manual recipe on " + this.searchStr + '/' + this.exactPhrase);
-        console.log('HERE2: ', this.exactPhrase)
         this.$store.dispatch('runManualRecipe', {searchStr:this.searchStr, exactPhrase:this.exactPhrase});
       },
       setIcon(name_state) {
