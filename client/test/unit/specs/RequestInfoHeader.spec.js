@@ -499,7 +499,7 @@ describe('RequestInfoHeader.vue', () => {
                   state: "NE"
                 }],
               natureBusinessInfo: "Nature of business can be pretty long so this one is more realistic. It even contains " +
-              "spaces and punctuation.",
+                "spaces and punctuation.",
               nrNum: "NR 2000948",
               nwpta: [],
               previousNr: null,
@@ -565,7 +565,7 @@ describe('RequestInfoHeader.vue', () => {
                   state: "NE"
                 }],
               natureBusinessInfo: "Nature of business can be pretty long so this one is more realistic. It even contains " +
-              "spaces and punctuation.",
+                "spaces and punctuation.",
               nrNum: "NR 2000948",
               nwpta: [],
               previousNr: null,
@@ -649,6 +649,35 @@ describe('RequestInfoHeader.vue', () => {
 
           console.log('finished');
         });
+      });
+
+      it('Validates the name choices properly', () => {
+        vm.compName1.name = '';
+        expect(vm.validate()).toBeFalsy();
+        vm.compName1.name = 'COLDSTREAM REFRIGERATION  HVAC SERVICES LIMITED';
+        vm.compName2.name = '';
+        vm.compName3.name = '';
+        expect(vm.validate()).toBeTruthy();
+        vm.compName3.name = 'Test add name choice 3';
+        expect(vm.validate()).toBeFalsy();
+        vm.compName2.name = 'Test add name choice 2';
+        expect(vm.validate()).toBeTruthy();
+        vm.compName2.name = ' ';
+        expect(vm.validate()).toBeFalsy();
+        vm.compName2.name = '';
+        vm.compName3.name = ' ';
+        expect(vm.validate()).toBeTruthy();
+        vm.compName3.name = 'Test add name choice 3';
+        expect(vm.validate()).toBeFalsy();
+
+        // this should do nothing
+        click('#nr-details-save-button');
+
+        // reset names and cancel edit - if above 'saved' this will error
+        vm.compName2.name = '';
+        vm.compName3.name = '';
+        expect(vm.validate()).toBeTruthy();
+        click('#nr-details-cancel-button');
       });
     });
 
