@@ -652,6 +652,9 @@ describe('RequestInfoHeader.vue', () => {
       });
 
       it('Validates the name choices properly', () => {
+        vm.compName1.name = '';
+        expect(vm.validate()).toBeFalsy();
+        vm.compName1.name = 'COLDSTREAM REFRIGERATION  HVAC SERVICES LIMITED';
         vm.compName2.name = '';
         vm.compName3.name = '';
         expect(vm.validate()).toBeTruthy();
@@ -659,7 +662,12 @@ describe('RequestInfoHeader.vue', () => {
         expect(vm.validate()).toBeFalsy();
         vm.compName2.name = 'Test add name choice 2';
         expect(vm.validate()).toBeTruthy();
+        vm.compName2.name = ' ';
+        expect(vm.validate()).toBeFalsy();
         vm.compName2.name = '';
+        vm.compName3.name = ' ';
+        expect(vm.validate()).toBeTruthy();
+        vm.compName3.name = 'Test add name choice 3';
         expect(vm.validate()).toBeFalsy();
 
         // this should do nothing

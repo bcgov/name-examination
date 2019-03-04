@@ -156,14 +156,14 @@
                 <td>1.</td>
                 <td>
                   <input v-model="compName1.name" class="form-control" :onchange="$v.compName1.name.$touch()" />
-                  <div class="error" v-if="!$v.compName1.name.required">The first name choice is required.</div>
+                  <div class="error" v-if="$v.compName1.name.$error">The first name choice is required.</div>
                 </td>
               </tr>
               <tr :class="{'form-group-error': $v.compName2.name.$error}">
                 <td>2.</td>
                 <td>
                   <input v-model="compName2.name" class="form-control" :onchange="$v.compName2.name.$touch()"/>
-                  <div class="error" v-if="$v.compName2 && !$v.compName2.name.required">To include a 3rd name choice the 2nd name choice is required.</div>
+                  <div class="error" v-if="$v.compName2.name.$error">To include a 3rd name choice the 2nd name choice is required.</div>
                 </td>
               </tr>
               <tr>
@@ -243,6 +243,7 @@
 import clientinfoview from '@/components/application/Examine/client/ClientInfoHeader.vue';
 import nwpta from '@/components/application/Examine/nwpta/nwpta.vue';
 import { required } from 'vuelidate/lib/validators'
+import { isNotBlankSpace } from "../../../../custom_validations/validators";
 import axios from '@/axios-auth';
 
 
@@ -261,22 +262,23 @@ export default {
       }
     },
     validations: function () {
-
       // set basic validations that aren't conditional on any other fields
       var validations = {
         // first name choice is always required
         compName1: {
           name: {
             required,
+            isNotBlankSpace
           }
         },
       }
 
       // if compName3 exists then compName2 must exist
-      if (this.compName3.name) {
+      if (this.compName3.name && this.compName3.name.replace(/\s/g,'')) {
         validations.compName2 = {
           name: {
             required,
+            isNotBlankSpace
           }
         }
       } else {
