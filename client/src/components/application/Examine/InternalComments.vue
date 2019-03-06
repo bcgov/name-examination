@@ -9,7 +9,7 @@
       </div>
       <div class="col">
         <div class="comment" v-for="comment in internalComments"
-             v-bind:key="comment.timestamp">
+             v-bind:key="comment.id">
           <p>
             <span class="comment-examiner">{{ comment.examiner }}</span>
             -
