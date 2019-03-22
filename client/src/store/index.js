@@ -1569,7 +1569,7 @@ export default new Vuex.Store({
     },
 
     checkManualSynonymMatches( {dispatch,commit,state}, searchObj ) {
-      var searchStr = searchObj.searchStr;
+      var searchStr = ((searchObj.searchStr == '') ? '*' : searchObj.searchStr);
       var exactPhrase = searchObj.exactPhrase;
       commit('setSynonymMatchesConflicts', null);
 
@@ -1597,7 +1597,7 @@ export default new Vuex.Store({
     },
 
     checkManualCobrsPhoneticMatches( {dispatch,commit,state}, searchObj ) {
-      var query = searchObj.searchStr;
+      var query = ((searchObj.searchStr == '') ? '*' : searchObj.searchStr);
       commit('setCobrsPhoneticConflicts', null);
 
       console.log('action: getting CobrsPhonetic matches for number: ' + state.compInfo.nrNumber + ' from solr')
@@ -1623,7 +1623,7 @@ export default new Vuex.Store({
     },
 
     checkManualPhoneticMatches( {dispatch,commit,state}, searchObj) {
-      var query = searchObj.searchStr;
+      var query = ((searchObj.searchStr == '') ? '*' : searchObj.searchStr);
       commit('setPhoneticConflicts', null);
 
       console.log('action: getting Phonetic matches for number: ' + state.compInfo.nrNumber + ' from solr')
@@ -1649,51 +1649,56 @@ export default new Vuex.Store({
     },
 
     checkManualConditions( {commit, state},searchStr ) {
-      console.log('action: manual check of restricted words and conditions for company number: ' + state.compInfo.nrNumber )
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.conditions-spinner'};
-      const url = '/api/v1/documents:restricted_words'
-      console.log('URL:' + url)
-      const vm = this
-      return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {
-        console.log('Check Manual Conditions Response:' + response.data)
-        commit('loadConditionsJSON',response.data)
-      })
-        .catch(error => console.log('ERROR: ' + error))
+      if (searchStr != '') {
+        console.log('action: manual check of restricted words and conditions for company number: ' + state.compInfo.nrNumber)
+        const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+        const myHeader = {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.conditions-spinner'};
+        const url = '/api/v1/documents:restricted_words'
+        console.log('URL:' + url)
+        const vm = this
+        return axios.post(url, {type: 'plain_text', content: searchStr}, myHeader).then(response => {
+          console.log('Check Manual Conditions Response:' + response.data)
+          commit('loadConditionsJSON', response.data)
+        })
+          .catch(error => console.log('ERROR: ' + error))
+      }
     },
 
     checkManualHistories( {commit, state},searchStr ) {
-      console.log('action: manual check of history for company number: ' + state.compInfo.nrNumber + ' from solr')
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.history-spinner'};
-      const url = '/api/v1/documents:histories'
-      console.log('URL:' + url)
-      searchStr = searchStr.replace(/\//g,' ')
-          .replace(/\\/g,' ')
+      if (searchStr != '') {
+        console.log('action: manual check of history for company number: ' + state.compInfo.nrNumber + ' from solr')
+        const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+        const myHeader = {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.history-spinner'};
+        const url = '/api/v1/documents:histories'
+        console.log('URL:' + url)
+        searchStr = searchStr.replace(/\//g, ' ')
+          .replace(/\\/g, ' ')
           .replace(/&/g, ' ')
           .replace(/\+/g, ' ')
           .replace(/\-/g, ' ')
           .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
           .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
           .replace(/\$/g, 'S')
-          .replace(/¢/g,'C')
+          .replace(/¢/g, 'C')
           .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
-      const vm = this
-      return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {
-        console.log('Check Manual Histories Response:' + response.data)
-        commit('loadHistoriesJSON',response.data)
-      })
-        .catch(error => console.log('ERROR: ' + error))
+        const vm = this
+        return axios.post(url, {type: 'plain_text', content: searchStr}, myHeader).then(response => {
+          console.log('Check Manual Histories Response:' + response.data)
+          commit('loadHistoriesJSON', response.data)
+        })
+          .catch(error => console.log('ERROR: ' + error))
+      }
     },
 
     checkManualTrademarks( {commit, state},searchStr ) {
-      console.log('action: manual check of trademarks for company number: ' + state.compInfo.nrNumber + ' from solr')
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.trademarks-spinner'};
-      const url = '/api/v1/documents:trademarks'
-      console.log('URL:' + url)
-      searchStr = searchStr.replace(/\//g,' ')
-          .replace(/\\/g,' ')
+      if (searchStr != '') {
+        console.log('action: manual check of trademarks for company number: ' + state.compInfo.nrNumber + ' from solr')
+        const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+        const myHeader = {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.trademarks-spinner'};
+        const url = '/api/v1/documents:trademarks'
+        console.log('URL:' + url)
+        searchStr = searchStr.replace(/\//g, ' ')
+          .replace(/\\/g, ' ')
           .replace(/&/g, ' ')
           .replace(/\+/g, ' ')
           .replace(/\-/g, ' ')
@@ -1703,20 +1708,21 @@ export default new Vuex.Store({
           .replace(/{/g, '')
           .replace(/]/g, '')
           .replace(/\[/g, '')
-          .replace(/\?/g,'')
-          .replace(/#/g,'')
+          .replace(/\?/g, '')
+          .replace(/#/g, '')
           .replace(/%/g, '')
           .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
           .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
           .replace(/\$/g, 'S')
-          .replace(/¢/g,'C')
+          .replace(/¢/g, 'C')
           .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
-      const vm = this
-      return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {
-        console.log('Check Manual Trademarks Response:' + response.data)
-        commit('loadTrademarksJSON',response.data)
-      })
-        .catch(error => console.log('ERROR: ' + error))
+        const vm = this
+        return axios.post(url, {type: 'plain_text', content: searchStr}, myHeader).then(response => {
+          console.log('Check Manual Trademarks Response:' + response.data)
+          commit('loadTrademarksJSON', response.data)
+        })
+          .catch(error => console.log('ERROR: ' + error))
+      }
     },
 
     syncNR({dispatch,commit},nrNumber) {

@@ -88,4 +88,10 @@ describe('store > checkManualSynonymMatches', () => {
 
     expect(SynonymMatch.lastCall.args[0]).toEqual('/api/v1/requests/synonymbucket/testing exact phrase/exact phrase')
   })
+
+  it('can search empty string', () => {
+    store.dispatch('checkManualSynonymMatches', {searchStr:'',exactPhrase:''})
+
+    expect(SynonymMatch.lastCall.args[0]).toEqual('/api/v1/requests/synonymbucket/*/*')
+  })
 })

@@ -82,4 +82,10 @@ describe('store > checkManualPhoneticMatches', () => {
 
     expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/ .>< \'; = _ * S@ATHENAE .>< \'; = _ * S@UM 139 LTD. .>< \'; = _ * S@/*')
   })
+
+  it('escape special characters', () => {
+    store.dispatch('checkManualPhoneticMatches', {searchStr:'',exactPhrase:''})
+
+    expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/*/*')
+  })
 })
