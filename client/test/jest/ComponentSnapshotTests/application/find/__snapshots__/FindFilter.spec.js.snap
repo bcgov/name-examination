@@ -239,14 +239,14 @@ exports[`FindFilter.vue renders a FindFilter component 1`] = `
       class="searchTable"
       id="search-table-container"
     >
-      <brow-stub
+      <b-row-stub
         id="table-options"
         tag="div"
       >
-        <bcol-stub
+        <b-col-stub
           tag="div"
         >
-          <blink-stub
+          <b-link-stub
             activeclass="active"
             event="click"
             exactactiveclass="active"
@@ -255,17 +255,17 @@ exports[`FindFilter.vue renders a FindFilter component 1`] = `
             target="_self"
           >
             Clear Filters
-          </blink-stub>
-        </bcol-stub>
+          </b-link-stub>
+        </b-col-stub>
          
-        <bcol-stub
+        <b-col-stub
           tag="div"
         >
-          <brow-stub
+          <b-row-stub
             id="pagination"
             tag="div"
           >
-            <bcol-stub
+            <b-col-stub
               tag="div"
             >
               <p
@@ -273,47 +273,47 @@ exports[`FindFilter.vue renders a FindFilter component 1`] = `
               >
                 Results: 0
               </p>
-            </bcol-stub>
+            </b-col-stub>
              
-            <bcol-stub
+            <b-col-stub
               tag="div"
             >
-              <bformgroup-stub
+              <b-form-group-stub
                 breakpoint="sm"
                 horizontal="true"
                 id="display-selection"
                 label="Display:"
                 labelcols="3"
               >
-                <bformselect-stub
+                <b-form-select-stub
                   options="5,10,20,50,100"
                   selectsize="0"
                   style="width: 60px; float: right; margin-right: 10px;"
                   value="10"
                 />
-              </bformgroup-stub>
-            </bcol-stub>
+              </b-form-group-stub>
+            </b-col-stub>
              
-            <bcol-stub
+            <b-col-stub
               tag="div"
             >
-              <bformgroup-stub
+              <b-form-group-stub
                 breakpoint="sm"
                 horizontal="true"
                 id="page-selection"
                 label="Page:"
                 labelcols="3"
               >
-                <bformselect-stub
+                <b-form-select-stub
                   options="1"
                   selectsize="0"
                   style="width: 60px; float: right;"
                   value="1"
                 />
-              </bformgroup-stub>
-            </bcol-stub>
+              </b-form-group-stub>
+            </b-col-stub>
              
-            <bcol-stub
+            <b-col-stub
               tag="div"
             >
               <div
@@ -323,11 +323,11 @@ exports[`FindFilter.vue renders a FindFilter component 1`] = `
                   of 1
                 </span>
                  
-                <bbuttongroup-stub
+                <b-button-group-stub
                   ariarole="group"
                   tag="div"
                 >
-                  <bbtn-stub
+                  <b-btn-stub
                     activeclass="active"
                     event="click"
                     exactactiveclass="active"
@@ -337,9 +337,9 @@ exports[`FindFilter.vue renders a FindFilter component 1`] = `
                     type="button"
                   >
                     ‹
-                  </bbtn-stub>
+                  </b-btn-stub>
                    
-                  <bbtn-stub
+                  <b-btn-stub
                     activeclass="active"
                     event="click"
                     exactactiveclass="active"
@@ -349,15 +349,15 @@ exports[`FindFilter.vue renders a FindFilter component 1`] = `
                     type="button"
                   >
                     ›
-                  </bbtn-stub>
-                </bbuttongroup-stub>
+                  </b-btn-stub>
+                </b-button-group-stub>
               </div>
-            </bcol-stub>
-          </brow-stub>
-        </bcol-stub>
-      </brow-stub>
+            </b-col-stub>
+          </b-row-stub>
+        </b-col-stub>
+      </b-row-stub>
        
-      <btable-stub
+      <b-table-stub
         apiurl=""
         class="pre-line scroll"
         currentpage="1"

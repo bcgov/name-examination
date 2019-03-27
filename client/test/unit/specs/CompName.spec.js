@@ -529,6 +529,7 @@ describe('CompName.vue', () => {
 
 
   describe('Reset & Re-Open', () => {
+    let sandbox
     let vm;
 
     let click = function (id) {
@@ -539,59 +540,117 @@ describe('CompName.vue', () => {
     };
 
     beforeEach((done) => {
+      sandbox = sinon.createSandbox();
+      sandbox.getStub = sandbox.stub(axios, 'get');
+
 
       // stub out updateRequest action from index - we don't care what it does and it errors during testing
-      instance.$store._actions.updateRequest[0] = sinon.stub();
+      //instance.$store._actions.updateRequest[0] = sinon.stub();
 
-      instance.$store.state.currentState = 'APPROVED';
-      instance.$store.state.compInfo.compNames = {
-        compName1:
-          {
-            choice: 1,
-            name: "Bad Name",
-            state: 'REJECTED',
-            decision_text: "Nope.",
-            conflict1: "Bada Boom Bad Name",
-            conflict1_num: 123,
-            conflict2: "Bad Dudes Name",
-            conflict2_num: 456,
-            conflict3: null,
-            conflict3_num: null,
-          },
-        compName2:
-          {
-            choice: 2,
-            name: "Good Name",
-            state: 'APPROVED',
-            comment: {
-              comment: 'My internal decision comment.',
-            },
-            decision_text: "Good work.",
-            conflict1: null,
-            conflict2: null,
-            conflict3: null,
-          },
-        compName3:
-          {
-            choice: 3,
-            name: "Whatever",
-            state: 'NE',
-            decision_text: null,
-            conflict1: null,
-            conflict2: null,
-            conflict3: null,
-          },
-      };
+      // NR that is completed with one rejected name (conflict) and one approved name
+      sandbox.getStub.withArgs('/api/v1/requests/NR 2000951', sinon.match.any).returns(
+        new Promise((resolve) => resolve({
+          data:
+            {
+              additionalInfo: "More info",
+              applicants:
+                {
+                  addrLine1: "940 Blanshard Street",
+                  addrLine2: null,
+                  addrLine3: null,
+                  city: "Victoria",
+                  clientFirstName: null,
+                  clientLastName: null,
+                  contact: "John Test",
+                  countryTypeCd: "CA",
+                  declineNotificationInd: null,
+                  emailAddress: "testoutputs@gov.bc.ca",
+                  faxNumber: null,
+                  firstName: "John",
+                  lastName: "Test",
+                  middleName: null,
+                  partyId: 1822,
+                  phoneNumber: "2505555555",
+                  postalCd: "V8V4K8",
+                  stateProvinceCd: "BC"
+                },
+              comments: [],
+              consentFlag: null,
+              corpNum: null,
+              expirationDate: null,
+              furnished: "N",
+              id: 1822,
+              lastUpdate: "Thu, 18 Oct 2018 22:46:54 GMT",
+              names: [
+                {
+                  choice: 1,
+                  comment: null,
+                  conflict1: "Bada Boom Bad Name",
+                  conflict1_num: 123,
+                  conflict2: "Bad Dudes Name",
+                  conflict2_num: 456,
+                  conflict3: null,
+                  conflict3_num: null,
+                  consumptionDate: null,
+                  decision_text: "Nope.",
+                  name: "Bad Name",
+                  state: "REJECTED"
+                },
+                {
+                  choice: 2,
+                  comment: {
+                    comment: 'My internal decision comment.',
+                  },
+                  conflict1: null,
+                  conflict1_num: null,
+                  conflict2: null,
+                  conflict2_num: null,
+                  conflict3: null,
+                  conflict3_num: null,
+                  consumptionDate: null,
+                  decision_text: "Good work.",
+                  name: "Good Name",
+                  state: "APPROVED"
+                },{
+                  choice: 3,
+                  name: "Whatever",
+                  state: 'NE',
+                  decision_text: null,
+                  conflict1: null,
+                  conflict1_num: null,
+                  conflict2: null,
+                  conflict2_num: null,
+                  conflict3: null,
+                  conflict3_num: null,
+                }],
+              natureBusinessInfo: "Nature of business can be pretty long so this one is more realistic. It even contains " +
+              "spaces and punctuation.",
+              nrNum: "NR 2000951",
+              nwpta: [],
+              previousNr: null,
+              previousRequestId: null,
+              previousStateCd: "DRAFT",
+              priorityCd: "Y",
+              requestTypeCd: "CR",
+              state: "APPROVED",
+              submitCount: 1,
+              submittedDate: "Wed, 17 Oct 2018 11:37:20 GMT",
+              submitter_userid: "",
+              userId: "tester",
+              xproJurisdiction: null
+            }
+        }))
+      );
+
       vm = instance.$mount();
+      vm.$store.dispatch('getpostgrescompInfo', 'NR 2000951');
       setTimeout(() => {
         done();
       }, 100)
     });
 
-    afterEach((done) => {
-      setTimeout(() => {
-        done();
-      }, 100)
+    afterEach(() => {
+      sandbox.restore();
     });
 
     describe('Reset', () => {
@@ -611,7 +670,7 @@ describe('CompName.vue', () => {
 
         setTimeout(() => {
           expect(instance.$store.state.currentState).toEqual("INPROGRESS");
-        }, 10)
+        }, 1000)
       });
 
       it('keeps decision data upon reset', () => {
@@ -662,7 +721,7 @@ describe('CompName.vue', () => {
 
         setTimeout(() => {
           expect(instance.$store.state.currentState).toEqual("INPROGRESS");
-        }, 10)
+        }, 1000)
       });
 
       it('keeps decision data upon re-open', () => {

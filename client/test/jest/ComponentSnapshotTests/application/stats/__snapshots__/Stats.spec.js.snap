@@ -57,7 +57,7 @@ exports[`Stats.vue renders a Stats component 1`] = `
       <div
         class="col"
       >
-        <bpagination-stub
+        <b-pagination-stub
           current-page="1"
           perpage="50"
           size="md"
@@ -69,7 +69,7 @@ exports[`Stats.vue renders a Stats component 1`] = `
     <div
       class="b-table"
     >
-      <btable-stub
+      <b-table-stub
         apiurl=""
         currentpage="1"
         emptyfilteredtext="There are no records matching your request"

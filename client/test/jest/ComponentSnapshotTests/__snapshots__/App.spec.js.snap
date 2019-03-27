@@ -36,7 +36,7 @@ exports[`App.vue  renders the App 1`] = `
   <div
     id="app"
   >
-    <stdheader-stub />
+    <std-header-stub />
      
     <div>
       <router-view-stub
