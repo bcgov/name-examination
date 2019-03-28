@@ -96,7 +96,7 @@
 
 <script>
 /* eslint-disable */
-
+  import { isActualDate,isValidFormat } from "../../../../../static/js/validators";
   export default {
     name: 'nwptaInfo',
     data: function() {

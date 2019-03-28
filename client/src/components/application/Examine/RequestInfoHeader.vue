@@ -94,7 +94,8 @@
               <h3 v-if="expiryDate !== null">EXPIRY DATE</h3>
               <span v-if="expiryDate !== null">
 
-                <span v-if="!is_editing">{{ expiryDate }}</span>
+                <span v-if="!is_editing && expiryDateForEdit != null">{{ expiryDateForEdit }}</span>
+                <span v-else-if="!is_editing">{{ expiryDate }}</span>
                 <span v-else>
 
                   <span :class="{'form-group-error': $v.expiryDateForEdit.$error}">
@@ -243,7 +244,7 @@
 import clientinfoview from '@/components/application/Examine/client/ClientInfoHeader.vue';
 import nwpta from '@/components/application/Examine/nwpta/nwpta.vue';
 import { required } from 'vuelidate/lib/validators'
-import { isNotBlankSpace } from "../../../../custom_validations/validators";
+import { isNotBlankSpace,isActualDate,isFutureDate,isValidFormat } from "../../../../static/js/validators";
 import axios from '@/axios-auth';
 
 
@@ -625,7 +626,9 @@ export default {
           this.expiryDate = new Date(
               this.expiryDateForEdit.substr(6,4), // yyyy
               this.expiryDateForEdit.substr(3,2)-1, // mm
-              this.expiryDateForEdit.substr(0,2)) // dd
+              this.expiryDateForEdit.substr(0,2), // dd
+              23, //hr
+              59) //min
             .toUTCString();
         }
 
