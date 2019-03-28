@@ -306,7 +306,8 @@ export default new Vuex.Store({
       state.reservationCount = value;
     },
     expiryDate (state, value) {
-      state.expiryDate = value;
+      var newDate = new Date(value)
+      state.expiryDate = newDate.toUTCString();
     },
     expiryDateForEdit (state, value) {
       state.expiryDateForEdit = value;
@@ -605,7 +606,7 @@ export default new Vuex.Store({
       // convert Expiry Date from timestamp to DD-MM-YYYY string for editing
       if (state.expiryDate != null) {
         var thedate = new Date(state.expiryDate);
-        state.expiryDateForEdit = padWithZeroes(thedate.getUTCDate(), 2) + "-" + padWithZeroes(thedate.getUTCMonth() + 1, 2) + "-" + thedate.getFullYear();
+        state.expiryDateForEdit = padWithZeroes(thedate.getDate(), 2) + "-" + padWithZeroes(thedate.getMonth() + 1, 2) + "-" + thedate.getFullYear();
       }
       else state.expiryDateForEdit = null;
 
@@ -716,7 +717,10 @@ export default new Vuex.Store({
       state.nrData.priorityCd = state.priority
       //state.reservationCount = dbcompanyInfo.reservationCount
       state.nrData.lastUpdate = state.lastUpdate
-      state.nrData.expirationDate = state.expiryDate
+
+      var expiryDate = new Date(state.expiryDate)
+      var expiryDateUTC = new Date(expiryDate.setHours(0,0))
+      state.nrData.expirationDate = expiryDateUTC.toUTCString()
       state.nrData.submittedDate = state.submittedDate
       state.nrData.submitCount = state.submitCount
       state.nrData.previousNr = state.previousNr
@@ -1951,7 +1955,8 @@ export default new Vuex.Store({
     expiryDate(state) {
       if (state.expiryDate != null) {
         // try converting from timestamp string
-        var retval = new Date(state.expiryDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+        var alteredHours = new Date(state.expiryDate).setHours(23,59)
+        var retval = new Date(alteredHours).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
         if (retval == 'Invalid Date') {
           retval = null;
         }
