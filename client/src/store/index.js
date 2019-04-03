@@ -718,9 +718,13 @@ export default new Vuex.Store({
       //state.reservationCount = dbcompanyInfo.reservationCount
       state.nrData.lastUpdate = state.lastUpdate
 
-      var expiryDate = new Date(state.expiryDate)
-      var expiryDateUTC = new Date(expiryDate.setHours(0,0))
-      state.nrData.expirationDate = expiryDateUTC.toUTCString()
+      if (state.expiryDate != null) {
+        var expiryDate = new Date(state.expiryDate);
+        var expiryDateUTC = new Date(expiryDate.setHours(0, 0));
+        state.nrData.expirationDate = expiryDateUTC.toUTCString();
+      } else {
+        state.nrData.expirationDate = state.expiryDate;
+      }
       state.nrData.submittedDate = state.submittedDate
       state.nrData.submitCount = state.submitCount
       state.nrData.previousNr = state.previousNr
