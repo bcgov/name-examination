@@ -33,21 +33,6 @@
         <p>Hold: <b>{{statsData.hold.response.numFound}}</b><br/></p>
       </div>
     </div>
-    <br/><br/>
-
-    <span>
-    <h2><i>Manual Search Tips:</i></h2>
-    <p>Looks for all matching names including synonyms by default.</p><br/>
-      <p>+&lt;<i>word</i>&gt; means must contain this word or its synonyms</p>
-      <p>+"&lt<i>word1</i>&gt;&lt;<i>word2</i>&gt;" means must include both words or its synonyms</p>
-      <p>-&lt<i>word</i>&gt; means remove this word for matching and all its synonyms</p>
-      <p>-"&lt<i>word 1</i>&gt;&lt;<i>word 2</i>&gt;" means remove this word phrase and all its synonyms for matching.</p>
-      <p>@&lt<i>word</i>&gt; means only use this word do not apply synonyms in matching.</p>
-      <p>@"&lt<i>word 1</i>&gt;&lt;<i>word 2</i>&gt;" means only use this word phrase for these words in the name and do not substitute synonyms.</p>
-      <p>? substitute one or more letters in a word. Eg. TRE??? – substitute three letters with any letters.</p>
-      <p>* Substitute a portion of a word.</p>
-    </span>
-
   </div>
 
       </div>

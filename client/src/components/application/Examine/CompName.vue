@@ -113,10 +113,12 @@
             <!-- MANUAL SEARCH -->
             <div v-if="userCanEdit && !is_making_decision && !is_complete" id="manual-search">
               <form class="form-inline" @submit.prevent="onSubmit">
-                <input ref="search" type="text" class="search form-control" v-model="searchStr"  v-shortkey="['alt', 's']" @shortkey="setFocus()" tabindex="1">
-                <button class="btn-search" type="submit"><i class="fa fa-search" tabindex="8"/></button>
-                <button class="btn-reset" v-if="is_running_manual_search" @click="resetSearchStr" tabindex="7">
-                  <i class="fa fa-times" /></button>
+                <div class="manual-search-bar">
+                  <input ref="search" type="text" class="search form-control" v-model="searchStr"  v-shortkey="['alt', 's']" @shortkey="setFocus()" tabindex="1">
+                  <button class="btn-search" type="submit"><i class="fa fa-search" tabindex="8"/></button>
+                  <button class="btn-reset" v-if="is_running_manual_search" @click="resetSearchStr" tabindex="7"><i class="fa fa-times" /></button>
+                </div>
+                <input ref="advanced-search" type="text" class="advanced-search form-control" placeholder="Exact Phrase" v-model="exactPhrase">
               </form>
             </div>
           </div>
@@ -162,6 +164,7 @@
     data: function () {
       return {
         searchStr: '',
+        exactPhrase: '',
         retval: [],
         is_running_manual_search: false,
         add_comment_display: "",
@@ -356,6 +359,7 @@
       // and coming back to same NR
       this.searching = true;
       this.setManualSearchStr(this.currentName);
+      this.exactPhrase = '';
     },
     methods: {
       /**
@@ -468,8 +472,8 @@
         this.$store.dispatch('updateNRState', 'HOLD');
       },
       runManualRecipe(){
-        console.log("Running manual recipe on " + this.searchStr);
-        this.$store.dispatch('runManualRecipe', this.searchStr)
+        console.log("Running manual recipe on " + this.searchStr + '/' + this.exactPhrase);
+        this.$store.dispatch('runManualRecipe', {searchStr:this.searchStr, exactPhrase:this.exactPhrase});
       },
       setIcon(name_state) {
         if (name_state == 'REJECTED') {
@@ -533,13 +537,14 @@
       onSubmit()
       {
         this.$store.dispatch('resetValues');
-        this.$store.dispatch('runManualRecipe', this.searchStr);
+        this.$store.dispatch('runManualRecipe', {searchStr:this.searchStr, exactPhrase:this.exactPhrase});
 
         if (this.searchStr != this.currentName) this.is_running_manual_search = true;
       },
       resetSearchStr(){
         this.searching = true;
         this.setManualSearchStr(this.currentName);
+        this.exactPhrase = '';
         this.is_running_manual_search = false;
       },
       nameAcceptReject() {
@@ -596,6 +601,7 @@
         console.log('CompName.currentName watcher fired:' + val)
         this.searching = true;
         this.setManualSearchStr(val);
+        this.exactPhrase = '';
       },
       nrNumber: function (val) {
         console.log('CompName.nrNumber watcher fired:' + val)
@@ -655,14 +661,34 @@
     white-space: pre-wrap;
   }
 
-  .search{
-    width: 100%;
+  .manual-search-bar {
+    width: 70%;
+    margin-right: 5px;
+  }
+
+  .search {
+    width: 99%;
     max-width: 700px;
+    min-width: 200px;
     font-size: 16px;
   }
 
+  .advanced-search {
+    font-size: 16px;
+    width: 20%;
+    min-width: 50px;
+    max-width: 300px;
+  }
+
+  #manual-search {
+    width: 100%;
+    max-width: 1030px;
+  }
+
   #manual-search button {
-    width: 20px;
+    width: 0.5%;
+    min-width: 20px;
+    max-width: 20px;
     border: none;
     background-color: transparent;
     padding: 0;

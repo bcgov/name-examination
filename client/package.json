@@ -1,6 +1,6 @@
 {
   "name": "namex",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "BC Registry: Name Examination",
   "author": "Thor Wolpert <thor@wolpert.ca>",
   "private": true,
@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "bootstrap-vue": "^2.0.0-rc.11",
+    "bootstrap-vue": "2.0.0-rc.11",
     "vue": "2.5.17",
     "vue-multiselect": "^2.1.0",
     "vue-router": "^3.0.1",

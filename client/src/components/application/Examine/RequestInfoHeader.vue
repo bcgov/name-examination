@@ -56,7 +56,7 @@
             <div>
               <h3>INTERNAL COMMENTS</h3>
               <div class="comment" v-for="comment in internalComments"
-                   v-bind:key="comment.timestamp">
+                   v-bind:key="comment.id">
                 <p>
                   <span class="comment-examiner">{{ comment.examiner }}</span>
                   -
@@ -94,7 +94,8 @@
               <h3 v-if="expiryDate !== null">EXPIRY DATE</h3>
               <span v-if="expiryDate !== null">
 
-                <span v-if="!is_editing">{{ expiryDate }}</span>
+                <span v-if="!is_editing && expiryDateForEdit != null">{{ expiryDateForEdit }}</span>
+                <span v-else-if="!is_editing">{{ expiryDate }}</span>
                 <span v-else>
 
                   <span :class="{'form-group-error': $v.expiryDateForEdit.$error}">
@@ -156,16 +157,21 @@
                 <td>1.</td>
                 <td>
                   <input v-model="compName1.name" class="form-control" :onchange="$v.compName1.name.$touch()" />
-                  <div class="error" v-if="!$v.compName1.name.required">The first name choice is required.</div>
+                  <div class="error" v-if="$v.compName1.name.$error">The first name choice is required.</div>
+                </td>
+              </tr>
+              <tr :class="{'form-group-error': $v.compName2.name.$error}">
+                <td>2.</td>
+                <td>
+                  <input v-model="compName2.name" class="form-control" :onchange="$v.compName2.name.$touch()"/>
+                  <div class="error" v-if="$v.compName2.name.$error">To include a 3rd name choice the 2nd name choice is required.</div>
                 </td>
               </tr>
               <tr>
-                <td>2.</td>
-                <td><input v-model="compName2.name" class="form-control" /></td>
-              </tr>
-              <tr>
                 <td>3.</td>
-                <td><input v-model="compName3.name" class="form-control" /></td>
+                <td>
+                  <input v-model="compName3.name" class="form-control" :onchange="$v.compName2.name.$touch()"/>
+                </td>
               </tr>
             </table>
             <table v-else style="width: 100%;">
@@ -238,6 +244,7 @@
 import clientinfoview from '@/components/application/Examine/client/ClientInfoHeader.vue';
 import nwpta from '@/components/application/Examine/nwpta/nwpta.vue';
 import { required } from 'vuelidate/lib/validators'
+import { isNotBlankSpace,isActualDate,isFutureDate,isValidFormat } from "../../../../static/js/validators";
 import axios from '@/axios-auth';
 
 
@@ -256,15 +263,30 @@ export default {
       }
     },
     validations: function () {
-
       // set basic validations that aren't conditional on any other fields
       var validations = {
         // first name choice is always required
         compName1: {
           name: {
             required,
+            isNotBlankSpace
           }
         },
+      }
+
+      // if compName3 exists then compName2 must exist
+      if (this.compName3.name && this.compName3.name.replace(/\s/g,'')) {
+        validations.compName2 = {
+          name: {
+            required,
+            isNotBlankSpace
+          }
+        }
+      } else {
+        validations.compName2 = {
+          name: {
+          }
+        }
       }
 
       // validate jurisdiction if required
@@ -337,7 +359,6 @@ export default {
           },
         }
       }
-
       return validations;
 
     },
@@ -605,7 +626,9 @@ export default {
           this.expiryDate = new Date(
               this.expiryDateForEdit.substr(6,4), // yyyy
               this.expiryDateForEdit.substr(3,2)-1, // mm
-              this.expiryDateForEdit.substr(0,2)) // dd
+              this.expiryDateForEdit.substr(0,2), // dd
+              23, //hr
+              59) //min
             .toUTCString();
         }
 

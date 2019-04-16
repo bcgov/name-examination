@@ -43,7 +43,7 @@
 
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <a target="_blank" href="https://namex-solr-dev.pathfinder.gov.bc.ca" id="admin" class="nav-link">Admin</a>
+            <a target="_blank" :href="adminURL" id="admin" class="nav-link">Admin</a>
           </li>
           <li v-if="userCanExamine" class="navbar-text divider">|</li>
           <li v-if="userCanExamine" class="nav-item">
@@ -89,6 +89,9 @@
       },
       userCanExamine() {
         return this.$store.getters.userHasApproverRole
+      },
+      adminURL() {
+        return this.$store.getters.adminURL
       }
     },
     methods: {

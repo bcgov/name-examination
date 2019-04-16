@@ -17,6 +17,7 @@ export default new Vuex.Store({
     authorized: false,
     email: null,
     errorJSON: null,
+    adminURL:null,
 
     //Interface settings
     currentChoice: null, // CURRENT NAME BEING EXAMINED (choice number)
@@ -67,6 +68,9 @@ export default new Vuex.Store({
           conflict1: null,
           conflict2: null,
           conflict3: null,
+          conflict1_num: null,
+          conflict2_num: null,
+          conflict3_num: null,
           decision_text: null,
           comment: null,
         },
@@ -78,6 +82,9 @@ export default new Vuex.Store({
           conflict1: null,
           conflict2: null,
           conflict3: null,
+          conflict1_num: null,
+          conflict2_num: null,
+          conflict3_num: null,
           decision_text: null,
           comment: null,
         },
@@ -89,6 +96,9 @@ export default new Vuex.Store({
           conflict1: null,
           conflict2: null,
           conflict3: null,
+          conflict1_num: null,
+          conflict2_num: null,
+          conflict3_num: null,
           decision_text: null,
           comment: null,
         },
@@ -296,7 +306,8 @@ export default new Vuex.Store({
       state.reservationCount = value;
     },
     expiryDate (state, value) {
-      state.expiryDate = value;
+      var newDate = new Date(value)
+      state.expiryDate = newDate.toUTCString();
     },
     expiryDateForEdit (state, value) {
       state.expiryDateForEdit = value;
@@ -362,7 +373,6 @@ export default new Vuex.Store({
       state.userId = null
       state.authorized = null
     },
-
     loadpostgresNo(state, postgresData) {
         state.compInfo.nrNumber = postgresData.nameRequest
     },
@@ -384,6 +394,9 @@ export default new Vuex.Store({
       state.compInfo.compNames.compName2.conflict1 = null
       state.compInfo.compNames.compName2.conflict2 = null
       state.compInfo.compNames.compName2.conflict3 = null
+      state.compInfo.compNames.compName2.conflict1_num = null
+      state.compInfo.compNames.compName2.conflict2_num = null
+      state.compInfo.compNames.compName2.conflict3_num = null
       state.compInfo.compNames.compName2.decision_text = null
       state.compInfo.compNames.compName3.name = null
       state.compInfo.compNames.compName3.state = null
@@ -391,6 +404,9 @@ export default new Vuex.Store({
       state.compInfo.compNames.compName3.conflict1 = null
       state.compInfo.compNames.compName3.conflict2 = null
       state.compInfo.compNames.compName3.conflict3 = null
+      state.compInfo.compNames.compName3.conflict1_num = null
+      state.compInfo.compNames.compName3.conflict2_num = null
+      state.compInfo.compNames.compName3.conflict3_num = null
       state.compInfo.compNames.compName3.decision_text = null
 
       // clear current name choice, to be reset by new data below
@@ -410,6 +426,9 @@ export default new Vuex.Store({
             state.compInfo.compNames.compName1.conflict1 = record.conflict1
             state.compInfo.compNames.compName1.conflict2 = record.conflict2
             state.compInfo.compNames.compName1.conflict3 = record.conflict3
+            state.compInfo.compNames.compName1.conflict1_num = record.conflict1_num
+            state.compInfo.compNames.compName1.conflict2_num = record.conflict2_num
+            state.compInfo.compNames.compName1.conflict3_num = record.conflict3_num
             state.compInfo.compNames.compName1.decision_text = record.decision_text
             state.compInfo.compNames.compName1.comment = record.comment
 
@@ -428,6 +447,9 @@ export default new Vuex.Store({
             state.compInfo.compNames.compName2.conflict1 = record.conflict1
             state.compInfo.compNames.compName2.conflict2 = record.conflict2
             state.compInfo.compNames.compName2.conflict3 = record.conflict3
+            state.compInfo.compNames.compName2.conflict1_num = record.conflict1_num
+            state.compInfo.compNames.compName2.conflict2_num = record.conflict2_num
+            state.compInfo.compNames.compName2.conflict3_num = record.conflict3_num
             state.compInfo.compNames.compName2.decision_text = record.decision_text
             state.compInfo.compNames.compName2.comment = record.comment
 
@@ -448,6 +470,9 @@ export default new Vuex.Store({
             state.compInfo.compNames.compName3.conflict1 = record.conflict1
             state.compInfo.compNames.compName3.conflict2 = record.conflict2
             state.compInfo.compNames.compName3.conflict3 = record.conflict3
+            state.compInfo.compNames.compName3.conflict1_num = record.conflict1_num
+            state.compInfo.compNames.compName3.conflict2_num = record.conflict2_num
+            state.compInfo.compNames.compName3.conflict3_num = record.conflict3_num
             state.compInfo.compNames.compName3.decision_text = record.decision_text
             state.compInfo.compNames.compName3.comment = record.comment
 
@@ -581,7 +606,7 @@ export default new Vuex.Store({
       // convert Expiry Date from timestamp to DD-MM-YYYY string for editing
       if (state.expiryDate != null) {
         var thedate = new Date(state.expiryDate);
-        state.expiryDateForEdit = padWithZeroes(thedate.getUTCDate(), 2) + "-" + padWithZeroes(thedate.getUTCMonth() + 1, 2) + "-" + thedate.getFullYear();
+        state.expiryDateForEdit = padWithZeroes(thedate.getDate(), 2) + "-" + padWithZeroes(thedate.getMonth() + 1, 2) + "-" + thedate.getFullYear();
       }
       else state.expiryDateForEdit = null;
 
@@ -692,7 +717,14 @@ export default new Vuex.Store({
       state.nrData.priorityCd = state.priority
       //state.reservationCount = dbcompanyInfo.reservationCount
       state.nrData.lastUpdate = state.lastUpdate
-      state.nrData.expirationDate = state.expiryDate
+
+      if (state.expiryDate != null) {
+        var expiryDate = new Date(state.expiryDate);
+        var expiryDateUTC = new Date(expiryDate.setHours(0, 0));
+        state.nrData.expirationDate = expiryDateUTC.toUTCString();
+      } else {
+        state.nrData.expirationDate = state.expiryDate;
+      }
       state.nrData.submittedDate = state.submittedDate
       state.nrData.submitCount = state.submitCount
       state.nrData.previousNr = state.previousNr
@@ -814,6 +846,12 @@ export default new Vuex.Store({
       let wildcard_stack = false
       for (let i=0; i<names.length; i++) {
         additionalRow = null;
+
+        // remove any empty string stem values - they are not valid
+        names[i].stems = names[i].stems.filter(function (elem) {
+          return elem != '';
+        });
+
         if (names[i].name_info.source != null) {
           //stack conflict
           entry = names[i].name_info;
@@ -1102,6 +1140,9 @@ export default new Vuex.Store({
         //load UI dropdowns from json files and database tables
         dispatch('loadDropdowns');
 
+        //load admin link
+        dispatch('loadAdminLink',myArray)
+
       })
     },
 
@@ -1330,6 +1371,17 @@ export default new Vuex.Store({
             .catch(error => console.log('ERROR: ' + error))
       },
 
+    loadAdminLink({state},myArray){
+      //Set Admin URL
+        if(myArray[0]['NODE_ENV']=='production') {
+          state.adminURL = 'https://namex-solr.pathfinder.gov.bc.ca'
+        } else if(myArray[0]['NODE_ENV']=='test') {
+          state.adminURL = 'https://namex-solr-test.pathfinder.gov.bc.ca'
+        } else {
+          state.adminURL = 'https://namex-solr-dev.pathfinder.gov.bc.ca'
+        }
+    },
+
     loadDropdowns( {commit, state} ) {
       var json_files_path = 'static/ui_dropdowns/';
 
@@ -1481,17 +1533,17 @@ export default new Vuex.Store({
       commit('currentNameObj', objName);
     },
 
-    runManualRecipe({dispatch,state},searchStr) {
-      console.log('running manual recipe with: ', searchStr);
+    runManualRecipe({dispatch,state},searchObj) {
+      console.log('running manual recipe with: ', searchObj.searchStr, '/', searchObj.exactPhrase);
       if( state.currentChoice != null) {
-        this.dispatch('checkManualExactMatches',searchStr)
-        this.dispatch('checkManualSynonymMatches',searchStr)
-        this.dispatch('checkManualCobrsPhoneticMatches',searchStr)
-        this.dispatch('checkManualPhoneticMatches',searchStr)
+        this.dispatch('checkManualExactMatches',searchObj.searchStr)
+        this.dispatch('checkManualSynonymMatches',searchObj)
+        this.dispatch('checkManualCobrsPhoneticMatches',searchObj)
+        this.dispatch('checkManualPhoneticMatches',searchObj)
         // this.dispatch('checkManualConflicts',searchStr)
-        this.dispatch('checkManualTrademarks',searchStr)
-        this.dispatch('checkManualConditions',searchStr)
-        this.dispatch('checkManualHistories',searchStr)
+        this.dispatch('checkManualTrademarks',searchObj.searchStr)
+        this.dispatch('checkManualConditions',searchObj.searchStr)
+        this.dispatch('checkManualHistories',searchObj.searchStr)
       }
     },
 
@@ -1508,6 +1560,8 @@ export default new Vuex.Store({
           .replace(/\\/g, '')
           .replace(/\//g, '')
           .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
+          .replace(/[\+\-]{2,}/g, '')
+          .replace(/\s[\+\-]$/, '')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       query = query.substring(0, 1) == '+' ? query.substring(1) : query;
       query = encodeURIComponent(query)
@@ -1522,12 +1576,13 @@ export default new Vuex.Store({
         .catch(error => console.log('ERROR (exact matches): ' + error))
     },
 
-    checkManualSynonymMatches( {dispatch,commit,state}, query ) {
-
+    checkManualSynonymMatches( {dispatch,commit,state}, searchObj ) {
+      var searchStr = ((searchObj.searchStr == '') ? '*' : searchObj.searchStr);
+      var exactPhrase = searchObj.exactPhrase;
       commit('setSynonymMatchesConflicts', null);
 
       console.log('action: getting synonym matches for number: ' + state.compInfo.nrNumber + ' from solr')
-      query = query.replace(/\//g,' ')
+      searchStr = searchStr.replace(/\//g,' ')
                 .replace(/\\/g,' ')
                 .replace(/&/g, ' ')
                 .replace(/\+/g, ' ')
@@ -1537,8 +1592,9 @@ export default new Vuex.Store({
                 .replace(/\$/g, 'S')
                 .replace(/¢/g,'C')
                 .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?|,)/g, '')
+      if (exactPhrase == '') exactPhrase = '*';
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-      const url = '/api/v1/requests/synonymbucket/' + query;
+      const url = '/api/v1/requests/synonymbucket/' + searchStr + '/' + exactPhrase;
       console.log('URL:' + url);
       const vm = this;
       dispatch('checkToken');
@@ -1548,8 +1604,8 @@ export default new Vuex.Store({
         .catch(error => console.log('ERROR (synonym matches): ' + error))
     },
 
-    checkManualCobrsPhoneticMatches( {dispatch,commit,state}, query ) {
-
+    checkManualCobrsPhoneticMatches( {dispatch,commit,state}, searchObj ) {
+      var query = ((searchObj.searchStr == '') ? '*' : searchObj.searchStr);
       commit('setCobrsPhoneticConflicts', null);
 
       console.log('action: getting CobrsPhonetic matches for number: ' + state.compInfo.nrNumber + ' from solr')
@@ -1564,7 +1620,7 @@ export default new Vuex.Store({
           .replace(/¢/g,'C')
           .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-      const url = '/api/v1/requests/cobrsphonetics/' + query;
+      const url = '/api/v1/requests/cobrsphonetics/' + query + '/*';
       console.log('URL:' + url);
       const vm = this;
       dispatch('checkToken');
@@ -1574,8 +1630,8 @@ export default new Vuex.Store({
         .catch(error => console.log('ERROR (CobrsPhonetic matches): ' + error))
     },
 
-    checkManualPhoneticMatches( {dispatch,commit,state}, query ) {
-
+    checkManualPhoneticMatches( {dispatch,commit,state}, searchObj) {
+      var query = ((searchObj.searchStr == '') ? '*' : searchObj.searchStr);
       commit('setPhoneticConflicts', null);
 
       console.log('action: getting Phonetic matches for number: ' + state.compInfo.nrNumber + ' from solr')
@@ -1590,7 +1646,7 @@ export default new Vuex.Store({
           .replace(/¢/g,'C')
           .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-      const url = '/api/v1/requests/phonetics/' + query;
+      const url = '/api/v1/requests/phonetics/' + query + '/*';
       console.log('URL:' + url);
       const vm = this;
       dispatch('checkToken');
@@ -1601,51 +1657,56 @@ export default new Vuex.Store({
     },
 
     checkManualConditions( {commit, state},searchStr ) {
-      console.log('action: manual check of restricted words and conditions for company number: ' + state.compInfo.nrNumber )
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.conditions-spinner'};
-      const url = '/api/v1/documents:restricted_words'
-      console.log('URL:' + url)
-      const vm = this
-      return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {
-        console.log('Check Manual Conditions Response:' + response.data)
-        commit('loadConditionsJSON',response.data)
-      })
-        .catch(error => console.log('ERROR: ' + error))
+      if (searchStr != '') {
+        console.log('action: manual check of restricted words and conditions for company number: ' + state.compInfo.nrNumber)
+        const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+        const myHeader = {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.conditions-spinner'};
+        const url = '/api/v1/documents:restricted_words'
+        console.log('URL:' + url)
+        const vm = this
+        return axios.post(url, {type: 'plain_text', content: searchStr}, myHeader).then(response => {
+          console.log('Check Manual Conditions Response:' + response.data)
+          commit('loadConditionsJSON', response.data)
+        })
+          .catch(error => console.log('ERROR: ' + error))
+      }
     },
 
     checkManualHistories( {commit, state},searchStr ) {
-      console.log('action: manual check of history for company number: ' + state.compInfo.nrNumber + ' from solr')
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.history-spinner'};
-      const url = '/api/v1/documents:histories'
-      console.log('URL:' + url)
-      searchStr = searchStr.replace(/\//g,' ')
-          .replace(/\\/g,' ')
+      if (searchStr != '') {
+        console.log('action: manual check of history for company number: ' + state.compInfo.nrNumber + ' from solr')
+        const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+        const myHeader = {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.history-spinner'};
+        const url = '/api/v1/documents:histories'
+        console.log('URL:' + url)
+        searchStr = searchStr.replace(/\//g, ' ')
+          .replace(/\\/g, ' ')
           .replace(/&/g, ' ')
           .replace(/\+/g, ' ')
           .replace(/\-/g, ' ')
           .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
           .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
           .replace(/\$/g, 'S')
-          .replace(/¢/g,'C')
+          .replace(/¢/g, 'C')
           .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
-      const vm = this
-      return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {
-        console.log('Check Manual Histories Response:' + response.data)
-        commit('loadHistoriesJSON',response.data)
-      })
-        .catch(error => console.log('ERROR: ' + error))
+        const vm = this
+        return axios.post(url, {type: 'plain_text', content: searchStr}, myHeader).then(response => {
+          console.log('Check Manual Histories Response:' + response.data)
+          commit('loadHistoriesJSON', response.data)
+        })
+          .catch(error => console.log('ERROR: ' + error))
+      }
     },
 
     checkManualTrademarks( {commit, state},searchStr ) {
-      console.log('action: manual check of trademarks for company number: ' + state.compInfo.nrNumber + ' from solr')
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const myHeader =  {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.trademarks-spinner'};
-      const url = '/api/v1/documents:trademarks'
-      console.log('URL:' + url)
-      searchStr = searchStr.replace(/\//g,' ')
-          .replace(/\\/g,' ')
+      if (searchStr != '') {
+        console.log('action: manual check of trademarks for company number: ' + state.compInfo.nrNumber + ' from solr')
+        const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+        const myHeader = {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.trademarks-spinner'};
+        const url = '/api/v1/documents:trademarks'
+        console.log('URL:' + url)
+        searchStr = searchStr.replace(/\//g, ' ')
+          .replace(/\\/g, ' ')
           .replace(/&/g, ' ')
           .replace(/\+/g, ' ')
           .replace(/\-/g, ' ')
@@ -1655,20 +1716,21 @@ export default new Vuex.Store({
           .replace(/{/g, '')
           .replace(/]/g, '')
           .replace(/\[/g, '')
-          .replace(/\?/g,'')
-          .replace(/#/g,'')
+          .replace(/\?/g, '')
+          .replace(/#/g, '')
           .replace(/%/g, '')
           .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
           .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
           .replace(/\$/g, 'S')
-          .replace(/¢/g,'C')
+          .replace(/¢/g, 'C')
           .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
-      const vm = this
-      return axios.post(url, {type: 'plain_text', content: searchStr }, myHeader).then(response => {
-        console.log('Check Manual Trademarks Response:' + response.data)
-        commit('loadTrademarksJSON',response.data)
-      })
-        .catch(error => console.log('ERROR: ' + error))
+        const vm = this
+        return axios.post(url, {type: 'plain_text', content: searchStr}, myHeader).then(response => {
+          console.log('Check Manual Trademarks Response:' + response.data)
+          commit('loadTrademarksJSON', response.data)
+        })
+          .catch(error => console.log('ERROR: ' + error))
+      }
     },
 
     syncNR({dispatch,commit},nrNumber) {
@@ -1897,7 +1959,8 @@ export default new Vuex.Store({
     expiryDate(state) {
       if (state.expiryDate != null) {
         // try converting from timestamp string
-        var retval = new Date(state.expiryDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+        var alteredHours = new Date(state.expiryDate).setHours(23,59)
+        var retval = new Date(alteredHours).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
         if (retval == 'Invalid Date') {
           retval = null;
         }
@@ -2057,5 +2120,8 @@ export default new Vuex.Store({
     errorJSON(state) {
       return state.errorJSON
     },
+    adminURL(state){
+      return state.adminURL
+    }
   }
 })
