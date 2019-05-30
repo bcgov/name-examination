@@ -624,7 +624,7 @@ describe('CompName.vue', () => {
                   conflict3_num: null,
                 }],
               natureBusinessInfo: "Nature of business can be pretty long so this one is more realistic. It even contains " +
-              "spaces and punctuation.",
+                "spaces and punctuation.",
               nrNum: "NR 2000951",
               nwpta: [],
               previousNr: null,
@@ -670,7 +670,7 @@ describe('CompName.vue', () => {
 
         setTimeout(() => {
           expect(instance.$store.state.currentState).toEqual("INPROGRESS");
-        }, 1000)
+        }, 10000)
       });
 
       it('keeps decision data upon reset', () => {
@@ -721,7 +721,7 @@ describe('CompName.vue', () => {
 
         setTimeout(() => {
           expect(instance.$store.state.currentState).toEqual("INPROGRESS");
-        }, 1000)
+        }, 10000)
       });
 
       it('keeps decision data upon re-open', () => {
@@ -842,7 +842,7 @@ describe('CompName.vue', () => {
                   state: "APPROVED"
                 }],
               natureBusinessInfo: "Nature of business can be pretty long so this one is more realistic. It even contains " +
-              "spaces and punctuation.",
+                "spaces and punctuation.",
               nrNum: "NR 2000951",
               nwpta: [],
               previousNr: null,
@@ -910,7 +910,7 @@ describe('CompName.vue', () => {
                   state: "NE"
                 }],
               natureBusinessInfo: "Nature of business can be pretty long so this one is more realistic. It even contains " +
-              "spaces and punctuation.",
+                "spaces and punctuation.",
               nrNum: "NR 2000952",
               nwpta: [],
               previousNr: null,
@@ -992,7 +992,7 @@ describe('CompName.vue', () => {
                   state: "NE"
                 }],
               natureBusinessInfo: "Nature of business can be pretty long so this one is more realistic. It even contains " +
-              "spaces and punctuation.",
+                "spaces and punctuation.",
               nrNum: "NR 2000953",
               nwpta: [],
               previousNr: null,
