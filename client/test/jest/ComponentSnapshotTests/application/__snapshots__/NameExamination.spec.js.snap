@@ -1,20 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`NameExamination.vue renders a NameExamination view 1`] = `
-<div>
-  <div
-    class="upper-section container-fluid"
+<div
+  style="position: absolute; width: 100%; background-color: white;"
+>
+  <comments-pop-up-stub />
+   
+  <v-container-stub
+    class="white-bg"
+    fluid=""
+    id="info-header-container"
+    ma-0=""
+    pa-0=""
+    tag="div"
   >
-    <div
-      class="namePage"
+    <v-layout-stub
+      tag="div"
     >
-      <div
-        class="RequestInfoHeader"
-      >
-        <requestinfoheaderview-stub />
-      </div>
-    </div>
-  </div>
+      <requestinfoheaderview-stub />
+    </v-layout-stub>
+  </v-container-stub>
    
   <div
     class="lower-section container-fluid"
@@ -31,6 +36,7 @@ exports[`NameExamination.vue renders a NameExamination view 1`] = `
       >
         <div
           class="col"
+          style="background-color: white;"
         >
           <compnameview-stub />
         </div>

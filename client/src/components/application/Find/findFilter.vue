@@ -46,41 +46,28 @@
         </table>
         <h1>Search</h1>
         <span class="searchTable" id="search-table-container" v-on:click="loadNR">
-          <b-row id="table-options">
-            <b-col>
+          <div style="display: flex;" class="mt-3" id="table-options">
+            <div style="flex-shrink: 1; align-self: center;">
               <b-link id="clear-filter" @click="clearFilter">Clear Filters</b-link>
-            </b-col>
+            </div>
+            <div style="flex-grow: 1;"></div>
+            <div style="flex-shrink: 1" id="pagination">
+              <div style="display: flex; justify-content: flex-end;">
+                <div id="results" style="align-self: center; margin-right: 30px;">Results: {{this.total}}</div>
+                <div style="align-self: center; margin-right: 5px;">Display:</div>
+                <b-form-select :options="pageSizeOptions" v-model="perPage" style="width:60px; float:right; margin-right: 10px"/>
+                <div style="align-self: center; margin-right: 3px;">Page:</div>
+                <b-form-select :options="pageNumbers" v-model="currentPage" style="width:60px; float:right"/>
+                <div style="align-self: center; margin:0px 3px 0px 5px;">of {{this.numberOfPages}}</div>
+                <b-button-group>
+                  <b-btn id="previous" @click="previousPage">&lsaquo;</b-btn>
+                  <b-btn id="next" @click="nextPage">&rsaquo;</b-btn>
+                </b-button-group>
 
-            <b-col>
-              <b-row id="pagination">
-                <b-col>
-                  <p id="results">Results: {{this.total}}</p>
-                </b-col>
-
-                <b-col>
-                  <b-form-group id="display-selection" horizontal label="Display:">
-                    <b-form-select :options="pageSizeOptions" v-model="perPage" style="width:60px; float:right; margin-right: 10px"/>
-                  </b-form-group>
-                </b-col>
-
-                <b-col>
-                  <b-form-group id="page-selection" horizontal label="Page:">
-                    <b-form-select :options="pageNumbers" v-model="currentPage" style="width:60px; float:right"/>
-                  </b-form-group>
-                </b-col>
-
-                <b-col>
-                  <div id="prev-next-page">
-                    <span>of {{this.numberOfPages}}</span>
-                    <b-button-group>
-                      <b-btn id="previous" @click="previousPage">&lsaquo;</b-btn>
-                      <b-btn id="next" @click="nextPage">&rsaquo;</b-btn>
-                    </b-button-group>
-                  </div>
-                </b-col>
-              </b-row>
-            </b-col>
-          </b-row>
+              </div>
+            </div>
+          </div>
+        </span>
 
           <b-table id="search-table" show-empty striped hover fixed class="pre-line scroll" :fields="headers" :items="data">
             <template slot="NameRequestNumber" slot-scope="data">
@@ -325,10 +312,12 @@ export default {
               }
             }
             data[i].comments = latestComment.comment;
-            if (data[i].comments.length > 100) {
-              data[i].comments = [data[i].comments.slice(0,75), '...'];
+            if (data[i].comments) {
+              if (data[i].comments.length > 100) {
+                data[i].comments = [data[i].comments.slice(0, 75), '...'];
+              }
             }
-          } else data[i].comments = null;
+          } else { data[i].comments = null };
 
           data[i] = this.buildTableRow(data[i]);
         }
@@ -597,31 +586,6 @@ export default {
   }
   .btn-secondary:hover{
     background-color: #ced4da;
-  }
-  #clear-filter {
-    float: left;
-    width: 100px;
-    margin-top: 27px;
-  }
-  #results {
-    margin-top: 27px;
-  }
-  #display-selection {
-    width:118px;
-    margin-top: 20px;
-    margin-bottom: 0;
-  }
-  #page-selection {
-    width:95px;
-    float: right;
-    margin-right:5px;
-    margin-top: 20px;
-    margin-bottom: 0;
-  }
-  #prev-next-page {
-    float:left;
-    margin-top: 20px;
-    margin-bottom: 0;
   }
   #filter-header {
     background-color: #b3cce6;

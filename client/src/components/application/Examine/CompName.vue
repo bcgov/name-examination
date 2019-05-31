@@ -1,160 +1,95 @@
 <!--eslint-disable-->
 <template>
-  <div>
-    <div class="name-sect">
-      <div class="row">
-        <div class="col">
-
-          <div id="top-buttons">
-
-            <!-- GET NEXT button -->
-            <button v-shortkey="['alt', 'n']" @shortkey="getNextCompany()" class="btn btn-sm btn-secondary" id="examine-get-next-button"
-                    v-if="userIsAnExaminer && !is_making_decision && !is_my_current_nr"
-                    @click="getNextCompany()" >Get <u>N</u>ext</button>
-
-            <!-- CANCEL button -->
-            <button class="btn btn-sm btn-danger" id="examine-cancel-button"
-                    v-if="canCancel && !is_making_decision && !is_cancelled && !is_approved_expired && !is_consumed" data-toggle="modal" data-target="#add-cancel-comment-modal">
-              Cancel Request</button>
-
-            <!-- HOLD button -->
-            <button v-shortkey="['alt', 'h']" @shortkey="holdRequest()" class="btn btn-sm btn-warning" id="examine-hold-button"
-                    v-if="!is_making_decision && is_my_current_nr"
-                    @click="holdRequest()"><u>H</u>old</button>
-
-            <!-- DECISION button -->
-            <button v-shortkey="['alt', 'd']" @shortkey="startDecision()" class="btn btn-sm btn-primary" id="examine-decide-button"
-                    v-if="userIsAnExaminer && !is_making_decision && !is_complete && is_my_current_nr && !is_name_decision_made"
-                    @click="startDecision()"><u>D</u>ecision</button>
-
-            <!-- ACCEPT/REJECT/CANCEL DECISION buttons -->
-            <button v-shortkey="['alt', 'a']" @shortkey="nameAccept()" class="btn btn-sm btn-primary" id="decision-approve-button"
-                    v-if="userIsAnExaminer && is_making_decision" @click="nameAccept()">
-              <span v-if="acceptance_will_be_conditional">Conditionally </span><u>A</u>pprove
-            </button>
-            <button v-shortkey="['alt', 'r']" @shortkey="nameReject()" class="btn btn-sm btn-danger" id="decision-reject-button"
-                    v-if="is_making_decision" @click="nameReject()" ><u>R</u>eject
-            </button>
-            <button v-shortkey="['alt', 'c']" @shortkey="is_making_decision=false" class="btn btn-sm btn-secondary" id="decision-cancel-button"
-                    v-if="is_making_decision" @click="is_making_decision=false">Ba<u>c</u>k
-            </button>
-
-            <!-- RE-OPEN (un-furnished) button -->
-            <button class="btn btn-sm btn-danger" id="examine-re-open-button"
-                    v-if="userCanEdit && is_complete && !is_furnished && !is_cancelled && !is_approved_expired" @click="reOpen()" >
-              Re-Open</button>
-
-            <!-- RESET (from furnished) button -->
-            <button class="btn btn-sm btn-danger" id="examine-reset-button"
-                    v-if="userCanEdit && is_complete && is_furnished && !is_cancelled && !is_approved_expired" @click="reset()">
-              RESET</button>
-
-            <!-- EXAMINE button - to claim/examine an NR that is on hold -->
-            <button class="btn btn-sm btn-primary" id="examine-button" v-if="can_claim"
-                    @click="claimNR()" >Examine</button>
-
-
-          </div>
-
+  <v-container fluid ma-0 pa-0 style="position: relative; background-color: white;">
+      <v-layout row ml-1>
+        <v-flex lg6>
           <table>
-            <tr class="name-option"
-                v-bind:class="{'active-name-option': currentChoice==1,
-                               accepted: compName1.state == 'APPROVED'}">
-              <td>1.</td>
-              <td id="name1">
-                {{ compName1.name }}
-                <span class="name-state-icon" v-html="setIcon(compName1.state)"></span>
-                <button class="btn btn-undo" v-if="is_undoable_1"
-                        v-on:click="undoDecision(1)">Undo Decision</button>
-                <span class="decision-text"
-                        v-bind:class="{'completed-decision-text': is_complete}">{{ decision_1 }}</span>
-              </td>
-            </tr>
-            <tr class="name-option"
-                v-bind:class="{'active-name-option': currentChoice==2,
-                               accepted: compName2.state == 'APPROVED'}">
-              <td>2.</td>
-              <td id="name2">
-                {{ compName2.name }}
-                <span class="name-state-icon" v-html="setIcon(compName2.state)"></span>
-                <button class="btn btn-undo" v-if="is_undoable_2"
-                        v-on:click="undoDecision(2)">Undo Decision</button>
-                <span class="decision-text"
-                        v-bind:class="{'completed-decision-text': is_complete}">{{ decision_2 }}</span>
-              </td>
-            </tr>
-            <tr class="name-option"
-                v-bind:class="{'active-name-option': currentChoice==3,
-                               accepted: compName3.state == 'APPROVED'}">
-              <td>3.</td>
-              <td id="name3" >
-                {{ compName3.name }}
-                <span class="name-state-icon" v-html="setIcon(compName3.state)"></span>
-                <button class="btn btn-undo" v-if="is_undoable_3"
-                        v-on:click="undoDecision(3)">Undo Decision</button>
-                <span id="decision-text3" class="decision-text"
-                      v-bind:class="{'completed-decision-text': is_complete}">{{ decision_3 }}</span>
-              </td>
-            </tr>
-          </table>
-
-          <div>
-
-            <!-- QUICK APPROVE/REJECT BUTTONS -->
-            <span class="float-right" style="margin-left: 10px;" v-if="userIsAnExaminer && !is_making_decision && !is_complete && is_my_current_nr && !is_name_decision_made">
-              <button v-shortkey="['alt', 'a']" @shortkey="quickApprove()" class="btn btn-sm btn-outline-primary" id="examine-quick-approve-button"
-                      @click="quickApprove">Quick <u>A</u>pprove</button>
-              <button  v-shortkey="['alt', 'i']" @shortkey="rejectDistinctive()" class="btn btn-sm btn-outline-danger" id="examine-reject-distinctive-button"
-                      @click="rejectDistinctive">Reject D<u>i</u>stinctive</button>
-              <button v-shortkey="['alt', 'e']" @shortkey="rejectDescriptive()" class="btn btn-sm btn-outline-danger" id="examine-reject-descriptive-button"
-                      @click="rejectDescriptive">Reject D<u>e</u>scriptive</button>
-            </span>
-
-            <!-- MANUAL SEARCH -->
-            <div v-if="userCanEdit && !is_making_decision && !is_complete" id="manual-search">
-              <form class="form-inline" @submit.prevent="onSubmit">
-                <div class="manual-search-bar">
-                  <input ref="search" type="text" class="search form-control" v-model="searchStr"  v-shortkey="['alt', 's']" @shortkey="setFocus()" tabindex="1">
-                  <button class="btn-search" type="submit"><i class="fa fa-search" tabindex="8"/></button>
-                  <button class="btn-reset" v-if="is_running_manual_search" @click="resetSearchStr" tabindex="7"><i class="fa fa-times" /></button>
-                </div>
-                <input ref="advanced-search" type="text" class="advanced-search form-control" placeholder="Exact Phrase" v-model="exactPhrase">
-              </form>
-            </div>
+              <tr class="name-option"
+                  v-bind:class="{'active-name-option': currentChoice==1,
+                                 accepted: compName1.state == 'APPROVED'}">
+                <td>1.</td>
+                <td id="name1">
+                  {{ compName1.name }}
+                  <span class="name-state-icon" v-html="setIcon(compName1.state)"></span>
+                  <button class="btn btn-undo" v-if="is_undoable_1"
+                          v-on:click="undoDecision(1)">Undo Decision</button>
+                  <span class="decision-text"
+                          v-bind:class="{'completed-decision-text': is_complete}">{{ decision_1 }}</span>
+                </td>
+              </tr>
+              <tr class="name-option"
+                  v-bind:class="{'active-name-option': currentChoice==2,
+                                 accepted: compName2.state == 'APPROVED'}">
+                <td>2.</td>
+                <td id="name2">
+                  {{ compName2.name }}
+                  <span class="name-state-icon" v-html="setIcon(compName2.state)"></span>
+                  <button class="btn btn-undo" v-if="is_undoable_2"
+                          v-on:click="undoDecision(2)">Undo Decision</button>
+                  <span class="decision-text"
+                          v-bind:class="{'completed-decision-text': is_complete}">{{ decision_2 }}</span>
+                </td>
+              </tr>
+              <tr class="name-option"
+                  v-bind:class="{'active-name-option': currentChoice==3,
+                                 accepted: compName3.state == 'APPROVED'}">
+                <td>3.</td>
+                <td id="name3" >
+                  {{ compName3.name }}
+                  <span class="name-state-icon" v-html="setIcon(compName3.state)"></span>
+                  <button class="btn btn-undo" v-if="is_undoable_3"
+                          v-on:click="undoDecision(3)">Undo Decision</button>
+                  <span id="decision-text3" class="decision-text"
+                        v-bind:class="{'completed-decision-text': is_complete}">{{ decision_3 }}</span>
+                </td>
+              </tr>
+              </table>
+        </v-flex>
+        <v-flex lg6>
+          <v-layout row v-if="showQuickButtons" align-right>
+            <v-flex grow text-right>
+              <v-btn flat
+                     v-shortkey="['alt', 'a']"
+                     @shortkey="quickApprove()"
+                     id="examine-quick-approve-button"
+                     @click="quickApprove">
+                <img src="/static/images/buttons/quick-approve.png" />
+              </v-btn>
+            </v-flex><v-flex shrink>
+              <v-btn flat
+                     v-shortkey="['alt', 'i']"
+                     @shortkey="rejectDistinctive()"
+                     id="examine-reject-distinctive-button"
+                     @click="rejectDistinctive">
+                <img src="/static/images/buttons/reject-dist.png" />
+              </v-btn>
+            </v-flex><v-flex shrink>
+              <v-btn flat
+                     v-shortkey="['alt', 'e']"
+                     @shortkey="rejectDescriptive()"
+                     id="examine-reject-descriptive-button"
+                     @click="rejectDescriptive">
+                <img src="/static/images/buttons/reject-desc.png" />
+              </v-btn>
+            </v-flex>
+          </v-layout>
+        </v-flex>
+      </v-layout>
+      <v-layout row ml-1>
+        <v-flex lg12>
+          <div v-if="userCanEdit && !is_making_decision && !is_complete" id="manual-search">
+            <form class="form-inline" @submit.prevent="onSubmit">
+              <div class="manual-search-bar">
+                <input ref="search" type="text" class="search form-control" v-model="searchStr"  v-shortkey="['alt', 's']" @shortkey="setFocus()" tabindex="1">
+                <button class="btn-search" type="submit"><i class="fa fa-search" tabindex="8"/></button>
+                <button class="btn-reset" v-if="is_running_manual_search" @click="resetSearchStr" tabindex="7"><i class="fa fa-times" /></button>
+              </div>
+              <input ref="advanced-search" type="text" class="advanced-search form-control" placeholder="Exact Phrase" v-model="exactPhrase">
+            </form>
           </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- CANCEL COMMENT popup -->
-    <div class="modal fade" id="add-cancel-comment-modal" tabindex="-1" role="dialog">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Please give a comment to explain why this NR is being CANCELLED</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <textarea id="cancel-comment-text" class="form-control" rows="10"
-                      v-model="cancel_comment_display"></textarea>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-sm btn-secondary"
-                    data-dismiss="modal" @click="cancelNrCancel">Cancel</button>
-            <button type="button" id="cancel-nr-after-comment-button" class="btn btn-sm btn-danger" disabled="true"
-                    data-dismiss="modal" @click="cancelNr">CANCEL REQUEST</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-  </div>
+        </v-flex>
+      </v-layout>
+    </v-container>
 </template>
 
 <script>
@@ -180,6 +115,16 @@
         set: function (value) {
           this.$store.commit('decision_made', value);
         }
+      },
+      showQuickButtons() {
+        if (this.userIsAnExaminer &&
+            !this.is_making_decision &&
+            !this.is_complete &&
+            this.is_my_current_nr &&
+            !this.is_name_decision_made) {
+          return true
+        }
+        return false
       },
       currentState() {
         return this.$store.getters.currentState;
@@ -620,66 +565,6 @@
 
 
 <style scoped>
-  .name-sect {
-  }
-  .name-option {
-    font-size:1.3em;
-    text-align: left;
-  }
-  .active-name-option{
-    font-weight: bold;
-  }
-
-  #top-buttons {
-    float: right;
-    margin: 10px 0 10px 10px;
-  }
-  #top-buttons button {
-    float: right;
-    margin-left: 5px;
-  }
-
-  .name-option > td {
-    vertical-align: top;
-  }
-  .name-option.accepted {
-    color: #007bff;
-    font-size: 20px;
-  }
-  .decision-text {
-    font-size: 11px;
-    width: 600px;
-    position: relative;
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .completed-decision-text {
-    font-size: 15px;
-    white-space: pre-wrap;
-  }
-
-  .manual-search-bar {
-    width: 70%;
-    margin-right: 5px;
-  }
-
-  .search {
-    width: 99%;
-    max-width: 700px;
-    min-width: 200px;
-    font-size: 16px;
-  }
-
-  .advanced-search {
-    font-size: 16px;
-    width: 20%;
-    min-width: 50px;
-    max-width: 300px;
-  }
-
   #manual-search {
     width: 100%;
     max-width: 1030px;
@@ -696,31 +581,78 @@
     margin-top: -1px;
   }
 
-  .btn-search {
-    margin-left: -25px;
+  #top-buttons {
+    float: right;
+    margin: 10px 0 10px 10px;
+  }
+
+  #top-buttons button {
+    float: right;
+    margin-left: 5px;
+  }
+
+  .active-name-option{
+    font-weight: bold;
+  }
+
+  .advanced-search {
+    font-size: 16px;
+    width: 20%;
+    min-width: 50px;
+    max-width: 300px;
+  }
+
+  .btn-reset {
+    margin-left: -40px;
   }
 
   .btn-search .fa-search {
     font-size: 14px;
   }
 
-  .btn-reset {
-    margin-left: -40px;
-}
-</style>
-
-<!-- not scoped -->
-<style>
-  .name-state-icon .icon-rejected {
-    color: #c00;
+  .btn-search {
+    margin-left: -25px;
   }
-  .name-state-icon .icon-accepted {
+
+  .completed-decision-text {
+    font-size: 15px;
+    white-space: pre-wrap;
+  }
+
+  .decision-text {
+    font-size: 11px;
+    width: 600px;
+    position: relative;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .manual-search-bar {
+    width: 70%;
+    margin-right: 5px;
+  }
+
+  .name-option > td {
+    vertical-align: top;
+  }
+
+  .name-option {
+    font-size:1.3em;
+    text-align: left;
+  }
+
+  .name-option.accepted {
     color: #007bff;
     font-size: 20px;
   }
 
-  .btn-undo {
-    padding: 2px 5px;
-    font-size: 11px;
+  .search {
+    width: 99%;
+    max-width: 700px;
+    min-width: 200px;
+    font-size: 16px;
   }
+
 </style>

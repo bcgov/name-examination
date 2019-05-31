@@ -1,279 +1,305 @@
 <!--eslint-disable-->
 <template>
-
-  <span v-if="show_extended_header">
-    <h3>Client</h3>
-
-    <!-- VIEW -->
-    <span v-if="!is_editing">
-      <p>{{ clientFirstName }} {{ clientLastName}}</p>
-
-      <h3>Applicant Info</h3>
-      <p>{{ firstName }} {{ middleName }} {{ lastName }}</p>
-      <p>{{ addressLine1 }}</p>
-      <p>{{ addressLine2 }}</p>
-      <p>{{ addressLine3 }}</p>
-      <p>{{ city }}, {{ province }}</p>
-      <p>{{ postalCode }}</p>
-      <p>{{ country }}</p>
-
-      <div class="row">
-        <div v-if="phone" class="col add-top-padding">
-          <h3>Phone</h3>
-          <p>{{ phone }}</p>
-        </div>
-        <div v-if="fax" class="col add-top-padding">
-          <h3>Fax</h3>
-          <p>{{ fax }}</p>
-        </div>
-      </div>
-
-      <h3>Email</h3>
-      <p>{{ conEmail }}</p>
-
-      <h3>Contact</h3>
-      <p>{{ contactName }}</p>
-
-    </span>
-
-
-    <!-- EDIT -->
-    <span v-else>
-      <div class="form-row">
-        <div class="col">
-          <input type="text" class="form-control " id="firstName1" maxlength="50"
-                 v-model="clientFirstName" placeholder="First Name" />
-        </div>
-        <div class="col">
-          <input type="text" class="form-control " id="lastName1" maxlength="50"
-                 v-model="clientLastName" placeholder="Last Name"/>
-        </div>
-      </div>
-
-      <h3>Applicant Info</h3>
-
-      <div class="form-row">
-        <div class="col add-top-padding">
-          <input class="form-control " v-model="firstName" maxlength="50"
-                 placeholder="First Name" />
-        </div>
-        <div class="col add-top-padding">
-          <input class="form-control " v-model="middleName" maxlength="50"
-                 placeholder="Middle Name"/>
-        </div>
-        <div class="col add-top-padding">
-          <input class="form-control " v-model="lastName" maxlength="50"
-                 placeholder="Last Name" />
-        </div>
-      </div>
-
-      <h3>Address</h3>
-      <input class="form-control " v-model="addressLine1" maxlength="200"
-             placeholder="Address" />
-      <input class="form-control " v-model="addressLine2" maxlength="200"
-             placeholder="Address" />
-      <input class="form-control " v-model="addressLine3" maxlength="200"
-             placeholder="Address" />
-
-      <div class="form-row">
-        <div class="col">
-          <input class="form-control " v-model="city" maxlength="200"
-                 placeholder="City" />
-        </div>
-        <div class="col">
-          <input class="form-control " v-model="province" maxlength="2"
-                 placeholder="State/Province" />
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="col">
-          <input class="form-control " v-model="postalCode" maxlength="20"
-                 placeholder="Postal Code" />
-        </div>
-        <div class="col">
-          <!-- TODO - dropdown for country? from jurisdiction list 2? -->
-          <input class="form-control " v-model="country" maxlength="2"
-                 placeholder="Country (2-CHAR CODE)" />
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="col add-top-padding">
-          <h3>Phone</h3>
-          <input type="text" class="form-control " v-model="phone" maxlength="30" />
-        </div>
-        <div class="form-group col add-top-padding">
-          <h3>Fax</h3>
-          <input type="text" class="form-control " v-model="fax" maxlength="30" />
-        </div>
-      </div>
-
-      <h3>email</h3>
-      <input id="email1" class="form-control " v-model="conEmail" maxlength="75" />
-
-      <h3>Contact</h3>
-      <input id="firstName1C" class="form-control " v-model="contactName" maxlength="150" />
-
-
-    </span>
-  </span>
-
+  <v-flex>
+    <v-container v-if="!is_editing" ma-0 pa-0>
+      <v-layout wrap v-if="client_info_expanded || is_viewing" dk-grey fs-15>
+        <v-flex lg12 fw-600>Client:</v-flex>
+        <v-flex lg12>{{ clientFirstName }} {{ clientLastName }}</v-flex>
+        <v-flex lg12 fw-600 mt-2>Applicant:</v-flex>
+        <v-flex lg12>{{ firstName }} {{ lastName }}</v-flex>
+        <v-flex lg12 mt-2 fw-600>Address:</v-flex>
+        <v-flex v-if="addressLine1" lg12>{{ addressLine1 }}</v-flex>
+        <v-flex v-if="addressLine2" lg12>{{ addressLine2 }}</v-flex>
+        <v-flex v-if="addressLine3" lg12>{{ addressLine3 }}</v-flex>
+        <v-flex lg12>{{ city }} {{ province }}</v-flex>
+        <v-flex lg12>{{ postalCode }}</v-flex>
+        <v-flex lg12>{{ country }}</v-flex>
+        <v-flex mt-3 v-if="phone" lg12><span class="fw-600">Phone:</span> {{ phone }}</v-flex>
+        <v-flex v-if="fax" lg12><span class="fw-600">Fax:</span> {{ fax }}</v-flex>
+        <v-flex v-if="conEmail" lg12><span class="fw-600">Email:</span> {{ conEmail }}</v-flex>
+        <v-flex mt-3 v-if="contactName" lg12 fw-600>Contact:</v-flex>
+        <v-flex v-if="contactName" lg12>{{ contactName }}</v-flex>
+      </v-layout>
+      <v-layout wrap dk-grey v-else position-up>
+        <v-flex lg12>{{ firstName }} {{ lastName }}</v-flex>
+        <v-flex lg12>{{ addressLine1 }}</v-flex>
+        <v-flex v-if="addressLine2" lg12>{{ addressLine2 }}</v-flex>
+        <!--format to show only 4 lines of Applicant name + address.-->
+        <v-flex v-if="!addressLine2 && !addressLine3" lg12>
+          {{ city }} {{ province }} {{ postalCode }} {{ country }}
+        </v-flex>
+      </v-layout>
+    </v-container>
+    <v-container v-else id="applicant-form-container" field dk-grey>
+      <v-form autocomplete="off" ma-0 pa-0>
+        <v-layout wrap field dk-grey>
+          <!--APPLICANT INFORMATION HEADING-->
+          <v-flex lg12 field>
+            <v-text-field class="applicant-info-field"
+                          v-model="firstName"
+                          placeholder="First name"
+                          maxlength="200" />
+          </v-flex>
+          <v-flex lg12 field>
+            <v-text-field class="applicant-info-field"
+                          placeholder="Middle name"
+                          v-model="middleName"
+                          maxlength="200" />
+          </v-flex>
+          <v-flex lg12 section>
+            <v-text-field class="applicant-info-field"
+                          v-model="lastName"
+                          placeholder="Last name"
+                          maxlength="200" />
+          </v-flex>
+          <!--CLIENT HEADING-->
+          <v-flex lg12 label>Client:</v-flex>
+          <v-flex lg12 field>
+            <v-text-field class="input-box-editing"
+                          id="firstName1"
+                          v-model="clientFirstName"
+                          placeholder="First name"
+                          maxlength="200" />
+          </v-flex>
+          <v-flex lg12 section>
+            <v-text-field class="input-box-editing"
+                          v-model="clientLastName"
+                          id="lastName1"
+                          placeholder="Last name"
+                          maxlength="200" />
+          </v-flex>
+          <!--ADDRESS: LINES-->
+          <v-flex lg12 label>Address:</v-flex>
+          <v-flex lg12 field>
+            <v-text-field class="applicant-info-field" v-model="addressLine1" maxlength="200" />
+          </v-flex>
+          <v-flex lg12 field>
+            <v-text-field class="applicant-info-field" v-model="addressLine2" maxlength="200" />
+          </v-flex>
+          <v-flex lg12 field>
+            <v-text-field class="applicant-info-field" v-model="addressLine3" maxlength="200" />
+          </v-flex>
+          <!--ADDRESS: CITY / PROVINCE-->
+          <v-flex lg9 field-inline>
+            <v-text-field class="applicant-info-field" v-model="city" maxlength="200" />
+          </v-flex>
+          <v-flex lg3 field>
+            <v-text-field class="applicant-info-field" v-model="province" maxlength="2" />
+          </v-flex>
+          <!--ADDRESS: POSTAL CODE / COUNTRY-->
+          <v-flex lg9 field-inline>
+            <v-text-field class="applicant-info-field" v-model="postalCode" maxlength="20" />
+          </v-flex>
+          <v-flex lg3 section>
+            <v-text-field class="applicant-info-field" v-model="country" maxlength="2" />
+          </v-flex>
+          <!--INLINE CONTACT HEADINGS-->
+          <v-flex lg2 align-self-center inline-label>Phone:</v-flex>
+          <v-flex lg10 pa-0 pl-1 ma-0>
+            <v-text-field class="applicant-info-field" v-model="phone" maxlength="30" />
+          </v-flex>
+          <v-flex lg2 align-self-center inline-label>Fax:</v-flex>
+          <v-flex lg10 pa-0 pl-1 ma-0>
+            <v-text-field class="applicant-info-field" v-model="fax" maxlength="30" />
+          </v-flex>
+          <v-flex lg2 align-self-center inline-label>Email:</v-flex>
+          <v-flex lg10 pa-0 pl-1 ma-0>
+            <v-text-field id="email1" class="applicant-info-field" v-model="conEmail" maxlength="75" />
+          </v-flex>
+          <!--CONTACT HEADING-->
+          <v-flex lg12 label field mt-1>Contact:</v-flex>
+          <v-flex lg12 pa-0 ma-0>
+            <v-text-field id="firstName1C" class="applicant-info-field" v-model="contactName" maxlength="200" />
+          </v-flex>
+          <v-layout justify-start row mt-4 pl-3>
+            <v-flex>
+              <v-btn id="nr-details-cancel-button"
+                     class="ma-0 pa-0"
+                     @click="cancelSave"
+                     flat>
+                <img src="static/images/buttons/cancel.png"
+                     alt="Cancel Button" />
+              </v-btn>
+            </v-flex>
+            <v-flex>
+              <v-btn id="nr-details-save-button"
+                     @click="save"
+                     class="ma-0 pa-0"
+                     flat>
+                <img src="static/images/buttons/save-edits.png"
+                     alt="Save Button" />
+              </v-btn>
+            </v-flex>
+          </v-layout>
+        </v-layout>
+      </v-form>
+    </v-container>
+  </v-flex>
 </template>
 
 <script>
 /* eslint-disable */
-  import { required } from 'vuelidate/lib/validators'
+import { required } from 'vuelidate/lib/validators'
 
-  export default {
-    name: 'ClientInfoHeader',
-    computed: {
-      is_editing() {
-        return this.$store.getters.is_editing;
-      },
-      show_extended_header() {
-        return this.is_editing || this.$store.getters.is_header_shown;
-      },
-      nrNumber() {
-        return  this.$store.getters.nrNumber;
-      },
-      clientFirstName: {
-        get: function() {
-          return this.$store.getters.clientFirstName;
-        },
-        set: function(value) {
-          this.$store.commit('clientFirstName', value);
-        }
-      },
-      clientLastName: {
-        get: function() {
-          return this.$store.getters.clientLastName;
-        },
-        set: function(value) {
-          this.$store.commit('clientLastName', value);
-        }
-      },
-      firstName: {
-        get: function() {
-          return this.$store.getters.firstName;
-        },
-        set: function(value) {
-          this.$store.commit('firstName', value);
-        }
-      },
-      middleName: {
-        get: function() {
-          return this.$store.getters.middleName;
-        },
-        set: function(value) {
-          this.$store.commit('middleName', value);
-        }
-      },
-      lastName: {
-        get: function() {
-          return this.$store.getters.lastName;
-        },
-        set: function(value) {
-          this.$store.commit('lastName', value);
-        }
-      },
-      addressLine1: {
-        get: function() {
-          return this.$store.getters.addressLine1;
-        },
-        set: function(value) {
-          this.$store.commit('addressLine1', value);
-        }
-      },
-      addressLine2: {
-        get: function() {
-          return this.$store.getters.addressLine2;
-        },
-        set: function(value) {
-          this.$store.commit('addressLine2', value);
-        }
-      },
-      addressLine3: {
-        get: function() {
-          return this.$store.getters.addressLine3;
-        },
-        set: function(value) {
-          this.$store.commit('addressLine3', value);
-        }
-      },
-      city: {
-        get: function() {
-          return this.$store.getters.city;
-        },
-        set: function(value) {
-          this.$store.commit('city', value);
-        }
-      },
-      province: {
-        get: function() {
-          return this.$store.getters.province;
-        },
-        set: function(value) {
-          this.$store.commit('province', value);
-        }
-      },
-      country: {
-        get: function() {
-          return this.$store.getters.country;
-        },
-        set: function(value) {
-          this.$store.commit('country', value);
-        }
-      },
-      postalCode: {
-        get: function() {
-          return this.$store.getters.postalCode;
-        },
-        set: function(value) {
-          this.$store.commit('postalCode', value);
-        }
-      },
-      contactName: {
-        get: function() {
-          return this.$store.getters.contactName;
-        },
-        set: function(value) {
-          this.$store.commit('contactName', value);
-        }
-      },
-      phone: {
-        get: function() {
-          return this.$store.getters.phone;
-        },
-        set: function(value) {
-          this.$store.commit('phone', value);
-        }
-      },
-      conEmail: {
-        get: function() {
-          return this.$store.getters.conEmail;
-        },
-        set: function(value) {
-          this.$store.commit('conEmail', value);
-        }
-      },
-      fax: {
-        get: function() {
-          return this.$store.getters.fax;
-        },
-        set: function(value) {
-          this.$store.commit('fax', value);
-        }
+export default {
+  name: 'ClientInfoHeader',
+  props: ['cancelSave', 'is_editing', 'is_viewing', 'is_expanded', 'save'],
+  computed: {
+    addressLine1: {
+      get: function() {
+        return this.$store.getters.addressLine1
+      }, set: function(value) {
+        this.$store.commit('addressLine1', value)
       },
     },
-    validations: {
+    addressLine2: {
+      get: function() {
+        return this.$store.getters.addressLine2
+      }, set: function(value) {
+        this.$store.commit('addressLine2', value)
+      },
     },
-    methods: {
-    }
-  }
+    addressLine3: {
+      get: function() {
+        return this.$store.getters.addressLine3
+      }, set: function(value) {
+        this.$store.commit('addressLine3', value)
+      },
+    },
+    city: {
+      get: function() {
+        return this.$store.getters.city
+      }, set: function(value) {
+        this.$store.commit('city', value)
+      },
+    },
+    client_info_expanded() {
+      if (this.$store.state.activeRequestBannerPopUp) {
+        return this.$store.state.activeRequestBannerPopUp === 'applicant'
+      }
+      return false
+    },
+    clientFirstName: {
+      get: function() {
+        return this.$store.getters.clientFirstName
+      }, set: function(value) {
+        this.$store.commit('clientFirstName', value)
+      },
+    },
+    clientLastName: {
+      get: function() {
+        return this.$store.getters.clientLastName
+      }, set: function(value) {
+        this.$store.commit('clientLastName', value)
+      },
+    },
+    conEmail: {
+      get: function() {
+        return this.$store.getters.conEmail
+      }, set: function(value) {
+        this.$store.commit('conEmail', value)
+      },
+    },
+    contactName: {
+      get: function() {
+        return this.$store.getters.contactName
+      }, set: function(value) {
+        this.$store.commit('contactName', value)
+      },
+    },
+    country: {
+      get: function() {
+        return this.$store.getters.country
+      }, set: function(value) {
+        this.$store.commit('country', value)
+      },
+    },
+    fax: {
+      get: function() {
+        return this.$store.getters.fax
+      }, set: function(value) {
+        this.$store.commit('fax', value)
+      },
+    },
+    firstName: {
+      get: function() {
+        return this.$store.getters.firstName
+      }, set: function(value) {
+        this.$store.commit('firstName', value)
+      },
+    },
+    lastName: {
+      get: function() {
+        return this.$store.getters.lastName
+      }, set: function(value) {
+        this.$store.commit('lastName', value)
+      },
+    },
+    middleName: {
+      get: function() {
+        return this.$store.getters.middleName
+      }, set: function(value) {
+        this.$store.commit('middleName', value)
+      },
+    },
+    nrNumber() {
+      return this.$store.getters.nrNumber
+    },
+    phone: {
+      get: function() {
+        return this.$store.getters.phone
+      }, set: function(value) {
+        this.$store.commit('phone', value)
+      },
+    },
+    postalCode: {
+      get: function() {
+        return this.$store.getters.postalCode
+      }, set: function(value) {
+        this.$store.commit('postalCode', value)
+      },
+    },
+    province: {
+      get: function() {
+        return this.$store.getters.province
+      }, set: function(value) {
+        this.$store.commit('province', value)
+      },
+    },
+  },
+  validations: {},
+}
 </script>
 
 <style scoped>
-</style>
+  .field {
+    margin: 0 0 3px 0 !important;
+    padding: 0 !important;
+  }
 
+  .field-inline {
+    margin: 0 0 3px 0 !important;
+    padding: 0 3px 0 0 !important;
+  }
+
+  .inline-label {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .label {
+    color: var(--text);
+    font-weight: 600;
+    padding: 0 !important;
+    margin: 2px 0 2px 0 !important;
+  }
+  .position-up {
+    position: relative;
+    top: -10px !important;
+  }
+  .section {
+    padding: 0 !important;
+    margin: 0 0 8px 0 !important;
+  }
+</style>
 

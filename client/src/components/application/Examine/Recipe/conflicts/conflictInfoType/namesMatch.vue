@@ -199,8 +199,12 @@
     h3, h2 {
     font-size: 15px;
   }
+
   p {
-    font-size: 14px;
+    font-size: 14px !important;
+    line-height: 1;
+    margin-top: 2px;
+    margin-bottom: 2px;
   }
 </style>
 

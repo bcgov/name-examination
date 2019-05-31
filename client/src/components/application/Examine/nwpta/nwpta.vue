@@ -1,104 +1,113 @@
 <!-- eslint-disable -->
 <template>
-  <span v-if="is_editing && has_nwpta && (!is_numbered_assumed || nwpta_requested)">
-
-    <span class="nwpta" :id="id">
-      <h3 class="add-top-padding">
-        {{ jurisdiction }}
-        <span v-if="is_named_assumed">(Assumed)</span>
-        <span v-if="nwpta_requested">REQUESTED</span>
-      </h3>
-
+  <fragment>
+    <template v-if="is_editing && has_nwpta && (!is_numbered_assumed || nwpta_requested)">
+      <v-flex fs-14><b>{{ jurisdiction }}: </b>{{ is_named_assumed ? '(Assumed)' : '' }}
+                                               {{ nwpta_requested ?  'Requested' : ''}}</v-flex>
       <!-- for do-it-for-me requests, give radio buttons to choose nuans, assumaed nauns, or numbered assumed -->
-      <div :hidden="!nwpta_requested">
-        <div class="form-check">
-          <input type="radio" value="requested_nuans" class="form-check-input"
-                 id="radio1" v-model="requested_radio_selection" />
-          <label class="form-check-label" for="radio1">
+      <template v-show="nwpta_requested">
+        <v-flex>
+          <input type="radio"
+                 value="requested_nuans"
+                 id="radio1"
+                 v-model="requested_radio_selection" />
+          <label for="radio1">
             NUANS
           </label>
-        </div>
-        <div class="form-check">
-          <input type="radio" value="requested_assumed" class="form-check-input"
-                 id="radio2" v-model="requested_radio_selection" />
-          <label class="form-check-label" for="radio2">
+        </v-flex>
+        <v-flex>
+          <input type="radio"
+                 value="requested_assumed"
+                 id="radio2"
+                 v-model="requested_radio_selection" />
+          <label for="radio2">
             Assumed NUANS
           </label>
-        </div>
-        <div class="form-check">
-          <input type="radio" value="requested_numbered" class="form-check-input"
-                 id="radio3" v-model="requested_radio_selection" />
-          <label class="form-check-label" for="radio3">
+        </v-flex>
+        <v-flex>
+          <input type="radio"
+                 value="requested_numbered"
+                 id="radio3"
+                 v-model="requested_radio_selection" />
+          <label for="radio3">
             Numbered Assumed
           </label>
-        </div>
-      </div>
-
+        </v-flex>
+      </template>
       <!-- number -->
-      <span v-if="!nwpta_requested || requested_radio_selection_nuans || requested_radio_selection_assumed">
-        <input type="text" v-model="nwpta.partnerNameNumber" class="form-control"
-               placeholder="Number" maxlength="20" />
-      </span>
-
+      <v-flex v-if="!nwpta_requested || requested_radio_selection_nuans || requested_radio_selection_assumed"
+              align-self-center>
+        <v-text-field v-model="nwpta.partnerNameNumber"
+                      class="nwpta-field"
+                      autocomplete="off"
+                      placeholder="Number"
+                      maxlength="20" />
+      </v-flex>
       <!-- name - only for "Named Assumed" type OR "do it for me" -->
-      <span v-if="(!nwpta_requested && is_named_assumed) || (nwpta_requested && requested_radio_selection_assumed)">
-        <input type="text" v-model="nwpta.partnerName" class="form-control" placeholder="Name"
-               maxlength="255" />
-      </span>
-
+      <v-flex v-if="(!nwpta_requested && is_named_assumed) || (nwpta_requested && requested_radio_selection_assumed)"
+              align-self-center>
+        <v-text-field v-model="nwpta.partnerName"
+                      class="nwpta-field"
+                      autocomplete="off"
+                      placeholder="Name"
+                      maxlength="255" />
+      </v-flex>
       <!-- date -->
-      <span v-if="!nwpta_requested || requested_radio_selection_nuans || requested_radio_selection_assumed" :class="{'form-group-error': $v.nwpta.partnerNameDate.$error}">
-        <input type="text" v-model="nwpta.partnerNameDate" class="form-control"
-               placeholder="Expiry Date" :onchange="$v.nwpta.partnerNameDate.$touch()" />
-        <div class="date-helper-text">DD-MM-YYYY</div>
-        <div class="error" v-if="!$v.nwpta.partnerNameDate.isValidFormat">
-          Date must be in format DD-MM-YYYY.</div>
-        <div class="error" v-else-if="!$v.nwpta.partnerNameDate.isActualDate">
-          This is not an actual date. Date must be in format DD-MM-YYYY.</div>
-      </span>
-    </span>
+      <template v-if="!nwpta_requested || requested_radio_selection_nuans || requested_radio_selection_assumed"
+        <v-flex :class="{'form-group-error': $v.nwpta.partnerNameDate.$error}"
+                align-self-center>
+          <v-text-field v-model="partnerNameDateAB"
+                        v-if="jurisdiction === 'AB' "
+                        class="nwpta-field"
+                        autocomplete="off"
+                        placeholder="Expiry Date"
+                        @input="$v.nwpta.partnerNameDate.$touch()" />
+          <v-text-field v-model="partnerNameDateSK"
+                        v-if="jurisdiction === 'SK' "
+                        class="nwpta-field"
+                        autocomplete="off"
+                        placeholder="Expiry Date"
+                        @input="$v.nwpta.partnerNameDate.$touch()" />
+        </v-flex>
+      <v-flex ft-ital>YYYY-MM-DD</v-flex>
+      <v-flex class="field-error"
+              v-if="!$v.nwpta.partnerNameDate.isValidFormat">
+        Date must be in format YYYY-MM-DD
+      </v-flex>
+      <v-flex class="field-error"
+              v-else-if="!$v.nwpta.partnerNameDate.isActualDate">
+        This is not an actual date. Date must be in format YYYY-MM-DD
+      </v-flex>
+    </template>
 
-  </span>
-  <span v-else-if="!is_editing && nwpta_requested && has_nwpta && !is_header_shown">
-
-    <span class="nwpta" :id="id">
-      <h3 class="add-top-padding">
-        {{ jurisdiction }}
-        <span>REQUESTED</span>
-      </h3>
-    </span>
-
-  </span>
-  <span v-else-if="(!is_editing || is_numbered_assumed) && has_nwpta && is_header_shown">
-    <span class="nwpta" :id="id">
-      <h3 class="add-top-padding">
-        {{ jurisdiction }}
-        <span v-if="nwpta_requested">REQUESTED</span>
-        <span v-else-if="is_named_assumed">(Assumed)</span>
-      </h3>
-      <div v-if="is_numbered_assumed">Numbered Assumed</div>
-
+    <template v-else-if="(!is_editing || is_numbered_assumed) && has_nwpta">
+      <v-flex fs-14><b>{{ jurisdiction }}: </b>
+        {{ is_named_assumed ? '(Assumed)' : '' }}
+        {{ nwpta_requested ?  'Requested' : ''}}
+      </v-flex>
+      <v-flex v-if="is_numbered_assumed" fw-600>Assumed #: </v-flex>
       <!-- number -->
-      {{ nwpta.partnerNameNumber }}
-
+      <v-flex>{{ nwpta.partnerNameNumber }}</v-flex>
       <!-- name - only for "Named Assumed" type -->
-      <span v-if="is_named_assumed">
-        <br/>
-        {{ nwpta.partnerName }}
-      </span>
-
+      <v-flex v-if="is_named_assumed">{{ nwpta.partnerName }}</v-flex>
       <!-- date -->
-      <br />
-      {{ nwpta.partnerNameDate }}
-    </span>
-  </span>
+      <v-flex>{{ nwpta.partnerNameDate }}</v-flex>
+    </template>
+
+    <v-flex fs-14 v-else>
+      <b>{{ jurisdiction }}:</b>
+      <p class="text-center no-nwpta">n/a</p>
+    </v-flex>
+  </fragment>
 </template>
 
 <script>
 /* eslint-disable */
   import { isActualDate,isValidFormat } from "../../../../../static/js/validators";
+  import moment from 'moment'
+
   export default {
-    name: 'nwptaInfo',
+    name: 'NwptaInfo',
     data: function() {
       return {
         requested_radio_selection: null,
@@ -113,15 +122,15 @@
 
       nwpta: {
         partnerNameDate: {
-          isValidFormat(value) {
-            // if empty, it's valid - not required
-            if (value == '' || value == null) return true;
-            return isValidFormat(value);
-          },
           isActualDate(value) {
             // if empty, it's valid - not required
-            if (value == '' || value == null) return true;
+            if (!value) return true;
             return isActualDate(value);
+          },
+          isValidFormat(value) {
+            // if empty, it's valid - not required
+            if (!value) return true;
+            return isValidFormat(value);
           },
         }
       },
@@ -134,6 +143,36 @@
         if (this.jurisdiction == 'AB') return this.$store.getters.nwpta_ab;
         else if (this.jurisdiction == 'SK') return this.$store.getters.nwpta_sk;
         else return null;
+      },
+      displayPartnerNameDate() {
+        if (this.jurisdiction) {
+          let type = this.jurisdiction.toLowerCase()
+          if (this.$store.getters[`nwpta_${type}`] && this.$store.getters[`nwpta_${type}`].partnerNameDate) {
+            let d = this.$store.getters[`nwpta_${type}`].partnerNameDate
+            return moment(d).format('YYYY-MM-DD')
+          }
+        }
+        return ''
+      },
+      partnerNameDateAB: {
+        get() {
+          if (this.$store.getters.nwpta_ab && this.$store.getters.nwpta_ab.partnerNameDate) {
+            return this.$store.getters.nwpta_ab.partnerNameDate
+          }
+          return ''
+        }, set(date) {
+          this.$store.commit('setPartnerDate', {type: 'ab', payload: date})
+        }
+      },
+      partnerNameDateSK: {
+        get() {
+          if (this.$store.getters.nwpta_sk && this.$store.getters.nwpta_sk.partnerNameDate) {
+            return this.$store.getters.nwpta_sk.partnerNameDate
+          }
+          return ''
+        }, set(date) {
+          this.$store.commit('setPartnerDate', {type: 'sk', payload: date})
+        }
       },
       has_nwpta() {
         if (this.nwpta == null) return false;
@@ -230,12 +269,29 @@
 </script>
 
 <style scoped>
-  .date-helper-text {
-    font-style: italic;
-    color: grey;
-    text-align: center;
+  div {
+    font-size: 13px;
+    color: var(--text) !important;
   }
-  .nwpta {
+  .field-error {
+    color: var(--rejected) !important;
+  }
 
+  .nwpta-field {
+    background-color: white;
+    height: 38px;
+    width: 145px;
+    margin-top: 0px !important;
+    margin-bottom: 5px !important;
+    border: 1px solid var(--l-grey);
+    padding: 4px !important;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .no-nwpta {
+    font-size: 24px !important;
+    font-weight: 600;
+    margin-top: 5px;
+    color: var(--l-grey)
   }
 </style>

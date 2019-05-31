@@ -2,12 +2,13 @@
 import { shallowMount } from '@vue/test-utils';
 import StdHeader from '@/components/application/sections/StdHeader';
 import store from '@/store'
+import router from '@/router'
 
 describe('StdHeader.vue', () => {
 
     let component;
-    beforeEach(() => {
-        component = shallowMount(StdHeader, {store: store});
+    beforeEach( () => {
+        component = shallowMount(StdHeader, { store, router });
     });
 
    it("renders a StdHeader component", () => {

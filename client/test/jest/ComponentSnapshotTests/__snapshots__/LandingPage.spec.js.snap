@@ -10,7 +10,9 @@ exports[`LandingPage.vue Snapshot renders a LandingPage component 1`] = `
     <div
       class="col"
     >
-      <div>
+      <div
+        class="mt-4"
+      >
         <h2>
           Your authorization is missing or has expired. Please login.
         </h2>

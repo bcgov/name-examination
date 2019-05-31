@@ -5,10 +5,10 @@
       <div class="col">
 
 
-  <div v-if="!auth">
+  <div v-if="!auth" class="mt-4">
     <h2 >Your authorization is missing or has expired. Please login.</h2>
   </div>
-  <div v-else>
+  <div class="mt-4"v-else>
     <h3>Welcome to Name X!</h3>
 
     <p>Canada’s most modern semi - automated way to examine business name requests. Automated indicators showing you:</p>

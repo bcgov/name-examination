@@ -295,6 +295,7 @@ export default {
     background-color: #efefef;
     border-radius: 0;
     float: left;
+    height: 38px;
     width: 145px;
     margin: 4px 0;
   }

@@ -36,7 +36,9 @@ exports[`App.vue  renders the App 1`] = `
   <div
     id="app"
   >
-    <std-header-stub />
+    <std-header-stub
+      style="z-index: 2;"
+    />
      
     <div>
       <router-view-stub

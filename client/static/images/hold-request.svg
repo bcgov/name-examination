@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="173" height="40" viewBox="0 0 173 40">
+    <g fill="none" fill-rule="evenodd">
+        <path fill="#5BC2E7" d="M40 0h133v40H40z"/>
+        <path fill="#1A5A96" d="M0 0h40v40H0z"/>
+        <text fill="#FFF" font-family="MyriadPro-Semibold, Myriad Pro" font-size="16" font-weight="500">
+            <tspan x="60.1" y="25">Hold Request</tspan>
+        </text>
+        <g fill="#FFF">
+            <path d="M14 11h3v16h-3zM23 11h3v16h-3z"/>
+        </g>
+    </g>
+</svg>
