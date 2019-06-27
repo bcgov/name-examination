@@ -1,21 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`HistoryList.vue renders a HistoryList component 1`] = `
-<div
-  class="col history-list-parent-col"
+<v-container-stub
+  fluid=""
+  ma-0=""
+  pa-0=""
+  tag="div"
 >
   <spinner-stub
     classname="history-spinner hidden"
   />
    
-  <div
-    class="row history-list-view"
+  <v-layout-stub
+    id="history-list-view"
+    ma-0=""
+    pa-0=""
+    tag="div"
   >
-    <div
-      class="empty-list"
-    >
-      ( No data )
-    </div>
-  </div>
-</div>
+    <!---->
+  </v-layout-stub>
+</v-container-stub>
 `;

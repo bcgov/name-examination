@@ -116,7 +116,6 @@ describe('StdHeader.vue', () => {
         },
       }
       vm = mount();
-      console.log(vm.$el.querySelector('#nameExamine'))
       expect(vm.$el.querySelector('#nameExamine')).toEqual(null);
     })
   })

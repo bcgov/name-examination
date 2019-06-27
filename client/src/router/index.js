@@ -60,15 +60,15 @@ let router = new Router({
 
 router.beforeResolve((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    console.log('Authorization check')
+    
     // this route requires auth,
     // if not Authenticated, redirect to login page.
     let auth = sessionStorage.getItem('AUTHORIZED')
     if (auth == 'true') {
-      console.log('Authorized')
+      
       next()
     } else {
-      console.log('Not authorized, redirect to /')
+      
       store.dispatch("checkError",{"message": "Not Authorized please login."});
       next({
         path: '/'

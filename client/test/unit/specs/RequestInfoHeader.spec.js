@@ -32,7 +32,6 @@ describe('RequestInfoHeader.vue', () => {
     let sandbox;
 
     let click = function (id) {
-      console.log('ID: ', id)
       let button = vm.$el.querySelector(id);
       let window = button.ownerDocument.defaultView;
       var click = new window.Event('click');
@@ -201,16 +200,14 @@ describe('RequestInfoHeader.vue', () => {
 
     it('has the show/hide details button working properly', () => {
       //TODO: tests for all fields that are hidden/shown in header
-      console.log('START details')
       expect(vm.$el.querySelector('#show-details-graphic')).not.toBeNull();
       expect(vm.$el.querySelector('#hide-details-graphic')).toBeNull();
       click('#nr-details-show-hide-details-button');
 
-      setTimeout(() => {
+      vm.$nextTick( function() {
         expect(vm.$el.querySelector('#show-details-graphic')).toBeNull();
         expect(vm.$el.querySelector('#hide-details-graphic')).not.toBeNull();
-        console.log('END details')
-      }, 200)
+      })
     });
   });
 
@@ -221,7 +218,6 @@ describe('RequestInfoHeader.vue', () => {
     let putCall, getCall, patchCall;
 
     let click = function (id) {
-      console.log('ID: ', id)
       let button = vm.$el.querySelector(id);
       let window = button.ownerDocument.defaultView;
       var click = new window.Event('click');
@@ -396,7 +392,6 @@ describe('RequestInfoHeader.vue', () => {
       });
 
       it('has the cancel button working properly', () => {
-        console.log('CANCEL')
         click('#nr-details-cancel-button');
         setTimeout(() => {
           expect(vm.$el.querySelector('#nr-details-save-button')).toEqual(null);
@@ -406,13 +401,10 @@ describe('RequestInfoHeader.vue', () => {
           expect(patchCall.lastCall).not.toBeNull();
           expect(patchCall.lastCall.args[1].state).toEqual('DRAFT');
           expect(patchCall.lastCall.args[1].previousStateCd).toEqual(null);
-
-          console.log('END cancel')
         }, 100);
       });
 
       it('has the save button working properly', () => {
-        console.log('START save')
 
         expect(vm.validate()).toBeTruthy();
         expect(vm.$el.querySelector('#nr-details-save-button')).not.toBeNull();
@@ -427,8 +419,6 @@ describe('RequestInfoHeader.vue', () => {
           expect(putCall.lastCall).not.toBeNull();
           expect(putCall.lastCall.args[1].state).toEqual('DRAFT');
           expect(putCall.lastCall.args[1].previousStateCd).toEqual(null);
-
-          console.log('finished');
         }, 100);
       });
 
@@ -441,7 +431,6 @@ describe('RequestInfoHeader.vue', () => {
     let putCall, getCall, patchCall;
 
     let click = function (id) {
-      console.log('ID: ', id)
       let button = vm.$el.querySelector(id);
       let window = button.ownerDocument.defaultView;
       var click = new window.Event('click');
@@ -615,7 +604,6 @@ describe('RequestInfoHeader.vue', () => {
       });
 
       it('has the cancel button working properly', () => {
-        console.log('CANCEL')
         click('#nr-details-cancel-button');
         setTimeout(() => {
           expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull();
@@ -625,13 +613,10 @@ describe('RequestInfoHeader.vue', () => {
           // the PATCH should not have been called (ie: no change in state), just a GET
           expect(patchCall.lastCall).toBeNull();
           expect(getCall.lastCall).not.toBeNull();
-
-          console.log('END cancel')
         }, 10);
       });
 
       it('has the save button working properly', () => {
-        console.log('START save')
 
         expect(vm.validate()).toBeTruthy();
         expect(vm.$el.querySelector('#nr-details-save-button')).not.toBeNull();
@@ -646,8 +631,6 @@ describe('RequestInfoHeader.vue', () => {
           expect(putCall.lastCall).not.toBeNull();
           expect(putCall.lastCall.args[1].state).toEqual('INPROGRESS');
           expect(putCall.lastCall.args[1].previousStateCd).toEqual(null);
-
-          console.log('finished');
         });
       });
 
@@ -697,9 +680,7 @@ describe('RequestInfoHeader.vue', () => {
       describe('I cannot edit when it is not my NR in progress', () => {
 
         it('hides the edit button', () => {
-          console.log('START check edit for not my NR in progress');
           expect(vm.$el.querySelector('#nr-details-edit-button')).toBeNull();
-          console.log('finished');
         });
       });
     });
@@ -720,9 +701,7 @@ describe('RequestInfoHeader.vue', () => {
       describe('editability testing', () => {
 
         it('shows the edit button', () => {
-          console.log('START check edit for not my NR in progress');
           expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull();
-          console.log('finished');
 
         });
       });
@@ -743,9 +722,7 @@ describe('RequestInfoHeader.vue', () => {
 
       describe('editability testing', () => {
         it('shows the edit button for a staff member who is currently editing', () => {
-          console.log('START check edit for not my NR in progress');
           expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull();
-          console.log('finished');
         });
       });
     });
@@ -758,7 +735,6 @@ describe('RequestInfoHeader.vue', () => {
     let putCall, getCall, patchCall;
 
     let click = function (id) {
-      console.log('ID: ', id)
       let button = vm.$el.querySelector(id);
       let window = button.ownerDocument.defaultView;
       var click = new window.Event('click');
@@ -932,7 +908,6 @@ describe('RequestInfoHeader.vue', () => {
       });
 
       it('has the cancel button working properly', () => {
-        console.log('CANCEL')
         click('#nr-details-cancel-button');
         setTimeout(() => {
           expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull();
@@ -943,12 +918,10 @@ describe('RequestInfoHeader.vue', () => {
           expect(patchCall.lastCall).toBeNull();
           expect(getCall.lastCall).not.toBeNull();
 
-          console.log('END cancel')
         }, 10);
       });
 
       it('has the save button working properly', () => {
-        console.log('START save')
 
         expect(vm.validate()).toBeTruthy();
         expect(vm.$el.querySelector('#nr-details-save-button')).not.toBeNull();
@@ -964,7 +937,6 @@ describe('RequestInfoHeader.vue', () => {
           expect(putCall.lastCall.args[1].state).toEqual('REJECTED');
           expect(putCall.lastCall.args[1].previousStateCd).toEqual(null);
 
-          console.log('finished');
         });
       });
     });

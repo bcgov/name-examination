@@ -2,7 +2,7 @@
 
 exports[`NameExamination.vue renders a NameExamination view 1`] = `
 <fragment-stub
-  name="ca3ec89d5"
+  name="8de9a00d60"
 >
   <!---->
    
@@ -10,52 +10,28 @@ exports[`NameExamination.vue renders a NameExamination view 1`] = `
    
   <commentspopup-stub />
    
-  <vcontainer-stub
+  <v-container-stub
     fluid=""
-    ma-0=""
-    pa-0=""
+    name-exam-container=""
     tag="div"
   >
-    <vlayout-stub
+    <v-layout-stub
       tag="div"
     >
-      <requestinfoheaderview-stub />
-    </vlayout-stub>
-  </vcontainer-stub>
-   
-  <div
-    style="position: relative; width: 100%; background-color: white;"
-  >
-    <div
-      class="lower-section container-fluid"
+      <requestinfoheader-stub />
+    </v-layout-stub>
+     
+    <v-layout-stub
+      tag="div"
+      wrap=""
     >
-      <div
-        class="namePage"
+      <v-flex-stub
+        lg12=""
+        tag="div"
       >
-        <div
-          class="row"
-        >
-          <div
-            class="col"
-            style="background-color: white;"
-          >
-            <compnameview-stub />
-          </div>
-        </div>
-         
-        <div
-          class="row"
-        >
-          <recipemenu-stub />
-           
-          <div
-            class="col"
-          >
-            <matchissues-stub />
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+        <compname-stub />
+      </v-flex-stub>
+    </v-layout-stub>
+  </v-container-stub>
 </fragment-stub>
 `;

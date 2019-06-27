@@ -41,7 +41,6 @@ defineFeature(feature, test => {
         givenRestrictedWord(given, data)
 
         givenQueue(given, data)
-        
 
         openNameExamination(given, data)
 

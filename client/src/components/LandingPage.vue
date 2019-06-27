@@ -51,7 +51,7 @@ export default {
   name: 'LandingPage',
     watch: {
       auth: function (val) {
-        console.log("Auth=" + val)
+
           if(val){ this.getCurrentStats() }
       }
     },
@@ -73,7 +73,7 @@ export default {
       //states: ['ALL', 'HOLD', 'INPROGRESS', 'DRAFT', 'EXPIRED', 'CANCELLED', 'APPROVED', 'CONDITIONAL', 'REJECTED'],
       getCurrentStats() {
         this.$store.statsDataJSON=null
-        console.log("Get Statistics")
+
         //var nStates = ['hold', 'draft', 'expired', 'cancelled', 'approved', 'conditional', 'rejected']
         var nStates = ['hold', 'draft']
         var vm = this

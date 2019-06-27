@@ -3,7 +3,7 @@
   <v-flex>
     <!--1st ROW - NR NUMBER / JURISDICTION / BUTTONS -->
     <v-container fluid mt-2 pa-0 :class="is_expanded || is_editing ? 'grey-bg' : ''">
-      <v-layout align-start pb-3 row>
+      <v-layout align-start pb-2 row>
         <!--NR NUMBER-->
         <v-flex :class="['nr-number', 'text-left',  'mx-4', priority ? 'rejected' : 'dk-grey']" shrink>
           <span id="nrNumberDisplay">{{ nrNumber }}</span>
@@ -68,7 +68,7 @@
               <v-icon id="priorityStarIcon"
                       class="priority fs-18">star</v-icon>Priority</v-flex>
             <v-flex id="div1"><b>Status:</b><span id="nrStatusText">
-              {{ nr_status }} {{ is_approved_expired ? '-EXPIRED' : '' }}</span></v-flex>
+              {{ nr_status }}{{ additionalStatus }}</span></v-flex>
             <v-flex><b>Examiner:</b> {{ examiner }}</v-flex>
             <v-flex>
               <v-icon color="light-blue"
@@ -152,7 +152,7 @@
         <v-flex fs-15
                 :style="nwptaABStyle">
           <v-layout column id="nwpta-ab" :style="nwptaABStyle">
-            <nwpta ref="nwpta_ab"
+            <NWPTA ref="nwpta_ab"
                    :style="nwptaABStyle"
                    jurisdiction="AB"
                    :is_lp_nwpta_type="is_lp_nwpta_type"
@@ -164,7 +164,7 @@
         <v-flex fs-15
                 :style="nwptaSKStyle">
           <v-layout column id="nwpta-sk" :style="nwptaSKStyle">
-            <nwpta ref="nwpta_sk"
+            <NWPTA ref="nwpta_sk"
                    jurisdiction="SK"
                    :style="nwptaSKStyle"
                    :is_lp_nwpta_type="is_lp_nwpta_type"
@@ -240,697 +240,661 @@
         </v-flex>
 
         <!--COL 7:  APPLICANT INFORMATION -->
-        <InfoHeaderPopup title="Applicant Information:"
+        <InfoHeaderPopup
+                         title="Applicant Information:"
                          :class="['ma-0', is_editing ? 'pr-4' : 'pr-2']"
                          :is_editing="is_editing"
                          :is_viewing="is_viewing"
                          :is_expanded="is_expanded"
                          infoType="applicant">
           <!--FORM FOR EDITING/VIEWING CLIENT and APPLICANT-->
-          <clientinfoview :is_editing="is_editing"
-                              :is_viewing="is_viewing"
-                              :is_expanded="is_expanded"
-                              :save="save"
-                              :cancelSave="cancelSave"
-                              ref="clientinfoview" />
+          <ClientInfoHeader :is_editing="is_editing"
+                            :is_viewing="is_viewing"
+                            :is_expanded="is_expanded"
+                            :save="save"
+                            :cancelSave="cancelSave"
+                            ref="clientinfoview" />
         </InfoHeaderPopup>
       </v-layout>
     </v-container>
     <v-container v-if="is_editing && !is_closed">
-        <!-- 3rd ROW  APPLICANT NAME CHOICES -->
-        <v-layout style="width: 45%" align-center fs-15 wrap id="compNameContainer">
-          <v-flex text-right pr-2 lg2>1.</v-flex>
-          <v-flex lg10>
-            <v-text-field v-model="compName1.name"
-                          id="compName1"
-                          autocomplete="off"
-                          @input="$v.compName1.name.$touch()"
-                          :onchange="$v.compName1.name.$touch()"
-                          class="name-choice-input" />
-          </v-flex>
-          <v-flex offset-lg2
-                  lg10
-                  field-error
-                  v-if="$v.compName1.name.$error">The first name choice is required</v-flex>
-          <v-flex text-right pr-2 lg2>2.</v-flex>
-          <v-flex lg10>
-            <v-text-field v-model="compName2.name"
-                          id="compName2"
-                          autocomplete="off"
-                          @input="$v.compName2.name.$touch()"
-                          :onchange="$v.compName2.name.$touch()"
-                          class="name-choice-input"/>
-          </v-flex>
-          <v-flex offset-lg2
-                  lg10
-                  field-error
-                  v-if="$v.compName2.name.$error">
-            To include a 3rd name choice the 2nd name choice is first required</v-flex>
-          <v-flex text-right pr-2 lg2>3.</v-flex>
-          <v-flex lg10>
-            <v-text-field v-model="compName3.name"
-                          id="compName3"
-                          autocomplete="off"
-                          @input="$v.compName2.name.$touch()"
-                          :onchange="$v.compName2.name.$touch()"
-                          class="name-choice-input"/>
-          </v-flex>
-        </v-layout>
+      <!-- 3rd ROW  APPLICANT NAME CHOICES -->
+      <v-layout style="width: 45%" align-center fs-15 wrap id="compNameContainer">
+        <v-flex text-right pr-2 lg2>1.</v-flex>
+        <v-flex lg10>
+          <v-text-field :onchange="$v.compName1.name.$touch()"
+                        @input="$v.compName1.name.$touch()"
+                        autocomplete="off"
+                        class="name-choice-input"
+                        id="compName1"
+                        v-model="compName1.name" />
+        </v-flex>
+        <v-flex offset-lg2
+                lg10
+                field-error
+                v-if="$v.compName1.name.$error">The first name choice is required</v-flex>
+        <v-flex text-right pr-2 lg2>2.</v-flex>
+        <v-flex lg10>
+          <v-text-field :onchange="$v.compName2.name.$touch()"
+                        @input="$v.compName2.name.$touch()"
+                        autocomplete="off"
+                        class="name-choice-input"
+                        id="compName2"
+                        v-model="compName2.name" />
+        </v-flex>
+        <v-flex offset-lg2
+                lg10
+                field-error
+                v-if="$v.compName2.name.$error">
+          To include a 3rd name choice the 2nd name choice is first required</v-flex>
+        <v-flex text-right pr-2 lg2>3.</v-flex>
+        <v-flex lg10>
+          <v-text-field :onchange="$v.compName2.name.$touch()"
+                        @input="$v.compName2.name.$touch()"
+                        autocomplete="off"
+                        class="name-choice-input"
+                        id="compName3"
+                        v-model="compName3.name" />
+        </v-flex>
+      </v-layout>
     </v-container>
   </v-flex>
 </template>
 
 <script>
-/* eslint-disable */
-import clientinfoview from '@/components/application/Examine/client/ClientInfoHeader.vue'
-import { required } from 'vuelidate/lib/validators'
-import { isActualDate, isFutureDate, isNotBlankSpace, isValidFormat } from "../../../../static/js/validators"
-import axios from '@/axios-auth'
-import InfoHeaderPopup from './InfoHeaderPopup'
-import nwpta from './nwpta/nwpta'
-import ActionButtons from './ActionButtons'
-import moment from 'moment'
+  /* eslint-disable */
+  import ActionButtons from './ActionButtons'
+  import ClientInfoHeader from '@/components/application/Examine/client/ClientInfoHeader.vue'
+  import InfoHeaderPopup from './InfoHeaderPopup'
+  import NWPTA from './nwpta/nwpta'
+  import { isActualDate, isFutureDate, isNotBlankSpace, isValidFormat } from "../../../../static/js/validators"
+  import { required } from 'vuelidate/lib/validators'
+  import axios from '@/axios-auth'
+  import moment from 'moment'
 
-export default {
-  name: 'RequestInfoHeader',
-  components: {
-    ActionButtons,
-    nwpta,
-    InfoHeaderPopup,
-    clientinfoview,
-  },
-  mounted() {
-    this.$root.$on('saveEdits', this.save)
-    this.$root.$on('cancelSave', this.cancelSave)
-  },
-  data() {
-    return {
-      corp_num_required: false,
-      prev_nr_required: false,
-      nwpta_required: false,
-      jurisdiction_required: false,
-      additional_info_template: null,
-      is_lp_nwpta_type: null,
-      is_cp_nwpta_type: null,
-    }
-  },
-  validations() {
-    // set basic validations that aren't conditional on any other fields
-    var validations = {
-      // first name choice is always required
-      compName1: {
-        name: {
-          required,
-          isNotBlankSpace
-        }
-      },
-    }
-
-    // if compName3 exists then compName2 must exist
-    if (this.compName3.name && this.compName3.name.replace(/\s/g,'')) {
-      validations.compName2 = {
-        name: {
-          required,
-          isNotBlankSpace
-        }
-      }
-    } else {
-      validations.compName2 = {
-        name: {
-        }
-      }
-    }
-
-    // validate jurisdiction if required
-    if (this.jurisdiction_required && !this.is_closed) {
-      validations.jurisdiction = {
-        required,
-      }
-    }
-
-    // validate corp # - not required, but if entered it must be validated
-    if (this.corp_num_required && !this.is_closed) {
-      validations.corpNum = {
-        isValidCorpNum(value) {
-          // if empty, it's valid - not required
-          if (value == '' || value == null) return true;
-
-          // valid corp numbers are between 7 and 10 characters long
-          if (value.length < 7 || value.length > 10) return false;
-
-          const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-          const url = '/api/v1/corporations/' + value;
-          return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-            return true;
-          })
-            .catch(error => {
-              return false;
-            });
-        },
-      }
-    }
-
-    // validate Expiry Date if present - only present when editing a furnished NR
-    if (this.expiryDateForEdit !== null) {
-      validations.expiryDateForEdit = {
-        required,
-        isActualDate(value) {
-          return isActualDate(value);
-        },
-        isValidFormat(value) {
-          return isValidFormat(value);
-        },
-        isFutureDate(value) {
-          // don't do this validation if it is not an actual date yet
-          if (value == '' || value == null || !isValidFormat(value) || !isActualDate(value)) return true;
-
-          return isFutureDate(value);
-        },
-      }
-    }
-
-    // validate Previous NR # - not required, but if entered it must be validated
-    if (this.prev_nr_required && !this.is_closed) {
-      validations.previousNr = {
-        isValidNr(value) {
-          // if empty, it's valid - not required
-          if (value == '' || value == null) return true;
-
-          // valid NR #s are NR, space, 7 digits (10 characters total)
-          if (value.length !== 10) return false;
-          if (value.substr(0, 3) !== 'NR ') return false;
-
-          const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-          const url = '/api/v1/requests/' + value
-          return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-            return true;
-          })
-            .catch(error => {
-              return false;
-            });
-        },
-      }
-    }
-    return validations;
-  },
-  computed: {
-    activePopUp() {
-      if (this.$store.state.activeRequestBannerPopUp) {
-        return this.$store.state.activeRequestBannerPopUp
-      }
-      return ''
+  export default {
+    name: 'RequestInfoHeader',
+    components: { ActionButtons, ClientInfoHeader, InfoHeaderPopup, NWPTA },
+    mounted() {
+      this.$root.$on('saveEdits', this.save)
+      this.$root.$on('cancelSave', this.cancelSave)
     },
-    additionalInfo: {
-      get: function() {
-        return this.$store.getters.additionalInfo == null ?  '' : this.$store.getters.additionalInfo;
-      },
-      set: function(value) {
-        this.$store.commit('additionalInfo', value);
-      }
-    },
-    can_edit() {
-      if (this.is_my_current_nr) return true;
-      if (this.$store.getters.userHasEditRole && ['DRAFT', 'HOLD', 'REJECTED', 'APPROVED', 'CONDITIONAL'].indexOf(this.nr_status) > -1 ) return true;
-      return false;
-    },
-    compName1: {
-      get: function() {
-        return this.$store.getters.compName1;
-      },
-      set: function(value) {
-        this.$store.commit('compName1', value);
-      }
-    },
-    compName2: {
-      get: function() {
-        return this.$store.getters.compName2;
-      },
-      set: function(value) {
-        this.$store.commit('compName2', value);
-      }
-    },
-    compName3: {
-      get: function() {
-        return this.$store.getters.compName3;
-      },
-      set: function(value) {
-        this.$store.commit('compName3', value);
-      }
-    },
-    consumptionDate() {
-      if (this.$store.getters.consumptionDate && moment(this.$store.getters.consumptionDate).isValid()) {
-        return new moment(this.$store.getters.consumptionDate).format('YYYY-MM-DD');
-      }
-      return ''
-    },
-    corpNum: {
-      get: function () {
-        return this.$store.getters.corpNum;
-      },
-      set: function (value) {
-        this.$store.commit('corpNum', value);
-      }
-    },
-    details: {
-      get: function() {
-        return this.$store.getters.details;
-      },
-      set: function(value) {
-        this.$store.commit('details', value);
-      }
-    },
-    examiner() {
-      return this.$store.getters.examiner;
-    },
-    expiryDate: {
-      get: function() {
-        return this.$store.getters.expiryDate;
-      },
-      set: function(value) {
-        this.$store.commit('expiryDate', value);
-      }
-    },
-    expiryDateForEdit: {
-      get: function() {
-        return this.$store.getters.expiryDateForEdit;
-      },
-      set: function(value) {
-        this.$store.commit('expiryDateForEdit', value);
-      }
-    },
-    internalComments_length() {
-      if (this.$store.getters.internalComments) {
-        let comments = this.$store.getters.internalComments
-        if (Array.isArray(comments) && comments.length > 0) {
-          return comments.length
-        }
-      }
-      return 0
-    },
-    is_approved_expired() {
-      // if there is no expiry date, this NR is not approved-expired
-      if (this.$store.getters.expiryDate == null) return false;
-
-      let expired_date = new Date(this.$store.state.expiryDate);
-      let date = new moment().format('YYYY-MM-DD');
-      if (this.$store.getters.currentState === "APPROVED" && date > expired_date) return true;
-      return false;
-    },
-    is_closed() {
-      if (['REJECTED', 'APPROVED', 'CONDITIONAL'].indexOf(this.nr_status) > -1) return true;
-      return false;
-    },
-    is_editing() {
-      return  this.$store.state.is_editing;
-    },
-    is_expanded() {
-      if (this.is_editing || this.is_viewing || this.$store.state.is_header_shown) return true
-      return false
-    },
-    is_my_current_nr() {
-      return this.$store.getters.is_my_current_nr;
-    },
-    jurisdiction: {
-      get: function() {
-        return this.$store.getters.jurisdiction;
-      },
-      set: function(value) {
-        this.$store.commit('jurisdiction', value);
-      }
-    },
-    jurisdiction_display() {
-      if (this.jurisdiction && this.jurisdiction_options) {
-        if (this.jurisdiction.length === 2) {
-          let fullname = this.jurisdiction_options.find(opt => opt.SHORT_DESC === this.jurisdiction).text
-          return fullname
-        }
-        if (this.jurisdiction.length > 2) {
-          return this.jurisdiction
-        }
-      }
-      return ''
-    },
-    jurisdiction_options() {
-      return this.$store.getters.listJurisdictions;
-    },
-    natureOfBusiness: {
-      get() {
-        if (this.$store.getters.natureOfBusiness) {
-          return this.$store.getters.natureOfBusiness
-        }
-        return ''
-      },
-      set(value) {
-        this.$store.commit('natureOfBusiness', value);
-      }
-    },
-    newComment: {
-      get() {
-        if (this.$store.state.newComment) {
-          return this.$store.state.newComment
-        }
-        return ''
-      }, set(e) {
-        this.$store.commit('setNewComment', e)
-      }
-    },
-    nr_status: {
-      get: function() {
-        return this.$store.getters.nr_status;
-      },
-      set: function(value) {
-        this.$store.commit('nr_status', value);
-      }
-    },
-    nwptaABStyle() {
-      if (this.$store.getters.nwpta_ab) {
-        for (let key in this.$store.getters.nwpta_ab) {
-          if (this.$store.getters.nwpta_ab[key]) {
-            return { maxWidth: 160 + 'px' }
-          }
-        }
-      }
+    data() {
       return {
-        maxWidth: 120 + 'px'
+        additional_info_template: null,
+        corp_num_required: false,
+        is_cp_nwpta_type: null,
+        is_lp_nwpta_type: null,
+        jurisdiction_required: false,
+        nwpta_required: false,
+        prev_nr_required: false,
       }
     },
-    nwptaSKStyle() {
-      if (this.$store.getters.nwpta_sk) {
-        for (let key in this.$store.getters.nwpta_sk) {
-          if (this.$store.getters.nwpta_sk[key]) {
-            return { maxWidth: 160 + 'px', marginLeft: 5+'px' }
-          }
+    validations() {
+      // set basic validations that aren't conditional on any other fields
+      let validations = {
+        // first name choice is always required
+        compName1: {
+          name: {
+            required,
+            isNotBlankSpace,
+          },
+        },
+      }
+
+      // if compName3 exists then compName2 must exist
+      if (this.compName3.name && this.compName3.name.replace(/\s/g, '')) {
+        validations.compName2 = {
+          name: {
+            required,
+            isNotBlankSpace,
+          },
+        }
+      } else {
+        validations.compName2 = {
+          name: {},
         }
       }
-      return {
-        maxWidth: 120 + 'px'
-      }
-    },
-    nrNumber() {
-      return  this.$store.getters.nrNumber;
-    },
-    previousNr: {
-      get: function () {
-        return this.$store.getters.previousNr;
-      },
-      set: function (value) {
-        this.$store.commit('previousNr', value);
-      }
-    },
-    previousNr_link() {
-      if (this.$store.getters.previousNr != undefined) {
-        // KBM 2018-08-30 - removed for MVP but will be part of a future phase
-        // return '<a href="/' + this.$store.getters.previousNr + '" target="_blank">' + this.$store.getters.previousNr + '</a>';
-        return this.$store.getters.previousNr;
-      }
-      else return '';
-    },
-    priority() {
-      return this.$store.getters.priority;
-    },
-    requestType: {
-      get: function() {
-        this.checkReqTypeRules(this.$store.getters.requestType);
-        return this.$store.getters.requestType;
-      },
-      set: function(value) {
-        this.$store.commit('requestType', value);
-      }
-    },
-    requestType_desc() {
-      try {
-        return getDescFromList(this.requestType_options, this.requestType);
-      } catch (err) {
-        return 'ERROR!!';
-      }
-    },
-    requestType_options() {
-      return this.$store.getters.listRequestTypes;
-    },
-    requestTypeRules() {
-      return this.$store.getters.requestTypeRules;
-    },
-    reservationCount: {
-      get: function() {
-        return this.$store.getters.reservationCount;
-      },
-      set: function(value) {
-        this.$store.commit('reservationCount', value);
-      }
-    },
-    is_viewing() {
-      return this.$store.state.is_header_shown && !this.is_editing;
-    },
-    submitCount() {
-      return this.$store.getters.submitCount;
-    },
-    submittedDate() {
-      return this.$store.getters.submittedDate;
-    },
-  },
-  watch: {
-    nrNumber: function (val) {
-      console.log('RequestInfoHeader.nrNumber watcher fired:' )
-      this.$store.dispatch('getpostgrescompInfo',this.nrNumber);
-      this.checkReqTypeRules(this.requestType);
-    },
-    requestType: function(val) {
-      /*
-       Show/hide elements of NR Details based on request type (display and edit).
-       */
-      this.checkReqTypeRules(val);
-    }
-  },
-  methods: {
-    toggleDetails() {
-      if (this.$store.state.is_header_shown) this.$store.state.is_header_shown = false;
-      else this.$store.state.is_header_shown = true;
-      this.$store.commit('toggleRequestBannerPopUp', null)
-      this.toggleCommentsPopUp(false)
-    },
-    edit() {
-      // if this isn't the user's INPROGRESS, make it that
-      if (!this.is_my_current_nr && !this.is_closed) {
 
-        // track the previous state if it's currently in DRAFT (otherwise do not)
-        if (this.$store.state.currentState == 'DRAFT') this.updateNRStatePreviousState('INPROGRESS', 'DRAFT');
-        else this.$store.dispatch('updateNRState', 'INPROGRESS');
+      // validate jurisdiction if required
+      if (this.jurisdiction_required && !this.is_closed) {
+        validations.jurisdiction = {
+          required,
+        }
       }
 
-      // KBM - REMOVED per ticket #970
-      /*
-      if (this.is_closed) {
-        this.$store.dispatch('syncNR',this.nrNumber);
+      // validate corp # - not required, but if entered it must be validated
+      if (this.corp_num_required && !this.is_closed) {
+        validations.corpNum = {
+          isValidCorpNum(value) {
+            // if empty, it's valid - not required
+            if (value == '' || value == null) return true
+
+            // valid corp numbers are between 7 and 10 characters long
+            if (value.length < 7 || value.length > 10) return false
+
+            const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+            const url = '/api/v1/corporations/' + value
+            return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
+              return true
+            })
+              .catch(error => {
+                return false
+              })
+          },
+        }
       }
-      */
-      this.$store.commit('toggleRequestBannerPopUp', null)
-      this.toggleCommentsPopUp(false)
-      this.$store.state.is_editing = true;
-    },
-    save() {
-      if (this.is_editing && !this.validate()) {
-        // do not continue if there are validation errors
-        return;
-      }
 
-      // if jurisdiction not required, clear the data (ie: BC)
-      if (!this.jurisdiction_required) this.$store.commit('jurisdiction', null);
-
-      // if corp num not required, clear the data
-      if (!this.corp_num_required) this.$store.commit('corpNum', null);
-
-      // if previous NR not required, clear the data
-      if (!this.prev_nr_required) this.$store.commit('previousNr', null);
-
-      // build Additional Info
-      this.buildAdditionalInfo();
-
-      // save Expiry Date - convert to UTC timestamp string to be consistent with data from API
+      // validate Expiry Date if present - only present when editing a furnished NR
       if (this.expiryDateForEdit !== null) {
-        this.expiryDate = this.expiryDateForEdit
+        validations.expiryDateForEdit = {
+          required,
+          isActualDate(value) {
+            return isActualDate(value)
+          },
+          isValidFormat(value) {
+            return isValidFormat(value)
+          },
+          isFutureDate(value) {
+            // don't do this validation if it is not an actual date yet
+            if (value == '' || value == null || !isValidFormat(value) || !isActualDate(value)) return true
+
+            return isFutureDate(value)
+          },
+        }
       }
 
-      // adjust nwpta data if it was requested and the type was changed
-      if (this.$refs.nwpta_ab != undefined) this.$refs.nwpta_ab.adjustUponSave();
-      if (this.$refs.nwpta_sk != undefined) this.$refs.nwpta_sk.adjustUponSave();
+      // validate Previous NR # - not required, but if entered it must be validated
+      if (this.prev_nr_required && !this.is_closed) {
+        validations.previousNr = {
+          isValidNr(value) {
+            // if empty, it's valid - not required
+            if (value == '' || value == null) return true
 
-      // set the state back if it was DRAFT, and clear previous value
-      if (this.$store.state.previousStateCd == 'DRAFT') {
-        this.$store.state.currentState = this.$store.state.previousStateCd;
-        this.$store.state.previousStateCd = null;
+            // valid NR #s are NR, space, 7 digits (10 characters total)
+            if (value.length !== 10) return false
+            if (value.substr(0, 3) !== 'NR ') return false
+
+            const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+            const url = '/api/v1/requests/' + value
+            return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
+              return true
+            })
+              .catch(error => {
+                return false
+              })
+          },
+        }
       }
+      return validations
+    },
+    computed: {
+      activePopUp() {
+        if (this.$store.state.activeRequestBannerPopUp) {
+          return this.$store.state.activeRequestBannerPopUp
+        }
+        return ''
+      },
+      additionalInfo: {
+        get() {
+          return this.$store.getters.additionalInfo == null ? '' : this.$store.getters.additionalInfo
+        },
+        set(value) {
+          this.$store.commit('additionalInfo', value)
+        },
+      },
+      additionalStatus() {
+        if (this.is_consumed) return '-CONSUMED'
+        if (this.is_approved_expired) return '-EXPIRED'
+        return ''
+      },
+      can_edit() {
+        if (this.is_my_current_nr) return true
+        if (this.$store.getters.userHasEditRole && ['DRAFT', 'HOLD', 'REJECTED', 'APPROVED', 'CONDITIONAL'].indexOf(this.nr_status) > -1) return true
+        return false
+      },
+      compName1: {
+        get() {
+          return this.$store.getters.compName1
+        },
+        set(value) {
+          this.$store.commit('compName1', value)
+        },
+      },
+      compName2: {
+        get() {
+          return this.$store.getters.compName2
+        },
+        set(value) {
+          this.$store.commit('compName2', value)
+        },
+      },
+      compName3: {
+        get() {
+          return this.$store.getters.compName3
+        },
+        set(value) {
+          this.$store.commit('compName3', value)
+        },
+      },
+      consumptionDate() {
+        if (this.$store.getters.consumptionDate && moment(this.$store.getters.consumptionDate).isValid()) {
+          return new moment(this.$store.getters.consumptionDate).format('YYYY-MM-DD')
+        }
+        return ''
+      },
+      corpNum: {
+        get() {
+          return this.$store.getters.corpNum
+        },
+        set: function(value) {
+          this.$store.commit('corpNum', value)
+        },
+      },
+      details: {
+        get() {
+          return this.$store.getters.details
+        },
+        set(value) {
+          this.$store.commit('details', value)
+        },
+      },
+      examiner() {
+        return this.$store.getters.examiner
+      },
+      expiryDate: {
+        get() {
+          return this.$store.getters.expiryDate
+        },
+        set(value) {
+          this.$store.commit('expiryDate', value)
+        },
+      },
+      expiryDateForEdit: {
+        get() {
+          return this.$store.getters.expiryDateForEdit
+        },
+        set(value) {
+          this.$store.commit('expiryDateForEdit', value)
+        },
+      },
+      internalComments_length() {
+        if (this.$store.getters.internalComments) {
+          let comments = this.$store.getters.internalComments
+          if (Array.isArray(comments) && comments.length > 0) {
+            return comments.length
+          }
+        }
+        return 0
+      },
+      is_approved_expired() {
+        // if there is no expiry date, this NR is not approved-expired
+        if (this.$store.getters.expiryDate == null) return false
 
-      this.$store.dispatch('updateRequest');
-      this.$store.state.is_editing = false;
+        let expired_date = new Date(this.$store.state.expiryDate)
+        let date = new moment().format('YYYY-MM-DD')
+        if (this.$store.getters.currentState === "APPROVED" && date > expired_date) return true
+        return false
+      },
+      is_closed() {
+        if (['REJECTED', 'APPROVED', 'CONDITIONAL'].indexOf(this.nr_status) > -1) return true
+        return false
+      },
+      is_editing() {
+        return this.$store.state.is_editing
+      },
+      is_expanded() {
+        if (this.is_editing || this.is_viewing || this.$store.state.is_header_shown) return true
+        return false
+      },
+      is_my_current_nr() {
+        return this.$store.getters.is_my_current_nr
+      },
+      is_viewing() {
+        return this.$store.state.is_header_shown && !this.is_editing
+      },
+      jurisdiction: {
+        get() {
+          return this.$store.getters.jurisdiction
+        },
+        set(value) {
+          this.$store.commit('jurisdiction', value)
+        },
+      },
+      jurisdiction_display() {
+        if (this.jurisdiction && this.jurisdiction_options) {
+          if (this.jurisdiction.length === 2) {
+            let fullname = this.jurisdiction_options.find(opt => opt.SHORT_DESC === this.jurisdiction).text
+            return fullname
+          }
+          if (this.jurisdiction.length > 2) {
+            return this.jurisdiction
+          }
+        }
+        return ''
+      },
+      jurisdiction_options() {
+        return this.$store.getters.listJurisdictions
+      },
+      natureOfBusiness: {
+        get() {
+          if (this.$store.getters.natureOfBusiness) {
+            return this.$store.getters.natureOfBusiness
+          }
+          return ''
+        },
+        set(value) {
+          this.$store.commit('natureOfBusiness', value)
+        },
+      },
+      newComment: {
+        get() {
+          if (this.$store.state.newComment) {
+            return this.$store.state.newComment
+          }
+          return ''
+        }, set(e) {
+          this.$store.commit('setNewComment', e)
+        },
+      },
+      nr_status: {
+        get() {
+          return this.$store.getters.nr_status
+        },
+        set(value) {
+          this.$store.commit('nr_status', value)
+        },
+      },
+      nrNumber() {
+        return this.$store.getters.nrNumber
+      },
+      nwptaABStyle() {
+        if (this.$store.getters.nwpta_ab) {
+          for (let key in this.$store.getters.nwpta_ab) {
+            if (this.$store.getters.nwpta_ab[key]) {
+              return { maxWidth: 160 + 'px' }
+            }
+          }
+        }
+        return {
+          maxWidth: 120 + 'px',
+        }
+      },
+      nwptaSKStyle() {
+        if (this.$store.getters.nwpta_sk) {
+          for (let key in this.$store.getters.nwpta_sk) {
+            if (this.$store.getters.nwpta_sk[key]) {
+              return { maxWidth: 160 + 'px', marginLeft: 5 + 'px' }
+            }
+          }
+        }
+        return {
+          maxWidth: 120 + 'px',
+        }
+      },
+      previousNr: {
+        get() {
+          return this.$store.getters.previousNr
+        },
+        set(value) {
+          this.$store.commit('previousNr', value)
+        },
+      },
+      previousNr_link() {
+        if (this.$store.getters.previousNr != undefined) {
+          // KBM 2018-08-30 - removed for MVP but will be part of a future phase
+          // return '<a href="/' + this.$store.getters.previousNr + '" target="_blank">' + this.$store.getters.previousNr + '</a>';
+          return this.$store.getters.previousNr
+        } else return ''
+      },
+      priority() {
+        return this.$store.getters.priority
+      },
+      requestType: {
+        get() {
+          this.checkReqTypeRules(this.$store.getters.requestType)
+          return this.$store.getters.requestType
+        },
+        set(value) {
+          this.$store.commit('requestType', value)
+        },
+      },
+      requestType_desc() {
+        try {
+          return getDescFromList(this.requestType_options, this.requestType)
+        } catch (err) {
+          return 'ERROR!!'
+        }
+      },
+      requestType_options() {
+        return this.$store.getters.listRequestTypes
+      },
+      requestTypeRules() {
+        return this.$store.getters.requestTypeRules
+      },
+      reservationCount: {
+        get() {
+          return this.$store.getters.reservationCount
+        },
+        set(value) {
+          this.$store.commit('reservationCount', value)
+        },
+      },
+      submitCount() {
+        return this.$store.getters.submitCount
+      },
+      submittedDate() {
+        return this.$store.getters.submittedDate
+      },
+    },
+    watch: {
+      nrNumber(val) {
+        this.$store.dispatch('getpostgrescompInfo', this.nrNumber)
+        this.checkReqTypeRules(this.requestType)
+      },
+      requestType(val) {
+        /* Show/hide elements of NR Details based on request type (display and edit).  */
+        this.checkReqTypeRules(val)
+      },
+    },
+    methods: {
+      buildAdditionalInfo() {
+        let newAddInfo = ""
+        // create new additional info from template if relevant; add to top of additional info
+        if (this.additional_info_template !== null && this.additional_info_template != '') {
+          // split templates based on || separator
+          let templates = this.additional_info_template.split('||')
+          for (let i = 0; i < templates.length; i++) {
+            let template = templates[i]
+            // corp num placeholder
+            // if there is no corp num for this placeholder, do not use this bit of the template
+            if (template.indexOf('<corp_num>') > -1) {
+              if (this.corpNum != null && this.corpNum != '')
+                template = template.replace('<corp_num>', this.corpNum)
+              else template = ''
+            }
+            // previous NR placeholder
+            // if there is no previous NR for this placeholder, do not use this bit of the template
+            if (template.indexOf('<prev_nr>') > -1) {
+              if (this.previousNr != null && this.previousNr != '')
+                template = template.replace('<prev_nr>', this.previousNr)
+              else template = ''
+            }
+            // NWPTA placeholder
+            // if there is no NWPTA data for this placeholder, do not use this bit of the template
+            if (template.indexOf('<nwpta>') > -1) {
+              // KBM 2018-08-22 - Do nothing - I don't think we need to add to Additional Info for
+              // NWPTA because it will have been added during initial entry into NRO, and we do not
+              // change nwpta type (assumed, numbered) to trigger adding/changing anything in
+              // Additional Info.
+              template = ''
+            }
+            /* Check if this bit of text is already in Additional Info - ie: don't keep adding notere. Corp Num or
+             previous NR every time user saves, even if they haven't changed that data. */
+            if (template != '') {
+              if (this.additionalInfo.indexOf(template) == -1) newAddInfo += template + ' '
+            }
+          }
+        }
+        if (newAddInfo != '') this.additionalInfo = newAddInfo + '\n' + this.additionalInfo
+      },
+      cancelSave() {
+        // set the state back to the previous state - only when previous state is DRAFT
+        // - otherwise just get original data
+        if (this.$store.state.previousStateCd == 'DRAFT') this.revertToPreviousState()
+        else this.$store.dispatch('getpostgrescompInfo', this.nrNumber)
 
-      // show full header after editing so user can see everything they changed
-      if (this.activePopUp === 'information') {
+        this.$store.state.is_editing = false
+        this.$store.state.is_header_shown = false
+        this.$nextTick(function() { window.scrollTo(0, 0) })
+      },
+      checkReqTypeRules(val) {
+
+        if (this.requestTypeRules != null) {
+          let rules = this.requestTypeRules.filter(findArrValueByAttr(val, 'request_type'))[0]
+
+          if (rules == undefined) {
+            this.corp_num_required = false
+            this.prev_nr_required = false
+            this.nwpta_required = false
+            this.jurisdiction_required = false
+            this.additional_info_template = null
+            this.is_lp_nwpta_type = null
+            this.is_cp_nwpta_type = null
+
+          } else {
+            this.corp_num_required = rules.corp_num_required
+            this.prev_nr_required = rules.prev_nr_required
+            this.nwpta_required = rules.nwpta_required /* not used, can be removed after business confirms */
+            this.jurisdiction_required = rules.jurisdiction_required
+            this.additional_info_template = rules.additional_info_template
+            this.is_lp_nwpta_type = rules.is_lp_nwpta_type
+            this.is_cp_nwpta_type = rules.is_cp_nwpta_type
+          }
+        }
+      },
+      edit() {
+        // if this isn't the user's INPROGRESS, make it that
+        if (!this.is_my_current_nr && !this.is_closed) {
+
+          // track the previous state if it's currently in DRAFT (otherwise do not)
+          if (this.$store.state.currentState == 'DRAFT') this.updateNRStatePreviousState('INPROGRESS', 'DRAFT')
+          else this.$store.dispatch('updateNRState', 'INPROGRESS')
+        }
+        /* KBM - REMOVED per ticket #970
+         if (this.is_closed) {
+         this.$store.dispatch('syncNR',this.nrNumber); */
         this.$store.commit('toggleRequestBannerPopUp', null)
-        return
-      }
-      this.$store.state.is_header_shown = true;
-      this.$nextTick(function() { window.scrollTo(0,0) })
-    },
-    cancelSave() {
-      // set the state back to the previous state - only when previous state is DRAFT
-      // - otherwise just get original data
-      if (this.$store.state.previousStateCd == 'DRAFT') this.revertToPreviousState();
-      else this.$store.dispatch('getpostgrescompInfo',this.nrNumber)
+        this.toggleCommentsPopUp(false)
+        this.$store.state.is_editing = true
+      },
+      formatDate(d) {
+        let date = moment(d, 'YYYY-MM-DD, hh:mm a')
+        return date.format('YYYY-MM-DD, h:mma')
+      },
+      revertToPreviousState() {
+        // set current state to previous state, and clear previous state field
+        let myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+        let url = '/api/v1/requests/' + this.nrNumber
 
-      this.$store.state.is_editing = false;
-      this.$store.state.is_header_shown = false;
-      this.$nextTick(function() { window.scrollTo(0,0) })
-    },
-    buildAdditionalInfo() {
-      var newAddInfo = "";
-
-      // create new additional info from template if relevant; add to top of additional info
-      if (this.additional_info_template !== null && this.additional_info_template != '') {
-
-
-        // split templates based on || separator
-        var templates = this.additional_info_template.split('||');
-        for (var i = 0; i < templates.length; i++) {
-          var template = templates[i];
-
-          // corp num placeholder
-          // if there is no corp num for this placeholder, do not use this bit of the template
-          if (template.indexOf('<corp_num>') > -1) {
-            if (this.corpNum != null && this.corpNum != '')
-              template = template.replace('<corp_num>', this.corpNum);
-            else template = '';
-          }
-
-          // previous NR placeholder
-          // if there is no previous NR for this placeholder, do not use this bit of the template
-          if (template.indexOf('<prev_nr>') > -1) {
-            if (this.previousNr != null && this.previousNr != '')
-              template = template.replace('<prev_nr>', this.previousNr);
-            else template = '';
-          }
-
-          // NWPTA placeholder
-          // if there is no NWPTA data for this placeholder, do not use this bit of the template
-          if (template.indexOf('<nwpta>') > -1) {
-            // KBM 2018-08-22 - Do nothing - I don't think we need to add to Additional Info for
-            // NWPTA because it will have been added during initial entry into NRO, and we do not
-            // change nwpta type (assumed, numbered) to trigger adding/changing anything in
-            // Additional Info.
-            template = '';
-          }
-
-          /*
-          Check if this bit of text is already in Additional Info - ie: don't keep adding note
-          re. Corp Num or previous NR every time user saves, even if they haven't changed that
-          data.
-          */
-          if (template != '') {
-            if (this.additionalInfo.indexOf(template) == -1) newAddInfo += template + ' ';
-          }
+        axios.patch(url, {
+          "state": this.$store.state.previousStateCd,
+          "previousStateCd": null,
+        }, { headers: { Authorization: `Bearer ${ myToken }` } })
+          .then(response => {
+            this.$store.dispatch('getpostgrescompInfo', this.nrNumber)
+          })
+          .catch(error => { console.log('ERROR: ' + error) })
+      },
+      save() {
+        if (this.is_editing && !this.validate()) {
+          // do not continue if there are validation errors
+          return
         }
-      }
 
-      if (newAddInfo != '') this.additionalInfo = newAddInfo + '\n' + this.additionalInfo;
-    },
-    validate() {
-      /*
-      Validate form using vuelidate.
-       */
-      console.log('got to validate()');
+        // if jurisdiction not required, clear the data (ie: BC)
+        if (!this.jurisdiction_required) this.$store.commit('jurisdiction', null)
 
-      // trigger vuelidate validation in this component and child component
-      this.$v.$touch();
-      this.$refs.clientinfoview.$v.$touch();
+        // if corp num not required, clear the data
+        if (!this.corp_num_required) this.$store.commit('corpNum', null)
 
-      var nwpta_ab_invalid = false;
-      if (this.$refs.nwpta_ab !== undefined) {
-        this.$refs.nwpta_ab.$v.$touch();
-        nwpta_ab_invalid = this.$refs.nwpta_ab.$v.$invalid;
-      }
-      var nwpta_sk_invalid = false;
-      if (this.$refs.nwpta_sk !== undefined) {
-        this.$refs.nwpta_sk.$v.$touch();
-        nwpta_sk_invalid = this.$refs.nwpta_sk.$v.$invalid;
-      }
+        // if previous NR not required, clear the data
+        if (!this.prev_nr_required) this.$store.commit('previousNr', null)
 
-      // return opposite of 'invalid' flags, since we want to know if this IS valid
-      return !this.$v.$invalid && !this.$refs.clientinfoview.$v.$invalid &&
-        !nwpta_ab_invalid && !nwpta_sk_invalid;
-    },
-    checkReqTypeRules(val) {
+        // build Additional Info
+        this.buildAdditionalInfo()
 
-      if (this.requestTypeRules != null) {
-        var rules = this.requestTypeRules.filter(findArrValueByAttr(val, 'request_type'))[0];
-
-        if (rules == undefined) {
-          this.corp_num_required = false;
-          this.prev_nr_required = false;
-          this.nwpta_required = false;
-          this.jurisdiction_required = false;
-          this.additional_info_template = null;
-          this.is_lp_nwpta_type = null;
-          this.is_cp_nwpta_type = null;
-
-        } else {
-          this.corp_num_required = rules.corp_num_required;
-          this.prev_nr_required = rules.prev_nr_required;
-          this.nwpta_required = rules.nwpta_required; /* not used, can be removed after business confirms */
-          this.jurisdiction_required = rules.jurisdiction_required;
-          this.additional_info_template = rules.additional_info_template;
-          this.is_lp_nwpta_type = rules.is_lp_nwpta_type;
-          this.is_cp_nwpta_type = rules.is_cp_nwpta_type;
+        // save Expiry Date - convert to UTC timestamp string to be consistent with data from API
+        if (this.expiryDateForEdit !== null) {
+          this.expiryDate = this.expiryDateForEdit
         }
-      }
+
+        // adjust nwpta data if it was requested and the type was changed
+        if (this.$refs.nwpta_ab != undefined) this.$refs.nwpta_ab.adjustUponSave()
+        if (this.$refs.nwpta_sk != undefined) this.$refs.nwpta_sk.adjustUponSave()
+
+        // set the state back if it was DRAFT, and clear previous value
+        if (this.$store.state.previousStateCd == 'DRAFT') {
+          this.$store.state.currentState = this.$store.state.previousStateCd
+          this.$store.state.previousStateCd = null
+        }
+
+        this.$store.dispatch('updateRequest')
+        this.$store.state.is_editing = false
+
+        // show full header after editing so user can see everything they changed
+        if (this.activePopUp === 'information') {
+          this.$store.commit('toggleRequestBannerPopUp', null)
+          return
+        }
+        this.$store.state.is_header_shown = true
+        this.$nextTick(function() { window.scrollTo(0, 0) })
+      },
+      toggleCommentsPopUp(bool) {
+        this.$store.commit('toggleCommentsPopUp', bool)
+      },
+      toggleDetails() {
+        if (this.$store.state.is_header_shown) this.$store.state.is_header_shown = false
+        else this.$store.state.is_header_shown = true
+        this.$store.commit('toggleRequestBannerPopUp', null)
+        this.toggleCommentsPopUp(false)
+      },
+      updateNRStatePreviousState(nrState, previousState) {
+        // Update NR State and Previous State
+        let myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+        let url = '/api/v1/requests/' + this.nrNumber
+
+        axios.patch(url, {
+          "previousStateCd": previousState,
+          "state": nrState,
+        }, { headers: { Authorization: `Bearer ${ myToken }` } })
+          .then(response => {
+            this.$store.dispatch('getpostgrescompInfo', this.nrNumber)
+          })
+          .catch(error => {
+            console.log('ERROR: ' + error)
+          })
+      },
+      validate() {
+        this.$v.$touch()
+        this.$refs.clientinfoview.$v.$touch()
+
+        let nwpta_ab_invalid = false
+        if (this.$refs.nwpta_ab !== undefined) {
+          this.$refs.nwpta_ab.$v.$touch()
+          nwpta_ab_invalid = this.$refs.nwpta_ab.$v.$invalid
+        }
+        let nwpta_sk_invalid = false
+        if (this.$refs.nwpta_sk !== undefined) {
+          this.$refs.nwpta_sk.$v.$touch()
+          nwpta_sk_invalid = this.$refs.nwpta_sk.$v.$invalid
+        }
+        // return opposite of 'invalid' flags, since we want to know if this IS valid
+        return !this.$v.$invalid && !this.$refs.clientinfoview.$v.$invalid &&
+          !nwpta_ab_invalid && !nwpta_sk_invalid
+      },
     },
-
-    // Update NR State and Previous State
-    updateNRStatePreviousState(nrState, previousState) {
-      console.log('Updating Examination state (plus prev state) for number ' + this.nrNumber + ' to ' + nrState)
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/requests/' + this.nrNumber;
-
-      // save off nrNumber and $store because can't refer to "this" inside axios response
-      var nrNumber = this.nrNumber;
-      var store = this.$store;
-
-      axios.patch(url,{"previousStateCd": previousState, "state": nrState} ,{headers: {Authorization: `Bearer ${myToken}`}})
-        .then(function(response){
-          console.log('state updated to ' + nrState + ' for ' + nrNumber);
-          store.dispatch('getpostgrescompInfo', nrNumber);
-        })
-        .catch(error => console.log('ERROR: ' + error))
-    },
-
-    // set current state to previous state, and clear previous state field
-    revertToPreviousState () {
-      console.log('Updating Examination state & prev state for number ' + this.nrNumber);
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-      const url = '/api/v1/requests/' + this.nrNumber;
-
-      // save off nrNumber and $store because can't refer to "this" inside axios response
-      var nrNumber = this.nrNumber;
-      var store = this.$store;
-
-      axios.patch(url,{"state": this.$store.state.previousStateCd, "previousStateCd": null} ,{headers: {Authorization: `Bearer ${myToken}`}})
-        .then(function(response){
-          console.log('state reverted to ' + store.state.previousStateCd + ' for ' + nrNumber);
-          store.dispatch('getpostgrescompInfo', nrNumber);
-        })
-        .catch(error => console.log('ERROR: ' + error))
-    },
-    toggleCommentsPopUp(bool) {
-      this.$store.commit('toggleCommentsPopUp', bool)
-    },
-    formatDate(d) {
-      let date = moment(d, 'YYYY-MM-DD, hh:mm a')
-      return date.format('YYYY-MM-DD, h:mma')
-    },
-    formatDateOnly(d) {
-      let date = moment(d, 'YYYY-MM-DD, hh:mm a')
-      return date.format('YYYY-MM-DD')
-    }
-  },
-}
+  }
 </script>
 
 <style scoped>
@@ -948,6 +912,11 @@ export default {
     color: red !important;
   }
 
+  .grey-bg {
+    background-color: var(--xl-grey) !important;
+    margin-bottom: 0 !important;
+  }
+
   .info-banner-collapsed {
     background-color: var(--xl-grey);
     height: 135px;
@@ -956,11 +925,6 @@ export default {
   .info-banner-xpanded {
     background-color: var(--xl-grey) !important;
     padding: 0px !important;
-  }
-
-  .grey-bg {
-    background-color: var(--xl-grey) !important;
-    margin-bottom: 0 !important;
   }
 
   .jurisdiction-dropdown {

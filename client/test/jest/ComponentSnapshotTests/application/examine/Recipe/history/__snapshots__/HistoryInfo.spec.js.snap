@@ -1,17 +1,34 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`HistoryInfo.vue renders a HistoryInfo component 1`] = `
-<span>
-  <h2
-    id="currentHistoryName"
+<v-container-stub
+  fluid=""
+  ma-0=""
+  mx-4=""
+  pr-5=""
+  pt-0=""
+  tag="div"
+>
+  <v-layout-stub
+    tag="div"
   >
-    
-  </h2>
-   
-  <div
-    class="add-top-padding"
-  >
-    <nullmatch-stub />
-  </div>
-</span>
+    <v-flex-stub
+      tag="div"
+    >
+      <span>
+        <h2
+          id="currentHistoryName"
+        >
+          
+        </h2>
+         
+        <div
+          class="add-top-padding"
+        >
+          <nullmatch-stub />
+        </div>
+      </span>
+    </v-flex-stub>
+  </v-layout-stub>
+</v-container-stub>
 `;

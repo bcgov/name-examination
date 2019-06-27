@@ -1,125 +1,278 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CompName.vue  renders a CompName component 1`] = `
-<vcontainer-stub
-  fluid=""
-  ma-0=""
-  pa-0=""
+<v-layout-stub
   tag="div"
+  wrap=""
 >
-  <vlayout-stub
-    ml-1=""
-    row=""
+  <v-flex-stub
+    bg-white=""
+    lg6=""
+    py-2=""
     tag="div"
   >
-    <vflex-stub
-      lg6=""
+    <v-container-stub
+      fs-18=""
+      ma-0=""
+      ml-3=""
+      pa-0=""
       tag="div"
     >
-      <table>
-        <tr
-          class="name-option"
+      <v-layout-stub
+        align-start=""
+        class="name-option"
+        tag="div"
+        wrap=""
+      >
+        <v-flex-stub
+          mr-2=""
+          shrink=""
+          tag="div"
         >
-          <td>
-            1.
-          </td>
-           
-          <td
-            id="name1"
-          >
-            
-                
-                
-            <span
-              class="name-state-icon"
-            />
-             
-            <!---->
-             
-            <span
-              class="decision-text"
-            >
-              
-            </span>
-          </td>
-        </tr>
+          1.
+        </v-flex-stub>
          
-        <tr
-          class="name-option"
+        <v-flex-stub
+          grow=""
+          id="name1"
+          ma-0=""
+          pa-0=""
+          tag="div"
         >
-          <td>
-            2.
-          </td>
+          
+          
+          
+          <stateicon-stub />
            
-          <td
-            id="name2"
-          >
-            
-                
-                
-            <span
-              class="name-state-icon"
-            />
-             
-            <!---->
-             
-            <span
-              class="decision-text"
-            >
-              
-            </span>
-          </td>
-        </tr>
+          <!---->
+        </v-flex-stub>
          
-        <tr
-          class="name-option"
+        <v-flex-stub
+          class="decision-text ml-4"
+          lg12=""
+          tag="div"
         >
-          <td>
-            3.
-          </td>
+          
+        </v-flex-stub>
+      </v-layout-stub>
+       
+      <v-layout-stub
+        align-start=""
+        class="name-option"
+        tag="div"
+        wrap=""
+      >
+        <v-flex-stub
+          mr-2=""
+          shrink=""
+          tag="div"
+        >
+          2.
+        </v-flex-stub>
+         
+        <v-flex-stub
+          grow=""
+          id="name2"
+          ma-0=""
+          pa-0=""
+          tag="div"
+        >
+          
+          
+          
+          <stateicon-stub />
            
-          <td
-            id="name3"
-          >
-            
-                
-                
-            <span
-              class="name-state-icon"
-            />
-             
-            <!---->
-             
-            <span
-              class="decision-text"
-              id="decision-text3"
-            >
-              
-            </span>
-          </td>
-        </tr>
-      </table>
-    </vflex-stub>
-     
-    <vflex-stub
-      lg6=""
-      tag="div"
-    >
-      <!---->
-    </vflex-stub>
-  </vlayout-stub>
+          <!---->
+        </v-flex-stub>
+         
+        <v-flex-stub
+          class="decision-text ml-4"
+          lg12=""
+          tag="div"
+        >
+          
+        </v-flex-stub>
+      </v-layout-stub>
+       
+      <v-layout-stub
+        align-start=""
+        class="name-option"
+        tag="div"
+        wrap=""
+      >
+        <v-flex-stub
+          mr-2=""
+          shrink=""
+          tag="div"
+        >
+          3.
+        </v-flex-stub>
+         
+        <v-flex-stub
+          grow=""
+          id="name3"
+          ma-0=""
+          pa-0=""
+          tag="div"
+        >
+          
+          
+          
+          <stateicon-stub />
+           
+          <!---->
+        </v-flex-stub>
+         
+        <v-flex-stub
+          class="decision-text ml-4"
+          lg12=""
+          tag="div"
+        >
+          
+        </v-flex-stub>
+      </v-layout-stub>
+    </v-container-stub>
+  </v-flex-stub>
    
-  <vlayout-stub
-    ml-1=""
-    row=""
+  <v-flex-stub
+    bg-white=""
+    lg6=""
+    py-2=""
     tag="div"
   >
-    <vflex-stub
-      lg12=""
+    <!---->
+  </v-flex-stub>
+   
+  <!---->
+   
+  <v-flex-stub
+    bg-grey=""
+    lg6=""
+    pl-5=""
+    py-4=""
+    tag="div"
+  >
+    <v-layout-stub
       tag="div"
     >
-      <!---->
-    </vflex-stub>
-  </vlayout-stub>
-</vcontainer-stub>
+      <v-flex-stub
+        grow=""
+        mr-3=""
+        tag="div"
+      >
+        <v-form-stub
+          id="regular-search-form"
+        >
+          <div
+            style="display: flex;"
+          >
+            <v-text-field-stub
+              append-icon=""
+              autocomplete="off"
+              class="examine-search"
+              id="regular-search-field"
+            />
+             
+            <div
+              class="search-icon mt-auto mb-auto"
+            >
+              <v-btn-stub
+                activeclass="v-btn--active"
+                class="m-1"
+                color="white"
+                flat="true"
+                icon="true"
+                id="regular-search-button"
+                tag="button"
+                type="button"
+              >
+                <v-icon-stub
+                  id="regular-search-icon"
+                >
+                  search
+                </v-icon-stub>
+              </v-btn-stub>
+            </div>
+          </div>
+        </v-form-stub>
+      </v-flex-stub>
+       
+      <v-flex-stub
+        ml-3=""
+        shrink=""
+        tag="div"
+      >
+        <v-form-stub
+          id="exact-search-form"
+        >
+          <div
+            style="display: flex;"
+          >
+            <div
+              style="width: 240px;"
+            >
+              <v-text-field-stub
+                append-icon=""
+                autocomplete="off"
+                class="examine-search"
+                id="exact-search-field"
+                name="exact-search"
+                placeholder="exact phrase"
+                value=""
+              />
+            </div>
+             
+            <div
+              class="search-icon mt-auto mb-auto"
+            >
+              <v-btn-stub
+                activeclass="v-btn--active"
+                class="m-1"
+                color="white"
+                flat="true"
+                icon="true"
+                id="exact-search-button"
+                tag="button"
+                type="button"
+              >
+                <v-icon-stub
+                  id="exact-search-icon"
+                >
+                  search
+                </v-icon-stub>
+              </v-btn-stub>
+            </div>
+          </div>
+        </v-form-stub>
+      </v-flex-stub>
+    </v-layout-stub>
+     
+    <v-layout-stub
+      mt-3=""
+      tag="div"
+      wrap=""
+    >
+      <v-flex-stub
+        ma-0=""
+        pa-0=""
+        tag="div"
+      >
+        <recipearea-stub
+          id="name-examination"
+        />
+      </v-flex-stub>
+    </v-layout-stub>
+  </v-flex-stub>
+   
+  <v-flex-stub
+    bg-grey=""
+    lg6=""
+    py-4=""
+    tag="div"
+  >
+    <!---->
+     
+    <!---->
+  </v-flex-stub>
+</v-layout-stub>
 `;

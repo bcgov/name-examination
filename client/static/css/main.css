@@ -1,3 +1,5 @@
+/* styles introduced by namex-ui-enhancements code-with-us */
+
 @font-face {
   font-family: 'OpenSans';
   font-weight: 400;
@@ -22,6 +24,18 @@
 
 @import './variables.css';
 
+textarea {
+  resize: none !important;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden !important;
+}
+
 #admin::before {
   color: transparent;
 }
@@ -38,7 +52,7 @@
 #app {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
-  padding-bottom: 15px;
+  padding-bottom: 0;
 }
 
 .action-button {
@@ -58,6 +72,10 @@
   font-size: 15px;
 }
 
+.c-accepted {
+  color: var(--accepted) !important;
+}
+
 .c-grey {
   color: var(--grey) !important;
 }
@@ -68,6 +86,10 @@
 
 .c-priority {
   color: var(--priority) !important;
+}
+
+.cursor-pointer {
+  cursor: pointer !important;
 }
 
 .dk-grey {
@@ -84,7 +106,7 @@
 }
 
 .fs-14 {
-  font-size: 13px !important;
+  font-size: 14px !important;
 }
 
 .fs-15 {
@@ -103,6 +125,7 @@
 .fs-18 {
   font-size: 18px !important;
 }
+
 .ft-ital {
   font-style: italic;
 }
@@ -139,17 +162,60 @@
 .rejected  {
   color: var(--rejected) !important;
 }
+
 .RequestInfoHeader {
   font-size: 14px;
+}
+
+.search-icon {
+  background-color: var(--gold) !important;
+  height: 40px;
+  width: 40px;
+}
+
+.styled-input {
+  background-color: var(--xl-grey);
+  border: none !important;
+  font-size: 15px;
+  height: 40px;
+  margin-bottom: auto;
+  margin-top: auto;
+  padding: 5px 10px 5px 10px;
+  width: 225px;
 }
 
 .xl-grey-bg {
   background-color: var(--xl-grey) !important;
 }
 
+
 /* overrides of vuetify styles */
+.application {
+  line-height: 1.5 !important;
+}
+
+.v-messages {
+  display: none !important;
+}
+
+.theme--light.v-table tbody tr[active] {
+  background-color: var(--xl-cyan) !important;
+}
+
+.message-to-request .v-messages {
+  display: inline !important;
+}
+
 .theme--light.v-sheet {
   color: var(--text) !important;
+}
+
+.v-input__icon {
+  cursor: pointer !important;
+}
+
+.container {
+  opacity: 1 !important;
 }
 
 .v-menu__content {
@@ -166,9 +232,29 @@
   outline: none !important;
 }
 
+.v-datatable {
+  margin: 0 !important;
+}
+
+.v-datatable thead {
+  box-shadow: 0 3px 4px -4px rgba(0, 0, 0, 0.4);
+}
+
+.v-datatable tr {
+  border: 0 !important;
+  margin: 5px 0 0 0 !important;
+}
+
 .v-btn__content, .v-btn {
   font-family: OpenSans !important;
   font-weight: 400 !important;
+}
+
+.v-table__overflow {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  height: 450px !important;
+  max-height: 450px !important;
 }
 
 .v-input__slot:after, .v-input__slot:before {
@@ -197,6 +283,7 @@
 
 .v-tabs__item {
   font-family: OpenSans !important;
+  opacity: 1 !important;
 }
 
 .v-tabs__item--active {
@@ -216,6 +303,13 @@
   text-decoration: none !important;
 }
 
+.v-select--is-menu-active {
+  z-index: 99999 !important;
+  position: relative !important;
+  top: 0px;
+  left: 0px;
+}
+
 .v-toolbar__content {
   padding: 0px !important;
 }
@@ -223,12 +317,19 @@
   opacity: 1 !important;
 }
 
-
 /*Styles from existing application */
 
 @font-face {
   font-family: 'Myriad-Pro';
   src: url('../fonts/MyriadWebPro.ttf');
+}
+
+.stem-highlight {
+  color: #28A745;
+}
+
+.synonym-stem-highlight {
+  color: #E0A800;
 }
 
 html, body {
@@ -2163,7 +2264,6 @@ img.back-to-top:hover {
 /* } */
 
 
-
 /* [RA-359] CS - homepage customizations for BC Gov Services Campaign */
 .popular-services-search .homepage-tile {
   border-bottom: 0;
@@ -2351,15 +2451,15 @@ a.accordion-btn:hover{
   border-radius: 0;
 }
 
-.panel{
+.panel {
   border-color: #f1f1f3;
   border-radius: 0;
 }
 
-.panel-text{
+.panel-text {
   margin-top: -1em;
 }
-.panel-text p{
+.panel-text p {
   margin-bottom: 0em;
 }
 .panel>.panel-heading+.panel-collapse>.panel-body {

@@ -1,4 +1,6 @@
 /* eslint-disable */
+import Vue from 'vue'
+Vue.use(require('vue-shortkey'))
 import { shallowMount } from '@vue/test-utils';
 import Decision from '@/components/application/Examine/Decision';
 import store from '@/store'

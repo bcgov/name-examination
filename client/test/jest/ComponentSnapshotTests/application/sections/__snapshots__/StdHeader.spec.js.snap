@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`StdHeader.vue renders a StdHeader component 1`] = `
-<vcontainer-stub
+<v-container-stub
   class="top-nav-toolbar"
   fluid=""
   id="header-main"
   tag="div"
 >
-  <vlayout-stub
+  <v-layout-stub
     tag="div"
   >
     <div>
@@ -31,7 +31,7 @@ exports[`StdHeader.vue renders a StdHeader component 1`] = `
     <div
       class="ml-auto px-3"
     >
-      <vtoolbar-stub
+      <v-toolbar-stub
         color="white"
         flat="true"
         height="70px"
@@ -48,8 +48,8 @@ exports[`StdHeader.vue renders a StdHeader component 1`] = `
         >
           Login
         </router-link-stub>
-      </vtoolbar-stub>
+      </v-toolbar-stub>
     </div>
-  </vlayout-stub>
-</vcontainer-stub>
+  </v-layout-stub>
+</v-container-stub>
 `;

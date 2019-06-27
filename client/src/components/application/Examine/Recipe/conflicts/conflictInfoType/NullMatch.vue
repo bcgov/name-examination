@@ -9,7 +9,7 @@
 <script>
 /* eslint-disable */
   export default {
-    name: 'nullMatch',
+    name: 'NullMatch',
   }
 </script>
 

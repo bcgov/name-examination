@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { shallowMount } from '@vue/test-utils';
-import TrademarksInfo from '@/components/application/Examine/Recipe/trademarks/trademarksInfo';
+import TrademarksInfo from '@/components/application/Examine/Recipe/trademarks/TrademarksInfo';
 import store from '@/store'
 
 describe('TrademarksInfo.vue', () => {

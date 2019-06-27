@@ -158,16 +158,29 @@
   .corpType {
     color: #494969;
   }
+
   h3, h2 {
-    font-size: 15px;
+     font-size: 15px;
+     color: var(--text);
+     text-transform: capitalize !important;
+     line-height: 1;
+     margin: 12px 0 4px 0;
+     padding: 0;
+     font-weight: 600;
+  }
+
+  p, div {
+     font-size: 14px;
+     color: var(--text);
+     line-height: 1;
+     margin: 0;
+     padding: 0;
   }
 
   p {
-     font-size: 14px !important;
-     line-height: 1;
-     margin-top: 2px;
-     margin-bottom: 2px;
+     margin: 0 0 0 8px;
   }
+
 </style>
 
 

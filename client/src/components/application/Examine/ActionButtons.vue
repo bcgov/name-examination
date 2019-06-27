@@ -57,23 +57,7 @@
              @click="startDecision()"><img src="/static/images/buttons/decision.png"/></v-btn>
 
       <!-- ACCEPT/REJECT/CANCEL DECISION buttons -->
-      <v-btn flat
-             class="mx-1 pa-0 action-button"
-             v-shortkey="['alt', 'a']"
-             @shortkey="nameAccept()"
-             id="decision-approve-button"
-             v-if="userIsAnExaminer && is_making_decision"
-             @click="nameAccept()">
-        <img v-if="acceptance_will_be_conditional" src="/static/images/buttons/dec-cond-approve.png"/>
-        <img v-else src="/static/images/buttons/dec-approve.png"/>
-      </v-btn>
-      <v-btn flat
-             v-shortkey="['alt', 'r']"
-             @shortkey="nameReject()"
-             class="mx-1 pa-0 action-button"
-             id="decision-reject-button"
-             v-if="is_making_decision"
-             @click="nameReject()"><img src="/static/images/buttons/dec-reject.png"/></v-btn>
+
       <v-btn flat
              v-shortkey="['alt', 'c']"
              @shortkey="is_making_decision=false"
@@ -162,7 +146,6 @@ export default {
       return this.$store.getters.acceptance_will_be_conditional;
     },
     can_claim() {
-      console.log('got to can_claim with status ' + this.currentState);
       // can this user claim the NR? Based on state.
       if (this.userIsAnExaminer && ['DRAFT', 'HOLD'].indexOf(this.currentState) > -1) return true;
       else return false;
@@ -212,9 +195,9 @@ export default {
 
       let expired_date = moment(this.$store.state.expiryDate, 'YYYY-MM-DD').clone();
       let today = new moment();
-      console.log('***');
-      console.log(this.$store.getters.currentState);
-      console.log(expired_date);
+
+
+
       if (this.$store.getters.currentState === 'APPROVED' && today.isAfter(expired_date)) return true;
       return false;
     },
@@ -285,14 +268,6 @@ export default {
     },
     holdRequest() {
       this.$store.dispatch('updateNRState', 'HOLD');
-    },
-    nameAccept() {
-      this.$store.commit('decision_made', 'APPROVED');
-      this.$store.commit('currentCondition', null);
-    },
-    nameReject() {
-      this.$store.commit('decision_made', 'REJECTED');
-      this.$store.commit('currentCondition', null);
     },
     reOpen() {
       /* Workflow:

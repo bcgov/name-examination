@@ -1,610 +1,705 @@
-/* eslint-disable */
+<!--eslint-disable-->
 <template>
-  <span>
-    <div class="row">
-      <div class="col-6 add-top-padding">
-        <h3>Conditions</h3>
-        <div id="decision-conditions-dropdown">
-        <multiselect
-          v-model="conditions_selected"
-          :options="conditions_onlycustomerfacing"
-          :multiple="true"
-          :custom-label="conditionsLabel"
-          name="phrase"
-          track-by="phrase"
-          :close-on-select="true"
-          deselectLabel=""
-          selectLabel=""
-          selectedLabel=""
-          placeholder=""
-          :disabled="customer_message_override !== null"
-        />
-        </div>
-      </div>
-      <div class="col-6 add-top-padding">
-        <h3>Conflicts</h3>
-        <multiselect
-          v-model="conflicts_selected"
-          :options="conflictList"
-          :multiple="true"
-          :custom-label="conflictsLabel"
-          track-by="nrNumber"
-          :max="3"
-          :close-on-select="true"
-          deselectLabel=""
-          selectLabel=""
-          selectedLabel=""
-          placeholder=""
-          :disabled="customer_message_override !== null"
-        />
-      </div>
-    </div>
+  <v-container decision-container fluid py-0 px-5>
+    <v-layout wrap>
+      <v-flex lg6 fs-24 style="position: relative; top: 10px">Decision</v-flex>
+      <v-flex grow />
+      <v-flex shrink style="position: relative; top: 14px">
+        <v-checkbox class="pa-0 ma-0"
+                    light
+                    v-model="consent_required_by_user" /></v-flex>
+      <v-flex shrink fs-15 style="position: relative; top: 14px">Consent Required
+      </v-flex>
+      <v-flex lg12>
+        <v-divider />
+      </v-flex>
+      <template v-if="conditionsText && conditionsText.length > 0">
+        <v-flex notification-banner d-flex mb-1>
+          <v-layout my-auto wrap>
+            <v-flex lg12
+                    px-3
+                    v-for="(cond, i) of conditionsText"
+                    :mt-1="i > 0"
+                    :key="i+'cond'">
+              <b>{{ cond.phrase[0] + cond.phrase.substr(1).toLowerCase() }} – </b>{{ cond.text }}
+            </v-flex>
+          </v-layout>
+        </v-flex>
+      </template>
 
-    <div class="row">
-      <div class="col-6 add-top-padding">
-        <h3>Generic Rejection Reason (label TBD)</h3>
-        <multiselect
-          v-model="decision_reasons_selected"
-          :options="listDecisionReasons"
-          :multiple="true"
-          label="name"
-          track-by="name"
-          :close-on-select="true"
-          deselectLabel=""
-          selectLabel=""
-          selectedLabel=""
-          placeholder=""
-          :disabled="customer_message_override !== null"
-        />
-      </div>
-      <div class="col-6 add-top-padding">
-        <h3>Trademarks</h3>
-        <div>
-        <multiselect
-          v-model="trademarks_selected"
-          :options="trademarks"
-          :multiple="true"
-          :custom-label="trademarksLabel"
-          name="name"
-          track-by="name"
-          :close-on-select="true"
-          deselectLabel=""
-          selectLabel=""
-          selectedLabel=""
-          placeholder=""
-          :disabled="customer_message_override !== null"
-        />
-        </div>
-      </div>
-    </div>
+      <!--COLUMN #1: MESSAGE SELECTION-->
+      <v-flex lg6>
+        <v-layout wrap add-stock-text-col>
 
-    <!-- internal alerts -->
-    <div class="row">
-      <div class="col add-top-padding">
-        <div class="alert alert-warning"
-             v-for="record in conditions_onlyinternalinstructions" v-bind:key="record.id">
-            {{ record.text }}
-        </div>
-      </div>
-    </div>
+          <!--CONDITIONS-->
+          <v-flex lg12 id="conditions-select-area">
+            <p class="fs-15 fw-600">Conditions</p>
+            <div id="conditions-decision-select-field">
+              <v-select :disabled="customer_message_override !== null"
+                        :height="selectedConditions.length <= 1 ? 30 : null"
+                        :items="conditionsInstructions"
+                        :menu-props="menuProps"
+                        chips
+                        attach
+                        class="decision-select-style"
+                        dense
+                        hide-selected
+                        item-text="phrase"
+                        multiple
+                        return-object
+                        single-line
+                        small-chips
+                        v-model="selectedConditions">
+                <template v-slot:selection="{ item, index }">
+                  <v-chip class="chip-class">{{ truncateChipText(item.phrase) }}
+                    <v-icon class="chip-close-icon"
+                            @click.stop="handleConditions(item)">clear
+                    </v-icon>
+                  </v-chip>
+                </template>
+              </v-select>
+            </div>
+          </v-flex>
 
-    <div class="row">
-      <div class="col add-top-padding">
-        <h3>Message to Requestor</h3>
-        <div class="customer-msg-box">
-          <pre>{{ customer_message_display }}</pre>
-        </div>
+          <!--CONFLICTS-->
+          <v-flex lg12 id="conflicts-select-area">
+            <p class="fs-15 fw-600">Conflicts</p>
+            <div id="conflicts-decision-select-field">
+              <v-select :disabled="customer_message_override !== null"
+                        :height="selectedConflicts.length <= 1 ? 30 : null"
+                        :items="conflictList"
+                        :menu-props="menuProps"
+                        chips
+                        class="decision-select-style"
+                        dense
+                        attach
+                        hide-selected
+                        multiple
+                        return-object
+                        single-line
+                        small-chips
+                        v-model="selectedConflicts">
+                <template v-slot:selection="{ item, index }">
+                  <v-chip class="chip-class">{{ truncateChipText(item.text) }}
+                    <v-icon class="chip-close-icon"
+                            @click.stop="removeChip(item)">clear
+                    </v-icon>
+                  </v-chip>
+                </template>
+              </v-select>
+            </div>
+          </v-flex>
 
-        <!-- character count warning -->
-        <div v-bind:class="{ 'warning': customer_message_display.length > 955,
-                              'character_count': true }">
-          Character count: {{ customer_message_display.length }}
-          <span v-if="customer_message_display.length > 955" style="color: red;">
-            <i class="fa fa-warning"></i>
-            The message will be cut off at 955 characters.
-          </span>
-        </div>
+          <!--MARCROS-->
+          <v-flex lg12 data-app id="macros-v-flex" ref="macrosField">
+            <p class="fs-15 fw-600">Macros</p>
+            <div id="macros-decision-select-field">
+              <v-select :disabled="customer_message_override !== null"
+                        :height="selectedReasons.length <= 1 ? 30 : null"
+                        :items="listDecisionReasons"
+                        :menu-props="menuProps"
+                        chips
+                        attach
+                        class="decision-select-style"
+                        dense
+                        hide-selected
+                        item-text="name"
+                        multiple
+                        return-object
+                        small-chips
+                        v-model="selectedReasons">
+                <template v-slot:selection="{ item, index }">
+                  <v-chip class="chip-class">{{ truncateChipText(item.name) }}
+                    <v-icon class="chip-close-icon"
+                            @click.stop="removeChip(item)">clear
+                    </v-icon>
+                  </v-chip>
+                </template>
+              </v-select>
+            </div>
+          </v-flex>
 
+          <!--TRADEMARKS-->
+          <v-flex data-app id="trademarks-v-flex" ref="trademarksSelectField">
+            <p class="fs-15 fw-600">Trademarks</p>
+            <div id="trademarks-decision-select-field">
+              <v-select :disabled="customer_message_override !== null"
+                        :height="selectedTrademarks.length <= 1 ? 30 : null"
+                        :items="trademarks"
+                        :menu-props="menuProps"
+                        chips
+                        class="decision-select-style mb-5"
+                        dense
+                        attach
+                        hide-selected
+                        item-text="name"
+                        multiple
+                        return-object
+                        small-chips
+                        v-model="selectedTrademarks">
+                <template v-slot:selection="{ item }">
+                  <v-chip class="chip-class">{{ truncateChipText(item.name) }}
+                    <v-icon class="chip-close-icon"
+                            @click.stop="handleTrademarks(item)">clear
+                    </v-icon>
+                  </v-chip>
+                </template>
+              </v-select>
+            </div>
+          </v-flex>
+        </v-layout>
+      </v-flex>
 
-        <a href="#" id="edit-customer-message-link" data-toggle="modal"
-           data-target="#edit-customer-message-modal">Edit...</a>
-        <a href="#" id="clear-customer-message-link" v-if="customer_message_override"
-           @click="clearCustomerMessagOverride">Clear Customer Message Override</a>
-      </div>
-    </div>
+      <!--COLUMN #2:  OUTPUT-->
+      <v-flex lg6>
+        <v-layout column>
 
-    <internalcomments ref="decisioncomments" layout="decision"></internalcomments>
+          <!--MESSAGE OUTPUT TEXTAREA-->
+          <v-flex>
+            <div class="decision-flex-holder">
+              <div class="fs-15 fw-600 ma-0 pa-0" style="position:relative; top:12px">Message To Requestor</div>
+                <v-btn flat
+                       @click="showModal"
+                       class="ma-0 pa-0">
+                  <img src="/static/images/buttons/edit-button-icon.png">
+                </v-btn>
+            </div></v-flex>
+          <v-flex textarea-outer-v-flex pa-2 pt-3 mt-2>
+            <v-textarea class="fs-14 pa-0 ma-0"
+                        full-width
+                        id="decision-msg-preview-area"
+                        rows="13"
+                        solo
+                        v-on:keydown.prevent
+                        flat
+                        v-model="customer_message_display">
 
-    <!-- Edit Customer Comments popup -->
-    <div class="modal fade" id="edit-customer-message-modal" tabindex="-1" role="dialog">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Edit Customer Comments</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <textarea id="edit-customer-message-textarea" class="form-control" rows="10"
-                      v-model="customer_message_display"></textarea>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-sm btn-secondary"
-                    data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-sm btn-primary"
-                    @click="saveCustomerMessageOverride">Save</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </span>
+            </v-textarea>
+            <div class="decision-flex-holder">
+              <div :class="messageDisplayProps.class">{{ messageDisplayProps.count }}</div>
+              <div><v-btn flat
+                          id="decision-msg-clear-button"
+                          class="ma-0 pa-0"
+                          @click="customer_message_override = null"
+                          v-if="customer_message_override">Clear Edits</v-btn></div>
+            </div>
+
+          </v-flex>
+          <v-flex>
+            <div class="decision-flex-holder top-margin-12">
+              <v-btn flat
+                     class="mx-1 pa-0 action-button"
+                     v-shortkey="['alt', 'a']"
+                     @shortkey="nameAccept"
+                     id="decision-approve-button"
+                     @click="nameAccept">
+                <img id="conditional-accept-button"
+                     v-if="acceptance_will_be_conditional"
+                      src="/static/images/buttons/cond-approve-name.png" />
+                <img v-else src="/static/images/buttons/approve-name.png" />
+              </v-btn>
+              <v-btn flat
+                     v-shortkey="['alt', 'r']"
+                     @shortkey="nameReject"
+                     class="mx-1 pa-0 action-button"
+                     id="decision-reject-button"
+                     @click="nameReject"><img src="/static/images/buttons/reject-name.png" /></v-btn>
+            </div>
+          </v-flex>
+        </v-layout>
+      </v-flex>
+    </v-layout>
+    <v-layout>
+      <v-dialog :width="800"
+                persistent
+                content-class="opacity-1"
+                v-model="editMessageModalVisible">
+        <v-container style="background-color: white">
+          <v-layout>
+            <v-flex textarea-outer-v-flex>
+              <v-textarea class="fs-14 pa-0 ma-0"
+                          flat
+                          full-width
+                          id="decision-msg-edit-field"
+                          rows="14"
+                          solo
+                          style="margin-bottom: 0px;"
+                          v-model="editTextarea" />
+              <div :class="editTextareaProps.class">{{ editTextareaProps.count }}</div>
+            </v-flex>
+          </v-layout>
+          <v-layout justify-start row mt-4 pl-3>
+            <v-flex text-right c-link>
+              <v-btn id="message-cancel-button"
+                     flat
+                     @click="hideModal">Cancel</v-btn>
+              <v-btn id="message-save-button"
+                     flat
+                     :disabled="!messageEdited"
+                     @click="saveModal">
+                <b style="font-weight: 600">Save</b>
+              </v-btn>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-dialog>
+    </v-layout>
+  </v-container>
+
 </template>
 
 <script>
-/* eslint-disable */
-
-  import internalcomments from "@/components/application/Examine/InternalComments.vue";
-  import Multiselect from 'vue-multiselect';
+  /* eslint-disable */
+  import Vue from 'vue'
+  import { mapGetters } from 'vuex'
 
   export default {
     name: "Decision",
-    data: function ()
-    {
+    data() {
       return {
-        conditions_selected: [],
-        conflicts_selected: [],
-        decision_reasons_selected: [],
-        trademarks_selected: [],
+        consent_required_by_user: false,
         customer_message_override: null,
-        conflictList: []
+        editMessageModalVisible: false,
+        editTextarea: null,
+        menuProps: {
+          auto: false,
+          closeOnContentClick: true,
+          maxHeight: 125,
+          overflowY: false,
+          position: 'relative',
+        },
+        originalMessage: null,
+        selectedConditions: [],
+        selectedConflicts: [],
+        selectedReasons: [],
+        selectedTrademarks: [],
       }
     },
+    mounted() {
+      this.acceptance_will_be_conditional = false
+      this.$nextTick(function() {
+        if (this.currentCondition) {
+          this.selectedConditions = [this.currentCondition]
+        }
+        if (this.currentTrademark) {
+          this.selectedTrademarks = [this.currentTrademark]
+        }
+        if (this.currentConflict) {
+          this.selectedConflicts = [this.currentConflict]
+        }
+        if (this.consent_required_by_condition || this.consent_required_by_user) {
+          this.acceptance_will_be_conditional = true
+        }
+      })
+    },
     computed: {
-      acceptance_will_be_conditional() {
-        return this.$store.getters.acceptance_will_be_conditional;
-      },
-      is_making_decision: {
-        get: function() {
-          return this.$store.getters.is_making_decision;
-        },
-        set: function(value) {
-          this.$store.commit('is_making_decision', value);
+      ...mapGetters([
+        'acceptance_will_be_conditional',
+        'cobrsPhoneticConflicts',
+        'conditionsJSON',
+        'currentConflict',
+        'currentTrademark',
+        'exactMatchesConflicts',
+        'is_making_decision',
+        'listDecisionReasons',
+        'phoneticConflicts',
+        'synonymMatchesConflicts',
+        'trademarksJSON',
+        'parseConditions'
+      ]),
+      acceptance_will_be_conditional: {
+        get() {
+          return this.$store.getters.acceptance_will_be_conditional
+        }, set(event) {
+          this.$store.commit('acceptance_will_be_conditional', event)
         }
-      },
-      decision_made: {
-        get: function () {
-          return this.$store.getters.decision_made;
-        },
-        set: function (value) {
-          this.$store.commit('decision_made', value);
-        }
-      },
-      currentNameObj: {
-        get: function () {
-          return this.$store.getters.currentNameObj;
-        },
-        set: function (value) {
-          this.$store.dispatch('currentNameObj', value);
-        }
-      },
-      exactMatchesConflicts() {
-        return this.$store.getters.exactMatchesConflicts;
-      },
-      synonymMatchesConflicts() {
-        return this.$store.getters.synonymMatchesConflicts;
-      },
-      cobrsPhoneticConflicts() {
-        return this.$store.getters.cobrsPhoneticConflicts;
-      },
-      phoneticConflicts() {
-        return this.$store.getters.phoneticConflicts;
-      },
-      currentConflict() {
-        return this.$store.getters.currentConflict;
-      },
-      listDecisionReasons() {
-        return this.$store.getters.listDecisionReasons;
       },
       conditions() {
-        /* Re-arrange the fields in object to be easier to use in dropdowns.
-
-        In the case of multiple conditions per word, break each condition into its own row for the
-        dropdown (the nested for loops below). At time of development there is no data that actually
-        has multiple conditions per word.
-
-        Note: in the case where a word does not have any conditions (ie: nothing in the conditions
-        xref table) we never get to the point where we create the revised_match_object, and never
-        push it to the array. It is as if they were not returned.
-        */
-
-        try {
-          if (this.$store.getters.conditionsJSON.restricted_words_conditions !== undefined) {
-            var condition_matches = this.$store.getters.conditionsJSON.restricted_words_conditions;
-            var retval = []
-
-            for (let wordmatch of condition_matches) {
-             for (let condition of wordmatch.cnd_info) {
-               var revised_match_object = {};
-               revised_match_object.id = wordmatch.word_info.id;
-               revised_match_object.phrase = wordmatch.word_info.phrase;
-               revised_match_object.allow_use = (condition.allow_use == 'Y')?true:false;
-               revised_match_object.consent_required = (condition.consent_required == 'Y')?true:false;
-               revised_match_object.instructions = condition.instructions;
-               revised_match_object.text = condition.text;
-
-               retval.push(revised_match_object);
-             }
-            }
-
-            return retval;
-
-          }
-          else return []
-        } catch (err) {
-          return [];
+        return this.$store.getters.parseConditions
+      },
+      conditionsInstructions() {
+        if (this.conditions && Array.isArray(this.conditions)) {
+          return this.conditions.filter(condition => condition.instructions)
         }
+        return []
       },
-      conditions_onlycustomerfacing() {
-        /* subset of conditions, only those that have customer instructions
-        */
-
-        var arr_conditions = this.conditions.filter(function (el) {
-          return el.instructions !== '' && el.instructions !== null
-        });
-
-        // manually add "CONSENT REQUIRED" condition
-        arr_conditions.push({
-          instructions: "Consent Required.",
-          consent_required: true,
-          display_string: "Consent Required",
-          id: "CONSENTREQUIRED",
-        });
-
-        return arr_conditions;
-
+      conditionsText() {
+        if ( this.conditions && Array.isArray(this.conditions) ) {
+          return this.conditions.filter(condition => condition.text)
+        }
+        return []
       },
-      conditions_onlyinternalinstructions() {
-        return this.conditions.filter(function (el) {return el.text !== '' && el.text !== null});
+      conflictList() {
+        let output = []
+        let listedNRs = []
+        let conflictTypes = [
+          'exactMatchesConflicts',
+          'synonymMatchesConflicts',
+          'cobrsPhoneticConflicts',
+          'phoneticConflicts',
+        ]
 
+        for ( let type of conflictTypes ) {
+          if ( !this[type] || !Array.isArray(this[type]) ) {
+            break
+          }
+          this[type].forEach(conflict => {
+            if ( conflict.nrNumber && !listedNRs.includes(conflict.nrNumber) ) {
+              listedNRs.push(conflict.nrNumber)
+              output.push(conflict)
+            }
+          })
+        }
+        return output
+      },
+      consent_required() {
+        if (!this.consent_required_by_condition && !this.consent_required_by_user) return false
+        return true
+      },
+      consent_required_by_condition() {
+        if (this.selectedConditions && Array.isArray(this.selectedConditions)) {
+          return this.selectedConditions.some(condition => condition.consent_required_tf)
+        }
+        return false
       },
       currentCondition() {
-        var currentCondition = this.$store.getters.currentCondition;
-        if (currentCondition == null) return null;
-
-        // only use the currentCondition if it requires consent
-        if (currentCondition.consent_required != 'Y') return null;
-
-        // Re-arrange the fields in object to be easier to use in dropdowns - match main list
-        var revised_match_object = {};
-        revised_match_object.phrase = currentCondition.word;
-        revised_match_object.allow_use = (currentCondition.allow_use == 'Y')?true:false;
-        revised_match_object.consent_required = (currentCondition.consent_required == 'Y')?true:false;
-        revised_match_object.instructions = currentCondition.instructions;
-        revised_match_object.text = currentCondition.text;
-
-        return revised_match_object;
-
+        let { currentCondition } = this.$store.getters
+        if (!currentCondition || !currentCondition.consent_required_tf) return ''
+        return currentCondition
       },
-      trademarks() {
-        try {
-          if (this.$store.getters.trademarksJSON !== null) {
-            return this.$store.getters.trademarksJSON.names;
-          }
-          else return []
-        } catch (err) {
-          return [];
+      currentNameObj: {
+        get() {
+          return this.$store.getters.currentNameObj
+        },
+        set(value) {
+          this.$store.dispatch('currentNameObj', value)
         }
       },
-      currentTrademark() {
-        return this.$store.getters.currentTrademark;
-      },
       customer_message() {
-        /*
-        Build customer message based on selected conditions, conflicts, trademarks, and format.
-         */
 
-        var retval = [];
+        let retval = []
 
         // CONFLICTS
-        for (var i = 0; i < this.conflicts_selected.length; i++) {
-
-          // check whether "Consent Required" condition is set - if so, set message re. "Requires consent from..."
-          if (this.consent_required_condition_set) {
-            retval.push('Consent required from ' + this.conflicts_selected[i].text);
+        if (!this.selectedConflicts || this.selectedConflicts.length === 0) {
+          if (this.consent_required_by_user) {
+            retval.push('Consent Required \n\n')
           }
-
-          // if "Consent Required" condition is not set, set message re. "Rejected due..."
-          else {
-            retval.push('Rejected due to conflict with ' + this.conflicts_selected[i].text);
+        } else {
+          for ( let i = 0; i < this.selectedConflicts.length; i++ ) {
+            // check whether "Consent Required" condition is set - if so, set message re. "Requires consent from..."
+            if ( this.consent_required_by_user ) {
+              retval.push('Consent required from ' + this.selectedConflicts[i].text)
+            }
+            // if "Consent Required" condition is not set, set message re. "Rejected due..."
+            else {
+              retval.push('Rejected due to conflict with ' + this.selectedConflicts[i].text)
+            }
           }
         }
 
         // CONDITIONS
-        for (var i = 0; i < this.conditions_selected.length; i++) {
+        for ( let i = 0; i < this.selectedConditions.length; i++ ) {
 
           // if this is the "Consent Required" condition, and there are conflicts, do not set
           // "Consent Required" messgage, because it is redundant with messaging re. conflicts.
-          if (this.conditions_selected[i].id == 'CONSENTREQUIRED' && this.conflicts_selected.length > 0) {
-            continue;
-          }
 
-          if (this.conditions_selected[i].phrase !== undefined && this.conditions_selected[i].phrase !== '') {
-            retval.push(this.conditions_selected[i].phrase + ' - ' + this.conditions_selected[i].instructions);
-          }
-          else {
-            retval.push(this.conditions_selected[i].instructions);
+          if ( this.selectedConditions[i].phrase !== undefined && this.selectedConditions[i].phrase !== '' ) {
+            retval.push(this.selectedConditions[i].phrase + ' - ' + this.selectedConditions[i].instructions)
+          } else {
+            retval.push(this.selectedConditions[i].instructions)
           }
         }
 
         // TRADEMARKS
-        for (var i = 0; i < this.trademarks_selected.length; i++) {
-          retval.push('Registered Trademark: ' + this.trademarks_selected[i].name + ' - Application #' + this.trademarks_selected[i].application_number);
+        for ( let i = 0; i < this.selectedTrademarks.length; i++ ) {
+          retval.push(
+            'Registered Trademark: ' + this.selectedTrademarks[i].name + ' - Application #' + this.selectedTrademarks[i].application_number)
         }
 
         // GENERIC DECISION REASONS
-        for (var i = 0; i < this.decision_reasons_selected.length; i++) {
-          retval.push(this.decision_reasons_selected[i].reason);
+        for ( let i = 0; i < this.selectedReasons.length; i++ ) {
+          retval.push(this.selectedReasons[i].reason)
         }
 
-        return retval;
-
+        return retval
       },
-      customer_message_display: {
-        get: function () {
-          /*
-          The text version of customer_message that is sent to API to be stored in DB.
-           */
+      customer_message_display() {
+        if ( this.customer_message_override ) {
+          return this.customer_message_override
+        } else {
+          // otherwise build out formatted text with line breaks...
+          let retval = ''
 
-          // if there's a customer message override (ie: the examiner has edited the text) then use
-          // that...
-          if (this.customer_message_override) {
-            return this.customer_message_override;
-
-          } else {
-            // otherwise build out formatted text with line breaks...
-            var retval = '';
-
-            for (var i = 0; i < this.customer_message.length; i++) {
-              retval += this.customer_message[i] + '\n\n';
-            }
-
-            return retval;
-
+          for ( let i = 0; i < this.customer_message.length; i++ ) {
+            retval += this.customer_message[i] + '\n\n'
           }
-        },
-        set: function (value) {
-          /*
-          This sets the message override from editing in the popup, NOT customer_message_display
-          calculated field.
-           */
-          //this.customer_message_override = value;
-
+          return retval
         }
       },
-      consent_required_condition_set() {
-        // is the "Consent Required" condition selected in Conditions dropdown?
-        if (this.conditions_selected.filter(findArrValueByAttr('CONSENTREQUIRED', 'id')).length > 0) return true;
-        else return false;
+      decision_made: {
+        get() {
+          return this.$store.getters.decision_made
+        },
+        set(value) {
+          this.$store.commit('decision_made', value)
+        }
       },
-    },
-    components: {
-      internalcomments,
-      Multiselect,
-    },
-    mounted: function () {
-      // pre-select the conflict from the display screen
-      if (this.currentConflict !== null && this.currentConflict !== undefined) {
-        this.conflicts_selected.push(this.currentConflict);
-      }
-      this.setConflictList();
-
-      // pre-select the condition from the display screen
-      if (this.currentCondition !== null && this.currentCondition !== undefined) {
-        this.conditions_selected.push(this.currentCondition);
-      }
-
-
-      // pre-select the trademark from the display screen
-      if (this.currentTrademark !== null && this.currentTrademark !== undefined) {
-        this.trademarks_selected.push(this.currentTrademark);
-      }
-
-      // reset the conditional acceptance flag
-      this.$store.commit('acceptance_will_be_conditional', false);
-
-
+      editTextareaProps() {
+        let remaining = this.editTextarea ? this.editTextarea.length : 0
+        let output = {
+          count: `Characters Remaining: ${ 955 - remaining }`,
+          class: 'c-grey fs-14 pl-2'
+        }
+        if ( (955 - remaining) < 0 ) {
+          output.count = 'Message cut off at 955 characters'
+          output.class = 'c-priority fs-14 fw-600 pl-2'
+        }
+        return output
+      },
+      is_making_decision: {
+        get() {
+          return this.$store.getters.is_making_decision
+        },
+        set(value) {
+          this.$store.commit('is_making_decision', value)
+        }
+      },
+      messageDisplayProps() {
+        let output = {
+          count: `Characters Remaining: ${ 955 - this.customer_message_display.length }`,
+          class: 'c-grey pa-1 ma-1'
+        }
+        if ( (955 - this.customer_message_display.length) < 0 ) {
+          output.count = 'Message cut off at 955 characters'
+          output.class = 'c-priority fs-14 fw-600 pa-0 ma-0'
+        }
+        return output
+      },
+      messageEdited() {
+        return this.editTextarea !== this.customer_message_display
+      },
+      trademarks() {
+        if ( this.trademarksJSON ) {
+          return this.trademarksJSON.names
+        }
+      },
     },
     watch: {
-      decision_made: function() {
-        this.nameAcceptReject();
+      decision_made() {
+        this.nameAcceptReject()
       },
-      conditions_selected: function () {
-        // set state variable indicating whether acceptance will be conditional or not
+      consent_required(newVal, oldVal) {
+        this.$store.commit('acceptance_will_be_conditional', newVal)
+      },
+      consent_required_by_user(newVal) {
+        if (newVal) {
 
-        var retval = false;
-        for (var i = 0; i < this.conditions_selected.length; i++) {
-          if (this.conditions_selected[i].consent_required) {
-            retval = true;
-            break;
-          }
         }
-
-        this.$store.commit('acceptance_will_be_conditional', retval);
-      },
-      exactMatchesConflicts: function (val) {
-        console.log('synonymMatchesConflicts watcher fired: ',val);
-        this.setConflictList();
-      },
-      synonymMatchesConflicts: function (val) {
-        console.log('synonymMatchesConflicts watcher fired: ',val);
-        this.setConflictList();
       }
     },
     methods: {
+      cancelEvent(event) {
+        event.preventDefault()
+        event.stopPropagation()
+        return null
+      },
       clearCustomerMessagOverride() {
-        this.customer_message_override = null;
-      },
-      saveCustomerMessageOverride(obj) {
-        console.log('save customer message override...');
-        console.log(obj);
-        this.customer_message_override = $('#edit-customer-message-textarea').val();
-
-        $('#edit-customer-message-modal').modal('hide');
-      },
-      conflictsLabel(obj) {
-        return obj.text + ' - ' + obj.nrNumber;
+        this.customer_message_override = null
       },
       conditionsLabel(obj) {
-        if (obj.display_string !== undefined) return obj.display_string;
-        else return obj.phrase + ' - ' + obj.instructions;
+        if ( obj.display_string !== undefined ) {
+          return obj.display_string
+        } else {
+          return obj.phrase + ' - ' + obj.instructions
+        }
       },
-      trademarksLabel(obj) {
-        return obj.name + ' - ' + obj.application_number;
+      handleConditions(item) {
+        this.removeChip(item)
+        if (this.currentCondition) {
+          if (item.id == this.currentCondition.id) {
+            this.$store.commit('currentCondition', null)
+          }
+        }
+      },
+      handleTrademarks(item) {
+        this.removeChip(item)
+        if (this.currentTrademark) {
+          if (item.application_number == this.currentTrademark.application_number) {
+            this.$store.commit('currentTrademark', null)
+          }
+        }
+      },
+      hideModal() {
+        this.editMessageModalVisible = false
+      },
+      nameAccept() {
+        this.$store.commit('decision_made', 'APPROVED')
+        this.$store.commit('currentCondition', null)
       },
       nameAcceptReject() {
-        // save decision text, state, decision comment, and up to three conflicts
-
-
-        if (this.decision_made == 'APPROVED') {
-          this.currentNameObj.state = 'APPROVED'; // accepted
-
-          // conditionally accepted if any conditions selected with condition_required flag TRUE
-          for (var i = 0; i < this.conditions_selected.length; i++) {
-            var record = this.conditions_selected[i];
-            if (record.consent_required) {
-              this.currentNameObj.state = 'CONDITION';
-              break;
-            }
-          }
-
+        let { decision_made, currentNameObj, selectedConflicts } = this
+        if ( decision_made == 'APPROVED' ) {
+          currentNameObj.state = this.acceptance_will_be_conditional ? 'CONDITION' : 'APPROVED'
           // if there were conflicts selected but this is an approval, this will result in
           // accidental "rejected due to conflict" messaging. Remove it by clearing the selected
           // conflicts (Issue #767).
           // Do NOT clear the conflicts if the "Consent Required" condition is also set - then it's
           // intentional.
-          if (!this.consent_required_condition_set) {
-            this.conflicts_selected = [];
+          if (this.consent_required_by_user) {
+            selectedConflicts = []
+          }
+        } else {
+          currentNameObj.state = 'REJECTED'
+          //populate the currentNameObj[1, 2 and 3] with selectedConflicts[0, 1, and 2]
+          //as well as currentNameObj[1, 2, and 3]_num with selectedConflicts[0, 1 and 2].nrNumber
+          for ( let n of [0, 1, 2] ) {
+            if ( !selectedConflicts[n] ) break
+            currentNameObj[`conflict${ n + 1 }`] = selectedConflicts[n].text
+            currentNameObj[`conflict${ n + 1 }_num`] = selectedConflicts[n].nrNumber
           }
         }
-        else {
-          this.currentNameObj.state = 'REJECTED';
-        }
-        for (var i = 0; i < this.conflicts_selected.length; i++) {
-          if (i == 0) {
-            this.currentNameObj.conflict1 = this.conflicts_selected[i].text;
-            this.currentNameObj.conflict1_num = this.conflicts_selected[i].nrNumber;
-          }
-          if (i == 1) {
-            this.currentNameObj.conflict2 = this.conflicts_selected[i].text;
-            this.currentNameObj.conflict2_num = this.conflicts_selected[i].nrNumber;
-
-          }
-          if (i == 2) {
-            this.currentNameObj.conflict3 = this.conflicts_selected[i].text;
-            this.currentNameObj.conflict3_num = this.conflicts_selected[i].nrNumber;
-
-          }
-        }
-
-        this.currentNameObj.decision_text = this.customer_message_display.substr(0,955);
-
-        // add new comment
-        this.$refs.decisioncomments.addNewComment();
-
+        currentNameObj.decision_text = this.customer_message_display.substr(0, 955)
         // send decision to API and reset flags
-        this.$store.dispatch('nameAcceptReject');
-        this.decision_made = null;
-        this.is_making_decision = false;
+        this.$store.dispatch('nameAcceptReject')
+        this.decision_made = null
+        this.is_making_decision = false
       },
-      setConflictList() {
-        let conflictList = [];
-        let exactMatches = this.exactMatchesConflicts;
-        let synonymMatches = this.synonymMatchesConflicts;
-        let cobrsPhoneticConflicts = this.cobrsPhoneticConflicts;
-        let phoneticConflicts = this.phoneticConflicts;
-        let seenNRs = [];
-
-        for (let i=0; i<exactMatches.length; i++) {
-          seenNRs.push(exactMatches[i].nrNumber);
-          conflictList.push(exactMatches[i]);
-        }
-        for (let i=0; i<synonymMatches.length; i++) {
-          if (synonymMatches[i].nrNumber != undefined && !seenNRs.includes(synonymMatches[i].nrNumber)) {
-            seenNRs.push(synonymMatches[i].nrNumber);
-            conflictList.push(synonymMatches[i]);
+      nameReject() {
+        this.$store.commit('decision_made', 'REJECTED')
+        this.$store.commit('currentCondition', null)
+      },
+      removeChip(item) {
+        let index
+        let type
+        let keys = Object.keys(item)
+        let selectionTypes = [
+          'selectedConditions',
+          'selectedConflicts',
+          'selectedReasons',
+          'selectedTrademarks',
+        ]
+        //to make this generic, since the item types (conflict, condition, reason or trademark) all have
+        //differently-named uniquely-identifying fields, we check an item to be removed against each item in each
+        //selection list.
+        for (let selectType of selectionTypes) {
+          if (this[selectType] && this[selectType].length > 0) {
+            let i = this[selectType].findIndex(set =>
+              keys.every(key => item[key] == set[key])
+            )
+        //breaking from the loop when a positive index is found
+            if (i >= 0) {
+              index = i
+              type = selectType
+              break
+            }
           }
         }
-        for (let i=0; i<cobrsPhoneticConflicts.length; i++) {
-          if (cobrsPhoneticConflicts[i].nrNumber != undefined && !seenNRs.includes(cobrsPhoneticConflicts[i].nrNumber)) {
-            seenNRs.push(cobrsPhoneticConflicts[i].nrNumber);
-            conflictList.push(cobrsPhoneticConflicts[i]);
-          }
+        //and splicing / setting the new array of items reactively with Vue.set
+        let editList = Object.assign([], this[type])
+        editList.splice(index, 1)
+        Vue.set(this, type, editList)
+      },
+      saveModal(obj) {
+        if ( this.editTextarea !== this.customer_message_display ) {
+          this.customer_message_override = this.editTextarea.valueOf()
         }
-        for (let i=0; i<phoneticConflicts.length; i++) {
-          if (phoneticConflicts[i].nrNumber != undefined && !seenNRs.includes(phoneticConflicts[i].nrNumber)) {
-            seenNRs.push(phoneticConflicts[i].nrNumber);
-            conflictList.push(phoneticConflicts[i]);
-          }
-        }
-        this.conflictList = conflictList;
+        this.hideModal()
+      },
+      showModal() {
+        Vue.set(this, 'editTextarea', this.customer_message_display)
+        this.editMessageModalVisible = true
+      },
+      trademarksLabel(obj) {
+        return obj.name + ' - ' + obj.application_number
+      },
+      truncateChipText(text) {
+        return text.length > 32 ? text.substr(0, 32) + '...' : text
       },
     },
   }
-
-
-
 </script>
 
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
-
 <style scoped>
-
-  .customer-msg-box {
-    padding: 10px;
-    border: 1px solid #bbb;
+  p {
+    margin-top: 12px;
+    margin-bottom: 0px !important;
   }
 
-  .customer-msg-box > p {
-    margin-bottom: 10px;
+  #message-cancel-button {
+    margin: 0px;
+    padding: 0px;
+    color: var(--link);
   }
 
-  #edit-customer-message-link,
-  #clear-customer-message-link {
-    font-size: 12px;
-    float: right;
+  #message-save-button {
+    margin: 0px 0px 0px -20px;
+    padding: 0px;
+    color: var(--link);
   }
 
-  #clear-customer-message-link {
-    margin-right: 20px;
+  .chip-class {
+    background-color: var(--blue);
+    height: 28px !important;
+    padding: 0 !important;
+    margin: 5px 5px 0 0;
+    border-radius: 6px;
+    color: white;
+    text-transform: uppercase;
+    font-size: 15px;
   }
 
-  .customer-msg-box pre {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    white-space: pre-line;
+  .chip-close-icon {
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+    margin: 0 0 0 7px;
+    padding: 0;
   }
 
-</style>
-
-<!-- unscoped styles -->
-<style>
-
-  .multiselect, .multiselect__input, .multiselect__single {
-    font-size: 12px;
+  .decision-container {
+    background-color: var(--xl-grey);
+    min-height: 550px;
   }
 
-  .multiselect__option {
-    min-height: inherit;
-    padding: 5px;
+  .decision-flex-holder {
+    display: flex;
+    justify-content: space-between;
   }
 
-  .character_count {
-    float: left;
-    padding: 5px;
-  }
-  .character_count.warning {
-    background-color: #ffa;
+  .decision-select-style {
+    padding: 5px 5px 0 5px !important;
+    border: 1px solid var(--l-grey);
+    background-color: white;
+    margin: 12px 15px 0 0;
   }
 
+  .fs-24 {
+    font-size: 24px;
+    font-weight: 600;
+  }
 
+  .notification-banner {
+    background-color: var(--l-blue);
+    width: 100%;
+    min-height: 45px;
+    margin: 0;
+    padding: 6px;
+    border: 1px solid var(--grey);
+    box-shadow: 0px 4px 6px -4px var(--grey);
+  }
+
+  .opacity-1 {
+    opacity: 1 !important;
+  }
+
+  .textarea-outer-v-flex {
+    border: 1px solid var(--l-grey);
+    height: 320px;
+    background-color: white;
+
+  }
+
+  .top-margin-12 {
+    margin-top: 12px;
+  }
 </style>

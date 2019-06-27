@@ -11,7 +11,6 @@ Vue.use(Vuetify)
 Vue.use(Plugin)
 Vue.use(require('vue-shortkey'))
 
-
 describe('CompName.vue', () => {
   let instance;
   
@@ -20,8 +19,8 @@ describe('CompName.vue', () => {
     instance = new Constructor({store: store});
     instance.$store.state.myKeycloak = {};
     instance.setFocus = () => {
-    };
-  });
+    }
+  })
   
   describe('Initialization', () => {
     let sandbox;
@@ -71,7 +70,6 @@ describe('CompName.vue', () => {
       expect(vm.$el.querySelector('#examine-quick-approve-button')).not.toEqual(null);
     });
     it('displays small decision text while in progress', () => {
-      console.log(vm.$store.getters.compName1);
       expect(vm.$store.getters.compName1.name).toEqual("Bad Name");
       expect(vm.$el.querySelector('.completed-decision-text')).toBeNull()
     })
@@ -98,16 +96,16 @@ describe('CompName.vue', () => {
       vm = instance.$mount();
       setTimeout(() => {
         done();
-      }, 100)
-    });
+      }, 100);
+    })
     
     afterEach(() => {
       sandbox.restore()
     });
     
     it('displays full decision text once completed', () => {
-      expect(vm.$el.querySelectorAll('.completed-decision-text')).not.toBeNull();
-      expect(vm.$el.querySelectorAll('.completed-decision-text').length).toBe(3);
+      expect(vm.$el.querySelectorAll('.decision-text')).not.toBeNull();
+      expect(vm.$el.querySelectorAll('.decision-text').length).toBe(3);
     })
   })
   
@@ -142,9 +140,9 @@ describe('CompName.vue', () => {
     });
     
     it('displays conflicts when there are no deision reasons', () => {
-      expect(vm.$el.querySelectorAll('.completed-decision-text')).not.toBeNull();
-      expect(vm.$el.querySelectorAll('.completed-decision-text')[0].innerHTML).toContain('Bada Boom Bad Name');
-      expect(vm.$el.querySelectorAll('.completed-decision-text')[0].innerHTML).toContain('Bad Dudes Name');
+      expect(vm.$el.querySelectorAll('.decision-text')).not.toBeNull();
+      expect(vm.$el.querySelectorAll('.decision-text')[0].innerHTML).toContain('Bada Boom Bad Name');
+      expect(vm.$el.querySelectorAll('.decision-text')[0].innerHTML).toContain('Bad Dudes Name');
     })
   })
   

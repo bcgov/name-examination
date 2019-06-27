@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Vue from 'vue';
 import store from '@/store'
-import ConflictList from '@/components/application/examine/recipe/conflicts/ConflictList';
+import ConflictList from '@/components/application/Examine/Recipe/conflicts/ConflictList';
 
 describe('ConflictList.vue phonetic matches expand/collapse', () => {
 

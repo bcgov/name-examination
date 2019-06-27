@@ -1,79 +1,81 @@
 <!--eslint-disable-->
 <template>
-  <v-flex :style="flexContainerStyle"
-          ma-0 pa-0 fs-15>
-    <v-layout pa-0 ma-0 wrap fill-height align-content-space-between>
-      <v-flex ma-0 pa-0>
+  <v-flex :style="flexContainerStyle" ma-0 pa-0 fs-15>
+    <v-layout wrap align-content-space-between>
+      <v-flex>
         <v-card flat
+                id="active-info-header-card"
                 tile
-                :class="cardClass"
-                :ripple="false">
-            <v-layout>
-              <v-flex :lg8="!is_expanded"
-                      :lg12="is_expanded"><b class="fw-600">{{ title }}</b></v-flex>
-              <v-flex grow text-right v-if="!is_expanded">
-                <v-btn class="ma-0 pa-0"
-                       flat
-                       v-if="isActivePopUp"
-                       :ripple="false"
-                       @click="clearHeaderPopup()">
-                  <v-icon :style="alignTop" color="light-blue">clear</v-icon>
-                  <span :style="alignTop" color="blue">Close</span>
-                </v-btn>
-                <v-btn class="ma-0 pa-0"
-                       v-else
-                       flat
-                       :ripple="false"
-                       @click="toggleRequestBannerPopUp()">
-                  <v-icon :style="alignTop" color="light-blue">add</v-icon>
-                  <span :style="alignTop" class="top-less-10"
-                        color="blue">Show</span>
-                </v-btn>
+                :class="cardClass">
+
+          <!--TITLE / SHOW : CLOSE BUTTON-->
+          <v-layout>
+            <v-flex fw-600>{{ title }}</v-flex>
+            <v-flex text-right v-if="!is_expanded">
+              <!--EITHER RENDERS SHOW OR CLOSE BUTTON:  BASED ON buttonProps Computed Value -->
+              <v-btn @click="buttonProps.action"
+                     class="ma-0 pa-0"
+                     flat>
+                <v-icon :style="alignTop" color="light-blue">{{ buttonProps.icon }}</v-icon>
+                <span :id="buttonProps.id"
+                      :style="alignTop"
+                      color="blue">{{ buttonProps.spanText }}</span>
+              </v-btn>
+            </v-flex>
+          </v-layout>
+
+          <!--<v-layout> FOR CONTENT-->
+          <v-layout :class="!is_expanded && infoType !== 'applicant' ? 'adjust-info' : ''"
+                    column>
+
+            <!-- APPLICANT / CLIENT CONTACT -->
+            <template v-if="infoType === 'applicant'">
+              <v-flex lg12>
+                <slot></slot>
               </v-flex>
-            </v-layout>
-            <v-layout column
-                      ma-0 pa-0
-                      :class="!is_expanded && infoType !== 'applicant' ? 'adjust-info' : ''">
-              <template v-if="infoType === 'applicant'">
-                <v-flex lg12 ma-0 pa-0>
-                  <slot></slot>
-                </v-flex>
+            </template>
+
+            <!--ADDITIONAL INFORMATION-->
+            <template v-if="infoType === 'information' ">
+              <template v-if="is_editing || (isActivePopUp && is_my_current_nr)">
+                <v-flex lg12>
+                  <v-textarea class="addtnl-info-text-area"
+                              style="white-space"
+                              id="info-header-card-add-info"
+                              no-resize
+                              rows="15"
+                              v-model="additionalInfo" />
+                </v-flex >
+                <v-flex text-right lg12 c-link v-if="!is_expanded">
+                  <v-btn id="popup-cancel-button" flat @click="clearHeaderPopup" >Cancel</v-btn >
+                  <v-btn id="popup-save-button" flat @click="saveInfo" >
+                      <span style="font-weight: 600"
+                            id="addn-info-popup-save-span">Save</span >
+                  </v-btn >
+                </v-flex >
               </template>
-              <template v-if="infoType === 'information' ">
-                <template v-if="is_editing || (isActivePopUp && is_my_current_nr)">
-                  <v-flex lg12 >
-                    <v-textarea class="addtnl-info-text-area"
-                                style="white-space"
-                                no-resize
-                                rows="15"
-                                v-model="additionalInfo" />
-                  </v-flex >
-                  <v-flex text-right lg12 c-link v-if="!is_expanded">
-                    <v-btn id="popup-cancel-button" flat @click="clearHeaderPopup" >Cancel</v-btn >
-                    <v-btn id="popup-save-button" flat @click="saveInfo" >
-                      <b style="font-weight: 600" >Save</b >
-                    </v-btn >
-                  </v-flex >
-                </template>
-                <template v-else>
-                  <v-flex lg12>
-                    <span :style="is_expanded ? {whiteSpace: 'pre-line'} : '' ">{{ text }}</span>
-                  </v-flex >
-                </template>
+              <template v-else>
+                <v-flex lg12>
+                  <span :style="is_expanded ? {whiteSpace: 'pre-line'} : '' ">{{ text }}</span>
+                </v-flex >
               </template>
-              <template v-if="infoType === 'nature'">
-                <v-flex lg-12 v-if="is_expanded || isActivePopUp">
-                  <span :style="is_expanded ? {whiteSpace: 'pre-line'} : '' " >{{ text }}</span >
-                </v-flex>
-                <v-flex lg12 v-if="!is_expanded && !isActivePopUp">
-                  {{ truncate(text) }}
-                </v-flex>
-                <v-flex lg-12 v-if="is_expanded && !isActivePopUp">
-                  <slot></slot>
-                </v-flex>
-              </template>
-            </v-layout>
-          </v-card>
+            </template>
+
+            <!--NATURE OF BUSINESS-->
+            <template v-if="infoType === 'nature'">
+              <v-flex lg-12 v-if="is_expanded || isActivePopUp">
+                <span :style="is_expanded ? {whiteSpace: 'pre-line'} : '' " >{{ text }}</span >
+              </v-flex>
+              <v-flex lg12 v-if="!is_expanded && !isActivePopUp">
+                {{ truncate(text) }}
+              </v-flex>
+              <v-flex lg-12 v-if="is_expanded && !isActivePopUp">
+                <slot></slot>
+              </v-flex>
+            </template>
+
+          </v-layout>
+        </v-card>
       </v-flex>
     </v-layout>
   </v-flex>
@@ -101,6 +103,23 @@ export default {
         return this.$store.state.activeRequestBannerPopUp
       }
       return ''
+    },
+    buttonProps() {
+      if (this.isActivePopUp) {
+        return {
+          action: this.clearHeaderPopup,
+          spanText: 'Close',
+          icon: 'clear',
+          id: 'info-header-card-close-span'
+        }
+      } else {
+        return {
+          action: this.toggleRequestBannerPopUp,
+          spanText: 'Show',
+          icon: 'add',
+          id: 'info-header-card-show-span'
+        }
+      }
     },
     cardClass() {
       if (this.is_expanded && this.infoType === 'nature') return 'with-padding'

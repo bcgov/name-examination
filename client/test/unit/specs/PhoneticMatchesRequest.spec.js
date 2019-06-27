@@ -18,8 +18,8 @@ describe('store > checkManualPhoneticMatches', () => {
   it('replaces the plus with a space', () => {
     store.dispatch('checkManualPhoneticMatches', {searchStr:'+dog+cat + fish+',exactPhrase:''})
     // let lastCallList = CobrsPhonetic.lastCall
-    // console.log(lastCallList)
-    // console.log(lastCallList.args)
+    //
+    //
     expect(CobrsPhonetic.lastCall.args[0]).toEqual('/api/v1/requests/phonetics/ dog cat   fish /*')
   })
 
