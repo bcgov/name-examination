@@ -301,7 +301,7 @@
 </template>
 
 <script>
-/* eslint-disable */
+  /* eslint-disable */
 import clientinfoview from '@/components/application/Examine/client/ClientInfoHeader.vue'
 import { required } from 'vuelidate/lib/validators'
 import { isActualDate, isFutureDate, isNotBlankSpace, isValidFormat } from "../../../../static/js/validators"

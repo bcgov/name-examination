@@ -1,99 +1,31 @@
-/* eslint-disable */
+<!--eslint-disable-->
 <template>
-  <span>
-    <div class="row">
-      <div class="col-6 add-top-padding">
-        <h3>Conditions</h3>
-        <div id="decision-conditions-dropdown">
-        <multiselect
-          v-model="conditions_selected"
-          :options="conditions_onlycustomerfacing"
-          :multiple="true"
-          :custom-label="conditionsLabel"
-          name="phrase"
-          track-by="phrase"
-          :close-on-select="true"
-          deselectLabel=""
-          selectLabel=""
-          selectedLabel=""
-          placeholder=""
-          :disabled="customer_message_override !== null"
-        />
-        </div>
-      </div>
-      <div class="col-6 add-top-padding">
-        <h3>Conflicts</h3>
-        <multiselect
-          v-model="conflicts_selected"
-          :options="conflictList"
-          :multiple="true"
-          :custom-label="conflictsLabel"
-          track-by="nrNumber"
-          :max="3"
-          :close-on-select="true"
-          deselectLabel=""
-          selectLabel=""
-          selectedLabel=""
-          placeholder=""
-          :disabled="customer_message_override !== null"
-        />
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-6 add-top-padding">
-        <h3>Generic Rejection Reason (label TBD)</h3>
-        <multiselect
-          v-model="decision_reasons_selected"
-          :options="listDecisionReasons"
-          :multiple="true"
-          label="name"
-          track-by="name"
-          :close-on-select="true"
-          deselectLabel=""
-          selectLabel=""
-          selectedLabel=""
-          placeholder=""
-          :disabled="customer_message_override !== null"
-        />
-      </div>
-      <div class="col-6 add-top-padding">
-        <h3>Trademarks</h3>
-        <div>
-        <multiselect
-          v-model="trademarks_selected"
-          :options="trademarks"
-          :multiple="true"
-          :custom-label="trademarksLabel"
-          name="name"
-          track-by="name"
-          :close-on-select="true"
-          deselectLabel=""
-          selectLabel=""
-          selectedLabel=""
-          placeholder=""
-          :disabled="customer_message_override !== null"
-        />
-        </div>
-      </div>
-    </div>
-
-    <!-- internal alerts -->
-    <div class="row">
-      <div class="col add-top-padding">
-        <div class="alert alert-warning"
-             v-for="record in conditions_onlyinternalinstructions" v-bind:key="record.id">
-            {{ record.text }}
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col add-top-padding">
-        <h3>Message to Requestor</h3>
-        <div class="customer-msg-box">
-          <pre>{{ customer_message_display }}</pre>
-        </div>
+  <v-container decision-container fluid py-0 px-5>
+    <v-layout wrap>
+      <v-flex lg6 fs-24 style="position: relative; top: 10px">Decision</v-flex>
+      <v-flex grow />
+      <v-flex shrink style="position: relative; top: 14px">
+        <v-checkbox class="pa-0 ma-0"
+                    light
+                    v-model="consent_required_by_user" /></v-flex>
+      <v-flex shrink fs-15 style="position: relative; top: 14px">Consent Required
+      </v-flex>
+      <v-flex lg12>
+        <v-divider />
+      </v-flex>
+      <template v-if="conditionsText && conditionsText.length > 0">
+        <v-flex notification-banner d-flex mb-1>
+          <v-layout my-auto wrap>
+            <v-flex lg12
+                    px-3
+                    v-for="(cond, i) of conditionsText"
+                    :mt-1="i > 0"
+                    :key="i+'cond'">
+              <b>{{ cond.phrase[0] + cond.phrase.substr(1).toLowerCase() }} – </b>{{ cond.text }}
+            </v-flex>
+          </v-layout>
+        </v-flex>
+      </template>
 
         <!-- character count warning -->
         <div v-bind:class="{ 'warning': customer_message_display.length > 955,
@@ -142,7 +74,7 @@
 </template>
 
 <script>
-/* eslint-disable */
+  /* eslint-disable */
 
   import internalcomments from "@/components/application/Examine/InternalComments.vue";
   import Multiselect from 'vue-multiselect';
@@ -463,37 +395,25 @@
         return obj.name + ' - ' + obj.application_number;
       },
       nameAcceptReject() {
-        // save decision text, state, decision comment, and up to three conflicts
-
-
-        if (this.decision_made == 'APPROVED') {
-          this.currentNameObj.state = 'APPROVED'; // accepted
-
-          // conditionally accepted if any conditions selected with condition_required flag TRUE
-          for (var i = 0; i < this.conditions_selected.length; i++) {
-            var record = this.conditions_selected[i];
-            if (record.consent_required) {
-              this.currentNameObj.state = 'CONDITION';
-              break;
-            }
-          }
-
+        let { decision_made, currentNameObj, selectedConflicts } = this
+        if ( decision_made == 'APPROVED' ) {
+          currentNameObj.state = this.acceptance_will_be_conditional ? 'CONDITION' : 'APPROVED'
           // if there were conflicts selected but this is an approval, this will result in
           // accidental "rejected due to conflict" messaging. Remove it by clearing the selected
           // conflicts (Issue #767).
           // Do NOT clear the conflicts if the "Consent Required" condition is also set - then it's
           // intentional.
-          if (!this.consent_required_condition_set) {
-            this.conflicts_selected = [];
+          if (this.consent_required_by_user) {
+            selectedConflicts = []
           }
-        }
-        else {
-          this.currentNameObj.state = 'REJECTED';
-        }
-        for (var i = 0; i < this.conflicts_selected.length; i++) {
-          if (i == 0) {
-            this.currentNameObj.conflict1 = this.conflicts_selected[i].text;
-            this.currentNameObj.conflict1_num = this.conflicts_selected[i].nrNumber;
+        } else {
+          currentNameObj.state = 'REJECTED'
+          //populate the currentNameObj[1, 2 and 3] with selectedConflicts[0, 1, and 2]
+          //as well as currentNameObj[1, 2, and 3]_num with selectedConflicts[0, 1 and 2].nrNumber
+          for ( let n of [0, 1, 2] ) {
+            if ( !selectedConflicts[n] ) break
+            currentNameObj[`conflict${ n + 1 }`] = selectedConflicts[n].text
+            currentNameObj[`conflict${ n + 1 }_num`] = selectedConflicts[n].nrNumber
           }
           if (i == 1) {
             this.currentNameObj.conflict2 = this.conflicts_selected[i].text;
