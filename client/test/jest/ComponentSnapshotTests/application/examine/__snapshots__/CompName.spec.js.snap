@@ -1,18 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CompName.vue  renders a CompName component 1`] = `
-<v-container-stub
+<vcontainer-stub
   fluid=""
   ma-0=""
   pa-0=""
   tag="div"
 >
-  <v-layout-stub
+  <vlayout-stub
     ml-1=""
     row=""
     tag="div"
   >
-    <v-flex-stub
+    <vflex-stub
       lg6=""
       tag="div"
     >
@@ -99,27 +99,27 @@ exports[`CompName.vue  renders a CompName component 1`] = `
           </td>
         </tr>
       </table>
-    </v-flex-stub>
+    </vflex-stub>
      
-    <v-flex-stub
+    <vflex-stub
       lg6=""
       tag="div"
     >
       <!---->
-    </v-flex-stub>
-  </v-layout-stub>
+    </vflex-stub>
+  </vlayout-stub>
    
-  <v-layout-stub
+  <vlayout-stub
     ml-1=""
     row=""
     tag="div"
   >
-    <v-flex-stub
+    <vflex-stub
       lg12=""
       tag="div"
     >
       <!---->
-    </v-flex-stub>
-  </v-layout-stub>
-</v-container-stub>
+    </vflex-stub>
+  </vlayout-stub>
+</vcontainer-stub>
 `;

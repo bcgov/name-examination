@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`App.vue  renders the App 1`] = `
-<div>
+<div
+  style="height: 100%; overflow-y: auto;"
+>
   <div
     class="modal fade"
     id="error-message-modal"
@@ -35,8 +37,9 @@ exports[`App.vue  renders the App 1`] = `
    
   <div
     id="app"
+    style="height: 100%;"
   >
-    <std-header-stub
+    <stdheader-stub
       style="z-index: 2;"
     />
      
