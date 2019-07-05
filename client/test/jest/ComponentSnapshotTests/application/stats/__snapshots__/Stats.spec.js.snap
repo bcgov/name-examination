@@ -58,10 +58,24 @@ exports[`Stats.vue renders a Stats component 1`] = `
         class="col"
       >
         <b-pagination-stub
+          align="left"
+          arialabel="Pagination"
           current-page="1"
+          ellipsistext="&hellip;"
+          firsttext="&laquo;"
+          labelfirstpage="Goto first page"
+          labellastpage="Goto last page"
+          labelnextpage="Goto next page"
+          labelpage="Goto page"
+          labelprevpage="Goto previous page"
+          lasttext="&raquo;"
+          limit="5"
+          nexttext="&rsaquo;"
           perpage="50"
+          prevtext="&lsaquo;"
           size="md"
           v-model="1"
+          value="1"
         />
       </div>
     </div>

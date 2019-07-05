@@ -1,48 +1,39 @@
 <!--eslint-disable-->
 <template>
-  <div>
-    <div class="upper-section container-fluid">
-
-      <div class="namePage" >
-
-        <!--<stateheaderview />-->
-
-        <div class="RequestInfoHeader">
-          <requestinfoheaderview />
+  <fragment >
+    <div class="alert alert-warning examiner-warning"
+         v-if="(currentState == 'INPROGRESS') && (examiner != userId) && auth" >
+      This NR is being examined by {{ examiner }}
+    </div >
+    <div id="exact-history-match-banner" class="examiner-warning"
+         v-if="this.exactHistoryMatches" >Similar name previously <b >{{ exactMatch }}</b ></div >
+    <comments-pop-up />
+    <v-container fluid ma-0 pa-0 style="position: relative; background-color: white;" >
+      <v-layout >
+        <requestinfoheaderview />
+      </v-layout >
+    </v-container>
+      <template v-if="!is_editing">
+        <div style="position: relative; width: 100%; background-color: white;" >
+        <div class="lower-section container-fluid" >
+          <div class="namePage" v-if="!is_editing" >
+            <div class="row" >
+              <div class="col" style="background-color: white" >
+                <compnameview />
+              </div >
+            </div >
+            <decision v-if="is_making_decision" />
+            <div class="row" v-else-if="!is_complete" >
+              <recipemenu />
+              <div class="col" >
+                <matchissues />
+              </div >
+            </div >
+          </div >
         </div>
-      </div>
-    </div>
-
-    <div class="lower-section container-fluid">
-
-      <!-- msg re. in progress with someone else -->
-      <div class="alert alert-warning examiner-warning"
-           v-if="(currentState == 'INPROGRESS') && (examiner != userId) && auth">
-        This NR is being examined by {{ examiner }}.
-      </div>
-
-      <!-- msg re. exact history matches, ie: previous name submissions -->
-      <div id="exact-history-match-banner" class="examiner-warning"
-           v-if="this.exactHistoryMatches">
-        Similar name previously <b>{{ exactMatch }}</b>
-      </div>
-
-     <div class="namePage">
-       <div class="row" >
-         <div class="col"><compnameview /></div>
-       </div>
-
-       <decision v-if="is_making_decision" />
-       <div class="row" v-else-if="!is_complete">
-         <recipemenu />
-         <div class="col"><matchissues /></div>
-       </div>
-
-     </div>
-
-    </div>
-  </div>
-
+        </div>
+      </template>
+  </fragment>
 </template>
 
 <script>
@@ -53,6 +44,7 @@
   import recipemenu from '@/components/application/Examine/RecipeMenu.vue';
   import matchissues from '@/components/application/Examine/IssueInfo.vue';
   import decision from '@/components/application/Examine/Decision.vue';
+  import CommentsPopUp from './Examine/CommentsPopUp'
 
   export default {
     name: "SearchResults",
@@ -76,6 +68,9 @@
       is_complete() {
         return this.$store.getters.is_complete;
       },
+      is_editing() {
+        return  this.$store.state.is_editing;
+      },
       examiner() {
         return this.$store.getters.examiner;
       },
@@ -87,6 +82,13 @@
       },
       historiesJSON() {
         return this.$store.getters.historiesJSON;
+      },
+      is_viewing() {
+        return this.is_editing || this.$store.state.is_header_shown;
+      },
+      is_expanded() {
+        if (this.is_editing || this.is_viewing) return true
+        return false
       },
       exactHistoryMatches() {
 
@@ -121,6 +123,7 @@
       },
     },
     components: {
+      CommentsPopUp,
       stateheaderview,
       requestinfoheaderview,
       compnameview,
@@ -146,6 +149,17 @@
 </script>
 
 <style scoped>
+  #info-header-container {
+  }
+
+  .white-bg {
+    background-color: white !important;
+  }
+
+  .grey-bg {
+    background-color: var(--xl-grey) !important;
+  }
+
   .namePage > .row {
     margin-top: 10px;
 

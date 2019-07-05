@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="209" height="40" viewBox="0 0 209 40">
+    <g fill="none" fill-rule="evenodd">
+        <path fill="#5BC2E7" d="M40 0h169v40H40z"/>
+        <path fill="#1A5A96" d="M0 0h40v40H0z"/>
+        <g fill="#FFF">
+            <path d="M11.587 14.029l1.886-1.886L27.302 25.97l-1.886 1.886z"/>
+            <path d="M25.416 12.143l1.886 1.886-13.829 13.828-1.886-1.886z"/>
+        </g>
+        <text fill="#FFF" font-family="MyriadPro-Semibold, Myriad Pro" font-size="16" font-weight="500">
+            <tspan x="81.092" y="25">Reject Name</tspan>
+        </text>
+    </g>
+</svg>

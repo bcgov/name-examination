@@ -1,23 +1,23 @@
 import staticFilesServer from '../../unit/static.files.server';
-import { createApiSandbox, sinon } from './support/api.stubs'
+import { createApiSandbox, sinon } from './support/api.stubs';
 import {
-    givenRestrictedWord,
-    givenQueue
-} from './support'
+  givenRestrictedWord,
+  givenQueue,
+} from './support';
 import {
-    openNameExamination,
-    accessConditionsTab,
-    selectCondition,
-    accessDecisionScreen,
-    conditionalyApprove,
-    getNext
-} from './activities'
+  openNameExamination,
+  accessConditionsTab,
+  selectCondition,
+  accessDecisionScreen,
+  conditionalyApprove,
+  getNext,
+} from './activities';
 import {
-    heSeesThatHeCanQuicklyApprove,
-    heSeesThatHeCanNotQuicklyApprove,
-    heSeesNrStatusIsApproved,
-    heSeesTheSelectedConditionInDecisionScreen,
-    heSeesConditionListIsEmpty
+  heSeesThatHeCanQuicklyApprove,
+  heSeesThatHeCanNotQuicklyApprove,
+  heSeesNrStatusIsApproved,
+  heSeesTheSelectedConditionInDecisionScreen,
+  heSeesConditionListIsEmpty
 } from './assertions'
 import { loadFeature, defineFeature } from 'jest-cucumber';
 const feature = loadFeature('./test/features/regular.work.feature');

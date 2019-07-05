@@ -1,7 +1,11 @@
 /* eslint-disable */
 import Vue from 'vue';
 import Vuelidate from 'vuelidate';
+import { Plugin } from 'vue-fragment'
+import Vuetify from 'vuetify'
 
+Vue.use(Vuetify)
+Vue.use(Plugin)
 Vue.use(require('vue-shortkey'));
 Vue.use(Vuelidate);
 
@@ -182,34 +186,31 @@ describe('RequestInfoHeader.vue', () => {
 
     it('displays the NR loaded in the store', () => {
       expect(vm.nrNumber).toEqual('NR 2000948');
-      expect(vm.$el.querySelector('div.nrNum').textContent).toEqual('NR 2000948');
+      expect(vm.$el.querySelector('#nrNumberDisplay').textContent).toEqual('NR 2000948');
     });
 
-    it('displays the priority div when priority is set in store', () => {
+    it('displays the priority icon when priority is set in store', () => {
       expect(vm.priority).toBeTruthy();
-      expect(vm.$el.querySelector('div.priority')).toBeDefined();
+      expect(vm.$el.querySelector('#priorityStarIcon')).not.toEqual(null);
     });
 
     it('displays the correct state of the NR', () => {
       expect(vm.nr_status).toEqual('INPROGRESS');
-      expect(vm.$el.querySelector('div.status').textContent.trim()).toEqual('Status: INPROGRESS');
+      expect(vm.$el.querySelector('#nrStatusText').textContent.trim()).toEqual('INPROGRESS');
     });
 
     it('has the show/hide details button working properly', () => {
       //TODO: tests for all fields that are hidden/shown in header
       console.log('START details')
-      expect(vm.$el.querySelector('#comments-div')).toBeNull();
-      expect(vm.$el.querySelector('newpta')).toBeNull();
-      expect(vm.$el.querySelector('#nr-details-show-hide-details-button').textContent.trim()).toEqual('Show Details  (b)');
+      expect(vm.$el.querySelector('#show-details-graphic')).not.toBeNull();
+      expect(vm.$el.querySelector('#hide-details-graphic')).toBeNull();
       click('#nr-details-show-hide-details-button');
 
       setTimeout(() => {
-        expect(vm.$el.querySelector('#nr-details-show-hide-details-button').textContent.trim()).toEqual('Hide Details (b)');
-        expect(vm.$el.querySelector('newpta')).toBeDefined();
-        expect(vm.$el.querySelector('#comments-div')).toBeDefined();
-        expect(vm.$el.querySelector('#comments-div h3').textContent).toEqual('INTERNAL COMMENTS');
+        expect(vm.$el.querySelector('#show-details-graphic')).toBeNull();
+        expect(vm.$el.querySelector('#hide-details-graphic')).not.toBeNull();
         console.log('END details')
-      }, 10)
+      }, 200)
     });
   });
 
@@ -398,28 +399,27 @@ describe('RequestInfoHeader.vue', () => {
         console.log('CANCEL')
         click('#nr-details-cancel-button');
         setTimeout(() => {
-          expect(vm.$el.querySelector('#nr-details-edit-button').textContent).toEqual('Edit');
-          expect(vm.$el.querySelector('#nr-details-save-button')).toBeNull();
-          expect(vm.$el.querySelector('#nr-details-cancel-button')).toBeNull();
-
+          expect(vm.$el.querySelector('#nr-details-save-button')).toEqual(null);
+          expect(vm.$el.querySelector('#nr-details-cancel-button')).toEqual(null);
+          expect(vm.$el.querySelector('#nr-details-edit-button')).not.toEqual(null);
           // the PATCH should have been called to revert state to DRAFT
           expect(patchCall.lastCall).not.toBeNull();
           expect(patchCall.lastCall.args[1].state).toEqual('DRAFT');
           expect(patchCall.lastCall.args[1].previousStateCd).toEqual(null);
 
           console.log('END cancel')
-        }, 10);
+        }, 100);
       });
 
       it('has the save button working properly', () => {
         console.log('START save')
 
         expect(vm.validate()).toBeTruthy();
-        expect(vm.$el.querySelector('#nr-details-save-button').textContent).toEqual('Save');
+        expect(vm.$el.querySelector('#nr-details-save-button')).not.toBeNull();
         click('#nr-details-save-button');
 
         setTimeout(() => {
-          expect(vm.$el.querySelector('#nr-details-edit-button').textContent).toEqual('Edit');
+          expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull();
           expect(vm.$el.querySelector('#nr-details-save-button')).toBeNull();
           expect(vm.$el.querySelector('#nr-details-cancel-button')).toBeNull();
 
@@ -429,7 +429,7 @@ describe('RequestInfoHeader.vue', () => {
           expect(putCall.lastCall.args[1].previousStateCd).toEqual(null);
 
           console.log('finished');
-        });
+        }, 100);
       });
 
     });
@@ -618,7 +618,7 @@ describe('RequestInfoHeader.vue', () => {
         console.log('CANCEL')
         click('#nr-details-cancel-button');
         setTimeout(() => {
-          expect(vm.$el.querySelector('#nr-details-edit-button').textContent).toEqual('Edit');
+          expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull();
           expect(vm.$el.querySelector('#nr-details-save-button')).toBeNull();
           expect(vm.$el.querySelector('#nr-details-cancel-button')).toBeNull();
 
@@ -634,11 +634,11 @@ describe('RequestInfoHeader.vue', () => {
         console.log('START save')
 
         expect(vm.validate()).toBeTruthy();
-        expect(vm.$el.querySelector('#nr-details-save-button').textContent).toEqual('Save');
+        expect(vm.$el.querySelector('#nr-details-save-button')).not.toBeNull();
         click('#nr-details-save-button');
 
         setTimeout(() => {
-          expect(vm.$el.querySelector('#nr-details-edit-button').textContent).toEqual('Edit');
+          expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull();
           expect(vm.$el.querySelector('#nr-details-save-button')).toBeNull();
           expect(vm.$el.querySelector('#nr-details-cancel-button')).toBeNull();
 
@@ -700,7 +700,6 @@ describe('RequestInfoHeader.vue', () => {
           console.log('START check edit for not my NR in progress');
           expect(vm.$el.querySelector('#nr-details-edit-button')).toBeNull();
           console.log('finished');
-
         });
       });
     });
@@ -722,7 +721,7 @@ describe('RequestInfoHeader.vue', () => {
 
         it('shows the edit button', () => {
           console.log('START check edit for not my NR in progress');
-          expect(vm.$el.querySelector('#nr-details-edit-button').textContent).toEqual('Edit');
+          expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull();
           console.log('finished');
 
         });
@@ -743,12 +742,10 @@ describe('RequestInfoHeader.vue', () => {
       });
 
       describe('editability testing', () => {
-
         it('shows the edit button for a staff member who is currently editing', () => {
           console.log('START check edit for not my NR in progress');
-          expect(vm.$el.querySelector('#nr-details-edit-button').textContent).toEqual('Edit');
+          expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull();
           console.log('finished');
-
         });
       });
     });
@@ -938,7 +935,7 @@ describe('RequestInfoHeader.vue', () => {
         console.log('CANCEL')
         click('#nr-details-cancel-button');
         setTimeout(() => {
-          expect(vm.$el.querySelector('#nr-details-edit-button').textContent).toEqual('Edit');
+          expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull();
           expect(vm.$el.querySelector('#nr-details-save-button')).toBeNull();
           expect(vm.$el.querySelector('#nr-details-cancel-button')).toBeNull();
 
@@ -954,11 +951,11 @@ describe('RequestInfoHeader.vue', () => {
         console.log('START save')
 
         expect(vm.validate()).toBeTruthy();
-        expect(vm.$el.querySelector('#nr-details-save-button').textContent).toEqual('Save');
+        expect(vm.$el.querySelector('#nr-details-save-button')).not.toBeNull();
         click('#nr-details-save-button');
 
         setTimeout(() => {
-          expect(vm.$el.querySelector('#nr-details-edit-button').textContent).toEqual('Edit');
+          expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull();
           expect(vm.$el.querySelector('#nr-details-save-button')).toBeNull();
           expect(vm.$el.querySelector('#nr-details-cancel-button')).toBeNull();
 
@@ -1014,7 +1011,7 @@ describe('RequestInfoHeader.vue', () => {
     });
 
     it('has the edit button for a staff member', () => {
-      expect(vm.$el.querySelector('#nr-details-edit-button').textContent).toEqual('Edit');
+      expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull();
     });
   });
 

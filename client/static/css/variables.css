@@ -1,0 +1,26 @@
+:root {
+  --priority:   #e01e36;
+  --rejected:   #e01e36;
+  --red:        #e01e36;
+
+  --d-blue:     #003366;
+  --blue:       #1a5a96;
+  --link:       #1a5a96;
+  --l-blue:     #dceffa;
+  --xl-blue:    #ecf7fc;
+
+  --d-grey:     #494949;
+  --text:       #494949;
+  --grey:       #bcbec5;
+  --outline:    #bcbec5;
+  --l-grey:     #dddddd;
+  --xl-grey:    #f2f2f2;
+
+  --cyan:       #5bc2e7;
+
+  --green:      #82c545;
+  --accepted:   #82c545;
+  --d-green:    #417505;
+
+  --gold:       #fcba19;
+}

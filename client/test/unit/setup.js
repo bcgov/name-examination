@@ -1,4 +1,9 @@
 import Vue from 'vue';
+import { Plugin } from 'vue-fragment'
+import Vuetify from 'vuetify'
+
+Vue.use(Vuetify)
+Vue.use(Plugin)
 
 Vue.config.productionTip = false;
 

@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 <template>
-  <div>
+  <div style="height: 100%; overflow-y: auto">
     <!-- error msgs from backend -->
     <div class="modal fade" id="error-message-modal" role="dialog">
       <div class="modal-dialog modal-lg" role="document">
@@ -29,10 +29,10 @@
         </div>
       </div>
     </div>
-    <div id="app">
-        <std-header> </std-header>
+    <div id="app" style="height: 100%;">
+        <std-header style="z-index: 2"> </std-header>
       <div>
-        <router-view></router-view>
+        <router-view style="z-index: 1"></router-view>
       </div>
     </div>
   </div>
@@ -97,12 +97,8 @@ export default {
 </script>
 
 <style>
-  #app {
-    font-family: Myriad-Pro, Calibri, Arial, 'sans serif';
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
-  }
+  /*app-wide import of css variables to use in scoped and inline style*/
+  @import '~/../../static/css/variables.css';
   .modal-header-error {
     background-color: #ea9999;
   }

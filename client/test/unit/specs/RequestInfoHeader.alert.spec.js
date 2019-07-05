@@ -59,24 +59,37 @@ describe('RequestInfoHeader alerts', () => {
   })
 
   it('displays NR', () => {
-    expect(vm.$el.querySelector('div.nrNum').textContent).toEqual('NR1234')
+    expect(vm.$el.querySelector('#nrNumberDisplay').textContent).toEqual('NR1234')
   })
 
   it('displays names', () => {
-    expect(vm.$el.querySelector('table tr:nth-child(1) input').value).toEqual('Incredible inc')
-    expect(vm.$el.querySelector('table tr:nth-child(2) input').value).toEqual('Fabulous inc')
-    expect(vm.$el.querySelector('table tr:nth-child(3) input').value).toEqual('Fantastic inc')
+    expect(vm.$el.querySelector('#compName1').value).toEqual('Incredible inc')
+    expect(vm.$el.querySelector('#compName2').value).toEqual('Fabulous inc')
+    expect(vm.$el.querySelector('#compName3').value).toEqual('Fantastic inc')
   })
 
   it('hides error when all good', () => {
-    expect(vm.$el.querySelector('table tr:nth-child(1) .error')).toEqual(null)
+    expect(vm.$el.querySelector('div.field-error')).toEqual(null)
   })
 
   it('alerts when first choice is missing', (done) => {
     vm.compName1.name = '';
 
     setTimeout(() => {
-      expect(vm.$el.querySelector('table tr:nth-child(1) .error').innerHTML).toEqual('The first name choice is required.')
+      expect(vm.$el.querySelector('div.field-error').innerHTML).toEqual('The first name choice is required')
+      done();
+    }, 300)
+  })
+  
+  it('alerts when entering a 3rd choice w.o. a 2nd', (done) => {
+    vm.compName1.name = 'Some Name';
+    vm.compName2.name = '';
+    vm.compName3.name = 'A name'
+    
+    setTimeout(() => {
+      expect(vm.$el.querySelector('div.field-error').innerHTML.trim()).toEqual(
+        'To include a 3rd name choice the 2nd name choice is first required'
+      )
       done();
     }, 300)
   })

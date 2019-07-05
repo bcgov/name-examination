@@ -56,7 +56,7 @@ describe('StdHeader.vue', () => {
     })
 
     it('offers a link to /home from logo', (done) => {
-      click('.navbar-brand');
+      click('#namex-logo-home-link');
 
       setTimeout(() => {
         expect(window.location.pathname).toEqual('/home')
@@ -64,7 +64,11 @@ describe('StdHeader.vue', () => {
       }, 300)
     })
     it('offers a link to /nameExamination', (done) => {
-      click('#nameExamine');
+      //vuetify does not offer a way to assign an ID to the link ( <a> tag )  in its tab
+      //component in the markup, but it is the first and only child of the element which gets the
+      //id
+      vm.$el.querySelector('#nameExamine').firstChild.setAttribute('id', 'nameExaminationhref')
+      click('#nameExaminationhref')
 
       setTimeout(() => {
         expect(window.location.pathname).toEqual('/nameExamination')
@@ -72,7 +76,10 @@ describe('StdHeader.vue', () => {
       }, 300)
     })
     it('offers a link to /find', (done) => {
-      click('#header-search-link');
+      vm.$el.querySelector(
+        '#header-search-link'
+      ).firstChild.setAttribute('id', 'namexSearchLink')
+      click('#namexSearchLink');
 
       setTimeout(() => {
         expect(window.location.pathname).toEqual('/find')
@@ -98,7 +105,6 @@ describe('StdHeader.vue', () => {
         },
       }
       vm = mount();
-      console.log(vm.$el.querySelector('#nameExamine'))
       expect(vm.$el.querySelector('#nameExamine')).toEqual(null);
     })
     it('does not offer a link to /nameExamination for viewers', () => {
