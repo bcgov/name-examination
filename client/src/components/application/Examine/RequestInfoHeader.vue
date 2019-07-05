@@ -2,8 +2,8 @@
 <template>
   <v-flex>
     <!--1st ROW - NR NUMBER / JURISDICTION / BUTTONS -->
-    <v-container fluid mt-2 pa-0>
-      <v-layout align-start mb-3 row>
+    <v-container fluid mt-2 pa-0 :class="is_expanded || is_editing ? 'grey-bg' : ''">
+      <v-layout align-start pb-3 row>
         <!--NR NUMBER-->
         <v-flex :class="['nr-number', 'text-left',  'mx-4', priority ? 'rejected' : 'dk-grey']" shrink>
           <span id="nrNumberDisplay">{{ nrNumber }}</span>
@@ -24,7 +24,7 @@
             </v-flex>
             <template v-if="jurisdiction_required">
               <v-flex fw-600 fs-15 mt-2>Jurisdiction:</v-flex>
-              <v-flex :mb-2="!$v.jurisdiction.required">
+              <v-flex :pb-2="!$v.jurisdiction.required">
                 <v-select v-model="jurisdiction"
                           :items="jurisdiction_options"
                           class="jurisdiction-dropdown"
@@ -32,7 +32,7 @@
                           dense
                           @input="$v.jurisdiction.$touch()" />
               </v-flex>
-              <v-flex mb-2 field-error v-if="!$v.jurisdiction.required">
+              <v-flex pb-2 field-error v-if="!$v.jurisdiction.required">
                 Jurisdiction is required
               </v-flex>
             </template>
@@ -611,7 +611,7 @@ export default {
         }
       }
       return {
-        width: 70 + 'px'
+        maxWidth: 120 + 'px'
       }
     },
     nwptaSKStyle() {
@@ -623,7 +623,7 @@ export default {
         }
       }
       return {
-        width: 70 + 'px'
+        maxWidth: 120 + 'px'
       }
     },
     nrNumber() {
@@ -956,6 +956,11 @@ export default {
   .info-banner-xpanded {
     background-color: var(--xl-grey) !important;
     padding: 0px !important;
+  }
+
+  .grey-bg {
+    background-color: var(--xl-grey) !important;
+    margin-bottom: 0 !important;
   }
 
   .jurisdiction-dropdown {

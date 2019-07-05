@@ -43,6 +43,7 @@
                 <template v-if="is_editing || (isActivePopUp && is_my_current_nr)">
                   <v-flex lg12 >
                     <v-textarea class="addtnl-info-text-area"
+                                style="white-space"
                                 no-resize
                                 rows="15"
                                 v-model="additionalInfo" />
@@ -55,14 +56,14 @@
                   </v-flex >
                 </template>
                 <template v-else>
-                  <v-flex lg12 >
-                    {{ text }}
+                  <v-flex lg12>
+                    <span :style="is_expanded ? {whiteSpace: 'pre-line'} : '' ">{{ text }}</span>
                   </v-flex >
                 </template>
               </template>
               <template v-if="infoType === 'nature'">
                 <v-flex lg-12 v-if="is_expanded || isActivePopUp">
-                  {{ text }}
+                  <span :style="is_expanded ? {whiteSpace: 'pre-line'} : '' " >{{ text }}</span >
                 </v-flex>
                 <v-flex lg12 v-if="!is_expanded && !isActivePopUp">
                   {{ truncate(text) }}

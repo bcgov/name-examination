@@ -39,8 +39,8 @@
         </v-flex>
         <v-layout px-3 pb-2 mt-2 column style="overflow-y: scroll; max-height: 475px;">
           <template v-for="(comment, i) in comments">
-            <v-flex fs-15>
-              {{ comment.comment }}
+            <v-flex fs-15 ws-pre>
+              <span style="white-space: pre-line" >{{ comment.comment }}</span>
             </v-flex>
             <v-flex fs-14 mt-2 ft-ital>
               {{ comment.examiner }} - {{ formatTime(comment.timestamp) }}
@@ -145,6 +145,11 @@ export default {
     padding: 0px;
     color: var(--link);
   }
+
+  ws-pre {
+    white-space: pre-line !important;
+  }
+
   top-less-10 {
     position: relative !important;
     top: -10px !important;

@@ -1,44 +1,39 @@
 <!--eslint-disable-->
 <template>
-  <div style="position: absolute; width: 100%; background-color: white;">
+  <fragment >
+    <div class="alert alert-warning examiner-warning"
+         v-if="(currentState == 'INPROGRESS') && (examiner != userId) && auth" >
+      This NR is being examined by {{ examiner }}
+    </div >
+    <div id="exact-history-match-banner" class="examiner-warning"
+         v-if="this.exactHistoryMatches" >Similar name previously <b >{{ exactMatch }}</b ></div >
     <comments-pop-up />
-    <v-container fluid
-                 ma-0 pa-0
-                 id="info-header-container"
-                 :class="is_expanded ? 'grey-bg' : 'white-bg'">
-      <v-layout>
+    <v-container fluid ma-0 pa-0 style="position: relative; background-color: white;" >
+      <v-layout >
         <requestinfoheaderview />
-      </v-layout>
+      </v-layout >
     </v-container>
-
-    <div class="lower-section container-fluid">
-
-      <!-- msg re. in progress with someone else -->
-      <div class="alert alert-warning examiner-warning"
-           v-if="(currentState == 'INPROGRESS') && (examiner != userId) && auth">
-        This NR is being examined by {{ examiner }}.
-      </div>
-
-      <!-- msg re. exact history matches, ie: previous name submissions -->
-      <div id="exact-history-match-banner" class="examiner-warning"
-           v-if="this.exactHistoryMatches">
-        Similar name previously <b>{{ exactMatch }}</b>
-      </div>
-
       <template v-if="!is_editing">
-        <div class="namePage" v-if="!is_editing">
-          <div class="row" >
-            <div class="col" style="background-color: white"><compnameview /></div>
-          </div>
-          <decision v-if="is_making_decision" />
-          <div class="row" v-else-if="!is_complete">
-            <recipemenu />
-            <div class="col"><matchissues /></div>
-          </div>
+        <div style="position: relative; width: 100%; background-color: white;" >
+        <div class="lower-section container-fluid" >
+          <div class="namePage" v-if="!is_editing" >
+            <div class="row" >
+              <div class="col" style="background-color: white" >
+                <compnameview />
+              </div >
+            </div >
+            <decision v-if="is_making_decision" />
+            <div class="row" v-else-if="!is_complete" >
+              <recipemenu />
+              <div class="col" >
+                <matchissues />
+              </div >
+            </div >
+          </div >
+        </div>
         </div>
       </template>
-    </div>
-  </div>
+  </fragment>
 </template>
 
 <script>
