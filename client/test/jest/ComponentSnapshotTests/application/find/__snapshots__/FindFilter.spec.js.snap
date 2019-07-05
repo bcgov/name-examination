@@ -244,10 +244,8 @@ exports[`FindFilter.vue renders a FindFilter component 1`] = `
         id="table-options"
         style="display: flex;"
       >
-        <div
-          style="flex-shrink: 1; align-self: center;"
-        >
-          <b-link-stub
+        <div>
+          <blink-stub
             activeclass="active"
             event="click"
             exactactiveclass="active"
@@ -256,70 +254,61 @@ exports[`FindFilter.vue renders a FindFilter component 1`] = `
             target="_self"
           >
             Clear Filters
-          </b-link-stub>
+          </blink-stub>
         </div>
          
-        <div
-          style="flex-grow: 1;"
-        />
+        <div />
          
         <div
           id="pagination"
-          style="flex-shrink: 1;"
         >
           <div
             style="display: flex; justify-content: flex-end;"
           >
             <div
               id="results"
-              style="align-self: center; margin-right: 30px;"
+              style="margin-right: 30px;"
             >
               Results: 0
             </div>
              
             <div
-              style="align-self: center; margin-right: 5px;"
+              style="margin-right: 5px;"
             >
               Display:
             </div>
              
-            <b-form-select-stub
-              disabledfield="disabled"
+            <bformselect-stub
               options="5,10,20,50,100"
               selectsize="0"
               style="width: 60px; float: right; margin-right: 10px;"
-              textfield="text"
               value="10"
-              valuefield="value"
             />
              
             <div
-              style="align-self: center; margin-right: 3px;"
+              style="margin-right: 3px;"
             >
               Page:
             </div>
              
-            <b-form-select-stub
-              disabledfield="disabled"
+            <bformselect-stub
               options="1"
               selectsize="0"
               style="width: 60px; float: right;"
-              textfield="text"
               value="1"
-              valuefield="value"
             />
              
             <div
-              style="align-self: center; margin: 0px 3px 0px 5px;"
+              style="margin: 0px 3px 0px 5px;"
             >
               of 1
             </div>
              
-            <b-button-group-stub
+            <bbuttongroup-stub
               ariarole="group"
               tag="div"
             >
-              <b-btn-stub
+              <bbtn-stub
                 activeclass="active"
                 event="click"
                 exactactiveclass="active"
@@ -329,9 +318,9 @@ exports[`FindFilter.vue renders a FindFilter component 1`] = `
                 type="button"
               >
                 ‹
-              </b-btn-stub>
+              </bbtn-stub>
                
-              <b-btn-stub
+              <bbtn-stub
                 activeclass="active"
                 event="click"
                 exactactiveclass="active"
@@ -341,14 +330,14 @@ exports[`FindFilter.vue renders a FindFilter component 1`] = `
                 type="button"
               >
                 ›
-              </b-btn-stub>
-            </b-button-group-stub>
+              </bbtn-stub>
+            </bbuttongroup-stub>
           </div>
         </div>
       </div>
     </span>
      
-    <b-table-stub
+    <btable-stub
       apiurl=""
       class="pre-line scroll"
       currentpage="1"

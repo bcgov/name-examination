@@ -1,59 +1,61 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`NameExamination.vue renders a NameExamination view 1`] = `
-<div
-  style="position: absolute; width: 100%; background-color: white;"
+<fragment-stub
+  name="ca3ec89d5"
 >
-  <comments-pop-up-stub />
+  <!---->
    
-  <v-container-stub
-    class="white-bg"
+  <!---->
+   
+  <commentspopup-stub />
+   
+  <vcontainer-stub
     fluid=""
-    id="info-header-container"
     ma-0=""
     pa-0=""
     tag="div"
   >
-    <v-layout-stub
+    <vlayout-stub
       tag="div"
     >
       <requestinfoheaderview-stub />
-    </v-layout-stub>
-  </v-container-stub>
+    </vlayout-stub>
+  </vcontainer-stub>
    
   <div
-    class="lower-section container-fluid"
+    style="position: relative; width: 100%; background-color: white;"
   >
-    <!---->
-     
-    <!---->
-     
     <div
-      class="namePage"
+      class="lower-section container-fluid"
     >
       <div
-        class="row"
+        class="namePage"
       >
         <div
-          class="col"
-          style="background-color: white;"
+          class="row"
         >
-          <compnameview-stub />
+          <div
+            class="col"
+            style="background-color: white;"
+          >
+            <compnameview-stub />
+          </div>
         </div>
-      </div>
-       
-      <div
-        class="row"
-      >
-        <recipemenu-stub />
          
         <div
-          class="col"
+          class="row"
         >
-          <matchissues-stub />
+          <recipemenu-stub />
+           
+          <div
+            class="col"
+          >
+            <matchissues-stub />
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</fragment-stub>
 `;
