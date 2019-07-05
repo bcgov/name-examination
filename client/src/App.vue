@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 <template>
-  <div>
+  <div style="height: 100%; overflow-y: auto">
     <!-- error msgs from backend -->
     <div class="modal fade" id="error-message-modal" role="dialog">
       <div class="modal-dialog modal-lg" role="document">
@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-    <div id="app">
+    <div id="app" style="height: 100%;">
         <std-header style="z-index: 2"> </std-header>
       <div>
         <router-view style="z-index: 1"></router-view>
