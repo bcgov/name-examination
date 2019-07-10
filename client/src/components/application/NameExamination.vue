@@ -1,11 +1,11 @@
 <!--eslint-disable-->
 <template>
   <fragment >
-    <div class="alert alert-warning examiner-warning"
+    <div class="alert alert-warning"
          v-if="(currentState == 'INPROGRESS') && (examiner != userId) && auth" >
       This NR is being examined by {{ examiner }}
     </div >
-    <div id="exact-history-match-banner" class="examiner-warning"
+    <div id="exact-history-match-banner" class="ml-1 mb-0 alert alert-info"
          v-if="this.exactHistoryMatches" >Similar name previously <b >{{ exactMatch }}</b ></div >
     <comments-pop-up />
     <v-container fluid ma-0 pa-0 style="position: relative; background-color: white;" >
@@ -163,11 +163,5 @@
   .namePage > .row {
     margin-top: 10px;
 
-  }
-
-  .examiner-warning {
-    margin-left: -15px;
-    margin-right: -15px;
-    border-radius: unset;
   }
 </style>
