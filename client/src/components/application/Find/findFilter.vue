@@ -268,7 +268,7 @@ export default {
           }
           // truncate nature of business if too long
           if (data[i].natureBusinessInfo != null && data[i].natureBusinessInfo.length > 100) {
-            data[i].natureBusinessInfo = [data[i].natureBusinessInfo.slice(0,75), '...'];
+            data[i].natureBusinessInfo = `${ data[i].natureBusinessInfo.slice(0, 75) }...`;
           }
           // display priority (priority/standard)
           if (data[i].priorityCd === 'Y')
@@ -291,7 +291,7 @@ export default {
               month: '2-digit',
               year: 'numeric'
             });
-            data[i].lastUpdate = [data[i].lastUpdate.slice(0,12),'\n',data[i].lastUpdate.slice(12,-1)];
+            data[i].lastUpdate = `${ data[i].lastUpdate.slice(0, 12) } \n ${ data[i].lastUpdate.slice(12, -1) }`;
           }
           if (data[i].submittedDate != undefined) {
             data[i].submittedDate = new Date(data[i].submittedDate).toLocaleString('en-ca', {
@@ -301,7 +301,7 @@ export default {
               month: '2-digit',
               year: 'numeric'
             });
-            data[i].submittedDate = [data[i].submittedDate.slice(0,12),'\n',data[i].submittedDate.slice(12,-1)];
+            data[i].submittedDate = `${ data[i].submittedDate.slice(0, 12) } \n ${ data[i].submittedDate.slice(12, -1) }`;
           }
           // display last comment only/format it for table //
           if (data[i].comments != undefined && data[i].comments[0] != undefined) {
@@ -314,7 +314,7 @@ export default {
             data[i].comments = latestComment.comment;
             if (data[i].comments) {
               if (data[i].comments.length > 100) {
-                data[i].comments = [data[i].comments.slice(0, 75), '...'];
+                data[i].comments = `${ data[i].comments.slice(0, 75) }...`;
               }
             }
           } else { data[i].comments = null };

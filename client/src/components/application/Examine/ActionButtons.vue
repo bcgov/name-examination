@@ -36,8 +36,7 @@
              class="mx-1 pa-0 action-button"
              id="examine-cancel-button"
              v-if="canCancel && !is_making_decision && !is_cancelled && !is_approved_expired && !is_consumed"
-             data-target="#add-cancel-comment-modal"
-             data-toggle="modal"><img src="/static/images/buttons/cancel-req.png"/></v-btn>
+             @click="toggleCancelModal('show')"><img src="/static/images/buttons/cancel-req.png"/></v-btn>
 
       <!-- HOLD button -->
       <v-btn flat
@@ -104,6 +103,8 @@
              v-if="can_claim"
              @click="claimNR()"><img src="/static/images/buttons/examine.png"/></v-btn>
     </v-flex>
+
+    <!--CANCELATION COMMENTS MODAL-->
     <div class="modal fade"
          id="add-cancel-comment-modal"
          role="dialog">
@@ -116,19 +117,24 @@
             </button>
           </div>
           <div class="modal-body">
-              <textarea id="cancel-comment-text" class="form-control" rows="10"
+              <textarea id="cancel-comment-text"
+                        class="form-control"
+                        rows="10"
                         v-model="cancel_comment_display"></textarea>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-sm btn-secondary"
-                    data-dismiss="modal" @click="cancelNrCancel">Cancel</button>
-            <button type="button" id="cancel-nr-after-comment-button" class="btn btn-sm btn-danger" disabled="true"
-                    data-dismiss="modal" @click="cancelNr">CANCEL REQUEST</button>
+            <button type="button"
+                    class="btn btn-sm btn-secondary"
+                    @click="toggleCancelModal('hide')">Cancel</button>
+            <button type="button"
+                    id="cancel-nr-after-comment-button"
+                    class="btn btn-sm btn-danger"
+                    :disabled="cancelSubmitDisabled"
+                    @click="cancelNr">CANCEL REQUEST</button>
           </div>
         </div>
       </div>
     </div>
-
   </fragment>
 </template>
 
@@ -139,13 +145,51 @@ import moment from 'moment'
 export default {
   name: 'ActionButtons',
   props: ['can_edit', 'edit', 'is_viewing', 'toggleDetails'],
-  data: function () {
+  data() {
     return {
       add_comment_display: '',
       cancel_comment_display: '',
     }
   },
+  mounted() {
+    //to clear the modal when it closes (using listener to catch all ways the modal is closed eg. built in 'x')
+    $('#add-cancel-comment-modal').on('hidden.bs.modal', () => {
+      this.cancel_comment_display = ''
+    })
+  },
   computed: {
+    acceptance_will_be_conditional() {
+      return this.$store.getters.acceptance_will_be_conditional;
+    },
+    can_claim() {
+      console.log('got to can_claim with status ' + this.currentState);
+      // can this user claim the NR? Based on state.
+      if (this.userIsAnExaminer && ['DRAFT', 'HOLD'].indexOf(this.currentState) > -1) return true;
+      else return false;
+    },
+    canCancel() {
+      return this.userCanEdit;
+    },
+    cancelSubmitDisabled() {
+      if (this.cancel_comment_display) {
+        return this.cancel_comment_display.length === 0
+      }
+      return true
+    },
+    consumptionDate() {
+      return this.$store.getters.consumptionDate;
+    },
+    currentNameObj: {
+      get: function() {
+        return this.$store.getters.currentNameObj;
+      },
+      set: function (value) {
+        this.$store.commit('currentNameObj', value);
+      }
+    },
+    currentState() {
+      return this.$store.getters.currentState;
+    },
     decision_made: {
       get: function () {
         return this.$store.getters.decision_made;
@@ -154,34 +198,13 @@ export default {
         this.$store.commit('decision_made', value);
       }
     },
-    currentState() {
-      return this.$store.getters.currentState;
-    },
-    userId() {
-      return this.$store.getters.userId;
-    },
-    userIsAnExaminer() {
-      return this.$store.getters.userHasApproverRole;
-    },
-    userCanEdit() {
-      return this.$store.getters.userHasEditRole;
-    },
-    canCancel() {
-      return this.userCanEdit;
-    },
-    is_my_current_nr() {
-      return this.$store.getters.is_my_current_nr;
-    },
-    is_complete() {
-      return this.$store.getters.is_complete;
-    },
-    is_furnished() {
-      if (this.$store.getters.furnished === 'Y') return true;
-      return false;
-    },
-    is_cancelled() {
-      if (this.$store.getters.currentState === 'CANCELLED') return true;
-      return false;
+    internalComments: {
+      get: function() {
+        return this.$store.getters.internalComments;
+      },
+      set: function(value) {
+        this.$store.commit('internalComments', value);
+      }
     },
     is_approved_expired() {
       // if there is no expiry date, this NR is not approved-expired
@@ -195,12 +218,23 @@ export default {
       if (this.$store.getters.currentState === 'APPROVED' && today.isAfter(expired_date)) return true;
       return false;
     },
+    is_cancelled() {
+      if (this.$store.getters.currentState === 'CANCELLED') return true;
+      return false;
+    },
+    is_complete() {
+      return this.$store.getters.is_complete;
+    },
     is_consumed() {
       if (this.consumptionDate != null) return true;
       else return false;
     },
     is_editing() {
       return  this.$store.state.is_editing;
+    },
+    is_furnished() {
+      if (this.$store.getters.furnished === 'Y') return true;
+      return false;
     },
     is_making_decision: {
       get: function() {
@@ -210,47 +244,47 @@ export default {
         this.$store.commit('is_making_decision', value);
       }
     },
+    is_my_current_nr() {
+      return this.$store.getters.is_my_current_nr;
+    },
     is_name_decision_made() {
       // is a decision already made for the current name? Happens right after reset/re-open.
       if (this.currentNameObj.state !== 'NE') return true;
       else return false;
     },
-    acceptance_will_be_conditional() {
-      return this.$store.getters.acceptance_will_be_conditional;
+    userCanEdit() {
+      return this.$store.getters.userHasEditRole;
     },
-    can_claim() {
-      console.log('got to can_claim with status ' + this.currentState);
-      // can this user claim the NR? Based on state.
-      if (this.userIsAnExaminer && ['DRAFT', 'HOLD'].indexOf(this.currentState) > -1) return true;
-      else return false;
+    userId() {
+      return this.$store.getters.userId;
     },
-    currentNameObj: {
-      get: function() {
-        return this.$store.getters.currentNameObj;
-      },
-      set: function (value) {
-        this.$store.commit('currentNameObj', value);
-      }
-    },
-    internalComments: {
-      get: function() {
-        return this.$store.getters.internalComments;
-      },
-      set: function(value) {
-        this.$store.commit('internalComments', value);
-      }
-    },
-    consumptionDate() {
-      return this.$store.getters.consumptionDate;
+    userIsAnExaminer() {
+      return this.$store.getters.userHasApproverRole;
     },
   },
   methods: {
-   getNextCompany() {
+    addNewComment(value) {
+      // create new comment object with just text, and add it to list of comments in data structure
+      var newCommentData = {
+        comment: value,
+        examiner: this.$store.state.examiner
+      };
+      this.internalComments = this.internalComments.concat(newCommentData)
+    },
+    cancelNr() {
+      this.addNewComment(this.cancel_comment_display)
+      this.$store.dispatch('cancelNr', 'CANCELLED')
+      this.toggleCancelModal('hide')
+    },
+    claimNR() {
+      this.$store.dispatch('updateNRState', 'INPROGRESS');
+    },
+    getNextCompany() {
       this.$store.dispatch('resetValues');
       this.$store.dispatch('getpostgrescompNo');
     },
-    startDecision() {
-      this.is_making_decision = true
+    holdRequest() {
+      this.$store.dispatch('updateNRState', 'HOLD');
     },
     nameAccept() {
       this.$store.commit('decision_made', 'APPROVED');
@@ -311,52 +345,21 @@ export default {
       // update request in database and NRO
       this.$store.dispatch('updateRequest');
     },
-    claimNR() {
-      this.$store.dispatch('updateNRState', 'INPROGRESS');
-    },
-    holdRequest() {
-      this.$store.dispatch('updateNRState', 'HOLD');
-    },
     setFocus: function() {
       if(this.$refs.search) {
         this.$refs.search.focus();
       }
     },
-    addNewComment(value) {
-      // create new comment object with just text, and add it to list of comments in data structure
-      var newCommentData = {
-        comment: value,
-        examiner: this.$store.state.examiner
-      };
-      this.internalComments = this.internalComments.concat(newCommentData);
+    startDecision() {
+      this.is_making_decision = true
     },
-    cancelNr() {
-      this.addNewComment(this.cancel_comment_display);
-      this.$store.dispatch('cancelNr', 'CANCELLED');
-    },
-    cancelNrCancel() {
-      this.cancel_comment_display = "";
-      $("#cancel-comment-text").prop('disabled', false); // TODO need this?
-    },
+    toggleCancelModal(action) {
+      //possible values for action are 'show' || 'hide'
+      $('#add-cancel-comment-modal').modal(action)
+    }
   },
-  watch: {
-    cancel_comment_display: function(val) {
-      console.log('cancel_comment_display watcher fired:' + val)
-      if (val)
-        $("#cancel-nr-after-comment-button").prop('disabled', false);
-      else
-        $("#cancel-nr-after-comment-button").prop('disabled', true);
-    },
-  }
+  destroyed() {
+    $('#add-cancel-comment-modal').off('hidden.bs.modal')
+  },
 }
 </script>
-
-
-<style scoped>
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s;
-  }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
-  }
-</style>

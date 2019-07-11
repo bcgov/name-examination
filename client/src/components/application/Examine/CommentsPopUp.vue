@@ -33,7 +33,7 @@
         </v-layout>
         <v-flex text-right c-link>
           <v-btn id="comments-cancel-button" flat :ripple="false" @click="clickCancel()">Cancel</v-btn>
-          <v-btn id="comments-save-button" flat :ripple="false" @click="saveInfo">
+          <v-btn id="comments-save-button" flat :ripple="false" :disabled="saveButtonDisabled" @click="saveInfo">
             <b style="font-weight: 600">Save</b>
           </v-btn>
         </v-flex>
@@ -54,84 +54,90 @@
 
 <script>
 /* eslint-disable */
-import moment from 'moment'
+  import moment from 'moment'
 
-export default {
-  name: 'CommentsPopUp',
-  data() {
-    return {
-      alignTop: {
-        position: 'relative',
-        top: `${-8}px`
+  export default {
+    name: 'CommentsPopUp',
+    data() {
+      return {
+        alignTop: {
+          position: 'relative',
+          top: `${-8}px`
+        },
+      }
+    },
+    computed: {
+      cardClass() {
+        let classes = ['base-info-card']
+        this.is_editing ? classes.push('editing-info') : null
+        this.showCommentsPopUp ? classes.push('expanded-info') : null
+        return classes
+      },
+      comments() {
+        function compareDateTime(b,a) {
+          if (moment(a.timestamp).unix() < moment(b.timestamp).unix() ) return -1
+          if (moment(a.timestamp).unix() > moment(b.timestamp).unix() ) return 1
+          return 0
+        }
+        if (this.$store.getters.internalComments && this.$store.getters.internalComments.length > 0) {
+          return this.$store.getters.internalComments.sort(compareDateTime)
+        }
+        return []
+      },
+      commentsCount() {
+        if (this.comments && this.comments.length > 0) {
+          return this.comments.length
+        }
+        return 0
+      },
+      commentsStyle() {
+        return {
+          maxHeight: `${this.innerHeight - 300}px`,
+          minHeight: `${300}px`
+        }
+      },
+      is_editing() {
+        return  this.$store.getters.is_editing;
+      },
+      newComment: {
+        get() {
+          if (this.$store.state.newComment) {
+            return this.$store.state.newComment
+          }
+          return ''
+        }, set(e) {
+          this.$store.commit('setNewComment', e)
+        }
+      },
+      saveButtonDisabled() {
+        if (this.newComment && this.newComment.length > 0) {
+          return false
+        }
+        return true
+      },
+      showCommentsPopUp() {
+        if (this.$store.state.showCommentsPopUp) {
+          return this.$store.state.showCommentsPopUp
+        }
+        return false
+      },
+    },
+    methods: {
+      clickCancel() {
+        this.newComment = ''
+        this.toggleCommentsPopUp(false)
+      },
+      formatTime(d) {
+        return moment(d).format('YYYY-MM-DD[,] h:mma')
+      },
+      saveInfo() {
+        this.$store.dispatch('postComment')
+      },
+      toggleCommentsPopUp(bool) {
+        this.$store.commit('toggleCommentsPopUp', bool)
       },
     }
-  },
-  computed: {
-    newComment: {
-      get() {
-        if (this.$store.state.newComment) {
-          return this.$store.state.newComment
-        }
-        return ''
-      }, set(e) {
-        this.$store.commit('setNewComment', e)
-      }
-    },
-    comments() {
-      function compareDateTime(b,a) {
-        if (moment(a.timestamp).unix() < moment(b.timestamp).unix() ) return -1
-        if (moment(a.timestamp).unix() > moment(b.timestamp).unix() ) return 1
-        return 0
-      }
-      if (this.$store.getters.internalComments && this.$store.getters.internalComments.length > 0) {
-        return this.$store.getters.internalComments.sort(compareDateTime)
-      }
-      return []
-    },
-    commentsCount() {
-      if (this.comments && this.comments.length > 0) {
-        return this.comments.length
-      }
-      return 0
-    },
-    commentsStyle() {
-      return {
-        maxHeight: `${this.innerHeight - 300}px`,
-        minHeight: `${300}px`
-      }
-    },
-    is_editing() {
-      return  this.$store.getters.is_editing;
-    },
-    cardClass() {
-      let classes = ['base-info-card']
-      this.is_editing ? classes.push('editing-info') : null
-      this.showCommentsPopUp ? classes.push('expanded-info') : null
-      return classes
-  },
-    showCommentsPopUp() {
-      if (this.$store.state.showCommentsPopUp) {
-        return this.$store.state.showCommentsPopUp
-      }
-      return false
-    },
-  },
-  methods: {
-    clickCancel() {
-      this.newComment = ''
-      this.toggleCommentsPopUp(false)
-    },
-    toggleCommentsPopUp(bool) {
-      this.$store.commit('toggleCommentsPopUp', bool)
-    },
-    formatTime(d) {
-      return moment(d).format('YYYY-MM-DD[,] h:mma')
-    },
-    saveInfo() {
-      this.$store.dispatch('postComment')
-    },
   }
-}
 </script>
 
 <style scoped>
@@ -156,6 +162,7 @@ export default {
     padding: 0px !important;
     margin: 0px !important;
   }
+
   .comments-text-area {
     margin-left: auto;
     margin-right: auto;
@@ -167,6 +174,7 @@ export default {
     width: 320px;
     height: 80px;
   }
+
   .expanded-info {
     font-size: 15px;
     background-color: var(--xl-grey);
@@ -174,6 +182,7 @@ export default {
     box-shadow: 0px 0px 6px 3px var(--grey) !important;
     margin-bottom: 10px !important;
   }
+
   .editing-info {
     z-index: 1000;
     font-size: 15px;
@@ -181,5 +190,4 @@ export default {
     border-radius: 0px !important;
     outline: 4px solid var(--xl-grey);
   }
-
 </style>
