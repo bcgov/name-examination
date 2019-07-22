@@ -3,2223 +3,2254 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from '../axios-auth'
 import moment from 'moment'
-import globalAxios from 'axios'
-import router from '@/router'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
-  state: {
-    //User Info
+export const state = {
+//User Info
+  myKeycloak: null,
+  userId: null,
+  user_roles: [],
+  authorized: false,
+  email: null,
+  errorJSON: null,
+  adminURL: null,
 
-    myKeycloak: null,
-    userId: null,
-    user_roles: [],
-    authorized: false,
-    email: null,
-    errorJSON: null,
-    adminURL:null,
-
-    //Interface settings
-    currentChoice: null, // CURRENT NAME BEING EXAMINED (choice number)
-    currentName: null, // CURRENT NAME BEING EXAMINED (string)
-    currentNameObj: { // CURRENT NAME BEING EXAMINED (complete object)
-      name: null,
-      choice: null,
-    },
-    currentState: null, // NR - APPROVED, REJECTED, INPROGRESS ETC...
-    previousStateCd: null,
-
-    currentConflict: null, // the conflict name currently in focus
-    currentCondition: null, // the condition currently in focus
-    currentTrademark: null, // the trademark currently in focus
-    currentHistory: null,  //NR number of history name selected
-
-    currentRecipeCard: null,
-    is_my_current_nr: false,
-    is_editing: false,
-    is_making_decision: false,
-    decision_made: null,
-    acceptance_will_be_conditional: false,
-    is_header_shown: false,
-    furnished: null,
-    hasBeenReset: null,
-    listPriorities: null, // DROP LIST
-    listJurisdictions: null, // DROP LIST
-    listRequestTypes: null, // DROP LIST
-    listDecisionReasons: null,
-    requestTypeRules: null, // list of request type rules, internal use only no display
-
-    //Names Data
-    //nr_conflict: null,
-    details: null,
-    additionalInfo: null,
-    internalComments: [],
-    applicantsOrigData: null,
-    nrData: null,
-    compInfo: {
-      nrNumber: null,
-      compNames: {
-        compName1: {
-          choice: null,
-          name: null,
-          state: null,
-          consumptionDate: null,
-          corpNum: null,
-          conflict1: null,
-          conflict2: null,
-          conflict3: null,
-          conflict1_num: null,
-          conflict2_num: null,
-          conflict3_num: null,
-          decision_text: null,
-          comment: null,
-        },
-        compName2: {
-          choice: null,
-          name: null,
-          state: null,
-          consumptionDate: null,
-          corpNum: null,
-          conflict1: null,
-          conflict2: null,
-          conflict3: null,
-          conflict1_num: null,
-          conflict2_num: null,
-          conflict3_num: null,
-          decision_text: null,
-          comment: null,
-        },
-        compName3: {
-          choice: null,
-          name: null,
-          state: null,
-          consumptionDate: null,
-          corpNum: null,
-          conflict1: null,
-          conflict2: null,
-          conflict3: null,
-          conflict1_num: null,
-          conflict2_num: null,
-          conflict3_num: null,
-          decision_text: null,
-          comment: null,
-        },
-      },
-      requestType: null,
-    },
-    applicantInfo: {
-      clientName: {
-        firstName: null,
-        lastName: null,
-      },
-      applicantName: {
-        firstName: null,
-        lastName: null,
-        middleName: null
-      },
-      contactInfo: {
-        addressLine1: null,
-        addressLine2: null,
-        addressLine3: null,
-        city: null,
-        province: null,
-        postalCode: null,
-        country: null,
-        contactName: null,
-        phone: null,
-        email: null,
-        fax: null
-      },
-    },
-    additionalCompInfo: {
-      jurisdiction: null,
-      natureOfBussiness: null,
-      nr_status: null,
-      nwpta_ab: {
-        partnerJurisdictionTypeCd: null,
-        partnerName: null,
-        partnerNameDate: null,
-        partnerNameNumber: null,
-        partnerNameTypeCd: null,
-      },
-      nwpta_sk: {
-        partnerJurisdictionTypeCd: null,
-        partnerName: null,
-        partnerNameDate: null,
-        partnerNameNumber: null,
-        partnerNameTypeCd: null,
-      },
-    },
-    examiner: null,
-    priority: null,
-    reservationCount: null,
-    submitCount: null,
-    previousNr: null,
-    corpNum: null,
-    submittedDate: null,
-    expiryDate: null,
-    expiryDateForEdit: null,
-    lastUpdate: null,
-    issueText: null,
-    issue: {
-      issue_Match: null,
-      issue_Consent: null,
-      issue_TradeMark: null,
-      issue_History: null,
-      issue_Format: null,
-      issue_Match_Text: null,
-      issue_Consent_Text: null,
-      issue_TradeMark_Text: null,
-      issue_History_Text: null,
-      issue_Format_Text: null
-    },
-
-    searchQuery: '?order=priorityCd:desc,submittedDate:asc&queue=hold&ranking=All&notification=All&' +
-      'submittedInterval=30 days&lastUpdateInterval=All&rows=10',
-    searchState: 'HOLD',
-    searchNr: '',
-    searchUsername: '',
-    searchCompName: '',
-    searchRanking: 'All',
-    searchNotification: 'All',
-    searchSubmittedInterval: 'All',
-    searchLastUpdatedInterval: 'All',
-    searchCurrentPage: 1,
-    searchPerPage: 10,
-
-    exactMatchesConflicts: [],
-    synonymMatchesConflicts: [],
-    cobrsPhoneticConflicts: [],
-    phoneticConflicts: [],
-    conflictList: [],
-    conflictHighlighting: [],
-    conflictNames: [],
-    conflictResponse: null,
-
-    conflictsJSON: null,
-    corpConflictJSON: null,
-    namesConflictJSON: null,
-    trademarksJSON: null,
-    historiesJSON: null,
-    historiesInfoJSON: null,
-    searchDataJSON: null,
-    conditionsJSON: null,
-    statsDataJSON: {hold: {response: {numfound: ''}},
-      draft: {response: {numfound: ''}},
-      expired: {response: {numfound: ''}},
-      cancelled: {response: {numfound: ''}},
-      approved: {response: {numfound: ''}},
-      conditional: {response: {numfound: ''}},
-      rejected: {response: {numfound: ''}}
-    },
-
-    //introduced during name-examination code with us upgrade
-    activeRequestBannerPopUp: null,
-    showCommentsPopUp: false,
-    newComment: null,
+//Interface settings
+  currentChoice: null, // CURRENT NAME BEING EXAMINED (choice number)
+  currentName: null, // CURRENT NAME BEING EXAMINED (string)
+  currentNameObj: { // CURRENT NAME BEING EXAMINED (complete object)
+    name: null, choice: null,
   },
-  mutations: {
-    requestType (state, value) {
-      state.compInfo.requestType = value;
-    },
-    is_my_current_nr (state, value) {
-      state.is_my_current_nr = value;
-    },
-    is_making_decision(state, value) {
-      state.is_making_decision = value;
-    },
-    decision_made(state, value) {
-      state.decision_made = value;
-    },
-    acceptance_will_be_conditional(state, value) {
-      state.acceptance_will_be_conditional = value;
-    },
-    currentState(state, value) {
-      state.currentState = value;
-    },
-    compName1(state, value) {
-      state.compInfo.compNames.compName1 = value;
-    },
-    compName2(state, value) {
-      state.compInfo.compNames.compName2 = value;
-    },
-    compName3(state, value) {
-      state.compInfo.compNames.compName3 = value;
-    },
-    clientFirstName (state, value) {
-      state.applicantInfo.clientName.firstName = value;
-    },
-    clientLastName(state, value) {
-      state.applicantInfo.clientName.lastName = value;
-    },
-    firstName (state, value) {
-      state.applicantInfo.applicantName.firstName = value;
-    },
-    middleName(state, value) {
-      state.applicantInfo.applicantName.middleName = value;
-    },
-    lastName (state, value) {
-      state.applicantInfo.applicantName.lastName = value;
-    },
-    addressLine1 (state, value) {
-      state.applicantInfo.contactInfo.addressLine1 = value;
-    },
-    addressLine2 (state, value) {
-      state.applicantInfo.contactInfo.addressLine2 = value;
-    },
-    addressLine3 (state, value) {
-      state.applicantInfo.contactInfo.addressLine3 = value;
-    },
-    city (state, value) {
-      state.applicantInfo.contactInfo.city = value;
-    },
-    province (state, value) {
-      state.applicantInfo.contactInfo.province = value;
-    },
-    country (state, value) {
-      state.applicantInfo.contactInfo.country = value;
-    },
-    postalCode (state, value) {
-      state.applicantInfo.contactInfo.postalCode = value;
-    },
-    contactName (state, value) {
-      state.applicantInfo.contactInfo.contactName = value;
-    },
-    phone (state, value) {
-      state.applicantInfo.contactInfo.phone = value;
-    },
-    conEmail (state, value) {
-      state.applicantInfo.contactInfo.email = value;
-    },
-    fax (state, value) {
-      state.applicantInfo.contactInfo.fax = value;
-    },
-    jurisdiction (state, value) {
-      state.additionalCompInfo.jurisdiction = value;
-    },
-    natureOfBusiness (state, value) {
-      state.additionalCompInfo.natureOfBussiness = value;
-    },
-    nwpta_ab (state, value) {
-      state.additionalCompInfo.nwpta_ab = value;
-    },
-    nwpta_sk (state, value) {
-      state.additionalCompInfo.nwpta_sk = value;
-    },
-    nr_status (state, value) {
-      state.additionalCompInfo.nr_status = value;
-    },
-    reservationCount (state, value) {
-      state.reservationCount = value;
-    },
-    expiryDate (state, value) {
-      state.expiryDate = value;
-    },
-    expiryDateForEdit (state, value) {
-      state.expiryDateForEdit = value;
-    },
-    details (state, value) {
-      state.details = value;
-    },
-    additionalInfo (state, value) {
-      state.additionalInfo = value;
-    },
-    internalComments (state, value) {
-      state.internalComments = value;
-    },
-    previousNr(state, value) {
-      state.previousNr = value;
-    },
-    corpNum(state, value) {
-      state.corpNum = value;
-    },
-    searchQuery(state, value) {
-      state.searchQuery = value;
-    },
-    searchQuerySpecial(state, value) {
-      state.searchQuerySpecial = value;
-    },
-    searchState(state,value) {
-      state.searchState = value;
-    },
-    searchNr(state,value) {
-      state.searchNr = value;
-    },
-    searchUsername(state,value) {
-      state.searchUsername = value;
-    },
-    searchCompName(state,value) {
-      state.searchCompName = value;
-    },
-    searchRanking(state,value) {
-      state.searchRanking = value;
-    },
-    searchNotification(state,value) {
-      state.searchNotification = value;
-    },
-    searchSubmittedInterval(state,value) {
-      state.searchSubmittedInterval = value;
-    },
-    searchLastUpdatedInterval(state,value) {
-      state.searchLastUpdatedInterval = value;
-    },
-    searchCurrentPage(state,value) {
-      state.searchCurrentPage = value;
-    },
-    searchPerPage(state,value) {
-      state.searchPerPage = value;
-    },
-    furnished(state,value) {
-      state.furnished = value;
-    },
-    hasBeenReset(state,value) {
-      state.hasBeenReset = value;
-    },
-    clearAuthData (state) {
-      state.userId = null
-      state.authorized = null
-    },
+  currentState: null, // NR - APPROVED, REJECTED, INPROGRESS ETC...
+  previousStateCd: null,
 
-    loadpostgresNo(state, postgresData) {
-      state.compInfo.nrNumber = postgresData.nameRequest
+  currentConflict: null, // the conflict name currently in focus
+  currentCondition: null, // the condition currently in focus
+  currentTrademark: null, // the trademark currently in focus
+  currentHistory: null,  //NR number of history name selected
+
+  currentRecipeCard: null,
+  is_my_current_nr: false,
+  is_editing: false,
+  is_making_decision: false,
+  decision_made: null,
+  acceptance_will_be_conditional: false,
+  is_header_shown: false,
+  furnished: null,
+  hasBeenReset: null,
+  listPriorities: null, // DROP LIST
+  listJurisdictions: null, // DROP LIST
+  listRequestTypes: null, // DROP LIST
+  listDecisionReasons: null,
+  requestTypeRules: null, // list of request type rules, internal use only no display
+
+//Names Data
+//nr_conflict: null,
+  details: null,
+  additionalInfo: null,
+  internalComments: [],
+  applicantsOrigData: null,
+  nrData: null,
+  compInfo: {
+    nrNumber: null, compNames: {
+      compName1: {
+        choice: null,
+        name: null,
+        state: null,
+        consumptionDate: null,
+        corpNum: null,
+        conflict1: null,
+        conflict2: null,
+        conflict3: null,
+        conflict1_num: null,
+        conflict2_num: null,
+        conflict3_num: null,
+        decision_text: null,
+        comment: null,
+      }, compName2: {
+        choice: null,
+        name: null,
+        state: null,
+        consumptionDate: null,
+        corpNum: null,
+        conflict1: null,
+        conflict2: null,
+        conflict3: null,
+        conflict1_num: null,
+        conflict2_num: null,
+        conflict3_num: null,
+        decision_text: null,
+        comment: null,
+      }, compName3: {
+        choice: null,
+        name: null,
+        state: null,
+        consumptionDate: null,
+        corpNum: null,
+        conflict1: null,
+        conflict2: null,
+        conflict3: null,
+        conflict1_num: null,
+        conflict2_num: null,
+        conflict3_num: null,
+        decision_text: null,
+        comment: null,
+      },
+    }, requestType: null,
+  },
+  applicantInfo: {
+    clientName: {
+      firstName: null, lastName: null,
+    }, applicantName: {
+      firstName: null, lastName: null, middleName: null,
+    }, contactInfo: {
+      addressLine1: null,
+      addressLine2: null,
+      addressLine3: null,
+      city: null,
+      province: null,
+      postalCode: null,
+      country: null,
+      contactName: null,
+      phone: null,
+      email: null,
+      fax: null,
     },
+  },
+  additionalCompInfo: {
+    jurisdiction: null, natureOfBussiness: null, nr_status: null, nwpta_ab: {
+      partnerJurisdictionTypeCd: null,
+      partnerName: null,
+      partnerNameDate: null,
+      partnerNameNumber: null,
+      partnerNameTypeCd: null,
+    }, nwpta_sk: {
+      partnerJurisdictionTypeCd: null,
+      partnerName: null,
+      partnerNameDate: null,
+      partnerNameNumber: null,
+      partnerNameTypeCd: null,
+    },
+  },
+  examiner: null,
+  priority: null,
+  reservationCount: null,
+  submitCount: null,
+  previousNr: null,
+  corpNum: null,
+  submittedDate: null,
+  expiryDate: null,
+  expiryDateForEdit: null,
+  lastUpdate: null,
+  issueText: null,
+  issue: {
+    issue_Match: null,
+    issue_Consent: null,
+    issue_TradeMark: null,
+    issue_History: null,
+    issue_Format: null,
+    issue_Match_Text: null,
+    issue_Consent_Text: null,
+    issue_TradeMark_Text: null,
+    issue_History_Text: null,
+    issue_Format_Text: null,
+  },
 
-    loadCompanyInfo(state, dbcompanyInfo) {
+  searchQuery: '?order=priorityCd:desc,submittedDate:asc&queue=hold&ranking=All&notification=All&' +
+    'submittedInterval=30 days&lastUpdateInterval=All&rows=10',
+  searchState: 'HOLD',
+  searchNr: '',
+  searchUsername: '',
+  searchCompName: '',
+  searchRanking: 'All',
+  searchNotification: 'All',
+  searchSubmittedInterval: 'All',
+  searchLastUpdatedInterval: 'All',
+  searchCurrentPage: 1,
+  searchPerPage: 10,
 
+  exactMatchesConflicts: [],
+  synonymMatchesConflicts: [],
+  cobrsPhoneticConflicts: [],
+  phoneticConflicts: [],
+  conflictList: [],
+  conflictHighlighting: [],
+  conflictNames: [],
+  conflictResponse: null,
 
-      state.nrData = dbcompanyInfo
+  conflictsJSON: null,
+  corpConflictJSON: null,
+  namesConflictJSON: null,
+  trademarksJSON: null,
+  historiesJSON: null,
+  historiesInfoJSON: null,
+  searchDataJSON: null,
+  conditionsJSON: null,
+  statsDataJSON: {
+    hold: { response: { numfound: '' } },
+    draft: { response: { numfound: '' } },
+    expired: { response: { numfound: '' } },
+    cancelled: { response: { numfound: '' } },
+    approved: { response: { numfound: '' } },
+    conditional: { response: { numfound: '' } },
+    rejected: { response: { numfound: '' } },
+  },
 
-      if (dbcompanyInfo.names.length == 0) {
+//introduced during name-examination code with us upgrade
+  activeRequestBannerPopUp: null,
+  newComment: null,
+  selectedConditions: [],
+  selectedConflicts: [],
+  selectedTrademarks: [],
+  showCommentsPopUp: false,
+  selectedConflictID: null,
+  expandedConflictID: null,
+  openBucket: null,
+  conflictsReturnedStatus: false,
+  parsedPhoneticConflicts: [],
+  parsedCOBRSConflicts: [],
+  parsedSynonymConflicts: [],
+}
 
-        return
+export const mutations = {
+  requestType(state, value) {
+    state.compInfo.requestType = value
+  },
+  is_my_current_nr(state, value) {
+    state.is_my_current_nr = value
+  },
+  is_making_decision(state, value) {
+    state.is_making_decision = value
+  },
+  decision_made(state, value) {
+    state.decision_made = value
+  },
+  acceptance_will_be_conditional(state, value) {
+    state.acceptance_will_be_conditional = value
+  },
+  currentState(state, value) {
+    state.currentState = value
+  },
+  compName1(state, value) {
+    state.compInfo.compNames.compName1 = value
+  },
+  compName2(state, value) {
+    state.compInfo.compNames.compName2 = value
+  },
+  compName3(state, value) {
+    state.compInfo.compNames.compName3 = value
+  },
+  clientFirstName(state, value) {
+    state.applicantInfo.clientName.firstName = value
+  },
+  clientLastName(state, value) {
+    state.applicantInfo.clientName.lastName = value
+  },
+  firstName(state, value) {
+    state.applicantInfo.applicantName.firstName = value
+  },
+  middleName(state, value) {
+    state.applicantInfo.applicantName.middleName = value
+  },
+  lastName(state, value) {
+    state.applicantInfo.applicantName.lastName = value
+  },
+  addressLine1(state, value) {
+    state.applicantInfo.contactInfo.addressLine1 = value
+  },
+  addressLine2(state, value) {
+    state.applicantInfo.contactInfo.addressLine2 = value
+  },
+  addressLine3(state, value) {
+    state.applicantInfo.contactInfo.addressLine3 = value
+  },
+  city(state, value) {
+    state.applicantInfo.contactInfo.city = value
+  },
+  province(state, value) {
+    state.applicantInfo.contactInfo.province = value
+  },
+  country(state, value) {
+    state.applicantInfo.contactInfo.country = value
+  },
+  postalCode(state, value) {
+    state.applicantInfo.contactInfo.postalCode = value
+  },
+  contactName(state, value) {
+    state.applicantInfo.contactInfo.contactName = value
+  },
+  phone(state, value) {
+    state.applicantInfo.contactInfo.phone = value
+  },
+  conEmail(state, value) {
+    state.applicantInfo.contactInfo.email = value
+  },
+  fax(state, value) {
+    state.applicantInfo.contactInfo.fax = value
+  },
+  jurisdiction(state, value) {
+    state.additionalCompInfo.jurisdiction = value
+  },
+  natureOfBusiness(state, value) {
+    state.additionalCompInfo.natureOfBussiness = value
+  },
+  nwpta_ab(state, value) {
+    state.additionalCompInfo.nwpta_ab = value
+  },
+  nwpta_sk(state, value) {
+    state.additionalCompInfo.nwpta_sk = value
+  },
+  nr_status(state, value) {
+    state.additionalCompInfo.nr_status = value
+  },
+  reservationCount(state, value) {
+    state.reservationCount = value
+  },
+  expiryDate(state, value) {
+    state.expiryDate = value
+  },
+  expiryDateForEdit(state, value) {
+    state.expiryDateForEdit = value
+  },
+  details(state, value) {
+    state.details = value
+  },
+  additionalInfo(state, value) {
+    state.additionalInfo = value
+  },
+  internalComments(state, value) {
+    state.internalComments = value
+  },
+  previousNr(state, value) {
+    state.previousNr = value
+  },
+  corpNum(state, value) {
+    state.corpNum = value
+  },
+  searchQuery(state, value) {
+    state.searchQuery = value
+  },
+  searchQuerySpecial(state, value) {
+    state.searchQuerySpecial = value
+  },
+  searchState(state, value) {
+    state.searchState = value
+  },
+  searchNr(state, value) {
+    state.searchNr = value
+  },
+  searchUsername(state, value) {
+    state.searchUsername = value
+  },
+  searchCompName(state, value) {
+    state.searchCompName = value
+  },
+  searchRanking(state, value) {
+    state.searchRanking = value
+  },
+  searchNotification(state, value) {
+    state.searchNotification = value
+  },
+  searchSubmittedInterval(state, value) {
+    state.searchSubmittedInterval = value
+  },
+  searchLastUpdatedInterval(state, value) {
+    state.searchLastUpdatedInterval = value
+  },
+  searchCurrentPage(state, value) {
+    state.searchCurrentPage = value
+  },
+  searchPerPage(state, value) {
+    state.searchPerPage = value
+  },
+  furnished(state, value) {
+    state.furnished = value
+  },
+  hasBeenReset(state, value) {
+    state.hasBeenReset = value
+  },
+  clearAuthData(state) {
+    state.userId = null
+    state.authorized = null
+  },
+
+  loadpostgresNo(state, postgresData) {
+    state.compInfo.nrNumber = postgresData.nameRequest
+  },
+
+  loadCompanyInfo(state, dbcompanyInfo) {
+    if (!dbcompanyInfo || !dbcompanyInfo.names) return
+    state.nrData = dbcompanyInfo
+
+    if (dbcompanyInfo.names.length == 0) {
+      return
+    }
+    // clear name choices 2 and 3 in case they are blank - ie: don't keep previous NR's data
+    state.compInfo.compNames.compName2.name = null
+    state.compInfo.compNames.compName2.state = null
+    state.compInfo.compNames.compName2.consumptionDate = null
+    state.compInfo.compNames.compName2.corpNum = null
+    state.compInfo.compNames.compName2.conflict1 = null
+    state.compInfo.compNames.compName2.conflict2 = null
+    state.compInfo.compNames.compName2.conflict3 = null
+    state.compInfo.compNames.compName2.conflict1_num = null
+    state.compInfo.compNames.compName2.conflict2_num = null
+    state.compInfo.compNames.compName2.conflict3_num = null
+    state.compInfo.compNames.compName2.decision_text = null
+    state.compInfo.compNames.compName3.name = null
+    state.compInfo.compNames.compName3.state = null
+    state.compInfo.compNames.compName3.consumptionDate = null
+    state.compInfo.compNames.compName3.corpNum = null
+    state.compInfo.compNames.compName3.conflict1 = null
+    state.compInfo.compNames.compName3.conflict2 = null
+    state.compInfo.compNames.compName3.conflict3 = null
+    state.compInfo.compNames.compName3.conflict1_num = null
+    state.compInfo.compNames.compName3.conflict2_num = null
+    state.compInfo.compNames.compName3.conflict3_num = null
+    state.compInfo.compNames.compName3.decision_text = null
+
+    // clear current name choice, to be reset by new data below
+    state.currentNameObj = null
+    state.currentName = null
+    state.currentChoice = null
+
+    for (let record of dbcompanyInfo.names) {
+
+      switch (record.choice) {
+        case 1:
+          state.compInfo.compNames.compName1.choice = record.choice
+          state.compInfo.compNames.compName1.name = record.name
+          state.compInfo.compNames.compName1.state = record.state
+          state.compInfo.compNames.compName1.consumptionDate = record.consumptionDate
+          state.compInfo.compNames.compName1.corpNum = record.corpNum
+          state.compInfo.compNames.compName1.conflict1 = record.conflict1
+          state.compInfo.compNames.compName1.conflict2 = record.conflict2
+          state.compInfo.compNames.compName1.conflict3 = record.conflict3
+          state.compInfo.compNames.compName1.conflict1_num = record.conflict1_num
+          state.compInfo.compNames.compName1.conflict2_num = record.conflict2_num
+          state.compInfo.compNames.compName1.conflict3_num = record.conflict3_num
+          state.compInfo.compNames.compName1.decision_text = record.decision_text
+          state.compInfo.compNames.compName1.comment = record.comment
+
+          // if this name is not yet examined or it is approved (in case of reset/re-open), set it as current name
+          if (record.state == 'NE' || record.state == 'APPROVED') {
+
+            this.dispatch('setCurrentName', record)
+          }
+
+          break
+        case 2:
+          state.compInfo.compNames.compName2.choice = record.choice
+          state.compInfo.compNames.compName2.name = record.name
+          state.compInfo.compNames.compName2.state = record.state
+          state.compInfo.compNames.compName2.consumptionDate = record.consumptionDate
+          state.compInfo.compNames.compName2.corpNum = record.corpNum
+          state.compInfo.compNames.compName2.conflict1 = record.conflict1
+          state.compInfo.compNames.compName2.conflict2 = record.conflict2
+          state.compInfo.compNames.compName2.conflict3 = record.conflict3
+          state.compInfo.compNames.compName2.conflict1_num = record.conflict1_num
+          state.compInfo.compNames.compName2.conflict2_num = record.conflict2_num
+          state.compInfo.compNames.compName2.conflict3_num = record.conflict3_num
+          state.compInfo.compNames.compName2.decision_text = record.decision_text
+          state.compInfo.compNames.compName2.comment = record.comment
+
+          // if this name is not yet examined or it is approved (in case of reset/re-open), set it as current name
+          if (( record.state == 'NE' || record.state == 'APPROVED' ) &&
+            ( record.choice < state.currentChoice || state.currentChoice == null )) {
+
+            this.dispatch('setCurrentName', record)
+          }
+
+          break
+        case 3:
+          state.compInfo.compNames.compName3.choice = record.choice
+          state.compInfo.compNames.compName3.name = record.name
+          state.compInfo.compNames.compName3.state = record.state
+          state.compInfo.compNames.compName3.consumptionDate = record.consumptionDate
+          state.compInfo.compNames.compName3.corpNum = record.corpNum
+          state.compInfo.compNames.compName3.conflict1 = record.conflict1
+          state.compInfo.compNames.compName3.conflict2 = record.conflict2
+          state.compInfo.compNames.compName3.conflict3 = record.conflict3
+          state.compInfo.compNames.compName3.conflict1_num = record.conflict1_num
+          state.compInfo.compNames.compName3.conflict2_num = record.conflict2_num
+          state.compInfo.compNames.compName3.conflict3_num = record.conflict3_num
+          state.compInfo.compNames.compName3.decision_text = record.decision_text
+          state.compInfo.compNames.compName3.comment = record.comment
+
+          // if this name is not yet examined or it is approved (in case of reset/re-open), set it as current name
+          if (( record.state == 'NE' || record.state == 'APPROVED' ) &&
+            ( record.choice < state.currentChoice || state.currentChoice == null )) {
+            this.dispatch('setCurrentName', record)
+          }
+          break
+
+        default:
+          break
+      }
+    }
+
+    //if no currentName selected choose 1st
+    if (state.currentName == null) {
+
+      this.dispatch('setCurrentName', dbcompanyInfo.names[0])
+    }
+
+    state.currentState = dbcompanyInfo.state
+    state.previousStateCd = dbcompanyInfo.previousStateCd
+    state.compInfo.requestType = dbcompanyInfo.requestTypeCd
+
+    // if the current state is not INPROGRESS, HOLD, or DRAFT clear any existing name record in currentNameObj
+    if (![ 'INPROGRESS', 'HOLD', 'DRAFT' ].includes(state.currentState)) {
+
+      this.dispatch('setCurrentName', {})
+    }
+
+    // we keep the original data so that if fields exist that we do not use, we don't lose that
+    // data when we put new data
+    if (dbcompanyInfo.applicants != '') {
+      state.applicantOrigData = dbcompanyInfo.applicants
+    } else {
+      state.applicantOrigData = {
+        'clientFirstName': null,
+        'clientLastName': null,
+        'firstName': null,
+        'middleName': null,
+        'lastName': null,
+        'addrLine1': null,
+        'addrLine2': null,
+        'addrLine3': null,
+        'city': null,
+        'stateProvinceCd': null,
+        'postalCd': null,
+        'countryTypeCd': null,
+        'contact': null,
+        'phoneNumber': null,
+        'emailAddress': null,
+        'faxNumber': null,
+      }
+    }
+    state.applicantInfo.clientName.firstName = dbcompanyInfo.applicants.clientFirstName
+    state.applicantInfo.clientName.lastName = dbcompanyInfo.applicants.clientLastName
+    state.applicantInfo.applicantName.firstName = dbcompanyInfo.applicants.firstName
+    state.applicantInfo.applicantName.middleName = dbcompanyInfo.applicants.middleName
+    state.applicantInfo.applicantName.lastName = dbcompanyInfo.applicants.lastName
+    state.applicantInfo.contactInfo.addressLine1 = dbcompanyInfo.applicants.addrLine1
+    state.applicantInfo.contactInfo.addressLine2 = dbcompanyInfo.applicants.addrLine2
+    state.applicantInfo.contactInfo.addressLine3 = dbcompanyInfo.applicants.addrLine3
+    state.applicantInfo.contactInfo.city = dbcompanyInfo.applicants.city
+    state.applicantInfo.contactInfo.province = dbcompanyInfo.applicants.stateProvinceCd
+    state.applicantInfo.contactInfo.postalCode = dbcompanyInfo.applicants.postalCd
+    state.applicantInfo.contactInfo.country = dbcompanyInfo.applicants.countryTypeCd
+    state.applicantInfo.contactInfo.contactName = dbcompanyInfo.applicants.contact
+    state.applicantInfo.contactInfo.phone = dbcompanyInfo.applicants.phoneNumber
+    state.applicantInfo.contactInfo.email = dbcompanyInfo.applicants.emailAddress
+    state.applicantInfo.contactInfo.fax = dbcompanyInfo.applicants.faxNumber
+
+    state.additionalCompInfo.jurisdiction = dbcompanyInfo.xproJurisdiction
+    state.additionalCompInfo.natureOfBussiness = dbcompanyInfo.natureBusinessInfo
+    //state.details = dbcompanyInfo.details
+    state.additionalInfo = dbcompanyInfo.additionalInfo
+    state.internalComments = dbcompanyInfo.comments
+
+    state.additionalCompInfo.nr_status = dbcompanyInfo.state
+    state.examiner = dbcompanyInfo.userId
+    state.priority = dbcompanyInfo.priorityCd
+    //state.reservationCount = dbcompanyInfo.reservationCount
+
+    if (dbcompanyInfo.expirationDate && moment(dbcompanyInfo.expirationDate)
+    .isValid()) {
+      state.expiryDate = moment(dbcompanyInfo.expirationDate)
+      .format('YYYY-MM-DD')
+    } else {
+      state.expiryDate = null
+    }
+
+    if (dbcompanyInfo.submittedDate && moment(dbcompanyInfo.submittedDate)
+    .isValid()) {
+      state.submittedDate = moment(dbcompanyInfo.submittedDate)
+      .format('YYYY-MM-DD, h:mma')
+    } else {
+      state.submittedDate = null
+    }
+
+    state.lastUpdate = dbcompanyInfo.lastUpdate
+
+    state.submitCount = dbcompanyInfo.submitCount
+    state.previousNr = dbcompanyInfo.previousNr
+    state.corpNum = dbcompanyInfo.corpNum
+    state.furnished = dbcompanyInfo.furnished
+    state.hasBeenReset = dbcompanyInfo.hasBeenReset
+
+    // cycle through nwpta entries
+    // - first clear existing nwpta data that may persist from previous NR
+    state.additionalCompInfo.nwpta_ab = {
+      partnerJurisdictionTypeCd: null,
+      partnerName: null,
+      partnerNameDate: null,
+      partnerNameNumber: null,
+      partnerNameTypeCd: null,
+    }
+    state.additionalCompInfo.nwpta_sk = {
+      partnerJurisdictionTypeCd: null,
+      partnerName: null,
+      partnerNameDate: null,
+      partnerNameNumber: null,
+      partnerNameTypeCd: null,
+    }
+    for (let record of dbcompanyInfo.nwpta) {
+
+      // convert date from long form to YYYY-MM-DD
+      if (record.partnerNameDate) {
+        var nwpta_date = new moment(record.partnerNameDate)
+        record.partnerNameDate = nwpta_date.clone()
+        .format('YYYY-MM-DD')
       }
 
-      // clear name choices 2 and 3 in case they are blank - ie: don't keep previous NR's data
-      state.compInfo.compNames.compName2.name = null
-      state.compInfo.compNames.compName2.state = null
-      state.compInfo.compNames.compName2.consumptionDate = null
-      state.compInfo.compNames.compName2.corpNum = null
-      state.compInfo.compNames.compName2.conflict1 = null
-      state.compInfo.compNames.compName2.conflict2 = null
-      state.compInfo.compNames.compName2.conflict3 = null
-      state.compInfo.compNames.compName2.conflict1_num = null
-      state.compInfo.compNames.compName2.conflict2_num = null
-      state.compInfo.compNames.compName2.conflict3_num = null
-      state.compInfo.compNames.compName2.decision_text = null
-      state.compInfo.compNames.compName3.name = null
-      state.compInfo.compNames.compName3.state = null
-      state.compInfo.compNames.compName3.consumptionDate = null
-      state.compInfo.compNames.compName3.corpNum = null
-      state.compInfo.compNames.compName3.conflict1 = null
-      state.compInfo.compNames.compName3.conflict2 = null
-      state.compInfo.compNames.compName3.conflict3 = null
-      state.compInfo.compNames.compName3.conflict1_num = null
-      state.compInfo.compNames.compName3.conflict2_num = null
-      state.compInfo.compNames.compName3.conflict3_num = null
-      state.compInfo.compNames.compName3.decision_text = null
+      if (record.partnerJurisdictionTypeCd == 'AB') state.additionalCompInfo.nwpta_ab = record
+      if (record.partnerJurisdictionTypeCd == 'SK') state.additionalCompInfo.nwpta_sk = record
+    }
 
-      // clear current name choice, to be reset by new data below
-      state.currentNameObj = null;
-      state.currentName = null;
-      state.currentChoice = null;
+    // convert Expiry Date from timestamp to YYYY-MM-DD string for editing
+    if (state.expiryDate) {
+      state.expiryDateForEdit = state.expiryDate
+    } else {
+      state.expiryDateForEdit = null
+    }
+    if (state.currentState === 'INPROGRESS') {
+      state.is_making_decision = true
+    }
+  },
 
+  loadConflictsJSON(state, JSONdata) {
+    state.conflictsJSON = JSONdata
+  },
 
-      for (let record of dbcompanyInfo.names) {
+  loadNamesConflictJSON(state, JSONdata) {
+    state.namesConflictJSON = JSONdata
+  },
 
+  loadCorpConflictJSON(state, JSONdata) {
+    state.corpConflictJSON = JSONdata
+  },
+
+  loadConditionsJSON(state, JSONdata) {
+    state.conditionsJSON = JSONdata
+  },
+
+  loadHistoriesJSON(state, JSONdata) {
+    state.historiesJSON = JSONdata
+  },
+
+  loadHistoriesInfoJSON(state, JSONdata) {
+    state.historiesInfoJSON = JSONdata
+  },
+
+  loadTrademarksJSON(state, JSONdata) {
+    state.trademarksJSON = JSONdata
+  },
+
+  loadSearchDataJSON(state, JSONdata) {
+    state.searchDataJSON = JSONdata
+  },
+
+  loadStatsDataJSON(state, params) {
+    state.statsDataJSON[params.myState] = params.JSONdata
+  },
+
+  update_nrData(state) {
+    if (state.nrData.names.length == 0) {
+
+      return
+    } else {
+      for (var i = 0; i < state.nrData.names.length; i++) {
+        var record = state.nrData.names[i]
         switch (record.choice) {
           case 1:
-            state.compInfo.compNames.compName1.choice = record.choice
-            state.compInfo.compNames.compName1.name = record.name
-            state.compInfo.compNames.compName1.state = record.state
-            state.compInfo.compNames.compName1.consumptionDate = record.consumptionDate
-            state.compInfo.compNames.compName1.corpNum = record.corpNum
-            state.compInfo.compNames.compName1.conflict1 = record.conflict1
-            state.compInfo.compNames.compName1.conflict2 = record.conflict2
-            state.compInfo.compNames.compName1.conflict3 = record.conflict3
-            state.compInfo.compNames.compName1.conflict1_num = record.conflict1_num
-            state.compInfo.compNames.compName1.conflict2_num = record.conflict2_num
-            state.compInfo.compNames.compName1.conflict3_num = record.conflict3_num
-            state.compInfo.compNames.compName1.decision_text = record.decision_text
-            state.compInfo.compNames.compName1.comment = record.comment
-
-            // if this name is not yet examined or it is approved (in case of reset/re-open), set it as current name
-            if (record.state == 'NE' || record.state == 'APPROVED') {
-
-              this.dispatch('setCurrentName',record);
-            }
-
-            break;
+            state.nrData.names[i] = state.compInfo.compNames.compName1
+            break
           case 2:
-            state.compInfo.compNames.compName2.choice = record.choice
-            state.compInfo.compNames.compName2.name = record.name
-            state.compInfo.compNames.compName2.state = record.state
-            state.compInfo.compNames.compName2.consumptionDate = record.consumptionDate
-            state.compInfo.compNames.compName2.corpNum = record.corpNum
-            state.compInfo.compNames.compName2.conflict1 = record.conflict1
-            state.compInfo.compNames.compName2.conflict2 = record.conflict2
-            state.compInfo.compNames.compName2.conflict3 = record.conflict3
-            state.compInfo.compNames.compName2.conflict1_num = record.conflict1_num
-            state.compInfo.compNames.compName2.conflict2_num = record.conflict2_num
-            state.compInfo.compNames.compName2.conflict3_num = record.conflict3_num
-            state.compInfo.compNames.compName2.decision_text = record.decision_text
-            state.compInfo.compNames.compName2.comment = record.comment
-
-            // if this name is not yet examined or it is approved (in case of reset/re-open), set it as current name
-            if ((record.state == 'NE' || record.state == 'APPROVED') &&
-              (record.choice < state.currentChoice || state.currentChoice == null)
-            ) {
-
-              this.dispatch('setCurrentName',record);
-            }
-
-            break;
+            state.nrData.names[i] = state.compInfo.compNames.compName2
+            break
           case 3:
-            state.compInfo.compNames.compName3.choice = record.choice
-            state.compInfo.compNames.compName3.name = record.name
-            state.compInfo.compNames.compName3.state = record.state
-            state.compInfo.compNames.compName3.consumptionDate = record.consumptionDate
-            state.compInfo.compNames.compName3.corpNum = record.corpNum
-            state.compInfo.compNames.compName3.conflict1 = record.conflict1
-            state.compInfo.compNames.compName3.conflict2 = record.conflict2
-            state.compInfo.compNames.compName3.conflict3 = record.conflict3
-            state.compInfo.compNames.compName3.conflict1_num = record.conflict1_num
-            state.compInfo.compNames.compName3.conflict2_num = record.conflict2_num
-            state.compInfo.compNames.compName3.conflict3_num = record.conflict3_num
-            state.compInfo.compNames.compName3.decision_text = record.decision_text
-            state.compInfo.compNames.compName3.comment = record.comment
-
-            // if this name is not yet examined or it is approved (in case of reset/re-open), set it as current name
-            if ((record.state == 'NE' || record.state == 'APPROVED') &&
-              (record.choice < state.currentChoice || state.currentChoice == null)
-            ) {
-              this.dispatch('setCurrentName',record);
-            }
-
-            break;
-          default:
-
-            break;
+            state.nrData.names[i] = state.compInfo.compNames.compName3
+            break
         }
       }
-
-      //if no currentName selected choose 1st
-      if(state.currentName == null){
-
-        this.dispatch('setCurrentName',dbcompanyInfo.names[0])
+      if (state.nrData.names.length < 2 && state.compInfo.compNames.compName2.name != null) {
+        state.compInfo.compNames.compName2.choice = 2
+        state.compInfo.compNames.compName2.state = 'NE'
+        state.nrData.names[1] = state.compInfo.compNames.compName2
       }
-
-
-      state.currentState = dbcompanyInfo.state;
-      state.previousStateCd = dbcompanyInfo.previousStateCd;
-      state.compInfo.requestType = dbcompanyInfo.requestTypeCd
-
-
-      // if the current state is not INPROGRESS, HOLD, or DRAFT clear any existing name record in currentNameObj
-      if (!['INPROGRESS','HOLD','DRAFT'].includes(state.currentState)) {
-
-        this.dispatch('setCurrentName',{});
+      if (state.nrData.names.length < 3 && state.compInfo.compNames.compName3.name != null) {
+        state.compInfo.compNames.compName3.choice = 3
+        state.compInfo.compNames.compName3.state = 'NE'
+        state.nrData.names[2] = state.compInfo.compNames.compName3
       }
+    }
 
+    state.nrData.requestTypeCd = state.compInfo.requestType
 
-      // we keep the original data so that if fields exist that we do not use, we don't lose that
-      // data when we put new data
-      if (dbcompanyInfo.applicants != '')
-        state.applicantOrigData = dbcompanyInfo.applicants
-      else {
-        state.applicantOrigData = {
-          'clientFirstName':null,
-          'clientLastName':null,
-          'firstName':null,
-          'middleName':null,
-          'lastName':null,
-          'addrLine1':null,
-          'addrLine2':null,
-          'addrLine3':null,
-          'city':null,
-          'stateProvinceCd':null,
-          'postalCd':null,
-          'countryTypeCd':null,
-          'contact':null,
-          'phoneNumber':null,
-          'emailAddress':null,
-          'faxNumber':null,
-        }
+    state.applicantOrigData.clientFirstName = state.applicantInfo.clientName.firstName
+    state.applicantOrigData.clientLastName = state.applicantInfo.clientName.lastName
+    state.applicantOrigData.firstName = state.applicantInfo.applicantName.firstName
+    state.applicantOrigData.lastName = state.applicantInfo.applicantName.lastName
+    state.applicantOrigData.middleName = state.applicantInfo.applicantName.middleName
+    state.applicantOrigData.addrLine1 = state.applicantInfo.contactInfo.addressLine1
+    state.applicantOrigData.addrLine2 = state.applicantInfo.contactInfo.addressLine2
+    state.applicantOrigData.addrLine3 = state.applicantInfo.contactInfo.addressLine3
+    state.applicantOrigData.city = state.applicantInfo.contactInfo.city
+    state.applicantOrigData.stateProvinceCd = state.applicantInfo.contactInfo.province
+    state.applicantOrigData.postalCd = state.applicantInfo.contactInfo.postalCode
+    state.applicantOrigData.countryTypeCd = state.applicantInfo.contactInfo.country
+    state.applicantOrigData.contact = state.applicantInfo.contactInfo.contactName
+    state.applicantOrigData.phoneNumber = state.applicantInfo.contactInfo.phone
+    state.applicantOrigData.emailAddress = state.applicantInfo.contactInfo.email
+    state.applicantOrigData.faxNumber = state.applicantInfo.contactInfo.fax
+    state.nrData.applicants = state.applicantOrigData
+
+    state.nrData.xproJurisdiction = state.additionalCompInfo.jurisdiction
+    state.nrData.natureBusinessInfo = state.additionalCompInfo.natureOfBussiness
+    state.nrData.details = state.details
+
+    if (state.additionalInfo != '' && state.additionalInfo != null) {
+      state.additionalInfo = state.additionalInfo.substr(0, 150)
+    }
+    state.nrData.additionalInfo = state.additionalInfo
+
+    state.nrData.comments = state.internalComments
+    state.nrData.nwpta = []
+    if (state.additionalCompInfo.nwpta_ab.partnerJurisdictionTypeCd !== null) {
+      let nwptaObj = Object.assign({}, state.additionalCompInfo.nwpta_ab)
+      if (nwptaObj.partnerNameDate) {
+        let date = moment(nwptaObj.partnerNameDate, 'YYYY-MM-DD')
+        .utc()
+        .toISOString()
+        nwptaObj.partnerNameDate = date
       }
-      state.applicantInfo.clientName.firstName = dbcompanyInfo.applicants.clientFirstName
-      state.applicantInfo.clientName.lastName = dbcompanyInfo.applicants.clientLastName
-      state.applicantInfo.applicantName.firstName = dbcompanyInfo.applicants.firstName
-      state.applicantInfo.applicantName.middleName = dbcompanyInfo.applicants.middleName
-      state.applicantInfo.applicantName.lastName = dbcompanyInfo.applicants.lastName
-      state.applicantInfo.contactInfo.addressLine1 = dbcompanyInfo.applicants.addrLine1
-      state.applicantInfo.contactInfo.addressLine2 = dbcompanyInfo.applicants.addrLine2
-      state.applicantInfo.contactInfo.addressLine3 = dbcompanyInfo.applicants.addrLine3
-      state.applicantInfo.contactInfo.city = dbcompanyInfo.applicants.city
-      state.applicantInfo.contactInfo.province = dbcompanyInfo.applicants.stateProvinceCd
-      state.applicantInfo.contactInfo.postalCode = dbcompanyInfo.applicants.postalCd
-      state.applicantInfo.contactInfo.country = dbcompanyInfo.applicants.countryTypeCd
-      state.applicantInfo.contactInfo.contactName = dbcompanyInfo.applicants.contact
-      state.applicantInfo.contactInfo.phone = dbcompanyInfo.applicants.phoneNumber
-      state.applicantInfo.contactInfo.email = dbcompanyInfo.applicants.emailAddress
-      state.applicantInfo.contactInfo.fax = dbcompanyInfo.applicants.faxNumber
-
-      state.additionalCompInfo.jurisdiction = dbcompanyInfo.xproJurisdiction
-      state.additionalCompInfo.natureOfBussiness = dbcompanyInfo.natureBusinessInfo
-      //state.details = dbcompanyInfo.details
-      state.additionalInfo = dbcompanyInfo.additionalInfo
-      state.internalComments = dbcompanyInfo.comments
-
-      state.additionalCompInfo.nr_status = dbcompanyInfo.state
-      state.examiner = dbcompanyInfo.userId
-      state.priority = dbcompanyInfo.priorityCd
-      //state.reservationCount = dbcompanyInfo.reservationCount
-
-
-
-      if (dbcompanyInfo.expirationDate && moment(dbcompanyInfo.expirationDate).isValid()) {
-        state.expiryDate = moment(dbcompanyInfo.expirationDate).format('YYYY-MM-DD')
-      } else {
-        state.expiryDate = null
+      state.nrData.nwpta.push(nwptaObj)
+    }
+    if (state.additionalCompInfo.nwpta_sk.partnerJurisdictionTypeCd !== null) {
+      let nwptaObj = Object.assign({}, state.additionalCompInfo.nwpta_sk)
+      if (nwptaObj.partnerNameDate) {
+        let date = moment(nwptaObj.partnerNameDate, 'YYYY-MM-DD')
+        .utc()
+        .toISOString()
+        nwptaObj.partnerNameDate = date
       }
-
-      if (dbcompanyInfo.submittedDate && moment(dbcompanyInfo.submittedDate).isValid()) {
-        state.submittedDate = moment(dbcompanyInfo.submittedDate).format('YYYY-MM-DD, h:mma')
-      } else {
-        state.submittedDate = null
-      }
-
-      state.lastUpdate = dbcompanyInfo.lastUpdate;
-
-      state.submitCount = dbcompanyInfo.submitCount
-      state.previousNr = dbcompanyInfo.previousNr
-      state.corpNum = dbcompanyInfo.corpNum
-      state.furnished = dbcompanyInfo.furnished
-      state.hasBeenReset = dbcompanyInfo.hasBeenReset
-
-
-      // cycle through nwpta entries
-      // - first clear existing nwpta data that may persist from previous NR
-      state.additionalCompInfo.nwpta_ab = {
-        partnerJurisdictionTypeCd: null,
-        partnerName: null,
-        partnerNameDate: null,
-        partnerNameNumber: null,
-        partnerNameTypeCd: null,
-      };
-      state.additionalCompInfo.nwpta_sk = {
-        partnerJurisdictionTypeCd: null,
-        partnerName: null,
-        partnerNameDate: null,
-        partnerNameNumber: null,
-        partnerNameTypeCd: null,
-      };
-      for (let record of dbcompanyInfo.nwpta) {
-
-        // convert date from long form to YYYY-MM-DD
-        if (record.partnerNameDate) {
-          var nwpta_date = new moment(record.partnerNameDate)
-          record.partnerNameDate = nwpta_date.clone().format('YYYY-MM-DD')
-        }
-
-        if (record.partnerJurisdictionTypeCd == 'AB') state.additionalCompInfo.nwpta_ab = record;
-        if (record.partnerJurisdictionTypeCd == 'SK') state.additionalCompInfo.nwpta_sk = record;
-      }
-
-      // convert Expiry Date from timestamp to YYYY-MM-DD string for editing
-      if (state.expiryDate) {
-        state.expiryDateForEdit = state.expiryDate
-      } else {
-        state.expiryDateForEdit = null
-      }
-    },
-
-    loadConflictsJSON(state,JSONdata){
-      state.conflictsJSON = JSONdata
-    },
-
-    loadNamesConflictJSON(state,JSONdata){
-      state.namesConflictJSON = JSONdata
-    },
-
-    loadCorpConflictJSON(state,JSONdata){
-      state.corpConflictJSON = JSONdata
-    },
-
-    loadConditionsJSON(state,JSONdata){
-      state.conditionsJSON = JSONdata
-    },
-
-    loadHistoriesJSON(state,JSONdata){
-      state.historiesJSON = JSONdata
-    },
-
-    loadHistoriesInfoJSON(state, JSONdata){
-      state.historiesInfoJSON = JSONdata;
-    },
-
-    loadTrademarksJSON(state,JSONdata){
-      state.trademarksJSON = JSONdata
-    },
-
-    loadSearchDataJSON(state,JSONdata){
-      state.searchDataJSON = JSONdata
-    },
-
-    loadStatsDataJSON(state,params){
-      state.statsDataJSON[params.myState] = params.JSONdata
-    },
-
-    update_nrData(state) {
-      if(state.nrData.names.length == 0) {
-
-        return
-      } else {
-        for (var i = 0; i < state.nrData.names.length; i++) {
-          var record = state.nrData.names[i];
-          switch (record.choice) {
-            case 1:
-              state.nrData.names[i] = state.compInfo.compNames.compName1;
-              break;
-            case 2:
-              state.nrData.names[i] = state.compInfo.compNames.compName2;
-              break;
-            case 3:
-              state.nrData.names[i] = state.compInfo.compNames.compName3;
-              break;
-          }
-        }
-        if (state.nrData.names.length < 2 && state.compInfo.compNames.compName2.name != null) {
-          state.compInfo.compNames.compName2.choice = 2;
-          state.compInfo.compNames.compName2.state = 'NE';
-          state.nrData.names[1] = state.compInfo.compNames.compName2;
-        }
-        if (state.nrData.names.length < 3 && state.compInfo.compNames.compName3.name != null) {
-          state.compInfo.compNames.compName3.choice = 3;
-          state.compInfo.compNames.compName3.state = 'NE';
-          state.nrData.names[2] = state.compInfo.compNames.compName3;
-        }
-      }
-
-      state.nrData.requestTypeCd = state.compInfo.requestType
-
-      state.applicantOrigData.clientFirstName = state.applicantInfo.clientName.firstName
-      state.applicantOrigData.clientLastName = state.applicantInfo.clientName.lastName
-      state.applicantOrigData.firstName = state.applicantInfo.applicantName.firstName
-      state.applicantOrigData.lastName = state.applicantInfo.applicantName.lastName
-      state.applicantOrigData.middleName = state.applicantInfo.applicantName.middleName
-      state.applicantOrigData.addrLine1 = state.applicantInfo.contactInfo.addressLine1
-      state.applicantOrigData.addrLine2 = state.applicantInfo.contactInfo.addressLine2
-      state.applicantOrigData.addrLine3 = state.applicantInfo.contactInfo.addressLine3
-      state.applicantOrigData.city = state.applicantInfo.contactInfo.city
-      state.applicantOrigData.stateProvinceCd = state.applicantInfo.contactInfo.province
-      state.applicantOrigData.postalCd = state.applicantInfo.contactInfo.postalCode
-      state.applicantOrigData.countryTypeCd = state.applicantInfo.contactInfo.country
-      state.applicantOrigData.contact = state.applicantInfo.contactInfo.contactName
-      state.applicantOrigData.phoneNumber = state.applicantInfo.contactInfo.phone
-      state.applicantOrigData.emailAddress = state.applicantInfo.contactInfo.email
-      state.applicantOrigData.faxNumber = state.applicantInfo.contactInfo.fax
-      state.nrData.applicants = state.applicantOrigData
-
-      state.nrData.xproJurisdiction = state.additionalCompInfo.jurisdiction
-      state.nrData.natureBusinessInfo = state.additionalCompInfo.natureOfBussiness
-      state.nrData.details = state.details
-
-      if (state.additionalInfo != '' && state.additionalInfo != null)
-        state.additionalInfo = state.additionalInfo.substr(0, 150);
-      state.nrData.additionalInfo = state.additionalInfo;
-
-      state.nrData.comments = state.internalComments
-      state.nrData.nwpta = []
-      if (state.additionalCompInfo.nwpta_ab.partnerJurisdictionTypeCd !== null) {
-        let nwptaObj = Object.assign({}, state.additionalCompInfo.nwpta_ab)
-        if (nwptaObj.partnerNameDate) {
-          let date = moment(nwptaObj.partnerNameDate, 'YYYY-MM-DD').utc().toISOString()
-          nwptaObj.partnerNameDate = date
-        }
-        state.nrData.nwpta.push(nwptaObj);
-      }
-      if (state.additionalCompInfo.nwpta_sk.partnerJurisdictionTypeCd !== null) {
-        let nwptaObj = Object.assign({}, state.additionalCompInfo.nwpta_sk)
-        if (nwptaObj.partnerNameDate) {
-          let date = moment(nwptaObj.partnerNameDate, 'YYYY-MM-DD').utc().toISOString()
-          nwptaObj.partnerNameDate = date
-        }
-        state.nrData.nwpta.push(nwptaObj);
-      }
-      state.nrData.state =  state.currentState
-      state.nrData.previousStateCd = state.previousStateCd;
-      state.nrData.userId = state.examiner
-      state.nrData.priorityCd = state.priority
-      //state.reservationCount = dbcompanyInfo.reservationCount
-      state.nrData.lastUpdate = state.lastUpdate
-
-      if (state.expiryDate) {
-        state.nrData.expirationDate =
-          new moment(state.expiryDate, 'YYYY-MM-DD').utc().format('ddd, D MMM YYYY HH:mm:ss [GMT]')
-      } else {
-        state.nrData.expirationDate = state.expiryDate
-      }
-
-      state.nrData.submittedDate =
-        new moment(state.submittedDate, 'YYYY-MM-DD, h:mma').utc().format('ddd, D MMM YYYY HH:mm:ss [GMT]')
-      state.nrData.submitCount = state.submitCount
-      state.nrData.previousNr = state.previousNr
-      state.nrData.corpNum = state.corpNum
-      state.nrData.furnished = state.furnished
-      state.nrData.hasBeenReset = state.hasBeenReset
-    },
-
-    loadCompanyIssues(state, dbcompanyIssues) {
-    },
-
-    saveDetail(state,detail){
-      state.details = detail
-    },
-
-    listPriorities (state, value) {
-      state.listPriorities = value;
-    },
-
-    listJurisdictions (state, value) {
-      state.listJurisdictions = value;
-    },
-
-    listRequestTypes (state, value) {
-      state.listRequestTypes = value;
-    },
-
-    listDecisionReasons (state, value) {
-      state.listDecisionReasons = value;
-    },
-
-    requestTypeRules(state, value) {
-      state.requestTypeRules = value;
-    },
-
-    currentRecipeCard(state,value){
-      state.currentRecipeCard = value
-    },
-
-    currentNameObj(state,value){
-      state.currentNameObj = value
-
-      if (value != null) {
-        // also set currentName and currentChoice
-        state.currentName = value.name;
-        state.currentChoice = value.choice;
-      }
-      else {
-        state.currentName = null;
-        state.currentChoice = null;
-      }
-    },
-
-    currentChoice(state,value){
-
-      state.currentChoice = value
-
-      // also set in currentNameObj
-      state.currentNameObj.choice = value
-    },
-
-    currentName(state,value){
-      state.currentName = value
-
-      // also set in currentNameObj
-      state.currentNameObj.name = value
-    },
-
-    setConfig(state,configValues) {
-    },
-
-    nrNumber(state,value){
-
-      state.compInfo.nrNumber = value
-    },
-
-    //introduced by name-examination code with us upgrade
-    toggleRequestBannerPopUp: (state, payload) => state.activeRequestBannerPopUp = payload,//ReqInfoHeader active popup
-    toggleCommentsPopUp: (state, payload) => state.showCommentsPopUp = payload,//app-wide comments popup visibility
-    setNewComment: (state, payload) => state.newComment = payload,//captured user-input in app-wide comments popup
-    setEditing: (state, payload) => state.is_editing = payload,
-    setPartnerDate(state, {type, payload}) {
-      state.additionalCompInfo[`nwpta_${type}`].partnerNameDate = payload
-    },
-
-    // not used
-    setConflicts(state,conflictJSon) {
-
-      //TODO - Mutations: interate thru list of conflicts
-
-      //3 sections from the solr json array :
-      // Highlights : used for colouring results
-      // Names : the actual names found that might be conflicting
-      // Response : statistics on the results found; max score; number of conflicts found;
-      state.conflictHighlighting =  conflictJSon['highlighting']
-      state.conflictNames =  conflictJSon['names']
-      state.conflictResponse =  conflictJSon['response']
-
-      var k
-      var c = 0
-      state.conflictList = new Array()
-      for( k in state.conflictNames) {
-        var mID = state.conflictNames[c].id
-        //Iterate through the list of names to create a new object that has the fields needed
-        //state.conflictList.push({nrNumber: mID, text: conflictJSon['highlighting'][mID]['name'][0]})
-        state.conflictList.push({nrNumber: mID, text: state.conflictNames[c].name, source: state.conflictNames[c].source})
-        c++
-      }
-
-
-    },
-
-    setExactMatchesConflicts(state, jsonValue) {
-      state.exactMatchesConflicts = []
-      if (jsonValue == null) return;
-      var names = jsonValue['names'];
-      for (var i=0; i<names.length; i++) {
-        var entry = names[i];
-        state.exactMatchesConflicts.push({
-          text:entry.name,
-          highlightedText: entry.name,
-          nrNumber:entry.id,
-          source:entry.source,
-          class: 'conflict-result conflict-exact-match',
-        })
-      }
-    },
-
-    setSynonymMatchesConflicts(state, json) {
-      state.synonymMatchesConflicts = [];
-      state.synonymHighlightedMatches = [];
-      if (json == null) return;
-      let names = json.names;
-      let additionalRow = null;
-      let entry = null;
-      let name_stems = []
-      let synonym_stems = null
-      let wildcard_stack = false
-      for (let i=0; i<names.length; i++) {
-        additionalRow = null;
-
-        // remove any empty string stem values - they are not valid
-        names[i].stems = names[i].stems.filter(function (elem) {
-          return elem != '';
-        });
-
-        if (names[i].name_info.source != null) {
-          //stack conflict
-          entry = names[i].name_info;
-          synonym_stems = names[i].stems
-          entry.class = 'conflict-result';
-
-        } else {
-          // stack title
-          name_stems = names[i].stems;
-          entry = names[i].name_info;
-
-          wildcard_stack = (entry.name.lastIndexOf('*') > 0)
-
-          entry.meta = entry.name.substring(entry.name.lastIndexOf('-')+1).trim();
-          entry.class = 'conflict-synonym-title';
-          entry.name = entry.name.replace('----', '').toUpperCase();
-          let syn_index = entry.name.indexOf('SYNONYMS:');
-          if (syn_index != -1) {
-            let last_bracket_indx = entry.name.lastIndexOf(')');
-            let synonym_clause = entry.name.substring(syn_index+10, last_bracket_indx);
-            // '<span class="synonym-stem-highlight">' + entry.name.substring(syn_index, entry.name.length) + '</span>');
-            let synonym_list = synonym_clause.split(',');
-
-            for (var syn=0; syn<synonym_list.length; syn++) {
-              for (var wrd = 0; wrd < name_stems.length; wrd++) {
-                if (synonym_list[syn].toUpperCase().includes(name_stems[wrd].toUpperCase())) {
-                  name_stems.splice(wrd, 1);
-                  wrd--;
-                }
-              }
-              entry.name = entry.name.replace(synonym_list[syn].toUpperCase(),'<span class="synonym-stem-highlight">'+ synonym_list[syn].toUpperCase() +'</span>');
-            }
-            entry.name = entry.name.replace('SYNONYMS:', '');
-          }
-          entry.name = entry.name.substring(0, entry.name.lastIndexOf('-')).trim();
-
-        }
-        entry.name = ' ' + entry.name;
-        let k=0;
-        for (k = 0; k < name_stems.length; k++) {
-          if (!wildcard_stack) {
-            entry.name = entry.name.replace(' '+name_stems[k].toUpperCase(), '<span class="stem-highlight">' + ' ' + name_stems[k].toUpperCase() + '</span>');
-          }
-          if (synonym_stems != undefined && synonym_stems.indexOf(name_stems[k].toUpperCase()) != -1) {
-            synonym_stems.splice(synonym_stems.indexOf(name_stems[k].toUpperCase()), 1);
-          }
-        }
-        if (synonym_stems != undefined) {
-          for (k = 0; k < synonym_stems.length; k++) {
-            entry.name = entry.name.replace(' '+synonym_stems[k].toUpperCase(), '<span class="synonym-stem-highlight">' + ' ' + synonym_stems[k].toUpperCase() + '</span>');
-          }
-        }
-        state.synonymMatchesConflicts.push({
-          count:0,
-          text:entry.name.replace(/<SPAN CLASS="SYNONYM\-STEM\-HIGHLIGHT">|<SPAN CLASS="STEM\-HIGHLIGHT">|<\/SPAN>/gi, '').trim(),
-          highlightedText:entry.name.trim(),
-          meta:entry.meta,
-          nrNumber:entry.id,
-          source:entry.source,
-          class: entry.class,
-        });
-      }
-      var count = 0
-      var stopCollapsing = false
-      var collapseCount = 2
-      for (let i=state.synonymMatchesConflicts.length-1; i>=0; i--){
-        let entry = state.synonymMatchesConflicts[i]
-        if (! stopCollapsing) {
-          if (entry.class == 'conflict-result') {
-            entry.class = 'conflict-result conflict-result-hidden'
-            count ++
-          }
-          if (entry.class == 'conflict-synonym-title') {
-            entry.count = count
-            count = 0
-            collapseCount --
-            if (collapseCount == 0) {
-              stopCollapsing = true
-            }
-            if (entry.count > 0) {
-              entry.class = 'conflict-synonym-title collapsible collapsed'
-            }
-          }
-        }
-        else {
-          if (entry.class == 'conflict-result') {
-            entry.class = 'conflict-result conflict-result-displayed'
-            count ++
-          }
-          if (entry.class == 'conflict-synonym-title') {
-            entry.count = count
-            count = 0
-            if (entry.count > 0) {
-              entry.class = 'conflict-synonym-title collapsible expanded'
-            }
-          }
-        }
-      }
-    },
-
-    setCobrsPhoneticConflicts(state, json) {
-      state.cobrsPhoneticConflicts = [];
-      if (json == null) return;
-      let names = json.names;
-      let additionalRow = null;
-      for (let i=0; i<names.length; i++) {
-        let entry = names[i]['name_info'];
-        additionalRow = null;
-
-        if (entry.source == null) {
-          entry.name = entry.name.replace('----', '');
-          entry.name = entry.name.replace('synonyms:', '');
-          entry.class = 'conflict-cobrs-phonetic-title';
-        }
-        else {
-          entry.class = 'conflict-result';
-        }
-        state.cobrsPhoneticConflicts.push({
-          count:0,
-          text:entry.name,
-          highlightedText: entry.name,
-          meta:entry.meta,
-          nrNumber:entry.id,
-          source:entry.source,
-          class: entry.class,
-        });
-      }
-      var count = 0
-      var stopCollapsing = false
-      var collapseCount = 2
-      for (let i=state.cobrsPhoneticConflicts.length-1; i>=0; i--){
-        let entry = state.cobrsPhoneticConflicts[i]
-        if (! stopCollapsing) {
-          if (entry.class == 'conflict-result') {
-            entry.class = 'conflict-result conflict-result-hidden'
-            count ++
-          }
-          if (entry.class == 'conflict-cobrs-phonetic-title') {
-            entry.count = count
-            count = 0
-            collapseCount --
-            if (collapseCount == 0) {
-              stopCollapsing = true
-            }
-            if (entry.count > 0) {
-              entry.class = 'conflict-cobrs-phonetic-title collapsible collapsed'
-            }
-          }
-        } else {
-          if (entry.class == 'conflict-result') {
-            entry.class = 'conflict-result conflict-result-displayed'
-            count ++
-          }
-          if (entry.class == 'conflict-cobrs-phonetic-title') {
-            entry.count = count
-            count = 0
-            if (entry.count > 0) {
-              entry.class = 'conflict-cobrs-phonetic-title collapsible expanded'
-            }
-          }
-        }
-      }
-    },
-
-    setPhoneticConflicts(state, json) {
-      state.phoneticConflicts = [];
-      if (json == null) return;
-      let names = json.names;
-      let additionalRow = null;
-
-      for (let i=0; i<names.length; i++) {
-        let entry = names[i]['name_info'];
-        additionalRow = null;
-
-        if (entry.source == null) {
-          entry.name = entry.name.replace('----', '');
-          entry.name = entry.name.replace('synonyms:', '');
-          entry.class = 'conflict-phonetic-title';
-        }
-        else {
-          entry.class = 'conflict-result';
-        }
-
-        state.phoneticConflicts.push({
-          count:0,
-          text:entry.name,
-          highlightedText:entry.name,
-          meta:entry.meta,
-          nrNumber:entry.id,
-          source:entry.source,
-          class: entry.class,
-        });
-      }
-      var count = 0
-      var stopCollapsing = false
-      var collapseCount = 2
-      for (let i=state.phoneticConflicts.length-1; i>=0; i--){
-        let entry = state.phoneticConflicts[i]
-        if (! stopCollapsing) {
-          if (entry.class == 'conflict-result') {
-            entry.class = 'conflict-result conflict-result-hidden'
-            count ++
-          }
-          if (entry.class == 'conflict-phonetic-title') {
-            entry.count = count
-            count = 0
-            collapseCount --
-            if (collapseCount == 0) {
-              stopCollapsing = true
-            }
-            if (entry.count > 0) {
-              entry.class = 'conflict-phonetic-title collapsible collapsed'
-            }
-          }
-        } else {
-          if (entry.class == 'conflict-result') {
-            entry.class = 'conflict-result conflict-result-displayed'
-            count ++
-          }
-          if (entry.class == 'conflict-phonetic-title') {
-            entry.count = count
-            count = 0
-            if (entry.count > 0) {
-              entry.class = 'conflict-phonetic-title collapsible expanded'
-            }
-          }
-        }
-      }
-    },
-
-    currentConflict(state, value){
-      state.currentConflict = value
-    },
-    currentCondition(state,value){
-      state.currentCondition = value
-    },
-    currentTrademark (state,value){
-      state.currentTrademark = value
-    },
-
-    currentHistory(state,value){
-      state.currentHistory = value
-    },
-
-    saveKeyCloak(state,value){
-      state.myKeycloak = value
-    },
-
-    setLoginValues(state){
-      state.userId=sessionStorage.getItem('USERNAME')
-      state.user_roles=sessionStorage.getItem('USER_ROLES')
-      state.authorized=sessionStorage.getItem('AUTHORIZED')
-    },
-
-    setErrorJSON(state, value) {
-      state.errorJSON = value
-    },
+      state.nrData.nwpta.push(nwptaObj)
+    }
+    state.nrData.state = state.currentState
+    state.nrData.previousStateCd = state.previousStateCd
+    state.nrData.userId = state.examiner
+    state.nrData.priorityCd = state.priority
+    //state.reservationCount = dbcompanyInfo.reservationCount
+    state.nrData.lastUpdate = state.lastUpdate
+
+    if (state.expiryDate) {
+      state.nrData.expirationDate = new moment(state.expiryDate, 'YYYY-MM-DD').utc()
+      .format('ddd, D MMM YYYY HH:mm:ss [GMT]')
+    } else {
+      state.nrData.expirationDate = state.expiryDate
+    }
+
+    state.nrData.submittedDate = new moment(state.submittedDate, 'YYYY-MM-DD, h:mma').utc()
+    .format('ddd, D MMM YYYY HH:mm:ss [GMT]')
+    state.nrData.submitCount = state.submitCount
+    state.nrData.previousNr = state.previousNr
+    state.nrData.corpNum = state.corpNum
+    state.nrData.furnished = state.furnished
+    state.nrData.hasBeenReset = state.hasBeenReset
   },
-  actions: {
-    logout({commit, state}) {
 
-      commit('clearAuthData')
+  loadCompanyIssues(state, dbcompanyIssues) {
+  },
 
-      sessionStorage.removeItem('KEYCLOAK_REFRESH')
-      sessionStorage.removeItem('KEYCLOAK_TOKEN')
-      sessionStorage.removeItem('AUTHORIZED')
-      sessionStorage.removeItem('KEYCLOAK_EXPIRES')
-      sessionStorage.removeItem('USERNAME')
-      sessionStorage.removeItem('USER_ROLES')
+  saveDetail(state, detail) {
+    state.details = detail
+  },
 
-    },
+  listPriorities(state, value) {
+    state.listPriorities = value
+  },
 
-    loadSetUp({dispatch}){
+  listJurisdictions(state, value) {
+    state.listJurisdictions = value
+  },
 
+  listRequestTypes(state, value) {
+    state.listRequestTypes = value
+  },
+
+  listDecisionReasons(state, value) {
+    state.listDecisionReasons = value
+  },
+
+  requestTypeRules(state, value) {
+    state.requestTypeRules = value
+  },
+
+  currentRecipeCard(state, value) {
+    state.currentRecipeCard = value
+  },
+
+  currentNameObj(state, value) {
+    state.currentNameObj = value
+
+    if (value != null) {
+      // also set currentName and currentChoice
+      state.currentName = value.name
+      state.currentChoice = value.choice
+    } else {
+      state.currentName = null
+      state.currentChoice = null
+    }
+  },
+
+  currentChoice(state, value) {
+
+    state.currentChoice = value
+
+    // also set in currentNameObj
+    state.currentNameObj.choice = value
+  },
+
+  currentName(state, value) {
+    state.currentName = value
+
+    // also set in currentNameObj
+    state.currentNameObj.name = value
+  },
+
+  setConfig(state, configValues) {
+  },
+
+  nrNumber(state, value) {
+
+    state.compInfo.nrNumber = value
+  },
+
+//introduced by name-examination code with us upgrade
+  toggleRequestBannerPopUp: (state, payload) => state.activeRequestBannerPopUp = payload,//ReqInfoHeader active popup
+  toggleCommentsPopUp: (state, payload) => state.showCommentsPopUp = payload,//app-wide comments popup visibility
+  setNewComment: (state, payload) => state.newComment = payload,//captured user-input in app-wide comments popup
+  setEditing: (state, payload) => state.is_editing = payload,
+  setPartnerDate(state, { type, payload }) {
+    state.additionalCompInfo[`nwpta_${ type }`].partnerNameDate = payload
+  },
+  toggleEditMessageModal: (state, payload) => state.editMessageModalVisible = payload,
+  setSelectedConflicts: (state, conflicts) => state.selectedConflicts = conflicts,
+  setSelectedConditions: (state, conditions) => state.selectedConditions = conditions,
+  setSelectedTrademarks(state, trademarks) {
+    Vue.set(state, 'selectedTrademarks', trademarks)
+    state.selectedTrademarks = trademarks
+  },
+  setSelectedConflictID: (state, payload) => state.selectedConflictID = payload,
+  setExpandedConflictID: (state, payload) => state.expandedConflictID = payload,
+  setOpenBucket: (state, payload) => state.openBucket = payload,
+  setConflictsReturnedStatus: (state, payload) => state.conflictsReturnedStatus = payload,
+
+  setExactMatchesConflicts(state, json) {
+    if (!json || !json.names) {
+      state.exactMatchesConflicts = []
+      return
+    }
+    let exactMatchesConflicts = []
+    let { names } = json
+    let i = 0
+
+    for (let entry of names) {
+      exactMatchesConflicts.push({
+        text: entry.name,
+        highlightedText: entry.name,
+        nrNumber: entry.id,
+        startDate: entry.start_date,
+        jurisdiction: entry.jurisdiction,
+        source: entry.source,
+        id: `${ i }-exact`,
+        class: 'conflict-result conflict-exact-match',
+      })
+      i++
+    }
+    state.exactMatchesConflicts = exactMatchesConflicts
+  },
+
+  setSynonymMatchesConflicts(state, json) {
+    if (!json || !json.names) {
+      state.synonymMatchesConflicts = []
+      state.parsedSynonymConflicts = []
+      return
+    }
+
+    let entry = null
+    let name_stems = []
+    let synonym_stems = null
+    let synonymMatchesConflicts = []
+    let wildcard_stack = false
+    let { names } = json
+
+    for (let i = 0; i < names.length; i++) {
+      // remove any empty string stem values - they are not valid
+      names[i].stems = names[i].stems.filter(function (elem) {
+        return elem != ''
+      })
+
+      if (names[i].name_info.source) {
+        //stack conflict
+        entry = names[i].name_info
+        synonym_stems = names[i].stems
+        entry.class = 'conflict-result'
+      } else {
+        // stack title
+        name_stems = names[i].stems
+        entry = names[i].name_info
+
+        wildcard_stack = ( entry.name.lastIndexOf('*') > 0 )
+
+          entry.meta = entry.name.substring(entry.name.lastIndexOf('-')+1).trim()
+          entry.class = 'conflict-synonym-title'
+          entry.name = entry.name.replace('----', '').toUpperCase()
+          let syn_index = entry.name.indexOf('SYNONYMS:')
+          if (syn_index !== -1) {
+            let last_bracket_indx = entry.name.lastIndexOf(')')
+            let synonym_clause = entry.name.substring(syn_index+10, last_bracket_indx)
+            let synonym_list = synonym_clause.split(',')
+
+            for (let syn=0; syn<synonym_list.length; syn++) {
+              for (let wrd = 0; wrd < name_stems.length; wrd++) {
+              if (synonym_list[syn].toUpperCase().includes(name_stems[wrd].toUpperCase())) {
+                  name_stems.splice(wrd, 1)
+                  wrd--
+              }
+            }
+              entry.name = entry.name.replace(synonym_list[syn].toUpperCase(),
+                '<span class="synonym-stem-highlight">'+ synonym_list[syn].toUpperCase() +'</span>')
+          }
+            entry.name = entry.name.replace('SYNONYMS:', '')
+        }
+          entry.name = entry.name.substring(0, entry.name.lastIndexOf('-')).trim()
+
+      }
+      entry.name = ' ' + entry.name
+      let k = 0
+      for (k = 0; k < name_stems.length; k++) {
+        if (!wildcard_stack) {
+          entry.name = entry.name.replace(' ' + name_stems[k].toUpperCase(),
+            '<span class="stem-highlight">' + ' ' + name_stems[k].toUpperCase() + '</span>')
+        }
+        if (synonym_stems != undefined && synonym_stems.indexOf(name_stems[k].toUpperCase()) != -1) {
+          synonym_stems.splice(synonym_stems.indexOf(name_stems[k].toUpperCase()), 1)
+        }
+      }
+      if (synonym_stems != undefined) {
+        for (let k = 0; k < synonym_stems.length; k++) {
+          entry.name = entry.name.replace(' ' + synonym_stems[k].toUpperCase(),
+            '<span class="synonym-stem-highlight">' + ' ' + synonym_stems[k].toUpperCase() + '</span>')
+        }
+      }
+      let output
+      if (entry.class === 'conflict-result') {
+        output = {
+          text: entry.name.replace(/<SPAN CLASS="SYNONYM\-STEM\-HIGHLIGHT">|<SPAN CLASS="STEM\-HIGHLIGHT">|<\/SPAN>/gi,
+            '',).trim(),
+          highlightedText: entry.name.trim(),
+          meta: entry.meta,
+          nrNumber: entry.id,
+          startDate: entry.start_date,
+          jurisdiction: entry.jurisdiction,
+          source: entry.source,
+          class: entry.class,
+          id: `${ i }-synonym`,
+        }
+      } else {
+        output = {
+          text: entry.name.replace(/<SPAN CLASS="SYNONYM\-STEM\-HIGHLIGHT">|<SPAN CLASS="STEM\-HIGHLIGHT">|<\/SPAN>/gi,
+            '',).trim(),
+          highlightedText: entry.name.trim(),
+          meta: entry.meta,
+          class: entry.class,
+          id: `${ i }-synonym`,
+        }
+      }
+      synonymMatchesConflicts.push(output)
+    }
+
+    let output = []
+    let conflictsOnly = []
+    let prevIndex
+
+    for (let i = 0; i < synonymMatchesConflicts.length; i++) {
+      let match = synonymMatchesConflicts[i]
+      if (match.class === 'conflict-synonym-title') {
+        match.children = []
+        match.count = 0
+        output.push(match)
+        prevIndex = output.length - 1
+      } else {
+        conflictsOnly.push(match)
+        output[prevIndex].children.push(match)
+        output[prevIndex].count = output[prevIndex].children.length
+      }
+    }
+    state.parsedSynonymConflicts = output
+    state.synonymMatchesConflicts = conflictsOnly
+  },
+
+  setCobrsPhoneticConflicts(state, json) {
+    if (!json || !json.names) {
+      state.cobrsPhoneticConflicts = []
+      state.parsedCOBRSConflicts = []
+      return
+    }
+
+    let cobrsPhoneticConflicts = []
+    let { names } = json
+    let i = 0
+
+    for (let name of names) {
+      let entry = name.name_info
+      let output
+
+      if (!entry.source) {
+        entry.name = entry.name.replace('----', '')
+        entry.name = entry.name.replace('synonyms:', '')
+        entry.class = 'conflict-cobrs-phonetic-title'
+        output = {
+          class: entry.class,
+          meta: entry.meta,
+          highlightedText: entry.name,
+          text: entry.name,
+          id: `${ i }-cobrs`,
+        }
+      } else {
+        entry.class = 'conflict-result'
+        output = {
+          text: entry.name,
+          highlightedText: entry.name,
+          meta: entry.meta,
+          nrNumber: entry.id,
+          source: entry.source,
+          class: entry.class,
+          startDate: entry.start_date,
+          jurisdiction: entry.jurisdiction,
+          id: `${ i }-cobrs`,
+        }
+      }
+      cobrsPhoneticConflicts.push(output)
+      i++
+    }
+
+    let output = []
+    let conflictsOnly = []
+    let prevIndex
+
+    for (let i = 0; i < cobrsPhoneticConflicts.length; i++) {
+      let match = cobrsPhoneticConflicts[i]
+      if (match.class === 'conflict-cobrs-phonetic-title') {
+        match.children = []
+        match.count = 0
+        output.push(match)
+        prevIndex = output.length - 1
+      } else {
+        conflictsOnly.push(match)
+        output[prevIndex].children.push(match)
+        output[prevIndex].count = output[prevIndex].children.length
+      }
+    }
+    state.parsedCOBRSConflicts = output
+    state.cobrsPhoneticConflicts = conflictsOnly
+  },
+
+  setPhoneticConflicts(state, json) {
+    if (!json || !json.names) {
+      state.phoneticConflicts = []
+      state.parsedPhoneticConflicts = []
+      return
+    }
+
+    let phoneticConflicts = []
+    let { names } = json
+    let i = 0
+
+    for (let name of names) {
+      let entry = name.name_info
+      let output
+
+      if (!entry.source) {
+        entry.name = entry.name.replace('----', '')
+        entry.name = entry.name.replace('synonyms:', '')
+        entry.class = 'conflict-phonetic-title'
+        output = {
+          text: entry.name,
+          highlightedText: entry.name,
+          meta: entry.meta,
+          class: entry.class,
+          id: `${ i }-phonetic`,
+        }
+      } else {
+        entry.class = 'conflict-result'
+        output = {
+          startDate: entry.start_date,
+          jurisdiction: entry.jurisdiction,
+          text: entry.name,
+          highlightedText: entry.name,
+          meta: entry.meta,
+          nrNumber: entry.id,
+          source: entry.source,
+          class: entry.class,
+          id: `${ i }-phonetic`,
+        }
+      }
+      phoneticConflicts.push(output)
+      i++
+    }
+
+    let output = []
+    let conflictsOnly = []
+    let prevIndex
+
+    for (let n = 0; n < phoneticConflicts.length; n++) {
+      let match = phoneticConflicts[n]
+      if (match.class === 'conflict-phonetic-title') {
+        match.children = []
+        match.count = 0
+        output.push(match)
+        prevIndex = output.length - 1
+      } else {
+        conflictsOnly.push(match)
+        output[prevIndex].children.push(match)
+        output[prevIndex].count = output[prevIndex].children.length
+      }
+    }
+    state.parsedPhoneticConflicts = output
+    state.phoneticConflicts = conflictsOnly
+  },
+
+  currentConflict(state, value) {
+    state.currentConflict = value
+  },
+  currentCondition(state, value) {
+    state.currentCondition = value
+  },
+  currentTrademark(state, value) {
+    state.currentTrademark = value
+  },
+
+  currentHistory(state, value) {
+    state.currentHistory = value
+  },
+
+  saveKeyCloak(state, value) {
+    state.myKeycloak = value
+  },
+
+  setLoginValues(state) {
+    state.userId = sessionStorage.getItem('USERNAME')
+    state.user_roles = sessionStorage.getItem('USER_ROLES')
+    state.authorized = sessionStorage.getItem('AUTHORIZED')
+  },
+
+  setErrorJSON(state, value) {
+    state.errorJSON = value
+  },
+}
+
+export const actions = {
+  resetConflictList({ commit }) {
+    commit('setExpandedConflictID', null)
+    commit('setSelectedConflictID', null)
+    commit('setOpenBucket', null)
+  },
+
+  logout({ commit, state }) {
+    commit('clearAuthData')
+    sessionStorage.removeItem('KEYCLOAK_REFRESH')
+    sessionStorage.removeItem('KEYCLOAK_TOKEN')
+    sessionStorage.removeItem('AUTHORIZED')
+    sessionStorage.removeItem('KEYCLOAK_EXPIRES')
+    sessionStorage.removeItem('USERNAME')
+    sessionStorage.removeItem('USER_ROLES')
+  },
+
+  loadSetUp({ dispatch }) {
+    //TODO - reset everything and force login???
+    // clear values from local storeage
+    dispatch('logout')
+    //Read Configuration.json File
+    readJFile('static/config/configuration.json', function (myArray) {
+      axios.defaults.baseURL = myArray[0]['URL']
+      //load UI dropdowns from json files and database tables
+      dispatch('loadDropdowns')
+
+      //load admin link
+      dispatch('loadAdminLink', myArray)
+    })
+  },
+
+  checkToken({ dispatch, state }) {
+    // checks if keycloak object exists - if not then state is unstable, force logout
+    if (state.myKeycloak == null) {
       //TODO - reset everything and force login???
-      // clear values from local storeage
+      //should only be null when first logging on (async keycloak)- if it becomes null somehow should we force another
+      // login?
       dispatch('logout')
       //
+      return
+    }
+    // checks if keycloak object has tokenParsed yet, if not then just return as this only happens at login
+    if (state.myKeycloak.tokenParsed == null) {
+      return
+    }
+    var expiresIn = state.myKeycloak.tokenParsed['exp'] - Math.ceil(new Date().getTime() / 1000)
 
-      //Read Configuration.json File
-      readJFile('static/config/configuration.json', function (myArray) {
-        axios.defaults.baseURL = myArray[0]['URL']
+    if (expiresIn < 1700 && expiresIn > 0) {
+      dispatch('updateToken')
+    } else if (expiresIn < 0) {
+      //TODO - reset everything and force login???
+      dispatch('logout')
+      window.location.assign('/')
+      //
+    }
+  },
 
-
-        //load UI dropdowns from json files and database tables
-        dispatch('loadDropdowns');
-
-        //load admin link
-        dispatch('loadAdminLink',myArray)
-
-      })
-    },
-
-    tryAutoLogin ({commit}) {
-    },
-
-    checkToken({dispatch, state}) {
-      // checks if keycloak object exists - if not then state is unstable, force logout
-      if (state.myKeycloak==null) {
-        //TODO - reset everything and force login???
-        //should only be null when first logging on (async keycloak)- if it becomes null somehow should we force another login?
-        dispatch('logout')
-        //
-        return
+  updateToken({ commit, state }) {
+    const vm = this
+    state.myKeycloak.updateToken(-1)
+    .success(function (refreshed) {
+      if (refreshed) {
+        sessionStorage.setItem('KEYCLOAK_TOKEN', state.myKeycloak.token)
+        sessionStorage.setItem('KEYCLOAK_REFRESH', state.myKeycloak.refreshToken)
+        sessionStorage.setItem('KEYCLOAK_EXPIRES', state.myKeycloak.tokenParsed.exp * 1000)
       }
-      // checks if keycloak object has tokenParsed yet, if not then just return as this only happens at login
-      if(state.myKeycloak.tokenParsed==null){ return }
+    })
+    .error(function () {
+      console.log('Failed to refresh the token, or the session has expired')
+    })
+  },
 
-      var expiresIn = state.myKeycloak.tokenParsed['exp'] - Math.ceil(new Date().getTime() / 1000)
 
 
+  checkError({ commit }, responseJSON) {
+    if (responseJSON.warnings != null) {
+      commit('setErrorJSON', responseJSON)
+    }
+    if (responseJSON.errors != null) {
+      commit('setErrorJSON', responseJSON)
+    }
+    if (responseJSON.message != null) {
+      commit('setErrorJSON', responseJSON)
+    }
+  },
 
-      if (expiresIn < 1700 && expiresIn > 0) {
+  setDetails({ commit, state }) {
+    var detail = state.details ? null : '1'
+    commit('saveDetail', detail)
+  },
 
-        dispatch('updateToken')
+  getpostgrescompNo({ commit, dispatch, state }) {
+    const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    const url = '/api/v1/requests/queues/@me/oldest'
+    const vm = this
 
-      } else if(expiresIn < 0) {
-        //TODO - reset everything and force login???
+    dispatch('checkToken')
+    return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } })
+    .then(response => {
+      // response.data.nameRequest = 'NR 8270105';
+      //response.data.nameRequest = 'NR 0000021';
+      commit('loadpostgresNo', response.data)
+    })
+  },
 
-        dispatch('logout')
-        window.location.assign("/");
-        //
+  getpostgrescompInfo({ dispatch, commit }, nrNumber) {
+    const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    const url = '/api/v1/requests/' + nrNumber
+    const vm = this
+    dispatch('checkToken')
+    return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } })
+    .then(response => {
+      commit('loadCompanyInfo', response.data)
+    })
+    .catch(error => console.log('ERROR: ' + error))
+  },
+
+  updateNRState({ commit, state, dispatch }, nrState) {
+    const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    const url = '/api/v1/requests/' + state.compInfo.nrNumber
+
+    axios.patch(url, { 'state': nrState }, { headers: { Authorization: `Bearer ${ myToken }` } })
+    .then(function (response) {
+      dispatch('getpostgrescompInfo', state.compInfo.nrNumber)
+    })
+    .catch(error => console.log('ERROR: ' + error))
+  },
+
+  cancelNr({ commit, state, dispatch }, nrState) {
+    commit('is_making_decision', false)
+    const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    const url = '/api/v1/requests/' + state.compInfo.nrNumber
+
+    axios.patch(url, {
+      'state': nrState, 'comments': state.internalComments,
+    }, { headers: { Authorization: `Bearer ${ myToken }` } })
+    .then(function (response) {
+
+      dispatch('getpostgrescompInfo', state.compInfo.nrNumber)
+
+    })
+    .catch(error => console.log('ERROR: ' + error))
+  },
+
+  nameAcceptReject({ commit, dispatch, state }) {
+    const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/names/' + state.currentChoice
+    axios.put(url, state.currentNameObj, { headers: { Authorization: `Bearer ${ myToken }` } })
+    .then(function (response) {
+      // Was this an accept? If so complete the NR
+      if (state.currentNameObj.state == 'APPROVED') {
+        dispatch('updateNRState', 'APPROVED')
       }
-    },
-
-    updateToken({commit, state}) {
-      const vm = this;
-      state.myKeycloak.updateToken(-1).success(function (refreshed) {
-        if (refreshed) {
-          sessionStorage.setItem('KEYCLOAK_TOKEN', state.myKeycloak.token);
-          sessionStorage.setItem('KEYCLOAK_REFRESH', state.myKeycloak.refreshToken);
-          sessionStorage.setItem('KEYCLOAK_EXPIRES', state.myKeycloak.tokenParsed.exp * 1000);
-        }
-      }).error(function () {
-        console.log('Failed to refresh the token, or the session has expired');
-      });
-    },
-
-    checkError({commit},responseJSON){
-
-      if( responseJSON.warnings != null ){
-        commit('setErrorJSON',responseJSON)
+      // was this a conditional accept? If so complete the NR
+      else if (state.currentNameObj.state == 'CONDITION') {
+        dispatch('updateNRState', 'CONDITIONAL')
       }
-      if( responseJSON.errors != null ){
-        commit('setErrorJSON',responseJSON)
-      }
-      if( responseJSON.message != null){
-        commit('setErrorJSON',responseJSON)
-      }
-    },
-
-    setDetails({commit, state}) {
-      var detail = state.details?null:"1";
-      commit('saveDetail',detail)
-    },
-
-    getpostgrescompNo ({commit, dispatch, state}) {
-
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/requests/queues/@me/oldest'
-
-      const vm = this
-
-      dispatch('checkToken')
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        // response.data.nameRequest = 'NR 8270105';
-        //response.data.nameRequest = 'NR 0000021';
-
-
-        commit('loadpostgresNo',response.data)
-      })
-    },
-    getpostgrescompInfo ({dispatch,commit},nrNumber) {
-
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/requests/' + nrNumber
-
-      const vm = this
-      dispatch('checkToken')
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-
-        commit('loadCompanyInfo',response.data)
-      })
-        .catch(error => console.log('ERROR: ' + error))
-    },
-
-    updateNRState ({commit, state, dispatch},nrState) {
-
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/requests/' + state.compInfo.nrNumber
-
-      axios.patch(url,{"state": nrState} ,{headers: {Authorization: `Bearer ${myToken}`}})
-        .then(function(response){
-
-          dispatch('getpostgrescompInfo', state.compInfo.nrNumber);
-
-        })
-        .catch(error => console.log('ERROR: ' + error))
-    },
-
-    cancelNr({commit, state, dispatch},nrState) {
-
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/requests/' + state.compInfo.nrNumber
-
-      axios.patch(url,{"state": nrState, "comments": state.internalComments} ,{headers: {Authorization: `Bearer ${myToken}`}})
-        .then(function(response){
-
-          dispatch('getpostgrescompInfo', state.compInfo.nrNumber);
-
-        })
-        .catch(error => console.log('ERROR: ' + error))
-    },
-
-    nameAcceptReject( {commit, dispatch, state}) {
-
-
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/names/' + state.currentChoice;
-      axios.put(url, state.currentNameObj, {headers: {Authorization: `Bearer ${myToken}`}})
-        .then(function(response){
-
-
-          // Was this an accept? If so complete the NR
-          if (state.currentNameObj.state == 'APPROVED') {
-            dispatch('updateNRState', 'APPROVED');
+      // This was a reject? If so check whether there are any more names
+      else {
+        if (state.currentChoice == 1) {
+          if (state.compInfo.compNames.compName2.state == null || state.compInfo.compNames.compName2.state !== 'NE') {
+            dispatch('updateNRState', 'REJECTED')
+          } else {
+            // save updated name with new state, decision text, etc.
+            commit('compName1', state.currentNameObj)
+            // we'e got another choice to move on to so move to the next
+            commit('currentNameObj', state.compInfo.compNames.compName2)
           }
-          // was this a conditional accept? If so complete the NR
-          else if (state.currentNameObj.state == 'CONDITION') {
-            dispatch('updateNRState', 'CONDITIONAL');
+          return
+        } else if (state.currentChoice == 2) {
+          if (state.compInfo.compNames.compName3.state == null || state.compInfo.compNames.compName3.state !== 'NE') {
+            dispatch('updateNRState', 'REJECTED')
+          } else {
+            // save updated name with new state, decision text, etc.
+            state.compInfo.compNames.compName2 = state.currentNameObj
+
+            // we'e got another choice to move on to so move to the next
+            commit('currentNameObj', state.compInfo.compNames.compName3)
           }
-          // This was a reject? If so check whether there are any more names
-          else {
-
-            if (state.currentChoice == 1) {
-              if (state.compInfo.compNames.compName2.state == null || state.compInfo.compNames.compName2.state !== 'NE') {
-                dispatch('updateNRState', 'REJECTED');
-              } else {
-
-                // save updated name with new state, decision text, etc.
-                commit('compName1', state.currentNameObj);
-
-                // we'e got another choice to move on to so move to the next
-                commit('currentNameObj', state.compInfo.compNames.compName2);
-              }
-            } else if (state.currentChoice == 2) {
-              if (state.compInfo.compNames.compName3.state == null || state.compInfo.compNames.compName3.state !== 'NE') {
-                dispatch('updateNRState', 'REJECTED');
-              } else {
-                // save updated name with new state, decision text, etc.
-                state.compInfo.compNames.compName2 = state.currentNameObj;
-
-                // we'e got another choice to move on to so move to the next
-                commit('currentNameObj', state.compInfo.compNames.compName3);
-              }
-            } else {
-              // this is choice 3 so we're definitely done, there are no more names to examine
-              dispatch('updateNRState', 'REJECTED');
-            }
-          }
-        })
-        .catch(error => {
-
-          dispatch('getpostgrescompInfo', state.compInfo.nrNumber);
-        })
-    },
-
-    //updates the names data, through the api, into the database
-    updateRequest( {commit, state}) {
-
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      commit('update_nrData')
-      const url = '/api/v1/requests/' + state.compInfo.nrNumber
-      axios.put(url, state.nrData, {headers: {Authorization: `Bearer ${myToken}`}})
-        .then(function(response){
-
-
-          // load updated data from response
-          if (response.data !== undefined && response.data.nrNum !== undefined) {
-            commit('loadCompanyInfo',response.data);
-          }
-        })
-        .catch(error => console.log('ERROR: ' + error))
-    },
-
-    undoDecision({state}, nameChoice) {
-
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-
-      var objName = {}
-      if (nameChoice == 1) objName = this.getters.compName1;
-      if (nameChoice == 2) objName = this.getters.compName2;
-      if (nameChoice == 3) objName = this.getters.compName3;
-
-      objName.state = 'NE';
-      objName.conflict1 = null;
-      objName.conflict2 = null;
-      objName.conflict3 = null;
-      objName.conflict1_num = null;
-      objName.conflict2_num = null;
-      objName.conflict3_num = null;
-      objName.decision_text = null;
-      objName.comment = null;
-
-
-      const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/names/' + nameChoice;
-      axios.put(url, objName, {headers: {Authorization: `Bearer ${myToken}`}})
-        .then(function(response){
-
-          // get full NR from scratch
-          this.getpostgrescompInfo(state.compInfo.nrNumber);
-        })
-        .catch(error => console.log('ERROR: ' + error))
-    },
-
-    loadAdminLink({state},myArray){
-      //Set Admin URL
-      if(myArray[0]['NODE_ENV']=='production') {
-        state.adminURL = 'https://namex-solr.pathfinder.gov.bc.ca'
-      } else if(myArray[0]['NODE_ENV']=='test') {
-        state.adminURL = 'https://namex-solr-test.pathfinder.gov.bc.ca'
-      } else {
-        state.adminURL = 'https://namex-solr-dev.pathfinder.gov.bc.ca'
-      }
-    },
-
-    loadDropdowns( {commit, state} ) {
-      var json_files_path = 'static/ui_dropdowns/';
-
-
-
-
-      // jurisdictions - first list 1, then list 2
-      if (state.listJurisdictions === null) {
-        readJFile(json_files_path + 'jurisdiction 1.json', function (myArray) {
-          commit('listJurisdictions', myArray);
-
-          readJFile(json_files_path + 'jurisdiction 2.json', function (myArray) {
-
-            // sort the country list alphabetically
-            myArray.sort(function(a,b) {return (a.text > b.text) ? 1 : ((b.text > a.text) ? -1 : 0);} );
-
-            commit('listJurisdictions', state.listJurisdictions.concat(myArray));
-          });
-        });
-      }
-
-
-      // request types
-      if (state.listRequestTypes === null) {
-        readJFile(json_files_path + 'requesttype.json', function (myArray) { commit('listRequestTypes', myArray);})
-      }
-
-
-      // decision reasons
-      if (state.listDecisionReasons === null) {
-        const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-        const url = '/api/v1/requests/decisionreasons'
-        axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-          commit('listDecisionReasons',response.data)
-        })
-      }
-
-      // request type rules - from CSV, not JSON
-      if (state.requestTypeRules === null) {
-        readCsv(json_files_path + 'request_type_rules.csv', function (myArray) {
-          commit('requestTypeRules', myArray);
-        });
-      }
-    },
-
-    newNrNumber({commit,dispatch},nrNum) {
-      //save current state ??
-
-      // reset the store values to null
-
-      dispatch('resetValues')
-
-      // By setting the NR number, this should(doesn't) trigger the watcher located on the RequestInfoHeader.vue component to fire
-      commit('nrNumber',nrNum)
-
-
-
-      dispatch('getpostgrescompInfo',nrNum)
-
-      //TODO: this is called in reset values already -- take out and test
-      commit('is_making_decision', false);
-    },
-
-    getConflictInfo ({state,commit},value) {
-      if (value == null || value.nrNumber == null) { return; }
-
-
-      commit('currentConflict', value);
-      if(value.source == "CORP" ){
-        state.corpConflictJSON = null
-        this.dispatch('getCorpConflict',value)
-      }else{
-
-        state.namesConflictJSON = null
-        this.dispatch('getNamesConflict',value)
-      }
-    },
-
-    getNamesConflict ({state,commit},value) {
-
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/requests/' + value.nrNumber
-      const vm = this
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.conflict-detail-spinner'}).then(response => {
-
-        commit('loadNamesConflictJSON',response.data )
-      })
-        .catch(error => this.dispatch('checkError',{errors:[{code:404, message:{"NR Info Error":["NR info could not be displayed because it isn't loaded in postgres yet."]}}]}))
-    },
-
-    getCorpConflict ({state,commit,dispatch},value) {
-
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/corporations/' + value.nrNumber
-      const vm = this
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.conflict-detail-spinner'}).then(response => {
-
-        commit('loadCorpConflictJSON',response.data)
-      })
-        .catch(error => this.dispatch('checkError',{errors:[{code:404, message:{"Corp Info Error":["Corporation info could not be displayed because it isn't in fdw-registries data."]}}]}))
-    },
-
-    getHistoryInfo ({state,commit,dispatch},value) {
-
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/requests/' + value.nr_num
-      const vm = this
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}, spinner: false}).then(response => {
-
-        commit('loadHistoriesInfoJSON',response.data )
-      })
-        .catch(error => this.dispatch('checkError',{errors:[{code:404, message:{"NR Info Error":["NR info could not be displayed because it isn't loaded in postgres yet."]}}]}))
-    },
-
-    getSearchDataJSON( {commit, state}, val) {
-
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-      // current hour passed in via front end because server is in utc time (for last update and submitted date filters
-      var currentDate = new Date();
-      const url = '/api/v1/requests' + val + '&hour=' + currentDate.getHours();
-
-      const vm = this;
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-
-        commit('loadSearchDataJSON',response.data)
-      })
-        .catch(error => console.log('ERROR: ' + error))
-    },
-
-    getStatsDataJSON( {commit, state},stateCd ) {
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-      var newQuery = '?order=priorityCd:desc,submittedDate:asc&queue=' + stateCd + '&furnished=true&unfurnished=true&rows=1&start=0'
-      const url = '/api/v1/requests' + newQuery
-
-      const vm = this;
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-
-        var params ={
-          myState: stateCd,
-          JSONdata: response.data
-        }
-        //commit('loadStatsDataJSON', response.data)
-        commit('loadStatsDataJSON',params)
-      })
-        .catch(error => console.log('ERROR: ' + error))
-    },
-
-    setCurrentName({commit, state},objName ) {
-      commit('currentNameObj', objName);
-    },
-
-    runManualRecipe({dispatch,state},searchObj) {
-
-      if( state.currentChoice != null) {
-        this.dispatch('checkManualExactMatches',searchObj.searchStr)
-        this.dispatch('checkManualSynonymMatches',searchObj)
-        this.dispatch('checkManualCobrsPhoneticMatches',searchObj)
-        this.dispatch('checkManualPhoneticMatches',searchObj)
-        // this.dispatch('checkManualConflicts',searchStr)
-        this.dispatch('checkManualTrademarks',searchObj.searchStr)
-        this.dispatch('checkManualConditions',searchObj.searchStr)
-        this.dispatch('checkManualHistories',searchObj.searchStr)
-      }
-    },
-
-    checkManualExactMatches( {commit, state}, query ) {
-
-      commit('setExactMatchesConflicts', null);
-
-
-      query = query.replace(' \/','\/')
-        .replace(/(^|\s+)(\$+(\s|$)+)+/g, '$1DOLLAR$3')
-        .replace(/(^|\s+)(¢+(\s|$)+)+/g, '$1CENT$3')
-        .replace(/\$/g, 'S')
-        .replace(/¢/g, 'C')
-        .replace(/\\/g, '')
-        .replace(/\//g, '')
-        .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
-        .replace(/[\+\-]{2,}/g, '')
-        .replace(/\s[\+\-]$/, '')
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      query = query.substring(0, 1) == '+' ? query.substring(1) : query;
-      query = encodeURIComponent(query)
-
-      const url = '/api/v1/exact-match?query='+query
-
-      const vm = this
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.exact-match-spinner'}).then(response => {
-
-        commit('setExactMatchesConflicts', response.data)
-      })
-        .catch(error => console.log('ERROR (exact matches): ' + error))
-    },
-
-    checkManualSynonymMatches( {dispatch,commit,state}, searchObj ) {
-      var searchStr = ((searchObj.searchStr == '') ? '*' : searchObj.searchStr);
-      var exactPhrase = searchObj.exactPhrase;
-      commit('setSynonymMatchesConflicts', null);
-
-
-      searchStr = searchStr.replace(/\//g,' ')
-        .replace(/\\/g,' ')
-        .replace(/&/g, ' ')
-        .replace(/\+/g, ' ')
-        .replace(/\-/g, ' ')
-        .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
-        .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
-        .replace(/\$/g, 'S')
-        .replace(/¢/g,'C')
-        .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?|,)/g, '')
-      if (exactPhrase == '') exactPhrase = '*';
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-      const url = '/api/v1/requests/synonymbucket/' + searchStr + '/' + exactPhrase;
-
-      const vm = this;
-      dispatch('checkToken');
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.synonym-match-spinner'}).then(response => {
-        commit('setSynonymMatchesConflicts', response.data)
-      })
-        .catch(error => console.log('ERROR (synonym matches): ' + error))
-    },
-
-    checkManualCobrsPhoneticMatches( {dispatch,commit,state}, searchObj ) {
-      var query = ((searchObj.searchStr == '') ? '*' : searchObj.searchStr);
-      commit('setCobrsPhoneticConflicts', null);
-
-
-      query = query.replace(/\//g,' ')
-        .replace(/\\/g,' ')
-        .replace(/&/g, ' ')
-        .replace(/\+/g, ' ')
-        .replace(/\-/g, ' ')
-        .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
-        .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
-        .replace(/\$/g, 'S')
-        .replace(/¢/g,'C')
-        .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-      const url = '/api/v1/requests/cobrsphonetics/' + query + '/*';
-
-      const vm = this;
-      dispatch('checkToken');
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.cobrs-phonetic-match-spinner'}).then(response => {
-        commit('setCobrsPhoneticConflicts', response.data);
-      })
-        .catch(error => console.log('ERROR (CobrsPhonetic matches): ' + error))
-    },
-
-    checkManualPhoneticMatches( {dispatch,commit,state}, searchObj) {
-      var query = ((searchObj.searchStr == '') ? '*' : searchObj.searchStr);
-      commit('setPhoneticConflicts', null);
-
-
-      query = query.replace(/\//g,' ')
-        .replace(/\\/g,' ')
-        .replace(/&/g, ' ')
-        .replace(/\+/g, ' ')
-        .replace(/\-/g, ' ')
-        .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
-        .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
-        .replace(/\$/g, 'S')
-        .replace(/¢/g,'C')
-        .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN');
-      const url = '/api/v1/requests/phonetics/' + query + '/*';
-
-      const vm = this;
-      dispatch('checkToken');
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.phonetic-match-spinner'}).then(response => {
-        commit('setPhoneticConflicts', response.data)
-      })
-        .catch(error => console.log('ERROR (Phonetic matches): ' + error))
-    },
-
-    checkManualConditions( {commit, state},searchStr ) {
-      if (searchStr != '') {
-
-        const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-        const myHeader = {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.conditions-spinner'};
-        const url = '/api/v1/documents:restricted_words'
-
-        const vm = this
-        return axios.post(url, {type: 'plain_text', content: searchStr}, myHeader).then(response => {
-
-          commit('loadConditionsJSON', response.data)
-        })
-          .catch(error => console.log('ERROR: ' + error))
-      }
-    },
-
-    checkManualHistories( {commit, state},searchStr ) {
-      if (searchStr != '') {
-
-        const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-        const myHeader = {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.history-spinner'};
-        const url = '/api/v1/documents:histories'
-
-        searchStr = searchStr.replace(/\//g, ' ')
-          .replace(/\\/g, ' ')
-          .replace(/&/g, ' ')
-          .replace(/\+/g, ' ')
-          .replace(/\-/g, ' ')
-          .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
-          .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
-          .replace(/\$/g, 'S')
-          .replace(/¢/g, 'C')
-          .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
-        const vm = this
-        return axios.post(url, {type: 'plain_text', content: searchStr}, myHeader).then(response => {
-
-          commit('loadHistoriesJSON', response.data)
-        })
-          .catch(error => console.log('ERROR: ' + error))
-      }
-    },
-
-    checkManualTrademarks( {commit, state},searchStr ) {
-      if (searchStr != '') {
-
-        const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-        const myHeader = {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.trademarks-spinner'};
-        const url = '/api/v1/documents:trademarks'
-
-        searchStr = searchStr.replace(/\//g, ' ')
-          .replace(/\\/g, ' ')
-          .replace(/&/g, ' ')
-          .replace(/\+/g, ' ')
-          .replace(/\-/g, ' ')
-          .replace(/\(/g, '')
-          .replace(/\)/g, '')
-          .replace(/}/g, '')
-          .replace(/{/g, '')
-          .replace(/]/g, '')
-          .replace(/\[/g, '')
-          .replace(/\?/g, '')
-          .replace(/#/g, '')
-          .replace(/%/g, '')
-          .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
-          .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
-          .replace(/\$/g, 'S')
-          .replace(/¢/g, 'C')
-          .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
-        const vm = this
-        return axios.post(url, {type: 'plain_text', content: searchStr}, myHeader).then(response => {
-
-          commit('loadTrademarksJSON', response.data)
-        })
-          .catch(error => console.log('ERROR: ' + error))
-      }
-    },
-
-    syncNR({dispatch,commit},nrNumber) {
-
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const url = '/api/v1/requests/' + nrNumber + '/syncnr'
-
-      const vm = this
-      dispatch('checkToken')
-      return axios.get(url, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-
-        commit('loadCompanyInfo',response.data)
-      })
-        .catch(error => console.log('ERROR: ' + error))
-    },
-
-    resetValues({state, commit}){
-      // clear NR specific JSON data so that it can't get accidentally re-used by the next NR number
-
-      commit('loadConflictsJSON',null)
-      commit('setExactMatchesConflicts', null);
-      commit('setSynonymMatchesConflicts', null);
-      commit('setCobrsPhoneticConflicts', null);
-      commit('setPhoneticConflicts', null);
-      commit('currentConflict', null)
-
-
-      commit('loadNamesConflictJSON',null)
-
-
-      commit('loadCorpConflictJSON',null)
-
-
-      commit('loadConditionsJSON',null)
-
-
-      commit('loadHistoriesJSON',null)
-
-
-      commit('loadHistoriesInfoJSON',null)
-      commit('currentHistory',null)
-
-
-      commit('currentTrademark',null)
-      commit('loadTrademarksJSON',null)
-
-      // reset all flags like editing, making decision, etc.
-      state.is_editing = false;
-      state.is_making_decision = false;
-      state.decision_made = null;
-      state.acceptance_will_be_conditional = false;
-      state.is_header_shown = false;
-
-    },
-    resetHistoriesInfo({commit}) {
-      commit('loadHistoriesInfoJSON',null)
-    },
-
-    postComment({commit, state}) {
-
-      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const myHeader = {headers: {Authorization: `Bearer ${myToken}`}, spinner: '.conditions-spinner'};
-      const url = `/api/v1/requests/${state.compInfo.nrNumber}/comments`
-      let data = { comment: state.newComment }
-
-      axios.post(url, data, {headers: {Authorization: `Bearer ${myToken}`}}).then(response => {
-        let comments
-        if (state.internalComments &&
-          Array.isArray(state.internalComments) &&
-          state.internalComments.length > 0) {
-          comments = Object.assign([], state.internalComments)
+          return
         } else {
-          comments = []
+          // this is choice 3 so we're definitely done, there are no more names to examine
+          dispatch('updateNRState', 'REJECTED')
         }
-        comments.push(response.data)
-        commit('internalComments', comments)
-        commit('setNewComment', null)
+      }
+    })
+    .catch(error => {
+      dispatch('getpostgrescompInfo', state.compInfo.nrNumber)
+    })
+  },
+
+  //updates the names data, through the api, into the database
+  updateRequest({ commit, state }) {
+    const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    commit('update_nrData')
+    const url = '/api/v1/requests/' + state.compInfo.nrNumber
+    axios.put(url, state.nrData, { headers: { Authorization: `Bearer ${ myToken }` } })
+    .then(function (response) {
+
+      // load updated data from response
+      if (response.data !== undefined && response.data.nrNum !== undefined) {
+        commit('loadCompanyInfo', response.data)
+      }
+    })
+    .catch(error => console.log('ERROR: ' + error))
+  },
+
+  undoDecision({ state }, nameChoice) {
+    const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+
+    var objName = {}
+    if (nameChoice == 1) objName = this.getters.compName1
+    if (nameChoice == 2) objName = this.getters.compName2
+    if (nameChoice == 3) objName = this.getters.compName3
+
+    objName.state = 'NE'
+    objName.conflict1 = null
+    objName.conflict2 = null
+    objName.conflict3 = null
+    objName.conflict1_num = null
+    objName.conflict2_num = null
+    objName.conflict3_num = null
+    objName.decision_text = null
+    objName.comment = null
+
+    const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/names/' + nameChoice
+    axios.put(url, objName, { headers: { Authorization: `Bearer ${ myToken }` } })
+    .then(function (response) {
+      // get full NR from scratch
+      this.getpostgrescompInfo(state.compInfo.nrNumber)
+    })
+    .catch(error => console.log('ERROR: ' + error))
+  },
+
+  loadAdminLink({ state }, myArray) {
+    //Set Admin URL
+    if (myArray[0]['NODE_ENV'] == 'production') {
+      state.adminURL = 'https://namex-solr.pathfinder.gov.bc.ca'
+    } else if (myArray[0]['NODE_ENV'] == 'test') {
+      state.adminURL = 'https://namex-solr-test.pathfinder.gov.bc.ca'
+    } else {
+      state.adminURL = 'https://namex-solr-dev.pathfinder.gov.bc.ca'
+    }
+  },
+
+  loadDropdowns({ commit, state }) {
+    var json_files_path = 'static/ui_dropdowns/'
+
+    // jurisdictions - first list 1, then list 2
+    if (state.listJurisdictions === null) {
+      readJFile(json_files_path + 'jurisdiction 1.json', function (myArray) {
+        commit('listJurisdictions', myArray)
+
+        readJFile(json_files_path + 'jurisdiction 2.json', function (myArray) {
+
+          // sort the country list alphabetically
+          myArray.sort(function (a, b) {
+            return ( a.text > b.text ) ? 1 : ( ( b.text > a.text ) ? -1 : 0 )
+          })
+
+          commit('listJurisdictions', state.listJurisdictions.concat(myArray))
+        })
       })
-        .catch(error => console.log('ERROR: ' + error))
-    },
+    }
+    // request types
+    if (state.listRequestTypes === null) {
+      readJFile(json_files_path + 'requesttype.json', function (myArray) {
+        commit('listRequestTypes', myArray)
+      })
+    }
+    // decision reasons
+    if (state.listDecisionReasons === null) {
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+      const url = '/api/v1/requests/decisionreasons'
+      axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } })
+      .then(response => {
+        commit('listDecisionReasons', response.data)
+      })
+    }
+
+    // request type rules - from CSV, not JSON
+    if (state.requestTypeRules === null) {
+      readCsv(json_files_path + 'request_type_rules.csv', function (myArray) {
+        commit('requestTypeRules', myArray)
+      })
+    }
+  },
+
+  newNrNumber({ commit, dispatch }, nrNum) {
+    //save current state ??
+    // reset the store values to null
+    dispatch('resetValues')
+    // By setting the NR number, this should(doesn't) trigger the watcher located on the RequestInfoHeader.vue
+    // component to fire
+    commit('nrNumber', nrNum)
+    dispatch('getpostgrescompInfo', nrNum)
+    //TODO: this is called in reset values already -- take out and test
+    commit('is_making_decision', false)
+  },
+
+  getConflictInfo({ state, commit, dispatch }, value) {
+    $('.conflict-detail-spinner').removeClass('hidden')
+    if (value == null || value.nrNumber == null) {
+      $('.conflict-detail-spinner').addClass('hidden')
+      return
+    }
+    commit('currentConflict', value)
+    if (value.source == 'CORP') {
+      state.corpConflictJSON = null
+      dispatch('getCorpConflict', value)
+    } else {
+      state.namesConflictJSON = null
+      dispatch('getNamesConflict', value)
+    }
+  },
+
+  getNamesConflict({ state, commit, dispatch }, value) {
+    const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    const url = '/api/v1/requests/' + value.nrNumber
+    const vm = this
+    return axios.get(url, {
+      headers: { Authorization: `Bearer ${ myToken }` }, spinner: '.conflict-detail-spinner',
+    })
+    .then(response => {
+      $('.conflict-detail-spinner')
+      .addClass('hidden')
+      commit('loadNamesConflictJSON', response.data)
+    })
+    .catch(error => {
+      $('.conflict-detail-spinner')
+      .addClass('hidden')
+      dispatch('checkError', {
+        errors: [ {
+          code: 404,
+          message: { 'NR Info Error': [ 'NR info could not be displayed because it isn\'t loaded in postgres yet.' ] },
+        } ],
+      })
+    })
+  },
+
+  getCorpConflict({ state, commit, dispatch }, value) {
+    const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    const url = '/api/v1/corporations/' + value.nrNumber
+    const vm = this
+    return axios.get(url, {
+      headers: { Authorization: `Bearer ${ myToken }` }, spinner: false,
+    })
+    .then(response => {
+      commit('loadCorpConflictJSON', response.data)
+      $('.conflict-detail-spinner').addClass('hidden')
+    })
+    .catch(error => {
+      $('.conflict-detail-spinner').addClass('hidden')
+      dispatch('checkError', {
+        errors: [ {
+          code: 404, message: {
+            'Corp Info Error': [ 'Corporation info could not be displayed because it isn\'t in fdw-registries data.' ],
+          },
+        } ],
+      })
+    })
+  },
+
+  getHistoryInfo({ state, commit, dispatch }, value) {
+    $('.history-list-spinner')
+    .removeClass('hidden')
+    const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    const url = '/api/v1/requests/' + value.nr_num
+    const vm = this
+    return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` }, spinner: false })
+    .then(response => {
+      commit('loadHistoriesInfoJSON', response.data)
+      $('.history-list-spinner')
+      .addClass('hidden')
+    })
+    .catch(error => {
+      $('.history-list-spinner')
+      .addClass('hidden')
+      dispatch('checkError', {
+        errors: [ {
+          code: 404,
+          message: { 'NR Info Error': [ 'NR info could not be displayed because it isn\'t loaded in postgres yet.' ] },
+        } ],
+      })
+    })
+  },
+
+  getSearchDataJSON({ commit, state }, val) {
+    const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    // current hour passed in via front end because server is in utc time (for last update and submitted date filters
+    var currentDate = new Date()
+    const url = '/api/v1/requests' + val + '&hour=' + currentDate.getHours()
+
+    const vm = this
+    return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } })
+    .then(response => {
+      commit('loadSearchDataJSON', response.data)
+    })
+    .catch(error => console.log('ERROR: ' + error))
+  },
+
+  getStatsDataJSON({ commit, state }, stateCd) {
+    const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    var newQuery = '?order=priorityCd:desc,submittedDate:asc&queue=' + stateCd +
+      '&furnished=true&unfurnished=true&rows=1&start=0'
+    const url = '/api/v1/requests' + newQuery
+    const vm = this
+    return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } })
+    .then(response => {
+      var params = {
+        myState: stateCd, JSONdata: response.data,
+      }
+      //commit('loadStatsDataJSON', response.data)
+      commit('loadStatsDataJSON', params)
+    })
+    .catch(error => console.log('ERROR: ' + error))
+  },
+
+  setCurrentName({ commit, state }, objName) {
+    commit('currentNameObj', objName)
+  },
+
+  runManualRecipe({ dispatch, state, commit }, searchObj) {
+    if (state.currentChoice != null) {
+      $('.conflict-container-spinner').removeClass('hidden')
+      commit('setConflictsReturnedStatus', false)
+      let p1 = dispatch('checkManualExactMatches', searchObj.searchStr)
+      let p2 = dispatch('checkManualSynonymMatches', searchObj)
+      let p3 = dispatch('checkManualCobrsPhoneticMatches', searchObj)
+      let p4 = dispatch('checkManualPhoneticMatches', searchObj)
+      Promise.all([ p1, p2, p3, p4 ])
+      .then(() => {
+        commit('setConflictsReturnedStatus', true)
+        $('.conflict-container-spinner').addClass('hidden')
+      })
+      // this.dispatch('checkManualConflicts',searchStr)
+      dispatch('checkManualTrademarks', searchObj.searchStr)
+      dispatch('checkManualConditions', searchObj.searchStr)
+      dispatch('checkManualHistories', searchObj.searchStr)
+    }
+  },
+
+  checkManualExactMatches({ commit, state }, query) {
+    query = query.replace(' \/', '\/')
+    .replace(/(^|\s+)(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+    .replace(/(^|\s+)(¢+(\s|$)+)+/g, '$1CENT$3')
+    .replace(/\$/g, 'S')
+    .replace(/¢/g, 'C')
+    .replace(/\\/g, '')
+    .replace(/\//g, '')
+    .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
+    .replace(/[\+\-]{2,}/g, '')
+    .replace(/\s[\+\-]$/, '')
+    let myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    query = query.substring(0, 1) == '+' ? query.substring(1) : query
+    query = encodeURIComponent(query)
+    let url = '/api/v1/exact-match?query=' + query
+    return axios.get(url, {
+      headers: { Authorization: `Bearer ${ myToken }` }, spinner: '.exact-match-spinner',
+    })
+    .then(response => {
+      commit('setExactMatchesConflicts', response.data)
+    })
+    .catch(error => { console.log('ERROR (exact matches): ' + error) })
+  },
+
+  checkManualSynonymMatches({ dispatch, commit, state }, searchObj) {
+    let searchStr = ( ( searchObj.searchStr == '' ) ? '*' : searchObj.searchStr )
+    let exactPhrase = searchObj.exactPhrase
+    searchStr = searchStr.replace(/\//g, ' ')
+    .replace(/\\/g, ' ')
+    .replace(/&/g, ' ')
+    .replace(/\+/g, ' ')
+    .replace(/\-/g, ' ')
+    .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+    .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+    .replace(/\$/g, 'S')
+    .replace(/¢/g, 'C')
+    .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?|,)/g, '')
+    if (exactPhrase == '') exactPhrase = '*'
+    let myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    let url = '/api/v1/requests/synonymbucket/' + searchStr + '/' + exactPhrase
+    dispatch('checkToken')
+    return axios.get(url, {
+      headers: { Authorization: `Bearer ${ myToken }` }, spinner: '.synonym-match-spinner',
+    })
+    .then(response => {
+      commit('setSynonymMatchesConflicts', response.data)
+    })
+    .catch(error => {
+      console.log('ERROR (synonym matches): ' + error)
+    })
+  },
+
+  checkManualCobrsPhoneticMatches({ dispatch, commit, state }, searchObj) {
+    let query = ( ( searchObj.searchStr == '' ) ? '*' : searchObj.searchStr )
+    query = query.replace(/\//g, ' ')
+    .replace(/\\/g, ' ')
+    .replace(/&/g, ' ')
+    .replace(/\+/g, ' ')
+    .replace(/\-/g, ' ')
+    .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+    .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+    .replace(/\$/g, 'S')
+    .replace(/¢/g, 'C')
+    .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
+    let myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    let url = '/api/v1/requests/cobrsphonetics/' + query + '/*'
+    dispatch('checkToken')
+    return axios.get(url, {
+      headers: { Authorization: `Bearer ${ myToken }` }, spinner: '.cobrs-phonetic-match-spinner',
+    })
+    .then(response => {
+      commit('setCobrsPhoneticConflicts', response.data)
+    })
+    .catch(error => {
+      console.log('ERROR (CobrsPhonetic matches): ' + error)
+    })
+  },
+
+  checkManualPhoneticMatches({ dispatch, commit, state }, searchObj) {
+    let query = ( ( searchObj.searchStr == '' ) ? '*' : searchObj.searchStr )
+    query = query.replace(/\//g, ' ')
+    .replace(/\\/g, ' ')
+    .replace(/&/g, ' ')
+    .replace(/\+/g, ' ')
+    .replace(/\-/g, ' ')
+    .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+    .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+    .replace(/\$/g, 'S')
+    .replace(/¢/g, 'C')
+    .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
+    const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    const url = '/api/v1/requests/phonetics/' + query + '/*'
+    dispatch('checkToken')
+    return axios.get(url, {
+      headers: { Authorization: `Bearer ${ myToken }` }, spinner: '.phonetic-match-spinner',
+    })
+    .then(response => {
+      commit('setPhoneticConflicts', response.data)
+    })
+    .catch(error => {
+      console.log('ERROR (Phonetic matches): ' + error)
+    })
+  },
+
+  checkManualConditions({ commit, state }, searchStr) {
+    if (searchStr != '') {
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+      const myHeader = { headers: { Authorization: `Bearer ${ myToken }` }, spinner: '.conditions-spinner' }
+      const url = '/api/v1/documents:restricted_words'
+      return axios.post(url, { type: 'plain_text', content: searchStr }, myHeader)
+      .then(response => {
+        commit('loadConditionsJSON', response.data)
+      })
+      .catch(error => console.log('ERROR: ' + error))
+    }
+  },
+
+  checkManualHistories({ commit, state }, searchStr) {
+    if (searchStr != '') {
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+      const myHeader = { headers: { Authorization: `Bearer ${ myToken }` }, spinner: '.history-spinner' }
+      const url = '/api/v1/documents:histories'
+      searchStr = searchStr.replace(/\//g, ' ')
+      .replace(/\\/g, ' ')
+      .replace(/&/g, ' ')
+      .replace(/\+/g, ' ')
+      .replace(/\-/g, ' ')
+      .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+      .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+      .replace(/\$/g, 'S')
+      .replace(/¢/g, 'C')
+      .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
+      return axios.post(url, { type: 'plain_text', content: searchStr }, myHeader)
+      .then(response => {
+        commit('loadHistoriesJSON', response.data)
+      })
+      .catch(error => console.log('ERROR: ' + error))
+    }
+  },
+
+  checkManualTrademarks({ commit, state }, searchStr) {
+    if (searchStr != '') {
+      const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+      const myHeader = { headers: { Authorization: `Bearer ${ myToken }` }, spinner: '.trademarks-spinner' }
+      const url = '/api/v1/documents:trademarks'
+      searchStr = searchStr.replace(/\//g, ' ')
+      .replace(/\\/g, ' ')
+      .replace(/&/g, ' ')
+      .replace(/\+/g, ' ')
+      .replace(/\-/g, ' ')
+      .replace(/\(/g, '')
+      .replace(/\)/g, '')
+      .replace(/}/g, '')
+      .replace(/{/g, '')
+      .replace(/]/g, '')
+      .replace(/\[/g, '')
+      .replace(/\?/g, '')
+      .replace(/#/g, '')
+      .replace(/%/g, '')
+      .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+      .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+      .replace(/\$/g, 'S')
+      .replace(/¢/g, 'C')
+      .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
+      return axios.post(url, { type: 'plain_text', content: searchStr }, myHeader)
+      .then(response => {
+        commit('loadTrademarksJSON', response.data)
+      })
+      .catch(error => console.log('ERROR: ' + error))
+    }
+  },
+
+  syncNR({ dispatch, commit }, nrNumber) {
+    const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    const url = '/api/v1/requests/' + nrNumber + '/syncnr'
+    const vm = this
+    dispatch('checkToken')
+    return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } })
+    .then(response => {
+      commit('loadCompanyInfo', response.data)
+    })
+    .catch(error => console.log('ERROR: ' + error))
+  },
+
+  resetValues({ state, commit }) {
+    // clear NR specific JSON data so that it can't get accidentally re-used by the next NR number
+    commit('loadConflictsJSON', null)
+    commit('setExactMatchesConflicts', null)
+    commit('setSynonymMatchesConflicts', null)
+    commit('setCobrsPhoneticConflicts', null)
+    commit('setPhoneticConflicts', null)
+    commit('currentConflict', null)
+    commit('loadNamesConflictJSON', null)
+    commit('loadCorpConflictJSON', null)
+    commit('loadConditionsJSON', null)
+    commit('loadHistoriesJSON', null)
+    commit('loadHistoriesInfoJSON', null)
+    commit('currentHistory', null)
+    commit('currentTrademark', null)
+    commit('loadTrademarksJSON', null)
+    commit('setSelectedConflicts', [])
+    commit('setSelectedConditions', [])
+    commit('setSelectedTrademarks', [])
+    // reset all flags like editing, making decision, etc.
+    state.is_editing = false
+    state.is_making_decision = false
+    state.decision_made = null
+    state.acceptance_will_be_conditional = false
+    state.is_header_shown = false
+  }, resetHistoriesInfo({ commit }) {
+    commit('loadHistoriesInfoJSON', null)
+  },
+
+  postComment({ commit, state }) {
+    const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    const myHeader = { headers: { Authorization: `Bearer ${ myToken }` }, spinner: '.conditions-spinner' }
+    const url = `/api/v1/requests/${ state.compInfo.nrNumber }/comments`
+    let data = { comment: state.newComment }
+
+    axios.post(url, data, { headers: { Authorization: `Bearer ${ myToken }` } })
+    .then(response => {
+      let comments
+      if (state.internalComments && Array.isArray(state.internalComments) && state.internalComments.length > 0) {
+        comments = Object.assign([], state.internalComments)
+      } else {
+        comments = []
+      }
+      comments.push(response.data)
+      commit('internalComments', comments)
+      commit('setNewComment', null)
+    })
+    .catch(error => console.log('ERROR: ' + error))
+  },
+}
+
+export const getters = {
+  keycloak(state) {
+    return state.myKeycloak
+  },
+  userId(state) {
+    return state.userId
+  },
+  userHasEditRole(state) {
+    let roles = state.user_roles
+    return roles.includes('names_approver') || roles.includes('names_editor')
+  },
+  userHasApproverRole(state) {
+    let roles = state.user_roles
+    return roles.includes('names_approver')
+  },
+  is_my_current_nr(state) {
+    // set flag indicating whether you own this NR and it's in progress
+    if (state.currentState == 'INPROGRESS' && state.examiner == state.userId) {
+      return true
+    } else {
+      return false
+    }
+  },
+  furnished(state) {
+    return state.furnished
+  },
+  hasBeenReset(state) {
+    return state.hasBeenReset
+  },
+  is_complete(state) {
+    // indicates a complete NR
+    if ([ 'APPROVED', 'REJECTED', 'CONDITIONAL', 'COMPLETED', 'CANCELLED', 'HISTORICAL', 'EXPIRED' ].indexOf(
+      state.currentState) >= 0) {
+      return true
+    } else {
+      return false
+    }
+  },
+  is_editing(state) {
+    return state.is_editing
+  },
+  is_making_decision(state) {
+    return state.is_making_decision
+  },
+  decision_made(state) {
+    return state.decision_made
+  },
+  acceptance_will_be_conditional(state) {
+    return state.acceptance_will_be_conditional
+  },
+  is_header_shown(state) {
+    return state.is_header_shown
+  },
+  email(state) {
+    return state.email
+  },
+  currentConflict(state) {
+    return state.currentConflict
+  },
+  currentCondition(state) {
+    return state.currentCondition
+  },
+  currentTrademark(state) {
+    return state.currentTrademark
+  },
+  currentNameObj(state) {
+    return state.currentNameObj
+  },
+  currentChoice(state) {
+    return state.currentChoice
+  },
+  currentState(state) {
+    return state.currentState
+  },
+  currentName(state) {
+    return state.currentName
+  },
+  issueText(state) {
+    return state.issueText
+  },
+  isAuthenticated(state) {
+    //return sessionStorage.getItem("AUTHORIZED")
+    return state.authorized
+  },
+  nrNumber(state) {
+    return state.compInfo.nrNumber
+  },
+  compName1(state) {
+    return state.compInfo.compNames.compName1
+  },
+  compName2(state) {
+    return state.compInfo.compNames.compName2
+  },
+  compName3(state) {
+    return state.compInfo.compNames.compName3
+  },
+  requestType(state) {
+    return state.compInfo.requestType
+  },
+  clientFirstName(state) {
+    return state.applicantInfo.clientName.firstName
+  },
+  clientLastName(state) {
+    return state.applicantInfo.clientName.lastName
+  },
+  firstName(state) {
+    return state.applicantInfo.applicantName.firstName
+  },
+  middleName(state) {
+    return state.applicantInfo.applicantName.middleName
+  },
+  lastName(state) {
+    return state.applicantInfo.applicantName.lastName
+  },
+  addressLine1(state) {
+    return state.applicantInfo.contactInfo.addressLine1
+  },
+  addressLine2(state) {
+    return state.applicantInfo.contactInfo.addressLine2
+  },
+  addressLine3(state) {
+    return state.applicantInfo.contactInfo.addressLine3
+  },
+  city(state) {
+    return state.applicantInfo.contactInfo.city
+  },
+  province(state) {
+    return state.applicantInfo.contactInfo.province
+  },
+  postalCode(state) {
+    return state.applicantInfo.contactInfo.postalCode
+  },
+  country(state) {
+    return state.applicantInfo.contactInfo.country
+  },
+  conEmail(state) {
+    return state.applicantInfo.contactInfo.email
+  },
+  contactName(state) {
+    return state.applicantInfo.contactInfo.contactName
+  },
+  phone(state) {
+    return state.applicantInfo.contactInfo.phone
+  },
+  fax(state) {
+    return state.applicantInfo.contactInfo.fax
+  },
+  jurisdiction(state) {
+    return state.additionalCompInfo.jurisdiction
+  },
+  natureOfBusiness(state) {
+    return state.additionalCompInfo.natureOfBussiness
+  },
+  nwpta_ab(state) {
+    return state.additionalCompInfo.nwpta_ab
+  },
+  nwpta_sk(state) {
+    return state.additionalCompInfo.nwpta_sk
+  },
+  nr_status(state) {
+    return state.additionalCompInfo.nr_status
+  },
+  examiner(state) {
+    return state.examiner
+  },
+  priority(state) {
+    if (state.priority == 'Y') {
+      return true
+    } else {
+      return false
+    }
+  },
+  reservationCount(state) {
+    return state.reservationCount
+  },
+  expiryDate(state) {
+    if (state.expiryDate) {
+      return state.expiryDate
+    }
+    return null
+  },
+  expiryDateForEdit(state) {
+    if (state.expiryDateForEdit) {
+      return state.expiryDateForEdit
+    }
+    return null
+  },
+  submittedDate(state) {
+    if (state.submittedDate) return state.submittedDate
+    return null
+  },
+  consumptionDate(state) {
+    /* Find the consumption date for the request from the individual name consumption date.
+     */
+    var thedate = null
+    if (state.compInfo.compNames.compName1.consumptionDate != null) {
+      thedate = state.compInfo.compNames.compName1.consumptionDate
+    } else if (state.compInfo.compNames.compName2.consumptionDate != null) {
+      thedate = state.compInfo.compNames.compName2.consumptionDate
+    } else {
+      thedate = state.compInfo.compNames.compName3.consumptionDate
+    }
+
+    if (thedate != null) {
+      return thedate
+    }
+    return null
 
   },
-  getters: {
-    keycloak(state) {
-      return state.myKeycloak
-    },
-    userId(state) {
-      return state.userId;
-    },
-    userHasEditRole(state) {
-      let roles = state.user_roles;
-      return roles.includes('names_approver') || roles.includes('names_editor')
-    },
-    userHasApproverRole(state) {
-      let roles = state.user_roles;
-      return roles.includes('names_approver')
-    },
-    is_my_current_nr(state) {
-      // set flag indicating whether you own this NR and it's in progress
-      if ( state.currentState == 'INPROGRESS' && state.examiner == state.userId ) return true;
-      else return false;
-    },
-    furnished(state) {
-      return state.furnished;
-    },
-    hasBeenReset(state) {
-      return state.hasBeenReset;
-    },
-    is_complete(state) {
-      // indicates a complete NR
-      if ( ['APPROVED', 'REJECTED', 'CONDITIONAL', 'COMPLETED', 'CANCELLED', 'HISTORICAL', 'EXPIRED'].indexOf(
-        state.currentState) >= 0 ) return true;
-      else return false;
-    },
-    is_editing(state) {
-      return state.is_editing
-    },
-    is_making_decision(state) {
-      return state.is_making_decision
-    },
-    decision_made(state) {
-      return state.decision_made;
-    },
-    acceptance_will_be_conditional(state) {
-      return state.acceptance_will_be_conditional;
-    },
-    is_header_shown(state) {
-      return state.is_header_shown
-    },
-    email(state) {
-      return state.email
-    },
-    currentConflict(state) {
-      return state.currentConflict;
-    },
-    currentCondition(state) {
-      return state.currentCondition;
-    },
-    currentTrademark(state) {
-      return state.currentTrademark;
-    },
-    currentNameObj(state) {
-      return state.currentNameObj;
-    },
-    currentChoice(state) {
-      return state.currentChoice;
-    },
-    currentState(state) {
-      return state.currentState;
-    },
-    currentName(state) {
-      return state.currentName;
-    },
-    issueText(state) {
-      return state.issueText
-    },
-    isAuthenticated(state) {
-      //return localStorage.getItem("AUTHORIZED")
-      return state.authorized
-    },
-    nrNumber(state) {
-      return state.compInfo.nrNumber
-    },
-    compName1(state) {
-      return state.compInfo.compNames.compName1;
-    },
-    compName2(state) {
-      return state.compInfo.compNames.compName2;
-    },
-    compName3(state) {
-      return state.compInfo.compNames.compName3;
-    },
-    requestType(state) {
-      return state.compInfo.requestType
-    },
-    clientFirstName(state) {
-      return state.applicantInfo.clientName.firstName
-    },
-    clientLastName(state) {
-      return state.applicantInfo.clientName.lastName
-    },
-    firstName(state) {
-      return state.applicantInfo.applicantName.firstName
-    },
-    middleName(state) {
-      return state.applicantInfo.applicantName.middleName
-    },
-    lastName(state) {
-      return state.applicantInfo.applicantName.lastName
-    },
-    addressLine1(state) {
-      return state.applicantInfo.contactInfo.addressLine1
-    },
-    addressLine2(state) {
-      return state.applicantInfo.contactInfo.addressLine2
-    },
-    addressLine3(state) {
-      return state.applicantInfo.contactInfo.addressLine3
-    },
-    city(state) {
-      return state.applicantInfo.contactInfo.city
-    },
-    province(state) {
-      return state.applicantInfo.contactInfo.province
-    },
-    postalCode(state) {
-      return state.applicantInfo.contactInfo.postalCode
-    },
-    country(state) {
-      return state.applicantInfo.contactInfo.country
-    },
-    conEmail(state) {
-      return state.applicantInfo.contactInfo.email
-    },
-    contactName(state) {
-      return state.applicantInfo.contactInfo.contactName
-    },
-    phone(state) {
-      return state.applicantInfo.contactInfo.phone
-    },
-    fax(state) {
-      return state.applicantInfo.contactInfo.fax
-    },
-    jurisdiction(state) {
-      return state.additionalCompInfo.jurisdiction
-    },
-    natureOfBusiness(state) {
-      return state.additionalCompInfo.natureOfBussiness
-    },
-    nwpta_ab(state) {
-      return state.additionalCompInfo.nwpta_ab
-    },
-    nwpta_sk(state) {
-      return state.additionalCompInfo.nwpta_sk
-    },
-    nr_status(state) {
-      return state.additionalCompInfo.nr_status
-    },
-    examiner(state) {
-      return state.examiner
-    },
-    priority(state) {
-      if ( state.priority == 'Y' ) return true;
-      else return false;
-    },
-    reservationCount(state) {
-      return state.reservationCount
-    },
-    expiryDate(state) {
-      if ( state.expiryDate ) {
-        return state.expiryDate
-      }
-      return null
-    },
-    expiryDateForEdit(state) {
-      if ( state.expiryDateForEdit ) {
-        return state.expiryDateForEdit
-      }
-      return null
-    },
-    submittedDate(state) {
-      if ( state.submittedDate ) return state.submittedDate
-      return null
-    },
-    consumptionDate(state) {
-      /* Find the consumption date for the request from the individual name consumption date.
-       */
-      var thedate = null;
-      if ( state.compInfo.compNames.compName1.consumptionDate != null ) {
-        thedate = state.compInfo.compNames.compName1.consumptionDate;
-      } else if ( state.compInfo.compNames.compName2.consumptionDate != null ) {
-        thedate = state.compInfo.compNames.compName2.consumptionDate;
-      } else thedate = state.compInfo.compNames.compName3.consumptionDate;
+  submitCount(state) {
+    return state.submitCount
+  },
+  previousNr(state) {
+    return state.previousNr
+  },
+  corpNum(state) {
+    return state.corpNum
+  },
+  issue_Match(state) {
+    return state.issue.issue_Match
+  },
+  issue_Match_Text(state) {
+    return state.issue.issue_Match_Text
+  },
+  issue_Consent(state) {
+    return state.issue.issue_Consent
+  },
+  issue_Consent_Text(state) {
+    return state.issue.issue_Consent_Text
+  },
+  issue_TradeMark(state) {
+    return state.issue.issue_TradeMark
+  },
+  issue_TradeMark_Text(state) {
+    return state.issue.issue_TradeMark_Text
+  },
+  issue_History(state) {
+    return state.issue.issue_History
+  },
+  issue_History_Text(state) {
+    return state.issue.issue_History_Text
+  },
+  issue_Format(state) {
+    return state.issue.issue_Format
+  },
+  issue_Format_Text(state) {
+    return state.issue.issue_Format_Text
+  },
+  details(state) {
+    return state.details
+  },
+  additionalInfo(state) {
+    return state.additionalInfo
+  },
+  internalComments(state) {
+    return state.internalComments
+  },
+  listPriorities(state) {
+    return state.listPriorities
+  },
+  listJurisdictions(state) {
+    return state.listJurisdictions
+  },
+  listRequestTypes(state) {
+    return state.listRequestTypes
+  },
+  listDecisionReasons(state) {
+    return state.listDecisionReasons
+  },
+  requestTypeRules(state) {
+    return state.requestTypeRules
+  },
+  exactMatchesConflicts(state) {
+    return state.exactMatchesConflicts
+  },
+  hasExactMatches(state) {
+    return state.exactMatchesConflicts ? state.exactMatchesConflicts.length > 0 : false
+  },
+  synonymMatchesConflicts(state) {
+    return state.synonymMatchesConflicts
+  },
+  cobrsPhoneticConflicts(state) {
+    return state.cobrsPhoneticConflicts
+  },
+  phoneticConflicts(state) {
+    return state.phoneticConflicts
+  },
+  conflictList(state) {
+    return state.conflictList
+  },
+  currentHistory(state) {
+    return state.currentHistory
+  },
+  conflictsJSON(state) {
+    return state.conflictsJSON
+  },
+  corpConflictJSON(state) {
+    return state.corpConflictJSON
+  },
+  namesConflictJSON(state) {
+    return state.namesConflictJSON
+  },
+  conditionsJSON(state) {
+    return state.conditionsJSON
+  },
+  historiesJSON(state) {
+    return state.historiesJSON
+  },
+  historiesInfoJSON(state) {
+    return state.historiesInfoJSON
+  },
+  trademarksJSON(state) {
+    return state.trademarksJSON
+  },
+  currentRecipeCard(state) {
+    return state.currentRecipeCard
+  },
+  nrData(state) {
+    return state.nrData
+  },
+  searchState(state) {
+    return state.searchState
+  },
+  searchDataJSON(state) {
+    return state.searchDataJSON
+  },
+  searchQuerySpecial(state) {
+    return state.searchQuerySpecial
+  },
+  statsDataJSON(state) {
+    return state.statsDataJSON
+  },
+  errorJSON(state) {
+    return state.errorJSON
+  },
+  adminURL(state) {
+    return state.adminURL
+  },
+  parseConditions(state) {
+    function parseBoolean(cond) {
+      if (cond === 'Y') return true
+      if (cond === 'N') return false
+      return ''
+    }
 
-      if ( thedate != null )
-        return thedate
-      return null
-
-    },
-    submitCount(state) {
-      return state.submitCount;
-    },
-    previousNr(state) {
-      return state.previousNr;
-    },
-    corpNum(state) {
-      return state.corpNum;
-    },
-    issue_Match(state) {
-      return state.issue.issue_Match
-    },
-    issue_Match_Text(state) {
-      return state.issue.issue_Match_Text
-    },
-    issue_Consent(state) {
-      return state.issue.issue_Consent
-    },
-    issue_Consent_Text(state) {
-      return state.issue.issue_Consent_Text
-    },
-    issue_TradeMark(state) {
-      return state.issue.issue_TradeMark
-    },
-    issue_TradeMark_Text(state) {
-      return state.issue.issue_TradeMark_Text
-    },
-    issue_History(state) {
-      return state.issue.issue_History
-    },
-    issue_History_Text(state) {
-      return state.issue.issue_History_Text
-    },
-    issue_Format(state) {
-      return state.issue.issue_Format
-    },
-    issue_Format_Text(state) {
-      return state.issue.issue_Format_Text
-    },
-    details(state) {
-      return state.details
-    },
-    additionalInfo(state) {
-      return state.additionalInfo
-    },
-    internalComments(state) {
-      return state.internalComments
-    },
-    listPriorities(state) {
-      return state.listPriorities
-    },
-    listJurisdictions(state) {
-      return state.listJurisdictions
-    },
-    listRequestTypes(state) {
-      return state.listRequestTypes
-    },
-    listDecisionReasons(state) {
-      return state.listDecisionReasons
-    },
-    requestTypeRules(state) {
-      return state.requestTypeRules
-    },
-    exactMatchesConflicts(state) {
-      return state.exactMatchesConflicts
-    },
-    hasExactMatches(state) {
-      return state.exactMatchesConflicts ? state.exactMatchesConflicts.length > 0 : false;
-    },
-    synonymMatchesConflicts(state) {
-      return state.synonymMatchesConflicts;
-    },
-    cobrsPhoneticConflicts(state) {
-      return state.cobrsPhoneticConflicts;
-    },
-    phoneticConflicts(state) {
-      return state.phoneticConflicts;
-    },
-    conflictList(state) {
-      return state.conflictList
-    },
-    currentHistory(state) {
-      return state.currentHistory
-    },
-    conflictsJSON(state) {
-      return state.conflictsJSON
-    },
-    corpConflictJSON(state) {
-      return state.corpConflictJSON
-    },
-    namesConflictJSON(state) {
-      return state.namesConflictJSON
-    },
-    conditionsJSON(state) {
-      return state.conditionsJSON
-    },
-    historiesJSON(state) {
-      return state.historiesJSON
-    },
-    historiesInfoJSON(state) {
-      return state.historiesInfoJSON
-    },
-    trademarksJSON(state) {
-      return state.trademarksJSON
-    },
-    currentRecipeCard(state) {
-      return state.currentRecipeCard
-    },
-    nrData(state) {
-      return state.nrData
-    },
-    searchState(state) {
-      return state.searchState
-    },
-    searchDataJSON(state) {
-      return state.searchDataJSON
-    },
-    searchQuerySpecial(state) {
-      return state.searchQuerySpecial
-    },
-    statsDataJSON(state) {
-      return state.statsDataJSON
-    },
-    errorJSON(state) {
-      return state.errorJSON
-    },
-    adminURL(state) {
-      return state.adminURL
-    },
-    parseConditions(state) {
-      function parseBoolean(cond) {
-        if (cond === 'Y') return true
-        if (cond === 'N') return false
-        return ''
-      }
-
-      if ( state.conditionsJSON && state.conditionsJSON.restricted_words_conditions) {
-
-        let output = []
-
-        for ( let restrictedWord of state.conditionsJSON.restricted_words_conditions ) {
-          for ( let conditionInfo of restrictedWord.cnd_info ) {
-            let object = {
-              phrase: restrictedWord.word_info.phrase,
-              id: conditionInfo.id,
-              allow_use: conditionInfo.allow_use,
-              allow_use_tf: parseBoolean(conditionInfo.allow_use),
-              consent_required: conditionInfo.consent_required,
-              consent_required_tf: parseBoolean(conditionInfo.consent_required),
-              text: conditionInfo.text,
-              instructions: conditionInfo.instructions,
-              consenting_body: conditionInfo.consenting_body,
-            }
-            output.push(object)
+    if (state.conditionsJSON && state.conditionsJSON.restricted_words_conditions) {
+      let output = []
+      for (let restrictedWord of state.conditionsJSON.restricted_words_conditions) {
+        for (let conditionInfo of restrictedWord.cnd_info) {
+          let object = {
+            ...conditionInfo,
+            consent_required_tf: parseBoolean(conditionInfo.consent_required),
+            allow_use_tf: parseBoolean(conditionInfo.allow_use),
+            phrase: restrictedWord.word_info.phrase,
           }
+          output.push(object)
         }
-        return output
       }
-      return []
-    },
-  }
+      return output
+    }
+    return []
+  },
+
+//itroduced in namex-ui-enhancements code-with-us
+  selectedTrademarks: state => state.selectedTrademarks,
+  selectedConflicts: state => state.selectedConflicts,
+  selectedConditions: state => state.selectedConditions,
+  editMessageModalVisible: state => state.editMessageModalVisible,
+  selectedConflictID: state => state.selectedConflictID,
+  expandedConflictID: state => state.expandedConflictID,
+  openBucket: state => state.openBucket,
+  conflictTitles(state) {
+    let output = []
+    if (state.conflictsReturnedStatus) {
+
+      //add exact matches
+      output.push({ count: 0, highlightedText: 'Exact Match', class: 'conflict-heading' })
+      if (state.exactMatchesConflicts.length > 0) {
+        output.push(...state.exactMatchesConflicts)
+      } else {
+        output.push({ highlightedText: 'No Exact Match', class: 'conflict-no-match' })
+      }
+
+      //add synonym matches
+      output.push({ count: 0, highlightedText: 'Exact Word Order + Synonym Match', class: 'conflict-heading' })
+      if (state.parsedSynonymConflicts.length > 0) {
+        output.push(...state.parsedSynonymConflicts)
+      } else {
+        output.push({ highlightedText: 'No Match', class: 'conflict-no-match' })
+      }
+
+      //add cobrs matches
+      output.push({ count: 0, highlightedText: 'Character Swap Match', class: 'conflict-heading' })
+      if (state.parsedCOBRSConflicts.length > 0) {
+        output.push(...state.parsedCOBRSConflicts)
+      } else {
+        output.push({ highlightedText: 'No Match', class: 'conflict-no-match' })
+      }
+
+      //add phonetic matches
+      output.push({ count: 0, highlightedText: 'Phonetic Match (experimental)', class: 'conflict-heading' })
+      if (state.parsedPhoneticConflicts.length > 0) {
+        output.push(...state.parsedPhoneticConflicts)
+      } else {
+        output.push({ highlightedText: 'No Match', class: 'conflict-no-match' })
+      }
+    }
+    return output
+  },
+  selectedNRs(state) {
+    if (state.selectedConflicts && state.selectedConflicts.length > 0) {
+      return state.selectedConflicts.map(conflict => conflict.nrNumber)
+    }
+    return []
+  },
+}
+
+export default new Vuex.Store({
+  actions, getters, mutations, state,
 })
+

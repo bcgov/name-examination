@@ -1,8 +1,7 @@
-<!--eslint-disable-->
 <template>
   <v-flex>
     <!--1st ROW - NR NUMBER / JURISDICTION / BUTTONS -->
-    <v-container fluid mt-2 pa-0 :class="is_expanded || is_editing ? 'grey-bg' : ''">
+    <v-container fluid mt-2 pa-0 :class="is_expanded || is_editing ? 'bg-grey' : ''">
       <v-layout align-start pb-2 row>
         <!--NR NUMBER-->
         <v-flex :class="['nr-number', 'text-left',  'mx-4', priority ? 'rejected' : 'dk-grey']" shrink>
@@ -20,6 +19,7 @@
                         class="jurisdiction-dropdown"
                         attach
                         flat
+                        attach
                         dense
                         v-model="requestType" />
             </v-flex>
@@ -32,6 +32,7 @@
                           attach
                           class="jurisdiction-dropdown"
                           flat
+                          attach
                           dense
                           @input="$v.jurisdiction.$touch()" />
               </v-flex>
@@ -88,13 +89,13 @@
         </v-flex>
 
         <!--COL 2:  Dates/Expiry -->
-        <v-flex :style="{maxWidth: '280px'}"
-                fs-15
-                :ml-2="is_expanded">
+        <v-flex :ml-2="is_expanded"
+                :style="{maxWidth: '280px'}"
+                fs-15>
           <v-layout column>
             <v-flex><b>Submit:</b> {{ formatDate(submittedDate) }}</v-flex>
             <template v-if="$store.getters.decision_made">
-              <v-flex :class="!$store.getters.decision_made ? 'grey--text' : ''">
+              <v-flex :class="!$store.getters.decision_made ? 'c-grey' : ''">
                 <b>Decision:</b> {{ $store.getters.decision_made ? $store.getters.decision_made : 'n/a' }}
               </v-flex>
             </template>
@@ -124,13 +125,13 @@
                       <v-flex lg8 fs-14 ft-ital pl-3>YYYY-MM-DD</v-flex>
                     </v-layout >
                     <v-flex v-if="!$v.expiryDateForEdit.required">Expiry Date is required.</v-flex>
-                    <v-flex class="error color-red" v-else-if="!$v.expiryDateForEdit.isActualDate">
+                    <v-flex class="error c-priority" v-else-if="!$v.expiryDateForEdit.isActualDate">
                       This is not an actual date. Date must be in format YYYY-MM-DD.
                     </v-flex>
-                    <v-flex class="error color-red" v-if="!$v.expiryDateForEdit.isValidFormat" >
+                    <v-flex class="error c-priority" v-if="!$v.expiryDateForEdit.isValidFormat" >
                       Date must be in format YYYY-MM-DD.
                     </v-flex >
-                    <v-flex class="error color-red" v-if="!$v.expiryDateForEdit.isFutureDate">
+                    <v-flex class="c-priority" v-if="!$v.expiryDateForEdit.isFutureDate">
                       Expiry Date must be in the future.
                     </v-flex>
                   </v-layout>
@@ -332,104 +333,6 @@
         nwpta_required: false,
         prev_nr_required: false,
       }
-    },
-    validations() {
-      // set basic validations that aren't conditional on any other fields
-      let validations = {
-        // first name choice is always required
-        compName1: {
-          name: {
-            required,
-            isNotBlankSpace,
-          },
-        },
-      }
-
-      // if compName3 exists then compName2 must exist
-      if (this.compName3.name && this.compName3.name.replace(/\s/g, '')) {
-        validations.compName2 = {
-          name: {
-            required,
-            isNotBlankSpace,
-          },
-        }
-      } else {
-        validations.compName2 = {
-          name: {},
-        }
-      }
-
-      // validate jurisdiction if required
-      if (this.jurisdiction_required && !this.is_closed) {
-        validations.jurisdiction = {
-          required,
-        }
-      }
-
-      // validate corp # - not required, but if entered it must be validated
-      if (this.corp_num_required && !this.is_closed) {
-        validations.corpNum = {
-          isValidCorpNum(value) {
-            // if empty, it's valid - not required
-            if (value == '' || value == null) return true
-
-            // valid corp numbers are between 7 and 10 characters long
-            if (value.length < 7 || value.length > 10) return false
-
-            const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-            const url = '/api/v1/corporations/' + value
-            return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
-              return true
-            })
-              .catch(error => {
-                return false
-              })
-          },
-        }
-      }
-
-      // validate Expiry Date if present - only present when editing a furnished NR
-      if (this.expiryDateForEdit !== null) {
-        validations.expiryDateForEdit = {
-          required,
-          isActualDate(value) {
-            return isActualDate(value)
-          },
-          isValidFormat(value) {
-            return isValidFormat(value)
-          },
-          isFutureDate(value) {
-            // don't do this validation if it is not an actual date yet
-            if (value == '' || value == null || !isValidFormat(value) || !isActualDate(value)) return true
-
-            return isFutureDate(value)
-          },
-        }
-      }
-
-      // validate Previous NR # - not required, but if entered it must be validated
-      if (this.prev_nr_required && !this.is_closed) {
-        validations.previousNr = {
-          isValidNr(value) {
-            // if empty, it's valid - not required
-            if (value == '' || value == null) return true
-
-            // valid NR #s are NR, space, 7 digits (10 characters total)
-            if (value.length !== 10) return false
-            if (value.substr(0, 3) !== 'NR ') return false
-
-            const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-            const url = '/api/v1/requests/' + value
-            return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
-              return true
-            })
-              .catch(error => {
-                return false
-              })
-          },
-        }
-      }
-      return validations
     },
     computed: {
       activePopUp() {
@@ -752,7 +655,7 @@
 
         this.$store.state.is_editing = false
         this.$store.state.is_header_shown = false
-        this.$nextTick(function() { window.scrollTo(0, 0) })
+        this.$nextTick(function() { this.scrollToTop() })
       },
       checkReqTypeRules(val) {
 
@@ -858,6 +761,9 @@
         this.$store.state.is_header_shown = true
         this.$nextTick(function() { window.scrollTo(0, 0) })
       },
+      scrollToTop() {
+        window.scrollTo(0,0)
+      },
       toggleCommentsPopUp(bool) {
         this.$store.commit('toggleCommentsPopUp', bool)
       },
@@ -900,6 +806,97 @@
         return !this.$v.$invalid && !nwpta_ab_invalid && !nwpta_sk_invalid
       },
     },
+    validations() {
+      // set basic validations that aren't conditional on any other fields
+      let validations = {
+        // first name choice is always required
+        compName1: {
+          name: {
+            required, isNotBlankSpace,
+          },
+        },
+      }
+
+      // if compName3 exists then compName2 must exist
+      if (this.compName3.name && this.compName3.name.replace(/\s/g, '')) {
+        validations.compName2 = {
+          name: {
+            required, isNotBlankSpace,
+          },
+        }
+      } else {
+        validations.compName2 = {
+          name: {},
+        }
+      }
+
+      // validate jurisdiction if required
+      if (this.jurisdiction_required && !this.is_closed) {
+        validations.jurisdiction = {
+          required,
+        }
+      }
+
+      // validate corp # - not required, but if entered it must be validated
+      if (this.corp_num_required && !this.is_closed) {
+        validations.corpNum = {
+          isValidCorpNum(value) {
+            // if empty, it's valid - not required
+            if (value == '' || value == null) return true
+
+            // valid corp numbers are between 7 and 10 characters long
+            if (value.length < 7 || value.length > 10) return false
+
+            const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+            const url = '/api/v1/corporations/' + value
+            return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
+              return true
+            }).catch(error => {
+              return false
+            })
+          },
+        }
+      }
+
+      // validate Expiry Date if present - only present when editing a furnished NR
+      if (this.expiryDateForEdit !== null) {
+        validations.expiryDateForEdit = {
+          required, isActualDate(value) {
+            return isActualDate(value)
+          }, isValidFormat(value) {
+            return isValidFormat(value)
+          }, isFutureDate(value) {
+            // don't do this validation if it is not an actual date yet
+            if (value == '' || value == null || !isValidFormat(value) || !isActualDate(value)) return true
+
+            return isFutureDate(value)
+          },
+        }
+      }
+
+      // validate Previous NR # - not required, but if entered it must be validated
+      if (this.prev_nr_required && !this.is_closed) {
+        validations.previousNr = {
+          isValidNr(value) {
+            // if empty, it's valid - not required
+            if (value == '' || value == null) return true
+
+            // valid NR #s are NR, space, 7 digits (10 characters total)
+            if (value.length !== 10) return false
+            if (value.substr(0, 3) !== 'NR ') return false
+
+            const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+            const url = '/api/v1/requests/' + value
+            return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
+              return true
+            }).catch(error => {
+              return false
+            })
+          },
+        }
+      }
+      return validations
+    },
   }
 </script>
 
@@ -912,15 +909,6 @@
     position: absolute;
     top: 565px;
     left: -60px;
-  }
-
-  .color-red {
-    color: red !important;
-  }
-
-  .grey-bg {
-    background-color: var(--xl-grey) !important;
-    margin-bottom: 0 !important;
   }
 
   .info-banner-collapsed {
@@ -956,9 +944,5 @@
     min-width: 210px;
     font-size: 34px;
     font-weight: 600;
-  }
-
-  .request-type {
-    font-size: 24px;
   }
  </style>

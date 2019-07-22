@@ -1,101 +1,183 @@
 <!--eslint-disable-->
 <template>
-    <div>
-      <div class="container-fluid">
-        <table>
-          <thead>
-            <tr id="filter-header">
-              <th>
-                <select id="search-filter-state" v-model="stateSort" class="form-control">
-                      <option v-for="state in states" :value="state">{{state}}</option>
-                </select>
+  <v-container fluid ma-0 pa-0 id="find-filter">
+    <v-layout pa-0 mt-3 px-4><h1>Search</h1></v-layout>
+    <v-layout pa-0 px-4 align-center>
+      <v-flex><a @click="clearFilter()">Clear Filters</a></v-flex>
+      <v-flex shrink mx-4>Results: {{ total }}</v-flex>
+      <v-flex shrink mx-2>Display:</v-flex>
+      <v-flex shrink><v-select :items="pageSizeOptions"
+                               attach
+                               browser-autocomplete="off"
+                               id="display-selection"
+                               style="width: 75px"
+                               class="text-input-style"
+                               v-model="perPage" /></v-flex>
+      <v-flex shrink mx-2>Page: </v-flex>
+      <v-flex shrink>
+        <v-select :items="pageNumbers"
+                  browser-autocomplete="off"
+                  id="page-selection"
+                  style="width: 75px"
+                  v-model="currentPage"
+                  attach
+                  class="text-input-style" />
+      </v-flex>
+      <v-flex shrink mx-2>of {{ numberOfPages }}</v-flex>
+      <v-flex ml-2 shrink>
+        <v-btn id="previous"
+               flat
+               class="ma-0 pa-0"
+               style="height: 32px; background-color: var(--gold); color: white;"
+               @click="previousPage">
+          <span class="fw-700 fs-16">{{ '<' }}</span>
+      </v-btn></v-flex>
+      <v-flex shrink>
+        <v-btn id="next"
+               flat
+               class="ma-0 pa-0 ml-1"
+               style="height: 32px; background-color: var(--gold); color: white;"
+               @click="nextPage">
+          <span class="fw-700 fs-16">{{ '>' }}</span>
+        </v-btn>
+      </v-flex>
+    </v-layout>
+    <v-layout>
+      <v-flex>
+        <v-data-table :headers="headers"
+                      class="ma-3"
+                      :items="data"
+                      hide-actions>
+          <template v-slot:headers="{headers}">
+            <tr>
+              <th v-for="header in headers"
+                  :style="header.style"
+                  class="text-left header-row-1 pa-0 pl-2">
+                {{ header.text }}
               </th>
-              <th>
-                <input id="search-filter-examiner" v-model="username" placeholder="Username" class="form-control" v-on:keypress="checkEnter"/>
-              </th>
-              <th>
-                <input id="search-filter-nr-number" v-model="nrSearch" placeholder="NR Number" class="form-control" v-on:keypress="checkEnter"/>
-              </th>
-              <th>
-                <input id="search-filter-company" v-model="compName" placeholder="Name" class="form-control" v-on:keypress="checkEnter"/>
-              </th>
-              <th></th>
-              <th>
-                <select id="search-filter-priority" v-model="ranking" class="form-control">
-                      <option v-for="option in rankings" :value="option">{{option}}</option>
-                </select>
-              </th>
-              <th>
-                <select id="search-filter-furnished" v-model="notification" class="form-control">
-                      <option v-for="option in notificationType" :value="option">{{option}}</option>
-                </select>
-              </th>
-              <th>
-                <select id="search-filter-submittedDate" v-model="submittedInterval" class="form-control">
-                      <option v-for="option in submittedDateIntervals" :value="option">{{option}}</option>
-                </select>
-              </th>
-              <th>
-                <select id="search-filter-lastUpdate" v-model="lastUpdateInterval" class="form-control">
-                      <option v-for="option in lastUpdateIntervals" :value="option">{{option}}</option>
-                </select>
-              </th>
-              <th></th>
             </tr>
-          </thead>
-        </table>
-        <h1>Search</h1>
-        <span class="searchTable" id="search-table-container" v-on:click="loadNR">
-          <div style="display: flex;" class="mt-3" id="table-options">
-            <div style="flex-shrink: 1; align-self: center;">
-              <b-link id="clear-filter" @click="clearFilter">Clear Filters</b-link>
-            </div>
-            <div style="flex-grow: 1;"></div>
-            <div style="flex-shrink: 1" id="pagination">
-              <div style="display: flex; justify-content: flex-end;">
-                <div id="results" style="align-self: center; margin-right: 30px;">Results: {{this.total}}</div>
-                <div style="align-self: center; margin-right: 5px;">Display:</div>
-                <b-form-select :options="pageSizeOptions" v-model="perPage" style="width:60px; float:right; margin-right: 10px"/>
-                <div style="align-self: center; margin-right: 3px;">Page:</div>
-                <b-form-select :options="pageNumbers" v-model="currentPage" style="width:60px; float:right"/>
-                <div style="align-self: center; margin:0px 3px 0px 5px;">of {{this.numberOfPages}}</div>
-                <b-button-group>
-                  <b-btn id="previous" @click="previousPage">&lsaquo;</b-btn>
-                  <b-btn id="next" @click="nextPage">&rsaquo;</b-btn>
-                </b-button-group>
-
-              </div>
-            </div>
-          </div>
-        </span>
-
-          <b-table id="search-table" show-empty striped hover fixed class="pre-line scroll" :fields="headers" :items="data">
-            <template slot="NameRequestNumber" slot-scope="data">
-              <a @click="examineNr(data.value)">{{data.value}}</a>
-            </template>
-          </b-table>
-        </span>
-      </div>
-    </div>
+            <tr class="header-row-2">
+              <th class="pa-0 px-1">
+                <v-select id="search-filter-state"
+                          browser-autocomplete="off"
+                          class="text-input-style"
+                          v-model="stateSort"
+                          :items="states"
+                          attach
+                          :menu-props="selectProps"
+                          value="state" />
+              </th>
+              <th class="pa-0 px-1">
+                <v-text-field id="search-filter-examiner"
+                              browser-autocomplete="off"
+                              class="text-input-style"
+                              v-model="username"
+                              placeholder="Username"
+                              v-on:keypress="checkEnter" />
+              </th>
+              <th class="pa-0 px-1">
+                <v-text-field id="search-filter-nr-number"
+                              browser-autocomplete="off"
+                              class="text-input-style"
+                              v-model="nrSearch"
+                              placeholder="NR Number"
+                              v-on:keypress="checkEnter" />
+              </th>
+              <th class="pa-0 px-1">
+                <v-text-field id="search-filter-company"
+                              browser-autocomplete="off"
+                              class="text-input-style"
+                              v-model="compName"
+                              placeholder="Name"
+                              v-on:keypress="checkEnter" />
+              </th>
+              <th class="pa-0 px-1"/>
+              <th class="pa-0 px-1">
+                <v-select id="search-filter-priority"
+                          browser-autocomplete="off"
+                          class="text-input-style"
+                          :items="rankings"
+                          :menu-props="priorityProps"
+                          attach
+                          value="option"
+                          v-model="ranking" />
+              </th>
+              <th class="pa-0 px-1">
+                <v-select id="search-filter-furnished"
+                          class="text-input-style"
+                          browser-autocomplete="off"
+                          :items="notificationType"
+                          attach
+                          value="option"
+                          v-model="notification" />
+              </th>
+              <th class="pa-0 px-1">
+                <v-select id="search-filter-submittedDate"
+                          class="text-input-style"
+                          browser-autocomplete="off"
+                          :items="submittedDateIntervals"
+                          value="option"
+                          attach
+                          v-model="submittedInterval" />
+              </th>
+              <th class="pa-0 px-1">
+                <v-select id="search-filter-lastUpdate"
+                          class="text-input-style"
+                          browser-autocomplete="off"
+                          v-model="lastUpdateInterval"
+                          attach
+                          value="option"
+                          :items="lastUpdateIntervals" />
+              </th>
+              <th />
+            </tr>
+          </template>
+          <template v-slot:items="{item, index}">
+            <tr>
+              <td class="pa-2">{{ item.Status }}</td>
+              <td class="pa-2">{{ item.LastModifiedBy }}</td>
+              <td class="pa-2">
+                <a @click="examineNr(item.NameRequestNumber)">{{ item.NameRequestNumber }}</a>
+              </td>
+              <td class="pa-2 cell-pre-line">{{ item.Names }}</td>
+              <td class="pa-2 cell-pre-line">{{ item.NatureOfBusiness }}</td>
+              <td class="pa-2">{{ item.Priority }}</td>
+              <td class="pa-2">{{ item.ClientNotification }}</td>
+              <td class="pa-2">{{ item.Submitted }}</td>
+              <td class="pa-2">{{ item.LastUpdate }}</td>
+              <td class="pa-2 cell-pre-line">{{ item.LastComment }}</td>
+            </tr>
+          </template>
+        </v-data-table>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
-<script defer>
+<script>
 /* eslint-disable */
 export default {
   name: 'findfilter',
   data: function () {
     return {
+      selectProps: {
+        minWidth: '130px',
+        minHeight: '400px'
+      },
+      priorityProps: {
+        minWidth: '100px'
+      },
       headers:[
-        {key:'Status', label: 'Status', thClass:'search-header status-col', class: 'text-center'},
-        {key:'LastModifiedBy', label: 'Last Modified By', thClass:'search-header username-col'},
-        {key:'NameRequestNumber', label: 'Name Request Number', class: 'text-center link', thClass:'search-header nr-col', formatter: (value) => {return value.trim()}},
-        {key:'Names', label: 'Names', thClass:'search-header name-col'},
-        {key:'NatureOfBusiness', label: 'Nature Of Business', thClass:'search-header nob-col', class: 'text-cutoff'},
-        {key:'Priority', label: 'Priority', thClass:'search-header priority-col', class: 'text-center'},
-        {key:'ClientNotification', label: 'Client Notification', thClass:'search-header notification-col', class: 'text-center'},
-        {key:'Submitted', label: 'Submitted', thClass:'search-header submitted-col', class: 'text-center'},
-        {key:'LastUpdate', label: 'Last Update', thClass:'search-header last-update-col', class: 'text-center'},
-        {key:'LastComment', label: 'Last Comment', thClass:'search-header comment-col'},
+        {value:'Status', text: 'Status', style: {width: '6%'}, },
+        {value:'LastModifiedBy', text: 'Modified By', style: {width: '5%'}, },
+        {value:'NameRequestNumber', text: 'NR Number', style: {width: '6%'}, },
+        {value:'Names', text: 'Names', style: {width: '29%'}, },
+        {value:'NatureOfBusiness', text: 'Nature Of Business', style: {width: '10%'}, },
+        {value:'Priority', text: 'Priority', style: {width: '6%'}, },
+        {value:'ClientNotification', text: 'Notified', style: {width: '6%'}, },
+        {value:'Submitted', text: 'Submitted', style: {width: '6%'}, },
+        {value:'LastUpdate', text: 'Last Update', style: {width: '6%'}, },
+        {value:'LastComment', text: 'Last Comment', style: {width: '20%'}, },
       ],
       data: [],
       pageSizeOptions: [5, 10, 20, 50, 100],
@@ -216,9 +298,6 @@ export default {
     },
   },
   mounted() {
-    // attach filter header to b-table (under main table header)
-    let tr = $('#filter-header');
-    $('#search-table thead').append(tr);
 
     // get rows from saved search filter info or if none saved then default search filter info
     this.mounting = true;
@@ -226,8 +305,6 @@ export default {
       this.updateQuery('queue',this.stateSort);
     else
       this.stateSort = this.currentStateSort;
-
-    $('#search-table table').addClass('scroll');
   },
   methods: {
     populateTable(searchData){
@@ -326,9 +403,7 @@ export default {
       return [];
     },
     loadNR(event) {
-
       // check if this is a body row (ie: in tbody)
-
       var row = $(event.target).closest('tr')[0];
       if (row !== undefined) {
 
@@ -556,86 +631,38 @@ export default {
 </script>
 
 <style scoped>
-  h1 {
-    margin: 0;
-    padding: 0;
+  a {
+    color: var(--link) !important;
   }
-  .searchTable {
-    padding: 0;
-    margin: 0;
+
+  td {
+    vertical-align: top !important;
   }
-  .pre-line {
+
+  .text-input-style {
+    background-color: white !important;
+    border: 1px solid var(--outline);
+    height: 32px;
+    padding: 0 0 5px 8px;
+    font-size: 13px;
+    margin: 0;
+    color: var(--text)
+  }
+
+  .cell-pre-line {
     white-space: pre-line;
   }
-  #pagination {
-    float: right;
-    width: 425px;
-  }
-  #pagination .col {
-    padding: 0;
-    margin: 0;
-  }
-  .btn-secondary {
-    background-color: #ffffff;
-    border: 1px solid #ced4da;
-    border-radius: .2rem;
-    color: #7f7f7f;
-    height: 30px;
-    padding-top: 2px;
-  }
-  .btn-secondary:hover{
-    background-color: #ced4da;
-  }
-  #filter-header {
-    background-color: #b3cce6;
-  }
-  #search-filter-state {
-    height: 30px !important;
-  }
-  #search-filter-priority {
-    height: 30px !important;
-  }
-  #search-filter-furnished {
-    height: 30px !important;
-  }
-  #search-filter-submittedDate {
-    height: 30px !important;
-  }
-  #search-filter-lastUpdate {
-    height: 30px !important;
+
+  .header-row-1 {
+    background-color: var(--d-blue);
+    color: white !important;
+    height: 50px;
+    font-size: 14px;
+    font-weight: 700;
   }
 
-</style>
-
-<style>
-  .link {
-    color: #1a5a96;
-    cursor: pointer;
-    text-decoration: underline;
-  }
-  .search-header {
-    color: #FFFFFF;
-    background-color: #336699;
-    text-decoration: none;
-    width: 100px;
-  }
-  .name-col {
-    width: 300px;
-  }
-  .username-col {
-    width: 120px;
-  }
-  .text-cutoff {
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
-  .table-striped tbody tr:hover {
-    background-color:#96c0e6;
-  }
-  .table-striped tbody tr.select {
-    background-color: #96c0e6;
-  }
-  .btn-group.pull-right {
-    display: none;
+  .header-row-2 {
+    background-color: var(--l-blue);
+    padding: 10px;
   }
 </style>

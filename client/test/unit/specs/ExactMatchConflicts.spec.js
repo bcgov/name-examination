@@ -1,172 +1,209 @@
-/*eslint-disable*/
-import staticFilesServer from '../static.files.server';
-import {createApiSandbox, sinon} from '../../features/specs/support/api.stubs'
-import Vue from 'vue';
-import Vuelidate from 'vuelidate'
-import Datatable from 'vue2-datatable-component'
-
-Vue.use(Vuelidate)
-Vue.use(require('vue-shortkey'))
-Vue.use(Datatable)
-import App from '@/App.vue';
-import store from '@/store'
+import App from '@/App.vue'
 import router from '@/router'
+import staticFilesServer from '../static.files.server'
+import store from '@/store'
+import Vue from 'vue'
+import { cleanState } from '../../features/specs/support/clean.state'
+import { createApiSandbox, sinon } from '../../features/specs/support/api.stubs'
 
-describe('Exact-Match Conflicts', () => {
+const encode = encodeURIComponent
 
-  let data = {};
+describe('Exact Match Conflict Handling by ConflictList', () => {
+  describe('When the backend returns exact matches', () => {
+    let data = {}
+    let Constructor = Vue.extend(App)
 
-  beforeEach((done) => {
-    data.apiSandbox = createApiSandbox()
-    jest.setTimeout(100000);
-    staticFilesServer.start(done)
+    beforeAll( done => {
+      data.api = createApiSandbox()
+      let { getStub } = data.api
+
+      getStub.withArgs('/api/v1/requests/queues/@me/oldest', sinon.match.any).resolves({
+        data: { nameRequest: 'NR1234' },
+      })
+      getStub.withArgs('/api/v1/requests/NR1234', sinon.match.any).resolves({
+        data: {
+          names: [{ choice: 1, state: 'NE', name: 'incredible name inc' }],
+          state: 'INPROGRESS',
+          requestTypeCd: 'CR',
+          applicants: '',
+          nwpta: [],
+          userId: 'Joe',
+        },
+      })
+      getStub.withArgs('/api/v1/requests/1', sinon.match.any).resolves({
+        data: { names: [] },
+      })
+      getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc/*', sinon.match.any).resolves({
+        data: {
+          names: [
+            { name_info: { name: '----INCREDIBLE NAME INC - meta1' }, stems: [], },
+            { name_info: { name: '----INCREDIBLE NAME - meta2' }, stems: [], },
+            { name_info: { name: '----INCREDIBLE - meta3' }, stems: [] },
+            { name_info: { id: '0693638', name: 'INCREDIBLE STEPS RECORDS', score: 1.0, source: 'CORP', }, stems: [], },
+          ],
+        },
+      })
+      getStub.withArgs('/api/v1/requests/phonetics/incredible name inc/*', sinon.match.any).resolves({
+        data: {
+          names: [
+            { name_info: { name: '----INCREDIBLE NAME INC - meta1' }, stems: [], },
+            { name_info: { name: '----INCREDIBLE NAME - meta2' }, stems: [], },
+            { name_info: { name: '----INCREDIBLE - meta3' }, stems: [] },
+            { name_info: { id: '0693638', name: 'INCREDIBLE STEPS RECORDS', score: 1.0, source: 'CORP', }, stems: [], },
+          ],
+        },
+      })
+      getStub.withArgs('/api/v1/requests/cobrsphonetics/incredible name inc/*', sinon.match.any).resolves({
+        data: {
+          names: [
+            { name_info: { name: '----INCREDIBLE NAME INC' }, stems: [], },
+            { name_info: { name: '----INCREDIBLE NAME' }, stems: [], },
+            { name_info: { name: '----INCREDIBLE' }, stems: [] },
+            { name_info: { id: '0793638', name: 'INCREDYBLE STEPS RECORDS', score: 1.0, source: 'CORP', }, stems: [], },
+          ],
+        },
+      })
+      getStub.withArgs('/api/v1/exact-match?query=' + encode('incredible name inc'), sinon.match.any).resolves({
+        data: {
+          'names': [{
+            'id': '12345',
+            'jurisdiction': 'BC',
+            'name': 'INCREDIBLE NAME INC',
+            'source': 'CORP',
+            'start_date': '2006-01-05T14:45:42Z',
+          }],
+        },
+      })
+      setTimeout(() => { staticFilesServer.start(done) }, 2000)
+    })
+
+    afterAll( done => {
+      data.api.restore()
+      staticFilesServer.stop(done)
+    })
+
+    beforeEach( done => {
+      store.replaceState(cleanState())
+      data.instance = new Constructor({ store: store, router: router })
+      data.vm = data.instance.$mount(document.getElementById('app'))
+      data.vm.$store.state.userId = 'Joe'
+      sessionStorage.setItem('AUTHORIZED', true)
+      data.vm.$router.push('/nameExamination')
+      setTimeout(() => { done() }, 2000)
+    })
+
+    afterEach( () => {
+      router.push('/')
+    })
+
+    test('displays exact-match conflicts', () => {
+      expect(data.vm.$el.querySelector('#conflicts-container').innerHTML).toContain('INCREDIBLE NAME INC')
+      expect(data.vm.$el.querySelector('.conflict-container-spinner').classList).toContain('hidden')
+    })
+
+    test('displays exact-match conflicts before Synonym conflicts', () => {
+      let inHTML = data.vm.$el.querySelector('#conflicts-container').innerHTML
+      expect(
+        inHTML.indexOf('INCREDIBLE NAME INC')
+        < inHTML.indexOf('Exact Word Order + Synonym Match')
+        < inHTML.indexOf('Character Swap Match')
+        < inHTML.indexOf('Phonetic Match (experimental)')
+      ).toBeTruthy()
+    })
+
+    test('changes conflicts tab to red', () => {
+      expect(data.vm.$el.querySelector('#conflicts1').className).toContain('c-priority')
+    })
+
+    test('populates additional attributes as expected', () => {
+      expect(data.vm.$store.state.exactMatchesConflicts).toEqual([
+        {
+          'class': 'conflict-result conflict-exact-match',
+          'highlightedText': 'INCREDIBLE NAME INC',
+          'id': '0-exact',
+          'jurisdiction': 'BC',
+          'nrNumber': '12345',
+          'source': 'CORP',
+          'startDate': '2006-01-05T14:45:42Z',
+          'text': 'INCREDIBLE NAME INC',
+        },
+      ])
+    })
   })
-  afterEach((done) => {
-    data.apiSandbox.restore()
-    staticFilesServer.stop(done)
-  })
 
-  describe('list', () => {
+  describe('When no matches or exact matches are returned', () => {
+    let data = {}
+    let Constructor = Vue.extend(App)
 
-    beforeEach((done) => {
-      data.apiSandbox.getStub.withArgs('/api/v1/requests/queues/@me/oldest', sinon.match.any).returns(
-        new Promise((resolve) => resolve({data: {nameRequest: 'NR1234'}}))
-      )
-      data.apiSandbox.getStub.withArgs('/api/v1/requests/NR1234', sinon.match.any).returns(
-        new Promise((resolve) => {
-          resolve({
-            data: {
-              names: [
-                {choice: 1, state: 'NE', name: 'incredible name inc'}
-              ],
-              state: 'INPROGRESS',
-              requestTypeCd: 'CR',
-              applicants: '',
-              nwpta: [],
-              userId: 'Joe'
-            }
-          })
-        })
-      )
-      data.apiSandbox.getStub.withArgs('/api/v1/requests/1', sinon.match.any).returns(
-        new Promise((resolve) => resolve({data: {}}))
-      )
-      data.apiSandbox.getStub.withArgs('/api/v1/exact-match?query=' + encodeURIComponent('incredible name inc'), sinon.match.any).returns(
-        new Promise((resolve) => resolve({
-          data: {
-            names: [
-              {name: 'Incredible Name LTD', id: '42', source: 'moon'}
-            ],
-          }
-        }))
-      )
-      data.apiSandbox.getStub.withArgs('/api/v1/requests/42', sinon.match.any).returns(
-        new Promise((resolve) => resolve({data: {names: []}}))
-      )
-      data.apiSandbox.getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc', sinon.match.any).returns(
-        new Promise((resolve) => {
-          resolve({
-            data: {
-              names: []
-            }
-          })
-        })
-      )
-      const Constructor = Vue.extend(App);
-      data.instance = new Constructor({store: store, router: router});
-      data.vm = data.instance.$mount(document.getElementById('app'));
-      setTimeout(() => {
-        data.instance.$store.state.userId = 'Joe'
-        sessionStorage.setItem('AUTHORIZED', true)
-        router.push('/nameExamination')
-        setTimeout(() => {
-          done();
-        }, 1000)
-      }, 1000)
+    beforeAll((done) => {
+      data.api = createApiSandbox()
+      let { getStub } = data.api
+
+      getStub.withArgs('/api/v1/requests/queues/@me/oldest', sinon.match.any).resolves({
+        data: { nameRequest: 'NR1234' }
+      })
+      getStub.withArgs('/api/v1/requests/NR1234', sinon.match.any).resolves({
+        data: {
+          names: [{ choice: 1, state: 'NE', name: 'incredible name inc' }],
+          state: 'INPROGRESS',
+          requestTypeCd: 'CR',
+          applicants: '',
+          nwpta: [],
+          userId: 'Joe',
+        },
+      })
+      getStub.withArgs('/api/v1/requests/1', sinon.match.any).resolves({
+        data: {},
+      })
+      getStub.withArgs('/api/v1/requests/synonymbucket/incredible name inc/*', sinon.match.any).resolves({
+        data: {
+          names: [],
+        },
+      })
+      getStub.withArgs('/api/v1/requests/phonetics/incredible name inc/*', sinon.match.any).resolves({
+        data: {
+          names: [],
+        },
+      })
+      getStub.withArgs('/api/v1/requests/cobrsphonetics/incredible name inc/*', sinon.match.any).resolves({
+        data: {
+          names: [],
+        },
+      })
+      getStub.withArgs('/api/v1/exact-match?query=' + encode('incredible name inc'), sinon.match.any).resolves({
+        data: {
+          names: [],
+        },
+      })
+      setTimeout(() => { staticFilesServer.start(done) }, 2000)
     })
 
-    it('displays exact-match conflicts', () => {
-      expect(data.vm.$el.querySelector('#conflict-list').textContent).toContain('Incredible Name LTD')
+    afterAll( done => {
+      data.api.restore()
+      staticFilesServer.stop(done)
     })
 
-    it('displays exact-match conflicts first (after title)', () => {
-      expect(data.vm.$el.querySelector('#conflict-list > div:nth-child(3)').textContent.trim()).toEqual('Incredible Name LTD')
-
-      // expect not to see spinner and results at the same time
-      expect(data.vm.$el.querySelector('#conflict-list .exact-match-spinner').classList.contains('hidden'));
+    beforeEach( done => {
+      store.replaceState(cleanState())
+      data.instance = new Constructor({ store: store, router: router })
+      data.vm = data.instance.$mount(document.getElementById('app'))
+      data.vm.$store.state.userId = 'Joe'
+      sessionStorage.setItem('AUTHORIZED', true)
+      data.vm.$router.push('/nameExamination')
+      setTimeout(() => { done() }, 2000)
     })
 
-    it('populates additional attributes as expected', () => {
-      expect(data.instance.$store.state.exactMatchesConflicts).toEqual([{
-        "class": "conflict-result conflict-exact-match",
-        "highlightedText": "Incredible Name LTD",
-        "nrNumber": "42",
-        "source": "moon",
-        "text": "Incredible Name LTD"
-      }])
+    afterEach(() => {
+      router.push('/')
     })
 
-    it('resists no exact match', (done) => {
-      data.apiSandbox.getStub.withArgs('/api/v1/exact-match?query=' + encodeURIComponent('incredible name inc'), sinon.match.any).returns(
-        new Promise((resolve) => resolve({
-          data: {
-            names: []
-          }
-        }))
-      )
-      const Constructor = Vue.extend(App);
-      data.instance = new Constructor({store: store, router: router});
-      data.vm = data.instance.$mount(document.getElementById('app'));
-      setTimeout(() => {
-        data.instance.$store.state.userId = 'Joe'
-        sessionStorage.setItem('AUTHORIZED', true)
-        router.push('/nameExamination')
-        setTimeout(() => {
-          // expect no-match messaging
-          expect(data.vm.$el.querySelector('#conflict-list > div:nth-child(3)').textContent.trim()).toEqual('No Exact Match')
-
-          // expect not to see spinner and no-match messaging at the same time
-          expect(data.vm.$el.querySelector('#conflict-list .exact-match-spinner').classList.contains('hidden'));
-          done();
-        }, 1000)
-      }, 1000)
+    test('renders normally with the no exact matches notice', () => {
+      expect(data.vm.$el.querySelector('.conflict-no-match')).toBeDefined()
+      expect(data.vm.$el.querySelector('.conflict-container-spinner').classList).toContain('hidden')
     })
 
-    it('changes conflicts tab to red', (done) => {
-      const Constructor = Vue.extend(App);
-      data.instance = new Constructor({store: store, router: router});
-      data.vm = data.instance.$mount(document.getElementById('app'));
-      setTimeout(() => {
-        data.instance.$store.state.userId = 'Joe'
-        sessionStorage.setItem('AUTHORIZED', true)
-        router.push('/nameExamination')
-        setTimeout(() => {
-          expect(document.getElementById('conflicts1').className).toMatch('c-priority')
-          done();
-        }, 1000)
-      }, 1000)
-    })
-
-    it('defaults to green', (done) => {
-      data.apiSandbox.getStub.withArgs('/api/v1/exact-match?query=' + encodeURIComponent('incredible name inc'), sinon.match.any).returns(
-        new Promise((resolve) => resolve({
-          data: {
-            names: []
-          }
-        }))
-      )
-      const Constructor = Vue.extend(App);
-      data.instance = new Constructor({store: store, router: router});
-      data.vm = data.instance.$mount(document.getElementById('app'));
-      setTimeout(() => {
-        data.instance.$store.state.userId = 'Joe'
-        sessionStorage.setItem('AUTHORIZED', true)
-        router.push('/nameExamination')
-        setTimeout(() => {
-          expect(document.getElementById('conflicts1').className).toMatch('c-accepted')
-          done();
-        }, 1000)
-      }, 1000)
+    test('defaults the conflicts tab to green when there are no conflicts', () => {
+      expect(data.vm.$el.querySelector('#conflicts1').className).toContain('c-accepted')
     })
   })
 })

@@ -2,21 +2,24 @@
 
 exports[`ConflictInfo.vue renders a ConflictInfo component 1`] = `
 <v-container-stub
+  bg-color=""
+  fluid=""
+  id="conflict-info-container"
+  ma-0=""
+  pa-0=""
   tag="div"
 >
-  <spinner-stub
-    classname="conflict-detail-spinner hidden"
-  />
-   
   <v-layout-stub
-    conflict-info-view=""
+    id="conflict-info-layout"
     tag="div"
   >
-    <v-flex-stub
-      tag="div"
-    >
-      <nullmatch-stub />
-    </v-flex-stub>
+    <spinner-stub
+      classname="conflict-detail-spinner pb-5"
+    />
+     
+    <nullmatch-stub
+      class="conflict-info-view"
+    />
   </v-layout-stub>
 </v-container-stub>
 `;

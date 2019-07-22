@@ -1,377 +1,205 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FindFilter.vue renders a FindFilter component 1`] = `
-<div>
-  <div
-    class="container-fluid"
+<v-container-stub
+  fluid=""
+  id="find-filter"
+  ma-0=""
+  pa-0=""
+  tag="div"
+>
+  <v-layout-stub
+    mt-3=""
+    pa-0=""
+    px-4=""
+    tag="div"
   >
-    <table>
-      <thead>
-        <tr
-          id="filter-header"
-        >
-          <th>
-            <select
-              class="form-control"
-              id="search-filter-state"
-            >
-              <option
-                value="ALL"
-              >
-                ALL
-              </option>
-              <option
-                value="HOLD"
-              >
-                HOLD
-              </option>
-              <option
-                value="INPROGRESS"
-              >
-                INPROGRESS
-              </option>
-              <option
-                value="DRAFT"
-              >
-                DRAFT
-              </option>
-              <option
-                value="EXPIRED"
-              >
-                EXPIRED
-              </option>
-              <option
-                value="CANCELLED"
-              >
-                CANCELLED
-              </option>
-              <option
-                value="APPROVED"
-              >
-                APPROVED
-              </option>
-              <option
-                value="CONDITIONAL"
-              >
-                CONDITIONAL
-              </option>
-              <option
-                value="REJECTED"
-              >
-                REJECTED
-              </option>
-              <option
-                value="COMPLETED"
-              >
-                COMPLETED
-              </option>
-            </select>
-          </th>
-           
-          <th>
-            <input
-              class="form-control"
-              id="search-filter-examiner"
-              placeholder="Username"
-            />
-          </th>
-           
-          <th>
-            <input
-              class="form-control"
-              id="search-filter-nr-number"
-              placeholder="NR Number"
-            />
-          </th>
-           
-          <th>
-            <input
-              class="form-control"
-              id="search-filter-company"
-              placeholder="Name"
-            />
-          </th>
-           
-          <th />
-           
-          <th>
-            <select
-              class="form-control"
-              id="search-filter-priority"
-            >
-              <option
-                value="All"
-              >
-                All
-              </option>
-              <option
-                value="Priority"
-              >
-                Priority
-              </option>
-              <option
-                value="Standard"
-              >
-                Standard
-              </option>
-            </select>
-          </th>
-           
-          <th>
-            <select
-              class="form-control"
-              id="search-filter-furnished"
-            >
-              <option
-                value="All"
-              >
-                All
-              </option>
-              <option
-                value="Notified"
-              >
-                Notified
-              </option>
-              <option
-                value="Not Notified"
-              >
-                Not Notified
-              </option>
-            </select>
-          </th>
-           
-          <th>
-            <select
-              class="form-control"
-              id="search-filter-submittedDate"
-            >
-              <option
-                value="Today"
-              >
-                Today
-              </option>
-              <option
-                value="7 days"
-              >
-                7 days
-              </option>
-              <option
-                value="30 days"
-              >
-                30 days
-              </option>
-              <option
-                value="90 days"
-              >
-                90 days
-              </option>
-              <option
-                value="1 year"
-              >
-                1 year
-              </option>
-              <option
-                value="3 years"
-              >
-                3 years
-              </option>
-              <option
-                value="5 years"
-              >
-                5 years
-              </option>
-              <option
-                value="All"
-              >
-                All
-              </option>
-            </select>
-          </th>
-           
-          <th>
-            <select
-              class="form-control"
-              id="search-filter-lastUpdate"
-            >
-              <option
-                value="Today"
-              >
-                Today
-              </option>
-              <option
-                value="Yesterday"
-              >
-                Yesterday
-              </option>
-              <option
-                value="2 days"
-              >
-                2 days
-              </option>
-              <option
-                value="7 days"
-              >
-                7 days
-              </option>
-              <option
-                value="30 days"
-              >
-                30 days
-              </option>
-              <option
-                value="All"
-              >
-                All
-              </option>
-            </select>
-          </th>
-           
-          <th />
-        </tr>
-      </thead>
-    </table>
-     
     <h1>
       Search
     </h1>
-     
-    <span
-      class="searchTable"
-      id="search-table-container"
+  </v-layout-stub>
+   
+  <v-layout-stub
+    align-center=""
+    pa-0=""
+    px-4=""
+    tag="div"
+  >
+    <v-flex-stub
+      tag="div"
     >
-      <div
-        class="mt-3"
-        id="table-options"
-        style="display: flex;"
-      >
-        <div
-          style="flex-shrink: 1; align-self: center;"
-        >
-          <b-link-stub
-            event="click"
-            id="clear-filter"
-            routertag="a"
-            target="_self"
-          >
-            Clear Filters
-          </b-link-stub>
-        </div>
-         
-        <div
-          style="flex-grow: 1;"
-        />
-         
-        <div
-          id="pagination"
-          style="flex-shrink: 1;"
-        >
-          <div
-            style="display: flex; justify-content: flex-end;"
-          >
-            <div
-              id="results"
-              style="align-self: center; margin-right: 30px;"
-            >
-              Results: 0
-            </div>
-             
-            <div
-              style="align-self: center; margin-right: 5px;"
-            >
-              Display:
-            </div>
-             
-            <b-form-select-stub
-              disabledfield="disabled"
-              htmlfield="html"
-              options="5,10,20,50,100"
-              selectsize="0"
-              style="width: 60px; float: right; margin-right: 10px;"
-              textfield="text"
-              value="10"
-              valuefield="value"
-            />
-             
-            <div
-              style="align-self: center; margin-right: 3px;"
-            >
-              Page:
-            </div>
-             
-            <b-form-select-stub
-              disabledfield="disabled"
-              htmlfield="html"
-              options="1"
-              selectsize="0"
-              style="width: 60px; float: right;"
-              textfield="text"
-              value="1"
-              valuefield="value"
-            />
-             
-            <div
-              style="align-self: center; margin: 0px 3px 0px 5px;"
-            >
-              of 1
-            </div>
-             
-            <b-button-group-stub
-              ariarole="group"
-              tag="div"
-            >
-              <b-btn-stub
-                event="click"
-                id="previous"
-                routertag="a"
-                tag="button"
-                target="_self"
-                type="button"
-                variant="secondary"
-              >
-                ‹
-              </b-btn-stub>
-               
-              <b-btn-stub
-                event="click"
-                id="next"
-                routertag="a"
-                tag="button"
-                target="_self"
-                type="button"
-                variant="secondary"
-              >
-                ›
-              </b-btn-stub>
-            </b-button-group-stub>
-          </div>
-        </div>
-      </div>
-    </span>
+      <a>
+        Clear Filters
+      </a>
+    </v-flex-stub>
      
-    <b-table-stub
-      apiurl=""
-      class="pre-line scroll"
-      currentpage="1"
-      emptyfilteredtext="There are no records matching your request"
-      emptytext="There are no records to show"
-      fields="[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]"
-      fixed="true"
-      hover="true"
-      id="search-table"
-      items=""
-      labelsortasc="Click to sort Ascending"
-      labelsortclear="Click to clear sorting"
-      labelsortdesc="Click to sort Descending"
-      perpage="0"
-      selectedvariant="primary"
-      selectmode="multi"
-      showempty="true"
-      sortby=""
-      sortcompareoptions="[object Object]"
-      sortdirection="asc"
-      striped="true"
-      value=""
-    />
-  </div>
-</div>
+    <v-flex-stub
+      mx-4=""
+      shrink=""
+      tag="div"
+    >
+      Results: 0
+    </v-flex-stub>
+     
+    <v-flex-stub
+      mx-2=""
+      shrink=""
+      tag="div"
+    >
+      Display:
+    </v-flex-stub>
+     
+    <v-flex-stub
+      shrink=""
+      tag="div"
+    >
+      <v-select-stub
+        attach=""
+        browser-autocomplete="off"
+        class="text-input-style"
+        id="display-selection"
+        items="5,10,20,50,100"
+        value="10"
+      />
+    </v-flex-stub>
+     
+    <v-flex-stub
+      mx-2=""
+      shrink=""
+      tag="div"
+    >
+      Page: 
+    </v-flex-stub>
+     
+    <v-flex-stub
+      shrink=""
+      tag="div"
+    >
+      <v-select-stub
+        attach=""
+        browser-autocomplete="off"
+        class="text-input-style"
+        id="page-selection"
+        items="1"
+        value="1"
+      />
+    </v-flex-stub>
+     
+    <v-flex-stub
+      mx-2=""
+      shrink=""
+      tag="div"
+    >
+      of 1
+    </v-flex-stub>
+     
+    <v-flex-stub
+      ml-2=""
+      shrink=""
+      tag="div"
+    >
+      <v-btn-stub
+        activeclass="v-btn--active"
+        class="ma-0 pa-0"
+        flat="true"
+        id="previous"
+        style="height: 32px; color: white;"
+        tag="button"
+        type="button"
+      >
+        <span
+          class="fw-700 fs-16"
+        >
+          &lt;
+        </span>
+      </v-btn-stub>
+    </v-flex-stub>
+     
+    <v-flex-stub
+      shrink=""
+      tag="div"
+    >
+      <v-btn-stub
+        activeclass="v-btn--active"
+        class="ma-0 pa-0 ml-1"
+        flat="true"
+        id="next"
+        style="height: 32px; color: white;"
+        tag="button"
+        type="button"
+      >
+        <span
+          class="fw-700 fs-16"
+        >
+          &gt;
+        </span>
+      </v-btn-stub>
+    </v-flex-stub>
+  </v-layout-stub>
+   
+  <v-layout-stub
+    tag="div"
+  >
+    <v-flex-stub
+      tag="div"
+    >
+      <v-data-table-stub
+        class="ma-3"
+        customfilter="function _default(items, search, filter, headers) {
+                search = search.toString().toLowerCase();
+                if (search.trim() === '') return items;
+                var props = headers.map(function (h) {
+                    return h.value;
+                });
+                return items.filter(function (item) {
+                    return props.some(function (prop) {
+                        return filter(Object(_util_helpers__WEBPACK_IMPORTED_MODULE_7__[\\"getObjectValueByPath\\"])(item, prop, item[prop]), search);
+                    });
+                });
+            }"
+        customsort="function _default(items, index, isDescending) {
+                if (index === null) return items;
+                return items.sort(function (a, b) {
+                    var _a, _b;
+                    var sortA = Object(_util_helpers__WEBPACK_IMPORTED_MODULE_6__[\\"getObjectValueByPath\\"])(a, index);
+                    var sortB = Object(_util_helpers__WEBPACK_IMPORTED_MODULE_6__[\\"getObjectValueByPath\\"])(b, index);
+                    if (isDescending) {
+                        _a = __read([sortB, sortA], 2), sortA = _a[0], sortB = _a[1];
+                    }
+                    // Check if both are numbers
+                    if (!isNaN(sortA) && !isNaN(sortB)) {
+                        return sortA - sortB;
+                    }
+                    // Check if both cannot be evaluated
+                    if (sortA === null && sortB === null) {
+                        return 0;
+                    }
+                    _b = __read([sortA, sortB].map(function (s) {
+                        return (s || '').toString().toLocaleLowerCase();
+                    }), 2), sortA = _b[0], sortB = _b[1];
+                    if (sortA > sortB) return 1;
+                    if (sortA < sortB) return -1;
+                    return 0;
+                });
+            }"
+        filter="function _default(val, search) {
+                return val != null && typeof val !== 'boolean' && val.toString().toLowerCase().indexOf(search) !== -1;
+            }"
+        headers="[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]"
+        headertext="text"
+        hideactions="true"
+        itemkey="id"
+        items=""
+        nexticon="$vuetify.icons.next"
+        nodatatext="$vuetify.noDataText"
+        noresultstext="$vuetify.dataIterator.noResultsText"
+        previcon="$vuetify.icons.prev"
+        rowsperpageitems="5,10,25,[object Object]"
+        rowsperpagetext="$vuetify.dataTable.rowsPerPageText"
+        sorticon="$vuetify.icons.sort"
+        value=""
+      />
+    </v-flex-stub>
+  </v-layout-stub>
+</v-container-stub>
 `;

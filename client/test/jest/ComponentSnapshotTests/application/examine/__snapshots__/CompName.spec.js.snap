@@ -42,7 +42,7 @@ exports[`CompName.vue  renders a CompName component 1`] = `
           
           
           
-          <stateicon-stub />
+          <compnameicon-stub />
            
           <!---->
         </v-flex-stub>
@@ -80,7 +80,7 @@ exports[`CompName.vue  renders a CompName component 1`] = `
           
           
           
-          <stateicon-stub />
+          <compnameicon-stub />
            
           <!---->
         </v-flex-stub>
@@ -118,7 +118,7 @@ exports[`CompName.vue  renders a CompName component 1`] = `
           
           
           
-          <stateicon-stub />
+          <compnameicon-stub />
            
           <!---->
         </v-flex-stub>
@@ -143,8 +143,6 @@ exports[`CompName.vue  renders a CompName component 1`] = `
     <!---->
   </v-flex-stub>
    
-  <!---->
-   
   <v-flex-stub
     bg-grey=""
     lg6=""
@@ -156,7 +154,7 @@ exports[`CompName.vue  renders a CompName component 1`] = `
       tag="div"
     >
       <v-flex-stub
-        grow=""
+        lg8=""
         mr-3=""
         tag="div"
       >
@@ -164,6 +162,7 @@ exports[`CompName.vue  renders a CompName component 1`] = `
           id="regular-search-form"
         >
           <div
+            class="examine-search-div"
             style="display: flex;"
           >
             <v-text-field-stub
@@ -198,18 +197,18 @@ exports[`CompName.vue  renders a CompName component 1`] = `
       </v-flex-stub>
        
       <v-flex-stub
-        ml-3=""
-        shrink=""
+        lg4=""
         tag="div"
       >
         <v-form-stub
           id="exact-search-form"
         >
           <div
+            class="examine-search-div"
             style="display: flex;"
           >
             <div
-              style="width: 240px;"
+              style="width: 100%;"
             >
               <v-text-field-stub
                 append-icon=""
@@ -270,8 +269,6 @@ exports[`CompName.vue  renders a CompName component 1`] = `
     py-4=""
     tag="div"
   >
-    <!---->
-     
     <!---->
   </v-flex-stub>
 </v-layout-stub>

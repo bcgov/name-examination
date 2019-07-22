@@ -2,33 +2,185 @@
 
 exports[`HistoryInfo.vue renders a HistoryInfo component 1`] = `
 <v-container-stub
+  align-start=""
+  bg-color=""
   fluid=""
-  ma-0=""
-  mx-4=""
-  pr-5=""
+  id="history-container"
+  pb-3=""
   pt-0=""
+  px-3=""
   tag="div"
 >
+  <spinner-stub
+    classname="history-list-spinner"
+  />
+   
   <v-layout-stub
+    align-items-start=""
+    class="history-list-layout"
     tag="div"
   >
-    <v-flex-stub
+    <v-layout-stub
+      align-items-start=""
       tag="div"
+      wrap=""
     >
-      <span>
-        <h2
-          id="currentHistoryName"
+      <v-flex-stub
+        item-heading=""
+        tag="div"
+      >
+        Client
+      </v-flex-stub>
+       
+      <v-flex-stub
+        lg9=""
+        tag="div"
+      >
+         
+      </v-flex-stub>
+       
+      <v-flex-stub
+        header-mg=""
+        item-heading=""
+        lg3=""
+        tag="div"
+      >
+        Applicant
+      </v-flex-stub>
+       
+      <v-flex-stub
+        header-mg=""
+        lg9=""
+        tag="div"
+      >
+        <div
+          class="item-detail"
         >
-          
-        </h2>
+           
+        </div>
          
         <div
-          class="add-top-padding"
+          class="item-detail"
         >
-          <nullmatch-stub />
+          
         </div>
-      </span>
-    </v-flex-stub>
+         
+        <div
+          class="item-detail"
+        >
+          
+        </div>
+         
+        <div
+          class="item-detail"
+        >
+          
+        </div>
+         
+        <div
+          class="item-detail"
+        >
+             
+        </div>
+      </v-flex-stub>
+       
+      <v-flex-stub
+        header-mg=""
+        item-heading=""
+        lg3=""
+        tag="div"
+      >
+        Phone
+      </v-flex-stub>
+       
+      <v-flex-stub
+        header-mg=""
+        lg9=""
+        tag="div"
+      >
+        
+      </v-flex-stub>
+       
+      <v-flex-stub
+        header-mg=""
+        item-heading=""
+        lg3=""
+        tag="div"
+      >
+        Email
+      </v-flex-stub>
+       
+      <v-flex-stub
+        header-mg=""
+        lg9=""
+        tag="div"
+      >
+        
+      </v-flex-stub>
+       
+      <v-flex-stub
+        header-mg=""
+        item-heading=""
+        lg3=""
+        tag="div"
+      >
+        Contact
+      </v-flex-stub>
+       
+      <v-flex-stub
+        header-mg=""
+        lg9=""
+        tag="div"
+      >
+        
+      </v-flex-stub>
+    </v-layout-stub>
+     
+    <v-layout-stub
+      align-items-start=""
+      tag="div"
+      wrap=""
+    >
+      <v-flex-stub
+        header-mg=""
+        item-heading=""
+        lg3=""
+        tag="div"
+      >
+        Submit Count
+      </v-flex-stub>
+       
+      <v-flex-stub
+        header-mg=""
+        lg9=""
+        tag="div"
+      >
+        
+      </v-flex-stub>
+       
+      <v-flex-stub
+        header-mg=""
+        item-heading=""
+        lg3=""
+        tag="div"
+      >
+        Name State
+      </v-flex-stub>
+       
+      <v-flex-stub
+        header-mg=""
+        lg9=""
+        tag="div"
+      >
+        
+      </v-flex-stub>
+       
+      <!---->
+       
+      <!---->
+    </v-layout-stub>
   </v-layout-stub>
+   
+  <!---->
 </v-container-stub>
 `;

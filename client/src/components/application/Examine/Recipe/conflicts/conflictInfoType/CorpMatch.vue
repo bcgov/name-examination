@@ -1,79 +1,85 @@
 <!--eslint-disable -->
 <template>
+  <v-container pt-0 pb-3 pl-4 fluid align-start>
+    <v-layout align-items-start v-if="is_xpro">
+      <v-layout wrap style="width: 50%" align-items-start>
+        <v-flex lg5 item-heading>Type:</v-flex>
+        <v-flex lg7>XPRO Corporation</v-flex>
+        <v-flex lg5 mt-3 item-heading>Corp Number:</v-flex>
+        <v-flex lg7 mt-3>{{ incorpNum }}</v-flex>
+        <v-flex lg5 mt-3 item-heading>Attorneys:</v-flex>
+        <v-flex lg7 mt-3>
+          <div v-if="is_not_available(attorneys)">Not Available</div>
+          <div v-else
+               v-for="attorney in attorneys"
+               v-bind:key="attorney">{{ attorney }}
+          </div>
+        </v-flex>
+        <v-flex lg5 mt-3 item-heading>Nature Of Business:</v-flex>
+        <v-flex mt-3 lg7>{{ natureOfBusiness }}</v-flex>
+      </v-layout>
 
-   <span v-if="is_xpro">
-      <h3 class="corpType">XPRO Corporation</h3>
+      <v-layout wrap style="width: 50%;" align-items-start>
+        <v-flex lg3 mt-3 item-heading>Directors:</v-flex>
+        <v-flex lg9 mt-3 pl-2>
+          <div v-if="is_not_available(directors)">Not Available</div>
+          <div v-else
+               v-for="director in directors"
+               v-bind:key="director">{{ director }}
+          </div>
+        </v-flex>
+        <v-flex lg3 mt-4 item-heading>Head Office:</v-flex>
+        <v-flex mt-4 lg9 pl-2>
+          <div v-for="addressLine in head_office">{{ addressLine }}</div>
+        </v-flex>
+      </v-layout>
+    </v-layout>
+    <v-layout align-items-start v-else>
+      <v-layout wrap style="width: 45%" align-items-start>
+        <v-flex lg5 item-heading>Type:</v-flex>
+        <v-flex lg7>BC Corporation</v-flex>
+        <v-flex lg5 mt-3 item-heading>Corp Number:</v-flex>
+        <v-flex lg7 mt-3>{{ incorpNum }}</v-flex>
+        <v-flex lg5 mt-3 item-heading>Directors</v-flex>
+        <v-flex lg7 mt-3>
+          <div v-if="is_not_available(directors)">Not Available</div>
+          <div v-else
+               v-for="director in directors"
+               v-bind:key="director">{{ director }}</div>
+        </v-flex>
+        <v-flex lg5 mt-3 item-heading>Nature Of Business</v-flex>
+        <v-flex mt-3 lg7>{{ natureOfBusiness }}</v-flex>
+      </v-layout>
 
-      <h3>Incorporation Number</h3>
-      <p>{{ incorpNum }}</p>
-
-      <h3>Incorporation Date</h3>
-      <p>{{ incorporated }}</p>
-
-      <h3>Attorneys</h3>
-      <p v-if="is_not_available(attorneys)">Not Available</p>
-      <p v-else v-for="attorney in attorneys" v-bind:key="attorney">{{ attorney }}</p>
-
-      <h3>Directors</h3>
-      <p v-if="is_not_available(directors)">Not Available</p>
-      <p v-else v-for="director in directors" v-bind:key="director">{{ director }}</p>
-
-      <h3>Jurisdiction</h3>
-      <p>{{ jurisdiction }}</p>
-
-      <h3>Nature Of Business</h3>
-      <p>{{ natureOfBusiness }}</p>
-
-      <h3>Head Office</h3>
-      <p v-for="addressLine in head_office">
-        {{ addressLine }}</p>
-   </span>
-   <span v-else>
-      <h3 class="corpType">BC Corporation</h3>
-      <h3>Incorporation Number</h3>
-      <p>{{ incorpNum }}</p>
-
-      <h3>Incorporation Date</h3>
-      <p>{{ incorporated }}</p>
-
-      <h3>Directors</h3>
-      <p v-if="is_not_available(directors)">Not Available</p>
-      <p v-else v-for="director in directors" v-bind:key="director">{{ director }}</p>
-
-      <h3>Jurisdiction</h3>
-      <p>{{ jurisdiction }}</p>
-
-      <h3>Nature Of Business</h3>
-      <p>{{ natureOfBusiness }}</p>
-
-      <h3>Records Office Delivery Address</h3>
-     <p v-if="is_not_available(records_office_delivery_address)">Not Available</p>
-      <p v-else v-for="recordsAddressLine in records_office_delivery_address">
-        {{ recordsAddressLine }}</p>
-
-      <h3>Registered Office Delivery Address</h3>
-      <p v-for="addressLine in registered_office_delivery_address">
-        {{ addressLine }}</p>
-  </span>
+      <v-layout wrap style="width: 55%;" align-items-start>
+        <v-flex lg5 item-heading>Records Office Delivery Address:</v-flex>
+        <v-flex pl-2 lg7>
+          <div v-if="is_not_available(records_office_delivery_address)">Not Available</div>
+          <div v-else v-for="recordsAddressLine in records_office_delivery_address">
+            {{ recordsAddressLine }}
+          </div>
+        </v-flex>
+        <v-flex mt-3 lg5 item-heading>Registered Office Delivery Address:</v-flex>
+        <v-flex mt-3 pl-2 lg7>
+          <div v-for="addressLine in registered_office_delivery_address">
+            {{ addressLine }}
+          </div>
+        </v-flex>
+      </v-layout>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
 /* eslint-disable */
+  import { mapGetters } from 'vuex'
+
   export default {
     name: 'corpMatch',
     computed: {
-      // currentConflict() {
-      //   return  this.$store.getters.currentConflict;
-      // },
-      // currentConflictName() {
-      //   console.log(this.currentConflict)
-      //   if (this.currentConflict !== null) return this.currentConflict.text;
-      //   else return null;
-      // },
-      // currentConflictNumber() {
-      //   if (this.currentConflict !== null) return this.currentConflict.nrNumber;
-      //   else return null;
-      // },
+      ...mapGetters({
+        corpConflictInfo: 'corpConflictJSON'
+      }),
       attorneys() {
         if (this.corpConflictInfo !== null)
           return this.corpConflictInfo['attorney names'];
@@ -87,10 +93,24 @@
           return null;
       },
       head_office(){
-        if (this.corpConflictInfo !== null)
-          return this.corpConflictInfo['head office'];
-        else
-          return null;
+        if (this.corpConflictInfo !== null) {
+          let lines = this.corpConflictInfo['head office']
+          let l = lines.length
+          let lastLine = lines[l - 4] + ' ' + lines[l - 3] + ' ' + lines[l - 2] + ' ' + lines[l - 1]
+          let output = []
+          for (let r = l - 5; r >= 0; r--) {
+            output = [lines[r], ...output]
+          }
+          output.push(lastLine)
+          if (output[0].toUpperCase() === 'N' && output[1].toUpperCase() === 'O' && output[2].toUpperCase() === 'T') {
+            output = [
+              'Address not', 'available'
+            ]
+          }
+          return output
+        } else {
+          return null
+        }
       },
       incorpNum () {
         if (this.corpConflictInfo !== null)
@@ -117,16 +137,44 @@
           return null;
       },
       records_office_delivery_address() {
-        if (this.corpConflictInfo !== null)
-          return this.corpConflictInfo['records office delivery address'];
-        else
-          return null;
+        if (this.corpConflictInfo !== null) {
+          let lines = this.corpConflictInfo['records office delivery address']
+          let l = lines.length
+          let lastLine = lines[l - 4] + ' ' + lines[l - 3] + ' ' + lines[l - 2] + ' ' + lines[l - 1]
+          let output = []
+          for (let r = l - 5; r >= 0; r--) {
+            output = [lines[r], ...output]
+          }
+          output.push(lastLine)
+          if (output[0].toUpperCase() === 'N' && output[1].toUpperCase() === 'O' && output[2].toUpperCase() === 'T') {
+            output = [
+              'Address not', 'available'
+            ]
+          }
+          return output
+        } else {
+          return null
+        }
       },
       registered_office_delivery_address() {
-        if (this.corpConflictInfo !== null)
-          return this.corpConflictInfo['registered office delivery address'];
-        else
-          return null;
+        if (this.corpConflictInfo !== null) {
+          let lines = this.corpConflictInfo['registered office delivery address']
+          let l = lines.length
+          let lastLine = lines[l - 4] + ' ' + lines[l - 3] + ' ' + lines[l - 2] + ' ' + lines[l - 1]
+          let output = []
+          for (let r = l - 5; r >= 0; r--) {
+            output = [lines[r], ...output]
+          }
+          output.push(lastLine)
+          if (output[0].toUpperCase() === 'N' && output[1].toUpperCase() === 'O' && output[2].toUpperCase() === 'T') {
+            output = [
+              'Address not', 'available'
+            ]
+          }
+          return output
+        } else {
+          return null
+        }
       },
       is_xpro(){
         if (this.corpConflictInfo !== null) {
@@ -139,9 +187,6 @@
           return false;
 
       },
-      corpConflictInfo() {
-        return this.$store.getters.corpConflictJSON
-      }
     },
     methods: {
       is_not_available(val) {
@@ -155,30 +200,12 @@
 </script>
 
 <style scoped>
-  .corpType {
-    color: #494969;
+  .item-heading {
+    font-weight: 600 !important;
   }
 
-  h3, h2 {
-     font-size: 15px;
-     color: var(--text);
-     text-transform: capitalize !important;
-     line-height: 1;
-     margin: 12px 0 4px 0;
-     padding: 0;
-     font-weight: 600;
-  }
-
-  p, div {
-     font-size: 14px;
-     color: var(--text);
-     line-height: 1;
-     margin: 0;
-     padding: 0;
-  }
-
-  p {
-     margin: 0 0 0 8px;
+  .bg-color {
+    background-color: var(--xl-cyan);
   }
 
 </style>

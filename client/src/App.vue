@@ -31,7 +31,7 @@
       </div>
     </div>
     <v-app >
-    <div id="app" style="height: 100%;">
+    <div id="app" style="height: 100%;" :class="is_editing ? 'bg-grey' : ''">
         <std-header style="z-index: 2"> </std-header>
       <div>
         <router-view style="z-index: 1"></router-view>
@@ -61,6 +61,9 @@ export default {
     computed: {
       errorJSON() {
         return this.$store.getters.errorJSON
+      },
+      is_editing() {
+        return this.$store.state.is_editing
       },
     },
     watch: {

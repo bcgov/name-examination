@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import axios from '@/axios-auth.js';
 
 module.exports = {
-    createApiSandbox:()=> {
+    createApiSandbox: () => {
         sinon.restore()
         let sandbox = sinon.createSandbox()
         sandbox.putStub = sandbox.stub(axios, 'put');
@@ -35,18 +35,39 @@ module.exports = {
                 names: []
             } }))
         )
+        sandbox.getStub.withArgs('/api/v1/requests/cobrsphonetics/incredible name inc/*', sinon.match.any).returns(
+            new Promise((resolve) => resolve({ data: {
+                names: []
+            } }))
+        )
+        sandbox.getStub.withArgs('/api/v1/requests/phonetics/incredible name inc/*', sinon.match.any).returns(
+            new Promise((resolve) => resolve({ data: {
+                names: []
+            } }))
+        )
 
         sandbox.getStub.withArgs('/api/v1/requests/undefined', sinon.match.any).returns(
             new Promise((resolve) => resolve({ data: {} }))
         )
+
         sandbox.putStub.withArgs('/api/v1/requests/undefined/names/1', sinon.match.any).returns(
             new Promise((resolve) => resolve({ data: {} }))
         )
         sandbox.patchStub.withArgs('/api/v1/requests/undefined', sinon.match.any).returns(
             new Promise((resolve) => resolve({ data: {} }))
         )
-        sandbox.getStub.withArgs('/api/v1/requests/null', sinon.match.any).returns(
-            new Promise((resolve) => resolve({ data: {} }))
+        sandbox.getStub.withArgs('/api/v1/requests/null', sinon.match.any).returns(new Promise((resolve) => {
+            resolve({
+              data: {
+                names: [ { choice: 1, state: 'NE', name: 'incredible name inc' } ],
+                state: 'INPROGRESS',
+                requestTypeCd: 'CR',
+                applicants: '',
+                nwpta: [],
+                userId: 'Joe'
+              }
+            })
+          })
         )
         sandbox.putStub.withArgs('/api/v1/requests/null/names/1', sinon.match.any).returns(
             new Promise((resolve) => resolve({ data: {} }))

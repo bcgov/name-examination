@@ -1,6 +1,6 @@
 <!--eslint-disable-->
 <template>
-  <v-layout wrap>
+  <v-layout wrap ref="CompName">
 
     <!--NAME CHOICES LIST-->
     <v-flex lg6 bg-white py-2>
@@ -11,7 +11,7 @@
           <v-flex shrink mr-2>1.</v-flex>
           <v-flex grow id="name1" ma-0 pa-0>
             {{ compName1.name }}
-            <StateIcon :state="compName1.state" />
+            <CompNameIcon :state="compName1.state" />
             <v-btn flat
                    style="margin: -7px 0 0 0; padding: 0;"
                    v-if="is_undoable_1"
@@ -25,7 +25,7 @@
           <v-flex shrink mr-2>2.</v-flex>
           <v-flex grow id="name2" ma-0 pa-0>
             {{ compName2.name }}
-            <StateIcon :state="compName2.state" />
+            <CompNameIcon :state="compName2.state" />
             <v-btn flat
                    style="margin: -7px 0 0 0; padding: 0;"
                    v-if="is_undoable_2"
@@ -39,7 +39,7 @@
           <v-flex shrink mr-2>3.</v-flex>
           <v-flex grow id="name3" ma-0 pa-0>
             {{ compName3.name }}
-            <StateIcon :state="compName3.state" />
+            <CompNameIcon :state="compName3.state" />
             <v-btn flat
                    style="margin: -7px 0 0 0; padding: 0;"
                    v-if="is_undoable_3"
@@ -80,29 +80,23 @@
       </v-layout>
     </v-flex>
 
-    <template v-if="is_making_decision">
-      <v-flex lg12 ma-0 pa-0>
-        <Decision />
-      </v-flex>
-    </template>
-
-    <!--EXAMINATION AREA:  RECIPE CARDS / DECISION INFO-->
-    <template v-if="!is_making_decision && !is_complete">
+    <!--EXAMINATION AREA:  RECIPE CARDS DECISION INFO-->
+    <template v-if="!is_complete">
 
       <!--LEFT COLUMN:  CONFLICTS/CONDITIONS/HISTORY/TRADEMARKS LISTS-->
-      <v-flex lg6 py-4 pl-5 bg-grey>
+      <v-flex lg6 py-4 pl-5 bg-grey style="z-index: 2">
         <v-layout>
 
-          <!--BASIC SEARCH FIELD-->
-          <v-flex grow mr-3>
+          <v-flex lg8 mr-3>
             <v-form @submit.prevent="onSubmit" id="regular-search-form">
-              <div style="display: flex;">
+              <div style="display: flex;" class="examine-search-div" >
                 <v-text-field @click:append.prevent="resetSearchStr"
                               @shortkey="setFocus"
+                              @focus="$root.$emit('setconflictfocus', 'regular')"
                               :append-icon="searchStr !== currentName ? 'clear' : ''"
                               autocomplete="off"
                               class="examine-search"
-                              ref="search"
+                              ref="regularsearchfield"
                               id="regular-search-field"
                               v-model="searchStr"
                               v-shortkey="['alt', 's']"/>
@@ -121,16 +115,17 @@
           </v-flex>
 
           <!--EXACT MATCH SEARCH FIELD-->
-          <v-flex shrink ml-3>
+          <v-flex lg4>
             <v-form @submit.prevent="onSubmit" id="exact-search-form">
-              <div style="display: flex;">
-                <div style="width: 240px">
+              <div style="display: flex;" class="examine-search-div">
+                <div style="width: 100%" >
                   <v-text-field @click:append="resetExactSearchStr"
                                 :append-icon="exactPhrase ? 'clear' : ''"
                                 autocomplete="off"
+                                @focus="$root.$emit('setconflictfocus', 'exact')"
                                 class="examine-search"
                                 placeholder="exact phrase"
-                                ref="advanced-search"
+                                ref="exactsearchfield"
                                 id="exact-search-field"
                                 name="exact-search"
                                 v-model="exactPhrase" />
@@ -148,6 +143,7 @@
               </div>
             </v-form>
           </v-flex>
+
         </v-layout>
         <v-layout mt-3 wrap>
           <v-flex ma-0 pa-0>
@@ -158,8 +154,7 @@
 
       <!--RIGHT TWO COLUMNS: EXAMINATION AREA INFO-->
       <v-flex lg6 py-4 bg-grey>
-        <ConflictInfo v-if="currentRecipeCard === 'Conflicts'" />
-        <HistoryInfo v-if="currentRecipeCard === 'History'" />
+        <Decision v-if="is_making_decision" />
       </v-flex>
     </template>
   </v-layout>
@@ -167,49 +162,13 @@
 
 <script>
 /* eslint-disable */
-  import ConflictInfo from '@/components/application/Examine/Recipe/conflicts/ConflictInfo'
   import Decision from '@/components/application/Examine/Decision'
-  import HistoryInfo from '@/components/application/Examine/Recipe/history/HistoryInfo'
   import RecipeArea from '@/components/application/Examine/Recipe/RecipeArea'
-  import Vue from 'vue'
-
-  const StateIcon = Vue.component('icon', {
-    props: ['state'],
-    computed: {
-      setup() {
-        let output = {
-          class: '', icon: '', style: ''
-        }
-        if (this.state === 'REJECTED') {
-          output.class = 'c-priority fs-18'
-          output.icon = 'clear'
-          output.style = {
-            position: 'relative',
-            top: '-2px',
-          }
-        }
-        if (this.state === 'APPROVED' || this.state === 'CONDITION') {
-          output.class = 'c-cyan fs-20'
-          output.icon = 'done'
-          output.style = {
-            position: 'relative',
-            top: '-4px',
-          }
-        }
-        return output
-      }
-    },
-    template: `
-            <v-icon v-if="state"
-                    :style="setup.style"
-                    class="fw-700"
-                    :class="setup.class">{{ setup.icon }}</v-icon>
-          `
-  })
+  import CompNameIcon from './CompNameIcon'
 
   export default {
     name: 'CompName',
-    components: { ConflictInfo, Decision, HistoryInfo, RecipeArea, StateIcon },
+    components: { Decision, RecipeArea, CompNameIcon },
     data() {
       return {
         searchTimeout: null,
@@ -224,157 +183,150 @@
     },
     mounted() {
       if (this.$store.getters.nrNumber == null) {
-        this.$store.dispatch('getpostgrescompNo');
+        this.$store.dispatch('getpostgrescompNo')
       }
-      this.setFocus();
       // set manual search string based on current name - fixes bug related to leaving
       // and coming back to same NR
-      this.searching = true;
-      this.setManualSearchStr(this.currentName);
-      this.exactPhrase = '';
+      this.searching = true
+      this.setManualSearchStr(this.currentName)
+      this.exactPhrase = ''
+      this.$root.$on('setcompnamefocus', this.setOrBlurFocus)
     },
     computed: {
       canCancel() {
-        return this.userCanEdit;
+        return this.userCanEdit
       },
       compName1() {
-        return this.$store.getters.compName1;
+        return this.$store.getters.compName1
       },
       compName1State() {
-        return this.$store.getters.compName1.state;
+        return this.$store.getters.compName1.state
       },
       compName2() {
-        return this.$store.getters.compName2;
+        return this.$store.getters.compName2
       },
       compName2State() {
-        return this.$store.getters.compName2.state;
+        return this.$store.getters.compName2.state
       },
       compName3() {
-        return this.$store.getters.compName3;
+        return this.$store.getters.compName3
       },
       compName3State() {
-        return this.$store.getters.compName3.state;
+        return this.$store.getters.compName3.state
       },
       currentChoice: {
         get() {
           return this.$store.getters.currentChoice
         },
         set(value) {
-          this.$store.commit('currentChoice', value);
+          this.$store.commit('currentChoice', value)
         }
       },
       currentName() {
-        return this.$store.getters.currentName;
+        return this.$store.getters.currentName
       },
       currentNameObj: {
         get() {
-          return this.$store.getters.currentNameObj;
+          return this.$store.getters.currentNameObj
         },
         set(value) {
-          this.$store.commit('currentNameObj', value);
+          this.$store.commit('currentNameObj', value)
         }
       },
       currentRecipeCard() {
         return this.$store.getters.currentRecipeCard
       },
       currentState() {
-        return this.$store.getters.currentState;
+        return this.$store.getters.currentState
       },
       decision_1() {
-        return this.decisionReasonOrConflictList(this.compName1);
+        return this.decisionReasonOrConflictList(this.compName1)
       },
       decision_2() {
-        return this.decisionReasonOrConflictList(this.compName2);
+        return this.decisionReasonOrConflictList(this.compName2)
       },
       decision_3() {
-        return this.decisionReasonOrConflictList(this.compName3);
+        return this.decisionReasonOrConflictList(this.compName3)
       },
       decision_made: {
         get() {
-          return this.$store.getters.decision_made;
+          return this.$store.getters.decision_made
         },
         set(value) {
-          this.$store.commit('decision_made', value);
+          this.$store.commit('decision_made', value)
         }
       },
       is_complete() {
-        return this.$store.getters.is_complete;
+        return this.$store.getters.is_complete
       },
       is_editing() {
-        return  this.$store.getters.is_editing;
+        return  this.$store.getters.is_editing
       },
       is_making_decision: {
         get() {
-          return this.$store.getters.is_making_decision;
+          return this.$store.getters.is_making_decision
         },
         set(value) {
-          this.$store.commit('is_making_decision', value);
+          this.$store.commit('is_making_decision', value)
         }
       },
       is_my_current_nr() {
-        return this.$store.getters.is_my_current_nr;
+        return this.$store.getters.is_my_current_nr
       },
       is_name_decision_made() {
         // is a decision already made for the current name? Happens right after reset/re-open.
-        if (this.currentNameObj.state !== 'NE') return true;
-        else return false;
+        if (this.currentNameObj.state !== 'NE') return true
+        else return false
       },
       is_undoable_1() {
         // first test generic reasons why a name would or wouldn't be undoable
-        let undoable = this.is_undoable(this.compName1);
+        let undoable = this.is_undoable(this.compName1)
 
         if (undoable) {
           // if name choices 2 and 3 have not been decided, then 1 is undoable
           if ((this.compName2.state == 'NE' || this.compName2.state == null) &&
             (this.compName3.state == 'NE' || this.compName3.state == null)) {
-            undoable = true;
+            undoable = true
           }
-          else undoable = false;
+          else undoable = false
         }
 
-        return undoable;
+        return undoable
       },
       is_undoable_2() {
         // first test generic reasons why a name would or wouldn't be undoable
-        let undoable = this.is_undoable(this.compName2);
+        let undoable = this.is_undoable(this.compName2)
 
         if (undoable) {
           // if name choice 3 has not been decided, then 2 is undoable
-          if (this.compName3.state == 'NE' || this.compName3.state == null) {
-            undoable = true;
+          if (this.compName3.state == 'NE' || this.compName3.state == null ) {
+            undoable = true
           }
-          else undoable = false;
+          else undoable = false
         }
 
-        return undoable;
+        return undoable
       },
       is_undoable_3() {
         // first test generic reasons why a name would or wouldn't be undoable
-        let undoable = this.is_undoable(this.compName3);
+        let undoable = this.is_undoable(this.compName3)
 
-        return undoable;
+        return undoable
       },
       is_viewing() {
         return this.$store.state.is_header_shown
       },
       listDecisionReasons() {
-        return this.$store.getters.listDecisionReasons;
+        return this.$store.getters.listDecisionReasons
       },
       showQuickButtons() {
-        if (this.userIsAnExaminer &&
-          !this.is_making_decision &&
-          !this.is_complete &&
-          this.is_my_current_nr &&
-          !this.is_name_decision_made) {
-          return true
-        }
-        return false
+        return !this.is_complete && this.is_making_decision && this.userIsAnExaminer && this.is_my_current_nr
       },
       userCanEdit() {
-        return this.$store.getters.userHasEditRole;
+        return this.$store.getters.userHasEditRole
       },
       userIsAnExaminer() {
-        return this.$store.getters.userHasApproverRole;
+        return this.$store.getters.userHasApproverRole
       },
     },
     watch: {
@@ -385,17 +337,17 @@
           $("#cancel-nr-after-comment-button").prop('disabled', true);
       },
       currentName(val) {
-        this.searching = true;
-        this.setManualSearchStr(val);
-        this.exactPhrase = '';
+        this.searching = true
+        this.setManualSearchStr(val)
+        this.exactPhrase = ''
       },
       nrNumber(val) {
         if (val != null) { this.runManualRecipe()}
       },
       searchStr(val) {
         if (this.searching) {
-          this.runManualRecipe();
-          this.searching = false;
+          this.runManualRecipe()
+          this.searching = false
         }
       }
     },
@@ -404,13 +356,13 @@
         /* method gets the decision reason(s) whether or not there's anything in the decision text field.  In some
          older NRs, there is no decision reason text.  In these cases we want to display the listof conflicts instead */
         if (!compname) {
-          return;
+          return
         }
         if (this.is_complete) {
           if (compname.decision_text) {
-            return compname.decision_text;
+            return compname.decision_text
           } else {
-            return this.getConflictList(compname);
+            return this.getConflictList(compname)
           }
         } else {
           return compname.decision_text
@@ -419,7 +371,7 @@
       getConflictList(compname) {
         if (!compname.conflict1) return
 
-        let reasons = `Rejected due to conflicts:\n${compname.conflict1}`;
+        let reasons = `Rejected due to conflicts:\n${compname.conflict1}`
         if (compname.conflict2) {
           reasons += ", " + compname.conflict2
         }
@@ -437,39 +389,36 @@
         return classes
       },
       is_undoable(name) {
-
         // if the NR is closed in any way, a name is not undoable - the NR will have to be
         // re-opened first.
+        if (!this.userIsAnExaminer) return false
 
-        if (!this.userIsAnExaminer) return false;
-
-        if (!this.is_my_current_nr) return false;
+        if (!this.is_my_current_nr) return false
 
         // if the NR is furnished, nothing is undoable
-        if (this.$store.state.furnished === 'Y')  return false;
+        if (this.$store.state.furnished === 'Y')  return false
 
         // if this name is complete (ie: anything other than NE) it's undoable
-        if (name.state == 'NE' || name.state == null) return false;
+        if (name.state == 'NE' || name.state == null) return false
 
-        return true;
+        return true
       },
       nameAcceptReject() {
-        if (this.decision_made == 'APPROVED') {
-          this.currentNameObj.state = 'APPROVED';
+        if (this.decision_made === 'APPROVED') {
+          this.currentNameObj.state = 'APPROVED'
         }
         else {
-          this.currentNameObj.state = 'REJECTED';
+          this.currentNameObj.state = 'REJECTED'
         }
         // send decision to API and reset flags
-        this.$store.dispatch('nameAcceptReject');
-        this.decision_made = null;
-        this.is_making_decision = false;
+        this.$store.dispatch('nameAcceptReject')
+        this.decision_made = null
       },
       onSubmit(event) {
         if (event.target.id && event.target.id.includes('exact-search')) {
           if (this.exactPhrase) {
             this.runManualRecipe()
-            this.is_running_manual_search = true;
+            this.is_running_manual_search = true
             return
           } else if (!this.exactPhrase) {
             event.preventDefualt()
@@ -478,7 +427,7 @@
           }
         }
         if (this.searchStr != this.currentName) {
-          this.is_running_manual_search = true;
+          this.is_running_manual_search = true
         }
         this.runManualRecipe()
       },
@@ -506,12 +455,12 @@
       },
       resetSearchStr() {
         if (!this.is_running_manual_search) {
-          this.setManualSearchStr(this.currentName);
+          this.setManualSearchStr(this.currentName)
           return
         }
-        this.searching = true;
-        this.setManualSearchStr(this.currentName);
-        this.exactPhrase = '';
+        this.searching = true
+        this.setManualSearchStr(this.currentName)
+        this.exactPhrase = ''
       },
       resetExactSearchStr() {
         this.exactPhrase = ''
@@ -520,16 +469,22 @@
         }
       },
       runManualRecipe() {
-
-        this.$store.dispatch('runManualRecipe', {searchStr:this.searchStr, exactPhrase:this.exactPhrase});
+        this.$store.dispatch('runManualRecipe', {searchStr:this.searchStr, exactPhrase:this.exactPhrase})
       },
-      setFocus() {
-        if(this.$refs.search) {
-          this.$refs.search.focus();
+      setOrBlurFocus({ref, type}) {
+        if (this.$refs[ref]) {
+          if (type === 'blur') {
+            this.$refs[ref].blur()
+            return
+          }
+          this.$refs[ref].focus()
         }
       },
+      setFocus() {
+        this.$refs.regularsearchfield.focus()
+        this.$root.$emit('setconflictfocus', 'regular')
+      },
       setManualSearchStr(val) {
-
         this.searchStr =  val;
       },
       undoDecision(name_number) {
@@ -537,9 +492,9 @@
         this.$store.dispatch('undoDecision', name_number);
 
         // set the undone name choice to the current (actionable) choice
-        if (name_number == 1) this.currentNameObj = this.compName1;
-        if (name_number == 2) this.currentNameObj = this.compName2;
-        if (name_number == 3) this.currentNameObj = this.compName3;
+        if (name_number == 1) this.currentNameObj = this.compName1
+        if (name_number == 2) this.currentNameObj = this.compName2
+        if (name_number == 3) this.currentNameObj = this.compName3
       },
     },
   }
@@ -547,16 +502,10 @@
 
 
 <style scoped>
-  .bg-grey {
-    background-color: var(--xl-grey);
-  }
 
-  .bg-white {
-    background-color: white;
-  }
 
-  .fs-20 {
-    font-size: 20px !important;
+  .examine-search-div:focus-within {
+    box-shadow: 0 0 3px 2px var(--cyan) !important;
   }
 
   .name-option {

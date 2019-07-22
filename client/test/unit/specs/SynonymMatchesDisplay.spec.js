@@ -1,43 +1,40 @@
-/* eslint-disable */
-import Vue from 'vue';
+import Vue from 'vue'
 import store from '@/store'
-import ConflictList from '@/components/application/examine/recipe/conflicts/ConflictList';
+import ConflictList from '@/components/application/examine/recipe/conflicts/ConflictList'
 
-describe('ConflictList.vue synonym matches expand/collapse', () => {
+describe('ConflictList.vue synonym matches', () => {
 
-  let vm;
-  let data;
+  let vm
+  let data
 
-  beforeEach(() => {
-    const Constructor = Vue.extend(ConflictList);
-    vm = new Constructor({store: store}).$mount();
+  beforeEach((done) => {
+    const Constructor = Vue.extend(ConflictList)
+    vm = new Constructor({ store: store }).$mount()
     store.commit('setSynonymMatchesConflicts', {
       names: [
-        {name_info: {name: 'first title - meta'}, stems: []},
-        {name_info: {name: 'first match', source: 'CORP'}, stems: []},
-        {name_info: {name: 'second title - meta'}, stems: []},
-        {name_info: {name: 'second match', source: 'CORP'}, stems: []},
-        {name_info: {name: 'second match #2', source: 'CORP'}, stems: []},
-        {name_info: {name: 'third title - meta'}, stems: []},
-        {name_info: {name: 'third match', source: 'CORP'}, stems: []},
-        {name_info: {name: 'third match #2', source: 'CORP'}, stems: []},
-      ]
+        { name_info: { name: 'first title - meta' }, stems: [] },
+        { name_info: { name: 'first match', source: 'CORP' }, stems: [] },
+        { name_info: { name: 'second title - meta' }, stems: [] },
+        { name_info: { name: 'second match', source: 'CORP' }, stems: [] },
+        { name_info: { name: 'second match #2', source: 'CORP' }, stems: [] },
+        { name_info: { name: 'third title - meta' }, stems: [] },
+        { name_info: { name: 'third match', source: 'CORP' }, stems: [] },
+        { name_info: { name: 'third match #2', source: 'CORP' }, stems: [] },
+      ],
     })
-    data = vm.$store.getters.synonymMatchesConflicts
+    setTimeout(() => { done() }, 3000)
   })
 
-  it('is available', () => {
-    vm.expand_collapse({text: 'SECOND TITLE'}, 'synonym');
-    expect(data[2].class).toEqual('conflict-synonym-title collapsible expanded');
-    expect(data[3].class).toEqual('conflict-result conflict-result-displayed');
-    expect(data[4].class).toEqual('conflict-result conflict-result-displayed');
-  });
-  it('toggles as expected', () => {
-    vm.expand_collapse({text: 'SECOND TITLE'}, 'synonym');
-    vm.expand_collapse({text: 'SECOND TITLE'}, 'synonym');
-
-    expect(data[2].class).toEqual('conflict-synonym-title collapsible collapsed');
-    expect(data[3].class).toEqual('conflict-result conflict-result-hidden');
-    expect(data[4].class).toEqual('conflict-result conflict-result-hidden');
+  it('all the items in the array are conflict-synonym-titles', () => {
+    data = vm.$store.state.parsedSynonymConflicts
+    expect(data.every(title => title.class === 'conflict-synonym-title')).toBeTruthy()
+  })
+  it('every child conflict is a conflict result', () => {
+    data = vm.$store.state.parsedSynonymConflicts
+    expect(data.every(title => title.children.every(child => child.class === 'conflict-result'))).toBeTruthy()
+  })
+  it('includes counts correctly', () => {
+    data = vm.$store.state.parsedSynonymConflicts
+    expect(data.every(title => title.count === title.children.length)).toBeTruthy()
   })
 })

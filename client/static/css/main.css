@@ -28,12 +28,12 @@ textarea {
   resize: none !important;
 }
 
-html,
-body {
+
+html {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden !important;
+  overflow: auto;
 }
 
 #admin::before {
@@ -51,7 +51,7 @@ body {
 
 #app {
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow: inherit;
   padding-bottom: 0;
 }
 
@@ -80,8 +80,29 @@ body {
   color: var(--grey) !important;
 }
 
+.c-gold {
+  color: var(--gold) !important;
+}
+
 .c-link {
   color: var(--link) !important;
+}
+
+.bg-grey {
+  background-color: var(--xl-grey);
+}
+
+.bg-white {
+  background-color: white;
+}
+
+.fs-20 {
+  font-size: 20px !important;
+}
+
+.fs-24 {
+  font-size: 24px;
+  font-weight: 600;
 }
 
 .c-priority {
@@ -188,6 +209,9 @@ body {
   background-color: var(--xl-grey) !important;
 }
 
+#find-filter .v-list__tile__title {
+  font-size: 13px !important;
+}
 
 /* overrides of vuetify styles */
 .application {
@@ -200,6 +224,10 @@ body {
 
 .theme--light.v-table tbody tr[active] {
   background-color: var(--xl-cyan) !important;
+}
+
+.theme--light.v-input--is-disabled textarea {
+  color: var(--text) !important;
 }
 
 .message-to-request .v-messages {
@@ -250,11 +278,21 @@ body {
   font-weight: 400 !important;
 }
 
-.v-table__overflow {
+not(#find-filter, #stats-viewer) .v-table__overflow {
   overflow-x: hidden !important;
   overflow-y: auto !important;
   height: 450px !important;
   max-height: 450px !important;
+}
+
+/*min height to allow v-select's in table header not to get cut off when few
+ items returned in search */
+#find-filter .v-table__overflow {
+  min-height: 400px !important;
+}
+
+#stats-viewer .v-table__overflow {
+  min-height: 400px !important;
 }
 
 .v-input__slot:after, .v-input__slot:before {
@@ -326,10 +364,12 @@ body {
 
 .stem-highlight {
   color: #28A745;
+  font-weight: 700 !important;
 }
 
 .synonym-stem-highlight {
   color: #E0A800;
+  font-weight: 700 !important;
 }
 
 html, body {

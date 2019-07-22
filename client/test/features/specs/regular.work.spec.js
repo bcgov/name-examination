@@ -8,7 +8,6 @@ import {
   openNameExamination,
   accessConditionsTab,
   selectCondition,
-  accessDecisionScreen,
   conditionalyApprove,
   getNext,
 } from './activities';
@@ -48,8 +47,6 @@ defineFeature(feature, test => {
 
         selectCondition(given, data)
 
-        accessDecisionScreen(when, data)
-
         heSeesTheSelectedConditionInDecisionScreen(then, data)
 
         conditionalyApprove(when, data)
@@ -58,9 +55,7 @@ defineFeature(feature, test => {
 
 
         getNext(when, data)
-
-        accessDecisionScreen(when, data)
-
+      
         heSeesConditionListIsEmpty(then, data)
 
         conditionalyApprove(when, data)

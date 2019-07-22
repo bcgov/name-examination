@@ -1,42 +1,30 @@
-/* eslint-disable */
-import Vue from 'vue';
+import Vue from 'vue'
 import store from '@/store'
-import ConflictList from '@/components/application/Examine/Recipe/conflicts/ConflictList';
+import ConflictList from '@/components/application/Examine/Recipe/conflicts/ConflictList'
 
-describe('ConflictList.vue phonetic matches expand/collapse', () => {
-
-  let vm
-  let data
+describe('ConflictList.vue phonetic matches titles and children classes', () => {
+  const Constructor = Vue.extend(ConflictList)
+  const vm = new Constructor({ store: store }).$mount()
 
   beforeEach(() => {
-    const Constructor = Vue.extend(ConflictList);
-    vm = new Constructor({store: store}).$mount();
-    store.commit('setPhoneticConflicts', {
-      names: [
-        {name_info: {name: 'first title'}, stems: []},
-        {name_info: {name: 'first match', source: 'CORP'}, stems: []},
-        {name_info: {name: 'second title'}, stems: []},
-        {name_info: {name: 'second match', source: 'CORP'}, stems: []},
-        {name_info: {name: 'second match #2', source: 'CORP'}, stems: []},
-        {name_info: {name: 'third title'}, stems: []},
-        {name_info: {name: 'third match', source: 'CORP'}, stems: []},
-        {name_info: {name: 'third match #2', source: 'CORP'}, stems: []},
-      ]
+    vm.$store.commit('setPhoneticConflicts', {
+      names: [ { name_info: { name: 'first title' }, stems: [] },
+        { name_info: { name: 'first match', source: 'CORP' }, stems: [] },
+        { name_info: { name: 'second title' }, stems: [] },
+        { name_info: { name: 'second match', source: 'CORP' }, stems: [] },
+        { name_info: { name: 'second match #2', source: 'CORP' }, stems: [] },
+        { name_info: { name: 'third title' }, stems: [] },
+        { name_info: { name: 'third match', source: 'CORP' }, stems: [] },
+        { name_info: { name: 'third match #2', source: 'CORP' }, stems: [] } ],
     })
-    data = vm.$store.getters.phoneticConflicts
   })
 
-  it('is available', () => {
-
-    expect(data[2].class).toEqual('conflict-phonetic-title collapsible collapsed')
-    expect(data[3].class).toEqual('conflict-result conflict-result-hidden')
-    expect(data[4].class).toEqual('conflict-result conflict-result-hidden')
-  })
-  it('toggles as expected', () => {
-    vm.expand_collapse({text: 'second title'}, 'phonetic')
-
-    expect(data[2].class).toEqual('conflict-phonetic-title collapsible expanded')
-    expect(data[3].class).toEqual('conflict-result conflict-result-displayed')
-    expect(data[4].class).toEqual('conflict-result conflict-result-displayed')
+  it('renders correctly', () => {
+    let data = vm.$store.state.parsedPhoneticConflicts
+    expect(data[0].class).toEqual('conflict-phonetic-title')
+    expect(data[1].class).toEqual('conflict-phonetic-title')
+    expect(data[1].count).toEqual(2)
+    expect(data[0].children[0].class).toEqual('conflict-result')
+    expect(data[2].count).toEqual(2)
   })
 })

@@ -1,56 +1,123 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CorpMatch.vue renders a CorpMatch component 1`] = `
-<span>
-  <h3
-    class="corpType"
+<v-container-stub
+  align-start=""
+  fluid=""
+  pb-3=""
+  pl-4=""
+  pt-0=""
+  tag="div"
+>
+  <v-layout-stub
+    align-items-start=""
+    tag="div"
   >
-    BC Corporation
-  </h3>
-   
-  <h3>
-    Incorporation Number
-  </h3>
-   
-  <p>
-    
-  </p>
-   
-  <h3>
-    Incorporation Date
-  </h3>
-   
-  <p>
-    
-  </p>
-   
-  <h3>
-    Directors
-  </h3>
-    
-  <h3>
-    Jurisdiction
-  </h3>
-   
-  <p>
-    
-  </p>
-   
-  <h3>
-    Nature Of Business
-  </h3>
-   
-  <p>
-    
-  </p>
-   
-  <h3>
-    Records Office Delivery Address
-  </h3>
-    
-  <h3>
-    Registered Office Delivery Address
-  </h3>
-   
-</span>
+    <v-layout-stub
+      align-items-start=""
+      tag="div"
+      wrap=""
+    >
+      <v-flex-stub
+        item-heading=""
+        lg5=""
+        tag="div"
+      >
+        Type:
+      </v-flex-stub>
+       
+      <v-flex-stub
+        lg7=""
+        tag="div"
+      >
+        BC Corporation
+      </v-flex-stub>
+       
+      <v-flex-stub
+        item-heading=""
+        lg5=""
+        mt-3=""
+        tag="div"
+      >
+        Corp Number:
+      </v-flex-stub>
+       
+      <v-flex-stub
+        lg7=""
+        mt-3=""
+        tag="div"
+      >
+        
+      </v-flex-stub>
+       
+      <v-flex-stub
+        item-heading=""
+        lg5=""
+        mt-3=""
+        tag="div"
+      >
+        Directors
+      </v-flex-stub>
+       
+      <v-flex-stub
+        lg7=""
+        mt-3=""
+        tag="div"
+      />
+       
+      <v-flex-stub
+        item-heading=""
+        lg5=""
+        mt-3=""
+        tag="div"
+      >
+        Nature Of Business
+      </v-flex-stub>
+       
+      <v-flex-stub
+        lg7=""
+        mt-3=""
+        tag="div"
+      >
+        
+      </v-flex-stub>
+    </v-layout-stub>
+     
+    <v-layout-stub
+      align-items-start=""
+      tag="div"
+      wrap=""
+    >
+      <v-flex-stub
+        item-heading=""
+        lg5=""
+        tag="div"
+      >
+        Records Office Delivery Address:
+      </v-flex-stub>
+       
+      <v-flex-stub
+        lg7=""
+        pl-2=""
+        tag="div"
+      />
+       
+      <v-flex-stub
+        item-heading=""
+        lg5=""
+        mt-3=""
+        tag="div"
+      >
+        Registered Office Delivery Address:
+      </v-flex-stub>
+       
+      <v-flex-stub
+        lg7=""
+        mt-3=""
+        pl-2=""
+        tag="div"
+      />
+    </v-layout-stub>
+  </v-layout-stub>
+</v-container-stub>
 `;
