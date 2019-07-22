@@ -74,7 +74,7 @@
 </template>
 
 <script>
-  /* eslint-disable */
+/* eslint-disable */
 
   import internalcomments from "@/components/application/Examine/InternalComments.vue";
   import Multiselect from 'vue-multiselect';
