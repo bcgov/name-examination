@@ -66,7 +66,7 @@
 </template>
 
 <script>
-  /* eslint-disable */
+/* eslint-disable */
   import ConditionsInfo from '@/components/application/Examine/Recipe/conditions/ConditionsInfo'
   import ConflictList from '@/components/application/Examine/Recipe/conflicts/ConflictList'
   import HistoryList from '@/components/application/Examine/Recipe/history/HistoryList'

@@ -302,7 +302,7 @@
 </template>
 
 <script>
-  /* eslint-disable */
+/* eslint-disable */
   import ActionButtons from './ActionButtons'
   import ClientInfoHeader from '@/components/application/Examine/client/ClientInfoHeader.vue'
   import InfoHeaderPopup from './InfoHeaderPopup'

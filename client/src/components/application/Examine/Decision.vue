@@ -249,7 +249,7 @@
 </template>
 
 <script>
-  /* eslint-disable */
+/* eslint-disable */
   import Vue from 'vue'
   import { mapGetters } from 'vuex'
 
