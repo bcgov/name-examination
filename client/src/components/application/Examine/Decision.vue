@@ -539,21 +539,25 @@
       nameAcceptReject() {
         let { decision_made, currentNameObj, selectedConflicts } = this
         if ( decision_made == 'APPROVED' ) {
-          currentNameObj.state = this.acceptance_will_be_conditional ? 'CONDITION' : 'APPROVED'
           // if there were conflicts selected but this is an approval, this will result in
           // accidental "rejected due to conflict" messaging. Remove it by clearing the selected
           // conflicts (Issue #767).
           // Do NOT clear the conflicts if the "Consent Required" condition is also set - then it's
           // intentional.
-          if (this.consent_required_by_user) {
-            selectedConflicts = []
+          if (this.acceptance_will_be_conditional) {
+            currentNameObj.state = 'CONDITION'
+          } else {
+            currentNameObj.state = 'APPROVED'
+            this.selectedConflicts = []
           }
         } else {
           currentNameObj.state = 'REJECTED'
+        }
+        if (selectedConflicts && selectedConflicts.length > 0) {
           //populate the currentNameObj[1, 2 and 3] with selectedConflicts[0, 1, and 2]
           //as well as currentNameObj[1, 2, and 3]_num with selectedConflicts[0, 1 and 2].nrNumber
           for ( let n of [0, 1, 2] ) {
-            if ( !selectedConflicts[n] ) break
+            if ( !selectedConflicts[n]  ) break
             currentNameObj[`conflict${ n + 1 }`] = selectedConflicts[n].text
             currentNameObj[`conflict${ n + 1 }_num`] = selectedConflicts[n].nrNumber
           }
