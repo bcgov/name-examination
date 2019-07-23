@@ -57,9 +57,22 @@ exports[`Stats.vue renders a Stats component 1`] = `
       <div
         class="col"
       >
-        <bpagination-stub
+        <b-pagination-stub
+          align="left"
+          arialabel="Pagination"
           current-page="1"
+          ellipsistext="…"
+          firsttext="«"
+          labelfirstpage="Go to first page"
+          labellastpage="Go to last page"
+          labelnextpage="Go to next page"
+          labelpage="Go to page"
+          labelprevpage="Go to previous page"
+          lasttext="»"
+          limit="5"
+          nexttext="›"
           perpage="50"
+          prevtext="‹"
           size="md"
           v-model="1"
         />
@@ -69,21 +82,24 @@ exports[`Stats.vue renders a Stats component 1`] = `
     <div
       class="b-table"
     >
-      <btable-stub
+      <b-table-stub
         apiurl=""
         currentpage="1"
         emptyfilteredtext="There are no records matching your request"
         emptytext="There are no records to show"
         fields="[object Object],[object Object],[object Object],[object Object],[object Object]"
-        footvariant=""
-        headvariant=""
         hover="true"
         items="function () { [native code] }"
         labelsortasc="Click to sort Ascending"
+        labelsortclear="Click to clear sorting"
         labelsortdesc="Click to sort Descending"
         perpage="50"
         responsive="true"
+        selectedvariant="primary"
+        selectmode="multi"
         showempty="true"
+        sortby=""
+        sortcompareoptions="[object Object]"
         sortdirection="asc"
         striped="true"
         value=""

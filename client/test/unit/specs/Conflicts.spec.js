@@ -4,7 +4,11 @@ import {createApiSandbox, sinon} from '../../features/specs/support/api.stubs'
 import Vue from 'vue';
 import Vuelidate from 'vuelidate'
 import Datatable from 'vue2-datatable-component'
+import { Plugin } from 'vue-fragment'
+import Vuetify from 'vuetify'
 
+Vue.use(Plugin)
+Vue.use(Vuetify)
 Vue.use(Vuelidate)
 Vue.use(require('vue-shortkey'))
 Vue.use(Datatable)
@@ -96,8 +100,7 @@ describe('Conflicts', () => {
     })
 
     it('does NOT change conflicts tab to red', () => {
-      expect(document.getElementById('Conflict1').className).toEqual('icon icon-pass')
-      expect(document.getElementById('Conflict2').className).toEqual('fa fa-check')
+      expect(document.getElementById('conflicts1').className).toMatch('c-accepted')
     })
 
     it('defaults tab to green', (done) => {
@@ -118,8 +121,7 @@ describe('Conflicts', () => {
         sessionStorage.setItem('AUTHORIZED', true)
         router.push('/nameExamination')
         setTimeout(() => {
-          expect(document.getElementById('Conflict1').className).toEqual('icon icon-pass')
-          expect(document.getElementById('Conflict2').className).toEqual('fa fa-check')
+          expect(document.getElementById('conflicts1').className).toMatch('c-accepted')
           done();
         }, 1000)
       }, 1000)

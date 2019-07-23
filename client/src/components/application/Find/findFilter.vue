@@ -326,11 +326,10 @@ export default {
       return [];
     },
     loadNR(event) {
-      console.log(event);
+
       // check if this is a body row (ie: in tbody)
 
       var row = $(event.target).closest('tr')[0];
-      console.log()
       if (row !== undefined) {
 
        if (row.parentNode.tagName == 'TBODY') {
@@ -483,13 +482,13 @@ export default {
   watch: {
 
     searchData: function (val) {
-      console.log('searchData watcher fired: ', val);
+
       this.total = val.response.numFound;
       this.pageNumbers = this.buildPages();
       this.data = this.populateTable(val);
     },
     stateSort: function (val) {
-      console.log('stateSort watcher fired: ', val);
+
       this.currentStateSort = val;
       if (val === 'ALL') {
         val = '';
@@ -497,28 +496,28 @@ export default {
       this.updateQuery('queue', val);
     },
     nrSearch: function (val) {
-      console.log('nrSearch watcher fired: ', val);
+
       this.currentNrSearch = val;
       this.updateQuery('nrNum', val);
     },
     username: function (val) {
-      console.log('username watcher fired: ', val);
+
       this.currentUsername = val;
       this.updateQuery('activeUser', val);
     },
     compName: function (val) {
-      console.log('compName watcher fired: ', val);
+
       this.currentCompName = val;
       this.updateQuery('compName', val);
     },
     perPage: function (val) {
-      console.log('perPage watcher fired: ', val);
+
       this.pageNumbers = this.buildPages();
       this.currentPerPage = val;
       this.updateQuery('rows',val);
     },
     currentPage: function (val) {
-      console.log('currentPage watcher fired: ', val);
+
       if (val === 1) {
         $('#previous').prop('disabled', true);
         $('next').prop('disabled', false);
@@ -533,22 +532,22 @@ export default {
       this.updateQuery('start',(val-1)*this.perPage);
     },
     ranking: function (val) {
-      console.log('ranking watcher fired: ', val);
+
       this.currentRanking = val;
       this.updateQuery('ranking',val);
     },
     notification: function (val) {
-      console.log('notification watcher fired: ', val);
+
       this.currentNotification = val;
       this.updateQuery('notification',val);
     },
     submittedInterval: function (val) {
-      console.log('submittedInterval watcher fired: ', val);
+
       this.currentSubmittedInterval = val;
       this.updateQuery('submittedInterval',val);
     },
     lastUpdateInterval: function (val) {
-      console.log('lastUpdateInterval watcher fired: ', val);
+
       this.currentLastUpdatedInterval = val;
       this.updateQuery('lastUpdateInterval',val);
     }

@@ -36,18 +36,21 @@
           <!--APPLICANT INFORMATION HEADING-->
           <v-flex lg12 field>
             <v-text-field class="applicant-info-field"
+                          id="applicant-first-name"
                           v-model="firstName"
                           placeholder="First name"
                           maxlength="200" />
           </v-flex>
           <v-flex lg12 field>
             <v-text-field class="applicant-info-field"
+                          id="applicant-middle-name"
                           placeholder="Middle name"
                           v-model="middleName"
                           maxlength="200" />
           </v-flex>
           <v-flex lg12 section>
             <v-text-field class="applicant-info-field"
+                          id="applicant-last-name"
                           v-model="lastName"
                           placeholder="Last name"
                           maxlength="200" />
@@ -56,7 +59,7 @@
           <v-flex lg12 label>Client:</v-flex>
           <v-flex lg12 field>
             <v-text-field class="input-box-editing"
-                          id="firstName1"
+                          id="client-first-name"
                           v-model="clientFirstName"
                           placeholder="First name"
                           maxlength="200" />
@@ -64,52 +67,52 @@
           <v-flex lg12 section>
             <v-text-field class="input-box-editing"
                           v-model="clientLastName"
-                          id="lastName1"
+                          id="client-last-name"
                           placeholder="Last name"
                           maxlength="200" />
           </v-flex>
           <!--ADDRESS: LINES-->
           <v-flex lg12 label>Address:</v-flex>
           <v-flex lg12 field>
-            <v-text-field class="applicant-info-field" v-model="addressLine1" maxlength="200" />
+            <v-text-field id="address-line1" class="applicant-info-field" v-model="addressLine1" maxlength="200" />
           </v-flex>
           <v-flex lg12 field>
-            <v-text-field class="applicant-info-field" v-model="addressLine2" maxlength="200" />
+            <v-text-field id="address-line2" class="applicant-info-field" v-model="addressLine2" maxlength="200" />
           </v-flex>
           <v-flex lg12 field>
-            <v-text-field class="applicant-info-field" v-model="addressLine3" maxlength="200" />
+            <v-text-field id="address-line3" class="applicant-info-field" v-model="addressLine3" maxlength="200" />
           </v-flex>
           <!--ADDRESS: CITY / PROVINCE-->
           <v-flex lg9 field-inline>
-            <v-text-field class="applicant-info-field" v-model="city" maxlength="200" />
+            <v-text-field id="address-city" class="applicant-info-field" v-model="city" maxlength="200" />
           </v-flex>
           <v-flex lg3 field>
-            <v-text-field class="applicant-info-field" v-model="province" maxlength="2" />
+            <v-text-field id="address-province" class="applicant-info-field" v-model="province" maxlength="2" />
           </v-flex>
           <!--ADDRESS: POSTAL CODE / COUNTRY-->
           <v-flex lg9 field-inline>
-            <v-text-field class="applicant-info-field" v-model="postalCode" maxlength="20" />
+            <v-text-field id="address-postal" class="applicant-info-field" v-model="postalCode" maxlength="20" />
           </v-flex>
           <v-flex lg3 section>
-            <v-text-field class="applicant-info-field" v-model="country" maxlength="2" />
+            <v-text-field id="address-country" class="applicant-info-field" v-model="country" maxlength="2" />
           </v-flex>
           <!--INLINE CONTACT HEADINGS-->
           <v-flex lg2 align-self-center inline-label>Phone:</v-flex>
           <v-flex lg10 pa-0 pl-1 ma-0>
-            <v-text-field class="applicant-info-field" v-model="phone" maxlength="30" />
+            <v-text-field id="applicant-phone" class="applicant-info-field" v-model="phone" maxlength="30" />
           </v-flex>
           <v-flex lg2 align-self-center inline-label>Fax:</v-flex>
           <v-flex lg10 pa-0 pl-1 ma-0>
-            <v-text-field class="applicant-info-field" v-model="fax" maxlength="30" />
+            <v-text-field id="applicant-fax" class="applicant-info-field" v-model="fax" maxlength="30" />
           </v-flex>
           <v-flex lg2 align-self-center inline-label>Email:</v-flex>
           <v-flex lg10 pa-0 pl-1 ma-0>
-            <v-text-field id="email1" class="applicant-info-field" v-model="conEmail" maxlength="75" />
+            <v-text-field id="applicant-email" class="applicant-info-field" v-model="conEmail" maxlength="75" />
           </v-flex>
           <!--CONTACT HEADING-->
           <v-flex lg12 label field mt-1>Contact:</v-flex>
           <v-flex lg12 pa-0 ma-0>
-            <v-text-field id="firstName1C" class="applicant-info-field" v-model="contactName" maxlength="200" />
+            <v-text-field id="contact-full-name" class="applicant-info-field" v-model="contactName" maxlength="200" />
           </v-flex>
           <v-layout justify-start row mt-4 pl-3>
             <v-flex>

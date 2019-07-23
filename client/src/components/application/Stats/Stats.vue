@@ -133,7 +133,7 @@ export default {
         this.$refs.table.refresh();
     },
     getPagedStats(ctx) {
-      
+
         this.requests = null;
         if (this.currentPage === 0) this.currentPage = 1
 
@@ -182,15 +182,9 @@ export default {
         return new Date(thedate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
     },
     pageChanged(page) {
-      console.log("Page changed", page)
       this.currentPage = page
     }
   },
-  watch: {
-    currentPage: function(val) {
-      console.log("CURRENT PAGE CHANGED: ", val)
-    }
-  }
 }
 </script>
 

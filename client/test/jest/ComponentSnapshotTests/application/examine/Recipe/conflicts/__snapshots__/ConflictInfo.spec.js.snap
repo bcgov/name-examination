@@ -1,27 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ConflictInfo.vue renders a ConflictInfo component 1`] = `
-<div>
-  <div
-    class="container-fluid"
+<v-container-stub
+  tag="div"
+>
+  <spinner-stub
+    classname="conflict-detail-spinner hidden"
+  />
+   
+  <v-layout-stub
+    conflict-info-view=""
+    tag="div"
   >
-    <div
-      class="row ConflictInfo"
+    <v-flex-stub
+      tag="div"
     >
-      <spinner-stub
-        classname="conflict-detail-spinner hidden"
-      />
-       
-      <div
-        class="col conflict-info-view"
-      >
-        <div
-          class="add-top-padding"
-        >
-          <nullmatch-stub />
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+      <nullmatch-stub />
+    </v-flex-stub>
+  </v-layout-stub>
+</v-container-stub>
 `;

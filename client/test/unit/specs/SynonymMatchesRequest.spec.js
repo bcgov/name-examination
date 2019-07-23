@@ -18,8 +18,8 @@ describe('store > checkManualSynonymMatches', () => {
   it('replaces the plus with a space', () => {
     store.dispatch('checkManualSynonymMatches', {searchStr:'+dog+cat + fish+', exactPhrase:''})
     // let lastCallList = SynonymMatch.lastCall
-    // console.log(lastCallList)
-    // console.log(lastCallList.args)
+    //
+    //
     expect(SynonymMatch.lastCall.args[0]).toEqual('/api/v1/requests/synonymbucket/ dog cat   fish /*')
   })
 

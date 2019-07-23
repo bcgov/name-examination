@@ -229,7 +229,6 @@
     },
     methods: {
       adjustUponSave() {
-        console.log('got to adjustUponSave() for ' + this.jurisdiction);
 
         // only adjust data if this is a do-it-for-me request
         if (!this.nwpta_requested) return;
@@ -262,7 +261,6 @@
 
           this.nwpta.partnerName = null;
         }
-        console.log('got to END OF adjustUponSave() for ' + this.jurisdiction);
       }
     },
   }

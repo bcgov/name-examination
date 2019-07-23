@@ -1,15 +1,82 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TrademarksInfo.vue renders a TrademarksInfo component 1`] = `
-<span>
+<v-container-stub
+  conditions-container=""
+  fluid=""
+  ma-0=""
+  pa-0=""
+  tag="div"
+>
   <spinner-stub
     classname="trademarks-spinner hidden"
   />
    
-  <span
+  <v-layout-stub
     id="trademarks-wrapper"
+    tag="div"
   >
-    <!---->
-  </span>
-</span>
+    <v-flex-stub
+      tag="div"
+    >
+      <v-data-table-stub
+        class="conditions-table-style"
+        customfilter="function _default(items, search, filter, headers) {
+                search = search.toString().toLowerCase();
+                if (search.trim() === '') return items;
+                var props = headers.map(function (h) {
+                    return h.value;
+                });
+                return items.filter(function (item) {
+                    return props.some(function (prop) {
+                        return filter(Object(_util_helpers__WEBPACK_IMPORTED_MODULE_7__[\\"getObjectValueByPath\\"])(item, prop, item[prop]), search);
+                    });
+                });
+            }"
+        customsort="function _default(items, index, isDescending) {
+                if (index === null) return items;
+                return items.sort(function (a, b) {
+                    var _a, _b;
+                    var sortA = Object(_util_helpers__WEBPACK_IMPORTED_MODULE_6__[\\"getObjectValueByPath\\"])(a, index);
+                    var sortB = Object(_util_helpers__WEBPACK_IMPORTED_MODULE_6__[\\"getObjectValueByPath\\"])(b, index);
+                    if (isDescending) {
+                        _a = __read([sortB, sortA], 2), sortA = _a[0], sortB = _a[1];
+                    }
+                    // Check if both are numbers
+                    if (!isNaN(sortA) && !isNaN(sortB)) {
+                        return sortA - sortB;
+                    }
+                    // Check if both cannot be evaluated
+                    if (sortA === null && sortB === null) {
+                        return 0;
+                    }
+                    _b = __read([sortA, sortB].map(function (s) {
+                        return (s || '').toString().toLocaleLowerCase();
+                    }), 2), sortA = _b[0], sortB = _b[1];
+                    if (sortA > sortB) return 1;
+                    if (sortA < sortB) return -1;
+                    return 0;
+                });
+            }"
+        filter="function _default(val, search) {
+                return val != null && typeof val !== 'boolean' && val.toString().toLowerCase().indexOf(search) !== -1;
+            }"
+        headers="[object Object],[object Object],[object Object]"
+        headertext="text"
+        hideactions="true"
+        id="Trademarks"
+        itemkey="id"
+        items=""
+        nexticon="$vuetify.icons.next"
+        nodatatext="$vuetify.noDataText"
+        noresultstext="$vuetify.dataIterator.noResultsText"
+        previcon="$vuetify.icons.prev"
+        rowsperpageitems="5,10,25,[object Object]"
+        rowsperpagetext="$vuetify.dataTable.rowsPerPageText"
+        sorticon="$vuetify.icons.sort"
+        value=""
+      />
+    </v-flex-stub>
+  </v-layout-stub>
+</v-container-stub>
 `;

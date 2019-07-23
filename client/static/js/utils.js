@@ -24,7 +24,7 @@ function readJFile(configUrl, cBack) {
 }
 
 function readCsv(csvFile, callback) {
-  console.log('got to readCsv()');
+  
 
   if (csvFile) {
     var req = new XMLHttpRequest();

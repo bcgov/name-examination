@@ -2,7 +2,6 @@ import http from 'http';
 import fs from 'fs';
 
 let server = http.createServer((request, response)=>{
-    console.log(request.method, request.url);
     response.setHeader('Access-Control-Allow-Origin', '*')
     if ('/static/config/configuration.json' == request.url) {
         response.write(JSON.stringify([{ URL:'' }]))

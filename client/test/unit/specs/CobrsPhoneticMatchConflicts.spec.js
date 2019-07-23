@@ -190,8 +190,7 @@ describe('CobrsPhoneticMatches', () => {
         sessionStorage.setItem('AUTHORIZED', true)
         router.push('/nameExamination')
         setTimeout(() => {
-          expect(document.getElementById('Conflict1').className).toEqual('icon icon-fail')
-          expect(document.getElementById('Conflict2').className).toEqual('fa fa-times')
+          expect(document.getElementById('conflicts1').className).toMatch('c-priority')
           done();
         }, 1000)
       }, 1000)
@@ -236,8 +235,7 @@ describe('CobrsPhoneticMatches', () => {
         sessionStorage.setItem('AUTHORIZED', true)
         router.push('/nameExamination')
         setTimeout(() => {
-          expect(document.getElementById('Conflict1').className).toEqual('icon icon-pass')
-          expect(document.getElementById('Conflict2').className).toEqual('fa fa-check')
+          expect(document.getElementById('conflicts1').className).toMatch('c-accepted')
           done();
         }, 1000)
       }, 1000)

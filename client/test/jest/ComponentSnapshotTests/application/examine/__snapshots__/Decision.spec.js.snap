@@ -1,264 +1,430 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Decision.vue renders a Decision view 1`] = `
-<span>
-  <div
-    class="row"
+<v-container-stub
+  decision-container=""
+  fluid=""
+  pa-0=""
+  px-5=""
+  tag="div"
+>
+  <v-layout-stub
+    justify-content-between=""
+    tag="div"
+    wrap=""
   >
-    <div
-      class="col-6 add-top-padding"
+    <v-flex-stub
+      fs-24=""
+      lg6=""
+      tag="div"
     >
-      <h3>
-        Conditions
-      </h3>
-       
-      <div
-        id="decision-conditions-dropdown"
-      >
-        <multiselect-stub
-          close-on-select="true"
-          custom-label="function () { [native code] }"
-          deselectgrouplabel="Press enter to deselect group"
-          deselectlabel=""
-          limit="99999"
-          limittext="function(t){return\\"and \\".concat(t,\\" more\\")}"
-          maxheight="300"
-          multiple="true"
-          name="phrase"
-          opendirection=""
-          options="[object Object]"
-          placeholder=""
-          selectedlabel=""
-          selectgrouplabel="Press enter to select group"
-          selectlabel=""
-          showlabels="true"
-          shownooptions="true"
-          shownoresults="true"
-          tabindex="0"
-          track-by="phrase"
-        />
-      </div>
-    </div>
+      Decision
+    </v-flex-stub>
      
-    <div
-      class="col-6 add-top-padding"
-    >
-      <h3>
-        Conflicts
-      </h3>
-       
-      <multiselect-stub
-        close-on-select="true"
-        custom-label="function () { [native code] }"
-        deselectgrouplabel="Press enter to deselect group"
-        deselectlabel=""
-        limit="99999"
-        limittext="function(t){return\\"and \\".concat(t,\\" more\\")}"
-        max="3"
-        maxheight="300"
-        multiple="true"
-        name=""
-        opendirection=""
-        options=""
-        placeholder=""
-        selectedlabel=""
-        selectgrouplabel="Press enter to select group"
-        selectlabel=""
-        showlabels="true"
-        shownooptions="true"
-        shownoresults="true"
-        tabindex="0"
-        track-by="nrNumber"
-      />
-    </div>
-  </div>
-   
-  <div
-    class="row"
-  >
-    <div
-      class="col-6 add-top-padding"
-    >
-      <h3>
-        Generic Rejection Reason (label TBD)
-      </h3>
-       
-      <multiselect-stub
-        close-on-select="true"
-        deselectgrouplabel="Press enter to deselect group"
-        deselectlabel=""
-        label="name"
-        limit="99999"
-        limittext="function(t){return\\"and \\".concat(t,\\" more\\")}"
-        maxheight="300"
-        multiple="true"
-        name=""
-        opendirection=""
-        placeholder=""
-        selectedlabel=""
-        selectgrouplabel="Press enter to select group"
-        selectlabel=""
-        showlabels="true"
-        shownooptions="true"
-        shownoresults="true"
-        tabindex="0"
-        track-by="name"
-      />
-    </div>
-     
-    <div
-      class="col-6 add-top-padding"
-    >
-      <h3>
-        Trademarks
-      </h3>
-       
-      <div>
-        <multiselect-stub
-          close-on-select="true"
-          custom-label="function () { [native code] }"
-          deselectgrouplabel="Press enter to deselect group"
-          deselectlabel=""
-          limit="99999"
-          limittext="function(t){return\\"and \\".concat(t,\\" more\\")}"
-          maxheight="300"
-          multiple="true"
-          name="name"
-          opendirection=""
-          options=""
-          placeholder=""
-          selectedlabel=""
-          selectgrouplabel="Press enter to select group"
-          selectlabel=""
-          showlabels="true"
-          shownooptions="true"
-          shownoresults="true"
-          tabindex="0"
-          track-by="name"
-        />
-      </div>
-    </div>
-  </div>
-   
-  <div
-    class="row"
-  >
-    <div
-      class="col add-top-padding"
+    <v-flex-stub
+      grow=""
+      tag="div"
     />
-  </div>
-   
-  <div
-    class="row"
-  >
-    <div
-      class="col add-top-padding"
+     
+    <v-flex-stub
+      shrink=""
+      tag="div"
     >
-      <h3>
-        Message to Requestor
-      </h3>
-       
-      <div
-        class="customer-msg-box"
-      >
-        <pre>
-          
-        </pre>
-      </div>
-       
-      <div
-        class="character_count"
-      >
-        
-        Character count: 0
-        
-        <!---->
-      </div>
-       
-      <a
-        data-target="#edit-customer-message-modal"
-        data-toggle="modal"
-        href="#"
-        id="edit-customer-message-link"
-      >
-        Edit...
-      </a>
-       
-      <!---->
-    </div>
-  </div>
-   
-  <internalcomments-stub
-    layout="decision"
-  />
-   
-  <div
-    class="modal fade"
-    id="edit-customer-message-modal"
-    role="dialog"
-    tabindex="-1"
-  >
-    <div
-      class="modal-dialog modal-lg"
-      role="document"
+      <v-checkbox-stub
+        backgroundcolor=""
+        class="pa-0 ma-0"
+        color="accent"
+        errorcount="1"
+        errormessages=""
+        indeterminateicon="$vuetify.icons.checkboxIndeterminate"
+        light="true"
+        messages=""
+        officon="$vuetify.icons.checkboxOff"
+        onicon="$vuetify.icons.checkboxOn"
+        ripple="true"
+        rules=""
+        successmessages=""
+        valuecomparator="function deepEqual(a, b) {
+    if (a === b) return true;
+    if (a instanceof Date && b instanceof Date) {
+        // If the values are Date, they were convert to timestamp with getTime and compare it
+        if (a.getTime() !== b.getTime()) return false;
+    }
+    if (a !== Object(a) || b !== Object(b)) {
+        // If the values aren't objects, they were already checked for equality
+        return false;
+    }
+    var props = Object.keys(a);
+    if (props.length !== Object.keys(b).length) {
+        // Different number of props, don't bother to check
+        return false;
+    }
+    return props.every(function (p) {
+        return deepEqual(a[p], b[p]);
+    });
+}"
+      />
+    </v-flex-stub>
+     
+    <v-flex-stub
+      fs-15=""
+      shrink=""
+      tag="div"
     >
-      <div
-        class="modal-content"
+      Consent Required
+    
+    </v-flex-stub>
+     
+    <v-flex-stub
+      lg12=""
+      tag="div"
+    >
+      <v-divider-stub />
+    </v-flex-stub>
+     
+    <!---->
+     
+    <v-flex-stub
+      lg6=""
+      tag="div"
+    >
+      <v-layout-stub
+        add-stock-text-col=""
+        tag="div"
+        wrap=""
       >
-        <div
-          class="modal-header"
+        <v-flex-stub
+          id="conditions-select-area"
+          lg12=""
+          tag="div"
         >
-          <h5
-            class="modal-title"
-            id="exampleModalLabel"
+          <p
+            class="fs-15 fw-600"
           >
-            Edit Customer Comments
-          </h5>
+            Conditions
+          </p>
            
-          <button
-            aria-label="Close"
-            class="close"
-            data-dismiss="modal"
-            type="button"
+          <div
+            id="conditions-decision-select-field"
           >
-            <span
-              aria-hidden="true"
+            <v-select-stub
+              attach=""
+              chips=""
+              class="decision-select-style"
+              dense=""
+              height="30"
+              hide-selected=""
+              item-text="phrase"
+              items=""
+              menu-props="[object Object]"
+              multiple="true"
+              return-object=""
+              single-line=""
+              small-chips=""
+              value=""
+            />
+          </div>
+        </v-flex-stub>
+         
+        <v-flex-stub
+          id="conflicts-select-area"
+          lg12=""
+          tag="div"
+        >
+          <p
+            class="fs-15 fw-600"
+          >
+            Conflicts
+          </p>
+           
+          <div
+            id="conflicts-decision-select-field"
+          >
+            <v-select-stub
+              attach=""
+              chips=""
+              class="decision-select-style"
+              dense=""
+              height="30"
+              hide-selected=""
+              items=""
+              menu-props="[object Object]"
+              multiple="true"
+              return-object=""
+              single-line=""
+              small-chips=""
+              value=""
+            />
+          </div>
+        </v-flex-stub>
+         
+        <v-flex-stub
+          data-app=""
+          id="macros-v-flex"
+          lg12=""
+          tag="div"
+        >
+          <p
+            class="fs-15 fw-600"
+          >
+            Macros
+          </p>
+           
+          <div
+            id="macros-decision-select-field"
+          >
+            <v-select-stub
+              attach=""
+              chips=""
+              class="decision-select-style"
+              dense=""
+              height="30"
+              hide-selected=""
+              item-text="name"
+              menu-props="[object Object]"
+              multiple="true"
+              return-object=""
+              small-chips=""
+              value=""
+            />
+          </div>
+        </v-flex-stub>
+         
+        <v-flex-stub
+          data-app=""
+          id="trademarks-v-flex"
+          tag="div"
+        >
+          <p
+            class="fs-15 fw-600"
+          >
+            Trademarks
+          </p>
+           
+          <div
+            id="trademarks-decision-select-field"
+          >
+            <v-select-stub
+              attach=""
+              chips=""
+              class="decision-select-style mb-5"
+              dense=""
+              height="30"
+              hide-selected=""
+              item-text="name"
+              menu-props="[object Object]"
+              multiple="true"
+              return-object=""
+              small-chips=""
+              value=""
+            />
+          </div>
+        </v-flex-stub>
+      </v-layout-stub>
+    </v-flex-stub>
+     
+    <v-flex-stub
+      lg6=""
+      tag="div"
+    >
+      <v-layout-stub
+        column=""
+        tag="div"
+      >
+        <v-flex-stub
+          tag="div"
+        >
+          <div
+            class="decision-flex-holder"
+          >
+            <div
+              class="fs-15 fw-600 ma-0 pa-0"
+              style="position: relative; top: 12px;"
             >
-              ×
-            </span>
-          </button>
-        </div>
+              Message To Requestor
+            </div>
+             
+            <v-btn-stub
+              activeclass="v-btn--active"
+              class="ma-0 pa-0"
+              flat="true"
+              tag="button"
+              type="button"
+            >
+              <img
+                src="/static/images/buttons/edit-button-icon.png"
+              />
+            </v-btn-stub>
+          </div>
+        </v-flex-stub>
          
-        <div
-          class="modal-body"
+        <v-flex-stub
+          mt-2=""
+          pa-2=""
+          pt-3=""
+          tag="div"
+          textarea-outer-v-flex=""
         >
-          <textarea
-            class="form-control"
-            id="edit-customer-message-textarea"
-            rows="10"
+          <v-textarea-stub
+            backgroundcolor=""
+            class="fs-14 pa-0 ma-0"
+            clearicon="$vuetify.icons.clear"
+            color="primary"
+            errorcount="1"
+            errormessages=""
+            flat="true"
+            fullwidth="true"
+            id="decision-msg-preview-area"
+            messages=""
+            rowheight="24"
+            rows="13"
+            rules=""
+            solo="true"
+            successmessages=""
+            type="text"
+            value=""
           />
-        </div>
-         
-        <div
-          class="modal-footer"
-        >
-          <button
-            class="btn btn-sm btn-secondary"
-            data-dismiss="modal"
-            type="button"
-          >
-            Cancel
-          </button>
            
-          <button
-            class="btn btn-sm btn-primary"
-            type="button"
+          <div
+            class="decision-flex-holder"
           >
-            Save
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</span>
+            <div
+              class="grey-text pa-1 ma-1"
+            >
+              Characters Remaining: 955
+            </div>
+             
+            <div>
+              <!---->
+            </div>
+          </div>
+        </v-flex-stub>
+         
+        <v-flex-stub
+          tag="div"
+        >
+          <div
+            class="decision-flex-holder top-margin-12"
+          >
+            <v-btn-stub
+              activeclass="v-btn--active"
+              class="mx-1 pa-0 action-button"
+              flat="true"
+              id="decision-approve-button"
+              tag="button"
+              type="button"
+            >
+              <img
+                src="/static/images/buttons/approve-name.png"
+              />
+            </v-btn-stub>
+             
+            <v-btn-stub
+              activeclass="v-btn--active"
+              class="mx-1 pa-0 action-button"
+              flat="true"
+              id="decision-reject-button"
+              tag="button"
+              type="button"
+            >
+              <img
+                src="/static/images/buttons/reject-name.png"
+              />
+            </v-btn-stub>
+          </div>
+        </v-flex-stub>
+      </v-layout-stub>
+    </v-flex-stub>
+  </v-layout-stub>
+   
+  <v-layout-stub
+    tag="div"
+  >
+    <v-dialog-stub
+      contentclass="opacity-1"
+      maxwidth="none"
+      origin="center center"
+      persistent="true"
+      transition="dialog-transition"
+      width="800"
+    >
+      <v-container-stub
+        tag="div"
+      >
+        <v-layout-stub
+          tag="div"
+        >
+          <v-flex-stub
+            tag="div"
+            textarea-outer-v-flex=""
+          >
+            <v-textarea-stub
+              backgroundcolor=""
+              class="fs-14 pa-0 ma-0"
+              clearicon="$vuetify.icons.clear"
+              color="primary"
+              errorcount="1"
+              errormessages=""
+              flat="true"
+              fullwidth="true"
+              id="decision-msg-edit-field"
+              messages=""
+              rowheight="24"
+              rows="14"
+              rules=""
+              solo="true"
+              style="margin-bottom: 0px;"
+              successmessages=""
+              type="text"
+            />
+             
+            <div
+              class="grey-text fs-14 pl-2"
+            >
+              Characters Remaining: 955
+            </div>
+          </v-flex-stub>
+        </v-layout-stub>
+         
+        <v-layout-stub
+          justify-start=""
+          mt-4=""
+          pl-3=""
+          row=""
+          tag="div"
+        >
+          <v-flex-stub
+            c-link=""
+            tag="div"
+            text-right=""
+          >
+            <v-btn-stub
+              activeclass="v-btn--active"
+              flat="true"
+              id="message-cancel-button"
+              tag="button"
+              type="button"
+            >
+              Cancel
+            </v-btn-stub>
+             
+            <v-btn-stub
+              activeclass="v-btn--active"
+              flat="true"
+              id="message-save-button"
+              tag="button"
+              type="button"
+            >
+              <b
+                style="font-weight: 600;"
+              >
+                Save
+              </b>
+            </v-btn-stub>
+          </v-flex-stub>
+        </v-layout-stub>
+      </v-container-stub>
+    </v-dialog-stub>
+  </v-layout-stub>
+</v-container-stub>
 `;

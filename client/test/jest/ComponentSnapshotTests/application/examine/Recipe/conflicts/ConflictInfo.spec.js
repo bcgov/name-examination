@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { shallowMount } from '@vue/test-utils';
-import ConflictInfo from '@/components/application/Examine/Recipe/conflicts/conflictInfo';
+import ConflictInfo from '@/components/application/Examine/Recipe/conflicts/ConflictInfo';
 import store from '@/store'
 
 describe('ConflictInfo.vue', () => {

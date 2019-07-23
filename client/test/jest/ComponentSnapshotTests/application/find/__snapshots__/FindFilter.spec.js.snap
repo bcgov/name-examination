@@ -244,100 +244,111 @@ exports[`FindFilter.vue renders a FindFilter component 1`] = `
         id="table-options"
         style="display: flex;"
       >
-        <div>
-          <blink-stub
-            activeclass="active"
+        <div
+          style="flex-shrink: 1; align-self: center;"
+        >
+          <b-link-stub
             event="click"
-            exactactiveclass="active"
             id="clear-filter"
             routertag="a"
             target="_self"
           >
             Clear Filters
-          </blink-stub>
+          </b-link-stub>
         </div>
          
-        <div />
+        <div
+          style="flex-grow: 1;"
+        />
          
         <div
           id="pagination"
+          style="flex-shrink: 1;"
         >
           <div
             style="display: flex; justify-content: flex-end;"
           >
             <div
               id="results"
-              style="margin-right: 30px;"
+              style="align-self: center; margin-right: 30px;"
             >
               Results: 0
             </div>
              
             <div
-              style="margin-right: 5px;"
+              style="align-self: center; margin-right: 5px;"
             >
               Display:
             </div>
              
-            <bformselect-stub
+            <b-form-select-stub
+              disabledfield="disabled"
+              htmlfield="html"
               options="5,10,20,50,100"
               selectsize="0"
               style="width: 60px; float: right; margin-right: 10px;"
+              textfield="text"
               value="10"
+              valuefield="value"
             />
              
             <div
-              style="margin-right: 3px;"
+              style="align-self: center; margin-right: 3px;"
             >
               Page:
             </div>
              
-            <bformselect-stub
+            <b-form-select-stub
+              disabledfield="disabled"
+              htmlfield="html"
               options="1"
               selectsize="0"
               style="width: 60px; float: right;"
+              textfield="text"
               value="1"
+              valuefield="value"
             />
              
             <div
-              style="margin: 0px 3px 0px 5px;"
+              style="align-self: center; margin: 0px 3px 0px 5px;"
             >
               of 1
             </div>
              
-            <bbuttongroup-stub
+            <b-button-group-stub
               ariarole="group"
               tag="div"
             >
-              <bbtn-stub
-                activeclass="active"
+              <b-btn-stub
                 event="click"
-                exactactiveclass="active"
                 id="previous"
                 routertag="a"
+                tag="button"
                 target="_self"
                 type="button"
+                variant="secondary"
               >
                 ‹
-              </bbtn-stub>
+              </b-btn-stub>
                
-              <bbtn-stub
-                activeclass="active"
+              <b-btn-stub
                 event="click"
-                exactactiveclass="active"
                 id="next"
                 routertag="a"
+                tag="button"
                 target="_self"
                 type="button"
+                variant="secondary"
               >
                 ›
-              </bbtn-stub>
-            </bbuttongroup-stub>
+              </b-btn-stub>
+            </b-button-group-stub>
           </div>
         </div>
       </div>
     </span>
      
-    <btable-stub
+    <b-table-stub
       apiurl=""
       class="pre-line scroll"
       currentpage="1"
@@ -345,15 +356,18 @@ exports[`FindFilter.vue renders a FindFilter component 1`] = `
       emptytext="There are no records to show"
       fields="[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]"
       fixed="true"
-      footvariant=""
-      headvariant=""
       hover="true"
       id="search-table"
       items=""
       labelsortasc="Click to sort Ascending"
+      labelsortclear="Click to clear sorting"
       labelsortdesc="Click to sort Descending"
       perpage="0"
+      selectedvariant="primary"
+      selectmode="multi"
       showempty="true"
+      sortby=""
+      sortcompareoptions="[object Object]"
       sortdirection="asc"
       striped="true"
       value=""

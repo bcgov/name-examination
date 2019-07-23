@@ -1,7 +1,8 @@
 /* eslint-disable */
 
 <template>
-  <div style="height: 100%; overflow-y: auto">
+  <div style="height: 100%;">
+
     <!-- error msgs from backend -->
     <div class="modal fade" id="error-message-modal" role="dialog">
       <div class="modal-dialog modal-lg" role="document">
@@ -29,12 +30,14 @@
         </div>
       </div>
     </div>
+    <v-app >
     <div id="app" style="height: 100%;">
         <std-header style="z-index: 2"> </std-header>
       <div>
         <router-view style="z-index: 1"></router-view>
       </div>
     </div>
+    </v-app>
   </div>
 </template>
 <script>
@@ -62,7 +65,7 @@ export default {
     },
     watch: {
       errorJSON: function(val) {
-        console.log('errorJSON watcher fired')
+
         this.errorMsg = '';
         this.warningMsg = '';
         //if the errorJSON has new data populates the error/warning messages and triggers the popup

@@ -130,7 +130,6 @@
           } else {
             myNum = 'NR ' + myNum
           }
-          console.log('Set new NR number to:' + myNum)
           this.$store.dispatch('newNrNumber', myNum)
           this.nrNum = ''
           this.$router.push('/nameExamination')
@@ -151,25 +150,8 @@
     font-size: 15px !important;
   }
 
-  .search-icon {
-    background-color: var(--gold) !important;
-    height: 40px;
-    width: 40px;
-  }
-
   .std-header-tab-width {
     wdith: 170px !important;
-  }
-
-  .styled-input {
-    background-color: var(--xl-grey);
-    border: none !important;
-    font-size: 15px;
-    height: 40px;
-    margin-bottom: auto;
-    margin-top: auto;
-    padding: 5px 10px 5px 10px;
-    width: 225px;
   }
 
   .top-nav-toolbar {

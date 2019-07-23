@@ -1,6 +1,8 @@
 /* eslint-disable */
 import Vue from 'vue';
+import Vuetify from 'vuetify'
 
+Vue.use(Vuetify)
 Vue.use(require('vue-shortkey'))
 import Decision from '@/components/application/Examine/Decision';
 import store from '@/store'
@@ -44,7 +46,7 @@ describe('Decision.vue', () => {
 
     beforeEach(() => {
 
-      instance.conditions_selected = [
+      instance.conditionsSelected = [
         {
           "id": 223,
           "phrase": "DOCTOR",
@@ -60,15 +62,20 @@ describe('Decision.vue', () => {
           "instructions": "Sample condition requiring consent."
         }
       ];
+      vm = instance.$mount();
     });
 
     it('Displays each condition in customer message', () => {
-      expect(instance.customer_message_display).toContain("Sample doctor condition text, not requiring consent.");
-      expect(instance.customer_message_display).toContain("Sample condition requiring consent.");
+      vm.$nextTick(function () {
+        expect(instance.customer_message_display).toContain("Sample doctor condition text, not requiring consent.")
+        expect(instance.customer_message_display).toContain("Sample condition requiring consent.");
+      })
     });
 
     it('Sets conditional approval flag', () => {
-      expect(instance.acceptance_will_be_conditional).toBe(true);
+      vm.$nextTick(function() {
+        expect(instance.acceptance_will_be_conditional).toBe(true);
+      })
     });
 
     it('Saves the decision text as built by examiner upon APPROVED decision made', () => {
@@ -90,7 +97,7 @@ describe('Decision.vue', () => {
 
     beforeEach(() => {
 
-      instance.conditions_selected = [
+      instance.conditionsSelected = [
         {
           "id": 223,
           "phrase": "DOCTOR",
@@ -106,6 +113,7 @@ describe('Decision.vue', () => {
           "instructions": "Sample condition NOT requiring consent."
         }
       ];
+      vm = instance.$mount()
     });
 
     it('Does not set conditional approval flag', () => {
@@ -115,17 +123,17 @@ describe('Decision.vue', () => {
 
   describe('When "consent required" condition has been selected WITHOUT conflicts', () => {
 
+    beforeEach(() => {
+      vm = instance.$mount()
+    });
+
     it('Contains "consent required" message', () => {
 
-      instance.conditions_selected = [
-        {
-          "id": "CONSENTREQUIRED",
-          "consent_required": true,
-          "display_string": "Consent Required",
-          "instructions": "Consent Required.",
-        },
-      ];
-      expect(instance.customer_message_display).toContain("Consent Required.");
+      instance.consent_required_by_user = true
+
+      vm.$nextTick(function () {
+        expect(vm.$el.querySelect('#conditional-accept-button')).toBeDefined()
+      })
     });
 
     it('Saves the decision text as built by examiner upon APPROVED decision made', () => {
@@ -147,45 +155,39 @@ describe('Decision.vue', () => {
   describe('When "consent required" condition has been selected WITH conflicts', () => {
     beforeEach(() => {
 
-      instance.conditions_selected = [
-        {
-          "id": "CONSENTREQUIRED",
-          "consent_required": true,
-          "display_string": "Consent Required",
-          "instructions": "Consent Required.",
-        },
-      ];
-      instance.conflicts_selected = [
+      instance.selectedConflicts = [
         {
           "nrNumber": "0299669",
           "text": "DR. EARL J. MCDONALD INC.",
           "source": "CORP",
         }
       ];
-
-    });
-
-    it('Does not contain "consent required" standalone message', () => {
-      expect(instance.customer_message_display).not.toContain("Consent Required.");
+      vm = instance.$mount()
     });
 
     it('Conflict message includes "consent required" and not "rejected"', () => {
-      expect(instance.customer_message_display).toContain("Consent required from DR. EARL J. MCDONALD INC.");
-      expect(instance.customer_message_display).not.toContain("Rejected due to conflict with DR. EARL J. MCDONALD INC.");
+      vm.$nextTick(function () {
+        expect(instance.customer_message_display).toContain("Consent required from DR. EARL J. MCDONALD INC.")
+        expect(instance.customer_message_display).not.toContain("Rejected due to conflict with DR. EARL J. MCDONALD INC.");
+      })
     });
 
     it('Saves the decision text as built by examiner upon APPROVED decision made', () => {
-      var customer_message_initial, customer_message_after_decision;
-      [customer_message_initial, customer_message_after_decision] = makeDecision("APPROVED");
+      vm.$nextTick(function () {
+        var customer_message_initial, customer_message_after_decision;
+        [customer_message_initial, customer_message_after_decision] = makeDecision("APPROVED")
 
-      expect(customer_message_after_decision).toBe(customer_message_initial);
+        expect(customer_message_after_decision).toBe(customer_message_initial);
+      })
     });
 
     it('Saves the decision text as built by examiner upon REJECTED decision made', () => {
-      var customer_message_initial, customer_message_after_decision;
-      [customer_message_initial, customer_message_after_decision] = makeDecision("REJECTED");
+      vm.$nextTick(function () {
+        var customer_message_initial, customer_message_after_decision;
+        [customer_message_initial, customer_message_after_decision] = makeDecision("REJECTED")
 
-      expect(customer_message_after_decision).toBe(customer_message_initial);
+        expect(customer_message_after_decision).toBe(customer_message_initial);
+      })
     });
 
   });
@@ -195,23 +197,22 @@ describe('Decision.vue', () => {
 
       instance.decision_made = null;
 
-      instance.conflicts_selected = [
+      instance.selectedConflicts = [
         {
           "nrNumber": "0299669",
           "text": "DR. EARL J. MCDONALD INC.",
           "source": "CORP",
         },
         {
-          "nrNumber": "111",
+          "nrNumber": "1234",
           "text": "SAMPLE CONFLICT",
           "source": "CORP",
         }
       ];
-
+      vm = instance.$mount()
     });
 
     it('Conflict message includes "rejected" and not "consent required"', () => {
-      expect(instance.customer_message_display).not.toContain("Consent required from from DR. EARL J. MCDONALD INC.");
       expect(instance.customer_message_display).toContain("Rejected due to conflict with DR. EARL J. MCDONALD INC.");
     });
 
@@ -222,11 +223,13 @@ describe('Decision.vue', () => {
     });
 
     it('Clears the decision text re. conflicts upon APPROVED decision made', () => {
-      var customer_message_initial, customer_message_after_decision;
-      [customer_message_initial, customer_message_after_decision] = makeDecision("APPROVED");
+      vm.$nextTick(function () {
+        var customer_message_initial, customer_message_after_decision;
+        [customer_message_initial, customer_message_after_decision] = makeDecision("APPROVED")
 
-      expect(customer_message_after_decision).not.toContain("Rejected due to conflict with DR. EARL J. MCDONALD INC.");
-      expect(customer_message_after_decision).not.toContain("Rejected due to conflict with SAMPLE CONFLICT");
+        expect(customer_message_after_decision).not.toContain("Rejected due to conflict with DR. EARL J. MCDONALD INC.")
+        expect(customer_message_after_decision).not.toContain("Rejected due to conflict with SAMPLE CONFLICT");
+      })
     });
 
     it('Saves the decision text as built by examiner upon REJECTED decision made', () => {
@@ -243,14 +246,14 @@ describe('Decision.vue', () => {
 
       instance.$store.state.exactMatchesConflicts = [
         {
-          text: 'conflict1',
+          text: 'test1',
           nrNumber: 'NR1111',
           source: 'CORP'
         }
       ];
       instance.$store.state.synonymMatchesConflicts = [
         {
-          text: 'conflict2',
+          text: 'test2',
           nrNumber: 'NR2222',
           source: 'CORP'
         }
@@ -267,20 +270,18 @@ describe('Decision.vue', () => {
       expect(instance.conflictList).toEqual(
         [
           {
-            text: 'conflict1',
+            text: 'test1',
             nrNumber: 'NR1111',
             source: 'CORP'
           },
           {
-            text: 'conflict2',
+            text: 'test2',
             nrNumber: 'NR2222',
             source: 'CORP'
           }
         ]
       );
-
-      expect(vm.$el.querySelector('div.multiselect:nth-child(2) div.multiselect__content-wrapper ul li:nth-child(1)').textContent).toEqual('conflict1 - NR1111 ');
-      expect(vm.$el.querySelector('div.multiselect:nth-child(2) div.multiselect__content-wrapper ul li:nth-child(2)').textContent).toEqual('conflict2 - NR2222 ');
+      expect(vm.$el.querySelector('#conflicts-select-area .v-select-list').textContent).toEqual('test1test2');
     });
 
   });

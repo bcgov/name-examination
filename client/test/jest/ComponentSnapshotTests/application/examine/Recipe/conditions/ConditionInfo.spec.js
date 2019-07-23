@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Vue from 'vue';
 Vue.use(require('vue-shortkey'))
-import ConditionInfo from '@/components/application/Examine/Recipe/conditions/conditionInfo';
+import ConditionInfo from '@/components/application/Examine/Recipe/conditions/ConditionsInfo';
 import store from '@/store'
 
 describe('ConditionInfo.vue', () => {
