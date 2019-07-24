@@ -51,9 +51,11 @@
           <v-flex lg12 section>
             <v-text-field class="applicant-info-field"
                           id="applicant-last-name"
+                          @input="validateLastName"
                           v-model="lastName"
                           placeholder="Last name"
                           maxlength="200" />
+            <v-flex lg12 c-priority v-if="errorText">{{ errorText }}</v-flex>
           </v-flex>
           <!--CLIENT HEADING-->
           <v-flex lg12 label>Client:</v-flex>
@@ -118,7 +120,7 @@
             <v-flex>
               <v-btn id="nr-details-cancel-button"
                      class="ma-0 pa-0"
-                     @click="cancelSave"
+                     @click="clickCancel"
                      flat>
                 <img src="static/images/buttons/cancel.png"
                      alt="Cancel Button" />
@@ -126,10 +128,12 @@
             </v-flex>
             <v-flex>
               <v-btn id="nr-details-save-button"
-                     @click="save"
+                     @click="clickSave"
+                     :disabled="errorText.length !== 0"
                      class="ma-0 pa-0"
                      flat>
                 <img src="static/images/buttons/save-edits.png"
+                     :style="errorText ? {opacity: .50} : null"
                      alt="Save Button" />
               </v-btn>
             </v-flex>
@@ -142,11 +146,15 @@
 
 <script>
 /* eslint-disable */
-import { required } from 'vuelidate/lib/validators'
 
 export default {
   name: 'ClientInfoHeader',
   props: ['cancelSave', 'is_editing', 'is_viewing', 'is_expanded', 'save'],
+  data() {
+    return {
+      errorText: '',
+    }
+  },
   computed: {
     addressLine1: {
       get: function() {
@@ -270,7 +278,23 @@ export default {
       },
     },
   },
-  validations: {},
+  methods: {
+    validateLastName(input) {
+      if ( !input || input.length === 0 || input.trim().length === 0 ) {
+        this.errorText = 'The last name field cannot be empty'
+      } else {
+        this.errorText = ''
+      }
+    },
+    clickCancel() {
+      this.errorText = ''
+      this.cancelSave()
+    },
+    clickSave() {
+      this.errorText = ''
+      this.save()
+    },
+  },
 }
 </script>
 

@@ -562,6 +562,7 @@
             currentNameObj[`conflict${ n + 1 }_num`] = selectedConflicts[n].nrNumber
           }
         }
+        currentNameObj.name = currentNameObj.name.trimEnd()
         currentNameObj.decision_text = this.customer_message_display.substr(0, 955)
         // send decision to API and reset flags
         this.$store.dispatch('nameAcceptReject')
