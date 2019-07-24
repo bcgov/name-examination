@@ -18,6 +18,7 @@
             <v-flex mt-2>
               <v-select :items="requestType_options"
                         class="jurisdiction-dropdown"
+                        attach
                         flat
                         dense
                         v-model="requestType" />
@@ -27,6 +28,8 @@
               <v-flex :pb-2="!$v.jurisdiction.required">
                 <v-select v-model="jurisdiction"
                           :items="jurisdiction_options"
+                          item-value="text"
+                          attach
                           class="jurisdiction-dropdown"
                           flat
                           dense
