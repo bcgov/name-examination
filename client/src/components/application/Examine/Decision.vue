@@ -430,12 +430,8 @@
 
           }
         }
-
-        this.currentNameObj.decision_text = this.customer_message_display.substr(0,955);
-
-        // add new comment
-        this.$refs.decisioncomments.addNewComment();
-
+        currentNameObj.name = currentNameObj.name.trimEnd()
+        currentNameObj.decision_text = this.customer_message_display.substr(0, 955)
         // send decision to API and reset flags
         this.$store.dispatch('nameAcceptReject');
         this.decision_made = null;

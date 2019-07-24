@@ -461,7 +461,8 @@ export default {
         return this.$store.getters.compName1;
       },
       set: function(value) {
-        this.$store.commit('compName1', value);
+        value = value.trimEnd()
+          this.$store.commit('compName1', value);
       }
     },
     compName2: {
@@ -469,7 +470,8 @@ export default {
         return this.$store.getters.compName2;
       },
       set: function(value) {
-        this.$store.commit('compName2', value);
+        value = value.trimEnd()
+          this.$store.commit('compName2', value);
       }
     },
     compName3: {
@@ -477,6 +479,7 @@ export default {
         return this.$store.getters.compName3;
       },
       set: function(value) {
+          value = value.trimEnd()
         this.$store.commit('compName3', value);
       }
     },
@@ -735,7 +738,9 @@ export default {
         // do not continue if there are validation errors
         return;
       }
-
+        if ( this.compName1 && this.compName1.name ) this.compName1.name = this.compName1.name.trimEnd()
+        if ( this.compName2 && this.compName2.name ) this.compName2.name = this.compName2.name.trimEnd()
+        if ( this.compName3 && this.compName3.name ) this.compName3.name = this.compName3.name.trimEnd()
       // if jurisdiction not required, clear the data (ie: BC)
       if (!this.jurisdiction_required) this.$store.commit('jurisdiction', null);
 
@@ -822,24 +827,19 @@ export default {
             template = '';
           }
 
-          /*
-          Check if this bit of text is already in Additional Info - ie: don't keep adding note
-          re. Corp Num or previous NR every time user saves, even if they haven't changed that
-          data.
-          */
-          if (template != '') {
-            if (this.additionalInfo.indexOf(template) == -1) newAddInfo += template + ' ';
-          }
-        }
-      }
-
-      if (newAddInfo != '') this.additionalInfo = newAddInfo + '\n' + this.additionalInfo;
-    },
-    validate() {
-      /*
-      Validate form using vuelidate.
-       */
-      console.log('got to validate()');
+        axios.patch(url, {
+          "previousStateCd": previousState,
+          "state": nrState,
+        }, { headers: { Authorization: `Bearer ${ myToken }` } })
+          .then(response => {
+            this.$store.dispatch('getpostgrescompInfo', this.nrNumber)
+          })
+          .catch(error => {
+            console.log('ERROR: ' + error)
+          })
+      },
+      validate() {
+        this.$v.$touch()
 
       // trigger vuelidate validation in this component and child component
       this.$v.$touch();
@@ -857,8 +857,7 @@ export default {
       }
 
       // return opposite of 'invalid' flags, since we want to know if this IS valid
-      return !this.$v.$invalid && !this.$refs.clientinfoview.$v.$invalid &&
-        !nwpta_ab_invalid && !nwpta_sk_invalid;
+      return !this.$v.$invalid && !nwpta_ab_invalid && !nwpta_sk_invalid;
     },
     checkReqTypeRules(val) {
 
