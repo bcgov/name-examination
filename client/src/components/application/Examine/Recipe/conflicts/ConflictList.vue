@@ -15,11 +15,11 @@
                 px-4
                 v-if="title.nrNumber">
         <v-flex width-5>
-          <v-checkbox :disabled="enableCheckbox"
+          <v-checkbox :disabled="checkboxDisabled"
                       :input-value="selectedNRs"
                       :key="`exact-check-${i}`"
                       :value="title.nrNumber"
-                      @click.capture.stop.self="setCheckbox(title)"
+                      @click.capture.stop.self="setCheckbox"
                       class="shift-up"/>
         </v-flex>
         <v-flex @click="clickExactMatch(title, i)"
@@ -83,14 +83,14 @@
               class="bucket-list"
               id="bucket-list"
               v-if="children && openBucketIndex === i">
-          <virtual-list :remain="remain"
-                        :bench="14"
-                        :scrollelement="containerDivEl()"
+          <virtual-list :remain="14"
+                        :bench="10"
+                        :scrollelement="$el"
                         :size="32">
             <ConflictListItem :child="child"
                               :childIndex="childIndex"
                               :clickChild="clickChild"
-                              :containerDivEl="containerDivEl"
+                              :containerDivEl="$el"
                               :expandedID="expandedID"
                               :focus="focus"
                               :checkboxDisabled="checkboxDisabled"
@@ -113,27 +113,26 @@
 
 <script>
   /* eslint-disable */
-  import spinner from '@/components/application/spinner.vue'
-  import {mapGetters} from 'vuex'
-  import moment from 'moment'
   import ConflictInfo from './ConflictInfo'
   import ConflictListItem from './ConflictListItem'
+  import moment from 'moment'
+  import spinner from '@/components/application/spinner.vue'
   import virtualList from 'vue-virtual-scroll-list'
+  import { mapGetters } from 'vuex'
+
+  const debounce = require('lodash/debounce')
 
   export default {
     name: 'ConflictList',
     components: { virtualList, ConflictListItem, ConflictInfo, spinner },
     data() {
       return {
-        childIndex: 0,
-        index: 0,
-        prevIndex: 0,
-        children: [],
-        listener: null,
+        prevIndex: '',
+        focus: 'conflicts',
       }
     },
     mounted() {
-      this.addListener()
+      this.addListeners()
       this.$root.$on('setconflictfocus', (area) => {
         this.setFocus(area)
       })
@@ -143,7 +142,7 @@
       })
     },
     beforeDestroy() {
-      this.removeListener()
+      this.removeListeners()
     },
     computed: {
       ...mapGetters({
@@ -158,16 +157,61 @@
         openBucket: 'openBucket',
         synonymMatchesConflicts: 'synonymMatchesConflicts',
         conflictTitles: 'conflictTitles',
+        conflictsIndex: 'conflictsIndex',
+        conflictsChildIndex: 'conflictsChildIndex',
+        conflictsChildren: 'conflictsChildren',
+        conflictsScrollPosition: 'conflictsScrollPosition',
+        currentRecipeCard: 'currentRecipeCard',
+        conflictsAutoAdd: 'conflictsAutoAdd',
         decisionPanel: 'decisionPanel'
       }),
       checkboxDisabled() {
         return this.decisionPanel.functionalityDisabled
+      },
+      addedConflicts: {
+        get() {
+          return this.$store.getters.addedConflicts
+        },
+        set(value) {
+          this.$store.commit('setAddedConflicts', value)
+        }
+      },
+      autoAdd() {
+        return this.conflictsAutoAdd
+      },
+      index: {
+        get() {
+          return this.conflictsIndex
+        }, set(value) {
+          this.$store.commit('setConflictsIndex', value)
+        }
+      },
+      childIndex: {
+        get() {
+          return this.conflictsChildIndex
+        }, set(value) {
+          this.$store.commit('setConflictsChildIndex', value)
+        }
+      },
+      children: {
+        get() {
+          return this.conflictsChildren
+        }, set(value) {
+          this.$store.commit('setConflictsChildren', value)
+        }
       },
       expandedID: {
         get() {
           return this.expandedConflictID
         }, set(id) {
           this.$store.commit('setExpandedConflictID', id)
+        }
+      },
+      savedScrollPosition: {
+        get() {
+          return this.conflictsScrollPosition
+        }, set(value) {
+          this.$store.commit('setConflictsScrollPosition', value)
         }
       },
       lastIndex() {
@@ -189,12 +233,6 @@
           this.$store.commit('setOpenBucket', index)
         }
       },
-      remain() {
-        if (this.children) {
-          return this.children.length < 14 ? this.children.length : 14
-        }
-        return null
-      },
       selectedConflicts: {
         get() {
           return this.conflicts
@@ -203,8 +241,14 @@
         }
       },
       selectedNRs() {
-        if (this.selectedConflicts && this.selectedConflicts.length > 0) {
-          return this.selectedConflicts.map(conflict => conflict.nrNumber)
+        if (this.autoAdd) {
+          if (this.selectedConflicts && this.selectedConflicts.length > 0) {
+            return this.selectedConflicts.map(conflict => conflict.nrNumber)
+          }
+        } else {
+          if (this.addedConflicts && this.addedConflicts.length > 0) {
+            return this.addedConflicts.map(conflict => conflict.nrNumber)
+          }
         }
       },
     },
@@ -213,6 +257,14 @@
         this.initialize()
         this.setInitialFocus(newData)
       },
+      currentRecipeCard(newData) {
+        //restores the scroll offset when switching between tabs
+        if (newData === 'Conflicts' && this.savedScrollPosition !== 0) {
+          this.$nextTick(function () {
+            document.getElementById('conflicts-container').scrollTo({ top: this.savedScrollPosition })
+          })
+        }
+      }
     },
     methods: {
       initialize() {
@@ -224,9 +276,10 @@
         this.selectedConflicts = []
         this.focus = 'conflicts'
       },
-      addListener() {
-        this.removeListener()
+      addListeners() {
+        this.removeListeners()
         document.addEventListener('keydown', this.manageEventListener)
+        this.$el.addEventListener('scroll', debounce(this.saveScrollPosition), 250)
       },
       clickBucket(index) {
         this.focus = 'conflicts'
@@ -258,15 +311,6 @@
         this.children = null
         this.index = index
         this.expandedID = match.id
-      },
-      containerDivEl() {
-        let el = document.getElementById('conflicts-container')
-        if (el) {
-          return el
-        }
-      },
-      thisEl() {
-        return this.$el
       },
       formatDate(d) {
         return moment(d).format('YYYY-MM-DD')
@@ -398,7 +442,7 @@
             return
 
           case 'Space':
-            if (!enableCheckbox) {
+            if (this.checkboxDisabled) {
               return
             }
             //if child menu is open, then children[childIndex] must be conflict-result
@@ -420,10 +464,15 @@
             return
         }
       },
-      removeListener() {
+      removeListeners() {
         document.removeEventListener('keydown', this.manageEventListener)
+        this.$el.removeEventListener('scroll',debounce(this.saveScrollPosition))
       },
-      scrollIntoView(id) {
+      saveScrollPosition(e) {
+        this.savedScrollPosition = e.target.scrollTop
+        return e
+      },
+      scrollIntoView(id, opt=true) {
         this.$nextTick(function() {
           let el = document.getElementById(id)
           if (el) el.scrollIntoViewIfNeeded()
@@ -433,16 +482,45 @@
         if (options && !Array.isArray(options)) {
           options = [options]
         }
-        let conflictsCopy = [...this.selectedConflicts]
-        for (let option of options) {
-          let index = this.selectedConflicts.findIndex(conflict => conflict.nrNumber === option.nrNumber)
-          if (index === -1) {
-            conflictsCopy.push(option)
-          } else {
-            conflictsCopy.splice(index, 1)
+        if (this.autoAdd) {
+          let conflictsCopy = [ ...this.selectedConflicts ]
+          for (let option of options) {
+            let index = this.selectedConflicts.findIndex(conflict => conflict.nrNumber === option.nrNumber)
+            if (index === -1) {
+              if (this.selectedConflicts.length >= 3) return
+              conflictsCopy.push(option)
+              this.$store.dispatch('addConflictToCompare', option)
+            } else {
+              conflictsCopy.splice(index, 1)
+              let i = this.$store.state.comparedConflicts.findIndex(c => c.nrNumber == option.nrNumber)
+              let comparedCopy = [ ...this.$store.state.comparedConflicts]
+              comparedCopy.splice(i, 1)
+              this.$store.commit('setComparedConflicts', comparedCopy)
+            }
+          }
+          this.selectedConflicts = conflictsCopy
+        } else {
+          let addedCopy = [ ...this.addedConflicts ]
+          for (let option of options) {
+            let index = this.addedConflicts.findIndex(conflict => conflict.nrNumber === option.nrNumber)
+            if (index === -1) {
+              addedCopy.push(option)
+            } else {
+              addedCopy.splice(index, 1)
+            }
+          }
+          this.addedConflicts = addedCopy
+        }
+      },
+      setExactMatchesOnLoad(newData) {
+        if (!newData) newData = this.conflictTitles
+        let options = []
+        for (let title of newData) {
+          if (title.nrNumber && options.length < 3) {
+            options.push(title)
           }
         }
-        this.selectedConflicts = conflictsCopy
+        this.setCheckbox(options)
       },
       setFocus(area) {
         if (!area) {
@@ -470,6 +548,8 @@
       setInitialFocus(newData) {
         if (!newData) newData = this.conflictTitles
         for (let i = 0; i < newData.length; i++) {
+
+          //case: Exact Match in conflict titles
           if (newData[i].nrNumber) {
             this.children = null
             this.index = i
@@ -480,6 +560,7 @@
             this.scrollIntoView(newData[i].id)
             return
           }
+          //case: No exact match, but there is a title with count > 0
           if (newData[i].count > 0) {
             this.childIndex = 0
             this.children = newData[i].children
@@ -491,20 +572,11 @@
             return
           }
         }
+        //case: there are no conflicts at all
         this.openBucketIndex = null
         this.children = null
         this.index = null
         this.setFocus('regular')
-      },
-      setExactMatchesOnLoad(newData) {
-        if (!newData) newData = this.conflictTitles
-        let options = []
-        for (let title of newData) {
-          if (title.nrNumber && options.length < 3) {
-            options.push(title)
-          }
-        }
-        this.setCheckbox(options)
       },
     }
   }
@@ -517,6 +589,21 @@
   .conflict-container-spinner:not(.hidden) ~ .conflict-layout,
   .conflict-container-spinner:not(.hidden) ~ .title-layout {
     display: none;
+  }
+
+  .cursor-pointer, .title-match, .bucket-list {
+    cursor: pointer !important;
+  }
+
+  .container-style {
+    width: 100%;
+    margin: 0;
+    padding: 3px 0 0 0;
+    font-weight: 400;
+    font-size: 15px;
+    height: 445px;
+    max-height: 445px;
+    overflow-y: scroll;
   }
 
   .conflict-cobrs-phonetic-title {

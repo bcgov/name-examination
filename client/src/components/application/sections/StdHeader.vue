@@ -100,6 +100,12 @@
       auth() {
         return this.$store.getters.isAuthenticated
       },
+      nrNumber() {
+        if (this.$store.state.compInfo) {
+          return this.$store.state.compInfo.nrNumber
+        }
+        return ''
+      },
       userCanExamine() {
         return this.$store.getters.userHasApproverRole
       },
@@ -122,17 +128,20 @@
       },
       submit() {
         if (this.nrNum) {
-          let myNum = this.nrNum.toUpperCase().trim();
-          if (myNum.includes('NR')) {
-            if (!myNum.includes('NR ')) {
-              myNum = myNum.replace('NR', 'NR ')
+          let match = /(?:\s+|\s|)(\D|\D+|)(?:\s+|\s|)(\d+)(?:\s+|\s|)/
+          let rtnNR = () => ( 'NR ' )
+
+          let search = this.nrNum.replace(match, rtnNR('$1') + '$2')
+          if (search) {
+            let payload = {
+              search,
+              router: this.$router
             }
-          } else {
-            myNum = 'NR ' + myNum
+            if (search != this.nrNumber) {
+              this.$store.dispatch('newNrNumber', payload)
+            }
           }
-          this.$store.dispatch('newNrNumber', myNum)
           this.nrNum = ''
-          this.$router.push('/nameExamination')
         }
       }
     }

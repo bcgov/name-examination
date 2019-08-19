@@ -488,7 +488,6 @@
         this.searchStr =  val;
       },
       undoDecision(name_number) {
-
         this.$store.dispatch('undoDecision', name_number);
 
         // set the undone name choice to the current (actionable) choice

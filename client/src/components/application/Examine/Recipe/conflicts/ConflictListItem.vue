@@ -8,10 +8,11 @@
               px-4>
       <v-flex width-5 v-if="child.nrNumber">
         <v-checkbox style="position: relative; top:4px"
+                    :id="`checkbox-${child.id}`"
                     :disabled="checkboxDisabled"
                     :value="child.nrNumber"
                     :input-value="selectedNRs"
-                    @click.capture.stop.self="setCheckbox(child)"/>
+                    @click.stop.prevent="setCheckbox(child)"/>
       </v-flex>
       <v-flex width-60
               cursor-pointer
@@ -77,9 +78,8 @@
   }
 
   .no-overflow {
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .cursor-pointer, .title-match, .bucket-list {

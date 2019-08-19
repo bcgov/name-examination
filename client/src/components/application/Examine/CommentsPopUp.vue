@@ -3,7 +3,6 @@
     <v-card flat
             style="z-index: 11111; position: absolute; top: 165px; left: 25px;"
             class="expanded-info"
-            v-if="showCommentsPopUp"
             width="350px">
       <v-container fluid p-1 ma-0>
         <v-layout mt-4>
@@ -19,7 +18,7 @@
                    :ripple="false"
                    @click="toggleCommentsPopUp(false)">
               <v-icon :style="alignTop" color="light-blue">clear</v-icon>
-              <span :style="alignTop" color="blue">Close
+              <span :style="alignTop" color="blue">Cl<span class="shortkey">o</span>se
             </span>
             </v-btn>
           </v-flex>
@@ -27,14 +26,16 @@
         <v-layout column>
           <v-flex>
             <v-textarea class="comments-text-area"
+                        ref="commentstextarea"
                         no-resize
                         v-model="newComment" />
           </v-flex>
         </v-layout>
         <v-flex text-right c-link>
-          <v-btn id="comments-cancel-button" flat :ripple="false" @click="clickCancel()">Cancel</v-btn>
+          <v-btn id="comments-cancel-button" flat :ripple="false" @click="clickCancel()">
+            Ca<span class="shortkey">n</span>cel</v-btn>
           <v-btn id="comments-save-button" flat :ripple="false" :disabled="saveButtonDisabled" @click="saveInfo">
-            <b style="font-weight: 600">Save</b>
+            <b style="font-weight: 600">Sa<span class="shortkey">v</span>e</b>
           </v-btn>
         </v-flex>
         <v-layout px-3 pb-2 mt-2 column style="overflow-y: scroll; max-height: 475px;">
@@ -65,6 +66,14 @@
           top: `${-8}px`
         },
       }
+    },
+    mounted() {
+      this.$nextTick(function() {
+        this.$el.scrollIntoViewIfNeeded()
+        if (this.$refs.commentstextarea) {
+          this.$refs.commentstextarea.focus()
+        }
+      })
     },
     computed: {
       cardClass() {
@@ -173,6 +182,10 @@
     border: 1px solid var(--l-grey);
     width: 320px;
     height: 80px;
+  }
+
+  .shortkey {
+    text-decoration: underline;
   }
 
   .expanded-info {

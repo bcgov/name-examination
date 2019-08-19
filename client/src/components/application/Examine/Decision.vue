@@ -39,8 +39,8 @@
       </v-flex>
 
       <!--COLUMN #1: MESSAGE SELECTION-->
-      <v-flex lg6>
-        <v-layout wrap add-stock-text-col>
+      <v-flex lg6 style="height: 400px" ma-0 pa-0>
+        <v-layout wrap add-stock-text-col fill-height style="height: 400px" ma-0 pa-0>
 
           <!--CONDITIONS-->
           <v-flex lg12 mt-2 id="conditions-select-area">
@@ -97,6 +97,15 @@
                             class="chip-close-icon">clear</v-icon>
                   </v-chip>
                 </template>
+                <template v-slot:no-data>
+                  <div class="v-list__tile__title"
+                       style="position: relative;
+                              font-size: 13px;
+                              padding: 8px 0px 6px 14px;
+                              min-height:40px">
+                    {{ conflictsAutoAdd ? 'No Conflicts' : 'auto-add is off.  no conflicts selected.'}}
+                  </div>
+                </template>
               </v-select>
             </div>
           </v-flex>
@@ -132,8 +141,8 @@
           </v-flex>
 
           <!--TRADEMARKS-->
-          <v-flex data-app id="trademarks-v-flex" ref="trademarksSelectField">
-            <div class="fs-15 mb-2 mt-4 fw-600">Trademarks</div>
+          <v-flex id="trademarks-v-flex" ref="trademarksSelectField">
+            <div class="fs-15 mt-4 fw-600">Trademarks</div>
             <div id="trademarks-decision-select-field">
               <v-select :disabled="customer_message_override !== null || !is_making_decision"
                         :height="selected_trademarks.length <= 1 ? 30 : null"
@@ -141,7 +150,7 @@
                         :menu-props="menuProps"
                         browser-autocomplete="off"
                         chips
-                        class="decision-select-style mb-5"
+                        class="decision-select-style"
                         dense
                         attach
                         hide-selected
@@ -182,26 +191,28 @@
                         readonly
                         full-width
                         id="decision-msg-preview-area"
-                        rows="13"
                         solo
+                        rows="15"
                         flat
-                        height="240px"
+                        height="290px"
                         v-model="customer_message_display">
             </v-textarea>
             <div class="decision-flex-holder">
               <div :class="messageDisplayProps.class">{{ messageDisplayProps.count }}</div>
-              <div><v-btn flat
-                          id="decision-msg-clear-button"
-                          class="ma-0 pa-0"
-                          :disabled="!customer_message_override || !is_making_decision"
-                          @click="customer_message_override = null"
-                          v-if="customer_message_override">Clear Edits</v-btn></div>
+              <div>
+                <v-btn flat
+                       id="decision-msg-clear-button"
+                       class="ma-0 pa-0"
+                       :disabled="!customer_message_override || !is_making_decision"
+                       @click="customer_message_override = null"
+                       v-if="customer_message_override">Clear Edits</v-btn>
+              </div>
             </div>
 
           </v-flex>
         </v-layout>
       </v-flex>
-      <v-flex>
+      <v-flex style="position: relative; top: 20px;">
         <div class="decision-flex-holder top-margin-12">
           <v-btn :disabled="!is_making_decision"
                  @click="nameAccept"
@@ -274,7 +285,6 @@
     data() {
       return {
         consent_required_by_user: false,
-        customer_message_override: null,
         editTextarea: null,
         editMessageModalVisible: false,
         menuProps: {
@@ -283,11 +293,7 @@
           maxHeight: 125,
         },
         originalMessage: null,
-        panel0: false,
-        panel1: false,
-        panel2: false,
         selectedReasons: [],
-        plugData: null,
       }
     },
     mounted() {
@@ -297,19 +303,32 @@
     computed: {
       ...mapGetters([
         'acceptance_will_be_conditional',
+        'autoAddDisabled',
+        'addedConflicts',
         'cobrsPhoneticConflicts',
+        'comparedConflicts',
         'conditionsJSON',
+        'conflictsAutoAdd',
+        'customerMessageOverride',
         'exactMatchesConflicts',
         'is_making_decision',
         'listDecisionReasons',
+        'parseConditions',
         'phoneticConflicts',
+        'selectedConditions',
+        'selectedConflicts',
+        'selectedTrademarks',
         'synonymMatchesConflicts',
         'trademarksJSON',
-        'parseConditions',
-        'selectedConflicts',
-        'selectedConditions',
-        'selectedTrademarks'
       ]),
+      customer_message_override: {
+        get() {
+          return this.customerMessageOverride
+        },
+        set(msg) {
+          this.$store.commit('setCustomerMessageOverride', msg)
+        }
+      },
       selected_trademarks: {
         get() {
           return this.selectedTrademarks
@@ -356,6 +375,9 @@
         return []
       },
       conflictList() {
+        if (!this.conflictsAutoAdd) {
+          return this.addedConflicts
+        }
         let output = []
         let listedNRs = []
         let conflictTypes = [
@@ -614,13 +636,19 @@
         return obj.name + ' - ' + obj.application_number
       },
       truncateChipText(text) {
-        return text.length > 37 ? `${text.slice(0,37)}...` : text
+        return text.length > 34 ? `${text.slice(0,34)}...` : text
       },
     },
   }
 </script>
 
 <style scoped>
+  #decision-msg-clear-button {
+    color: var(--link);
+    font-size: 14px;
+    font-weight: 700;
+  }
+
   #message-cancel-button {
     margin: 0px;
     padding: 0px;
@@ -641,7 +669,7 @@
     border-radius: 6px;
     color: white;
     text-transform: uppercase;
-    font-size: 15px;
+    font-size: 13px;
   }
 
   .chip-close-icon {
@@ -660,7 +688,6 @@
   .decision-flex-holder {
     display: flex;
     justify-content: space-between;
-    height:
   }
 
   .decision-select-style {
@@ -692,7 +719,7 @@
 
   .textarea-outer-v-flex {
     border: 1px solid var(--l-grey);
-    height: 320px;
+    height: 350px;
     background-color: white;
 
   }

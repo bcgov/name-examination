@@ -7,7 +7,7 @@ import moment from 'moment'
 Vue.use(Vuex)
 
 export const state = {
-//User Info
+  //User Info
   myKeycloak: null,
   userId: null,
   user_roles: [],
@@ -16,7 +16,7 @@ export const state = {
   errorJSON: null,
   adminURL: null,
 
-//Interface settings
+  //Interface settings
   currentChoice: null, // CURRENT NAME BEING EXAMINED (choice number)
   currentName: null, // CURRENT NAME BEING EXAMINED (string)
   currentNameObj: { // CURRENT NAME BEING EXAMINED (complete object)
@@ -45,15 +45,16 @@ export const state = {
   listDecisionReasons: null,
   requestTypeRules: null, // list of request type rules, internal use only no display
 
-//Names Data
-//nr_conflict: null,
+  //Names Data
+  //nr_conflict: null,
   details: null,
   additionalInfo: null,
   internalComments: [],
   applicantsOrigData: null,
   nrData: null,
   compInfo: {
-    nrNumber: null, compNames: {
+    nrNumber: null,
+    compNames: {
       compName1: {
         choice: null,
         name: null,
@@ -197,7 +198,7 @@ export const state = {
     rejected: { response: { numfound: '' } },
   },
 
-//introduced during name-examination code with us upgrade
+  //introduced during name-examination code with us upgrade
   activeRequestBannerPopUp: null,
   newComment: null,
   selectedConditions: [],
@@ -211,6 +212,14 @@ export const state = {
   parsedPhoneticConflicts: [],
   parsedCOBRSConflicts: [],
   parsedSynonymConflicts: [],
+  comparedConflicts: [],
+  conflictsIndex: 0,
+  conflictsChildIndex: 0,
+  conflictsChildren: [],
+  conflictsScrollPosition: 0,
+  conflictsAutoAdd: true,
+  addedConflicts: [],
+  customerMessageOverride: null,
 }
 
 export const mutations = {
@@ -374,11 +383,9 @@ export const mutations = {
     state.userId = null
     state.authorized = null
   },
-
   loadpostgresNo(state, postgresData) {
     state.compInfo.nrNumber = postgresData.nameRequest
   },
-
   loadCompanyInfo(state, dbcompanyInfo) {
     if (!dbcompanyInfo || !dbcompanyInfo.names) return
     state.nrData = dbcompanyInfo
@@ -604,7 +611,7 @@ export const mutations = {
       if (record.partnerNameDate) {
         var nwpta_date = new moment(record.partnerNameDate)
         record.partnerNameDate = nwpta_date.clone()
-        .format('YYYY-MM-DD')
+                                           .format('YYYY-MM-DD')
       }
 
       if (record.partnerJurisdictionTypeCd == 'AB') state.additionalCompInfo.nwpta_ab = record
@@ -621,43 +628,33 @@ export const mutations = {
       state.is_making_decision = true
     }
   },
-
   loadConflictsJSON(state, JSONdata) {
     state.conflictsJSON = JSONdata
   },
-
   loadNamesConflictJSON(state, JSONdata) {
     state.namesConflictJSON = JSONdata
   },
-
   loadCorpConflictJSON(state, JSONdata) {
     state.corpConflictJSON = JSONdata
   },
-
   loadConditionsJSON(state, JSONdata) {
     state.conditionsJSON = JSONdata
   },
-
   loadHistoriesJSON(state, JSONdata) {
     state.historiesJSON = JSONdata
   },
-
   loadHistoriesInfoJSON(state, JSONdata) {
     state.historiesInfoJSON = JSONdata
   },
-
   loadTrademarksJSON(state, JSONdata) {
     state.trademarksJSON = JSONdata
   },
-
   loadSearchDataJSON(state, JSONdata) {
     state.searchDataJSON = JSONdata
   },
-
   loadStatsDataJSON(state, params) {
     state.statsDataJSON[params.myState] = params.JSONdata
   },
-
   update_nrData(state) {
     if (state.nrData.names.length == 0) {
 
@@ -749,51 +746,42 @@ export const mutations = {
 
     if (state.expiryDate) {
       state.nrData.expirationDate = new moment(state.expiryDate, 'YYYY-MM-DD').utc()
-      .format('ddd, D MMM YYYY HH:mm:ss [GMT]')
+                                                                              .format('ddd, D MMM YYYY HH:mm:ss [GMT]')
     } else {
       state.nrData.expirationDate = state.expiryDate
     }
 
     state.nrData.submittedDate = new moment(state.submittedDate, 'YYYY-MM-DD, h:mma').utc()
-    .format('ddd, D MMM YYYY HH:mm:ss [GMT]')
+                                                                                     .format('ddd, D MMM YYYY HH:mm:ss [GMT]')
     state.nrData.submitCount = state.submitCount
     state.nrData.previousNr = state.previousNr
     state.nrData.corpNum = state.corpNum
     state.nrData.furnished = state.furnished
     state.nrData.hasBeenReset = state.hasBeenReset
   },
-
   loadCompanyIssues(state, dbcompanyIssues) {
   },
-
   saveDetail(state, detail) {
     state.details = detail
   },
-
   listPriorities(state, value) {
     state.listPriorities = value
   },
-
   listJurisdictions(state, value) {
     state.listJurisdictions = value
   },
-
   listRequestTypes(state, value) {
     state.listRequestTypes = value
   },
-
   listDecisionReasons(state, value) {
     state.listDecisionReasons = value
   },
-
   requestTypeRules(state, value) {
     state.requestTypeRules = value
   },
-
   currentRecipeCard(state, value) {
     state.currentRecipeCard = value
   },
-
   currentNameObj(state, value) {
     state.currentNameObj = value
 
@@ -806,7 +794,6 @@ export const mutations = {
       state.currentChoice = null
     }
   },
-
   currentChoice(state, value) {
 
     state.currentChoice = value
@@ -814,42 +801,18 @@ export const mutations = {
     // also set in currentNameObj
     state.currentNameObj.choice = value
   },
-
   currentName(state, value) {
     state.currentName = value
 
     // also set in currentNameObj
     state.currentNameObj.name = value
   },
-
   setConfig(state, configValues) {
   },
-
   nrNumber(state, value) {
 
     state.compInfo.nrNumber = value
   },
-
-//introduced by name-examination code with us upgrade
-  toggleRequestBannerPopUp: (state, payload) => state.activeRequestBannerPopUp = payload,//ReqInfoHeader active popup
-  toggleCommentsPopUp: (state, payload) => state.showCommentsPopUp = payload,//app-wide comments popup visibility
-  setNewComment: (state, payload) => state.newComment = payload,//captured user-input in app-wide comments popup
-  setEditing: (state, payload) => state.is_editing = payload,
-  setPartnerDate(state, { type, payload }) {
-    state.additionalCompInfo[`nwpta_${ type }`].partnerNameDate = payload
-  },
-  toggleEditMessageModal: (state, payload) => state.editMessageModalVisible = payload,
-  setSelectedConflicts: (state, conflicts) => state.selectedConflicts = conflicts,
-  setSelectedConditions: (state, conditions) => state.selectedConditions = conditions,
-  setSelectedTrademarks(state, trademarks) {
-    Vue.set(state, 'selectedTrademarks', trademarks)
-    state.selectedTrademarks = trademarks
-  },
-  setSelectedConflictID: (state, payload) => state.selectedConflictID = payload,
-  setExpandedConflictID: (state, payload) => state.expandedConflictID = payload,
-  setOpenBucket: (state, payload) => state.openBucket = payload,
-  setConflictsReturnedStatus: (state, payload) => state.conflictsReturnedStatus = payload,
-
   setExactMatchesConflicts(state, json) {
     if (!json || !json.names) {
       state.exactMatchesConflicts = []
@@ -874,7 +837,6 @@ export const mutations = {
     }
     state.exactMatchesConflicts = exactMatchesConflicts
   },
-
   setSynonymMatchesConflicts(state, json) {
     if (!json || !json.names) {
       state.synonymMatchesConflicts = []
@@ -907,28 +869,28 @@ export const mutations = {
 
         wildcard_stack = ( entry.name.lastIndexOf('*') > 0 )
 
-          entry.meta = entry.name.substring(entry.name.lastIndexOf('-')+1).trim()
-          entry.class = 'conflict-synonym-title'
-          entry.name = entry.name.replace('----', '').toUpperCase()
-          let syn_index = entry.name.indexOf('SYNONYMS:')
-          if (syn_index !== -1) {
-            let last_bracket_indx = entry.name.lastIndexOf(')')
-            let synonym_clause = entry.name.substring(syn_index+10, last_bracket_indx)
-            let synonym_list = synonym_clause.split(',')
+        entry.meta = entry.name.substring(entry.name.lastIndexOf('-')+1).trim()
+        entry.class = 'conflict-synonym-title'
+        entry.name = entry.name.replace('----', '').toUpperCase()
+        let syn_index = entry.name.indexOf('SYNONYMS:')
+        if (syn_index !== -1) {
+          let last_bracket_indx = entry.name.lastIndexOf(')')
+          let synonym_clause = entry.name.substring(syn_index+10, last_bracket_indx)
+          let synonym_list = synonym_clause.split(',')
 
-            for (let syn=0; syn<synonym_list.length; syn++) {
-              for (let wrd = 0; wrd < name_stems.length; wrd++) {
+          for (let syn=0; syn<synonym_list.length; syn++) {
+            for (let wrd = 0; wrd < name_stems.length; wrd++) {
               if (synonym_list[syn].toUpperCase().includes(name_stems[wrd].toUpperCase())) {
-                  name_stems.splice(wrd, 1)
-                  wrd--
+                name_stems.splice(wrd, 1)
+                wrd--
               }
             }
-              entry.name = entry.name.replace(synonym_list[syn].toUpperCase(),
-                '<span class="synonym-stem-highlight">'+ synonym_list[syn].toUpperCase() +'</span>')
+            entry.name = entry.name.replace(synonym_list[syn].toUpperCase(),
+              '<span class="synonym-stem-highlight">'+ synonym_list[syn].toUpperCase() +'</span>')
           }
-            entry.name = entry.name.replace('SYNONYMS:', '')
+          entry.name = entry.name.replace('SYNONYMS:', '')
         }
-          entry.name = entry.name.substring(0, entry.name.lastIndexOf('-')).trim()
+        entry.name = entry.name.substring(0, entry.name.lastIndexOf('-')).trim()
 
       }
       entry.name = ' ' + entry.name
@@ -995,7 +957,6 @@ export const mutations = {
     state.parsedSynonymConflicts = output
     state.synonymMatchesConflicts = conflictsOnly
   },
-
   setCobrsPhoneticConflicts(state, json) {
     if (!json || !json.names) {
       state.cobrsPhoneticConflicts = []
@@ -1060,7 +1021,6 @@ export const mutations = {
     state.parsedCOBRSConflicts = output
     state.cobrsPhoneticConflicts = conflictsOnly
   },
-
   setPhoneticConflicts(state, json) {
     if (!json || !json.names) {
       state.phoneticConflicts = []
@@ -1125,7 +1085,6 @@ export const mutations = {
     state.parsedPhoneticConflicts = output
     state.phoneticConflicts = conflictsOnly
   },
-
   currentConflict(state, value) {
     state.currentConflict = value
   },
@@ -1135,24 +1094,48 @@ export const mutations = {
   currentTrademark(state, value) {
     state.currentTrademark = value
   },
-
   currentHistory(state, value) {
     state.currentHistory = value
   },
-
   saveKeyCloak(state, value) {
     state.myKeycloak = value
   },
-
   setLoginValues(state) {
     state.userId = sessionStorage.getItem('USERNAME')
     state.user_roles = sessionStorage.getItem('USER_ROLES')
     state.authorized = sessionStorage.getItem('AUTHORIZED')
   },
-
   setErrorJSON(state, value) {
     state.errorJSON = value
   },
+
+  //introduced by name-examination code with us upgrade
+  toggleRequestBannerPopUp: (state, payload) => state.activeRequestBannerPopUp = payload,//ReqInfoHeader active popup
+  toggleCommentsPopUp: (state, payload) => state.showCommentsPopUp = payload,//app-wide comments popup visibility
+  setNewComment: (state, payload) => state.newComment = payload,//captured user-input in app-wide comments popup
+  setEditing: (state, payload) => state.is_editing = payload,
+  setPartnerDate (state, { type, payload }) {
+    state.additionalCompInfo[`nwpta_${ type }`].partnerNameDate = payload
+  },
+  toggleEditMessageModal: (state, payload) => state.editMessageModalVisible = payload,
+  setSelectedConflicts: (state, conflicts) => state.selectedConflicts = conflicts,
+  setSelectedConditions: (state, conditions) => state.selectedConditions = conditions,
+  setSelectedTrademarks (state, trademarks) {
+    Vue.set(state, 'selectedTrademarks', trademarks)
+    state.selectedTrademarks = trademarks
+  },
+  setSelectedConflictID: (state, payload) => state.selectedConflictID = payload,
+  setExpandedConflictID: (state, payload) => state.expandedConflictID = payload,
+  setOpenBucket: (state, payload) => state.openBucket = payload,
+  setConflictsReturnedStatus: (state, payload) => state.conflictsReturnedStatus = payload,
+  setComparedConflicts: (state, payload) => state.comparedConflicts = payload,
+  setConflictsIndex: (state, payload) => state.conflictsIndex = payload,
+  setConflictsChildIndex: (state, payload) => state.conflictsChildIndex = payload,
+  setConflictsChildren: (state, payload) => state.conflictsChildren = payload,
+  setConflictsScrollPosition: (state, payload) => state.conflictsScrollPosition = payload,
+  setConflictsAutoAdd: (state, payload) => state.conflictsAutoAdd = payload,
+  setAddedConflicts: (state, payload) => state.addedConflicts = payload,
+  setCustomerMessageOverride: (state, payload) => state.customerMessageOverride = payload,
 }
 
 export const actions = {
@@ -1161,7 +1144,6 @@ export const actions = {
     commit('setSelectedConflictID', null)
     commit('setOpenBucket', null)
   },
-
   logout({ commit, state }) {
     commit('clearAuthData')
     sessionStorage.removeItem('KEYCLOAK_REFRESH')
@@ -1171,7 +1153,6 @@ export const actions = {
     sessionStorage.removeItem('USERNAME')
     sessionStorage.removeItem('USER_ROLES')
   },
-
   loadSetUp({ dispatch }) {
     //TODO - reset everything and force login???
     // clear values from local storeage
@@ -1186,7 +1167,6 @@ export const actions = {
       dispatch('loadAdminLink', myArray)
     })
   },
-
   checkToken({ dispatch, state }) {
     // checks if keycloak object exists - if not then state is unstable, force logout
     if (state.myKeycloak == null) {
@@ -1212,24 +1192,20 @@ export const actions = {
       //
     }
   },
-
   updateToken({ commit, state }) {
     const vm = this
     state.myKeycloak.updateToken(-1)
-    .success(function (refreshed) {
-      if (refreshed) {
-        sessionStorage.setItem('KEYCLOAK_TOKEN', state.myKeycloak.token)
-        sessionStorage.setItem('KEYCLOAK_REFRESH', state.myKeycloak.refreshToken)
-        sessionStorage.setItem('KEYCLOAK_EXPIRES', state.myKeycloak.tokenParsed.exp * 1000)
-      }
-    })
-    .error(function () {
-      console.log('Failed to refresh the token, or the session has expired')
-    })
+         .success(function (refreshed) {
+           if (refreshed) {
+             sessionStorage.setItem('KEYCLOAK_TOKEN', state.myKeycloak.token)
+             sessionStorage.setItem('KEYCLOAK_REFRESH', state.myKeycloak.refreshToken)
+             sessionStorage.setItem('KEYCLOAK_EXPIRES', state.myKeycloak.tokenParsed.exp * 1000)
+           }
+         })
+         .error(function () {
+           console.log('Failed to refresh the token, or the session has expired')
+         })
   },
-
-
-
   checkError({ commit }, responseJSON) {
     if (responseJSON.warnings != null) {
       commit('setErrorJSON', responseJSON)
@@ -1241,12 +1217,10 @@ export const actions = {
       commit('setErrorJSON', responseJSON)
     }
   },
-
   setDetails({ commit, state }) {
     var detail = state.details ? null : '1'
     commit('saveDetail', detail)
   },
-
   getpostgrescompNo({ commit, dispatch, state }) {
     const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
     const url = '/api/v1/requests/queues/@me/oldest'
@@ -1254,11 +1228,11 @@ export const actions = {
 
     dispatch('checkToken')
     return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } })
-    .then(response => {
-      // response.data.nameRequest = 'NR 8270105';
-      //response.data.nameRequest = 'NR 0000021';
-      commit('loadpostgresNo', response.data)
-    })
+                .then(response => {
+                  // response.data.nameRequest = 'NR 8270105';
+                  //response.data.nameRequest = 'NR 0000021';
+                  commit('loadpostgresNo', response.data)
+                })
   },
 
   getpostgrescompInfo({ dispatch, commit }, nrNumber) {
@@ -1268,8 +1242,8 @@ export const actions = {
     dispatch('checkToken')
     return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } })
     .then(response => {
-      commit('loadCompanyInfo', response.data)
-    })
+             commit('loadCompanyInfo', response.data)
+           })
     .catch(error => console.log('ERROR: ' + error))
   },
 
@@ -1278,91 +1252,87 @@ export const actions = {
     const url = '/api/v1/requests/' + state.compInfo.nrNumber
 
     axios.patch(url, { 'state': nrState }, { headers: { Authorization: `Bearer ${ myToken }` } })
-    .then(function (response) {
-      dispatch('getpostgrescompInfo', state.compInfo.nrNumber)
-    })
-    .catch(error => console.log('ERROR: ' + error))
+         .then(function (response) {
+           dispatch('getpostgrescompInfo', state.compInfo.nrNumber)
+         }).catch(error => console.log('ERROR: ' + error))
   },
-
-  cancelNr({ commit, state, dispatch }, nrState) {
+  cancelNr ({ commit, state, dispatch }, nrState) {
     commit('is_making_decision', false)
     const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
     const url = '/api/v1/requests/' + state.compInfo.nrNumber
 
     axios.patch(url, {
-      'state': nrState, 'comments': state.internalComments,
-    }, { headers: { Authorization: `Bearer ${ myToken }` } })
-    .then(function (response) {
+           'state': nrState,
+           'comments': state.internalComments,
+         }, { headers: { Authorization: `Bearer ${ myToken }` } })
+         .then(function (response) {
 
-      dispatch('getpostgrescompInfo', state.compInfo.nrNumber)
-
-    })
-    .catch(error => console.log('ERROR: ' + error))
+           dispatch('getpostgrescompInfo', state.compInfo.nrNumber)
+         })
+         .catch(error => console.log('ERROR: ' + error))
   },
-
   nameAcceptReject({ commit, dispatch, state }) {
     const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
     const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/names/' + state.currentChoice
     axios.put(url, state.currentNameObj, { headers: { Authorization: `Bearer ${ myToken }` } })
-    .then(function (response) {
-      // Was this an accept? If so complete the NR
-      if (state.currentNameObj.state == 'APPROVED') {
-        dispatch('updateNRState', 'APPROVED')
-      }
-      // was this a conditional accept? If so complete the NR
-      else if (state.currentNameObj.state == 'CONDITION') {
-        dispatch('updateNRState', 'CONDITIONAL')
-      }
-      // This was a reject? If so check whether there are any more names
-      else {
-        if (state.currentChoice == 1) {
-          if (state.compInfo.compNames.compName2.state == null || state.compInfo.compNames.compName2.state !== 'NE') {
-            dispatch('updateNRState', 'REJECTED')
-          } else {
-            // save updated name with new state, decision text, etc.
-            commit('compName1', state.currentNameObj)
-            // we'e got another choice to move on to so move to the next
-            commit('currentNameObj', state.compInfo.compNames.compName2)
-          }
-          return
-        } else if (state.currentChoice == 2) {
-          if (state.compInfo.compNames.compName3.state == null || state.compInfo.compNames.compName3.state !== 'NE') {
-            dispatch('updateNRState', 'REJECTED')
-          } else {
-            // save updated name with new state, decision text, etc.
-            state.compInfo.compNames.compName2 = state.currentNameObj
+     .then(function (response) {
+       commit('setCustomerMessageOverride', null)
+       // Was this an accept? If so complete the NR
+       if (state.currentNameObj.state == 'APPROVED') {
+         dispatch('updateNRState', 'APPROVED')
+       }
+       // was this a conditional accept? If so complete the NR
+       else if (state.currentNameObj.state == 'CONDITION') {
+         dispatch('updateNRState', 'CONDITIONAL')
+       }
+       // This was a reject? If so check whether there are any more names
+       else {
+         if (state.currentChoice == 1) {
+           if (state.compInfo.compNames.compName2.state == null || state.compInfo.compNames.compName2.state !== 'NE') {
+             dispatch('updateNRState', 'REJECTED')
+           } else {
+             // save updated name with new state, decision text, etc.
+             commit('compName1', state.currentNameObj)
+             // we'e got another choice to move on to so move to the next
+             commit('currentNameObj', state.compInfo.compNames.compName2)
+           }
+           return
+         } else if (state.currentChoice == 2) {
+           if (state.compInfo.compNames.compName3.state == null || state.compInfo.compNames.compName3.state !== 'NE') {
+             dispatch('updateNRState', 'REJECTED')
+           } else {
+             // save updated name with new state, decision text, etc.
+             state.compInfo.compNames.compName2 = state.currentNameObj
 
-            // we'e got another choice to move on to so move to the next
-            commit('currentNameObj', state.compInfo.compNames.compName3)
-          }
-          return
-        } else {
-          // this is choice 3 so we're definitely done, there are no more names to examine
-          dispatch('updateNRState', 'REJECTED')
-        }
-      }
-    })
-    .catch(error => {
+             // we'e got another choice to move on to so move to the next
+             commit('currentNameObj', state.compInfo.compNames.compName3)
+           }
+           return
+         } else {
+           // this is choice 3 so we're definitely done, there are no more names to examine
+           dispatch('updateNRState', 'REJECTED')
+         }
+       }
+     })
+     .catch(error => {
       dispatch('getpostgrescompInfo', state.compInfo.nrNumber)
-    })
+        })
   },
-
   //updates the names data, through the api, into the database
   updateRequest({ commit, state }) {
     const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
     commit('update_nrData')
     const url = '/api/v1/requests/' + state.compInfo.nrNumber
     axios.put(url, state.nrData, { headers: { Authorization: `Bearer ${ myToken }` } })
-    .then(function (response) {
+         .then(function (response) {
 
-      // load updated data from response
-      if (response.data !== undefined && response.data.nrNum !== undefined) {
-        commit('loadCompanyInfo', response.data)
-      }
-    })
-    .catch(error => console.log('ERROR: ' + error))
+           // load updated data from response
+           if (response.data !== undefined && response.data.nrNum !== undefined) {
+             commit('loadCompanyInfo', response.data)
+           }
+         })
+         .catch(error => console.log('ERROR: ' + error))
   },
-
   undoDecision({ state }, nameChoice) {
     const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
 
@@ -1382,14 +1352,14 @@ export const actions = {
     objName.comment = null
 
     const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/names/' + nameChoice
-    axios.put(url, objName, { headers: { Authorization: `Bearer ${ myToken }` } })
-    .then(function (response) {
-      // get full NR from scratch
-      this.getpostgrescompInfo(state.compInfo.nrNumber)
-    })
-    .catch(error => console.log('ERROR: ' + error))
-  },
+      axios.put(url, objName, {headers: {Authorization: `Bearer ${myToken}`}})
+        .then(function(response){
 
+          // get full NR from scratch
+          this.getpostgrescompInfo(state.compInfo.nrNumber)
+        })
+        .catch(error => console.log('ERROR: ' + error))
+    },
   loadAdminLink({ state }, myArray) {
     //Set Admin URL
     if (myArray[0]['NODE_ENV'] == 'production') {
@@ -1400,7 +1370,6 @@ export const actions = {
       state.adminURL = 'https://namex-solr-dev.pathfinder.gov.bc.ca'
     }
   },
-
   loadDropdowns({ commit, state }) {
     var json_files_path = 'static/ui_dropdowns/'
 
@@ -1431,9 +1400,9 @@ export const actions = {
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const url = '/api/v1/requests/decisionreasons'
       axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } })
-      .then(response => {
-        commit('listDecisionReasons', response.data)
-      })
+           .then(response => {
+             commit('listDecisionReasons', response.data)
+           })
     }
 
     // request type rules - from CSV, not JSON
@@ -1444,105 +1413,137 @@ export const actions = {
     }
   },
 
-  newNrNumber({ commit, dispatch }, nrNum) {
-    //save current state ??
-    // reset the store values to null
-    dispatch('resetValues')
-    // By setting the NR number, this should(doesn't) trigger the watcher located on the RequestInfoHeader.vue
-    // component to fire
-    commit('nrNumber', nrNum)
-    dispatch('getpostgrescompInfo', nrNum)
-    //TODO: this is called in reset values already -- take out and test
-    commit('is_making_decision', false)
+  newNrNumber({ commit, dispatch }, payload) {
+    let { search, router } = payload
+    const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    const url = '/api/v1/requests/' + search
+    console.log(url)
+    dispatch('checkToken')
+    return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } })
+                .then(response => {
+                  console.log(response.data)
+                  if (router && router.currentRoute.path !== '/nameExamination') {
+                    router.push('/nameExamination')
+                  }
+                  dispatch('resetValues').then( () => {
+                    console.log('reset thened')
+                    commit('nrNumber', search)
+                    commit('loadCompanyInfo', response.data)
+                    commit('is_making_decision', false)
+                  })
+                })
+                .catch(error => {
+                  console.log('ERROR: ' + error)
+                  return
+                })
   },
 
-  getConflictInfo({ state, commit, dispatch }, value) {
+  getConflictInfo({ state, commit, dispatch }, conflict) {
     $('.conflict-detail-spinner').removeClass('hidden')
-    if (value == null || value.nrNumber == null) {
-      $('.conflict-detail-spinner').addClass('hidden')
-      return
-    }
-    commit('currentConflict', value)
-    if (value.source == 'CORP') {
-      state.corpConflictJSON = null
-      dispatch('getCorpConflict', value)
+
+    commit('currentConflict', conflict)
+
+    if (conflict.source === 'CORP') {
+      commit('loadCorpConflictJSON', null)
+      dispatch('getCorpConflict', conflict).then(data => {
+        commit('loadCorpConflictJSON', data)
+      }).finally( () => {
+        $('.conflict-detail-spinner').addClass('hidden')
+      })
     } else {
-      state.namesConflictJSON = null
-      dispatch('getNamesConflict', value)
+      commit('loadNamesConflictJSON', null)
+      dispatch('getNamesConflict', conflict).then(data => {
+        commit('loadNamesConflictJSON', data)
+      }).finally( () => {
+        $('.conflict-detail-spinner').addClass('hidden')
+      })
     }
   },
+  addConflictToCompare({ state, commit, dispatch }, conflict) {
+    let conflictData = {
+      nrNumber: conflict.nrNumber,
+      jurisdiction: conflict.jurisdiction,
+      startDate: conflict.startDate,
+      text: conflict.text,
+    }
+    let comparedConflictsCopy = [...state.comparedConflicts]
+    if (conflict.source === 'CORP') {
+      dispatch('getCorpConflict', conflict).then(data => {
+        console.log(data)
+        conflictData = { ...conflictData, ...data }
+        conflictData.type = 'corp'
+        comparedConflictsCopy.push(conflictData)
+        commit('setComparedConflicts', comparedConflictsCopy)
+      })
+    } else {
+      dispatch('getNamesConflict', conflict).then(data => {
+        console.log(data)
+        conflictData = { ...conflictData, ...data }
+        conflictData.type = 'name'
+        comparedConflictsCopy.push(conflictData)
+        commit('setComparedConflicts', comparedConflictsCopy)
+      })
+    }
+  },
+  getNamesConflict({ state, commit, dispatch }, conflict) {
+    let myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    let url = '/api/v1/requests/' + conflict.nrNumber
 
-  getNamesConflict({ state, commit, dispatch }, value) {
-    const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-    const url = '/api/v1/requests/' + value.nrNumber
-    const vm = this
-    return axios.get(url, {
-      headers: { Authorization: `Bearer ${ myToken }` }, spinner: '.conflict-detail-spinner',
-    })
-    .then(response => {
-      $('.conflict-detail-spinner')
-      .addClass('hidden')
-      commit('loadNamesConflictJSON', response.data)
-    })
-    .catch(error => {
-      $('.conflict-detail-spinner')
-      .addClass('hidden')
-      dispatch('checkError', {
-        errors: [ {
-          code: 404,
-          message: { 'NR Info Error': [ 'NR info could not be displayed because it isn\'t loaded in postgres yet.' ] },
-        } ],
+    return new Promise((resolve, reject) => {
+      axios.get(url, { headers: { Authorization: `Bearer ${myToken}` }, spinner: null, })
+           .then(response => {
+             resolve(response.data)
+           }).catch(error => {
+        dispatch('checkError', { errors: [{
+            code: 404,
+            message: {
+              'NR Info Error': [`NR info couldn't be displayed as it isn't loaded in postgres yet`]}
+          }]
+        })
+        reject()
       })
     })
   },
-
-  getCorpConflict({ state, commit, dispatch }, value) {
+  getCorpConflict({ state, commit, dispatch }, conflict) {
     const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-    const url = '/api/v1/corporations/' + value.nrNumber
-    const vm = this
-    return axios.get(url, {
-      headers: { Authorization: `Bearer ${ myToken }` }, spinner: false,
-    })
-    .then(response => {
-      commit('loadCorpConflictJSON', response.data)
-      $('.conflict-detail-spinner').addClass('hidden')
-    })
-    .catch(error => {
-      $('.conflict-detail-spinner').addClass('hidden')
-      dispatch('checkError', {
-        errors: [ {
-          code: 404, message: {
-            'Corp Info Error': [ 'Corporation info could not be displayed because it isn\'t in fdw-registries data.' ],
-          },
-        } ],
+    const url = '/api/v1/corporations/' + conflict.nrNumber
+
+    return new Promise((resolve, reject) => {
+      axios.get(url, { headers: { Authorization: `Bearer ${myToken}` }, spinner: false, })
+           .then(response => {
+             resolve(response.data)
+           }).catch(error => {
+        dispatch('checkError', {
+          errors: [{
+            code: 404,
+            message: {
+              'Corp Error': [`Corp info couldn't be displayed. It isn't in fdw-registries data.`]
+            }
+          }]
+        })
+        reject()
       })
     })
   },
-
   getHistoryInfo({ state, commit, dispatch }, value) {
-    $('.history-list-spinner')
-    .removeClass('hidden')
+    $('.history-list-spinner').removeClass('hidden')
     const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
     const url = '/api/v1/requests/' + value.nr_num
     const vm = this
-    return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` }, spinner: false })
-    .then(response => {
-      commit('loadHistoriesInfoJSON', response.data)
-      $('.history-list-spinner')
-      .addClass('hidden')
-    })
-    .catch(error => {
-      $('.history-list-spinner')
-      .addClass('hidden')
-      dispatch('checkError', {
-        errors: [ {
-          code: 404,
-          message: { 'NR Info Error': [ 'NR info could not be displayed because it isn\'t loaded in postgres yet.' ] },
-        } ],
-      })
-    })
+    return axios.get(url, { headers: { Authorization: `Bearer ${myToken}` }, spinner: false, }).then(response => {
+                  commit('loadHistoriesInfoJSON', response.data)
+                  $('.history-list-spinner').addClass('hidden')
+                })
+                .catch(error => {
+                  $('.history-list-spinner').addClass('hidden')
+                  dispatch('checkError', {
+                    errors: [{
+                      code: 404,
+                      message: { 'NR Info Error': ['NR info could not be displayed because it isn\'t loaded in postgres yet.'] }
+                    }]
+                  })
+                })
   },
-
   getSearchDataJSON({ commit, state }, val) {
     const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
     // current hour passed in via front end because server is in utc time (for last update and submitted date filters
@@ -1551,12 +1552,11 @@ export const actions = {
 
     const vm = this
     return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } })
-    .then(response => {
-      commit('loadSearchDataJSON', response.data)
-    })
-    .catch(error => console.log('ERROR: ' + error))
+                .then(response => {
+                  commit('loadSearchDataJSON', response.data)
+                })
+                .catch(error => console.log('ERROR: ' + error))
   },
-
   getStatsDataJSON({ commit, state }, stateCd) {
     const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
     var newQuery = '?order=priorityCd:desc,submittedDate:asc&queue=' + stateCd +
@@ -1564,20 +1564,18 @@ export const actions = {
     const url = '/api/v1/requests' + newQuery
     const vm = this
     return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } })
-    .then(response => {
-      var params = {
-        myState: stateCd, JSONdata: response.data,
-      }
-      //commit('loadStatsDataJSON', response.data)
-      commit('loadStatsDataJSON', params)
-    })
-    .catch(error => console.log('ERROR: ' + error))
+                .then(response => {
+                  var params = {
+                    myState: stateCd, JSONdata: response.data,
+                  }
+                  //commit('loadStatsDataJSON', response.data)
+                  commit('loadStatsDataJSON', params)
+                })
+                .catch(error => console.log('ERROR: ' + error))
   },
-
   setCurrentName({ commit, state }, objName) {
     commit('currentNameObj', objName)
   },
-
   runManualRecipe({ dispatch, state, commit }, searchObj) {
     if (state.currentChoice != null) {
       $('.conflict-container-spinner').removeClass('hidden')
@@ -1586,8 +1584,7 @@ export const actions = {
       let p2 = dispatch('checkManualSynonymMatches', searchObj)
       let p3 = dispatch('checkManualCobrsPhoneticMatches', searchObj)
       let p4 = dispatch('checkManualPhoneticMatches', searchObj)
-      Promise.all([ p1, p2, p3, p4 ])
-      .then(() => {
+      Promise.all([p1, p2, p3, p4]).then(() => {
         commit('setConflictsReturnedStatus', true)
         $('.conflict-container-spinner').addClass('hidden')
       })
@@ -1597,191 +1594,176 @@ export const actions = {
       dispatch('checkManualHistories', searchObj.searchStr)
     }
   },
-
   checkManualExactMatches({ commit, state }, query) {
     query = query.replace(' \/', '\/')
-    .replace(/(^|\s+)(\$+(\s|$)+)+/g, '$1DOLLAR$3')
-    .replace(/(^|\s+)(¢+(\s|$)+)+/g, '$1CENT$3')
-    .replace(/\$/g, 'S')
-    .replace(/¢/g, 'C')
-    .replace(/\\/g, '')
-    .replace(/\//g, '')
-    .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
-    .replace(/[\+\-]{2,}/g, '')
-    .replace(/\s[\+\-]$/, '')
-    let myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+                 .replace(/(^|\s+)(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+                 .replace(/(^|\s+)(¢+(\s|$)+)+/g, '$1CENT$3')
+                 .replace(/\$/g, 'S')
+                 .replace(/¢/g, 'C')
+                 .replace(/\\/g, '')
+                 .replace(/\//g, '')
+                 .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
+                 .replace(/[\+\-]{2,}/g, '')
+                 .replace(/\s[\+\-]$/, '')
+    const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
     query = query.substring(0, 1) == '+' ? query.substring(1) : query
     query = encodeURIComponent(query)
-    let url = '/api/v1/exact-match?query=' + query
+    const url = '/api/v1/exact-match?query=' + query
     return axios.get(url, {
-      headers: { Authorization: `Bearer ${ myToken }` }, spinner: '.exact-match-spinner',
-    })
-    .then(response => {
+      headers: { Authorization: `Bearer ${myToken}` },
+      spinner: '.exact-match-spinner'
+    }).then(response => {
       commit('setExactMatchesConflicts', response.data)
-    })
-    .catch(error => { console.log('ERROR (exact matches): ' + error) })
+    }).catch(error => { console.log('ERROR (exact matches): ' + error) })
   },
-
   checkManualSynonymMatches({ dispatch, commit, state }, searchObj) {
-    let searchStr = ( ( searchObj.searchStr == '' ) ? '*' : searchObj.searchStr )
-    let exactPhrase = searchObj.exactPhrase
+    var searchStr = ((searchObj.searchStr == '') ? '*' : searchObj.searchStr)
+    var exactPhrase = searchObj.exactPhrase
     searchStr = searchStr.replace(/\//g, ' ')
-    .replace(/\\/g, ' ')
-    .replace(/&/g, ' ')
-    .replace(/\+/g, ' ')
-    .replace(/\-/g, ' ')
-    .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
-    .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
-    .replace(/\$/g, 'S')
-    .replace(/¢/g, 'C')
-    .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?|,)/g, '')
+                         .replace(/\\/g, ' ')
+                         .replace(/&/g, ' ')
+                         .replace(/\+/g, ' ')
+                         .replace(/\-/g, ' ')
+                         .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+                         .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+                         .replace(/\$/g, 'S')
+                         .replace(/¢/g, 'C')
+                         .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?|,)/g, '')
     if (exactPhrase == '') exactPhrase = '*'
-    let myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-    let url = '/api/v1/requests/synonymbucket/' + searchStr + '/' + exactPhrase
+    const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    const url = '/api/v1/requests/synonymbucket/' + searchStr + '/' + exactPhrase
     dispatch('checkToken')
     return axios.get(url, {
-      headers: { Authorization: `Bearer ${ myToken }` }, spinner: '.synonym-match-spinner',
-    })
-    .then(response => {
+      headers: { Authorization: `Bearer ${myToken}` },
+      spinner: '.synonym-match-spinner'
+    }).then( response => {
       commit('setSynonymMatchesConflicts', response.data)
-    })
-    .catch(error => {
-      console.log('ERROR (synonym matches): ' + error)
-    })
+    }).catch( error => {
+      console.log('ERROR (synonym matches): ' + error) })
   },
-
   checkManualCobrsPhoneticMatches({ dispatch, commit, state }, searchObj) {
-    let query = ( ( searchObj.searchStr == '' ) ? '*' : searchObj.searchStr )
+    var query = ((searchObj.searchStr == '') ? '*' : searchObj.searchStr)
     query = query.replace(/\//g, ' ')
-    .replace(/\\/g, ' ')
-    .replace(/&/g, ' ')
-    .replace(/\+/g, ' ')
-    .replace(/\-/g, ' ')
-    .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
-    .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
-    .replace(/\$/g, 'S')
-    .replace(/¢/g, 'C')
-    .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
-    let myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-    let url = '/api/v1/requests/cobrsphonetics/' + query + '/*'
+                 .replace(/\\/g, ' ')
+                 .replace(/&/g, ' ')
+                 .replace(/\+/g, ' ')
+                 .replace(/\-/g, ' ')
+                 .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+                 .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+                 .replace(/\$/g, 'S')
+                 .replace(/¢/g, 'C')
+                 .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
+    const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    const url = '/api/v1/requests/cobrsphonetics/' + query + '/*'
     dispatch('checkToken')
     return axios.get(url, {
-      headers: { Authorization: `Bearer ${ myToken }` }, spinner: '.cobrs-phonetic-match-spinner',
-    })
-    .then(response => {
+      headers: { Authorization: `Bearer ${myToken}` },
+      spinner: '.cobrs-phonetic-match-spinner'
+    }).then( response => {
       commit('setCobrsPhoneticConflicts', response.data)
-    })
-    .catch(error => {
-      console.log('ERROR (CobrsPhonetic matches): ' + error)
-    })
+    }).catch( error => {
+      console.log('ERROR (CobrsPhonetic matches): ' + error) })
   },
-
   checkManualPhoneticMatches({ dispatch, commit, state }, searchObj) {
-    let query = ( ( searchObj.searchStr == '' ) ? '*' : searchObj.searchStr )
+    let query = ((searchObj.searchStr == '') ? '*' : searchObj.searchStr)
     query = query.replace(/\//g, ' ')
-    .replace(/\\/g, ' ')
-    .replace(/&/g, ' ')
-    .replace(/\+/g, ' ')
-    .replace(/\-/g, ' ')
-    .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
-    .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
-    .replace(/\$/g, 'S')
-    .replace(/¢/g, 'C')
-    .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
+                 .replace(/\\/g, ' ')
+                 .replace(/&/g, ' ')
+                 .replace(/\+/g, ' ')
+                 .replace(/\-/g, ' ')
+                 .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+                 .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+                 .replace(/\$/g, 'S')
+                 .replace(/¢/g, 'C')
+                 .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
     const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
     const url = '/api/v1/requests/phonetics/' + query + '/*'
     dispatch('checkToken')
     return axios.get(url, {
-      headers: { Authorization: `Bearer ${ myToken }` }, spinner: '.phonetic-match-spinner',
-    })
-    .then(response => {
-      commit('setPhoneticConflicts', response.data)
-    })
-    .catch(error => {
-      console.log('ERROR (Phonetic matches): ' + error)
-    })
+                  headers: { Authorization: `Bearer ${myToken}` }, spinner: '.phonetic-match-spinner'
+                })
+                .then(response => {
+                  commit('setPhoneticConflicts', response.data)
+                })
+                .catch(error => {
+                  console.log('ERROR (Phonetic matches): ' + error) })
   },
-
   checkManualConditions({ commit, state }, searchStr) {
     if (searchStr != '') {
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-      const myHeader = { headers: { Authorization: `Bearer ${ myToken }` }, spinner: '.conditions-spinner' }
+      const myHeader = { headers: { Authorization: `Bearer ${myToken}` }, spinner: '.conditions-spinner' }
       const url = '/api/v1/documents:restricted_words'
-      return axios.post(url, { type: 'plain_text', content: searchStr }, myHeader)
-      .then(response => {
-        commit('loadConditionsJSON', response.data)
-      })
-      .catch(error => console.log('ERROR: ' + error))
+      const vm = this
+      return axios.post(url, { type: 'plain_text', content: searchStr }, myHeader).then(response => {
+                    commit('loadConditionsJSON', response.data)
+                  })
+                  .catch(error => console.log('ERROR: ' + error))
     }
   },
-
   checkManualHistories({ commit, state }, searchStr) {
     if (searchStr != '') {
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const myHeader = { headers: { Authorization: `Bearer ${ myToken }` }, spinner: '.history-spinner' }
       const url = '/api/v1/documents:histories'
       searchStr = searchStr.replace(/\//g, ' ')
-      .replace(/\\/g, ' ')
-      .replace(/&/g, ' ')
-      .replace(/\+/g, ' ')
-      .replace(/\-/g, ' ')
-      .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
-      .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
-      .replace(/\$/g, 'S')
-      .replace(/¢/g, 'C')
-      .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
+                           .replace(/\\/g, ' ')
+                           .replace(/&/g, ' ')
+                           .replace(/\+/g, ' ')
+                           .replace(/\-/g, ' ')
+                           .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+                           .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+                           .replace(/\$/g, 'S')
+                           .replace(/¢/g, 'C')
+                           .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
       return axios.post(url, { type: 'plain_text', content: searchStr }, myHeader)
-      .then(response => {
-        commit('loadHistoriesJSON', response.data)
-      })
-      .catch(error => console.log('ERROR: ' + error))
+                  .then(response => {
+                    commit('loadHistoriesJSON', response.data)
+                  })
+                  .catch(error => console.log('ERROR: ' + error))
     }
   },
-
   checkManualTrademarks({ commit, state }, searchStr) {
     if (searchStr != '') {
       const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const myHeader = { headers: { Authorization: `Bearer ${ myToken }` }, spinner: '.trademarks-spinner' }
       const url = '/api/v1/documents:trademarks'
       searchStr = searchStr.replace(/\//g, ' ')
-      .replace(/\\/g, ' ')
-      .replace(/&/g, ' ')
-      .replace(/\+/g, ' ')
-      .replace(/\-/g, ' ')
-      .replace(/\(/g, '')
-      .replace(/\)/g, '')
-      .replace(/}/g, '')
-      .replace(/{/g, '')
-      .replace(/]/g, '')
-      .replace(/\[/g, '')
-      .replace(/\?/g, '')
-      .replace(/#/g, '')
-      .replace(/%/g, '')
-      .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
-      .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
-      .replace(/\$/g, 'S')
-      .replace(/¢/g, 'C')
-      .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
+                           .replace(/\\/g, ' ')
+                           .replace(/&/g, ' ')
+                           .replace(/\+/g, ' ')
+                           .replace(/\-/g, ' ')
+                           .replace(/\(/g, '')
+                           .replace(/\)/g, '')
+                           .replace(/}/g, '')
+                           .replace(/{/g, '')
+                           .replace(/]/g, '')
+                           .replace(/\[/g, '')
+                           .replace(/\?/g, '')
+                           .replace(/#/g, '')
+                           .replace(/%/g, '')
+                           .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+                           .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+                           .replace(/\$/g, 'S')
+                           .replace(/¢/g, 'C')
+                           .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
       return axios.post(url, { type: 'plain_text', content: searchStr }, myHeader)
-      .then(response => {
-        commit('loadTrademarksJSON', response.data)
-      })
-      .catch(error => console.log('ERROR: ' + error))
+                  .then(response => {
+                    commit('loadTrademarksJSON', response.data)
+                  })
+                  .catch(error => console.log('ERROR: ' + error))
     }
   },
-
   syncNR({ dispatch, commit }, nrNumber) {
     const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
     const url = '/api/v1/requests/' + nrNumber + '/syncnr'
     const vm = this
     dispatch('checkToken')
     return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } })
-    .then(response => {
-      commit('loadCompanyInfo', response.data)
-    })
-    .catch(error => console.log('ERROR: ' + error))
+                .then(response => {
+                  commit('loadCompanyInfo', response.data)
+                })
+                .catch(error => console.log('ERROR: ' + error))
   },
-
   resetValues({ state, commit }) {
     // clear NR specific JSON data so that it can't get accidentally re-used by the next NR number
     commit('loadConflictsJSON', null)
@@ -1801,16 +1783,21 @@ export const actions = {
     commit('setSelectedConflicts', [])
     commit('setSelectedConditions', [])
     commit('setSelectedTrademarks', [])
+    commit('setConflictsReturnedStatus', null)
+    commit('setComparedConflicts', [])
+    commit('setConflictsAutoAdd', true)
+    commit('setAddedConflicts', [])
+    commit('setCustomerMessageOverride', null)
     // reset all flags like editing, making decision, etc.
     state.is_editing = false
     state.is_making_decision = false
     state.decision_made = null
     state.acceptance_will_be_conditional = false
     state.is_header_shown = false
-  }, resetHistoriesInfo({ commit }) {
+  },
+  resetHistoriesInfo({ commit }) {
     commit('loadHistoriesInfoJSON', null)
   },
-
   postComment({ commit, state }) {
     const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
     const myHeader = { headers: { Authorization: `Bearer ${ myToken }` }, spinner: '.conditions-spinner' }
@@ -1818,18 +1805,18 @@ export const actions = {
     let data = { comment: state.newComment }
 
     axios.post(url, data, { headers: { Authorization: `Bearer ${ myToken }` } })
-    .then(response => {
-      let comments
-      if (state.internalComments && Array.isArray(state.internalComments) && state.internalComments.length > 0) {
-        comments = Object.assign([], state.internalComments)
-      } else {
-        comments = []
-      }
-      comments.push(response.data)
-      commit('internalComments', comments)
-      commit('setNewComment', null)
-    })
-    .catch(error => console.log('ERROR: ' + error))
+         .then(response => {
+           let comments
+           if (state.internalComments && Array.isArray(state.internalComments) && state.internalComments.length > 0) {
+             comments = Object.assign([], state.internalComments)
+           } else {
+             comments = []
+           }
+           comments.push(response.data)
+           commit('internalComments', comments)
+           commit('setNewComment', null)
+         })
+         .catch(error => console.log('ERROR: ' + error))
   },
 }
 
@@ -2196,7 +2183,7 @@ export const getters = {
     return []
   },
 
-//itroduced in namex-ui-enhancements code-with-us
+  //introduced in namex-ui-enhancements code-with-us
   selectedTrademarks: state => state.selectedTrademarks,
   selectedConflicts: state => state.selectedConflicts,
   selectedConditions: state => state.selectedConditions,
@@ -2238,6 +2225,7 @@ export const getters = {
         output.push(...state.parsedPhoneticConflicts)
       } else {
         output.push({ highlightedText: 'No Match', class: 'conflict-no-match' })
+
       }
     }
     return output
@@ -2248,13 +2236,28 @@ export const getters = {
     }
     return []
   },
+  conflictsChildIndex: state => state.conflictsChildIndex,
+  conflictsIndex: state => state.conflictsIndex,
+  conflictsChildren: state => state.conflictsChildren,
+  conflictsAutoAdd: state => state.conflictsAutoAdd,
+  autoAddDisabled: (state, getters) => {
+    return (
+      getters.decisionPanel.functionalityDisabled
+      || state.selectedConflicts.length > 0
+      || state.addedConflicts.length > 0
+    )
+  },
+  addedConflicts: state => state.addedConflicts,
+  comparedConflicts: state => state.comparedConflicts,
   decisionPanel(state) {
     let show = true
-    if (state.examiner !== state.userId || !state.is_making_decision) show = false
     let functionalityDisabled = false
-    if (!show) functionalityDisabled = true
+    if (state.examiner !== state.userId || !state.is_making_decision) show = false
+    if (state.customerMessageOverride || !show) functionalityDisabled = true
     return { show, functionalityDisabled }
-  }
+  },
+  customerMessageOverride: state => state.customerMessageOverride,
+  conflictsScrollPosition: state => state.conflictsScrollPosition,
 }
 
 export default new Vuex.Store({

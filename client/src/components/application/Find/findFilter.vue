@@ -428,9 +428,11 @@ export default {
     },
     examineNr(nr) {
       if (nr != '') {
-        this.$store.dispatch('newNrNumber', nr);
-        const path = '/nameExamination';
-        this.$router.push(path);
+        let payload = {
+          search: nr,
+          router: this.$router,
+        }
+        this.$store.dispatch('newNrNumber', payload)
       }
     },
     sort() {

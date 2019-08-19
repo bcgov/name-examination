@@ -10,7 +10,7 @@
       <v-icon class="notice-icon">warning</v-icon>Similar name previously <b>{{ exactMatch }}</b>
     </div>
 
-    <CommentsPopUp />
+    <CommentsPopUp v-if="showCommentsPopUp" />
     <v-container fluid name-exam-container >
       <v-layout>
         <RequestInfoHeader />
@@ -105,6 +105,12 @@
         catch(e) {
           return false;
         }
+      },
+      showCommentsPopUp() {
+        if (this.$store.state.showCommentsPopUp) {
+          return this.$store.state.showCommentsPopUp
+        }
+        return false
       },
     },
     watch: {
