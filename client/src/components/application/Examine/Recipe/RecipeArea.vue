@@ -15,8 +15,8 @@
                  flat
                  href="Conflicts"
                  id="conflicts-tab">
-            <v-icon :class="conflictsIcon === 'close' ? 'c-priority' : 'c-accepted'"
-                    class="ma-0 pa-0 recipe-menu-icon"
+            <v-icon :class="getColour(conflictsIcon)"
+                    class="mr-1 pa-0 recipe-menu-icon"
                     id="conflicts1">{{ conflictsIcon }}</v-icon>
             <span class="recipe-menu-tab-text">Conflicts</span>
           </v-tab>
@@ -26,9 +26,10 @@
                  flat
                  href="Conditions"
                  id="conditions-tab">
-            <v-icon :class="conditionIcon === 'close' ? 'c-priority' : 'c-accepted'"
-                    class="ma-0 pa-0 recipe-menu-icon"
-                    id="conditions1">{{ conditionIcon }}</v-icon>
+            <v-icon
+              :class="getColour(conditionIcon)"
+              class="mr-1 pa-0 recipe-menu-icon"
+              id="conditions1">{{ conditionIcon }}</v-icon>
             <span class="recipe-menu-tab-text">Condition</span>
           </v-tab>
 
@@ -37,8 +38,8 @@
                  flat
                  href="Trademarks"
                  id="trademarks-tab">
-              <v-icon :class="trademarksIcon === 'close' ? 'c-priority' : 'c-accepted'"
-                      class="ma-0 pa-0 recipe-menu-icon"
+              <v-icon :class="getColour(trademarksIcon)"
+                      class="mr-1 pa-0 recipe-menu-icon"
                       id="trademarks1">{{ trademarksIcon }}</v-icon>
             <span class="recipe-menu-tab-text">Trademarks</span>
           </v-tab>
@@ -48,8 +49,8 @@
                  flat
                  href="History"
                  id="history-tab">
-            <v-icon :class="historyIcon === 'close' ? 'c-priority' : 'c-accepted'"
-                    class="ma-0 pa-0 recipe-menu-icon"
+            <v-icon :class="getColour(historyIcon)"
+                    class="mr-1 pa-0 recipe-menu-icon"
                     id="history1">{{ historyIcon }}</v-icon>
             <span class="recipe-menu-tab-text">History</span>
           </v-tab>
@@ -67,6 +68,7 @@
 
 <script>
 /* eslint-disable */
+  import { mapState } from 'vuex'
   import ConditionsInfo from '@/components/application/Examine/Recipe/conditions/ConditionsInfo'
   import ConflictList from '@/components/application/Examine/Recipe/conflicts/ConflictList'
   import HistoryList from '@/components/application/Examine/Recipe/history/HistoryList'
@@ -75,29 +77,47 @@
   export default {
     name: 'RecipeArea',
     components: { ConditionsInfo, ConflictList, HistoryList, TrademarksInfo },
-    data() {
-      return {
-        conditionIcon: 'close',
-        conflictsIcon: 'close',
-        historyIcon: 'close',
-        trademarksIcon: 'close',
-      }
-    },
     mounted() {
       if (!this.currentRecipeCard) {
-        this.$store.commit('currentRecipeCard', 'Conflicts')
+        this.currentRecipeCard = 'conflicts'
       }
-      this.setConditions()
-      this.setConflicts()
-      this.setHistory()
-      this.setTrademarks()
     },
     computed: {
-      cobrsPhoneticConflicts() {
-        return this.$store.getters.cobrsPhoneticConflicts
+      ...mapState({
+        exactMatchesConflicts: state => (state.exactMatchesConflicts.filter(conflict => conflict.nrNumber)),
+        cobrsPhoneticConflicts: 'cobrsPhoneticConflicts',
+        phoneticConflicts: 'phoneticConflicts',
+        synonymMatchesConflicts: 'synonymMatchesConflicts',
+        is_making_decision: 'is_making_decision',
+        conditionsJSON: 'conditionsJSON',
+        historiesJSON: 'historiesJSON',
+        trademarkInfo: 'trademarksJSON',
+      }),
+      conditionIcon() {
+        if (this.conditionsJSON) {
+          let { restricted_words_conditions } = this.conditionsJSON
+          if (restricted_words_conditions.length > 0) {
+            for (let resWord of restricted_words_conditions) {
+              console.log(resWord.cnd_info)
+              if (resWord.cnd_info.every(con => con.allow_use === 'N')) {
+                return 'close'
+              }
+            }
+            return 'error_outline'
+          }
+        }
+        return 'done'
       },
-      conditionInfo() {
-        return this.$store.getters.conditionsJSON
+      conflictsIcon() {
+        if (
+          this.cobrsPhoneticConflicts.length > 0
+          || this.exactMatchesConflicts.length > 0
+          || this.synonymMatchesConflicts.length > 0
+          || this.phoneticConflicts.length > 0
+        ) {
+          return 'close'
+        }
+        return 'done'
       },
       currentRecipeCard: {
         get() {
@@ -107,55 +127,28 @@
           this.$store.commit('currentRecipeCard', value)
         },
       },
-      hasExactMatchesInfo() {
-        return this.$store.getters.hasExactMatches
+      historyIcon() {
+        if (!this.historiesJSON || this.historiesJSON.names.length === 0) {
+          return 'done'
+        }
+        for (let historyItem of this.historiesJSON.names) {
+          if (historyItem.name_state_type_cd === 'R' || historyItem.name_state_type_cd === 'REJECTED') {
+            return 'close'
+          }
+        }
+        return 'error_outline'
       },
-      historyInfo() {
-        return this.$store.getters.historiesJSON
+      ateser() {
+        return this.$el.querySelector('#conflicts1').className
       },
-      phoneticConflicts() {
-        return this.$store.getters.phoneticConflicts
-      },
-      synonymMatchesInfo() {
-        return this.$store.getters.synonymMatchesConflicts
-      },
-      trademarkInfo() {
-        return this.$store.getters.trademarksJSON
-      },
-    },
-    watch: {
-      cobrsPhoneticConflicts(val) {
-        // set severity flag on recipe menu
-        this.setConflicts()
-      },
-      conditionInfo(val) {
-        // set severity flag on recipe menu
-        this.setConditions()
-      },
-      hasExactMatchesInfo() {
-        this.setConflicts()
-      },
-      historyInfo(val) {
-        // set severity flag on recipe menu
-        this.setHistory()
-      },
-      phoneticConflicts(val) {
-        // set severity flag on recipe menu
-        this.setConflicts()
-      },
-      synonymMatchesInfo(val) {
-        // set severity flag on recipe menu
-        this.setConflicts()
-      },
-      trademarkInfo(val) {
-        // set severity flag on recipe menu
-        this.setTrademarks()
+      trademarksIcon() {
+        if (!this.trademarkInfo || this.trademarkInfo.names.length === 0) {
+          return 'done'
+        }
+        return 'close'
       },
     },
     methods: {
-      clickRecipeCard(event) {
-        event.preventDefault()
-      },
       getClasses(tab) {
         if (tab === 'Conflicts') {
           if (this.currentRecipeCard === tab) {
@@ -168,115 +161,14 @@
         }
         return 'tab-base tab-inactive'
       },
-      hasCobrsPhonConflicts() {
-        let matchesList = this.cobrsPhoneticConflicts
-        for (let i = 0; i < matchesList.length; i++) {
-          if (matchesList[i].source != undefined)
-            return true
-        }
-        return false
-      },
-      hasPhonConflicts() {
-        let matchesList = this.phoneticConflicts
-        for (let i = 0; i < matchesList.length; i++) {
-          if (matchesList[i].source != undefined)
-            return true
-        }
-        return false
-      },
-      hasSynConflicts() {
-        let matchesList = this.synonymMatchesInfo
-        for (let i = 0; i < matchesList.length; i++) {
-          if (matchesList[i].source != undefined)
-            return true
-        }
-        return false
+      getColour(icon) {
+        if (icon === 'done') return 'c-accepted'
+        if (icon === 'error_outline') return 'c-gold'
+        if (icon === 'close') return 'c-priority'
       },
       preventEvent(event) {
         event.preventDefault()
         event.stopPropagation()
-      },
-      setConcern(val) {
-        this[val] = 'close'
-      },
-      setConditions() {
-        // if no restricted words -> call setPass
-        // else if any word has all possible conditions with allow us as 'N' -> call setFail
-        // else -> call setConcern
-
-        var conditionInfo = this.conditionInfo
-        if (conditionInfo != null) {
-          conditionInfo = conditionInfo.restricted_words_conditions
-          if (conditionInfo.length != 0) {
-            var fail = false
-            var wIter
-            var cIter
-            // loop through restricted words and their list of conditions
-            for (wIter = 0; wIter < conditionInfo.length; wIter++) {
-              var tmpF = true
-              // loop through list of condition info and grab 'allow_use' info for each one
-              for (cIter = 0; cIter < conditionInfo[wIter].cnd_info.length; cIter++) {
-                if (conditionInfo[wIter].cnd_info[cIter].allow_use_tf) {
-                  tmpF = false
-                }
-              }
-              // if true then all conditions for this word had 'allow_use' = 'N'
-              if (tmpF) {
-                fail = true
-                break
-              }
-            }
-            // if true then at least 1 word had 'allow_use' = 'N' for every condition
-            if (fail) {
-              this.setFail('conditionIcon')
-            } else {
-              this.setConcern('conditionIcon')
-            }
-          } else {
-            this.setPass('conditionIcon')
-          }
-        } else {
-          this.setPass('conditionIcon')
-        }
-      },
-      setConflicts() {
-        if (this.hasExactMatchesInfo || this.hasSynConflicts() || this.hasCobrsPhonConflicts() || this.hasPhonConflicts())
-          this.setFail('conflictsIcon')
-        else
-          this.setPass('conflictsIcon')
-      },
-      setFail(val) {
-        this[val] = 'close'
-      },
-      setHistory() {
-        //If there is any history, set to CONCERN; otherwise PASS. -- changing
-        if (this.historyInfo == null || this.historyInfo.names.length == 0) {
-          this.setPass('historyIcon')
-        } else {
-          let set = false
-          for (let i = 0; i < this.historyInfo.names.length; i++) {
-            if (this.historyInfo.names[i].name_state_type_cd === 'R' || this.historyInfo.names[i].name_state_type_cd === 'REJECTED' || this.historyInfo.names[i].submit_count > 3) {
-              this.setFail('historyIcon')
-              set = true
-              break
-            }
-          }
-          if (!set)
-            this.setConcern('historyIcon')
-        }
-      },
-      setPass(val) {
-        this[val] = 'check'
-      },
-      setTrademarks() {
-        //If there are any trademarks, set to FAIL; otherwise PASS.
-        if (this.trademarkInfo == null || this.trademarkInfo == undefined) {
-          this.setPass('trademarksIcon')
-        } else if (this.trademarkInfo.names.length == 0) {
-          this.setPass('trademarksIcon')
-        } else {
-          this.setFail('trademarksIcon')
-        }
       },
     },
   }

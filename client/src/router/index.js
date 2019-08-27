@@ -7,7 +7,7 @@ import store from '@/store'
 const LandingPage = () => import(/* webpackChunkName: "home" */'@/components/LandingPage')
 const Signin = () => import(/* webpackChunkName: "signin" */'@/components/auth/Signin')
 const NameExamination = () => import(/* webpackChunkName: "nameexamination" */'@/components/application/NameExamination')
-const Find = () => import(/* webpackChunkName: "find" */'@/components/application/Find')
+const findFilter = () => import(/* webpackChunkName: "find" */'@/components/application/Find/findFilter')
 const Stats = () => import(/* webpackChunkName: "stats" */'@/components/application/Stats/Stats.vue')
 
 Vue.use(Router)
@@ -41,7 +41,7 @@ let router = new Router({
     },
     {
       name: 'find',
-      component: Find,
+      component: findFilter,
       path: '/find',
       meta: {
         requiresAuth: true
@@ -60,15 +60,15 @@ let router = new Router({
 
 router.beforeResolve((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    
+
     // this route requires auth,
     // if not Authenticated, redirect to login page.
     let auth = sessionStorage.getItem('AUTHORIZED')
     if (auth == 'true') {
-      
+
       next()
     } else {
-      
+
       store.dispatch("checkError",{"message": "Not Authorized please login."});
       next({
         path: '/'

@@ -1,30 +1,29 @@
-/* eslint-disable */
-import Vue from 'vue';
+import Vue from 'vue'
 import router from '@/router'
-import StdHeader from '@/components/application/sections/StdHeader';
+import StdHeader from '@/components/application/sections/StdHeader'
 
 describe('StdHeader.vue', () => {
 
-  let instance;
-  let vm;
-  let messageSentToStore;
-  let valueSent;
-  let store;
+  let instance
+  let vm
+  let messageSentToStore
+  let valueSent
+  let store
   let mount = () => {
     sessionStorage.setItem('AUTHORIZED', true)
-    const Constructor = Vue.extend(StdHeader);
-    instance = new Constructor({store: store, router: router});
+    const Constructor = Vue.extend(StdHeader)
+    instance = new Constructor({ store: store, router: router })
     let app = document.createElement('DIV')
-    app.id = "app"
-    document.body.innerHTML = '';
-    document.body.appendChild(app);
-    return instance.$mount(document.getElementById('app'));
+    app.id = 'app'
+    document.body.innerHTML = ''
+    document.body.appendChild(app)
+    return instance.$mount(document.getElementById('app'))
   }
   let click = function (id) {
-    let button = vm.$el.querySelector(id);
-    let window = button.ownerDocument.defaultView;
-    var click = new window.Event('click');
-    button.dispatchEvent(click);
+    let button = vm.$el.querySelector(id)
+    let window = button.ownerDocument.defaultView
+    var click = new window.Event('click')
+    button.dispatchEvent(click)
   }
 
   it('displays user id', () => {
@@ -33,13 +32,14 @@ describe('StdHeader.vue', () => {
         isAuthenticated: true,
         userHasEditRole: true,
         userHasApproverRole: true,
-        userId: 'max'
-      }
+        userId: 'max',
+      },
     }
-    vm = mount();
-    let value = vm.$el.querySelector('#userid').innerHTML;
+    vm = mount()
+    let value = vm.$el.querySelector('#userid').innerHTML
 
-    expect(value).toEqual('max')
+    expect(value)
+    .toEqual('max')
   })
 
   describe('Navigation menu when logged in', () => {
@@ -49,48 +49,58 @@ describe('StdHeader.vue', () => {
         getters: {
           isAuthenticated: true,
           userHasApproverRole: true,
-          userHasEditRole: true
+          userHasEditRole: true,
         },
       }
-      vm = mount();
+      vm = mount()
     })
 
     it('offers a link to /home from logo', (done) => {
-      click('#namex-logo-home-link');
+      click('#namex-logo-home-link')
 
       setTimeout(() => {
-        expect(window.location.pathname).toEqual('/home')
-        done();
+        expect(window.location.pathname)
+        .toEqual('/home')
+        done()
       }, 300)
     })
     it('offers a link to /nameExamination', (done) => {
       //vuetify does not offer a way to assign an ID to the link ( <a> tag )  in its tab
       //component in the markup, but it is the first and only child of the element which gets the
       //id
-      vm.$el.querySelector('#nameExamine').firstChild.setAttribute('id', 'nameExaminationhref')
+      vm.$el.querySelector('#nameExamine')
+      .firstChild
+      .setAttribute('id', 'nameExaminationhref')
       click('#nameExaminationhref')
 
       setTimeout(() => {
-        expect(window.location.pathname).toEqual('/nameExamination')
-        done();
+        expect(window.location.pathname)
+        .toEqual('/nameExamination')
+        done()
       }, 300)
     })
     it('offers a link to /find', (done) => {
       vm.$el.querySelector(
-        '#header-search-link'
-      ).firstChild.setAttribute('id', 'namexSearchLink')
-      click('#namexSearchLink');
+        '#header-search-link',
+      )
+      .firstChild
+      .setAttribute('id', 'namexSearchLink')
+      click('#namexSearchLink')
 
       setTimeout(() => {
-        expect(window.location.pathname).toEqual('/find')
-        done();
+        expect(window.location.pathname)
+        .toEqual('/find')
+        done()
       }, 300)
     })
     it('offers a link to sign out', () => {
-      expect(vm.$el.querySelector('#header-logout-button')).not.toEqual(null);
+      expect(vm.$el.querySelector('#header-logout-button'))
+      .not
+      .toEqual(null)
     })
     it('does not offer a link to sign in', () => {
-      expect(vm.$el.querySelector('#header-login-button')).toEqual(null);
+      expect(vm.$el.querySelector('#header-login-button'))
+      .toEqual(null)
     })
   })
 
@@ -101,22 +111,24 @@ describe('StdHeader.vue', () => {
         getters: {
           isAuthenticated: true,
           userHasApproverRole: false,
-          userHasEditRole: true
+          userHasEditRole: true,
         },
       }
-      vm = mount();
-      expect(vm.$el.querySelector('#nameExamine')).toEqual(null);
+      vm = mount()
+      expect(vm.$el.querySelector('#nameExamine'))
+      .toEqual(null)
     })
     it('does not offer a link to /nameExamination for viewers', () => {
       store = {
         getters: {
           isAuthenticated: true,
           userHasApproverRole: false,
-          userHasEditRole: false
+          userHasEditRole: false,
         },
       }
-      vm = mount();
-      expect(vm.$el.querySelector('#nameExamine')).toEqual(null);
+      vm = mount()
+      expect(vm.$el.querySelector('#nameExamine'))
+      .toEqual(null)
     })
   })
 
@@ -124,26 +136,30 @@ describe('StdHeader.vue', () => {
 
     beforeEach(() => {
       store = {
-        getters: {}
+        getters: {},
       }
-      vm = mount();
+      vm = mount()
     })
 
     it('does not offer a link to /nameExamination', () => {
-      expect(vm.$el.querySelector('#nameExamine')).toEqual(null);
+      expect(vm.$el.querySelector('#nameExamine'))
+      .toEqual(null)
     })
     it('does not offer a link to /find', () => {
-      expect(vm.$el.querySelector('#header-search-link')).toEqual(null);
+      expect(vm.$el.querySelector('#header-search-link'))
+      .toEqual(null)
     })
     it('does not offer a link to sign out', () => {
-      expect(vm.$el.querySelector('#header-logout-button')).toEqual(null);
+      expect(vm.$el.querySelector('#header-logout-button'))
+      .toEqual(null)
     })
     it('offers a link to sign-in', (done) => {
-      click('#header-login-button');
+      click('#header-login-button')
 
       setTimeout(() => {
-        expect(window.location.pathname).toEqual('/signin')
-        done();
+        expect(window.location.pathname)
+        .toEqual('/signin')
+        done()
       }, 300)
     })
   })
@@ -151,111 +167,125 @@ describe('StdHeader.vue', () => {
   describe('onSubmit', () => {
 
     let submit = () => {
-      click('#header-search-button');
+      click('#header-search-button')
     }
     beforeEach(() => {
       store = {
         getters: {
           isAuthenticated: true,
           userHasApproverRole: true,
-          userHasEditRole: true
+          userHasEditRole: true,
         },
         dispatch: function (message, value) {
-          messageSentToStore = message;
+          messageSentToStore = message
           valueSent = value
-        }
+        },
       }
-      messageSentToStore = '';
-      valueSent = '';
-      vm = mount();
+      messageSentToStore = ''
+      valueSent = ''
+      vm = mount()
     })
 
     it('resists trailing spaces on NR', () => {
       vm.nrNum = 'NR 1234 '
       submit()
 
-      expect(messageSentToStore).toEqual('newNrNumber');
-      expect(valueSent).toEqual('NR 1234');
+      expect(messageSentToStore)
+      .toEqual('newNrNumber')
+      expect(valueSent)
+      .toEqual('NR 1234')
     })
     it('adds missing prefix', () => {
       vm.nrNum = '1234'
       submit()
 
-      expect(messageSentToStore).toEqual('newNrNumber');
-      expect(valueSent).toEqual('NR 1234');
+      expect(messageSentToStore)
+      .toEqual('newNrNumber')
+      expect(valueSent)
+      .toEqual('NR 1234')
     })
     it('detaches prefix', () => {
       vm.nrNum = 'NR1234'
       submit()
 
-      expect(messageSentToStore).toEqual('newNrNumber');
-      expect(valueSent).toEqual('NR 1234');
+      expect(messageSentToStore)
+      .toEqual('newNrNumber')
+      expect(valueSent)
+      .toEqual('NR 1234')
     })
     it('does nothing when value is empty', () => {
       vm.nrNum = ''
       submit()
 
-      expect(messageSentToStore).toEqual('');
-      expect(valueSent).toEqual('');
+      expect(messageSentToStore)
+      .toEqual('')
+      expect(valueSent)
+      .toEqual('')
     })
     it.skip('does nothing when value is kind-of empty', () => {
       vm.nrNum = '   '
       submit()
 
-      expect(messageSentToStore).toEqual('');
-      expect(valueSent).toEqual('');
+      expect(messageSentToStore)
+      .toEqual('')
+      expect(valueSent)
+      .toEqual('')
     })
   })
   describe('logout', () => {
 
     let logout = () => {
-      click('#header-logout-button');
+      click('#header-logout-button')
     }
-    let assigned;
-    let oldHandler;
+    let assigned
+    let oldHandler
     beforeEach(() => {
       store = {
         getters: {
           isAuthenticated: true,
           userHasApproverRole: true,
-          userHasEditRole: true
+          userHasEditRole: true,
         },
         dispatch: function (message, value) {
-          messageSentToStore = message;
+          messageSentToStore = message
           valueSent = value
-        }
+        },
       }
-      messageSentToStore = '';
-      valueSent = '';
-      vm = mount();
-      oldHandler = window.location.assign;
+      messageSentToStore = ''
+      valueSent = ''
+      vm = mount()
+      oldHandler = window.location.assign
       window.location.assign = function (value) {
-        assigned = value;
+        assigned = value
       }
-      logout();
+      logout()
     })
     afterEach(() => {
-      window.location.assign = oldHandler;
+      window.location.assign = oldHandler
     })
     it('is delegated to the store', () => {
-      expect(messageSentToStore).toEqual('logout');
+      expect(messageSentToStore)
+      .toEqual('logout')
     })
     it('resets location', () => {
-      expect(assigned).toEqual('/');
+      expect(assigned)
+      .toEqual('/')
     })
     it('offers a login link when not authenticated', () => {
       store = {
         getters: {
-          isAuthenticated: false
+          isAuthenticated: false,
         },
         dispatch: function (message, value) {
-          messageSentToStore = message;
+          messageSentToStore = message
           valueSent = value
-        }
+        },
       }
-      vm = mount();
+      vm = mount()
 
-      expect(vm.$el.querySelector('#header-login-button')).not.toEqual(null);
+      expect(vm.$el.querySelector('#header-login-button'))
+      .not
+      .toEqual(null)
     })
   })
 })

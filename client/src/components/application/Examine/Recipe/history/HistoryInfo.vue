@@ -1,75 +1,45 @@
 <!--eslint-disable-->
 <template>
-  <v-container fluid style="max-height: 450px;" ma-0 pt-0 mx-4 pr-5>
-    <v-layout>
-      <v-flex>
-        <span>
-          <h2 id="currentHistoryName">{{ selectedHistory }}</h2>
-          <div v-if="selectedHistory" class="col client-info-view">
-
-          <div class="add-top-padding">
-            <h3>NR #</h3>
-            <p>{{nrNum}}</p>
-
-            <h3>Submitted</h3>
-            <p>{{ submittedDate }}</p>
-          </div>
-
-          <h3>Client</h3>
-          <p>{{ clientFirstName }} {{ clientLastName}}</p>
-
-          <h3>Applicant Info</h3>
-          <p>{{ firstName }} {{ middleName }} {{ lastName }}</p>
-          <p>{{ addressLine1 }}</p>
-          <p>{{ addressLine2 }}</p>
-          <p>{{ addressLine3 }}</p>
-          <p>{{ city }} {{ province }}{{ postalCode }}</p>
-          <p>{{ country }}</p>
-
-          <div class="row">
-            <div v-if="phone" class="col add-top-padding">
-              <h3>Phone</h3>
-              <p>{{ phone }}</p>
-            </div>
-            <div v-if="fax" class="col add-top-padding">
-              <h3>Fax</h3>
-              <p>{{ fax }}</p>
-            </div>
-          </div>
-
-          <h3 v-if="conEmail">Email</h3>
-          <p>{{ conEmail }}</p>
-
-          <h3>Contact</h3>
-          <p>{{ contactName }}</p>
-          <h3>Submit Count: {{submitCount}}</h3>
-          <h3>Name State</h3>
-          <p>{{nameState}}</p>
-
-          <h3 v-if="decisionText">Decision Text</h3>
-          <p v-if="decisionText">{{ decisionText }}</p>
-
-          <h3 v-if="conflicts.length > 0">Conflicts</h3>
-          <p v-for="conflict in conflicts">{{ conflict }}</p>
-
-
-          <br />
-          <div>
-            <h3>Comments</h3>
-            <div class="comment-box" v-if="comments">
-              <p v-for="comment in comments">
-                <span class="comment-examiner">{{ comment.examiner }}</span>
-                :<br />
-                <span class="comment-timestamp">{{ comment.timestamp }}</span>
-                <span class="comment-text">{{ comment.comment }}</span>
-              </p>
-            </div>
-          </div>
-         </div>
-          <div v-else class="add-top-padding">
-            <NullMatch />
-          </div>
-        </span>
+  <v-container pt-0 pb-3 px-3 fluid align-start bg-color id="history-container">
+    <spinner className="history-list-spinner" />
+    <v-layout align-items-start class="history-list-layout">
+      <v-layout wrap style="width: 45%" align-items-start>
+        <v-flex item-heading>Client</v-flex>
+        <v-flex lg9>{{ clientFirstName }} {{ clientLastName}}</v-flex>
+        <v-flex header-mg lg3 item-heading>Applicant</v-flex>
+        <v-flex header-mg lg9>
+          <div class="item-detail">{{ firstName }} {{ lastName }}</div>
+          <div class="item-detail">{{ addressLine1 }}</div>
+          <div class="item-detail">{{ addressLine2 }}</div>
+          <div class="item-detail">{{ addressLine3 }}</div>
+          <div class="item-detail">{{ city }} {{ province }} {{ postalCode }} {{ country }}</div>
+        </v-flex>
+        <v-flex lg3 header-mg item-heading>Phone</v-flex>
+        <v-flex header-mg lg9>{{ phone }}</v-flex>
+        <v-flex header-mg lg3 item-heading>Email</v-flex>
+        <v-flex header-mg lg9>{{ conEmail }}</v-flex>
+        <v-flex header-mg lg3 item-heading>Contact</v-flex>
+        <v-flex header-mg lg9>{{ contactName }}</v-flex>
+      </v-layout>
+      <v-layout wrap style="width: 55%;" align-items-start>
+        <v-flex header-mg lg3 item-heading>Submit Count</v-flex>
+        <v-flex header-mg lg9>{{ submitCount }}</v-flex>
+        <v-flex header-mg lg3 item-heading>Name State</v-flex>
+        <v-flex header-mg lg9>{{nameState}}</v-flex>
+        <v-flex lg12 header-mg v-if="conflicts.length > 0">
+          <div class="item-heading item-detail">Decision:</div>
+          <div class="ml-3 mt-1" v-for="(conflict, i) in conflicts">{{ `${i+1}. ${conflict}` }}</div>
+        </v-flex>
+        <v-flex lg12 header-mg v-if="decisionText">{{ decisionText }}</v-flex>
+      </v-layout>
+    </v-layout>
+    <v-layout wrap v-if="comments.length > 0" align-items-start>
+      <v-flex lg12 item-heading>Comments</v-flex>
+      <v-flex lg12 ml-3>
+      <template v-for="comment in comments">
+        <div>{{ comment.comment }}</div>
+        <div class="ml-3 ft-ital mb-2">{{ comment.examiner + ' - ' + formatDate(comment.timestamp)}}</div>
+      </template>
       </v-flex>
     </v-layout>
   </v-container>
@@ -77,12 +47,18 @@
 
 <script>
 /* eslint-disable */
+  import spinner from '@/components/application/spinner.vue'
   import NullMatch from '@/components/application/Examine/Recipe/conflicts/conflictInfoType/NullMatch.vue';
+  import moment from 'moment'
 
   export default {
     name: 'HistoryInfo',
-    components: {
-      NullMatch
+    components: { NullMatch, spinner },
+    data() {
+      return {}
+    },
+    mounted() {
+      this.$el.scrollIntoViewIfNeeded()
     },
     computed: {
       selectedHistory() {
@@ -92,7 +68,6 @@
       clientFirstName() {
         if (this.selectedHistoryInfo == undefined) return '';
         return this.selectedHistoryInfo.applicants.clientFirstName
-
       },
       clientLastName() {
         if (this.selectedHistoryInfo == undefined) return '';
@@ -233,48 +208,26 @@
         return this.$store.getters.historiesInfoJSON;
       }
     },
-    methods: {},
+    methods: {
+      formatDate(timestamp) {
+        return moment(timestamp, 'ddd, DD MMM YYYY HH:mm:ss zz').format('YYYY-MMM-dd')
+      },
+    },
   }
 </script>
 
 <style scoped>
-  .client-info-view {
-    margin-left: 0;
-    padding: 5px;
+  .history-list-spinner:not(.hidden) ~ .history-list-layout {
+    display: none !important;
+  }
+  .item-heading {
+    font-weight: 600 !important;
+  }
+  .header-mg {
+    margin-top: 3px;
+  }
+  .bg-color {
+    background-color: var(--xl-cyan);
   }
 
-  h3, h2 {
-    font-size: 15px;
-    color: var(--text);
-    text-transform: capitalize !important;
-    line-height: 1;
-    margin: 12px 0 4px 0;
-    padding: 0;
-    font-weight: 600;
-  }
-
-  p, div {
-    font-size: 14px;
-    color: var(--text);
-    line-height: 1;
-    margin: 0;
-    padding: 0;
-  }
-
-  p {
-    margin: 0 0 0 8px;
-  }
-
-  .comment-box {
-    margin: 1px;
-    background-color: lightyellow;
-  }
-
-  .comment-text {
-    white-space: pre-line;
-  }
-
-  .comment-timestamp, .comment-examiner {
-    font-style: italic;
-  }
 </style>

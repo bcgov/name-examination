@@ -1,4 +1,3 @@
-/*eslint-disable*/
 import store from '@/store'
 
 describe('store > setPhoneticConflicts', () => {
@@ -25,24 +24,19 @@ describe('store > setPhoneticConflicts', () => {
           {name_info: {name: 'third match #2', source: 'CORP'}, stems: []},
         ]
       })
-      data = store.state.phoneticConflicts
+      data = store.state.parsedPhoneticConflicts
     })
 
-    it('identifies titles and collape the two last', () => {
-      expect(data[0].class).toEqual('conflict-phonetic-title collapsible expanded')
-      expect(data[2].class).toEqual('conflict-phonetic-title collapsible collapsed')
-      expect(data[5].class).toEqual('conflict-phonetic-title collapsible collapsed')
+    it('all the entries are conflict-phonetic-titles', () => {
+      expect(data.every(d => d.class === 'conflict-phonetic-title')).toBeTruthy()
     })
-    it('identifies matches and hides the last two sets', () => {
-      expect(data[1].class).toEqual('conflict-result conflict-result-displayed')
-      expect(data[3].class).toEqual('conflict-result conflict-result-hidden')
-      expect(data[4].class).toEqual('conflict-result conflict-result-hidden')
-      expect(data[6].class).toEqual('conflict-result conflict-result-hidden')
-      expect(data[7].class).toEqual('conflict-result conflict-result-hidden')
+    it('all the children of the entries are conflict-results', () => {
+      expect(data.every(d => d.children.every(child => child.class === 'conflict-result'))).toBeTruthy()
     })
-    it('includes count', () => {
-      expect(data[2].count).toEqual(2)
+    it('entries have correct counts', () => {
       expect(data[0].count).toEqual(1)
+      expect(data[1].count).toEqual(2)
+      expect(data[2].count).toEqual(2)
     })
 
     describe('no match', () => {
@@ -55,13 +49,9 @@ describe('store > setPhoneticConflicts', () => {
             {name_info: {name: 'second title'}, stems: []}
           ]
         })
-        data = store.state.phoneticConflicts
+        data = store.state.parsedPhoneticConflicts
       })
-
-      it('makes the title no collapsible', () => {
-        expect(data[0].class).toEqual('conflict-phonetic-title')
-      })
-      it('forces count to 0', () => {
+      it('has count of 0', () => {
         expect(data[0].count).toEqual(0)
       })
       it('lives alone', () => {

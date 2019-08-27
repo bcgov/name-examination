@@ -1,11 +1,11 @@
 /* eslint-disable */
 <template>
-  <v-container>
-    <spinner className="conflict-detail-spinner hidden" />
-    <v-layout conflict-info-view>
-      <v-flex v-if="is_corp"><CorpMatch /></v-flex>
-      <v-flex v-else-if="is_names"><NamesMatch /></v-flex>
-      <v-flex v-else><NullMatch /></v-flex>
+  <v-container ma-0 pa-0 fluid bg-color id="conflict-info-container">
+    <v-layout id="conflict-info-layout">
+      <spinner className="conflict-detail-spinner pb-5"/>
+      <CorpMatch id="corpmatch" class="conflict-info-view" v-if="is_corp"/>
+      <NamesMatch id="namematch" class="conflict-info-view" v-else-if="is_names"/>
+      <NullMatch class="conflict-info-view" v-else/>
     </v-layout>
   </v-container>
 </template>
@@ -20,6 +20,9 @@
   export default {
     name: 'ConflictInfo',
     components: { CorpMatch, NamesMatch, NullMatch, spinner, },
+    mounted() {
+      this.scrollIntoView()
+    },
     computed: {
       currentConflict() {
         return this.$store.getters.currentConflict
@@ -37,14 +40,29 @@
         return false
       },
     },
+    watch: {
+      currentConflict(newData, oldData) {
+        if (newData) {
+          this.scrollIntoView()
+        }
+      }
+    },
+    methods: {
+      scrollIntoView() {
+        this.$nextTick(function () {
+          this.$el.scrollIntoViewIfNeeded()
+        })
+      }
+    }
   }
 </script>
 
 <style scoped>
-  /* hide the panel content when spinner is showing, ie: results are loading */
   .conflict-detail-spinner:not(.hidden) ~ .conflict-info-view {
     display: none !important;
   }
-
+  .bg-color {
+    background-color: var(--l-blue);
+  }
 
 </style>

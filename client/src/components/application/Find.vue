@@ -1,26 +1,18 @@
 /* eslint-disable */
 <template>
-  <div>
-
-    <div class="upper-section container-fluid">
-      <div class="findPage">
-        <findfilter />
-      </div>
-    </div>
-
-  </div>
-
+  <findfilter />
 </template>
 
 <script>
 /* eslint-disable */
-  import findfilter from '@/components/application/Find/findFilter.vue';
+  import findfilter from '@/components/application/Find/findFilter.vue'
 
   export default {
     name: "find",
-    data: function () {
+    components: { findfilter, },
+    data() {
       return {
-        visble: true
+        visble: true,
       }
     },
     computed: {
@@ -28,21 +20,15 @@
         return this.$store.getters.isAuthenticated
       },
       details() {
-        return this.$store.getters.details;
-      }
-    },
-    components: {
-      findfilter
+        return this.$store.getters.details
+      },
     },
     watch: {
       auth: {
-        handler(selection) {
-          if (auth != true) { this.$router.push("/Signin") }
+        handler() {
+          if (auth != true) this.$router.push("/Signin")
         }
-      }
+      },
     }
   }
 </script>
-
-<style scoped>
-</style>

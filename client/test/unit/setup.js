@@ -1,31 +1,38 @@
-import Vue from 'vue';
+import Vue from 'vue'
 import { Plugin } from 'vue-fragment'
 import Vuetify from 'vuetify'
+import Vuelidate from 'vuelidate'
+import BootstrapVue from 'bootstrap-vue'
+import $ from 'jquery'
+import staticFilesServer from './static.files.server'
+import fs from 'fs'
 
-Vue.use(Vuetify)
+
+Vue.use(BootstrapVue)
 Vue.use(Plugin)
+Vue.use(require('vue-shortkey'))
+Vue.use(Vuelidate)
+Vue.use(Vuetify)
 
-Vue.config.productionTip = false;
+window.scrollTo = jest.fn()
+Vue.config.productionTip = false
+window.HTMLElement.prototype.scrollIntoViewIfNeeded = function () { return null }
+window.HTMLElement.prototype.scrollTo = function () { return null }
 
-import $ from 'jquery';
-
-global.$ = global.jQuery = $;
-
-import staticFilesServer from './static.files.server';
-
-import fs from 'fs';
-
-let utils = fs.readFileSync('./static/js/utils.js').toString();
+global.$ = global.jQuery = $
+let utils = fs.readFileSync('./static/js/utils.js')
+.toString()
 global.readJFile = ( new Function(utils + `return function(configUrl, callback){
     readJFile('http://localhost:` + staticFilesServer.port + `/' + configUrl, callback);
-};`) )();
+};`) )()
 global.readCsv = ( new Function(utils + `return function(csvFile, callback){
     readCsv('http://localhost:` + staticFilesServer.port + `/' + csvFile, callback);
-};`) )();
-global.findArrValue = ( new Function(utils + `return findArrValue;`) )();
-global.findArrValueByAttr = ( new Function(utils + `return findArrValueByAttr;`) )();
-global.getDescFromList = ( new Function(utils + `return getDescFromList;`) )();
+};`) )()
+global.findArrValue = ( new Function(utils + `return findArrValue;`) )()
+global.findArrValueByAttr = ( new Function(utils + `return findArrValueByAttr;`) )()
+global.getDescFromList = ( new Function(utils + `return getDescFromList;`) )()
+
 let app = document.createElement('DIV')
-app.id = "app"
-document.body.innerHTML = '';
-document.body.appendChild(app);
+app.setAttribute('id', 'app')
+app.setAttribute('data-app', 'true')
+document.body.appendChild(app)

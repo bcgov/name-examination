@@ -2,8 +2,8 @@
 
 exports[`TrademarksInfo.vue renders a TrademarksInfo component 1`] = `
 <v-container-stub
-  conditions-container=""
   fluid=""
+  id="trademarks-container"
   ma-0=""
   pa-0=""
   tag="div"
@@ -20,7 +20,6 @@ exports[`TrademarksInfo.vue renders a TrademarksInfo component 1`] = `
       tag="div"
     >
       <v-data-table-stub
-        class="conditions-table-style"
         customfilter="function _default(items, search, filter, headers) {
                 search = search.toString().toLowerCase();
                 if (search.trim() === '') return items;
@@ -58,6 +57,7 @@ exports[`TrademarksInfo.vue renders a TrademarksInfo component 1`] = `
                     return 0;
                 });
             }"
+        disableinitialsort="true"
         filter="function _default(val, search) {
                 return val != null && typeof val !== 'boolean' && val.toString().toLowerCase().indexOf(search) !== -1;
             }"

@@ -39,6 +39,7 @@ exports[`App.vue  renders the App 1`] = `
     id="app"
   >
     <div
+      class=""
       id="app"
       style="height: 100%;"
     >
@@ -47,8 +48,8 @@ exports[`App.vue  renders the App 1`] = `
       />
        
       <div>
-        <router-view-stub
-          name="default"
+        <router-view
+          style="z-index: 1;"
         />
       </div>
     </div>

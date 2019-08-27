@@ -4,47 +4,47 @@ exports[`Decision.vue renders a Decision view 1`] = `
 <v-container-stub
   decision-container=""
   fluid=""
-  pa-0=""
-  px-5=""
+  opacity-30="true"
+  px-3=""
+  py-0=""
   tag="div"
 >
   <v-layout-stub
-    justify-content-between=""
     tag="div"
     wrap=""
   >
     <v-flex-stub
       fs-24=""
+      grow=""
       lg6=""
       tag="div"
     >
       Decision
     </v-flex-stub>
      
-    <v-flex-stub
-      grow=""
-      tag="div"
-    />
-     
-    <v-flex-stub
-      shrink=""
+    <v-layout-stub
+      justify-end=""
       tag="div"
     >
-      <v-checkbox-stub
-        backgroundcolor=""
-        class="pa-0 ma-0"
-        color="accent"
-        errorcount="1"
-        errormessages=""
-        indeterminateicon="$vuetify.icons.checkboxIndeterminate"
-        light="true"
-        messages=""
-        officon="$vuetify.icons.checkboxOff"
-        onicon="$vuetify.icons.checkboxOn"
-        ripple="true"
-        rules=""
-        successmessages=""
-        valuecomparator="function deepEqual(a, b) {
+      <div
+        style="position: relative; top: 4px;"
+      >
+        <v-checkbox-stub
+          backgroundcolor=""
+          class="pa-0 ma-0"
+          color="accent"
+          disabled="true"
+          errorcount="1"
+          errormessages=""
+          indeterminateicon="$vuetify.icons.checkboxIndeterminate"
+          light="true"
+          messages=""
+          officon="$vuetify.icons.checkboxOff"
+          onicon="$vuetify.icons.checkboxOn"
+          ripple="true"
+          rules=""
+          successmessages=""
+          valuecomparator="function deepEqual(a, b) {
     if (a === b) return true;
     if (a instanceof Date && b instanceof Date) {
         // If the values are Date, they were convert to timestamp with getTime and compare it
@@ -63,17 +63,16 @@ exports[`Decision.vue renders a Decision view 1`] = `
         return deepEqual(a[p], b[p]);
     });
 }"
-      />
-    </v-flex-stub>
-     
-    <v-flex-stub
-      fs-15=""
-      shrink=""
-      tag="div"
-    >
-      Consent Required
-    
-    </v-flex-stub>
+        />
+      </div>
+       
+      <div
+        class="fs-15"
+        style="position: relative; top: 4px;"
+      >
+        Consent 
+      </div>
+    </v-layout-stub>
      
     <v-flex-stub
       lg12=""
@@ -96,22 +95,25 @@ exports[`Decision.vue renders a Decision view 1`] = `
         <v-flex-stub
           id="conditions-select-area"
           lg12=""
+          mt-2=""
           tag="div"
         >
-          <p
-            class="fs-15 fw-600"
+          <div
+            class="fs-15 my-2 fw-600"
           >
             Conditions
-          </p>
+          </div>
            
           <div
             id="conditions-decision-select-field"
           >
             <v-select-stub
               attach=""
+              browser-autocomplete="off"
               chips=""
               class="decision-select-style"
               dense=""
+              disabled="true"
               height="30"
               hide-selected=""
               item-text="phrase"
@@ -131,20 +133,22 @@ exports[`Decision.vue renders a Decision view 1`] = `
           lg12=""
           tag="div"
         >
-          <p
-            class="fs-15 fw-600"
+          <div
+            class="fs-15 mb-2 mt-4 fw-600"
           >
             Conflicts
-          </p>
+          </div>
            
           <div
             id="conflicts-decision-select-field"
           >
             <v-select-stub
               attach=""
+              browser-autocomplete="off"
               chips=""
               class="decision-select-style"
               dense=""
+              disabled="true"
               height="30"
               hide-selected=""
               items=""
@@ -164,20 +168,22 @@ exports[`Decision.vue renders a Decision view 1`] = `
           lg12=""
           tag="div"
         >
-          <p
-            class="fs-15 fw-600"
+          <div
+            class="fs-15 mb-2 mt-4 fw-600"
           >
             Macros
-          </p>
+          </div>
            
           <div
             id="macros-decision-select-field"
           >
             <v-select-stub
               attach=""
+              browser-autocomplete="off"
               chips=""
               class="decision-select-style"
               dense=""
+              disabled="true"
               height="30"
               hide-selected=""
               item-text="name"
@@ -195,20 +201,22 @@ exports[`Decision.vue renders a Decision view 1`] = `
           id="trademarks-v-flex"
           tag="div"
         >
-          <p
-            class="fs-15 fw-600"
+          <div
+            class="fs-15 mb-2 mt-4 fw-600"
           >
             Trademarks
-          </p>
+          </div>
            
           <div
             id="trademarks-decision-select-field"
           >
             <v-select-stub
               attach=""
+              browser-autocomplete="off"
               chips=""
               class="decision-select-style mb-5"
               dense=""
+              disabled="true"
               height="30"
               hide-selected=""
               item-text="name"
@@ -247,6 +255,7 @@ exports[`Decision.vue renders a Decision view 1`] = `
             <v-btn-stub
               activeclass="v-btn--active"
               class="ma-0 pa-0"
+              disabled="true"
               flat="true"
               tag="button"
               type="button"
@@ -260,22 +269,22 @@ exports[`Decision.vue renders a Decision view 1`] = `
          
         <v-flex-stub
           mt-2=""
-          pa-2=""
-          pt-3=""
           tag="div"
           textarea-outer-v-flex=""
         >
           <v-textarea-stub
             backgroundcolor=""
-            class="fs-14 pa-0 ma-0"
+            class="fs-14 pa-0 ma-0 decision-msg-textarea"
             clearicon="$vuetify.icons.clear"
             color="primary"
             errorcount="1"
             errormessages=""
             flat="true"
             fullwidth="true"
+            height="240px"
             id="decision-msg-preview-area"
             messages=""
+            readonly="true"
             rowheight="24"
             rows="13"
             rules=""
@@ -289,7 +298,7 @@ exports[`Decision.vue renders a Decision view 1`] = `
             class="decision-flex-holder"
           >
             <div
-              class="grey-text pa-1 ma-1"
+              class="c-grey pa-1 ma-1"
             >
               Characters Remaining: 955
             </div>
@@ -299,41 +308,43 @@ exports[`Decision.vue renders a Decision view 1`] = `
             </div>
           </div>
         </v-flex-stub>
-         
-        <v-flex-stub
-          tag="div"
-        >
-          <div
-            class="decision-flex-holder top-margin-12"
-          >
-            <v-btn-stub
-              activeclass="v-btn--active"
-              class="mx-1 pa-0 action-button"
-              flat="true"
-              id="decision-approve-button"
-              tag="button"
-              type="button"
-            >
-              <img
-                src="/static/images/buttons/approve-name.png"
-              />
-            </v-btn-stub>
-             
-            <v-btn-stub
-              activeclass="v-btn--active"
-              class="mx-1 pa-0 action-button"
-              flat="true"
-              id="decision-reject-button"
-              tag="button"
-              type="button"
-            >
-              <img
-                src="/static/images/buttons/reject-name.png"
-              />
-            </v-btn-stub>
-          </div>
-        </v-flex-stub>
       </v-layout-stub>
+    </v-flex-stub>
+     
+    <v-flex-stub
+      tag="div"
+    >
+      <div
+        class="decision-flex-holder top-margin-12"
+      >
+        <v-btn-stub
+          activeclass="v-btn--active"
+          class="mx-1 pa-0 action-button"
+          disabled="true"
+          flat="true"
+          id="decision-approve-button"
+          tag="button"
+          type="button"
+        >
+          <img
+            src="/static/images/buttons/approve-name.png"
+          />
+        </v-btn-stub>
+         
+        <v-btn-stub
+          activeclass="v-btn--active"
+          class="mx-1 pa-0 action-button"
+          disabled="true"
+          flat="true"
+          id="decision-reject-button"
+          tag="button"
+          type="button"
+        >
+          <img
+            src="/static/images/buttons/reject-name.png"
+          />
+        </v-btn-stub>
+      </div>
     </v-flex-stub>
   </v-layout-stub>
    
@@ -379,7 +390,7 @@ exports[`Decision.vue renders a Decision view 1`] = `
             />
              
             <div
-              class="grey-text fs-14 pl-2"
+              class="c-grey fs-14 pl-2"
             >
               Characters Remaining: 955
             </div>

@@ -1,15 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Find.vue renders a Find component 1`] = `
-<div>
-  <div
-    class="upper-section container-fluid"
-  >
-    <div
-      class="findPage"
-    >
-      <findfilter-stub />
-    </div>
-  </div>
-</div>
-`;
+exports[`Find.vue renders a Find component 1`] = `<findfilter-stub />`;

@@ -2,10 +2,12 @@
 import axios from 'axios'
 import store from '@/store'
 
-const instance = axios.create({
-})
+const instance = axios.create()
 
-var activeRequestsCounter = 0;
+instance.defaults.headers.get['Accept'] = 'application/json'
+instance.defaults.headers.put['Content-Type'] = 'application/json'
+
+var activeRequestsCounter = 0
 
 instance.interceptors.request.use(function (config) {
   /*
@@ -17,25 +19,25 @@ instance.interceptors.request.use(function (config) {
       returned, and the loading spinner never goes away.
    */
   if (config.spinner == false) {
-    config.loadingTimer = null; // just null the timer value for use in response interceptor
+    config.loadingTimer = null // just null the timer value for use in response interceptor
   }
   // activate specific named spinner - commonly used in recipe steps - not timed, just turned on and off
-  else if (typeof(config.spinner) == "string") {
-    $(config.spinner).removeClass('hidden');
+  else if (typeof ( config.spinner ) == 'string') {
+    $(config.spinner).removeClass('hidden')
   }
   // activate main (page-blocking) spinner
   else {
-    activeRequestsCounter++;
+    activeRequestsCounter++
     var loadingTimer = setTimeout(function () {
-      $('#loading-overlay').css('display', 'flex');
-    }, 1000);
-    config.loadingTimer = loadingTimer;
+      $('#loading-overlay').css('display', 'flex')
+    }, 1000)
+    config.loadingTimer = loadingTimer
   }
 
-  store.dispatch('checkToken');
+  store.dispatch('checkToken')
 
-  return config;
-});
+  return config
+})
 
 instance.interceptors.response.use(function (response) {
   /*
@@ -45,24 +47,24 @@ instance.interceptors.response.use(function (response) {
    */
   if (response.config.loadingTimer !== null) {
 
-    clearTimeout(response.config.loadingTimer);
-    activeRequestsCounter--;
+    clearTimeout(response.config.loadingTimer)
+    activeRequestsCounter--
     if (activeRequestsCounter <= 0) {
-      activeRequestsCounter = 0;
-      $('#loading-overlay').css('display', 'none');
+      activeRequestsCounter = 0
+      $('#loading-overlay').css('display', 'none')
     }
   }
 
   // turn off named spinner
-  if (typeof(response.config.spinner) == "string") {
-    $(response.config.spinner).addClass('hidden');
+  if (typeof ( response.config.spinner ) == 'string') {
+    $(response.config.spinner).addClass('hidden')
   }
 
-  store.dispatch('checkToken');
+  store.dispatch('checkToken')
 
-  let status = response.status;
-  if ( status !== 200 ) {
-      store.dispatch('checkError',response.data)
+  let status = response.status
+  if (status !== 200) {
+    store.dispatch('checkError', response.data)
   }
 
   return response
@@ -74,41 +76,21 @@ instance.interceptors.response.use(function (response) {
   3. if there are no more requests that might still be running, hide the overlay
    */
   if (error.config.loadingTimer !== null) {
-    clearTimeout(error.config.loadingTimer);
-    activeRequestsCounter--;
+    clearTimeout(error.config.loadingTimer)
+    activeRequestsCounter--
     if (activeRequestsCounter <= 0) {
-      activeRequestsCounter = 0;
-      $('#loading-overlay').css('display', 'none');
+      activeRequestsCounter = 0
+      $('#loading-overlay').css('display', 'none')
     }
   }
 
   // turn off named spinner
-  if (error.config.spinner && typeof(error.config.spinner) == "string") {
-    $(error.config.spinner).addClass('hidden');
+  if (error.config.spinner && typeof ( error.config.spinner ) == 'string') {
+    $(error.config.spinner).addClass('hidden')
   }
 
-  /* This code was never executed before implementing above, so commented out since untested.
-  const { config, response: { status } } = error
-  const originalRequest = config
-  if (status === 401) {
-    if (!isAlreadyFetchingAccessToken) {
-      isAlreadyFetchingAccessToken = true
-      store.dispatch(fetchAccessToken()).then((access_token) => {
-        isAlreadyFetchingAccessToken = false
-        onAccessTokenFetched(access_token)
-      })
-    }
 
-    const retryOriginalRequest = new Promise((resolve) => {
-      addSubscriber(access_token => {
-        originalRequest.headers.Authorization = 'Bearer ' + access_token
-        resolve(axios(originalRequest))
-      })
-    })
-    return retryOriginalRequest
-  }
-  */
-  store.dispatch('checkError',error)
+  store.dispatch('checkError', error)
   return Promise.reject(error)
 })
 

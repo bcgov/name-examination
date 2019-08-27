@@ -9,7 +9,7 @@
   --blue:       #1a5a96;
   --link:       #1a5a96;
   --l-blue:     #dceffa;
-  --xl-blue:    #ecf7fc;2
+  --xl-blue:    #ecf7fc;
 
   --d-grey:     #494949;
   --text:       #494949;
@@ -25,6 +25,7 @@
   --green:      #82c545;
   --accepted:   #82c545;
   --d-green:    #417505;
+  --l-green:    rgba(54, 197, 43, 0.31);
 
   --gold:       #fcba19;
   --l-gold:     rgba(255, 189, 25, 0.31);

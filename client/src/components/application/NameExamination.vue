@@ -39,6 +39,9 @@
     },
     components: { CommentsPopUp, CompName, RequestInfoHeader, },
     computed: {
+      stated() {
+        return this.$store
+      },
       auth() {
         return this.$store.getters.isAuthenticated
       },
