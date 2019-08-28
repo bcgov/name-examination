@@ -1,6 +1,9 @@
 <!--eslint-disable-->
 <template>
-  <v-container decision-container fluid py-0 px-3 :opacity-30="!is_making_decision">
+  <v-container v-if="$store.getters.decisionPanel.show"
+               decision-container
+               fluid py-0 px-3
+               :opacity-30="!is_making_decision">
     <v-layout wrap>
       <v-flex lg6
               fs-24

@@ -138,9 +138,6 @@
         }
         return 'error_outline'
       },
-      ateser() {
-        return this.$el.querySelector('#conflicts1').className
-      },
       trademarksIcon() {
         if (!this.trademarkInfo || this.trademarkInfo.names.length === 0) {
           return 'done'
