@@ -8,7 +8,7 @@
               px-4>
       <v-flex width-5 v-if="child.nrNumber">
         <v-checkbox style="position: relative; top:4px"
-                    :disabled="enableCheckbox"
+                    :disabled="checkboxDisabled"
                     :value="child.nrNumber"
                     :input-value="selectedNRs"
                     @click.capture.stop.self="setCheckbox(child)"/>
@@ -58,7 +58,7 @@
       'expandedID',
       'focus',
       'id',
-      'enableCheckbox',
+      'checkboxDisabled',
       'n',
       'selectedNRs',
       'setCheckbox',

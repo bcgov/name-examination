@@ -98,7 +98,6 @@
           let { restricted_words_conditions } = this.conditionsJSON
           if (restricted_words_conditions.length > 0) {
             for (let resWord of restricted_words_conditions) {
-              console.log(resWord.cnd_info)
               if (resWord.cnd_info.every(con => con.allow_use === 'N')) {
                 return 'close'
               }

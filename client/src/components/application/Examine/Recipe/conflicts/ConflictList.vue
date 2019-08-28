@@ -93,7 +93,7 @@
                               :containerDivEl="containerDivEl"
                               :expandedID="expandedID"
                               :focus="focus"
-                              :enableCheckbox="enableCheckbox"
+                              :checkboxDisabled="checkboxDisabled"
                               :key="child.id"
                               :n="n"
                               :selectedNRs="selectedNRs"
@@ -129,11 +129,7 @@
         index: 0,
         prevIndex: 0,
         children: [],
-        cobrs: '',
-        other: '',
-        k: 1,
         listener: null,
-        focus: 'conflicts',
       }
     },
     mounted() {
@@ -164,8 +160,8 @@
         conflictTitles: 'conflictTitles',
         decisionPanel: 'decisionPanel'
       }),
-      enableCheckbox() {
-        return !this.decisionPanel.enableCheckbox
+      checkboxDisabled() {
+        return this.decisionPanel.functionalityDisabled
       },
       expandedID: {
         get() {
@@ -263,20 +259,19 @@
         this.index = index
         this.expandedID = match.id
       },
-      thisEl() {
-        return this.$el
-      },
       containerDivEl() {
         let el = document.getElementById('conflicts-container')
         if (el) {
           return el
         }
       },
+      thisEl() {
+        return this.$el
+      },
       formatDate(d) {
         return moment(d).format('YYYY-MM-DD')
       },
       manageEventListener(event) {
-        console.log('manage called')
         let types = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Space']
         //return the event without taking action / modifying it in any way when...
         // 1) key pressed is not on the list of keys we are listening for (so we never care about it)
@@ -319,7 +314,6 @@
               if (this.childIndex < this.lastChildIndex) {
                 this.childIndex++
                 let { id } = this.children[this.childIndex]
-                console.log(id)
                 this.scrollIntoView(id)
                 return
               }
@@ -338,7 +332,6 @@
             //Case: No open bucket.  Just call MoveDown()
             moveDown()
             let { id } = this.conflictTitles[this.index]
-            console.log(id)
             this.scrollIntoView(id)
             return
 

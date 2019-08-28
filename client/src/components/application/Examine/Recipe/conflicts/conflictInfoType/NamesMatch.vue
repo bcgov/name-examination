@@ -2,9 +2,8 @@
 <template>
   <v-container ma-0 pt-0 pb-3 px-3 fluid align-start>
     <v-layout align-items-start>
-      <v-layout wrap style="width: 45%" align-items-start>
-        <v-flex item-heading>Client</v-flex>
-        <v-flex lg9>{{ applicants.clientFirstName }} {{ applicants.clientLastName}}</v-flex>
+      <v-layout wrap style="width: 50%" align-items-start>
+
         <v-flex header-mg lg3 item-heading>Applicant</v-flex>
         <v-flex header-mg lg9>
           <div class="item-detail">{{ applicants.firstName }} {{ applicants.lastName }}</div>
@@ -23,11 +22,13 @@
         <v-flex header-mg lg9>{{ applicants.emailAddress }}</v-flex>
 
       </v-layout>
-      <v-layout wrap style="width: 55%;" align-items-start>
+      <v-layout wrap style="width: 50%;" align-items-start>
+        <v-flex item-heading lg4>Client</v-flex>
+        <v-flex lg8>{{ applicants.clientFirstName }} {{ applicants.clientLastName}}</v-flex>
         <v-flex header-mg lg4 item-heading>Contact</v-flex>
-        <v-flex header-mg lg8>{{ applicants.contactName }}</v-flex>
+        <v-flex header-mg lg8>{{ applicants.contact }}</v-flex>
         <v-flex header-mg lg4 mt-3 item-heading>Submit Count</v-flex>
-        <v-flex header-mg lg8>{{ submitCount }}</v-flex>
+        <v-flex header-mg lg8 mt-3>{{ submitCount }}</v-flex>
         <v-flex header-mg lg4 item-heading>Name State</v-flex>
         <v-flex header-mg lg8>{{nameState}}</v-flex>
       </v-layout>
