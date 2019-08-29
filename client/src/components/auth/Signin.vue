@@ -32,7 +32,6 @@
         keycloak.init({token: token, onLoad: 'login-required'}).success(function (authenticated) {
           if (authenticated) {
 
-
             sessionStorage.setItem('KEYCLOAK_TOKEN', keycloak.token);
             sessionStorage.setItem('KEYCLOAK_REFRESH', keycloak.refreshToken);
             sessionStorage.setItem('KEYCLOAK_EXPIRES', keycloak.tokenParsed.exp * 1000);
@@ -46,17 +45,15 @@
               sessionStorage.setItem("AUTHORIZED", true);
 
             // Get user profile
-              keycloak.loadUserProfile().success(function (userProfile) {
+              keycloak.loadUserProfile().success(
+                function (userProfile) {
                 app.userName = userProfile.username;
                 sessionStorage.setItem('USERNAME', app.userName);
-
-                ;
                 vm.$store.commit('setLoginValues')
 
               });
-
               // everthing is good, re-direct to home page
-              vm.$router.push("/home")
+                vm.$router.push('/home')
             }
 
           } else {

@@ -1,84 +1,183 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`NamesMatch.vue renders a NamesMatch component 1`] = `
-<span>
-  <h3>
-    NR #
-  </h3>
-   
-  <p>
-    
-  </p>
-   
-  <h3>
-    Submitted
-  </h3>
-   
-  <p>
-    
-  </p>
-   
-  <h3>
-    Client
-  </h3>
-   
-  <p>
-     
-  </p>
-   
-  <h3>
-    Applicant Info
-  </h3>
-   
-  <p>
-      
-  </p>
-   
-  <p>
-    
-  </p>
-   
-  <p>
-    
-  </p>
-   
-  <p>
-    
-  </p>
-   
-  <p>
-      , 
-  </p>
-   
-  <div
-    class="row"
+<v-container-stub
+  align-start=""
+  fluid=""
+  ma-0=""
+  pb-3=""
+  pt-0=""
+  px-3=""
+  tag="div"
+>
+  <v-layout-stub
+    align-items-start=""
+    tag="div"
   >
-    <!---->
+    <v-layout-stub
+      align-items-start=""
+      tag="div"
+      wrap=""
+    >
+      <v-flex-stub
+        header-mg=""
+        item-heading=""
+        lg3=""
+        tag="div"
+      >
+        Applicant
+      </v-flex-stub>
+       
+      <v-flex-stub
+        header-mg=""
+        lg9=""
+        tag="div"
+      >
+        <div
+          class="item-detail"
+        >
+           
+        </div>
+         
+        <div
+          class="item-detail"
+        >
+          
+        </div>
+         
+        <div
+          class="item-detail"
+        >
+          
+        </div>
+         
+        <div
+          class="item-detail"
+        >
+          
+        </div>
+         
+        <div
+          class="item-detail"
+        >
+          
+          
+          
+          
+          
+        </div>
+      </v-flex-stub>
+       
+      <v-flex-stub
+        header-mg=""
+        item-heading=""
+        lg3=""
+        tag="div"
+      >
+        Phone
+      </v-flex-stub>
+       
+      <v-flex-stub
+        header-mg=""
+        lg9=""
+        tag="div"
+      >
+        
+      </v-flex-stub>
+       
+      <v-flex-stub
+        header-mg=""
+        item-heading=""
+        lg3=""
+        tag="div"
+      >
+        Email
+      </v-flex-stub>
+       
+      <v-flex-stub
+        header-mg=""
+        lg9=""
+        tag="div"
+      >
+        
+      </v-flex-stub>
+    </v-layout-stub>
      
-    <!---->
-  </div>
-   
-  <h3>
-    Email
-  </h3>
-   
-  <p>
-    
-  </p>
-   
-  <h3>
-    Contact
-  </h3>
-   
-  <p>
-    
-  </p>
+    <v-layout-stub
+      align-items-start=""
+      tag="div"
+      wrap=""
+    >
+      <v-flex-stub
+        item-heading=""
+        lg4=""
+        tag="div"
+      >
+        Client
+      </v-flex-stub>
+       
+      <v-flex-stub
+        lg8=""
+        tag="div"
+      >
+         
+      </v-flex-stub>
+       
+      <v-flex-stub
+        header-mg=""
+        item-heading=""
+        lg4=""
+        tag="div"
+      >
+        Contact
+      </v-flex-stub>
+       
+      <v-flex-stub
+        header-mg=""
+        lg8=""
+        tag="div"
+      >
+        
+      </v-flex-stub>
+       
+      <v-flex-stub
+        header-mg=""
+        item-heading=""
+        lg4=""
+        mt-3=""
+        tag="div"
+      >
+        Submit Count
+      </v-flex-stub>
+       
+      <v-flex-stub
+        header-mg=""
+        lg8=""
+        mt-3=""
+        tag="div"
+      >
+        
+      </v-flex-stub>
+       
+      <v-flex-stub
+        header-mg=""
+        item-heading=""
+        lg4=""
+        tag="div"
+      >
+        Name State
+      </v-flex-stub>
+       
+      <v-flex-stub
+        header-mg=""
+        lg8=""
+        tag="div"
+      >
+        
+      </v-flex-stub>
+    </v-layout-stub>
+  </v-layout-stub>
    
   <!---->
-   
-  <!---->
-   
-  <!---->
-   
-</span>
+</v-container-stub>
 `;

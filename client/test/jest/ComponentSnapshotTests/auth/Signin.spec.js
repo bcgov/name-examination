@@ -2,12 +2,51 @@
 import { shallowMount } from '@vue/test-utils';
 import Signin from '@/components/auth/Signin';
 import store from '@/store'
+import router from '@/router'
 
-describe.skip('Signin.vue', () => {
+describe('Signin.vue', () => {
+
+  //window.Keycloak mocks the basic functions of Keycloak
+  window.Keycloak = function() {
+    return {
+      token: 'testing123',
+      refreshToken: 'testing456',
+      tokenParsed: {
+        exp: 1000,
+      },
+      loadUserProfile () {
+        return {
+          success (fn) {
+            fn({ username: 'Joe' })
+          }
+        }
+      },
+      realmAccess: {
+        roles: [
+          'names_approver', 'names_editor', 'names_viewer'
+        ]
+      },
+      init() {
+        return {
+          success(auth) {
+            auth(true)
+            return {
+              error() {
+                return null
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 
     let component;
     beforeEach(() => {
-        component = shallowMount(Signin, {store: store});
+          Object.defineProperty(router, 'push', {
+            value: function(path) { }
+          })
+        component = shallowMount(Signin, {store: store, router: router});
     });
 
    it("renders a Signin component", () => {

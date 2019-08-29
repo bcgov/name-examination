@@ -9,14 +9,15 @@ describe('Decision.vue component', () => {
   let instance
   let vm
   createApiSandbox()
-
+  const Constructor = Vue.extend(Decision)
   let makeDecision
 
-  beforeEach(() => {
+  beforeEach((done) => {
     store.replaceState(cleanState())
-    const Constructor = Vue.extend(Decision)
     instance = new Constructor({ store: store })
-
+    instance.$store.state.is_making_decision = true
+    instance.$store.state.examiner = 'Joe'
+    instance.$store.state.userId = 'Joe'
     instance.decision_made = null
     instance.$store.state.currentNameObj = {
       name: 'blah',
@@ -34,6 +35,7 @@ describe('Decision.vue component', () => {
       // return the pre and post decision text for comparisons
       return [ customer_message_initial, customer_message_after_decision ]
     }
+    setTimeout(()=> { done() } )
   })
 
   describe('When conditions have been selected with consent required', () => {
@@ -63,7 +65,7 @@ describe('Decision.vue component', () => {
             'instructions': 'Sample condition requiring consent.',
           },
         ]
-        done()
+        setTimeout(() => { done() }, 1000)
       })
 
 
@@ -123,8 +125,9 @@ describe('Decision.vue component', () => {
 
   describe('When "consent required" condition has been selected WITHOUT conflicts', () => {
 
-    beforeEach(() => {
+    beforeEach((done) => {
       vm = instance.$mount()
+      setTimeout(()=>{ done() }, 1000)
     })
 
     it('Contains "consent required" message', () => {
@@ -258,7 +261,7 @@ describe('Decision.vue component', () => {
 
       setTimeout(() => {
         done()
-      }, 100)
+      }, 1000)
 
     })
 

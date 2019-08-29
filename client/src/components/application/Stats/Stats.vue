@@ -131,7 +131,7 @@ export default {
     }
   },
   mounted() {
-    this.$refs.numberinput.focus()
+    if (this.$refs.numberinput) his.$refs.numberinput.focus()
   },
   computed: {
     timespanHuman() {

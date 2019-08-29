@@ -15,7 +15,7 @@
                 px-4
                 v-if="title.nrNumber">
         <v-flex width-5>
-          <v-checkbox :disabled="!is_making_decision"
+          <v-checkbox :disabled="enableCheckbox"
                       :input-value="selectedNRs"
                       :key="`exact-check-${i}`"
                       :value="title.nrNumber"
@@ -45,7 +45,7 @@
 
       <!--CASE:  TITLES WITH CHILDREN / COUNT OF 1 OR MORE / EXPAND COLLAPSE ICONS-->
       <v-layout :class="title.class"
-                :conflict-highlighted="index === i && focus === 'conflicts' ? true : false"
+                :conflict-highlighted="index === i && focus === 'conflicts' && openBucketIndex===null"
                 :id="title.id"
                 :key="`count-layout-${i}`"
                 @click="clickBucket(i)"
@@ -67,7 +67,7 @@
 
       <!--CASE:  TITLES WITHOUT CHILDREN / 0 COUNTS / NO ICONS -->
       <v-layout :class="title.class"
-                :conflict-highlighted="index === i && focus === 'conflicts' "
+                :conflict-highlighted="index === i && focus === 'conflicts' && openBucketIndex===null"
                 :id="title.id"
                 :key="`no-count-layout-${i}`"
                 v-else
@@ -93,7 +93,7 @@
                               :containerDivEl="containerDivEl"
                               :expandedID="expandedID"
                               :focus="focus"
-                              :is_making_decision="is_making_decision"
+                              :checkboxDisabled="checkboxDisabled"
                               :key="child.id"
                               :n="n"
                               :selectedNRs="selectedNRs"
@@ -127,12 +127,9 @@
       return {
         childIndex: 0,
         index: 0,
+        prevIndex: 0,
         children: [],
-        cobrs: '',
-        other: '',
-        k: 1,
         listener: null,
-        focus: 'conflicts',
       }
     },
     mounted() {
@@ -161,7 +158,11 @@
         openBucket: 'openBucket',
         synonymMatchesConflicts: 'synonymMatchesConflicts',
         conflictTitles: 'conflictTitles',
+        decisionPanel: 'decisionPanel'
       }),
+      checkboxDisabled() {
+        return this.decisionPanel.functionalityDisabled
+      },
       expandedID: {
         get() {
           return this.expandedConflictID
@@ -224,9 +225,8 @@
         this.focus = 'conflicts'
       },
       addListener() {
-        if (!this.listener) {
-          this.listener = document.addEventListener('keydown', this.manageEventListener)
-        }
+        this.removeListener()
+        document.addEventListener('keydown', this.manageEventListener)
       },
       clickBucket(index) {
         this.focus = 'conflicts'
@@ -259,14 +259,14 @@
         this.index = index
         this.expandedID = match.id
       },
-      thisEl() {
-        return this.$el
-      },
       containerDivEl() {
         let el = document.getElementById('conflicts-container')
         if (el) {
           return el
         }
+      },
+      thisEl() {
+        return this.$el
       },
       formatDate(d) {
         return moment(d).format('YYYY-MM-DD')
@@ -308,7 +308,7 @@
           case 'ArrowDown':
             this.expandedID = null
 
-            if (this.lastChildIndex) {
+            if (this.openBucketIndex !== null) {
               //Case:  There is an open bucket and the last item in it is not highlighted
               //Advance childIndex bt one
               if (this.childIndex < this.lastChildIndex) {
@@ -321,13 +321,13 @@
               //Close the bucket and advance the regular index
               if (this.childIndex === this.lastChildIndex) {
                 if (this.openBucketIndex === this.lastIndex) return
-                this.index = this.openBucketIndex
                 this.openBucketIndex = null
                 this.children = null
                 this.childIndex = 0
                 moveDown()
                 return
               }
+              return
             }
             //Case: No open bucket.  Just call MoveDown()
             moveDown()
@@ -336,7 +336,10 @@
             return
 
           case 'ArrowUp':
-            this.expandedID = null
+            if (this.expandedID !== null) {
+              this.expandedID = null
+              return
+            }
             if (this.openBucketIndex !== null) {
               if (this.childIndex > 0) {
                 this.childIndex--
@@ -344,10 +347,10 @@
                 this.scrollIntoView(id)
                 return
               }
-              this.index = this.openBucketIndex
               this.openBucketIndex = null
               this.children = null
               this.scrollIntoView(this.conflictTitles[this.index].id)
+              return
             }
             for (let i = this.index - 1; i >= 0; i--) {
               if (this.conflictTitles[i].count > 0 || this.conflictTitles[i].nrNumber) {
@@ -365,7 +368,6 @@
               return
             }
             if (this.openBucketIndex !== null) {
-              this.index = this.openBucketIndex
               this.scrollIntoView(this.conflictTitles[this.index].id)
               this.openBucketIndex = null
               this.children = null
@@ -381,8 +383,7 @@
               this.scrollIntoView(item.id)
               return
             }
-            if (this.index && this.conflictTitles[this.index].nrNumber) {
-              console.log('hhsdfhj')
+            if (this.openBucketIndex === null && this.conflictTitles[this.index].nrNumber) {
               let item = this.conflictTitles[this.index]
               this.$store.dispatch('getConflictInfo', item)
               this.expandedID = item.id
@@ -392,13 +393,12 @@
             this.openBucketIndex = this.index
             let item = this.conflictTitles[this.index]
             this.children = item.children
-            this.index = null
             this.childIndex = 0
             this.scrollIntoView(item.children[0].id)
             return
 
           case 'Space':
-            if (!this.is_making_decision) {
+            if (!enableCheckbox) {
               return
             }
             //if child menu is open, then children[childIndex] must be conflict-result
@@ -421,8 +421,7 @@
         }
       },
       removeListener() {
-        document.removeEventListener('keydown', this.handleKeyboardEvent)
-        this.listener = null
+        document.removeEventListener('keydown', this.manageEventListener)
       },
       scrollIntoView(id) {
         this.$nextTick(function() {
@@ -487,7 +486,7 @@
             this.openBucketIndex = i
             this.focus = 'conflicts'
             this.$root.$emit('setcompnamefocus', {ref: 'regularsearchfield', type: 'blur'})
-            this.index = null
+            this.index = i
             this.scrollIntoView(newData[i].children[0].id)
             return
           }

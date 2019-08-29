@@ -2248,6 +2248,13 @@ export const getters = {
     }
     return []
   },
+  decisionPanel(state) {
+    let show = true
+    if (state.examiner !== state.userId || !state.is_making_decision) show = false
+    let functionalityDisabled = false
+    if (!show) functionalityDisabled = true
+    return { show, functionalityDisabled }
+  }
 }
 
 export default new Vuex.Store({

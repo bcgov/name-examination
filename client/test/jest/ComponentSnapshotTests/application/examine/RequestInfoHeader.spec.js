@@ -3,7 +3,7 @@ import { shallowMount } from '@vue/test-utils';
 import RequestInfoHeader from '@/components/application/Examine/RequestInfoHeader';
 import store from '@/store'
 
-describe.skip('RequestInfoHeader.vue', () => {
+describe('RequestInfoHeader.vue', () => {
 
     let component;
     beforeEach(() => {
