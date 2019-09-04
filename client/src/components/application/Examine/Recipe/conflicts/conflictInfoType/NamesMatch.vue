@@ -61,7 +61,7 @@
     props: ['conflictData'],
     computed: {
       invalidRecord() {
-        if ( this.conflictData.invalidRecordInd ) return true
+        if ( this.conflictData && this.conflictData.invalidRecordInd ) return true
         return false
       },
       currentConflictName() {

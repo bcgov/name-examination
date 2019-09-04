@@ -284,9 +284,12 @@
       },
       clickChild(match, index) {
         this.focus = 'conflicts'
-        if (this.expandedID !== null) {
+        if (this.expandedID === match.id) {
           this.expandedID = null
           return
+        }
+        if (this.expandedID !== null) {
+          this.expandedID = null
         }
         this.$store.dispatch('getConflictInfo', match)
         this.childIndex = index
