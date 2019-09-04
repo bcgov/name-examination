@@ -7,11 +7,6 @@ import moment from 'moment'
 Vue.use(Vuex)
 
 export const actions = {
-  resetConflictList({ commit }) {
-    commit( 'setExpandedConflictID', null )
-    commit( 'setSelectedConflictID', null )
-    commit( 'setOpenBucket', null )
-  },
   logout({ commit, state }) {
     commit( 'clearAuthData' )
     sessionStorage.removeItem( 'KEYCLOAK_REFRESH' )
@@ -123,8 +118,7 @@ export const actions = {
          } ).catch( error => console.log( 'ERROR: ' + error ) )
   },
   cancelNr({ commit, state, dispatch }, nrState) {
-    dispatch('resetDecisionCompare')
-    commit('setCustomerMessageOverride', null)
+    dispatch('resetDecisionArea')
     commit( 'is_making_decision', false )
     const myToken = sessionStorage.getItem( 'KEYCLOAK_TOKEN' )
     const url = '/api/v1/requests/' + state.compInfo.nrNumber
@@ -144,8 +138,7 @@ export const actions = {
     const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/names/' + state.currentChoice
     axios.put( url, state.currentNameObj, { headers: { Authorization: `Bearer ${ myToken }` } } )
          .then( function (response) {
-           commit( 'setCustomerMessageOverride', null )
-           dispatch( 'resetDecisionCompare' )
+           dispatch( 'resetDecisionArea' )
            // Was this an accept? If so complete the NR
            if ( state.currentNameObj.state == 'APPROVED' ) {
              dispatch( 'updateNRState', 'APPROVED' )
@@ -206,9 +199,8 @@ export const actions = {
          } )
          .catch( error => console.log( 'ERROR: ' + error ) )
   },
-  undoDecision({ state, getters, dispatch, commit }, nameChoice) {
-    dispatch('resetDecisionCompare')
-    commit('setCustomerMessageOverride', null)
+  undoDecision({ state, getters, dispatch }, nameChoice) {
+    dispatch('resetDecisionArea')
     const myToken = sessionStorage.getItem( 'KEYCLOAK_TOKEN' )
 
     var objName = {}
@@ -668,6 +660,7 @@ export const actions = {
   },
   resetValues({ state, commit, dispatch }) {
     // clear NR specific JSON data so that it can't get accidentally re-used by the next NR number
+    dispatch('resetDecisionArea')
     commit( 'loadConflictsJSON', null )
     commit( 'setExactMatchesConflicts', null )
     commit( 'setSynonymMatchesConflicts', null )
@@ -682,14 +675,8 @@ export const actions = {
     commit( 'currentHistory', null )
     commit( 'currentTrademark', null )
     commit( 'loadTrademarksJSON', null )
-    commit( 'setSelectedConflicts', [] )
-    commit( 'setSelectedConditions', [] )
-    commit( 'setSelectedTrademarks', [] )
     commit( 'setConflictsReturnedStatus', null )
-    commit( 'setComparedConflicts', [] )
-    commit( 'setConflictsAutoAdd', true )
-    commit( 'setCustomerMessageOverride', null )
-    dispatch('resetDecisionCompare')
+
     // reset all flags like editing, making decision, etc.
     state.is_editing = false
     state.is_making_decision = false
@@ -756,10 +743,6 @@ export const actions = {
     }
     commit('setSelectedConflicts', listCopy)
   },
-  resetDecisionCompare({ commit }) {
-    commit('setSelectedConflictNRs', [])
-    commit('setComparedConflicts', [])
-  },
   removeComparedNR({ state, commit }, nrNumber) {
     let p = state.selectedConflictNRs[0] ? state.selectedConflictNRs[0] : ''
     if (state.selectedConflictNRs.includes(nrNumber)) {
@@ -779,7 +762,35 @@ export const actions = {
       comparedCopy.splice(comparedIndex, 1)
       commit('setComparedConflicts', comparedCopy)
     }
-  }
+  },
+  resetConflictList({ commit }) {
+    commit('setConflictsChildIndex', null)
+    commit('setConflictsChildren', [])
+    commit('setConflictsIndex', null)
+    commit('setConflictsScrollPosition', 0)
+    commit('setExpandedConflictID', null)
+    commit('setOpenBucket', null)
+    commit('setSelectedConflictID', null)
+  },
+  resetCompareCheckboxes({ commit }) {
+    commit('setSelectedConflictNRs', [])
+    commit('setComparedConflicts', [])
+  },
+  resetDecisionArea({ commit, dispatch }) {
+    dispatch('resetConflictList')
+    dispatch('resetSelectedComparedFields')
+    //above dispatches 'resetCompareCheckboxes' also
+    commit('setConflictsAutoAdd', true)
+    commit('setConsentRequiredByUser', false)
+    commit('setCustomerMessageOverride', null)
+  },
+  resetSelectedComparedFields({ commit, dispatch }) {
+    dispatch('resetCompareCheckboxes')
+    commit('setSelectedConditions', [])
+    commit('setSelectedConflicts', [])
+    commit('setSelectedReasons', [])
+    commit('setSelectedTrademarks', [])
+  },
 }
 
 export const getters = {
@@ -1230,6 +1241,7 @@ export const getters = {
   customerMessageOverride: state => state.customerMessageOverride,
   conflictsScrollPosition: state => state.conflictsScrollPosition,
   selectedConflictNRs: state => state.selectedConflictNRs,
+  selectedReasons: state => state.selectedReasons,
 }
 
 export const mutations = {
@@ -2160,7 +2172,6 @@ export const mutations = {
   setSelectedConditions: (state, conditions) => state.selectedConditions = conditions,
   setSelectedTrademarks(state, trademarks) {
     Vue.set( state, 'selectedTrademarks', trademarks )
-    state.selectedTrademarks = trademarks
   },
   setSelectedConflictID: (state, payload) => state.selectedConflictID = payload,
   setExpandedConflictID: (state, payload) => state.expandedConflictID = payload,
@@ -2206,6 +2217,10 @@ export const mutations = {
       nrNumber
     )
   },
+  setSelectedReasons(state, payload) {
+    Vue.set( state, 'selectedReasons', payload )
+  },
+  setConsentRequiredByUser: (state, payload) => state.consentRequiredByUser = payload,
 }
 
 export const state = {
@@ -2422,6 +2437,8 @@ export const state = {
   conflictsAutoAdd: true,
   customerMessageOverride: null,
   selectedConflictNRs: [],
+  selectedReasons: [],
+  consentRequiredByUser: false,
 }
 
 export default new Vuex.Store({ actions, getters, mutations, state, })

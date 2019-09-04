@@ -296,6 +296,13 @@
         this.expandedID = match.id
       },
       clickExactMatch(match, index) {
+        if (this.expandedID !== null) {
+          if (this.expandedID == match.id) {
+            this.expandedID = null
+            return
+          }
+          this.expandedID = null
+        }
         this.focus = 'conflicts'
         this.$store.dispatch('getConflictInfo', match)
         this.openBucketIndex = null

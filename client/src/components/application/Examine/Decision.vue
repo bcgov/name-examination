@@ -115,7 +115,7 @@
             <div class="fs-15 mb-2 mt-4 fw-600">Macros</div>
             <div id="macros-decision-select-field">
               <v-select :disabled="customer_message_override !== null || !is_making_decision"
-                        :height="selectedReasons.length <= 1 ? 30 : null"
+                        :height="selected_reasons.length <= 1 ? 30 : null"
                         :items="listDecisionReasons"
                         :menu-props="menuProps"
                         browser-autocomplete="off"
@@ -128,11 +128,11 @@
                         multiple
                         return-object
                         small-chips
-                        v-model="selectedReasons">
+                        v-model="selected_reasons">
                 <template v-slot:selection="{ item, index }">
                   <v-chip class="chip-class">{{ truncateChipText(item.name) }}
                     <v-icon class="chip-close-icon"
-                            @click.stop="removeChip('selectedReasons', index)">clear
+                            @click.stop="removeChip('selected_reasons', index)">clear
                     </v-icon>
                   </v-chip>
                 </template>
@@ -286,7 +286,6 @@
     name: "Decision",
     data() {
       return {
-        consent_required_by_user: false,
         editTextarea: null,
         editMessageModalVisible: false,
         menuProps: {
@@ -295,7 +294,6 @@
           maxHeight: 125,
         },
         originalMessage: null,
-        selectedReasons: [],
       }
     },
     mounted() {
@@ -318,6 +316,7 @@
         'phoneticConflicts',
         'selectedConditions',
         'selectedConflicts',
+        'selectedReasons',
         'selectedTrademarks',
         'synonymMatchesConflicts',
         'trademarksJSON',
@@ -333,8 +332,17 @@
       selected_trademarks: {
         get() {
           return this.selectedTrademarks
-        }, set(items) {
+        },
+        set(items) {
           this.$store.commit('setSelectedTrademarks', items)
+        }
+      },
+      consent_required_by_user: {
+        get() {
+          return this.$store.state.consentRequiredByUser
+        },
+        set(value) {
+          this.$store.commit('setConsentRequiredByUser', value)
         }
       },
       selected_conflicts: {
@@ -453,8 +461,8 @@
             'Registered Trademark: ' + this.selected_trademarks[i].name + ' - Application #' + this.selected_trademarks[i].application_number)
         }
         // GENERIC DECISION REASONS
-        for ( let i = 0; i < this.selectedReasons.length; i++ ) {
-          retval.push(this.selectedReasons[i].reason)
+        for ( let i = 0; i < this.selected_reasons.length; i++ ) {
+          retval.push(this.selected_reasons[i].reason)
         }
         return retval
       },
@@ -497,6 +505,14 @@
         },
         set(value) {
           this.$store.commit('is_making_decision', value)
+        }
+      },
+      selected_reasons: {
+        get() {
+          return this.selectedReasons
+        },
+        set(reasons) {
+          this.$store.commit('setSelectedReasons', reasons)
         }
       },
       messageDisplayProps() {
