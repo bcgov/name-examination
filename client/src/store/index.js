@@ -123,6 +123,8 @@ export const actions = {
          } ).catch( error => console.log( 'ERROR: ' + error ) )
   },
   cancelNr({ commit, state, dispatch }, nrState) {
+    dispatch('resetDecisionCompare')
+    commit('setCustomerMessageOverride', null)
     commit( 'is_making_decision', false )
     const myToken = sessionStorage.getItem( 'KEYCLOAK_TOKEN' )
     const url = '/api/v1/requests/' + state.compInfo.nrNumber
@@ -143,6 +145,7 @@ export const actions = {
     axios.put( url, state.currentNameObj, { headers: { Authorization: `Bearer ${ myToken }` } } )
          .then( function (response) {
            commit( 'setCustomerMessageOverride', null )
+           dispatch( 'resetDecisionCompare' )
            // Was this an accept? If so complete the NR
            if ( state.currentNameObj.state == 'APPROVED' ) {
              dispatch( 'updateNRState', 'APPROVED' )
@@ -203,13 +206,15 @@ export const actions = {
          } )
          .catch( error => console.log( 'ERROR: ' + error ) )
   },
-  undoDecision({ state }, nameChoice) {
+  undoDecision({ state, getters, dispatch, commit }, nameChoice) {
+    dispatch('resetDecisionCompare')
+    commit('setCustomerMessageOverride', null)
     const myToken = sessionStorage.getItem( 'KEYCLOAK_TOKEN' )
 
     var objName = {}
-    if ( nameChoice == 1 ) objName = this.getters.compName1
-    if ( nameChoice == 2 ) objName = this.getters.compName2
-    if ( nameChoice == 3 ) objName = this.getters.compName3
+    if ( nameChoice == 1 ) objName = getters.compName1
+    if ( nameChoice == 2 ) objName = getters.compName2
+    if ( nameChoice == 3 ) objName = getters.compName3
 
     objName.state = 'NE'
     objName.conflict1 = null
@@ -226,7 +231,7 @@ export const actions = {
          .then( function (response) {
 
            // get full NR from scratch
-           this.getpostgrescompInfo( state.compInfo.nrNumber )
+           dispatch('getpostgrescompInfo', state.compInfo.nrNumber)
          } )
          .catch( error => console.log( 'ERROR: ' + error ) )
   },
@@ -340,6 +345,7 @@ export const actions = {
       jurisdiction: conflict.jurisdiction,
       startDate: conflict.startDate,
       text: conflict.text,
+      invalidRecordInd: false,
     }
       if ( conflict.source === 'CORP' ) {
         dispatch('getCorpConflict', conflict).then(data => {
@@ -349,11 +355,9 @@ export const actions = {
         }).catch(() => {
           //set the invlalid record indicator so that CorpMatch will render an error message instead of a CorpMatch
           //container with no data whatsoever
-          let data = {
-            invalidRecordInd: true,
-            type: 'corp'
-          }
-          data = { ...data, ...baseConflictData}
+          let data = { ...data, ...baseConflictData}
+          data.type = 'corp'
+          data.invalidRecordInd = true
           commit('addComparedConflict', data)
         })
       }
@@ -365,11 +369,9 @@ export const actions = {
         }).catch(() => {
           //set the invlalid record indicator so that NamesMatch will render an error message instead of a NameMatch
           //container with no data whatsoever
-          let data = {
-            invalidRecordInd: true,
-            type: 'name'
-          }
-          data = { ...data, ...baseConflictData }
+          let data = { ...data, ...baseConflictData }
+          data.type = 'name'
+          data.invalidRecordInd = true
           commit('addComparedConflict', data)
         })
       }
@@ -2187,6 +2189,7 @@ export const mutations = {
     }
   },
   setCustomerMessageOverride: (state, payload) => state.customerMessageOverride = payload,
+  setSelectedConflictNRs: (state, payload) => state.selectedConflictNRs = payload,
   addSelectedConflictNRs(state, nrNumber) {
     let index = state.selectedConflictNRs.length
     Vue.set(
