@@ -138,7 +138,7 @@ export default {
       else return false;
     },
     canCancel() {
-      return this.userCanEdit;
+      return this.userCanEdit && !this.other_examiner_inprogress
     },
     cancelSubmitDisabled() {
       if (this.cancel_comment_display) {
@@ -215,10 +215,13 @@ export default {
     is_my_current_nr() {
       return this.$store.getters.is_my_current_nr;
     },
+    other_examiner_inprogress() {
+      return this.userId !== this.$store.getters.examiner && this.$store.getters.nr_status === 'INPROGRESS'
+    },
     is_name_decision_made() {
       // is a decision already made for the current name? Happens right after reset/re-open.
-      if (this.currentNameObj.state !== 'NE') return true;
-      else return false;
+      if (this.currentNameObj.state !== 'NE') return true
+      return false
     },
     userCanEdit() {
       return this.$store.getters.userHasEditRole;

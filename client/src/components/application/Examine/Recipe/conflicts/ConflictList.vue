@@ -16,10 +16,10 @@
                 v-if="title.nrNumber">
         <v-flex width-5>
           <v-checkbox :disabled="checkboxDisabled"
+                      id="`check-${item.nrNumber}`"
                       :input-value="selectedNRs"
-                      :key="`exact-check-${i}`"
                       :value="title.nrNumber"
-                      @click.capture.stop.self="setCheckbox"
+                      @click.prevent.stop="setCheckbox(title)"
                       class="shift-up"/>
         </v-flex>
         <v-flex @click="clickExactMatch(title, i)"
@@ -156,6 +156,7 @@
         expandedConflictID: 'expandedConflictID',
         openBucket: 'openBucket',
         synonymMatchesConflicts: 'synonymMatchesConflicts',
+        comparedConflicts: 'comparedConflicts',
         conflictTitles: 'conflictTitles',
         conflictsIndex: 'conflictsIndex',
         conflictsChildIndex: 'conflictsChildIndex',
@@ -163,18 +164,11 @@
         conflictsScrollPosition: 'conflictsScrollPosition',
         currentRecipeCard: 'currentRecipeCard',
         conflictsAutoAdd: 'conflictsAutoAdd',
-        decisionPanel: 'decisionPanel'
+        decisionPanel: 'decisionPanel',
+        selectedConflictNRs: 'selectedConflictNRs',
       }),
       checkboxDisabled() {
         return this.decisionPanel.functionalityDisabled
-      },
-      addedConflicts: {
-        get() {
-          return this.$store.getters.addedConflicts
-        },
-        set(value) {
-          this.$store.commit('setAddedConflicts', value)
-        }
       },
       autoAdd() {
         return this.conflictsAutoAdd
@@ -241,15 +235,7 @@
         }
       },
       selectedNRs() {
-        if (this.autoAdd) {
-          if (this.selectedConflicts && this.selectedConflicts.length > 0) {
-            return this.selectedConflicts.map(conflict => conflict.nrNumber)
-          }
-        } else {
-          if (this.addedConflicts && this.addedConflicts.length > 0) {
-            return this.addedConflicts.map(conflict => conflict.nrNumber)
-          }
-        }
+        return this.selectedConflictNRs
       },
     },
     watch: {
@@ -298,8 +284,11 @@
       },
       clickChild(match, index) {
         this.focus = 'conflicts'
+        if (this.expandedID !== null) {
+          this.expandedID = null
+          return
+        }
         this.$store.dispatch('getConflictInfo', match)
-        this.expandedID = null
         this.childIndex = index
         this.expandedID = match.id
       },
@@ -313,7 +302,7 @@
         this.expandedID = match.id
       },
       formatDate(d) {
-        return moment(d).format('YYYY-MM-DD')
+        return moment(d).parseZone().format('YYYY-MM-DD')
       },
       manageEventListener(event) {
         let types = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Space']
@@ -478,49 +467,20 @@
           if (el) el.scrollIntoViewIfNeeded()
         })
       },
-      setCheckbox(options) {
-        if (options && !Array.isArray(options)) {
-          options = [options]
-        }
-        if (this.autoAdd) {
-          let conflictsCopy = [ ...this.selectedConflicts ]
-          for (let option of options) {
-            let index = this.selectedConflicts.findIndex(conflict => conflict.nrNumber === option.nrNumber)
-            if (index === -1) {
-              if (this.selectedConflicts.length >= 3) return
-              conflictsCopy.push(option)
-              this.$store.dispatch('addConflictToCompare', option)
-            } else {
-              conflictsCopy.splice(index, 1)
-              let i = this.$store.state.comparedConflicts.findIndex(c => c.nrNumber == option.nrNumber)
-              let comparedCopy = [ ...this.$store.state.comparedConflicts]
-              comparedCopy.splice(i, 1)
-              this.$store.commit('setComparedConflicts', comparedCopy)
-            }
-          }
-          this.selectedConflicts = conflictsCopy
-        } else {
-          let addedCopy = [ ...this.addedConflicts ]
-          for (let option of options) {
-            let index = this.addedConflicts.findIndex(conflict => conflict.nrNumber === option.nrNumber)
-            if (index === -1) {
-              addedCopy.push(option)
-            } else {
-              addedCopy.splice(index, 1)
-            }
-          }
-          this.addedConflicts = addedCopy
-        }
+      setCheckbox(conflict) {
+        this.$store.dispatch('toggleConflictCheckbox', conflict)
       },
       setExactMatchesOnLoad(newData) {
         if (!newData) newData = this.conflictTitles
-        let options = []
+        let exactMatches = []
         for (let title of newData) {
-          if (title.nrNumber && options.length < 3) {
-            options.push(title)
+          if (title.nrNumber && exactMatches.length < 3) {
+            exactMatches.push(title)
           }
         }
-        this.setCheckbox(options)
+        exactMatches.forEach( match => {
+          this.setCheckbox(match)
+        })
       },
       setFocus(area) {
         if (!area) {

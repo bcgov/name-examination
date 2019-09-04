@@ -1,18 +1,34 @@
 /* eslint-disable */
 <template>
-  <v-container ma-0 pa-0 fluid container-style id="compare-container">
-    <v-layout v-for="(conflict, i) in comparedConflicts"
-              :key="`compare-${i}`"
-              column>
-      <v-layout header-style px-3>
-        <v-flex text-style text-left>{{ conflict.text }}</v-flex>
-        <v-flex width-15 text-right>{{ conflict.nrNumber }}</v-flex>
-        <v-flex width-10 text-right>{{ conflict.jurisdiction }}</v-flex>
-        <v-flex width-20 text-right>{{ formatDate(conflict.startDate) }}</v-flex>
+  <v-container ma-0 pa-0 fluid id="compare-container">
+    <template v-if="comparedConflicts && comparedConflicts.length > 0">
+      <v-layout v-for="(conflict, i) in comparedConflicts"
+                :key="i+'-compared'"
+                :id="i+'-compared'"
+                mb-1
+                bg-l-blue
+                column>
+        <v-layout header-style px-3>
+          <v-flex text-style text-left>{{ conflict.text }}</v-flex>
+          <v-flex width-15 text-right>{{ conflict.nrNumber }}</v-flex>
+          <v-flex width-10 text-center>{{ formatJurisdiction(conflict.jurisdiction) }}</v-flex>
+          <v-flex width-20 text-left>{{ formatDate(conflict.startDate) }}</v-flex>
+        </v-layout>
+        <CorpMatch data-testid="corp-match"
+                   :key="i + 'corp-match'"
+                   :conflictData="conflict"
+                   v-if="conflict.type === 'corp'" />
+        <NamesMatch data-testid="names-match"
+                    :key="i + '-name-match'"
+                    :conflictData="conflict"
+                    v-if="conflict.type === 'name'" />
       </v-layout>
-      <CorpMatch class="conflict-info-view" v-if="conflict.type === 'corp'" />
-      <NamesMatch class="conflict-info-view" v-if="conflict.type === 'name'" />
-    </v-layout>
+    </template>
+    <template v-else>
+      <v-layout text-center pt-3>
+        <v-flex>No conflicts have been added for comparisson.</v-flex>
+      </v-layout>
+    </template>
   </v-container>
 </template>
 
@@ -31,7 +47,13 @@
     },
     methods: {
       formatDate(d) {
-        return moment(d).format('YYYY-MM-DD')
+        return moment(d).parseZone().format('YYYY-MM-DD')
+      },
+      formatJurisdiction(text) {
+        if (text.includes('-')) {
+          return text.split('-')[0].trim()
+        }
+        return text
       }
     }
   }
@@ -41,23 +63,39 @@
   .text-style {
     width: 65%;
     overflow: hidden;
+    white-space: nowrap;
     text-overflow: ellipsis;
   }
 
   .width-10 {
     width: 10%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
   }
 
   .width-20 {
     width: 20%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: clip;
   }
 
   .width-15 {
     width: 15%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
   }
 
-  .container-style {
+  .bg-l-blue {
     background-color: var(--xl-blue);
+  }
+
+  #compare-container {
+    background-color: white;
+    height: 445px;
+    overflow-y: scroll;
   }
 
   .header-style {

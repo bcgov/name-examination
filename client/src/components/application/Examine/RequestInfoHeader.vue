@@ -74,7 +74,7 @@
             <v-flex id="div1"><b>Status:</b><span id="nrStatusText">
               {{ nr_status }}{{ additionalStatus }}</span></v-flex>
             <v-flex><b>Examiner:</b> {{ examiner }}</v-flex>
-            <v-flex v-shortkey="{toggle:['alt','o'], save:['alt','v'], cancel:['alt','n']}"
+            <v-flex v-shortkey="{toggle:['alt','o'], save:['alt','v']}"
                     @shortkey="commentsShortkey">
               <v-icon color="light-blue"
                       class="mirrored"

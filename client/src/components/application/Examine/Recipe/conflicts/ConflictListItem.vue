@@ -12,7 +12,7 @@
                     :disabled="checkboxDisabled"
                     :value="child.nrNumber"
                     :input-value="selectedNRs"
-                    @click.stop.prevent="setCheckbox(child)"/>
+                    @click.prevent.stop="setCheckbox(child)"/>
       </v-flex>
       <v-flex width-60
               cursor-pointer
@@ -66,7 +66,7 @@
     ],
     methods: {
       formatDate(d) {
-        return moment(d).format('YYYY-MM-DD')
+        return moment(d).parseZone().format('YYYY-MM-DD')
       }
     }
   }

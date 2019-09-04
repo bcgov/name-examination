@@ -32,8 +32,7 @@
           </v-flex>
         </v-layout>
         <v-flex text-right c-link>
-          <v-btn id="comments-cancel-button" flat :ripple="false" @click="clickCancel()">
-            Ca<span class="shortkey">n</span>cel</v-btn>
+          <v-btn id="comments-cancel-button" flat :ripple="false" @click="clickCancel()">Cancel</v-btn>
           <v-btn id="comments-save-button" flat :ripple="false" :disabled="saveButtonDisabled" @click="saveInfo">
             <b style="font-weight: 600">Sa<span class="shortkey">v</span>e</b>
           </v-btn>

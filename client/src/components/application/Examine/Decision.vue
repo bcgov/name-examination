@@ -93,7 +93,7 @@
                         v-model="selected_conflicts">
                 <template v-slot:selection="{ item, index }">
                   <v-chip class="chip-class">{{ truncateChipText(item.text) }}
-                    <v-icon @click.stop="removeChip('selected_conflicts', index)"
+                    <v-icon @click.stop="removeChip('selected_conflicts', index, item.nrNumber)"
                             class="chip-close-icon">clear</v-icon>
                   </v-chip>
                 </template>
@@ -103,7 +103,7 @@
                               font-size: 13px;
                               padding: 8px 0px 6px 14px;
                               min-height:40px">
-                    {{ conflictsAutoAdd ? 'No Conflicts' : 'auto-add is off.  no conflicts selected.'}}
+                    {{ conflictsAutoAdd ? 'No Conflicts' : 'No conflicts selected (and auto-add is off).'}}
                   </div>
                 </template>
               </v-select>
@@ -178,7 +178,9 @@
           <!--MESSAGE OUTPUT TEXTAREA-->
           <v-flex>
             <div class="decision-flex-holder">
-              <div class="fs-15 fw-600 ma-0 pa-0" style="position:relative; top:12px">Message To Requestor</div>
+              <div class="fs-15 fw-600 ma-0 pa-0" style="position:relative; top:12px">
+                Message To Requestor<span class="c-priority ml-1" v-if="customer_message_override">(Edited)</span>
+              </div>
                 <v-btn flat
                        :disabled="!is_making_decision"
                        @click="showModal"
@@ -304,7 +306,6 @@
       ...mapGetters([
         'acceptance_will_be_conditional',
         'autoAddDisabled',
-        'addedConflicts',
         'cobrsPhoneticConflicts',
         'comparedConflicts',
         'conditionsJSON',
@@ -376,7 +377,7 @@
       },
       conflictList() {
         if (!this.conflictsAutoAdd) {
-          return this.addedConflicts
+          return this.comparedConflicts
         }
         let output = []
         let listedNRs = []
@@ -613,14 +614,18 @@
         this.$store.commit('decision_made', 'REJECTED')
         this.$nextTick(function () { this.nameAcceptReject() })
       },
-      removeChip(type, index) {
-      //use spread syntax to create a new array from the existing selected(Trademarks, Conditions, Reasons, Conflicts)
+      removeChip(type, index, nrNumber) {
+        //use spread syntax to create a new array from the existing selected(Trademarks, Conditions, Reasons, Conflicts)
       //so as not to simply create a reference to the existing selected(listType) data.
         let selectedCopy = [ ...this[type] ]
         selectedCopy.splice(index, 1)
       //and then assign this new value to replace the selected(listType) in the component data.  Do this as opposed
       //to splicing the list in data directly because Vue will not react to such a change in a guaranteed immediate way
         this[type] = selectedCopy
+
+        if (nrNumber) {
+          this.$store.dispatch('removeComparedNR', nrNumber)
+        }
       },
       saveModal(obj) {
         if ( this.editTextarea !== this.customer_message_display ) {

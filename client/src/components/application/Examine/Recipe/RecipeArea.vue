@@ -2,8 +2,9 @@
 <template>
   <v-container fluid style="background-color: white" ma-0 pa-0>
     <v-layout column ma-0 pa-0>
-      <v-layout tab-layout ma-0 pa-0>
+      <v-layout tab-layout ma-0 pa-0 align-center>
         <v-flex @click="currentRecipeCard = 'Conflicts'"
+                grow
                 text-center
                 :class="getClasses('Conflicts')">
           <span class="recipe-menu-tab-text">
@@ -13,6 +14,7 @@
         </v-flex>
         <v-flex @click="currentRecipeCard = 'Conditions'"
                 text-center
+                grow
                 :class="getClasses('Conditions')">
           <span class="recipe-menu-tab-text">
             <v-icon :class="getColour(conditionIcon)"
@@ -21,6 +23,7 @@
         </v-flex>
         <v-flex @click="currentRecipeCard = 'Trademarks'"
                 text-center
+                grow
                 :class="getClasses('Trademarks')">
           <span class="recipe-menu-tab-text">
             <v-icon :class="getColour(trademarksIcon)"
@@ -29,6 +32,8 @@
         </v-flex>
         <v-flex @click="currentRecipeCard = 'History'"
                 text-center
+
+                grow
                 :class="getClasses('History')">
           <span class="recipe-menu-tab-text">
              <v-icon :class="getColour(historyIcon)"
@@ -37,25 +42,21 @@
         </v-flex>
         <v-flex @click="currentRecipeCard = 'Compare'"
                 text-center
+                grow
                 :class="getClasses('Compare')">
           <span class="recipe-menu-tab-text">
             <v-icon class="ma-0 pa-0 recipe-menu-icon"
                     id="compare1">dehaze</v-icon>Compare</span>
         </v-flex>
-        <v-flex auto-add-area
-                pl-2
-                :opacity-50="!!autoAddDisabled"
-                pt-2>
-          <v-switch v-model="autoAdd"
-                    :disabled="autoAddDisabled"
-                    class="ma-0 pa-0">
-            <template v-slot:prepend>
-              <span class="pt-1" style="font-size: 14px">auto-add</span>
-            </template>
-          </v-switch>
-        </v-flex>
+        <div class="auto-add-area">
+          <div style="position: relative; top: 5px">
+            <v-checkbox v-model="autoAdd"
+                        :disabled="autoAddDisabled" />
+          </div>
+          <div class="fs-14 pa-0 ma-0 pr-1" :class="autoAddDisabled ? 'c-grey' : 'c-link'">auto add</div>
+        </div>
       </v-layout>
-      <v-flex>
+      <v-flex style="background-color: white; padding-top: 4px;">
         <keep-alive>
           <component :is="currentRecipeCard" />
         </keep-alive>
@@ -111,8 +112,11 @@
               if (resWord.cnd_info.every(con => con.allow_use === 'N')) {
                 return 'close'
               }
+              if (resWord.cnd_info.some(con => con.allow_use === 'N' || con.consent_required === 'Y')) {
+                return 'error_outline'
+              }
             }
-            return 'error_outline'
+
           }
         }
         return 'done'
@@ -177,26 +181,33 @@
 </script>
 
 <style scoped>
-  .auto-add-area {
-    background-color: var(--xl-grey);
-    max-width: 16.67%;
-    width: 16.67%;
+  #compare1 {
+    position: relative;
+    top: 2px;
+    margin-right: 3px !important;
     color: var(--link);
-    font-size: 13px !important;
+  }
+
+  .auto-add-area {
+    display: flex;
+    height: 42px;
+    align-items: center;
+    background-color: var(--xl-grey);
+    padding: 0 !important;
+    padding-left: 5px !important;
   }
   opacity-50 {
     opacity: 20% !important;
   }
 
   .recipe-menu-icon {
-    position: relative;
-    top: 1px;
+    font-size: 20px;
   }
 
   .recipe-menu-tab-text {
     position: relative;
     top: 1px;
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .tab-1st-active {
@@ -214,14 +225,13 @@
   }
 
   .tab-base {
-    background-color: white;
     border-right: 0;
     border-top: 0;
     color: var(--link);
     cursor: pointer;
-    padding-top: 6px !important;
-    max-width: 16.67%;
-    width: 16.67%;
+    height: 42px;
+    padding-top: 1%;
+    padding-bottom: 3%;
   }
 
   .tab-inactive {
@@ -231,7 +241,8 @@
 
   .tab-layout {
     height: 42px;
-    background-color: var(--xl-grey);
+    background-color: white;
+    align-items: center;
   }
 
 </style>

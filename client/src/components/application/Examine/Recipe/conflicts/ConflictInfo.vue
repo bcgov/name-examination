@@ -3,8 +3,14 @@
   <v-container ma-0 pa-0 fluid bg-color id="conflict-info-container">
     <v-layout id="conflict-info-layout">
       <spinner className="conflict-detail-spinner pb-5"/>
-      <CorpMatch id="corpmatch" class="conflict-info-view" v-if="is_corp"/>
-      <NamesMatch id="namematch" class="conflict-info-view" v-else-if="is_names"/>
+      <CorpMatch id="corpmatch"
+                 class="conflict-info-view"
+                 :conflictData="corpConflictJSON"
+                 v-if="is_corp"/>
+      <NamesMatch id="namematch"
+                  :conflictData="namesConflictJSON"
+                  class="conflict-info-view"
+                  v-else-if="is_names"/>
       <NullMatch class="conflict-info-view" v-else/>
     </v-layout>
   </v-container>
@@ -16,6 +22,7 @@
   import NamesMatch from './conflictInfoType/NamesMatch.vue'
   import NullMatch from './conflictInfoType/NullMatch.vue'
   import spinner from '@/components/application/spinner.vue'
+  import { mapGetters } from 'vuex'
 
   export default {
     name: 'ConflictInfo',
@@ -24,9 +31,7 @@
       this.scrollIntoView()
     },
     computed: {
-      currentConflict() {
-        return this.$store.getters.currentConflict
-      },
+      ...mapGetters(['currentConflict', 'namesConflictJSON', 'corpConflictJSON']),
       is_corp() {
         if (this.currentConflict != undefined) {
           if (this.currentConflict.source === 'CORP') return true
