@@ -51,7 +51,7 @@
                     {{ i + 1 }}. {{ name.name }}<span :class="getClass(name.state)" class="mx-2">{{ name.state }}</span>
                   </v-flex>
                   <v-layout fs-13 column>
-                    <v-flex v-for="text in name.decision_text"
+                    <v-flex v-for="(text, i) in name.decision_text"
                             :key="`decision-text-flex-${i}`"
                             ft-ital mb-2 ml-4>{{ text }}</v-flex>
                   </v-layout>
@@ -131,7 +131,7 @@ export default {
     }
   },
   mounted() {
-    if (this.$refs.numberinput) his.$refs.numberinput.focus()
+    if (this.$refs.numberinput) this.$refs.numberinput.focus()
   },
   computed: {
     timespanHuman() {

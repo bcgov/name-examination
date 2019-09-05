@@ -270,7 +270,7 @@
       addListeners() {
         this.removeListeners()
         document.addEventListener('keydown', this.manageEventListener)
-        this.$el.addEventListener('scroll', debounce(this.saveScrollPosition), 250)
+        this.$el.addEventListener('scroll', debounce(this.saveScrollPosition), 350)
       },
       clickBucket(index) {
         this.focus = 'conflicts'
