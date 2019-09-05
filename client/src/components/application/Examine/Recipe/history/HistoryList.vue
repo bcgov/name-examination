@@ -7,8 +7,6 @@
         <v-data-table :headers="headers"
                       :items="historiesJSON"
                       id="history-list-table"
-                      v-shortkey="{arrowup:['arrowup'],arrowdown:['arrowdown'],arrowright:['arrowright'],arrowleft:['arrowleft']}"
-                      @shortkey.native="handleKeyboardEvent"
                       hide-actions>
           <template v-slot:items="{item, index}">
             <tr :active="ind === index"
@@ -58,6 +56,15 @@ import moment from 'moment'
         ind: 0,
       }
     },
+    activated() {
+      this.addListener()
+    },
+    deactivated() {
+      this.removeListener()
+    },
+    beforeDestroy() {
+      this.removeListener()
+    },
     computed: {
       historiesJSON() {
         if (this.$store.getters.historiesJSON && this.$store.getters.historiesJSON.names) {
@@ -97,6 +104,26 @@ import moment from 'moment'
       },
     },
     methods: {
+      addListener() {
+        this.removeListener()
+        document.addEventListener('keydown', this.manageHistoryListener)
+      },
+      removeListener() {
+        document.removeEventListener('keydown', this.manageHistoryListener)
+      },
+      manageHistoryListener(event) {
+        let types = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',]
+        if ( !types.includes(event.code) || event.target.type === 'textarea' || this.is_editing ) {
+          return event
+        }
+        if ( event.target.tagName !== 'INPUT') {
+          event.preventDefault()
+          this.handleKeyboardEvent(event)
+        }
+        else {
+          return event
+        }
+      },
       autoSetCurrentHistory() {
         if (this.historiesJSON && this.historiesJSON.length > 0) {
           this.ind = 0
@@ -136,53 +163,49 @@ import moment from 'moment'
             el.scrollIntoViewIfNeeded()
           }
         }
-        let keyPresses = ['arrowup', 'arrowdown', 'arrowright', 'arrowleft']
-        if (!event.isComposing && keyPresses.includes(event.srcKey)) {
-          event.preventDefault()
 
-          if (this.historiesJSON && this.historiesJSON.length > 0) {
-            let length = this.historiesJSON.length
-            switch (event.srcKey) {
-              case 'arrowdown':
-                if (this.currentHistory) { this.currentHistory = null }
-                if (this.expandedInd) { this.expandedInd = null }
-                if (this.ind === null) {
-                  this.ind = 0
-                  scrollToView(this.ind)
-                  return
-                }
-                if (this.ind === (length - 1)) return
-                this.ind++
+        if (this.historiesJSON && this.historiesJSON.length > 0) {
+          let length = this.historiesJSON.length
+          switch (event.code) {
+            case 'ArrowDown':
+              if (this.currentHistory) { this.currentHistory = null }
+              if (this.expandedInd) { this.expandedInd = null }
+              if (this.ind === null) {
+                this.ind = 0
                 scrollToView(this.ind)
                 return
+              }
+              if (this.ind === (length - 1)) return
+              this.ind++
+              scrollToView(this.ind)
+              return
 
-              case 'arrowup':
-                if (this.currentHistory) { this.currentHistory = null }
-                if (this.expandedInd) { this.expandedInd = null }
-                if (this.ind === null || this.ind <= 0) {
-                  this.ind = 0
-                  scrollToView(this.ind)
-                  return
-                }
-                this.ind--
+            case 'ArrowUp':
+              if (this.currentHistory) { this.currentHistory = null }
+              if (this.expandedInd) { this.expandedInd = null }
+              if (this.ind === null || this.ind <= 0) {
+                this.ind = 0
                 scrollToView(this.ind)
                 return
+              }
+              this.ind--
+              scrollToView(this.ind)
+              return
 
-              case 'arrowright':
-                if (this.ind === null) {
-                  this.ind = 0
-                }
-                this.expandedInd = this.ind
-                this.currentHistory = this.historiesJSON[this.ind]
-                this.$store.dispatch('resetHistoriesInfo')
-                this.$store.dispatch('getHistoryInfo', this.currentHistory)
-                return
+            case 'ArrowRight':
+              if (this.ind === null) {
+                this.ind = 0
+              }
+              this.expandedInd = this.ind
+              this.currentHistory = this.historiesJSON[this.ind]
+              this.$store.dispatch('resetHistoriesInfo')
+              this.$store.dispatch('getHistoryInfo', this.currentHistory)
+              return
 
-              case 'arrowleft':
-                this.expandedInd = null
-                this.currentHistory = null
-                return
-            }
+            case 'ArrowLeft':
+              this.expandedInd = null
+              this.currentHistory = null
+              return
           }
         }
       }

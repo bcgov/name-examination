@@ -131,8 +131,13 @@
         focus: 'conflicts',
       }
     },
-    mounted() {
+    activated() {
       this.addListeners()
+    },
+    deactivated() {
+      this.removeListeners()
+    },
+    mounted() {
       this.$root.$on('setconflictfocus', (area) => {
         this.setFocus(area)
       })

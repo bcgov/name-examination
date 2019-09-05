@@ -118,7 +118,7 @@ export const actions = {
          } ).catch( error => console.log( 'ERROR: ' + error ) )
   },
   cancelNr({ commit, state, dispatch }, nrState) {
-    dispatch('resetDecisionArea')
+    dispatch('resetExaminationArea')
     commit( 'is_making_decision', false )
     const myToken = sessionStorage.getItem( 'KEYCLOAK_TOKEN' )
     const url = '/api/v1/requests/' + state.compInfo.nrNumber
@@ -138,7 +138,7 @@ export const actions = {
     const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/names/' + state.currentChoice
     axios.put( url, state.currentNameObj, { headers: { Authorization: `Bearer ${ myToken }` } } )
          .then( function (response) {
-           dispatch( 'resetDecisionArea' )
+           dispatch( 'resetExaminationArea' )
            // Was this an accept? If so complete the NR
            if ( state.currentNameObj.state == 'APPROVED' ) {
              dispatch( 'updateNRState', 'APPROVED' )
@@ -200,7 +200,7 @@ export const actions = {
          .catch( error => console.log( 'ERROR: ' + error ) )
   },
   undoDecision({ state, getters, dispatch }, nameChoice) {
-    dispatch('resetDecisionArea')
+    dispatch('resetExaminationArea')
     const myToken = sessionStorage.getItem( 'KEYCLOAK_TOKEN' )
 
     var objName = {}
@@ -660,7 +660,7 @@ export const actions = {
   },
   resetValues({ state, commit, dispatch }) {
     // clear NR specific JSON data so that it can't get accidentally re-used by the next NR number
-    dispatch('resetDecisionArea')
+    dispatch('resetExaminationArea')
     commit( 'loadConflictsJSON', null )
     commit( 'setExactMatchesConflicts', null )
     commit( 'setSynonymMatchesConflicts', null )
@@ -771,21 +771,17 @@ export const actions = {
     commit('setExpandedConflictID', null)
     commit('setOpenBucket', null)
     commit('setSelectedConflictID', null)
-  },
-  resetCompareCheckboxes({ commit }) {
     commit('setSelectedConflictNRs', [])
     commit('setComparedConflicts', [])
   },
-  resetDecisionArea({ commit, dispatch }) {
+  resetExaminationArea({ commit, dispatch }) {
     dispatch('resetConflictList')
-    dispatch('resetSelectedComparedFields')
-    //above dispatches 'resetCompareCheckboxes' also
+    dispatch('resetDecision')
     commit('setConflictsAutoAdd', true)
     commit('setConsentRequiredByUser', false)
     commit('setCustomerMessageOverride', null)
   },
-  resetSelectedComparedFields({ commit, dispatch }) {
-    dispatch('resetCompareCheckboxes')
+  resetDecision({ commit, dispatch }) {
     commit('setSelectedConditions', [])
     commit('setSelectedConflicts', [])
     commit('setSelectedReasons', [])
