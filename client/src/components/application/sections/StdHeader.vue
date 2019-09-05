@@ -138,7 +138,7 @@
               router: this.$router
             }
             if (search == this.nrNumber) {
-              this.$store.dispatch('syncNR', search)
+              this.nrNum = ''
               return
             }
             this.$store.dispatch('newNrNumber', payload)
