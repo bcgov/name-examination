@@ -5,7 +5,7 @@
       <!-- Edit Request button -->
       <v-btn class="mx-1 pa-0 action-button"
              flat
-             v-shortkey="['alt', 'e']"
+             v-shortkey="['alt', 'd']"
              @shortkey="edit"
              id="nr-details-edit-button"
              v-if="can_edit"
