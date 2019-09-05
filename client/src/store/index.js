@@ -475,14 +475,15 @@ export const actions = {
       let p2 = dispatch( 'checkManualSynonymMatches', searchObj )
       let p3 = dispatch( 'checkManualCobrsPhoneticMatches', searchObj )
       let p4 = dispatch( 'checkManualPhoneticMatches', searchObj )
-      Promise.all( [p1, p2, p3, p4] ).then( () => {
+      let p5 = dispatch('checkManualTrademarks', searchObj.searchStr)
+      let p6 = dispatch('checkManualConditions', searchObj.searchStr)
+      let p7 = dispatch('checkManualHistories', searchObj.searchStr)
+      Promise.all( [p1, p2, p3, p4, p5, p6, p7] ).finally( () => {
         commit( 'setConflictsReturnedStatus', true )
-        $( '.conflict-container-spinner' ).addClass( 'hidden' )
+        setTimeout(() => { $( '.conflict-container-spinner' ).addClass( 'hidden' ) }, 500)
       } )
       // this.dispatch('checkManualConflicts',searchStr)
-      dispatch( 'checkManualTrademarks', searchObj.searchStr )
-      dispatch( 'checkManualConditions', searchObj.searchStr )
-      dispatch( 'checkManualHistories', searchObj.searchStr )
+
     }
   },
   checkManualExactMatches({ commit, state }, query) {
@@ -744,7 +745,6 @@ export const actions = {
     commit('setSelectedConflicts', listCopy)
   },
   removeComparedNR({ state, commit }, nrNumber) {
-    let p = state.selectedConflictNRs[0] ? state.selectedConflictNRs[0] : ''
     if (state.selectedConflictNRs.includes(nrNumber)) {
       commit('removeSelectedConflictNRs', nrNumber)
     }
@@ -781,7 +781,7 @@ export const actions = {
     commit('setConsentRequiredByUser', false)
     commit('setCustomerMessageOverride', null)
   },
-  resetDecision({ commit, dispatch }) {
+  resetDecision({ commit }) {
     commit('setSelectedConditions', [])
     commit('setSelectedConflicts', [])
     commit('setSelectedReasons', [])

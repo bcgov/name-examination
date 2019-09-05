@@ -469,7 +469,10 @@
         }
       },
       runManualRecipe() {
-        this.$store.dispatch('runManualRecipe', {searchStr:this.searchStr, exactPhrase:this.exactPhrase})
+        $('.conflict-container-spinner').removeClass('hidden')
+        this.$store.dispatch('resetExaminationArea').then(() => {
+          this.$store.dispatch('runManualRecipe', { searchStr: this.searchStr, exactPhrase: this.exactPhrase })
+        })
       },
       setOrBlurFocus({ref, type}) {
         if (this.$refs[ref]) {
