@@ -365,7 +365,7 @@
           return this.$store.getters.compName1
         },
         set(value) {
-          value = value.trimEnd()
+          value = value.trimRight()
           this.$store.commit('compName1', value)
         },
       },
@@ -374,7 +374,7 @@
           return this.$store.getters.compName2
         },
         set(value) {
-          value = value.trimEnd()
+          value = value.trimRight()
           this.$store.commit('compName2', value)
         },
       },
@@ -383,7 +383,7 @@
           return this.$store.getters.compName3
         },
         set(value) {
-          value = value.trimEnd()
+          value = value.trimRight()
           this.$store.commit('compName3', value)
         },
       },
@@ -736,9 +736,9 @@
           // do not continue if there are validation errors
           return
         }
-        if ( this.compName1 && this.compName1.name ) this.compName1.name = this.compName1.name.trimEnd()
-        if ( this.compName2 && this.compName2.name ) this.compName2.name = this.compName2.name.trimEnd()
-        if ( this.compName3 && this.compName3.name ) this.compName3.name = this.compName3.name.trimEnd()
+        if ( this.compName1 && this.compName1.name ) this.compName1.name = this.compName1.name.trimRight()
+        if ( this.compName2 && this.compName2.name ) this.compName2.name = this.compName2.name.trimRight()
+        if ( this.compName3 && this.compName3.name ) this.compName3.name = this.compName3.name.trimRight()
         // if jurisdiction not required, clear the data (ie: BC)
         if (!this.jurisdiction_required) this.$store.commit('jurisdiction', null)
 

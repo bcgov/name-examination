@@ -128,7 +128,7 @@
         }
       },
       incorpNum() {
-        if ( this.conflictData !== null ) {
+        if (this.conflictData) {
           return this.conflictData['incorp #']
         }
         else {
@@ -136,7 +136,7 @@
         }
       },
       incorporated() {
-        if ( this.conflictData !== null ) {
+        if (this.conflictData) {
           return this.conflictData['incorporated']
         }
         else {
@@ -144,7 +144,7 @@
         }
       },
       jurisdiction() {
-        if ( this.conflictData !== null ) {
+        if (this.conflictData) {
           return this.conflictData['jurisdiction']
         }
         else {
@@ -152,7 +152,7 @@
         }
       },
       natureOfBusiness() {
-        if ( this.conflictData !== null ) {
+        if (this.conflictData) {
           return this.conflictData['nature of business']
         }
         else {
@@ -160,7 +160,7 @@
         }
       },
       records_office_delivery_address() {
-        if ( this.conflictData !== null ) {
+        if (this.conflictData) {
           let lines = this.conflictData['records office delivery address']
           let l = lines.length
           let lastLine = lines[l - 4] + ' ' + lines[l - 3] + ' ' + lines[l - 2] + ' ' + lines[l - 1]
@@ -181,7 +181,7 @@
         }
       },
       registered_office_delivery_address() {
-        if ( this.conflictData !== null ) {
+        if (this.conflictData) {
           let lines = this.conflictData['registered office delivery address']
           let l = lines.length
           let lastLine = lines[l - 4] + ' ' + lines[l - 3] + ' ' + lines[l - 2] + ' ' + lines[l - 1]
@@ -202,7 +202,7 @@
         }
       },
       is_xpro() {
-        if ( this.conflictData !== null ) {
+        if (this.conflictData) {
           if ( this.conflictData['jurisdiction'] === 'BC' ) {
             return false
           }
@@ -213,7 +213,6 @@
         else {
           return false
         }
-
       },
     },
     methods: {

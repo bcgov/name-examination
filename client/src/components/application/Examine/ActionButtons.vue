@@ -129,8 +129,8 @@ export default {
     })
   },
   computed: {
-    acceptance_will_be_conditional() {
-      return this.$store.getters.acceptance_will_be_conditional;
+    acceptanceWillBeConditional() {
+      return this.$store.getters.acceptanceWillBeConditional;
     },
     can_claim() {
       // can this user claim the NR? Based on state.

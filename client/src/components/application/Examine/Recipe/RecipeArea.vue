@@ -109,14 +109,10 @@
           let { restricted_words_conditions } = this.conditionsJSON
           if (restricted_words_conditions.length > 0) {
             for (let resWord of restricted_words_conditions) {
-              if (resWord.cnd_info.every(con => con.allow_use === 'N')) {
-                return 'close'
-              }
-              if (resWord.cnd_info.some(con => con.allow_use === 'N' || con.consent_required === 'Y')) {
-                return 'error_outline'
-              }
+              if (resWord.cnd_info.every(con => con.allow_use === 'N')) return 'close'
+              if (resWord.cnd_info.every(con => con.consent_required === 'Y')) return 'close'
             }
-
+            return 'error_outline'
           }
         }
         return 'done'

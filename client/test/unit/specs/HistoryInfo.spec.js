@@ -44,7 +44,7 @@ describe('HistoryList & HistoryInfo', () => {
         "start": 0
       }
     })
-    setTimeout(() => { done() })
+    setTimeout(() => { done() }, 1000)
   })
 
   it('builds a list of History items', () => {
@@ -54,7 +54,7 @@ describe('HistoryList & HistoryInfo', () => {
   describe('mount the historyList with data', () => {
     beforeEach((done) => {
       data.vm = data.instance.$mount()
-      setTimeout(() => { done() }, 2000)
+      setTimeout(() => { done() }, 1000)
     })
 
     it('displays the history table', () => {
@@ -114,7 +114,7 @@ describe('HistoryList & HistoryInfo', () => {
           let tr = data.vm.$el.querySelector('#' + id)
           let clickEvent = new Event('click')
           tr.dispatchEvent(clickEvent)
-          setTimeout(() => { done() }, 3000)
+          setTimeout(() => { done() }, 1000)
       })
 
       afterEach(() => {

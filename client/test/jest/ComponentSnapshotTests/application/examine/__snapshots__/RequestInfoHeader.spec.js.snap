@@ -130,7 +130,13 @@ exports[`RequestInfoHeader.vue renders a RequestInfoHeader component 1`] = `
               class="dark-blue--text"
             >
               
-              0 Comments
+              0 C
+              <span
+                class="shortkey"
+              >
+                o
+              </span>
+              mments
             </b>
           </v-flex-stub>
         </v-layout-stub>

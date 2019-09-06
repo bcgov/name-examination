@@ -303,6 +303,7 @@ export const actions = {
                 } )
   },
   getConflictInfo({ state, commit, dispatch }, conflict) {
+    if (!conflict.source || !conflict.nrNumber) return
     $( '.conflict-detail-spinner' ).removeClass( 'hidden' )
 
     commit( 'currentConflict', conflict )
@@ -682,7 +683,6 @@ export const actions = {
     state.is_editing = false
     state.is_making_decision = false
     state.decision_made = null
-    state.acceptance_will_be_conditional = false
     state.is_header_shown = false
   },
   resetHistoriesInfo({ commit }) {
@@ -838,9 +838,6 @@ export const getters = {
   },
   decision_made(state) {
     return state.decision_made
-  },
-  acceptance_will_be_conditional(state) {
-    return state.acceptance_will_be_conditional
   },
   is_header_shown(state) {
     return state.is_header_shown
@@ -1238,6 +1235,15 @@ export const getters = {
   conflictsScrollPosition: state => state.conflictsScrollPosition,
   selectedConflictNRs: state => state.selectedConflictNRs,
   selectedReasons: state => state.selectedReasons,
+  acceptanceWillBeConditional: state => {
+    let checkConditions = () => {
+      if (state.selectedConditions && Array.isArray(state.selectedConditions) ) {
+        return state.selectedConditions.some(condition => condition.consent_required)
+      }
+      return false
+    }
+    return state.consentRequiredByUser || checkConditions() || false
+  },
 }
 
 export const mutations = {
@@ -1247,14 +1253,8 @@ export const mutations = {
   is_my_current_nr(state, value) {
     state.is_my_current_nr = value
   },
-  is_making_decision(state, value) {
-    state.is_making_decision = value
-  },
   decision_made(state, value) {
     state.decision_made = value
-  },
-  acceptance_will_be_conditional(state, value) {
-    state.acceptance_will_be_conditional = value
   },
   currentState(state, value) {
     state.currentState = value
@@ -1772,17 +1772,15 @@ export const mutations = {
     state.nrData.lastUpdate = state.lastUpdate
 
     if ( state.expiryDate ) {
-      state.nrData.expirationDate = new moment( state.expiryDate, 'YYYY-MM-DD' ).utc()
-                                                                                .format(
-                                                                                  'ddd, D MMM YYYY HH:mm:ss [GMT]' )
+      state.nrData.expirationDate =
+        new moment( state.expiryDate, 'YYYY-MM-DD' ).utc().format('ddd, D MMM YYYY HH:mm:ss [GMT]' )
     }
     else {
       state.nrData.expirationDate = state.expiryDate
     }
 
-    state.nrData.submittedDate = new moment( state.submittedDate, 'YYYY-MM-DD, h:mma' ).utc()
-                                                                                       .format(
-                                                                                         'ddd, D MMM YYYY HH:mm:ss [GMT]' )
+    state.nrData.submittedDate =
+      new moment( state.submittedDate, 'YYYY-MM-DD, h:mma' ).utc().format('ddd, D MMM YYYY HH:mm:ss [GMT]' )
     state.nrData.submitCount = state.submitCount
     state.nrData.previousNr = state.previousNr
     state.nrData.corpNum = state.corpNum
@@ -2156,6 +2154,7 @@ export const mutations = {
   },
 
   //introduced by name-examination code with us upgrade
+  is_making_decision: (state, payload) => state.is_making_decision = payload,
   toggleRequestBannerPopUp: (state, payload) => state.activeRequestBannerPopUp = payload,//ReqInfoHeader active popup
   toggleCommentsPopUp: (state, payload) => state.showCommentsPopUp = payload,//app-wide comments popup visibility
   setNewComment: (state, payload) => state.newComment = payload,//captured user-input in app-wide comments popup
@@ -2248,7 +2247,6 @@ export const state = {
   is_editing: false,
   is_making_decision: false,
   decision_made: null,
-  acceptance_will_be_conditional: false,
   is_header_shown: false,
   furnished: null,
   hasBeenReset: null,
@@ -2413,28 +2411,28 @@ export const state = {
 
   //introduced during name-examination code with us upgrade
   activeRequestBannerPopUp: null,
-  newComment: null,
-  selectedConditions: [],
-  selectedConflicts: [],
-  selectedTrademarks: [],
-  showCommentsPopUp: false,
-  selectedConflictID: null,
-  expandedConflictID: null,
-  openBucket: null,
-  conflictsReturnedStatus: false,
-  parsedPhoneticConflicts: [],
-  parsedCOBRSConflicts: [],
-  parsedSynonymConflicts: [],
   comparedConflicts: [],
-  conflictsIndex: 0,
+  conflictsAutoAdd: true,
   conflictsChildIndex: 0,
   conflictsChildren: [],
+  conflictsIndex: 0,
+  conflictsReturnedStatus: false,
   conflictsScrollPosition: 0,
-  conflictsAutoAdd: true,
-  customerMessageOverride: null,
-  selectedConflictNRs: [],
-  selectedReasons: [],
   consentRequiredByUser: false,
+  customerMessageOverride: null,
+  expandedConflictID: null,
+  newComment: null,
+  openBucket: null,
+  parsedCOBRSConflicts: [],
+  parsedPhoneticConflicts: [],
+  parsedSynonymConflicts: [],
+  selectedConditions: [],
+  selectedConflictID: null,
+  selectedConflictNRs: [],
+  selectedConflicts: [],
+  selectedReasons: [],
+  selectedTrademarks: [],
+  showCommentsPopUp: false,
 }
 
 export default new Vuex.Store({ actions, getters, mutations, state, })
