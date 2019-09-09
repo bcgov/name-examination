@@ -12,8 +12,8 @@
           <v-flex lg7 mt-3>
             <div v-if="is_not_available(attorneys)">Not Available</div>
             <div v-else
-                 v-for="attorney in attorneys"
-                 v-bind:key="attorney">{{ attorney }}
+                 v-for="(attorney, i) in attorneys"
+                 :key="'attorney'+i">{{ attorney }}
             </div>
           </v-flex>
           <v-flex lg5 mt-3 item-heading>Nature Of Business:</v-flex>
@@ -25,13 +25,13 @@
           <v-flex lg9 mt-3 pl-2>
             <div v-if="is_not_available(directors)">Not Available</div>
             <div v-else
-                 v-for="director in directors"
-                 v-bind:key="director">{{ director }}
+                 v-for="(director, i) in directors"
+                 :key="'director'+i">{{ director }}
             </div>
           </v-flex>
           <v-flex lg3 mt-4 item-heading>Head Office:</v-flex>
           <v-flex mt-4 lg9 pl-2>
-            <div v-for="addressLine in head_office">{{ addressLine }}</div>
+            <div v-for="(addressLine, i) in head_office" :key="'line'+i">{{ addressLine }}</div>
           </v-flex>
         </v-layout>
       </v-layout>
@@ -45,8 +45,8 @@
           <v-flex lg7 mt-3>
             <div v-if="is_not_available(directors)">Not Available</div>
             <div v-else
-                 v-for="director in directors"
-                 v-bind:key="director">{{ director }}
+                 v-for="(director, i) in directors"
+                 :key="'director'+i">{{ director }}
             </div>
           </v-flex>
           <v-flex lg5 mt-3 item-heading>Nature Of Business</v-flex>
@@ -57,13 +57,13 @@
           <v-flex lg5 item-heading>Records Office Delivery Address:</v-flex>
           <v-flex pl-2 lg7>
             <div v-if="is_not_available(records_office_delivery_address)">Not Available</div>
-            <div v-else v-for="recordsAddressLine in records_office_delivery_address">
+            <div v-else v-for="(recordsAddressLine, i) in records_office_delivery_address" :key="'ra'+i">
               {{ recordsAddressLine }}
             </div>
           </v-flex>
           <v-flex mt-3 lg5 item-heading>Registered Office Delivery Address:</v-flex>
           <v-flex mt-3 pl-2 lg7>
-            <div v-for="addressLine in registered_office_delivery_address">
+            <div v-for="(addressLine, i) in registered_office_delivery_address" :key="'add'+i">
               {{ addressLine }}
             </div>
           </v-flex>
@@ -91,7 +91,7 @@
         return false
       },
       attorneys() {
-        if ( this.conflictData !== null ) {
+        if (this.conflictData) {
           return this.conflictData['attorney names']
         }
         else {
@@ -99,7 +99,7 @@
         }
       },
       directors() {
-        if ( this.conflictData !== null ) {
+        if (this.conflictData) {
           return this.conflictData['directors']
         }
         else {
@@ -107,7 +107,7 @@
         }
       },
       head_office() {
-        if ( this.conflictData !== null ) {
+        if (this.conflictData) {
           let lines = this.conflictData['head office']
           let l = lines.length
           let lastLine = lines[l - 4] + ' ' + lines[l - 3] + ' ' + lines[l - 2] + ' ' + lines[l - 1]

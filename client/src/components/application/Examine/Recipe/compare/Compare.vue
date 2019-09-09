@@ -1,34 +1,34 @@
 /* eslint-disable */
 <template>
-  <v-container ma-0 pa-0 fluid id="compare-container">
-    <template v-if="comparedConflicts && comparedConflicts.length > 0">
-      <v-layout v-for="(conflict, i) in comparedConflicts"
-                :key="i+'-compared'"
-                :id="i+'-compared'"
-                mb-1
-                bg-l-blue
-                column>
-        <v-layout header-style px-3>
-          <v-flex text-style text-left>{{ conflict.text }}</v-flex>
-          <v-flex width-15 text-right>{{ conflict.nrNumber }}</v-flex>
-          <v-flex width-10 text-center>{{ formatJurisdiction(conflict.jurisdiction) }}</v-flex>
-          <v-flex width-20 text-left>{{ formatDate(conflict.startDate) }}</v-flex>
-        </v-layout>
-        <CorpMatch data-testid="corp-match"
-                   :key="i + 'corp-match'"
-                   :conflictData="conflict"
-                   v-if="conflict.type === 'corp'" />
-        <NamesMatch data-testid="names-match"
-                    :key="i + '-name-match'"
-                    :conflictData="conflict"
-                    v-if="conflict.type === 'name'" />
+  <v-container ma-0
+               pa-0
+               fluid
+               id="compare-container">
+    <v-layout v-if="comparedConflicts.length > 0"
+              v-for="(conflict, i) in comparedConflicts"
+              :key="i+'-compared'"
+              :id="i+'-compared'"
+              mb-1
+              bg-l-blue
+              column>
+      <v-layout header-style px-3>
+        <v-flex text-style text-left>{{ conflict.text }}</v-flex>
+        <v-flex width-15 text-right>{{ conflict.nrNumber }}</v-flex>
+        <v-flex width-10 text-center>{{ formatJurisdiction(conflict.jurisdiction) }}</v-flex>
+        <v-flex width-20 text-left>{{ formatDate(conflict.startDate) }}</v-flex>
       </v-layout>
-    </template>
-    <template v-else>
-      <v-layout text-center pt-3>
-        <v-flex>No conflicts have been added for comparisson.</v-flex>
-      </v-layout>
-    </template>
+      <CorpMatch data-testid="corpmatch"
+                 :key="i + 'corp-match'"
+                 :conflictData="conflict"
+                 v-if="conflict.type === 'corp'" />
+      <NamesMatch data-testid="namesmatch"
+                  :key="i + '-name-match'"
+                  :conflictData="conflict"
+                  v-if="conflict.type === 'name'" />
+    </v-layout>
+    <v-layout text-center pt-3 v-if="comparedConflicts.length === 0">
+      <v-flex>No conflicts have been added for comparisson.</v-flex>
+    </v-layout>
   </v-container>
 </template>
 
@@ -43,7 +43,13 @@
     name: 'Compare',
     components: { CorpMatch, NamesMatch, },
     computed: {
-      ...mapGetters(['comparedConflicts'])
+      ...mapGetters({conflicts: 'comparedConflicts'}),
+      comparedConflicts() {
+        if (Array.isArray(this.conflicts)) {
+          return this.conflicts
+        }
+        return []
+      }
     },
     methods: {
       formatDate(d) {

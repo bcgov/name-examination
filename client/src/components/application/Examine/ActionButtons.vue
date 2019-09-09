@@ -1,4 +1,3 @@
-<!--eslint-disable-->
 <template>
   <v-layout justify-end>
     <v-flex shrink pr-4 v-show="!is_editing" align-self-center>
@@ -40,7 +39,6 @@
              v-if="canCancel && !is_making_decision && !is_cancelled && !is_approved_expired && !is_consumed"
              @click="toggleCancelModal('show')"><img src="/static/images/buttons/cancel-req.png"/></v-btn>
 
-      <!-- HOLD button -->
       <v-btn flat
              class="mx-1 pa-0 action-button"
              v-shortkey="['alt', 'h']"
