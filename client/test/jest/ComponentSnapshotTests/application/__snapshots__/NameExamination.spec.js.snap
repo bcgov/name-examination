@@ -8,7 +8,7 @@ exports[`NameExamination.vue renders a NameExamination view 1`] = `
    
   <!---->
    
-  <commentspopup-stub />
+  <!---->
    
   <v-container-stub
     fluid=""

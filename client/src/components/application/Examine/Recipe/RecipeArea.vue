@@ -1,85 +1,84 @@
 <!--eslint-disable-->
 <template>
   <v-container fluid style="background-color: white" ma-0 pa-0>
-    <v-layout column>
-      <v-flex>
-        <v-tabs color="white"
-                fixed-tabs
-                flat
-                height="40px"
-                hide-slider
-                v-model="currentRecipeCard">
-
-          <v-tab @click="preventEvent"
-                 :class="getClasses('Conflicts')"
-                 flat
-                 href="Conflicts"
-                 id="conflicts-tab">
+    <v-layout column ma-0 pa-0>
+      <v-layout tab-layout ma-0 pa-0 align-center>
+        <v-flex @click="currentRecipeCard = 'Conflicts'"
+                grow
+                text-center
+                :class="getClasses('Conflicts')">
+          <span class="recipe-menu-tab-text">
             <v-icon :class="getColour(conflictsIcon)"
                     class="mr-1 pa-0 recipe-menu-icon"
-                    id="conflicts1">{{ conflictsIcon }}</v-icon>
-            <span class="recipe-menu-tab-text">Conflicts</span>
-          </v-tab>
-
-          <v-tab @click="preventEvent"
-                 :class="getClasses('Conditions')"
-                 flat
-                 href="Conditions"
-                 id="conditions-tab">
-            <v-icon
-              :class="getColour(conditionIcon)"
-              class="mr-1 pa-0 recipe-menu-icon"
-              id="conditions1">{{ conditionIcon }}</v-icon>
-            <span class="recipe-menu-tab-text">Condition</span>
-          </v-tab>
-
-          <v-tab @click="preventEvent"
-                 :class="getClasses('Trademarks')"
-                 flat
-                 href="Trademarks"
-                 id="trademarks-tab">
-              <v-icon :class="getColour(trademarksIcon)"
-                      class="mr-1 pa-0 recipe-menu-icon"
-                      id="trademarks1">{{ trademarksIcon }}</v-icon>
-            <span class="recipe-menu-tab-text">Trademarks</span>
-          </v-tab>
-
-          <v-tab @click="preventEvent"
-                 :class="getClasses('History')"
-                 flat
-                 href="History"
-                 id="history-tab">
-            <v-icon :class="getColour(historyIcon)"
+                    id="conflicts1">{{ conflictsIcon }}</v-icon>Conflicts</span>
+        </v-flex>
+        <v-flex @click="currentRecipeCard = 'Conditions'"
+                text-center
+                grow
+                :class="getClasses('Conditions')">
+          <span class="recipe-menu-tab-text">
+            <v-icon :class="getColour(conditionIcon)"
                     class="mr-1 pa-0 recipe-menu-icon"
-                    id="history1">{{ historyIcon }}</v-icon>
-            <span class="recipe-menu-tab-text">History</span>
-          </v-tab>
-        </v-tabs>
-      </v-flex>
-      <v-flex>
-        <ConflictList v-if="currentRecipeCard === 'Conflicts'" />
-        <ConditionsInfo v-else-if="currentRecipeCard === 'Conditions'" />
-        <TrademarksInfo v-else-if="currentRecipeCard === 'Trademarks'" />
-        <HistoryList v-else />
+                    id="conditions1">{{ conditionIcon }}</v-icon>Conditions</span>
+        </v-flex>
+        <v-flex @click="currentRecipeCard = 'Trademarks'"
+                text-center
+                grow
+                :class="getClasses('Trademarks')">
+          <span class="recipe-menu-tab-text">
+            <v-icon :class="getColour(trademarksIcon)"
+                    class="mr-1 pa-0 recipe-menu-icon"
+                    id="trademarks1">{{ trademarksIcon }}</v-icon>Trademarks</span>
+        </v-flex>
+        <v-flex @click="currentRecipeCard = 'History'"
+                text-center
+
+                grow
+                :class="getClasses('History')">
+          <span class="recipe-menu-tab-text">
+             <v-icon :class="getColour(historyIcon)"
+                     class="mr-1 pa-0 recipe-menu-icon"
+                     id="history1">{{ historyIcon }}</v-icon>History</span>
+        </v-flex>
+        <v-flex @click="currentRecipeCard = 'Compare'"
+                text-center
+                grow
+                :class="getClasses('Compare')">
+          <span class="recipe-menu-tab-text">
+            <v-icon class="ma-0 pa-0 recipe-menu-icon"
+                    id="compare1">dehaze</v-icon>Compare</span>
+        </v-flex>
+        <div class="auto-add-area">
+          <div style="position: relative; top: 5px">
+            <v-checkbox v-model="autoAdd"
+                        :disabled="autoAddDisabled" />
+          </div>
+          <div class="fs-14 pa-0 ma-0 pr-1" :class="autoAddDisabled ? 'c-grey' : 'c-link'">auto add</div>
+        </div>
+      </v-layout>
+      <v-flex style="background-color: white; padding-top: 4px;">
+        <keep-alive>
+          <component :is="currentRecipeCard" />
+        </keep-alive>
       </v-flex>
     </v-layout>
   </v-container>
 </template>
 
 <script>
-/* eslint-disable */
-  import { mapState } from 'vuex'
-  import ConditionsInfo from '@/components/application/Examine/Recipe/conditions/ConditionsInfo'
-  import ConflictList from '@/components/application/Examine/Recipe/conflicts/ConflictList'
-  import HistoryList from '@/components/application/Examine/Recipe/history/HistoryList'
-  import TrademarksInfo from '@/components/application/Examine/Recipe/trademarks/TrademarksInfo'
+  import { mapState, mapGetters } from 'vuex'
+  import Conditions from '@/components/application/Examine/Recipe/conditions/ConditionsInfo'
+  import Conflicts from '@/components/application/Examine/Recipe/conflicts/ConflictList'
+  import History from '@/components/application/Examine/Recipe/history/HistoryList'
+  import Trademarks from '@/components/application/Examine/Recipe/trademarks/TrademarksInfo'
+  import Compare from './compare/Compare'
 
   export default {
     name: 'RecipeArea',
-    components: { ConditionsInfo, ConflictList, HistoryList, TrademarksInfo },
+    components: { Compare, Conditions, Conflicts, History, Trademarks },
     mounted() {
       if (!this.currentRecipeCard) {
-        this.currentRecipeCard = 'conflicts'
+        this.currentRecipeCard = 'Conflicts'
       }
     },
     computed: {
@@ -93,14 +92,25 @@
         historiesJSON: 'historiesJSON',
         trademarkInfo: 'trademarksJSON',
       }),
+      ...mapGetters([
+        'autoAddDisabled',
+        'decisionPanel'
+      ]),
+      autoAdd: {
+        get() {
+          return this.$store.getters.conflictsAutoAdd
+        },
+        set(value) {
+          this.$store.commit('setConflictsAutoAdd', value)
+        }
+      },
       conditionIcon() {
         if (this.conditionsJSON) {
           let { restricted_words_conditions } = this.conditionsJSON
           if (restricted_words_conditions.length > 0) {
             for (let resWord of restricted_words_conditions) {
-              if (resWord.cnd_info.every(con => con.allow_use === 'N')) {
-                return 'close'
-              }
+              if (resWord.cnd_info.every(con => con.allow_use === 'N')) return 'close'
+              if (resWord.cnd_info.every(con => con.consent_required === 'Y')) return 'close'
             }
             return 'error_outline'
           }
@@ -161,24 +171,39 @@
         if (icon === 'done') return 'c-accepted'
         if (icon === 'error_outline') return 'c-gold'
         if (icon === 'close') return 'c-priority'
-      },
-      preventEvent(event) {
-        event.preventDefault()
-        event.stopPropagation()
-      },
+      }
     },
   }
 </script>
 
 <style scoped>
-  .recipe-menu-icon {
+  #compare1 {
     position: relative;
-    top: -3px;
+    top: 2px;
+    margin-right: 3px !important;
+    color: var(--link);
+  }
+
+  .auto-add-area {
+    display: flex;
+    height: 42px;
+    align-items: center;
+    background-color: var(--xl-grey);
+    padding: 0 !important;
+    padding-left: 5px !important;
+  }
+  opacity-50 {
+    opacity: 20% !important;
+  }
+
+  .recipe-menu-icon {
+    font-size: 20px;
   }
 
   .recipe-menu-tab-text {
     position: relative;
-    top: -3px;
+    top: 1px;
+    font-size: 15px;
   }
 
   .tab-1st-active {
@@ -196,16 +221,24 @@
   }
 
   .tab-base {
-    background-color: white;
     border-right: 0;
     border-top: 0;
     color: var(--link);
-    padding-top: 3px !important;
-    width: 25%;
+    cursor: pointer;
+    height: 42px;
+    padding-top: 1%;
+    padding-bottom: 3%;
   }
 
   .tab-inactive {
     border-left: 2px solid var(--xl-grey);
     border-bottom: 2px solid var(--xl-grey);
   }
+
+  .tab-layout {
+    height: 42px;
+    background-color: white;
+    align-items: center;
+  }
+
 </style>

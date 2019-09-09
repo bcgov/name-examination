@@ -13,7 +13,7 @@
             {{ compName1.name }}
             <CompNameIcon :state="compName1.state" />
             <v-btn flat
-                   style="margin: -7px 0 0 0; padding: 0;"
+                   style="margin: -7px 0 0 0; padding: 0; color: var(--link);"
                    v-if="is_undoable_1"
                    @click="undoDecision(1)">Undo Decision</v-btn>
           </v-flex>
@@ -27,7 +27,7 @@
             {{ compName2.name }}
             <CompNameIcon :state="compName2.state" />
             <v-btn flat
-                   style="margin: -7px 0 0 0; padding: 0;"
+                   style="margin: -7px 0 0 0; padding: 0; color: var(--link);"
                    v-if="is_undoable_2"
                    @click="undoDecision(2)">Undo Decision</v-btn>
           </v-flex>
@@ -41,7 +41,7 @@
             {{ compName3.name }}
             <CompNameIcon :state="compName3.state" />
             <v-btn flat
-                   style="margin: -7px 0 0 0; padding: 0;"
+                   style="margin: -7px 0 0 0; padding: 0; color: var(--link);"
                    v-if="is_undoable_3"
                    @click="undoDecision(3)">Undo Decision</v-btn>
           </v-flex>
@@ -469,7 +469,10 @@
         }
       },
       runManualRecipe() {
-        this.$store.dispatch('runManualRecipe', {searchStr:this.searchStr, exactPhrase:this.exactPhrase})
+        $('.conflict-container-spinner').removeClass('hidden')
+        this.$store.dispatch('resetExaminationArea').then(() => {
+          this.$store.dispatch('runManualRecipe', { searchStr: this.searchStr, exactPhrase: this.exactPhrase })
+        })
       },
       setOrBlurFocus({ref, type}) {
         if (this.$refs[ref]) {
@@ -488,7 +491,6 @@
         this.searchStr =  val;
       },
       undoDecision(name_number) {
-
         this.$store.dispatch('undoDecision', name_number);
 
         // set the undone name choice to the current (actionable) choice

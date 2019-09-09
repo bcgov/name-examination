@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { shallowMount } from '@vue/test-utils';
-import CorpMatch from '@/components/application/Examine/Recipe/conflicts/conflictInfoType/corpMatch';
+import CorpMatch from '@/components/application/Examine/Recipe/conflicts/conflictInfoType/CorpMatch.vue';
 import store from '@/store'
 
 describe('CorpMatch.vue', () => {

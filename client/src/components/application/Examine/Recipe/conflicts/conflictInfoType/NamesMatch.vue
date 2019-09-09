@@ -1,6 +1,7 @@
 <!--eslint-disable -->
 <template>
   <v-container ma-0 pt-0 pb-3 px-3 fluid align-start>
+    <template v-if="!invalidRecord">
     <v-layout align-items-start>
       <v-layout wrap style="width: 50%" align-items-start>
 
@@ -43,7 +44,12 @@
       </v-flex>
     </v-layout>
     </v-layout>
-
+    </template>
+    <template v-if="invalidRecord">
+      <v-layout pt-2>
+        <v-flex>NR info could not be retrieved. It does not appear to be in the postgres data.</v-flex>
+      </v-layout>
+    </template>
   </v-container>
 </template>
 
@@ -52,7 +58,12 @@
 
   export default {
     name: 'namesMatch',
+    props: ['conflictData'],
     computed: {
+      invalidRecord() {
+        if ( this.conflictData && this.conflictData.invalidRecordInd ) return true
+        return false
+      },
       currentConflictName() {
         let currentConflict = this.$store.getters.currentConflict
         if (currentConflict != null)
@@ -61,47 +72,44 @@
           return ""
       },
       applicants() {
-        if (!this.namesConflictInfo || !this.namesConflictInfo.applicants) return {}
-        return this.namesConflictInfo.applicants
+        if (!this.conflictData || !this.conflictData.applicants) return {}
+        return this.conflictData.applicants
       },
       comments() {
-        if (!this.namesConflictInfo || !this.namesConflictInfo.comments) return []
-        return this.namesConflictInfo.comments
+        if (!this.conflictData || !this.conflictData.comments) return []
+        return this.conflictData.comments
       },
       submitCount() {
-        if (this.namesConflictInfo && this.namesConflictInfo.submitCount) return this.namesConflictInfo.submitCount
+        if (this.conflictData && this.conflictData.submitCount) return this.conflictData.submitCount
         return ''
       },
       submittedDate() {
-          if (this.namesConflictInfo == undefined || this.namesConflictInfo.submittedDate == undefined) return ''
-          return new Date(this.namesConflictInfo.submittedDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
+          if (this.conflictData == undefined || this.conflictData.submittedDate == undefined) return ''
+          return new Date(this.conflictData.submittedDate).toLocaleString('en-ca',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'});
       },
       nrNum() {
-        if (this.namesConflictInfo == undefined) return '';
-        return this.namesConflictInfo.nrNum
-      },
-      namesConflictInfo() {
-        return this.$store.getters.namesConflictJSON
+        if (this.conflictData == undefined) return '';
+        return this.conflictData.nrNum
       },
       decisionText() {
-        if (this.namesConflictInfo == undefined) return '';
+        if (this.conflictData == undefined) return '';
 
         // get decision text for this particular name choice
-        for (let i = 0; i < this.namesConflictInfo.names.length; i++) {
-          if (this.namesConflictInfo.names[i].name === this.currentConflictName &&
-              this.namesConflictInfo.names[i].decision_text != '') {
-            return this.namesConflictInfo.names[i].decision_text
+        for (let i = 0; i < this.conflictData.names.length; i++) {
+          if (this.conflictData.names[i].name === this.currentConflictName &&
+              this.conflictData.names[i].decision_text != '') {
+            return this.conflictData.names[i].decision_text
           }
         }
         return null
       },
       nameState() {
-        if (this.namesConflictInfo && this.namesConflictInfo.state) return this.namesConflictInfo.state
+        if (this.conflictData && this.conflictData.state) return this.conflictData.state
         return ''
       },
       conflicts() {
-        if (!this.namesConflictInfo || !this.namesConflictInfo.names) return []
-        let { names } = this.namesConflictInfo
+        if (!this.conflictData || !this.conflictData.names) return []
+        let { names } = this.conflictData
 
         let i = names.findIndex(conflict => conflict.name === this.currentConflictName)
         let nameConflict = names[i]

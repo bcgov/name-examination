@@ -74,12 +74,13 @@
             <v-flex id="div1"><b>Status:</b><span id="nrStatusText">
               {{ nr_status }}{{ additionalStatus }}</span></v-flex>
             <v-flex><b>Examiner:</b> {{ examiner }}</v-flex>
-            <v-flex>
+            <v-flex v-shortkey="{toggle:['alt','o'], save:['alt','v']}"
+                    @shortkey="commentsShortkey">
               <v-icon color="light-blue"
                       class="mirrored"
                       @click="toggleCommentsPopUp(true)">chat_bubble_outline</v-icon>
               <b class="dark-blue--text">
-                {{ internalComments_length }} Comments</b>
+                {{ internalComments_length }} C<span class="shortkey">o</span>mments</b>
             </v-flex>
           </v-layout>
         </v-flex>
@@ -364,7 +365,7 @@
           return this.$store.getters.compName1
         },
         set(value) {
-          value = value.trimEnd()
+          value = value.trimRight()
           this.$store.commit('compName1', value)
         },
       },
@@ -373,7 +374,7 @@
           return this.$store.getters.compName2
         },
         set(value) {
-          value = value.trimEnd()
+          value = value.trimRight()
           this.$store.commit('compName2', value)
         },
       },
@@ -382,7 +383,7 @@
           return this.$store.getters.compName3
         },
         set(value) {
-          value = value.trimEnd()
+          value = value.trimRight()
           this.$store.commit('compName3', value)
         },
       },
@@ -682,6 +683,21 @@
           }
         }
       },
+      commentsShortkey(event) {
+        switch(event.srcKey) {
+          case 'save':
+            this.$store.dispatch('postComment')
+            return
+          case 'cancel':
+            this.$store.commit('setNewComment', null)
+            this.$store.commit('toggleCommentsPopUp', false)
+            return
+          case 'toggle':
+            let visibility = this.$store.state.showCommentsPopUp
+            this.$store.commit('toggleCommentsPopUp', !visibility)
+            return
+        }
+      },
       edit() {
         // if this isn't the user's INPROGRESS, make it that
         if (!this.is_my_current_nr && !this.is_closed) {
@@ -720,9 +736,9 @@
           // do not continue if there are validation errors
           return
         }
-        if ( this.compName1 && this.compName1.name ) this.compName1.name = this.compName1.name.trimEnd()
-        if ( this.compName2 && this.compName2.name ) this.compName2.name = this.compName2.name.trimEnd()
-        if ( this.compName3 && this.compName3.name ) this.compName3.name = this.compName3.name.trimEnd()
+        if ( this.compName1 && this.compName1.name ) this.compName1.name = this.compName1.name.trimRight()
+        if ( this.compName2 && this.compName2.name ) this.compName2.name = this.compName2.name.trimRight()
+        if ( this.compName3 && this.compName3.name ) this.compName3.name = this.compName3.name.trimRight()
         // if jurisdiction not required, clear the data (ie: BC)
         if (!this.jurisdiction_required) this.$store.commit('jurisdiction', null)
 
@@ -938,6 +954,11 @@
     padding: 2px 0px 0px 6px;
     height: 40px !important;
     background-color: white;
+  }
+
+  .shortkey {
+    text-decoration: underline;
+
   }
 
   .nr-number {

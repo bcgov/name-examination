@@ -119,5 +119,7 @@ exports[`CorpMatch.vue renders a CorpMatch component 1`] = `
       />
     </v-layout-stub>
   </v-layout-stub>
+   
+  <!---->
 </v-container-stub>
 `;

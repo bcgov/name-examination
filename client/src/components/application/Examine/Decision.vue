@@ -39,15 +39,15 @@
       </v-flex>
 
       <!--COLUMN #1: MESSAGE SELECTION-->
-      <v-flex lg6>
-        <v-layout wrap add-stock-text-col>
+      <v-flex lg6 style="height: 400px" ma-0 pa-0>
+        <v-layout wrap add-stock-text-col fill-height style="height: 400px" ma-0 pa-0>
 
           <!--CONDITIONS-->
           <v-flex lg12 mt-2 id="conditions-select-area">
             <div class="fs-15 my-2 fw-600">Conditions</div>
             <div id="conditions-decision-select-field">
               <v-select :disabled="customer_message_override !== null || !is_making_decision"
-                        :height="selected_conditions.length <= 1 ? 30 : null"
+                        height="30px"
                         :items="conditionsInstructions"
                         :menu-props="menuProps"
                         browser-autocomplete="off"
@@ -77,7 +77,7 @@
             <div class="fs-15 mb-2 mt-4 fw-600">Conflicts</div>
             <div id="conflicts-decision-select-field" >
               <v-select :disabled="customer_message_override !== null || !is_making_decision"
-                        :height="selected_conflicts.length <= 1 ? 30 : null"
+                        height="30px"
                         :items="conflictList"
                         :menu-props="menuProps"
                         browser-autocomplete="off"
@@ -93,9 +93,18 @@
                         v-model="selected_conflicts">
                 <template v-slot:selection="{ item, index }">
                   <v-chip class="chip-class">{{ truncateChipText(item.text) }}
-                    <v-icon @click.stop="removeChip('selected_conflicts', index)"
+                    <v-icon @click.stop="removeChip('selected_conflicts', index, item.nrNumber)"
                             class="chip-close-icon">clear</v-icon>
                   </v-chip>
+                </template>
+                <template v-slot:no-data>
+                  <div class="v-list__tile__title"
+                       style="position: relative;
+                              font-size: 13px;
+                              padding: 8px 0px 6px 14px;
+                              min-height:40px">
+                    {{ conflictsAutoAdd ? 'No Conflicts' : 'No conflicts selected (and auto-add is off).'}}
+                  </div>
                 </template>
               </v-select>
             </div>
@@ -106,7 +115,7 @@
             <div class="fs-15 mb-2 mt-4 fw-600">Macros</div>
             <div id="macros-decision-select-field">
               <v-select :disabled="customer_message_override !== null || !is_making_decision"
-                        :height="selectedReasons.length <= 1 ? 30 : null"
+                        height="30px"
                         :items="listDecisionReasons"
                         :menu-props="menuProps"
                         browser-autocomplete="off"
@@ -119,11 +128,11 @@
                         multiple
                         return-object
                         small-chips
-                        v-model="selectedReasons">
+                        v-model="selected_reasons">
                 <template v-slot:selection="{ item, index }">
                   <v-chip class="chip-class">{{ truncateChipText(item.name) }}
                     <v-icon class="chip-close-icon"
-                            @click.stop="removeChip('selectedReasons', index)">clear
+                            @click.stop="removeChip('selected_reasons', index)">clear
                     </v-icon>
                   </v-chip>
                 </template>
@@ -132,16 +141,16 @@
           </v-flex>
 
           <!--TRADEMARKS-->
-          <v-flex data-app id="trademarks-v-flex" ref="trademarksSelectField">
-            <div class="fs-15 mb-2 mt-4 fw-600">Trademarks</div>
+          <v-flex id="trademarks-v-flex" ref="trademarksSelectField">
+            <div class="fs-15 mt-4 fw-600">Trademarks</div>
             <div id="trademarks-decision-select-field">
               <v-select :disabled="customer_message_override !== null || !is_making_decision"
-                        :height="selected_trademarks.length <= 1 ? 30 : null"
+                        height="30px"
                         :items="trademarks"
                         :menu-props="menuProps"
                         browser-autocomplete="off"
                         chips
-                        class="decision-select-style mb-5"
+                        class="decision-select-style"
                         dense
                         attach
                         hide-selected
@@ -169,7 +178,9 @@
           <!--MESSAGE OUTPUT TEXTAREA-->
           <v-flex>
             <div class="decision-flex-holder">
-              <div class="fs-15 fw-600 ma-0 pa-0" style="position:relative; top:12px">Message To Requestor</div>
+              <div class="fs-15 fw-600 ma-0 pa-0" style="position:relative; top:12px">
+                Message To Requestor<span class="c-priority ml-1" v-if="customer_message_override">(Edited)</span>
+              </div>
                 <v-btn flat
                        :disabled="!is_making_decision"
                        @click="showModal"
@@ -182,26 +193,28 @@
                         readonly
                         full-width
                         id="decision-msg-preview-area"
-                        rows="13"
                         solo
+                        rows="15"
                         flat
-                        height="240px"
+                        height="290px"
                         v-model="customer_message_display">
             </v-textarea>
             <div class="decision-flex-holder">
               <div :class="messageDisplayProps.class">{{ messageDisplayProps.count }}</div>
-              <div><v-btn flat
-                          id="decision-msg-clear-button"
-                          class="ma-0 pa-0"
-                          :disabled="!customer_message_override || !is_making_decision"
-                          @click="customer_message_override = null"
-                          v-if="customer_message_override">Clear Edits</v-btn></div>
+              <div>
+                <v-btn flat
+                       id="decision-msg-clear-button"
+                       class="ma-0 pa-0"
+                       :disabled="!customer_message_override || !is_making_decision"
+                       @click="customer_message_override = null"
+                       v-if="customer_message_override">Clear Edits</v-btn>
+              </div>
             </div>
 
           </v-flex>
         </v-layout>
       </v-flex>
-      <v-flex>
+      <v-flex style="position: relative; top: 20px;">
         <div class="decision-flex-holder top-margin-12">
           <v-btn :disabled="!is_making_decision"
                  @click="nameAccept"
@@ -211,7 +224,7 @@
                  id="decision-approve-button"
                  v-shortkey="['alt', 'a']">
             <img id="conditional-accept-button"
-                 v-if="acceptance_will_be_conditional"
+                 v-if="acceptanceWillBeConditional"
                  src="/static/images/buttons/cond-approve-name.png" />
             <img v-else src="/static/images/buttons/approve-name.png" />
           </v-btn>
@@ -267,14 +280,12 @@
 <script>
 /* eslint-disable */
   import Vue from 'vue'
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapState } from 'vuex'
 
   export default {
     name: "Decision",
     data() {
       return {
-        consent_required_by_user: false,
-        customer_message_override: null,
         editTextarea: null,
         editMessageModalVisible: false,
         menuProps: {
@@ -283,68 +294,37 @@
           maxHeight: 125,
         },
         originalMessage: null,
-        panel0: false,
-        panel1: false,
-        panel2: false,
-        selectedReasons: [],
-        plugData: null,
       }
-    },
-    mounted() {
-      this.$root.$on('addSelected', (data) => { this.addSelected(data) })
-      this.acceptance_will_be_conditional = false
     },
     computed: {
       ...mapGetters([
-        'acceptance_will_be_conditional',
+        'acceptanceWillBeConditional',
+        'autoAddDisabled',
         'cobrsPhoneticConflicts',
-        'conditionsJSON',
+        'comparedConflicts',
+        'conflictsAutoAdd',
+        'consentRequiredByUser',
+        'customerMessageOverride',
         'exactMatchesConflicts',
         'is_making_decision',
         'listDecisionReasons',
+        'parseConditions',
         'phoneticConflicts',
+        'selectedConditions',
+        'selectedConflicts',
+        'selectedReasons',
+        'selectedTrademarks',
         'synonymMatchesConflicts',
         'trademarksJSON',
-        'parseConditions',
-        'selectedConflicts',
-        'selectedConditions',
-        'selectedTrademarks'
       ]),
-      selected_trademarks: {
-        get() {
-          return this.selectedTrademarks
-        }, set(items) {
-          this.$store.commit('setSelectedTrademarks', items)
-        }
-      },
-      selected_conflicts: {
-        get() {
-          return this.selectedConflicts
-        }, set(items) {
-          this.$store.commit('setSelectedConflicts', items)
-        }
-      },
-      selected_conditions: {
-        get() {
-          return this.selectedConditions
-        },
-        set(items) {
-          this.$store.commit('setSelectedConditions', items)
-        }
-      },
-      acceptance_will_be_conditional: {
-        get() {
-          return this.$store.getters.acceptance_will_be_conditional
-        },
-        set(event) {
-          this.$store.commit('acceptance_will_be_conditional', event)
-        }
-      },
+      ...mapState([
+        'consentRequiredByUser',
+      ]),
       conditions() {
         return this.$store.getters.parseConditions
       },
       conditionsInstructions() {
-        if (this.conditions && Array.isArray(this.conditions)) {
+        if ( this.conditions && Array.isArray(this.conditions) ) {
           return this.conditions.filter(condition => condition.instructions)
         }
         return []
@@ -356,6 +336,9 @@
         return []
       },
       conflictList() {
+        if ( !this.conflictsAutoAdd ) {
+          return this.comparedConflicts
+        }
         let output = []
         let listedNRs = []
         let conflictTypes = [
@@ -367,7 +350,7 @@
 
         for ( let type of conflictTypes ) {
           this[type].forEach(conflict => {
-            if (!listedNRs.includes(conflict.nrNumber) ) {
+            if ( !listedNRs.includes(conflict.nrNumber) ) {
               listedNRs.push(conflict.nrNumber)
               output.push(conflict)
             }
@@ -375,16 +358,13 @@
         }
         return output
       },
-      consent_required() {
-        if (this.consent_required_by_condition) return true
-        if (this.consent_required_by_user) return true
-        return false
-      },
-      consent_required_by_condition() {
-        if (this.selected_conditions && Array.isArray(this.selected_conditions)) {
-          return this.selected_conditions.some(condition => condition.consent_required)
+      consent_required_by_user: {
+        get() {
+          return this.consentRequiredByUser
+        },
+        set(value) {
+          this.$store.commit('setConsentRequiredByUser', value)
         }
-        return false
       },
       currentNameObj: {
         get() {
@@ -394,54 +374,73 @@
           this.$store.dispatch('currentNameObj', value)
         }
       },
+      customer_message_override: {
+        get() {
+          return this.customerMessageOverride
+        },
+        set(msg) {
+          this.$store.commit('setCustomerMessageOverride', msg)
+        }
+      },
       customer_message() {
         let retval = []
         // CONFLICTS
-        if (!this.selected_conflicts || this.selected_conflicts.length === 0) {
-        //if there are no conflicts but the user has selected Conditions Required.  Display that only.
-          if (this.consent_required_by_user) {
+        if ( !this.selected_conflicts || this.selected_conflicts.length === 0 ) {
+          //if there are no conflicts but the user has selected Conditions Required.  Display that only.
+          if ( this.consent_required_by_user ) {
             retval.push('Consent Required \n')
           }
-        } else {
-          for ( let i = 0; i < this.selected_conflicts.length; i++ ) {
-            // check whether "Consent Required" condition is set - if so, set message re. "Requires consent from..."
-            if ( this.consent_required_by_user ) {
-              retval.push('Consent required from ' + this.selected_conflicts[i].text)
-            }
-            // if "Consent Required" condition is not set, set message re. "Rejected due..."
-            else {
-              retval.push('Rejected due to conflict with ' + this.selected_conflicts[i].text)
+        }
+        else {
+          if ( this.selected_conflicts && Array.isArray(this.selected_conflicts)) {
+            for ( let i = 0; i < this.selected_conflicts.length; i++ ) {
+              // check whether "Consent Required" condition is set - if so, set message re. "Requires consent from..."
+              if ( this.consent_required_by_user ) {
+                retval.push('Consent required from ' + this.selected_conflicts[i].text)
+              }
+              // if "Consent Required" condition is not set, set message re. "Rejected due..."
+              else {
+                retval.push('Rejected due to conflict with ' + this.selected_conflicts[i].text)
+              }
             }
           }
         }
         // CONDITIONS
-        for ( let i = 0; i < this.selected_conditions.length; i++ ) {
-          // if this is the "Consent Required" condition, and there are conflicts, do not set
-          // "Consent Required" messgage, because it is redundant with messaging re. conflicts.
-          if ( this.selected_conditions[i].phrase !== undefined && this.selected_conditions[i].phrase !== '' ) {
-            retval.push(this.selected_conditions[i].phrase + ' - ' + this.selected_conditions[i].instructions)
-          } else {
-            retval.push(this.selected_conditions[i].instructions)
+        if ( this.selected_conditions && Array.isArray(this.selected_conditions)) {
+          for ( let i = 0; i < this.selected_conditions.length; i++ ) {
+            // if this is the "Consent Required" condition, and there are conflicts, do not set
+            // "Consent Required" messgage, because it is redundant with messaging re. conflicts.
+            if ( this.selected_conditions[i].phrase !== undefined && this.selected_conditions[i].phrase !== '' ) {
+              retval.push(this.selected_conditions[i].phrase + ' - ' + this.selected_conditions[i].instructions)
+            }
+            else {
+              retval.push(this.selected_conditions[i].instructions)
+            }
           }
         }
         // TRADEMARKS
-        for ( let i = 0; i < this.selected_trademarks.length; i++ ) {
-          retval.push(
-            'Registered Trademark: ' + this.selected_trademarks[i].name + ' - Application #' + this.selected_trademarks[i].application_number)
+        if ( this.selected_trademarks && Array.isArray(this.selected_trademarks)) {
+          for ( let i = 0; i < this.selected_trademarks.length; i++ ) {
+            retval.push(
+              'Registered Trademark: ' + this.selected_trademarks[i].name + ' - Application #' + this.selected_trademarks[i].application_number)
+          }
         }
         // GENERIC DECISION REASONS
-        for ( let i = 0; i < this.selectedReasons.length; i++ ) {
-          retval.push(this.selectedReasons[i].reason)
+        if (this.selected_reasons && Array.isArray(this.selected_reasons)) {
+          for ( let i = 0; i < this.selected_reasons.length; i++ ) {
+            retval.push(this.selected_reasons[i].reason)
+          }
         }
         return retval
       },
       customer_message_display() {
         if ( this.customer_message_override ) {
           return this.customer_message_override
-        } else {
+        }
+        else {
           // otherwise build out formatted text with line breaks...
           let retval = ''
-
+          if (this.customer_message && Array.isArray(this.customer_message))
           for ( let i = 0; i < this.customer_message.length; i++ ) {
             retval += this.customer_message[i] + '\n\n'
           }
@@ -462,7 +461,7 @@
           count: `Characters Remaining: ${ 955 - remaining }`,
           class: 'c-grey fs-14 pl-2'
         }
-        if ( (955 - remaining) < 0 ) {
+        if ( ( 955 - remaining ) < 0 ) {
           output.count = 'Message cut off at 955 characters'
           output.class = 'c-priority fs-14 fw-600 pl-2'
         }
@@ -481,7 +480,7 @@
           count: `Characters Remaining: ${ 955 - this.customer_message_display.length }`,
           class: 'c-grey pa-1 ma-1'
         }
-        if ( (955 - this.customer_message_display.length) < 0 ) {
+        if ( ( 955 - this.customer_message_display.length ) < 0 ) {
           output.count = 'Message cut off at 955 characters'
           output.class = 'c-priority fs-14 fw-600 pa-0 ma-0'
         }
@@ -493,6 +492,37 @@
       nr_status() {
         return this.$store.getters.nr_status
       },
+      selected_conditions: {
+        get() {
+          return this.selectedConditions
+        },
+        set(items) {
+          this.$store.commit('setSelectedConditions', items)
+        }
+      },
+      selected_conflicts: {
+        get() {
+          return this.selectedConflicts
+        }, set(items) {
+          this.$store.commit('setSelectedConflicts', items)
+        }
+      },
+      selected_reasons: {
+        get() {
+          return this.selectedReasons
+        },
+        set(reasons) {
+          this.$store.commit('setSelectedReasons', reasons)
+        }
+      },
+      selected_trademarks: {
+        get() {
+          return this.selectedTrademarks
+        },
+        set(items) {
+          this.$store.commit('setSelectedTrademarks', items)
+        }
+      },
       trademarks() {
         if ( this.trademarksJSON ) {
           return this.trademarksJSON.names
@@ -500,9 +530,6 @@
       },
     },
     watch: {
-      consent_required(newVal) {
-        this.acceptance_will_be_conditional = newVal
-      },
       nr_status(newVal, oldVal) {
         if (newVal === 'DRAFT' && oldVal === 'INPROGRESS') {
           this.is_making_decision = false
@@ -514,32 +541,6 @@
         this.fieldSearch = ''
         let el = this.$refs[ref]
         el.focus()
-      },
-      addSelected({type, item}) {
-        //unique identifiers are conflicts: 'nr_number', conditions, reasons: 'id' and trademarks: 'application_number'
-        //setting 'field' variable to whichever applies
-        let field = 'id'
-        if (type === 'selected_trademarks') field = 'application_number'
-        if (type === 'selected_conflicts') field = 'nr_number'
-        if (this[type].length > 3) return
-            //if the Selected(listType) array has 3 items, don't add another
-            //check the identified unique field's value against the currently held values for duplicates and
-            //it if its already on the list, remove it instead of adding it again
-        let selectedCopy = [...this[type]]
-        let index = this[type].findIndex(currentItem => currentItem[field] == item[field])
-        if (index >= 0) {
-          selectedCopy.splice(index, 1)
-        } else {
-          selectedCopy.push(item)
-        }
-        //if not already on list, then copy the selected(listType) so as not mutate the array in the component data to
-        //maintain reactivity in Vue
-        this[type] = selectedCopy
-      },
-      cancelEvent(event) {
-        event.preventDefault()
-        event.stopPropagation()
-        return null
       },
       conditionsLabel(obj) {
         if ( obj.display_string !== undefined ) {
@@ -563,7 +564,7 @@
           // conflicts (Issue #767).
           // Do NOT clear the conflicts if the "Consent Required" condition is also set - then it's
           // intentional.
-          if (this.acceptance_will_be_conditional) {
+          if (this.acceptanceWillBeConditional) {
             currentNameObj.state = 'CONDITION'
           } else {
             currentNameObj.state = 'APPROVED'
@@ -581,7 +582,7 @@
             currentNameObj[`conflict${ n + 1 }_num`] = selected_conflicts[n].nrNumber
           }
         }
-        currentNameObj.name = currentNameObj.name.trimEnd()
+        currentNameObj.name = currentNameObj.name.trimRight()
         currentNameObj.decision_text = this.customer_message_display.substr(0, 955)
         // send decision to API and reset flags
         this.$store.dispatch('nameAcceptReject')
@@ -591,14 +592,18 @@
         this.$store.commit('decision_made', 'REJECTED')
         this.$nextTick(function () { this.nameAcceptReject() })
       },
-      removeChip(type, index) {
-      //use spread syntax to create a new array from the existing selected(Trademarks, Conditions, Reasons, Conflicts)
+      removeChip(type, index, nrNumber) {
+        //use spread syntax to create a new array from the existing selected(Trademarks, Conditions, Reasons, Conflicts)
       //so as not to simply create a reference to the existing selected(listType) data.
         let selectedCopy = [ ...this[type] ]
         selectedCopy.splice(index, 1)
       //and then assign this new value to replace the selected(listType) in the component data.  Do this as opposed
       //to splicing the list in data directly because Vue will not react to such a change in a guaranteed immediate way
         this[type] = selectedCopy
+
+        if (nrNumber) {
+          this.$store.dispatch('removeComparedNR', nrNumber)
+        }
       },
       saveModal(obj) {
         if ( this.editTextarea !== this.customer_message_display ) {
@@ -614,13 +619,19 @@
         return obj.name + ' - ' + obj.application_number
       },
       truncateChipText(text) {
-        return text.length > 37 ? `${text.slice(0,37)}...` : text
+        return text.length > 34 ? `${text.slice(0,34)}...` : text
       },
     },
   }
 </script>
 
 <style scoped>
+  #decision-msg-clear-button {
+    color: var(--link);
+    font-size: 14px;
+    font-weight: 700;
+  }
+
   #message-cancel-button {
     margin: 0px;
     padding: 0px;
@@ -641,7 +652,7 @@
     border-radius: 6px;
     color: white;
     text-transform: uppercase;
-    font-size: 15px;
+    font-size: 13px;
   }
 
   .chip-close-icon {
@@ -660,7 +671,6 @@
   .decision-flex-holder {
     display: flex;
     justify-content: space-between;
-    height:
   }
 
   .decision-select-style {
@@ -692,7 +702,7 @@
 
   .textarea-outer-v-flex {
     border: 1px solid var(--l-grey);
-    height: 320px;
+    height: 350px;
     background-color: white;
 
   }

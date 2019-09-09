@@ -11,7 +11,7 @@ module.exports = {
       errorJSON: null,
       adminURL: null,
 
-//Interface settings
+      //Interface settings
       currentChoice: null, // CURRENT NAME BEING EXAMINED (choice number)
       currentName: null, // CURRENT NAME BEING EXAMINED (string)
       currentNameObj: { // CURRENT NAME BEING EXAMINED (complete object)
@@ -30,7 +30,7 @@ module.exports = {
       is_editing: false,
       is_making_decision: false,
       decision_made: null,
-      acceptance_will_be_conditional: false,
+      acceptanceWillBeConditional: false,
       is_header_shown: false,
       furnished: null,
       hasBeenReset: null,
@@ -40,15 +40,16 @@ module.exports = {
       listDecisionReasons: null,
       requestTypeRules: null, // list of request type rules, internal use only no display
 
-//Names Data
-//nr_conflict: null,
+      //Names Data
+      //nr_conflict: null,
       details: null,
       additionalInfo: null,
       internalComments: [],
       applicantsOrigData: null,
       nrData: null,
       compInfo: {
-        nrNumber: null, compNames: {
+        nrNumber: null,
+        compNames: {
           compName1: {
             choice: null,
             name: null,
@@ -192,20 +193,30 @@ module.exports = {
         rejected: { response: { numfound: '' } },
       },
 
-//introduced during name-examination code with us upgrade
+      //introduced during name-examination code with us upgrade
       activeRequestBannerPopUp: null,
+      comparedConflicts: [],
+      conflictsAutoAdd: true,
+      conflictsChildIndex: 0,
+      conflictsChildren: [],
+      conflictsIndex: 0,
+      conflictsReturnedStatus: false,
+      conflictsScrollPosition: 0,
+      consentRequiredByUser: false,
+      customerMessageOverride: null,
+      expandedConflictID: null,
       newComment: null,
+      openBucket: null,
+      parsedCOBRSConflicts: [],
+      parsedPhoneticConflicts: [],
+      parsedSynonymConflicts: [],
       selectedConditions: [],
+      selectedConflictID: null,
+      selectedConflictNRs: [],
       selectedConflicts: [],
+      selectedReasons: [],
       selectedTrademarks: [],
       showCommentsPopUp: false,
-      selectedConflictID: null,
-      expandedConflictID: null,
-      openBucket: null,
-      conflictsReturnedStatus: false,
-      parsedPhoneticConflicts: [],
-      parsedCOBRSConflicts: [],
-      parsedSynonymConflicts: [],
     }
   }
 }

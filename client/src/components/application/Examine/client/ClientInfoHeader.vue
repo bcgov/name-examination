@@ -119,6 +119,8 @@
           <v-layout justify-start row mt-4 pl-3>
             <v-flex>
               <v-btn id="nr-details-cancel-button"
+                     v-shortkey="['alt', 'c']"
+                     @shortkey="clickCancel"
                      class="ma-0 pa-0"
                      @click="clickCancel"
                      flat>
@@ -129,6 +131,8 @@
             <v-flex>
               <v-btn id="nr-details-save-button"
                      @click="clickSave"
+                     v-shortkey="['alt', 's']"
+                     @shortkey="clickSave"
                      :disabled="errorText.length !== 0"
                      class="ma-0 pa-0"
                      flat>

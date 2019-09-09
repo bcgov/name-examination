@@ -77,7 +77,7 @@ html {
 }
 
 .c-grey {
-  color: var(--grey) !important;
+  color: var(--l-grey) !important;
 }
 
 .c-gold {

@@ -1,10 +1,11 @@
-<!--eslint-disable-->
 <template>
   <v-layout justify-end>
     <v-flex shrink pr-4 v-show="!is_editing" align-self-center>
       <!-- Edit Request button -->
       <v-btn class="mx-1 pa-0 action-button"
              flat
+             v-shortkey="['alt', 'd']"
+             @shortkey="edit"
              id="nr-details-edit-button"
              v-if="can_edit"
              @click="edit"><img src="/static/images/buttons/edit-req.png" /></v-btn>
@@ -38,7 +39,6 @@
              v-if="canCancel && !is_making_decision && !is_cancelled && !is_approved_expired && !is_consumed"
              @click="toggleCancelModal('show')"><img src="/static/images/buttons/cancel-req.png"/></v-btn>
 
-      <!-- HOLD button -->
       <v-btn flat
              class="mx-1 pa-0 action-button"
              v-shortkey="['alt', 'h']"
@@ -127,8 +127,8 @@ export default {
     })
   },
   computed: {
-    acceptance_will_be_conditional() {
-      return this.$store.getters.acceptance_will_be_conditional;
+    acceptanceWillBeConditional() {
+      return this.$store.getters.acceptanceWillBeConditional;
     },
     can_claim() {
       // can this user claim the NR? Based on state.
@@ -136,7 +136,7 @@ export default {
       else return false;
     },
     canCancel() {
-      return this.userCanEdit;
+      return this.userCanEdit && !this.other_examiner_inprogress
     },
     cancelSubmitDisabled() {
       if (this.cancel_comment_display) {
@@ -213,10 +213,13 @@ export default {
     is_my_current_nr() {
       return this.$store.getters.is_my_current_nr;
     },
+    other_examiner_inprogress() {
+      return this.userId !== this.$store.getters.examiner && this.$store.getters.nr_status === 'INPROGRESS'
+    },
     is_name_decision_made() {
       // is a decision already made for the current name? Happens right after reset/re-open.
-      if (this.currentNameObj.state !== 'NE') return true;
-      else return false;
+      if (this.currentNameObj.state !== 'NE') return true
+      return false
     },
     userCanEdit() {
       return this.$store.getters.userHasEditRole;

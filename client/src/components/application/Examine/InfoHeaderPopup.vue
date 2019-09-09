@@ -56,7 +56,7 @@
               </template>
               <template v-else>
                 <v-flex lg12>
-                  <span :style="is_expanded ? {whiteSpace: 'pre-line'} : '' ">{{ text }}</span>
+                  <span :style="is_expanded ? {whiteSpace: 'pre-line'} : '' ">{{ truncate(text) }}</span>
                 </v-flex >
               </template>
             </template>

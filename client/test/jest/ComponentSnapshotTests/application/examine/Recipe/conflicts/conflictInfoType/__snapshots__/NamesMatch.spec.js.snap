@@ -179,5 +179,7 @@ exports[`NamesMatch.vue renders a NamesMatch component 1`] = `
   </v-layout-stub>
    
   <!---->
+   
+  <!---->
 </v-container-stub>
 `;
