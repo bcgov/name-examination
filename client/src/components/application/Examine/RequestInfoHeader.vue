@@ -6,6 +6,8 @@
         <!--NR NUMBER-->
         <v-flex :class="['nr-number', 'text-left',  'mx-4', priority ? 'rejected' : 'dk-grey']" shrink>
           <span id="nrNumberDisplay">{{ nrNumber }}</span>
+          <v-icon style="position: relative; top: -8px; color: var(--link);"
+                  @click="getTransactionsHistory()">open_in_new</v-icon>
         </v-flex>
         <!--REQUEST DESCRIPTION / DROPDOWN -->
         <v-flex :lg5="is_editing" :grow="!is_editing">
@@ -226,10 +228,18 @@
                         column
                         :class="{'form-group-error': $v.corpNum.$error}">
                 <v-flex mt-4 fw-600>Related Corp #:</v-flex>
-                <v-flex><v-text-field class="name-choice-input"
+                <v-flex>
+                  <v-text-field class="name-choice-input"
                                       v-model="corpNum"
                                       autocomplete="off"
-                                      @input="$v.corpNum.$touch()" /></v-flex>
+                                      @input="$v.corpNum.$touch()">
+                    <template v-slot:append-outer>
+                      <spinner style="transform: scale(.4); position: relative; top: -95px"
+                               className="corp-num-spinner hidden" />
+                    </template>
+                  </v-text-field>
+                </v-flex>
+                <v-flex></v-flex>
                 <v-flex class="field-error"
                      v-if="!$v.corpNum.isValidCorpNum">Please enter a valid Incorporation Number</v-flex>
               </v-layout>
@@ -316,10 +326,11 @@
   import { required } from 'vuelidate/lib/validators'
   import axios from '@/axios-auth'
   import moment from 'moment'
+import Spinner from '../spinner'
 
   export default {
     name: 'RequestInfoHeader',
-    components: { ActionButtons, ClientInfoHeader, InfoHeaderPopup, NWPTA },
+    components: { Spinner, ActionButtons, ClientInfoHeader, InfoHeaderPopup, NWPTA },
     mounted() {
       this.$root.$on('saveEdits', this.save)
       this.$root.$on('cancelSave', this.cancelSave)
@@ -427,6 +438,12 @@
         set(value) {
           this.$store.commit('expiryDateForEdit', value)
         },
+      },
+      is_consumed() {
+        if (this.consumptionDate && (this.nr_status === 'APPROVED' || this.nr_status === 'CONDITION')) {
+          return true
+        }
+        return false
       },
       internalComments_length() {
         if (this.$store.getters.internalComments) {
@@ -717,6 +734,9 @@
         let date = moment(d, 'YYYY-MM-DD, hh:mm a')
         return date.format('YYYY-MM-DD, h:mma')
       },
+      getTransactionsHistory() {
+        this.$store.dispatch('getTransactionsHistory', this.nrNumber)
+      },
       revertToPreviousState() {
         // set current state to previous state, and clear previous state field
         let myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
@@ -857,17 +877,26 @@
       if (this.corp_num_required && !this.is_closed) {
         validations.corpNum = {
           isValidCorpNum(value) {
+
             // if empty, it's valid - not required
-            if (value == '' || value == null) return true
+            if (!value) {
+              $('.corp-num-spinner').addClass('hidden')
+              return true
+            }
 
             // valid corp numbers are between 7 and 10 characters long
-            if (value.length < 7 || value.length > 10) return false
+            if (value.length < 7 || value.length > 10) {
+              return false
+            }
+            $('.corp-num-spinner').removeClass('hidden')
 
             const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
             const url = '/api/v1/corporations/' + value
             return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
+              $('.corp-num-spinner').addClass('hidden')
               return true
             }).catch(error => {
+              $('.corp-num-spinner').addClass('hidden')
               return false
             })
           },

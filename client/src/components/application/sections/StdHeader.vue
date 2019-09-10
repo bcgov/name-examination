@@ -15,7 +15,6 @@
         <v-toolbar flat color="white" height="70px">
           <v-toolbar-items>
             <v-btn flat
-                   :ripple="true"
                    :href="adminURL"
                    id="admin"
                    target="_blank">
@@ -173,6 +172,17 @@
     padding: 0px;
     position: relative;
     top: 0;
+  }
+
+  .styled-input {
+    background-color: var(--xl-grey);
+    border: 1px solid var(--l-grey) !important;
+    font-size: 15px;
+    height: 40px;
+    margin-bottom: auto;
+    margin-top: auto;
+    padding: 5px 10px 5px 10px;
+    width: 225px;
   }
 
   .vertical-divider {

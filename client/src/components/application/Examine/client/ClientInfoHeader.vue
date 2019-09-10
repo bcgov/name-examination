@@ -1,6 +1,7 @@
 <!--eslint-disable-->
 <template>
   <v-flex>
+    <!--The display/not-in-edit-mode view-->
     <v-container v-if="!is_editing" ma-0 pa-0>
       <v-layout wrap v-if="client_info_expanded || is_viewing" dk-grey fs-15>
         <v-flex lg12 fw-600>Client:</v-flex>
@@ -30,6 +31,8 @@
         </v-flex>
       </v-layout>
     </v-container>
+
+    <!--The EDIT MODE view + 'Save Edits' and 'Cancel' buttons-->
     <v-container v-else id="applicant-form-container" field dk-grey>
       <v-form autocomplete="off" ma-0 pa-0>
         <v-layout wrap field dk-grey>
@@ -116,7 +119,7 @@
           <v-flex lg12 pa-0 ma-0>
             <v-text-field id="contact-full-name" class="applicant-info-field" v-model="contactName" maxlength="200" />
           </v-flex>
-          <v-layout justify-start row mt-4 pl-3>
+          <v-layout justify-space-between mt-4>
             <v-flex>
               <v-btn id="nr-details-cancel-button"
                      v-shortkey="['alt', 'c']"

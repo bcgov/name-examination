@@ -34,7 +34,7 @@
         </v-flex>
         <v-flex cursor-pointer
                 width-5
-                v-if="title.jurisdiction">{{ title.jurisdiction }}
+                v-if="title.jurisdiction">{{ $store.getters.getShortJurisdiction(title.jurisdiction) }}
         </v-flex>
         <v-flex cursor-pointer
                 width-15

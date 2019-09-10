@@ -454,7 +454,6 @@ export const actions = {
     var newQuery = '?order=priorityCd:desc,submittedDate:asc&queue=' + stateCd +
       '&furnished=true&unfurnished=true&rows=1&start=0'
     const url = '/api/v1/requests' + newQuery
-    const vm = this
     return axios.get( url, { headers: { Authorization: `Bearer ${ myToken }` } } )
                 .then( response => {
                   var params = {
@@ -780,6 +779,7 @@ export const actions = {
     commit('setConflictsAutoAdd', true)
     commit('setConsentRequiredByUser', false)
     commit('setCustomerMessageOverride', null)
+    commit('resetTransactionModalState')
   },
   resetDecision({ commit }) {
     commit('setSelectedConditions', [])
@@ -787,6 +787,60 @@ export const actions = {
     commit('setSelectedReasons', [])
     commit('setSelectedTrademarks', [])
   },
+  getTransactionsHistory({ commit, dispatch }, nrNumber) {
+    const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    const url = '/api/v1/events/' + nrNumber
+    commit('setTransactionsRequestStatus', 'pending')
+    commit('toggleCommentsPopUp', false)
+    commit('toggleRequestBannerPopUp', null)
+    commit('toggleTransactionsModal', true)
+    return new Promise((resolve, reject) => {
+      axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` }})
+        .then(response => {
+          let { transactions } = response.data
+          let jsonDataFalse = [
+            'Get NR Details from NRO',
+            'Decision',
+            'Load NR',
+            'Updated NRO',
+            'Hold Request',
+            'Get Next NR',
+            'Marked on Hold',
+            'Migrated by NRO',
+            'Set to Historical by NRO(Migration)',
+            'Expired by NRO',
+            'Cancelled in NRO',
+          ]
+          let data = []
+
+          for (let entry in transactions) {
+            let item = transactions[entry]
+            if (!item.user_action) {
+              item.user_action = item.action
+            }
+            if (typeof item.jsonData === 'string') {
+              item.jsonData = JSON.parse(item.jsonData)
+            }
+            if (item.jsonData && Object.keys(item.jsonData).length > 0) {
+              item.showJSONData = true
+              if ( jsonDataFalse.includes(item.user_action) ) {
+                item.showJSONData = false
+              }
+            } else {
+              item.showJSONData = false
+            }
+            data.push(item)
+          }
+          commit('setTransactionsData', data)
+          commit('setTransactionsRequestStatus', 'success')
+          resolve()
+        })
+        .catch( error => {
+          commit('setTransactionsRequestStatus', 'failed')
+          reject()
+        })
+    })
+  }
 }
 
 export const getters = {
@@ -1163,7 +1217,7 @@ export const getters = {
   selectedConflictID: state => state.selectedConflictID,
   expandedConflictID: state => state.expandedConflictID,
   openBucket: state => state.openBucket,
-  conflictTitles(state) {
+  conflictTitles(state, getters) {
     let output = []
     if ( state.conflictsReturnedStatus ) {
 
@@ -1204,7 +1258,7 @@ export const getters = {
 
       }
     }
-    return output
+    return output.filter(match => match.nrNumber !== getters.nrNumber)
   },
   selectedNRs(state) {
     if ( state.selectedConflicts && state.selectedConflicts.length > 0 ) {
@@ -1243,6 +1297,22 @@ export const getters = {
       return false
     }
     return state.consentRequiredByUser || checkConditions() || false
+  },
+  getShortJurisdiction: state => jurisdiction => {
+    jurisdiction = jurisdiction.toUpperCase()
+    if ( jurisdiction.length === 2 ) return jurisdiction
+
+    let index
+    let textIndex = state.listJurisdictions.findIndex(opt => opt.text === jurisdiction)
+    if ( textIndex >= 0 ) index = textIndex
+    let shortIndex = state.listJurisdictions.findIndex(opt => opt.SHORT_DESC === jurisdiction)
+    if ( shortIndex >= 0 ) index = shortIndex
+
+    if ( typeof index === 'number' ) {
+      return state.listJurisdictions[index].value
+    }
+
+    return '?'
   },
 }
 
@@ -2216,6 +2286,25 @@ export const mutations = {
     Vue.set( state, 'selectedReasons', payload )
   },
   setConsentRequiredByUser: (state, payload) => state.consentRequiredByUser = payload,
+  toggleTransactionsModal: (state, payload) => state.transactionsModalVisible = payload,
+  setTransactionsData: (state, payload) => state.transactionsData = payload,
+  setTransactionsRequestStatus: (state, payload) => state.transactionsRequestStatus = payload,
+  setTransactionsModalState(state, {key, value}) {
+    Vue.set(
+      state.transactionsModalState,
+      key,
+      value
+    )
+  },
+  resetTransactionModalState(state) {
+    state.transactionsModalState = {
+      maximized: true,
+      page: 1,
+      expand: null,
+      scrollOffset: 0,
+      sortDescending: true,
+    }
+  },
 }
 
 export const state = {
@@ -2433,6 +2522,17 @@ export const state = {
   selectedReasons: [],
   selectedTrademarks: [],
   showCommentsPopUp: false,
+  transactionsModalVisible: false,
+  transactionsData: null,
+  transactionsRequestStatus: 'pending',
+  transactionsModalState: {
+    maximized: true,
+    page: 1,
+    expand: null,
+    scrollOffset: 0,
+    sortDescending: true,
+  },
+  conflictsPreserveMessage: false,
 }
 
 export default new Vuex.Store({ actions, getters, mutations, state, })

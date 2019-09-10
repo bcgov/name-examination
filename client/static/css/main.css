@@ -122,6 +122,10 @@ html {
   font-size: 12px !important;
 }
 
+.fs-12 {
+  font-size: 12px !important;
+}
+
 .fs-13 {
   font-size: 13px !important;
 }
@@ -136,6 +140,18 @@ html {
 
 .fs-16 {
   font-size: 16px !important;
+}
+
+.fs-17 {
+  font-size: 17px !important;
+}
+
+.fs-18 {
+  font-size: 18px !important;
+}
+
+.fs-20 {
+  font-size: 20px !important;
 }
 
 .fs-16-fw-700 {
@@ -192,17 +208,6 @@ html {
   background-color: var(--gold) !important;
   height: 40px;
   width: 40px;
-}
-
-.styled-input {
-  background-color: var(--xl-grey);
-  border: none !important;
-  font-size: 15px;
-  height: 40px;
-  margin-bottom: auto;
-  margin-top: auto;
-  padding: 5px 10px 5px 10px;
-  width: 225px;
 }
 
 .xl-grey-bg {

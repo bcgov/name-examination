@@ -36,9 +36,10 @@
     <v-layout wrap v-if="comments.length > 0" align-items-start>
       <v-flex lg12 item-heading>Comments</v-flex>
       <v-flex lg12 ml-3>
-      <template v-for="comment in comments">
-        <div>{{ comment.comment }}</div>
-        <div class="ml-3 ft-ital mb-2">{{ comment.examiner + ' - ' + formatDate(comment.timestamp)}}</div>
+      <template v-for="(comment, i) in comments">
+        <div :key="'hi-comment-'+i">{{ comment.comment }}</div>
+        <div :key="'hi-comment-'+i" class="ml-3 ft-ital mb-2">{{ comment.examiner + ' - ' +
+                                                              formatDate(comment.timestamp)}}</div>
       </template>
       </v-flex>
     </v-layout>

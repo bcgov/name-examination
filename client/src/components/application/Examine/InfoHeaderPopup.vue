@@ -46,13 +46,20 @@
                               rows="15"
                               v-model="additionalInfo" />
                 </v-flex >
-                <v-flex text-right lg12 c-link v-if="!is_expanded">
-                  <v-btn id="popup-cancel-button" flat @click="clearHeaderPopup" >Cancel</v-btn >
-                  <v-btn id="popup-save-button" flat @click="saveInfo" >
+                <v-layout justify-end v-if="!is_expanded">
+                  <v-flex shrink c-link>
+                    <v-btn id="popup-cancel-button"
+                           flat
+                           @click="clearHeaderPopup">Cancel
+                    </v-btn>
+                  </v-flex>
+                  <v-flex shrink c-link>
+                    <v-btn id="popup-save-button" flat @click="saveInfo">
                       <span style="font-weight: 600"
-                            id="addn-info-popup-save-span">Save</span >
-                  </v-btn >
-                </v-flex >
+                            id="addn-info-popup-save-span">Save</span>
+                    </v-btn>
+                  </v-flex>
+                </v-layout>
               </template>
               <template v-else>
                 <v-flex lg12>

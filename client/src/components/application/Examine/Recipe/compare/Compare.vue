@@ -26,7 +26,7 @@
                   :conflictData="conflict"
                   v-if="conflict.type === 'name'" />
     </v-layout>
-    <v-layout text-center pt-3 v-if="comparedConflicts.length === 0">
+    <v-layout text-center pa-3 v-if="comparedConflicts.length === 0">
       <v-flex>No conflicts have been added for comparisson.</v-flex>
     </v-layout>
   </v-container>
