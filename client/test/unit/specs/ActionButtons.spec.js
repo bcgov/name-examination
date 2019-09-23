@@ -141,7 +141,6 @@ describe('ActionButtons.vue', () => {
 
     it('hides decision and hold buttons for IN PROGRESS NR of another examiner', () => {
       expect(vm.$el.querySelector('#examine-decide-button')).toBeNull()
-      console.log(userId)
       expect(vm.$el.querySelector('#examine-hold-button')).toBeNull()
     })
 
