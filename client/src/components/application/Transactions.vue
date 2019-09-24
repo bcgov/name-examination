@@ -179,8 +179,8 @@
       sortedTransactionData() {
         if (Array.isArray(this.transactionsData)) {
           let output = this.transactionsData.sort((a,b) => {
-            let A = moment(a.eventDate).format('x')
-            let B = moment(b.eventDate).format('x')
+            let A = a.id
+            let B = b.id
             if (this.sortDescending) {
               if ( A > B ) return -1
               if ( A < B ) return 1
