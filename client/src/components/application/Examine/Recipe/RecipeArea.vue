@@ -5,7 +5,7 @@
       <v-layout tab-layout ma-0 pa-0 align-center>
         <v-flex @click="currentRecipeCard = 'Conflicts'"
                 grow
-                text-center
+                d-flex
                 :class="getClasses('Conflicts')">
           <span class="recipe-menu-tab-text">
             <v-icon :class="getColour(conflictsIcon)"
@@ -16,10 +16,10 @@
                 text-center
                 grow
                 :class="getClasses('Conditions')">
-          <span class="recipe-menu-tab-text">
+          <div class="recipe-menu-tab-text">
             <v-icon :class="getColour(conditionIcon)"
                     class="mr-1 pa-0 recipe-menu-icon"
-                    id="conditions1">{{ conditionIcon }}</v-icon>Conditions</span>
+                    id="conditions1">{{ conditionIcon }}</v-icon>Conditions</div>
         </v-flex>
         <v-flex @click="currentRecipeCard = 'Trademarks'"
                 text-center
@@ -203,7 +203,9 @@
   .recipe-menu-tab-text {
     position: relative;
     top: 1px;
-    font-size: 15px;
+    font-size: 14px;
+    display: inline-block;
+
   }
 
   .tab-1st-active {
@@ -228,6 +230,7 @@
     height: 42px;
     padding-top: 1%;
     padding-bottom: 3%;
+    text-align: center !important;
   }
 
   .tab-inactive {

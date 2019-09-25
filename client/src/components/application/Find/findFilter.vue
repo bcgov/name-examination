@@ -50,8 +50,9 @@
                       hide-actions>
           <template v-slot:headers="{headers}">
             <tr>
-              <th v-for="header in headers"
+              <th v-for="(header, i) in headers"
                   :style="header.style"
+                  :key="'find-header-'+i"
                   class="text-left header-row-1 pa-0 pl-2">
                 {{ header.text }}
               </th>

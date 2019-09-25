@@ -2,13 +2,11 @@ import Vue from 'vue'
 import { Plugin } from 'vue-fragment'
 import Vuetify from 'vuetify'
 import Vuelidate from 'vuelidate'
-import BootstrapVue from 'bootstrap-vue'
 import $ from 'jquery'
 import staticFilesServer from './static.files.server'
 import fs from 'fs'
 
 
-Vue.use(BootstrapVue)
 Vue.use(Plugin)
 Vue.use(require('vue-shortkey'))
 Vue.use(Vuelidate)
@@ -34,5 +32,5 @@ global.getDescFromList = ( new Function(utils + `return getDescFromList;`) )()
 
 let app = document.createElement('DIV')
 app.setAttribute('id', 'app')
-app.setAttribute('data-app', 'true')
+app.setAttribute('data-app', true)
 document.body.appendChild(app)

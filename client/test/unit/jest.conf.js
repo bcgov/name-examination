@@ -18,6 +18,8 @@ module.exports = {
     '<rootDir>/test/e2e',
     '<rootDir>/test/features',
   ],
+  notify: true,
+  notifyMode: 'always',
   snapshotSerializers: ['<rootDir>/node_modules/jest-serializer-vue'],
   setupFiles: ['<rootDir>/test/unit/setup'],
   coverageDirectory: '<rootDir>/test/unit/coverage',

@@ -1,21 +1,18 @@
 <!--eslint-disable-->
 <template>
     <v-card flat
-            style="z-index: 11111; position: absolute; top: 165px; left: 25px;"
-            class="expanded-info"
-            width="350px">
-      <v-container fluid p-1 ma-0>
-        <v-layout mt-4>
-          <v-flex lg8="!is_editing">
+            class="expanded-info">
+      <v-container fluid pa-2 ma-0>
+        <v-layout justify-space-between my-2>
+          <v-flex shrink>
             <v-icon color="grey" class="mirrored fs-18 ml-3 mr-1">
               chat_bubble_outline
             </v-icon>
             {{ commentsCount }} Comments
           </v-flex>
-          <v-flex lg4 text-right>
+          <v-flex shrink>
             <v-btn class="ma-0 pa-0"
                    flat
-                   :ripple="false"
                    @click="toggleCommentsPopUp(false)">
               <v-icon :style="alignTop" color="light-blue">clear</v-icon>
               <span :style="alignTop" color="blue">Cl<span class="shortkey">o</span>se
@@ -24,28 +21,37 @@
           </v-flex>
         </v-layout>
         <v-layout column>
-          <v-flex>
+          <v-flex shrink>
             <v-textarea class="comments-text-area"
                         ref="commentstextarea"
+                        :rows="8"
                         no-resize
                         v-model="newComment" />
           </v-flex>
         </v-layout>
-        <v-flex text-right c-link>
-          <v-btn id="comments-cancel-button" flat :ripple="false" @click="clickCancel()">Cancel</v-btn>
-          <v-btn id="comments-save-button" flat :ripple="false" :disabled="saveButtonDisabled" @click="saveInfo">
-            <b style="font-weight: 600">Sa<span class="shortkey">v</span>e</b>
-          </v-btn>
-        </v-flex>
-        <v-layout px-3 pb-2 mt-2 column style="overflow-y: scroll; max-height: 475px;">
+
+        <v-layout justify-end>
+          <v-flex shrink c-link>
+            <v-btn id="comments-cancel-button" flat @click="clickCancel()">Cancel</v-btn>
+          </v-flex>
+          <v-flex shrink c-link>
+            <v-btn id="comments-save-button" flat :disabled="saveButtonDisabled" @click="saveInfo">
+              <b style="font-weight: 600">Sa<span class="shortkey">v</span>e</b>
+            </v-btn>
+          </v-flex>
+        </v-layout>
+
+        <v-layout px-3 pb-2 mt-2 column class="comments-display">
           <template v-for="(comment, i) in comments">
-            <v-flex fs-15 ws-pre>
-              <span style="white-space: pre-line" >{{ comment.comment }}</span>
+            <v-flex fs-15 comment-text>
+              {{ comment.comment }}
             </v-flex>
-            <v-flex fs-14 mt-2 ft-ital>
+            <v-flex fs-14 mt-1 ft-ital>
               {{ comment.examiner }} - {{ formatTime(comment.timestamp) }}
             </v-flex>
-            <v-divider v-if="i < commentsCount - 1 " />
+            <v-flex my-2>
+              <v-divider v-if="i < commentsCount - 1 " />
+            </v-flex>
           </template>
         </v-layout>
       </v-container>
@@ -62,7 +68,7 @@
       return {
         alignTop: {
           position: 'relative',
-          top: `${-8}px`
+          top: '-8px'
         },
       }
     },
@@ -180,7 +186,6 @@
     background-color: white;
     border: 1px solid var(--l-grey);
     width: 320px;
-    height: 80px;
   }
 
   .shortkey {
@@ -193,6 +198,22 @@
     border-radius: 0px !important;
     box-shadow: 0px 0px 6px 3px var(--grey) !important;
     margin-bottom: 10px !important;
+    z-index: 11111;
+    position: absolute;
+    top: 165px;
+    left: 25px;
+    max-width: 350px;
+  }
+
+  .comments-display {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 425px;
+  }
+
+  .comment-text {
+    white-space: pre-line;
+    overflow-wrap: break-word !important;
   }
 
   .editing-info {

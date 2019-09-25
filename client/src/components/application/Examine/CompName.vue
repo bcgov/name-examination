@@ -52,8 +52,8 @@
 
     <!--QUICK APPROVE/REJECT BUTTONS-->
     <v-flex lg6 bg-white py-2>
-      <v-layout v-if="showQuickButtons" align-right>
-        <v-flex grow text-right>
+      <v-layout v-if="showQuickButtons" justify-end>
+        <v-flex shrink text-right>
           <v-btn flat
                  v-shortkey="['alt', 'a']"
                  @shortkey="quickApprove()"
@@ -552,7 +552,7 @@
 
   .examine-search {
     background-color: white;
-    border: none !important;
+    border: 1px solid lightgrey !important;
     font-size: 15px;
     height: 40px;
     margin-bottom: auto;

@@ -4,37 +4,6 @@ exports[`App.vue  renders the App 1`] = `
 <div
   style="height: 100%;"
 >
-  <div
-    class="modal fade"
-    id="error-message-modal"
-    role="dialog"
-  >
-    <div
-      class="modal-dialog modal-lg"
-      role="document"
-    >
-      <div
-        class="modal-content"
-      >
-        <!---->
-         
-        <!---->
-         
-        <div
-          class="modal-footer"
-        >
-          <button
-            class="btn btn-sm btn-primary"
-            data-dismiss="modal"
-            type="button"
-          >
-            Continue
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-   
   <v-app-stub
     id="app"
   >
@@ -47,12 +16,74 @@ exports[`App.vue  renders the App 1`] = `
         style="z-index: 2;"
       />
        
-      <div>
-        <router-view
-          style="z-index: 1;"
-        />
-      </div>
+      <router-view
+        style="z-index: 1;"
+      />
     </div>
+     
+    <v-dialog-stub
+      class="pa-0"
+      contentclass="shift-dialog-up"
+      maxwidth="none"
+      origin="center center"
+      transition="dialog-transition"
+      width="50%"
+    >
+      <v-container-stub
+        bg-white=""
+        fluid=""
+        ma-0=""
+        pa-0=""
+        tag="div"
+      >
+        <v-layout-stub
+          column=""
+          tag="div"
+        >
+          <v-flex-stub
+            class="fw-700 fs-18 mb-0 pa-2 error-modal"
+            tag="div"
+          >
+            
+            Error
+          
+          </v-flex-stub>
+           
+          <v-flex-stub
+            class="pre-line"
+            fs-15=""
+            mt-1=""
+            pa-2=""
+            tag="div"
+          >
+            <!---->
+             
+            <!---->
+          </v-flex-stub>
+           
+          <v-flex-stub
+            tag="div"
+          >
+            <div
+              style="display: flex; justify-content: flex-end;"
+            >
+              <div>
+                <v-btn-stub
+                  activeclass="v-btn--active"
+                  class="c-link"
+                  flat="true"
+                  tag="button"
+                  type="button"
+                >
+                  Dismiss
+                
+                </v-btn-stub>
+              </div>
+            </div>
+          </v-flex-stub>
+        </v-layout-stub>
+      </v-container-stub>
+    </v-dialog-stub>
   </v-app-stub>
 </div>
 `;

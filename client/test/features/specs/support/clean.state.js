@@ -3,6 +3,7 @@ module.exports = {
   cleanState: () => {
     return {
       //User Info
+      //User Info
       myKeycloak: null,
       userId: null,
       user_roles: [],
@@ -15,7 +16,8 @@ module.exports = {
       currentChoice: null, // CURRENT NAME BEING EXAMINED (choice number)
       currentName: null, // CURRENT NAME BEING EXAMINED (string)
       currentNameObj: { // CURRENT NAME BEING EXAMINED (complete object)
-        name: null, choice: null,
+        name: null,
+        choice: null,
       },
       currentState: null, // NR - APPROVED, REJECTED, INPROGRESS ETC...
       previousStateCd: null,
@@ -30,7 +32,6 @@ module.exports = {
       is_editing: false,
       is_making_decision: false,
       decision_made: null,
-      acceptanceWillBeConditional: false,
       is_header_shown: false,
       furnished: null,
       hasBeenReset: null,
@@ -64,21 +65,8 @@ module.exports = {
             conflict3_num: null,
             decision_text: null,
             comment: null,
-          }, compName2: {
-            choice: null,
-            name: null,
-            state: null,
-            consumptionDate: null,
-            corpNum: null,
-            conflict1: null,
-            conflict2: null,
-            conflict3: null,
-            conflict1_num: null,
-            conflict2_num: null,
-            conflict3_num: null,
-            decision_text: null,
-            comment: null,
-          }, compName3: {
+          },
+          compName2: {
             choice: null,
             name: null,
             state: null,
@@ -93,14 +81,35 @@ module.exports = {
             decision_text: null,
             comment: null,
           },
-        }, requestType: null,
+          compName3: {
+            choice: null,
+            name: null,
+            state: null,
+            consumptionDate: null,
+            corpNum: null,
+            conflict1: null,
+            conflict2: null,
+            conflict3: null,
+            conflict1_num: null,
+            conflict2_num: null,
+            conflict3_num: null,
+            decision_text: null,
+            comment: null,
+          },
+        },
+        requestType: null,
       },
       applicantInfo: {
         clientName: {
-          firstName: null, lastName: null,
-        }, applicantName: {
-          firstName: null, lastName: null, middleName: null,
-        }, contactInfo: {
+          firstName: null,
+          lastName: null,
+        },
+        applicantName: {
+          firstName: null,
+          lastName: null,
+          middleName: null,
+        },
+        contactInfo: {
           addressLine1: null,
           addressLine2: null,
           addressLine3: null,
@@ -115,13 +124,17 @@ module.exports = {
         },
       },
       additionalCompInfo: {
-        jurisdiction: null, natureOfBussiness: null, nr_status: null, nwpta_ab: {
+        jurisdiction: null,
+        natureOfBussiness: null,
+        nr_status: null,
+        nwpta_ab: {
           partnerJurisdictionTypeCd: null,
           partnerName: null,
           partnerNameDate: null,
           partnerNameNumber: null,
           partnerNameTypeCd: null,
-        }, nwpta_sk: {
+        },
+        nwpta_sk: {
           partnerJurisdictionTypeCd: null,
           partnerName: null,
           partnerNameDate: null,
@@ -153,8 +166,7 @@ module.exports = {
         issue_Format_Text: null,
       },
 
-      searchQuery: '?order=priorityCd:desc,submittedDate:asc&queue=hold&ranking=All&notification=All&' +
-        'submittedInterval=30 days&lastUpdateInterval=All&rows=10',
+      searchQuery: '?order=priorityCd:desc,submittedDate:asc&queue=hold&ranking=All&notification=All&' + 'submittedInterval=30 days&lastUpdateInterval=All&rows=10',
       searchState: 'HOLD',
       searchNr: '',
       searchUsername: '',
@@ -217,6 +229,16 @@ module.exports = {
       selectedReasons: [],
       selectedTrademarks: [],
       showCommentsPopUp: false,
+      transactionsModalVisible: false,
+      transactionsData: null,
+      transactionsRequestStatus: 'pending',
+      transactionsModalState: {
+        maximized: true,
+        page: 1,
+        expand: null,
+        scrollOffset: 0,
+        sortDescending: true,
+      }
     }
   }
 }

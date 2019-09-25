@@ -2,41 +2,37 @@
 
 <template>
   <div style="height: 100%;">
-
-    <!-- error msgs from backend -->
-    <div class="modal fade" id="error-message-modal" role="dialog">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div v-if="errorMsg != ''">
-            <div class="modal-header modal-header-error" id="errorModalLabel">
-              <h5 class="modal-title">ERROR</h5>
-            </div>
-            <div class="modal-body pre-line">
-              <section><i>{{ errorMsg }}</i></section>
-            </div>
-          </div>
-          <div v-if="warningMsg != ''">
-            <div class="modal-header modal-header-warning" id="warningModalLabel">
-              <h5 class="modal-title">WARNING</h5>
-            </div>
-            <div class="modal-body pre-line">
-              <section><i>{{ warningMsg }}</i></section>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-sm btn-primary"
-                    data-dismiss="modal">Continue</button>
-          </div>
-        </div>
-      </div>
-    </div>
     <v-app >
-    <div id="app" style="height: 100%;" :class="is_editing ? 'bg-grey' : ''">
+      <div id="app" style="height: 100%;" :class="is_editing ? 'bg-grey' : ''">
         <std-header style="z-index: 2"> </std-header>
-      <div>
         <router-view style="z-index: 1"></router-view>
       </div>
-    </div>
+      <v-dialog v-model="showErrorModal"
+                width="50%"
+                content-class="shift-dialog-up"
+                class="pa-0">
+        <v-container fluid ma-0 pa-0 bg-white>
+          <v-layout column>
+            <v-flex class="fw-700 fs-18 mb-0 pa-2" :class="modalType === 'error' ? 'error-modal' : 'warning-modal'">
+              {{ modalType === 'error' ? 'Error' : 'Warning' }}
+            </v-flex>
+            <v-flex class="pre-line" fs-15 pa-2 mt-1>
+              <section v-if="warningMsg">{{ warningMsg }}</section>
+              <section v-if="errorMsg">{{ errorMsg }}</section>
+            </v-flex>
+            <v-flex>
+              <div style="display: flex; justify-content: flex-end;">
+                <div>
+                  <v-btn flat
+                         class="c-link"
+                         @click="toggleErrorModal(false)">Dismiss
+                  </v-btn>
+                </div>
+              </div>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-dialog>
     </v-app>
   </div>
 </template>
@@ -46,10 +42,12 @@ import StdHeader from '@/components/application/sections/StdHeader.vue'
 
 export default {
     name: 'App',
-    data: function() {
+    data() {
       return {
         errorMsg: '',
         warningMsg: '',
+        showErrorModal: false,
+        modalType: 'error',
       }
     },
     components:{
@@ -67,50 +65,75 @@ export default {
       },
     },
     watch: {
-      errorJSON: function(val) {
-
-        this.errorMsg = '';
-        this.warningMsg = '';
+      errorJSON(newErrors) {
+        this.errorMsg = ''
+        this.warningMsg = ''
         //if the errorJSON has new data populates the error/warning messages and triggers the popup
-        if (val != null) {
-          $('#error-message-modal').modal()
-          let i;
-
-          if (val.warnings != undefined) {
-            for (i = 0; i < val.warnings.length; i++) {
-              let msg = val.warnings[i].message;
-              this.warningMsg += `${i + 1}) ` + msg + '\n';
+        if (newErrors) {
+          if (Array.isArray(newErrors.warnings) && newErrors.warnings.length > 0) {
+            for (let warning of newErrors.warnings) {
+              this.warningMsg += `${warning.message} \n`
             }
+            this.modalType = warning
+            this.toggleErrorModal(true)
           }
 
-          if (val.errors != undefined) {
-            for (i = 0; i < val.errors.length; i++) {
-              let error = Object.keys(val.errors[i].message)[0];
-              let msg = val.errors[i].message[error][0];
-
-              this.errorMsg += `${i + 1}) ` + error;
-              this.errorMsg += ': ' + msg + '\n';
+          if ( Array.isArray(newErrors.errors) && newErrors.errors.length > 0 ) {
+            for (let error of newErrors.errors) {
+              let errorKey = Object.keys(error.message)[0]
+              let errorMessage = error.message[errorKey]
+              this.errorMsg += `${errorKey}: ${errorMessage} \n`
             }
+            this.modalType = 'error'
+            this.toggleErrorModal(true)
           }
 
-          if (val.message != undefined) {
-            this.errorMsg = val.message;
+          if (newErrors.message) {
+            this.errorMsg = newErrors.message
+            this.modalType = 'error'
+            this.toggleErrorModal(true)
           }
         }
       }
+    },
+    methods: {
+      sendErrors() {
+        let errorJSON = {
+          errors: {
+            message: {
+              error500: 'Some dumb error happened'
+            }
+          }
+        }
+        this.$store.commit('setErrorJSON', errorJSON)
+      },
+      toggleErrorModal(value) {
+        this.showErrorModal = value
+      }
     }
-};
+  }
 </script>
 
 <style>
   /*app-wide import of css variables to use in scoped and inline style*/
   @import '~/../../static/css/variables.css';
-  .modal-header-error {
-    background-color: #ea9999;
+  .error-modal {
+    background-color: var(--priority);
+    color: white;
   }
 
-  .modal-header-warning {
-    background-color: #ffc107;
+  .warning-modal {
+    background-color: var(--gold);
+    color: var(--text);
+  }
+
+  .bg-white {
+    background-color: white;
+  }
+
+  .shift-dialog-up {
+    position: relative;
+    top: -200px;
   }
 
   .pre-line {

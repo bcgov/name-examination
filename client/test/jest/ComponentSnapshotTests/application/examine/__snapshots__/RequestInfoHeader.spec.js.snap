@@ -27,6 +27,10 @@ exports[`RequestInfoHeader.vue renders a RequestInfoHeader component 1`] = `
         >
           
         </span>
+         
+        <v-icon-stub>
+          open_in_new
+        </v-icon-stub>
       </v-flex-stub>
        
       <v-flex-stub

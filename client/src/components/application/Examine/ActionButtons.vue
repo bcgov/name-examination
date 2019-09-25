@@ -37,7 +37,7 @@
              class="mx-1 pa-0 action-button"
              id="examine-cancel-button"
              v-if="canCancel && !is_making_decision && !is_cancelled && !is_approved_expired && !is_consumed"
-             @click="toggleCancelModal('show')"><img src="/static/images/buttons/cancel-req.png"/></v-btn>
+             @click="showCancelModal()"><img src="/static/images/buttons/cancel-req.png"/></v-btn>
 
       <v-btn flat
              class="mx-1 pa-0 action-button"
@@ -74,36 +74,35 @@
     </v-flex>
 
     <!--CANCELATION COMMENTS MODAL-->
-    <div class="modal fade"
-         id="add-cancel-comment-modal"
-         role="dialog">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Please give a comment to explain why this NR is being CANCELLED</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+
+    <v-dialog v-model="showCancelCommentsModal" persistent width="60%" hide-overlay>
+      <v-card>
+        <v-card-title class="fw-700 fs-18 mb-0 pb-0">
+          Cancel Name Request
+        </v-card-title>
+        <v-card-text>
+          <span class="fs-15 my-2">Please provide comments to explain why the NR is being cancelled</span>
+          <v-textarea id="cancel-comment-text"
+                      flat
+                      class="cancel-text-area"
+                      :rows="10"
+                      v-model="cancel_comment_display"></v-textarea></v-card-text>
+        <div style="display: flex; justify-content: flex-end;">
+          <div>
+            <v-btn flat
+                   class="c-link"
+                   @click="hideCancelModal()">Cancel</v-btn>
           </div>
-          <div class="modal-body">
-              <textarea id="cancel-comment-text"
-                        class="form-control"
-                        rows="10"
-                        v-model="cancel_comment_display"></textarea>
-          </div>
-          <div class="modal-footer">
-            <button type="button"
-                    class="btn btn-sm btn-secondary"
-                    @click="toggleCancelModal('hide')">Cancel</button>
-            <button type="button"
-                    id="cancel-nr-after-comment-button"
-                    class="btn btn-sm btn-danger"
-                    :disabled="cancelSubmitDisabled"
-                    @click="cancelNr">CANCEL REQUEST</button>
+          <div>
+            <v-btn flat
+                   class="c-priority"
+                   :disabled="cancelSubmitDisabled"
+                   @click="cancelNr">Submit Cancellation
+            </v-btn>
           </div>
         </div>
-      </div>
-    </div>
+      </v-card>
+    </v-dialog>
   </v-layout>
 </template>
 
@@ -118,13 +117,12 @@ export default {
     return {
       add_comment_display: '',
       cancel_comment_display: '',
+      showCancelCommentsModal: false,
     }
   },
   mounted() {
     //to clear the modal when it closes (using listener to catch all ways the modal is closed eg. built in 'x')
-    $('#add-cancel-comment-modal').on('hidden.bs.modal', () => {
-      this.cancel_comment_display = ''
-    })
+
   },
   computed: {
     acceptanceWillBeConditional() {
@@ -243,7 +241,7 @@ export default {
     cancelNr() {
       this.addNewComment(this.cancel_comment_display)
       this.$store.dispatch('cancelNr', 'CANCELLED')
-      this.toggleCancelModal('hide')
+      this.hideCancelModal()
     },
     claimNR() {
       this.$store.dispatch('updateNRState', 'INPROGRESS');
@@ -331,13 +329,24 @@ export default {
       this.$store.commit('setExpandedConflictID', null)
       this.is_making_decision = true
     },
-    toggleCancelModal(action) {
-      //possible values for action are 'show' || 'hide'
-      $('#add-cancel-comment-modal').modal(action)
+    showCancelModal() {
+      this.showCancelCommentsModal = true
+    },
+    hideCancelModal() {
+      this.showCancelCommentsModal = false
+      this.cancel_comment_display = ''
     }
-  },
-  destroyed() {
-    $('#add-cancel-comment-modal').off('hidden.bs.modal')
   },
 }
 </script>
+
+<style scoped>
+  .cancel-text-area {
+    margin-top: 10px;
+    padding-top: 0px;
+    padding-left: 8px;
+    padding-right: 8px;
+    background-color: white;
+    border: 1px solid var(--l-grey);
+  }
+</style>

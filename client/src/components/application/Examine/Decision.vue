@@ -2,13 +2,16 @@
 <template>
   <v-container v-if="$store.getters.decisionPanel.show"
                decision-container
-               fluid py-0 px-3
+               fluid
+               py-0
+               px-3
                :opacity-30="!is_making_decision">
     <v-layout wrap>
       <v-flex lg6
               fs-24
               grow
-              style="position: relative; top: 0px;">Decision</v-flex>
+              style="position: relative; top: 0px;">Decision
+      </v-flex>
       <v-layout justify-end>
         <div style="position: relative; top: 4px;">
           <v-checkbox class="pa-0 ma-0"
@@ -16,10 +19,12 @@
                       light
                       v-model="consent_required_by_user" />
         </div>
-        <div class="fs-15" style="position: relative; top: 4px">Consent </div>
+        <div class="fs-15" style="position: relative; top: 4px">Consent</div>
       </v-layout>
 
-      <v-flex lg12 style="position: relative; top: -11px"><v-divider /></v-flex>
+      <v-flex lg12>
+        <v-divider />
+      </v-flex>
 
       <v-flex d-flex
               style="position: relative; top: -8px;"
@@ -47,7 +52,6 @@
             <div class="fs-15 my-2 fw-600">Conditions</div>
             <div id="conditions-decision-select-field">
               <v-select :disabled="customer_message_override !== null || !is_making_decision"
-                        height="30px"
                         :items="conditionsInstructions"
                         :menu-props="menuProps"
                         browser-autocomplete="off"
@@ -65,7 +69,8 @@
                 <template v-slot:selection="{ item, index }">
                   <v-chip class="chip-class">{{ truncateChipText(item.phrase) }}
                     <v-icon @click.stop="removeChip('selected_conditions', index)"
-                            class="chip-close-icon">clear</v-icon>
+                            class="chip-close-icon">clear
+                    </v-icon>
                   </v-chip>
                 </template>
               </v-select>
@@ -75,9 +80,8 @@
           <!--CONFLICTS-->
           <v-flex lg12 id="conflicts-select-area">
             <div class="fs-15 mb-2 mt-4 fw-600">Conflicts</div>
-            <div id="conflicts-decision-select-field" >
+            <div id="conflicts-decision-select-field">
               <v-select :disabled="customer_message_override !== null || !is_making_decision"
-                        height="30px"
                         :items="conflictList"
                         :menu-props="menuProps"
                         browser-autocomplete="off"
@@ -94,7 +98,8 @@
                 <template v-slot:selection="{ item, index }">
                   <v-chip class="chip-class">{{ truncateChipText(item.text) }}
                     <v-icon @click.stop="removeChip('selected_conflicts', index, item.nrNumber)"
-                            class="chip-close-icon">clear</v-icon>
+                            class="chip-close-icon">clear
+                    </v-icon>
                   </v-chip>
                 </template>
                 <template v-slot:no-data>
@@ -115,7 +120,6 @@
             <div class="fs-15 mb-2 mt-4 fw-600">Macros</div>
             <div id="macros-decision-select-field">
               <v-select :disabled="customer_message_override !== null || !is_making_decision"
-                        height="30px"
                         :items="listDecisionReasons"
                         :menu-props="menuProps"
                         browser-autocomplete="off"
@@ -145,7 +149,6 @@
             <div class="fs-15 mt-4 fw-600">Trademarks</div>
             <div id="trademarks-decision-select-field">
               <v-select :disabled="customer_message_override !== null || !is_making_decision"
-                        height="30px"
                         :items="trademarks"
                         :menu-props="menuProps"
                         browser-autocomplete="off"
@@ -162,7 +165,8 @@
                 <template v-slot:selection="{ item, index }">
                   <v-chip class="chip-class">{{ truncateChipText(item.name) }}
                     <v-icon @click.stop="removeChip('selected_trademarks', index)"
-                            class="chip-close-icon">clear</v-icon>
+                            class="chip-close-icon">clear
+                    </v-icon>
                   </v-chip>
                 </template>
               </v-select>
@@ -181,13 +185,14 @@
               <div class="fs-15 fw-600 ma-0 pa-0" style="position:relative; top:12px">
                 Message To Requestor<span class="c-priority ml-1" v-if="customer_message_override">(Edited)</span>
               </div>
-                <v-btn flat
-                       :disabled="!is_making_decision"
-                       @click="showModal"
-                       class="ma-0 pa-0">
-                  <img src="/static/images/buttons/edit-button-icon.png">
-                </v-btn>
-            </div></v-flex>
+              <v-btn flat
+                     :disabled="!is_making_decision"
+                     @click="showModal"
+                     class="ma-0 pa-0">
+                <img src="/static/images/buttons/edit-button-icon.png">
+              </v-btn>
+            </div>
+          </v-flex>
           <v-flex textarea-outer-v-flex mt-2>
             <v-textarea class="fs-14 pa-0 ma-0 decision-msg-textarea"
                         readonly
@@ -207,7 +212,8 @@
                        class="ma-0 pa-0"
                        :disabled="!customer_message_override || !is_making_decision"
                        @click="customer_message_override = null"
-                       v-if="customer_message_override">Clear Edits</v-btn>
+                       v-if="customer_message_override">Clear Edits
+                </v-btn>
               </div>
             </div>
 
@@ -257,11 +263,14 @@
               <div :class="editTextareaProps.class">{{ editTextareaProps.count }}</div>
             </v-flex>
           </v-layout>
-          <v-layout justify-start row mt-4 pl-3>
-            <v-flex text-right c-link>
+          <v-layout justify-end row mt-4 pl-3>
+            <v-flex shrink c-link>
               <v-btn id="message-cancel-button"
                      flat
-                     @click="hideModal">Cancel</v-btn>
+                     @click="hideModal">Cancel
+              </v-btn>
+            </v-flex>
+            <v-flex shrink c-link>
               <v-btn id="message-save-button"
                      flat
                      :disabled="!messageEdited"
@@ -278,7 +287,7 @@
 </template>
 
 <script>
-/* eslint-disable */
+  /* eslint-disable */
   import Vue from 'vue'
   import { mapGetters, mapState } from 'vuex'
 
@@ -392,7 +401,7 @@
           }
         }
         else {
-          if ( this.selected_conflicts && Array.isArray(this.selected_conflicts)) {
+          if ( this.selected_conflicts && Array.isArray(this.selected_conflicts) ) {
             for ( let i = 0; i < this.selected_conflicts.length; i++ ) {
               // check whether "Consent Required" condition is set - if so, set message re. "Requires consent from..."
               if ( this.consent_required_by_user ) {
@@ -406,7 +415,7 @@
           }
         }
         // CONDITIONS
-        if ( this.selected_conditions && Array.isArray(this.selected_conditions)) {
+        if ( this.selected_conditions && Array.isArray(this.selected_conditions) ) {
           for ( let i = 0; i < this.selected_conditions.length; i++ ) {
             // if this is the "Consent Required" condition, and there are conflicts, do not set
             // "Consent Required" messgage, because it is redundant with messaging re. conflicts.
@@ -419,14 +428,14 @@
           }
         }
         // TRADEMARKS
-        if ( this.selected_trademarks && Array.isArray(this.selected_trademarks)) {
+        if ( this.selected_trademarks && Array.isArray(this.selected_trademarks) ) {
           for ( let i = 0; i < this.selected_trademarks.length; i++ ) {
             retval.push(
               'Registered Trademark: ' + this.selected_trademarks[i].name + ' - Application #' + this.selected_trademarks[i].application_number)
           }
         }
         // GENERIC DECISION REASONS
-        if (this.selected_reasons && Array.isArray(this.selected_reasons)) {
+        if ( this.selected_reasons && Array.isArray(this.selected_reasons) ) {
           for ( let i = 0; i < this.selected_reasons.length; i++ ) {
             retval.push(this.selected_reasons[i].reason)
           }
@@ -440,10 +449,10 @@
         else {
           // otherwise build out formatted text with line breaks...
           let retval = ''
-          if (this.customer_message && Array.isArray(this.customer_message))
-          for ( let i = 0; i < this.customer_message.length; i++ ) {
-            retval += this.customer_message[i] + '\n\n'
-          }
+          if ( this.customer_message && Array.isArray(this.customer_message) )
+            for ( let i = 0; i < this.customer_message.length; i++ ) {
+              retval += this.customer_message[i] + '\n\n'
+            }
           return retval
         }
       },
@@ -531,7 +540,7 @@
     },
     watch: {
       nr_status(newVal, oldVal) {
-        if (newVal === 'DRAFT' && oldVal === 'INPROGRESS') {
+        if ( newVal === 'DRAFT' && oldVal === 'INPROGRESS' ) {
           this.is_making_decision = false
         }
       }
@@ -545,7 +554,8 @@
       conditionsLabel(obj) {
         if ( obj.display_string !== undefined ) {
           return obj.display_string
-        } else {
+        }
+        else {
           return obj.phrase + ' - ' + obj.instructions
         }
       },
@@ -554,7 +564,7 @@
       },
       nameAccept() {
         this.$store.commit('decision_made', 'APPROVED')
-        this.$nextTick(function() { this.nameAcceptReject() })
+        this.$nextTick(function () { this.nameAcceptReject() })
       },
       nameAcceptReject() {
         let { decision_made, currentNameObj, selected_conflicts } = this
@@ -564,20 +574,22 @@
           // conflicts (Issue #767).
           // Do NOT clear the conflicts if the "Consent Required" condition is also set - then it's
           // intentional.
-          if (this.acceptanceWillBeConditional) {
+          if ( this.acceptanceWillBeConditional ) {
             currentNameObj.state = 'CONDITION'
-          } else {
+          }
+          else {
             currentNameObj.state = 'APPROVED'
             this.selected_conflicts = []
           }
-        } else {
+        }
+        else {
           currentNameObj.state = 'REJECTED'
         }
-        if (selected_conflicts && selected_conflicts.length > 0) {
+        if ( selected_conflicts && selected_conflicts.length > 0 ) {
           //populate the currentNameObj[1, 2 and 3] with selected_conflicts[0, 1, and 2]
           //as well as currentNameObj[1, 2, and 3]_num with selected_conflicts[0, 1 and 2].nrNumber
           for ( let n of [0, 1, 2] ) {
-            if ( !selected_conflicts[n]  ) break
+            if ( !selected_conflicts[n] ) break
             currentNameObj[`conflict${ n + 1 }`] = selected_conflicts[n].text
             currentNameObj[`conflict${ n + 1 }_num`] = selected_conflicts[n].nrNumber
           }
@@ -594,14 +606,14 @@
       },
       removeChip(type, index, nrNumber) {
         //use spread syntax to create a new array from the existing selected(Trademarks, Conditions, Reasons, Conflicts)
-      //so as not to simply create a reference to the existing selected(listType) data.
-        let selectedCopy = [ ...this[type] ]
+        //so as not to simply create a reference to the existing selected(listType) data.
+        let selectedCopy = [...this[type]]
         selectedCopy.splice(index, 1)
-      //and then assign this new value to replace the selected(listType) in the component data.  Do this as opposed
-      //to splicing the list in data directly because Vue will not react to such a change in a guaranteed immediate way
+        //and then assign this new value to replace the selected(listType) in the component data.  Do this as opposed
+        //to splicing the list in data directly because Vue will not react to such a change in a guaranteed immediate way
         this[type] = selectedCopy
 
-        if (nrNumber) {
+        if ( nrNumber ) {
           this.$store.dispatch('removeComparedNR', nrNumber)
         }
       },
@@ -619,7 +631,7 @@
         return obj.name + ' - ' + obj.application_number
       },
       truncateChipText(text) {
-        return text.length > 34 ? `${text.slice(0,34)}...` : text
+        return text.length > 34 ? `${ text.slice(0, 34) }...` : text
       },
     },
   }

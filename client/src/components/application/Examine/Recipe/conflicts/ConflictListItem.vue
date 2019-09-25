@@ -26,7 +26,7 @@
       <v-flex width-5
               cursor-pointer
               text-left
-              v-if="child.jurisdiction">{{ child.jurisdiction }}
+              v-if="child.jurisdiction">{{ $store.getters.getShortJurisdiction(child.jurisdiction) }}
       </v-flex>
       <v-flex width-15
               cursor-pointer

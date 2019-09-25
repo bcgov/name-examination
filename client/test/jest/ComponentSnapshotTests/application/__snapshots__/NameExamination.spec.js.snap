@@ -10,6 +10,8 @@ exports[`NameExamination.vue renders a NameExamination view 1`] = `
    
   <!---->
    
+  <!---->
+   
   <v-container-stub
     fluid=""
     name-exam-container=""
