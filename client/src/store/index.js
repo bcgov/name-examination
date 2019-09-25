@@ -835,9 +835,10 @@ export const actions = {
           commit('setTransactionsRequestStatus', 'success')
           resolve()
         })
-        .catch( error => {
-          commit('setTransactionsRequestStatus', 'failed')
-          reject()
+        .catch( () => {
+          commit('setTransactionsData', 'No data')
+          commit('setTransactionsRequestStatus', 'success')
+          resolve()
         })
     })
   }

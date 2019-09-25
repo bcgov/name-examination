@@ -24,7 +24,7 @@
     <!--Body/Table/Spinner portion-->
     <v-layout :class="maximized ? 'main-panel-lg' : 'main-panel-sm'" id="trans-main-panel">
       <v-layout v-if="transactionsRequestStatus === 'success'">
-        <v-flex>
+        <v-flex v-if="sortedTransactionData">
           <v-data-table :headers="headers"
                         :pagination.sync="pagination"
                         :items="sortedTransactionData"
@@ -52,9 +52,11 @@
                 </th>
               </tr>
             </template>
+
             <template v-slot:items="{item, index}">
               <tr :key="'trans-row'+index" :class="expand === index ? 'bg-xl-blue' : ''">
                 <td>{{ item.user_action ? item.user_action : item.action }}</td>
+                <td>{{ item.stateCd }}</td>
                 <td>{{ item.user_name }}</td>
                 <td :colspan="item.showJSONData ? 1 : 2">{{ parseDate(item.eventDate) }}</td>
                 <td v-if="item.showJSONData">
@@ -77,6 +79,7 @@
             </template>
           </v-data-table>
         </v-flex>
+        <v-flex v-else pa-5>No history to display.</v-flex>
       </v-layout>
       <v-layout pa-5 v-if="transactionsRequestStatus === 'failed'">
         <v-flex pa-5>Network Error. Something went wrong.</v-flex>
@@ -103,9 +106,10 @@
       return {
         dragged: false,
         headers: [
-          { text: 'Transaction', style: { width: '50%' } },
-          { text: 'Username', style: { width: '25%' } },
-          { text: 'Date & Time', style: { width: '10%' } },
+          { text: 'Transaction', style: { width: '45%' } },
+          { text: 'State', style: { width: '15%' } },
+          { text: 'Username', style: { width: '15%' } },
+          { text: 'Date & Time', style: { width: '20%' } },
           { text: 'Expand', style: { width:'5%' } },
         ],
         timeStamp: '',
@@ -177,6 +181,9 @@
         }
       },
       sortedTransactionData() {
+        if (typeof this.transactionsData === 'string') {
+          return null
+        }
         if (Array.isArray(this.transactionsData)) {
           let output = this.transactionsData.sort((a,b) => {
             let A = a.id
@@ -207,11 +214,13 @@
         }
       },
       sortedTransactionData(newData) {
-        //restores the scroll offset when switching between tabs
-        if ( newData.length > 0 && this.savedScrollPosition !== 0 ) {
-          this.$nextTick(function () {
-            this.$el.querySelector('#trans-main-panel').scrollTo({ top: this.savedScrollPosition })
-          })
+        if (Array.isArray(newData)) {
+          //restores the scroll offset when switching between tabs
+          if (newData.length > 0 && this.savedScrollPosition !== 0) {
+            this.$nextTick(function () {
+              this.$el.querySelector('#trans-main-panel').scrollTo({ top: this.savedScrollPosition })
+            })
+          }
         }
       }
     },

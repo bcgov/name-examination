@@ -89,6 +89,7 @@ instance.interceptors.response.use(function (response) {
     $(error.config.spinner).addClass('hidden')
   }
 
+  if (error.request && error.request.url.includes('/api/v1/events/')) return Promise.reject(error)
 
   store.dispatch('checkError', error)
   return Promise.reject(error)
