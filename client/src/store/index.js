@@ -102,11 +102,11 @@ export const actions = {
     const myToken = sessionStorage.getItem( 'KEYCLOAK_TOKEN' )
     const url = '/api/v1/requests/' + nrNumber
     dispatch( 'checkToken' )
-    return axios.get( url, { headers: { Authorization: `Bearer ${ myToken }` } } )
-                .then( response => {
-                  commit( 'loadCompanyInfo', response.data )
-                } )
-                .catch( error => console.log( 'ERROR: ' + error ) )
+    axios.get( url, { headers: { Authorization: `Bearer ${ myToken }` } } )
+      .then( response => {
+        commit( 'loadCompanyInfo', response.data )
+      } )
+      .catch( error => console.log( 'ERROR: ' + error ) )
   },
   updateNRState({ commit, state, dispatch }, nrState) {
     const myToken = sessionStorage.getItem( 'KEYCLOAK_TOKEN' )
@@ -119,6 +119,7 @@ export const actions = {
   },
   cancelNr({ commit, state, dispatch }, nrState) {
     dispatch('resetExaminationArea')
+
     commit( 'is_making_decision', false )
     const myToken = sessionStorage.getItem( 'KEYCLOAK_TOKEN' )
     const url = '/api/v1/requests/' + state.compInfo.nrNumber
@@ -145,7 +146,7 @@ export const actions = {
            }
            // was this a conditional accept? If so complete the NR
            else if ( state.currentNameObj.state == 'CONDITION' ) {
-             dispatch( 'updateNRState', 'CONDITIONAL' )
+             dispatch('updateNRState', 'CONDITIONAL')
            }
            // This was a reject? If so check whether there are any more names
            else {
@@ -1476,6 +1477,15 @@ export const mutations = {
     state.compInfo.nrNumber = postgresData.nameRequest
   },
   loadCompanyInfo(state, dbcompanyInfo) {
+    if (state.nrData && state.nrData.consent_dt) {
+      state.nrData.consent_dt = null
+    }
+    if (state.nrData && state.nrData.consentFlag) {
+      state.nrData.consentFlag = null
+    }
+    if (state.consentDateForEdit) {
+      state.consentDateForEdit = null
+    }
     if ( !dbcompanyInfo || !dbcompanyInfo.names ) return
     state.nrData = dbcompanyInfo
 
@@ -1588,6 +1598,8 @@ export const mutations = {
       }
     }
 
+
+
     //if no currentName selected choose 1st
     if ( state.currentName == null ) {
 
@@ -1597,6 +1609,11 @@ export const mutations = {
     state.currentState = dbcompanyInfo.state
     state.previousStateCd = dbcompanyInfo.previousStateCd
     state.compInfo.requestType = dbcompanyInfo.requestTypeCd
+
+    if (dbcompanyInfo.consent_dt && moment(dbcompanyInfo.consent_dt).isValid()) {
+      let dateString = new moment(dbcompanyInfo.consent_dt).format('YYYY-MM-DD')
+      state.consentDateForEdit = dateString
+    }
 
     // if the current state is not INPROGRESS, HOLD, or DRAFT clear any existing name record in currentNameObj
     if ( !['INPROGRESS', 'HOLD', 'DRAFT'].includes( state.currentState ) ) {
@@ -1657,11 +1674,8 @@ export const mutations = {
     state.priority = dbcompanyInfo.priorityCd
     //state.reservationCount = dbcompanyInfo.reservationCount
 
-    if ( dbcompanyInfo.expirationDate && moment( dbcompanyInfo.expirationDate )
-    .isValid() )
-    {
-      state.expiryDate = moment( dbcompanyInfo.expirationDate )
-      .format( 'YYYY-MM-DD' )
+    if ( dbcompanyInfo.expirationDate && moment( dbcompanyInfo.expirationDate ).isValid() ) {
+      state.expiryDate = moment( dbcompanyInfo.expirationDate ).format( 'YYYY-MM-DD' )
     }
     else {
       state.expiryDate = null
@@ -1842,12 +1856,23 @@ export const mutations = {
     //state.reservationCount = dbcompanyInfo.reservationCount
     state.nrData.lastUpdate = state.lastUpdate
 
-    if ( state.expiryDate ) {
-      state.nrData.expirationDate =
-        new moment( state.expiryDate, 'YYYY-MM-DD' ).utc().format('ddd, D MMM YYYY HH:mm:ss [GMT]' )
+    if (state.consentDateForEdit) {
+      let date = new moment(state.consentDateForEdit, 'YYYY-MM-DD').format('ddd, D MMM YYYY')
+      date = date + ' 07:00:00 GMT'
+      state.nrData.consent_dt = date
     }
-    else {
-      state.nrData.expirationDate = state.expiryDate
+
+    if (state.expiryDateForEdit) {
+      let date = new moment(state.expiryDateForEdit, 'YYYY-MM-DD').format('ddd, D MMM YYYY')
+      date = date + ' 07:00:00 GMT'
+      state.nrData.expirationDate = date
+    }
+    else if ( state.expiryDate ) {
+      let date = new moment(state.expiryDate, 'YYYY-MM-DD').format('ddd, D MMM YYYY')
+      date = date + ' 07:00:00 GMT'
+      state.nrData.expirationDate = date
+    } else {
+      state.nrData.expirationDate = null
     }
 
     state.nrData.submittedDate =
@@ -2242,6 +2267,17 @@ export const mutations = {
   setSelectedConflictID: (state, payload) => state.selectedConflictID = payload,
   setExpandedConflictID: (state, payload) => state.expandedConflictID = payload,
   setOpenBucket: (state, payload) => state.openBucket = payload,
+  setConsentDate: (state, payload) => state.consentDateForEdit = payload,
+  setConsentFlag(state, payload) {
+    state.nrData.consentFlag = payload
+    if (payload === 'R') {
+      let date = new moment().format('YYYY-MM-DD')
+      state.consentDateForEdit = date
+      return
+    }
+    state.nrData.consent_dt = null
+    state.consentDateForEdit = null
+  },
   setConflictsReturnedStatus: (state, payload) => state.conflictsReturnedStatus = payload,
   setComparedConflicts: (state, payload) => state.comparedConflicts = payload,
   setConflictsIndex: (state, payload) => state.conflictsIndex = payload,
@@ -2264,6 +2300,11 @@ export const mutations = {
       comparedConflictsCopy.splice(index, 1)
       state.comparedConflicts = comparedConflictsCopy
     }
+  },
+  resetConsent(state) {
+    state.nrData.consent_dt = null
+    state.nrData.consentFlag = null
+    state.consentDateForEdit = null
   },
   setCustomerMessageOverride: (state, payload) => state.customerMessageOverride = payload,
   setSelectedConflictNRs: (state, payload) => state.selectedConflictNRs = payload,
@@ -2317,6 +2358,7 @@ export const state = {
   email: null,
   errorJSON: null,
   adminURL: null,
+  consentDateForEdit: null,
 
   //Interface settings
   currentChoice: null, // CURRENT NAME BEING EXAMINED (choice number)

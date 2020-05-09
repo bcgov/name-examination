@@ -2800,6 +2800,11 @@ nav .form-control {
 
 /* FORM VALIDATION */
 
+.form-group-error {
+  background-color: unset !important;
+  color: white !important
+}
+
 .form-group-error h3 {
   color: #cc0000;
 }
