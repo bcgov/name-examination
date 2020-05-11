@@ -135,18 +135,23 @@ export const actions = {
          .catch( error => console.log( 'ERROR: ' + error ) )
   },
   nameAcceptReject({ commit, dispatch, state }) {
+    letsavedName = state.currentName
     const myToken = sessionStorage.getItem( 'KEYCLOAK_TOKEN' )
     const url = '/api/v1/requests/' + state.compInfo.nrNumber + '/names/' + state.currentChoice
     axios.put( url, state.currentNameObj, { headers: { Authorization: `Bearer ${ myToken }` } } )
          .then( function (response) {
            dispatch( 'resetExaminationArea' )
+           if (['APPROVED', 'CONDITION'].includes(state.currentNameObj.state)) {
+             commit('setWordClassificationModalName', savedName)
+             commit('toggleWordClassificationModal', true)
+           }
            // Was this an accept? If so complete the NR
-           if ( state.currentNameObj.state == 'APPROVED' ) {
+           if (state.currentNameObj.state == 'APPROVED') {
              dispatch( 'updateNRState', 'APPROVED' )
            }
            // was this a conditional accept? If so complete the NR
            else if ( state.currentNameObj.state == 'CONDITION' ) {
-             dispatch('updateNRState', 'CONDITIONAL')
+             dispatch( 'updateNRState', 'CONDITIONAL' )
            }
            // This was a reject? If so check whether there are any more names
            else {
@@ -2348,6 +2353,8 @@ export const mutations = {
       sortDescending: true,
     }
   },
+  toggleWordClassificationModal: (state, payload) => state.wordClassificationModalVisible = payload,
+  setWordClassificationModalName: (state, payload) => state.wordClassificationModalName = payload,
 }
 
 export const state = {
@@ -2577,6 +2584,8 @@ export const state = {
     sortDescending: true,
   },
   conflictsPreserveMessage: false,
+  wordClassificationModalVisible: false,
+  wordClassificationModalName: '',
 }
 
 export default new Vuex.Store({ actions, getters, mutations, state, })
