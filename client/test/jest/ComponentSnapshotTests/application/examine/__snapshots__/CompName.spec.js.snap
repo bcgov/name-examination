@@ -20,7 +20,7 @@ exports[`CompName.vue  renders a CompName component 1`] = `
     >
       <v-layout-stub
         align-start=""
-        class="name-option"
+        class=" 0"
         tag="div"
         wrap=""
       >
@@ -58,7 +58,7 @@ exports[`CompName.vue  renders a CompName component 1`] = `
        
       <v-layout-stub
         align-start=""
-        class="name-option"
+        class=" 0"
         tag="div"
         wrap=""
       >
@@ -96,7 +96,7 @@ exports[`CompName.vue  renders a CompName component 1`] = `
        
       <v-layout-stub
         align-start=""
-        class="name-option"
+        class=" 0"
         tag="div"
         wrap=""
       >
