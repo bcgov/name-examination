@@ -96,11 +96,11 @@
                 fs-15>
           <v-layout column>
             <v-flex><b>Submit:</b> {{ formatDate(submittedDate) }}</v-flex>
-            <template v-if="$store.getters.decision_made">
-              <v-flex :class="!$store.getters.decision_made ? 'c-grey' : ''">
+            <!-- <template v-if="$store.getters.decision_made">
+             <v-flex :class="!$store.getters.decision_made ? 'c-grey' : ''">
                 <b>Decision:</b> {{ $store.getters.decision_made ? $store.getters.decision_made : 'n/a' }}
               </v-flex>
-            </template>
+            </template> -->
             <template v-if="corpNum">
               <v-flex :class="!corpNum ? 'grey--text' : ''">
                 <b>Corp Num:</b> {{ corpNum ? corpNum : 'n/a' }}

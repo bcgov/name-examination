@@ -2831,4 +2831,9 @@ nav .form-control {
   text-decoration: none;
 }
 
+.word-classification-modal {
+  background-color: white;
+  padding: 25px 40px 25px 40px !important;
+}
+
 /* END gov header tweaks */

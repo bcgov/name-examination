@@ -51,7 +51,7 @@ import StdHeader from "./application/sections/StdHeader"
 import moment from 'moment'
 
 export default {
-  components: {StdHeader},
+  components: { StdHeader },
   name: 'LandingPage',
     watch: {
       auth: function (val) {
