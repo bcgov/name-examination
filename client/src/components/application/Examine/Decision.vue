@@ -222,13 +222,14 @@
       </v-flex>
       <v-flex style="position: relative; top: 20px;">
         <div class="decision-flex-holder top-margin-12">
+          <!--both the Approve and Quick Approve buttons show shortkey 'alt a'. Since these elements are
+          always simultaneously displayed and never separately, only implementing the 'alt a' shortkey logic once.  See
+          CompName.vue for this.-->
           <v-btn :disabled="!is_making_decision"
                  @click="nameAccept"
-                 @shortkey="nameAccept"
                  class="mx-1 pa-0 action-button"
                  flat
-                 id="decision-approve-button"
-                 v-shortkey="['alt', 'a']">
+                 id="decision-approve-button">
             <img id="conditional-accept-button"
                  v-if="acceptanceWillBeConditional"
                  src="/static/images/buttons/cond-approve-name.png" />
