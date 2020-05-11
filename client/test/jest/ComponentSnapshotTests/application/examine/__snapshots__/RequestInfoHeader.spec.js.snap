@@ -18,7 +18,7 @@ exports[`RequestInfoHeader.vue renders a RequestInfoHeader component 1`] = `
       tag="div"
     >
       <v-flex-stub
-        class="nr-number,text-left,mx-4,dk-grey"
+        class=" 0 1 2 3"
         shrink=""
         tag="div"
       >
