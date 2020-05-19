@@ -294,10 +294,21 @@
 
   export default {
     name: "Decision",
+    mounted() {
+      this.$root.$on('name-accept-reject', () => {
+        this.$store.commit('decision_made', 'APPROVED')
+        this.forceConditional = true
+        this.nameAcceptReject()
+        this.$nextTick(function() {
+          this.forceConditional = false
+        })
+      })
+    },
     data() {
       return {
         editTextarea: null,
         editMessageModalVisible: false,
+        forceConditional: false,
         menuProps: {
           auto: false,
           closeOnContentClick: true,
@@ -575,7 +586,7 @@
           // conflicts (Issue #767).
           // Do NOT clear the conflicts if the "Consent Required" condition is also set - then it's
           // intentional.
-          if ( this.acceptanceWillBeConditional ) {
+          if ( this.acceptanceWillBeConditional || this.forceConditional) {
             currentNameObj.state = 'CONDITION'
           }
           else {

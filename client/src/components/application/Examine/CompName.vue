@@ -432,13 +432,17 @@
         this.runManualRecipe()
       },
       quickApprove() {
-        this.currentNameObj.decision_text = ''
-
+        if (this.$store.state.consentRequiredByUser) {
+          this.$root.$emit('name-accept-reject')
+          return
+        }
+        if (!this.$store.state.consentRequiredByUser) {
+          this.$store.commit('setSelectedConflicts', [])
+        }
         this.decision_made = 'APPROVED'
         this.nameAcceptReject()
       },
       rejectDescriptive() {
-
         this.currentNameObj.decision_text = 'Require descriptive second word or phrase * E.G. ' +
           'Construction, Gardening, Investments, Holdings, Etc.'
         this.decision_made = 'REJECTED'

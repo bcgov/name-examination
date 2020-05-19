@@ -574,5 +574,14 @@
 		"LEGACY_CD": "TMY",
 		"ADDITIONAL_INFO": "",
 		"SOURCE_APPLICATION": ""
-	}
+	},
+  {
+    "value": "BC",
+    "SHORT_DESC": "Benefit Company",
+    "text": "Benefit Company - Incorporation",
+    "CLASS_TYPE_CD": "CORP",
+    "LEGACY_CD": "BC",
+    "ADDITIONAL_INFO": "",
+    "SOURCE_APPLICATION": "COLIN"
+  }
 ]

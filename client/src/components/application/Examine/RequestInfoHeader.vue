@@ -19,7 +19,6 @@
             <v-flex mt-2>
               <v-select :items="requestType_options"
                         class="jurisdiction-dropdown"
-                        attach
                         flat
                         attach
                         dense
@@ -34,7 +33,6 @@
                           attach
                           class="jurisdiction-dropdown"
                           flat
-                          attach
                           dense
                           @input="$v.jurisdiction.$touch()" />
               </v-flex>
@@ -75,6 +73,7 @@
                       class="priority fs-18">star</v-icon>Priority</v-flex>
             <v-flex id="div1"><b>Status:</b><span id="nrStatusText">
               {{ nr_status }}{{ additionalStatus }}</span></v-flex>
+
             <v-flex><b>Examiner:</b> {{ examiner }}</v-flex>
             <v-flex v-shortkey="{toggle:['alt','o'], save:['alt','v']}"
                     @shortkey="commentsShortkey">
@@ -116,22 +115,22 @@
                   {{ expiryDate }}
                 </v-flex>
                 <v-flex v-else>
-                  <v-layout column :class="{'form-group-error': $v.expiryDateForEdit.$error}">
+                  <v-layout column>
                     <v-layout wrap>
                       <v-flex pt-1 lg3><b>Expiry:</b></v-flex>
                       <v-flex lg7><v-text-field v-model="expiryDateForEdit"
                                                 class="name-choice-input"
                                                 placeholder="Expiry Date"
                                                 autocomplete="off"
-                                                :onchange="$v.expiryDateForEdit.$touch()" /></v-flex>
+                                                @input="$v.expiryDateForEdit.$touch()" /></v-flex>
                       <v-flex lg3 />
                       <v-flex lg8 fs-14 ft-ital pl-3>YYYY-MM-DD</v-flex>
                     </v-layout >
                     <v-flex v-if="!$v.expiryDateForEdit.required">Expiry Date is required.</v-flex>
-                    <v-flex class="error c-priority" v-else-if="!$v.expiryDateForEdit.isActualDate">
-                      This is not an actual date. Date must be in format YYYY-MM-DD.
+                    <v-flex class="c-priority" v-if="!$v.expiryDateForEdit.isActualDate">
+                      This is not an actual date.
                     </v-flex>
-                    <v-flex class="error c-priority" v-if="!$v.expiryDateForEdit.isValidFormat" >
+                    <v-flex class="c-priority" v-if="!$v.expiryDateForEdit.isValidFormat" >
                       Date must be in format YYYY-MM-DD.
                     </v-flex >
                     <v-flex class="c-priority" v-if="!$v.expiryDateForEdit.isFutureDate">
@@ -145,8 +144,41 @@
             <v-flex :class="!consumptionDate ? 'grey--text' : ''">
               <b>Consumed:</b> {{ consumptionDate ? consumptionDate : 'n/a' }}
             </v-flex>
-            <template v-if="1===2">
-              <v-flex grey--text>Consent: n/a</v-flex>
+            <template v-if="nr_status === 'CONDITIONAL' ">
+              <v-flex>
+                <v-layout column v-if="!is_editing">
+                  <v-flex>
+                    <b>Consent: </b>{{ consentText }}
+                  </v-flex>
+                </v-layout>
+                <v-layout wrap v-if="is_editing">
+                  <v-flex pt-1 lg3><b>Consent:</b></v-flex>
+                  <v-flex lg7><v-select v-model="consentFlag"
+                                        attach
+                                        :items="consentOptions"
+                                        style="max-width: 125px"
+                                        dense
+                                        class="name-choice-input"
+                                        autocomplete="off" /></v-flex>
+                  <template v-if="consent_date">
+                    <v-flex pt-1 lg3><b>Consent Date:</b></v-flex>
+                    <v-flex lg7><v-text-field v-model="consent_date"
+                                              class="name-choice-input"
+                                              placeholder="Consent Date"
+                                              autocomplete="off"
+                                              :onchange="$v.consent_date.$touch()" /></v-flex>
+                    <v-flex lg3 />
+                    <v-flex lg8 fs-14 ft-ital pl-3>YYYY-MM-DD</v-flex>
+                    <v-flex v-if="!$v.consent_date.required">Consent Date is required.</v-flex>
+                    <v-flex class="c-priority" v-if="!$v.consent_date.isActualDate">
+                      This is not an actual date.
+                    </v-flex>
+                    <v-flex class="c-priority" v-if="!$v.consent_date.isValidFormat" >
+                      Date must be in format YYYY-MM-DD
+                    </v-flex >
+                  </template>
+                </v-layout>
+              </v-flex>
             </template>
           </v-layout>
         </v-flex>
@@ -209,8 +241,7 @@
           <v-layout column>
             <v-flex mt-4 v-if="submitCount > 0"><b>Submit Count: </b>{{submitCount}}</v-flex>
             <template v-if="prev_nr_required">
-              <v-layout column v-if="is_editing && !is_closed"
-                        :class="{'form-group-error': $v.previousNr.$error}">
+              <v-layout column v-if="is_editing && !is_closed">
                 <v-flex mt-4 fw-600>Previous NR</v-flex>
                 <v-flex><v-text-field class="name-choice-input"
                                       v-model="previousNr"
@@ -225,8 +256,7 @@
 
             <template v-if="corp_num_required">
               <v-layout v-if="is_editing && !is_closed"
-                        column
-                        :class="{'form-group-error': $v.corpNum.$error}">
+                        column>
                 <v-flex mt-4 fw-600>Related Corp #:</v-flex>
                 <v-flex>
                   <v-text-field class="name-choice-input"
@@ -319,14 +349,14 @@
 <script>
 /* eslint-disable */
   import ActionButtons from './ActionButtons'
+  import axios from '@/axios-auth'
   import ClientInfoHeader from '@/components/application/Examine/client/ClientInfoHeader.vue'
   import InfoHeaderPopup from './InfoHeaderPopup'
+  import moment from 'moment'
   import NWPTA from './nwpta/nwpta'
+  import Spinner from '../spinner'
   import { isActualDate, isFutureDate, isNotBlankSpace, isValidFormat } from "../../../../static/js/validators"
   import { required } from 'vuelidate/lib/validators'
-  import axios from '@/axios-auth'
-  import moment from 'moment'
-import Spinner from '../spinner'
 
   export default {
     name: 'RequestInfoHeader',
@@ -338,6 +368,12 @@ import Spinner from '../spinner'
     data() {
       return {
         additional_info_template: null,
+        consentOptions: [
+          {text: 'Required', value: 'Y'},
+          {text: 'Received', value: 'R'},
+          {text: 'Waived', value: 'N'},
+          {text: '-', value: null}
+        ],
         corp_num_required: false,
         is_cp_nwpta_type: null,
         is_lp_nwpta_type: null,
@@ -370,6 +406,34 @@ import Spinner from '../spinner'
         if (this.is_my_current_nr) return true
         if (this.$store.getters.userHasEditRole && ['DRAFT', 'HOLD', 'REJECTED', 'APPROVED', 'CONDITIONAL'].indexOf(this.nr_status) > -1) return true
         return false
+      },
+      consent_date: {
+        get() {
+          return this.$store.state.consentDateForEdit
+        },
+        set (value) {
+          this.$store.commit('setConsentDate', value)
+        }
+      },
+      consentFlag: {
+        get() {
+          return this.$store.state.nrData.consentFlag ? this.$store.state.nrData.consentFlag : null
+        },
+        set (value) {
+          this.$store.commit('setConsentFlag', value)
+        }
+      },
+      consentText() {
+        if (this.consentFlag === 'R') {
+          return this.consent_date
+        }
+        if (this.consentFlag === 'N') {
+          return 'Waived'
+        }
+        if (this.consentFlag === 'Y') {
+          return 'Required'
+        }
+        return '—'
       },
       compName1: {
         get() {
@@ -852,7 +916,6 @@ import Spinner from '../spinner'
           },
         },
       }
-
       // if compName3 exists then compName2 must exist
       if (this.compName3.name && this.compName3.name.replace(/\s/g, '')) {
         validations.compName2 = {
@@ -918,6 +981,18 @@ import Spinner from '../spinner'
           },
         }
       }
+      if (this.consent_date) {
+        validations.consent_date = {
+          required,
+          isActualDate(value) {
+            return isActualDate(value)
+          },
+          isValidFormat(value) {
+            return isValidFormat(value)
+          }
+        }
+      }
+
 
       // validate Previous NR # - not required, but if entered it must be validated
       if (this.prev_nr_required && !this.is_closed) {
@@ -987,7 +1062,6 @@ import Spinner from '../spinner'
 
   .shortkey {
     text-decoration: underline;
-
   }
 
   .nr-number {

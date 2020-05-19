@@ -313,6 +313,8 @@ export default {
         this.$store.state.previousStateCd = 'DRAFT';
         this.$store.state.is_editing = true;
       }
+      this.$store.state.nrData.consent_dt = null
+      this.$store.commit('resetConsent')
 
       this.$store.commit('furnished', 'N');
 
