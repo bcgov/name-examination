@@ -578,9 +578,63 @@
   {
     "value": "BC",
     "SHORT_DESC": "Benefit Company",
-    "text": "Benefit Company - Incorporation",
+    "text": "BC Benefit Company - Incorporation",
     "CLASS_TYPE_CD": "CORP",
     "LEGACY_CD": "BC",
+    "ADDITIONAL_INFO": "",
+    "SOURCE_APPLICATION": "COLIN"
+  },
+  {
+    "value": "BEAM",
+    "SHORT_DESC": "Benefit Company",
+    "text": "BC Benefit Company - Amalgamation",
+    "CLASS_TYPE_CD": "CORP",
+    "LEGACY_CD": "BEAM",
+    "ADDITIONAL_INFO": "",
+    "SOURCE_APPLICATION": "COLIN"
+  },
+  {
+    "value": "BEC",
+    "SHORT_DESC": "Benefit Company",
+    "text": "BC Benefit Company - Change of Name",
+    "CLASS_TYPE_CD": "CORP",
+    "LEGACY_CD": "BEC",
+    "ADDITIONAL_INFO": "",
+    "SOURCE_APPLICATION": "COLIN"
+  },
+  {
+    "value": "BECT",
+    "SHORT_DESC": "Benefit Company",
+    "text": "BC Benefit Company - Continuation In",
+    "CLASS_TYPE_CD": "CORP",
+    "LEGACY_CD": "BECT",
+    "ADDITIONAL_INFO": "",
+    "SOURCE_APPLICATION": "COLIN"
+  },
+  {
+    "value": "BERE",
+    "SHORT_DESC": "Benefit Company",
+    "text": "BC Benefit Company - Restoration",
+    "CLASS_TYPE_CD": "CORP",
+    "LEGACY_CD": "BERE",
+    "ADDITIONAL_INFO": "",
+    "SOURCE_APPLICATION": "COLIN"
+  },
+  {
+    "value": "BECV",
+    "SHORT_DESC": "Benefit Company",
+    "text": "BC Benefit Company - BC to Benefit Conversion",
+    "CLASS_TYPE_CD": "CORP",
+    "LEGACY_CD": "BECV",
+    "ADDITIONAL_INFO": "",
+    "SOURCE_APPLICATION": "COLIN"
+  },
+  {
+    "value": "BECR",
+    "SHORT_DESC": "Benefit Company",
+    "text": "BC Benefit Company - Benefit to BC Conversion",
+    "CLASS_TYPE_CD": "CORP",
+    "LEGACY_CD": "BECR",
     "ADDITIONAL_INFO": "",
     "SOURCE_APPLICATION": "COLIN"
   }

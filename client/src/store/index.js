@@ -16,13 +16,14 @@ export const actions = {
     sessionStorage.removeItem( 'USERNAME' )
     sessionStorage.removeItem( 'USER_ROLES' )
   },
-  loadSetUp({ dispatch }) {
+  loadSetUp({ commit, dispatch }) {
     //TODO - reset everything and force login???
     // clear values from local storeage
     dispatch( 'logout' )
     //Read Configuration.json File
     readJFile( 'static/config/configuration.json', function (myArray) {
       axios.defaults.baseURL = myArray[0]['URL']
+      commit('setBaseURL', myArray[0]['URL'])
       //load UI dropdowns from json files and database tables
       dispatch( 'loadDropdowns' )
 
@@ -2348,6 +2349,8 @@ export const mutations = {
       sortDescending: true,
     }
   },
+
+  setBaseURL: (state, payload) => state.baseURL = payload,
 }
 
 export const state = {
@@ -2577,6 +2580,8 @@ export const state = {
     sortDescending: true,
   },
   conflictsPreserveMessage: false,
+
+  baseURL:'',
 }
 
 export default new Vuex.Store({ actions, getters, mutations, state, })
