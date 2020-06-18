@@ -144,7 +144,7 @@
             <v-flex :class="!consumptionDate ? 'grey--text' : ''">
               <b>Consumed:</b> {{ consumptionDate ? consumptionDate : 'n/a' }}
             </v-flex>
-            <template v-if="nr_status === 'CONDITIONAL' ">
+            <template v-if="nr_status === 'CONDITIONAL' && showConsent">
               <v-flex>
                 <v-layout column v-if="!is_editing">
                   <v-flex>
@@ -670,6 +670,13 @@
         set(value) {
           this.$store.commit('reservationCount', value)
         },
+      },
+      showConsent() {
+        let { baseURL } = this.$store.state
+        if (baseURL.includes('-test') || baseURL.includes('-dev')) {
+          return true
+        }
+        return false
       },
       submitCount() {
         return this.$store.getters.submitCount
