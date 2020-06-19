@@ -7,8 +7,10 @@
              v-shortkey="['alt', 'd']"
              @shortkey="edit"
              id="nr-details-edit-button"
-             v-if="can_edit"
+             v-if="can_edit && showButtons"
              @click="edit"><img src="/static/images/buttons/edit-req.png" /></v-btn>
+
+      <!--SHOW DETAILS-->
       <v-btn flat
              v-shortkey="['alt', 'b']"
              @shortkey="toggleDetails()"
@@ -36,9 +38,10 @@
       <v-btn flat
              class="mx-1 pa-0 action-button"
              id="examine-cancel-button"
-             v-if="canCancel && !is_making_decision && !is_cancelled && !is_approved_expired && !is_consumed"
+             v-if="canCancel && !is_making_decision && !is_cancelled && !is_approved_expired && showButtons"
              @click="showCancelModal()"><img src="/static/images/buttons/cancel-req.png"/></v-btn>
 
+      <!--HOLD REQUEST-->
       <v-btn flat
              class="mx-1 pa-0 action-button"
              v-shortkey="['alt', 'h']"
@@ -47,20 +50,18 @@
              v-if="is_my_current_nr"
              @click="holdRequest()"><img src="/static/images/buttons/hold-req.png"/></v-btn>
 
-      <!-- ACCEPT/REJECT/CANCEL DECISION buttons -->
-
       <!-- RE-OPEN (un-furnished) button -->
       <v-btn flat
              class="mx-1 pa-0 action-button"
              id="examine-re-open-button"
-             v-if="userCanEdit && is_complete && !is_furnished && !is_cancelled && !is_approved_expired"
+             v-if="userCanEdit && is_complete && !is_furnished && !is_cancelled && !is_approved_expired && showButtons"
              @click="reOpen()"><img src="/static/images/buttons/reopen-req.png"/></v-btn>
 
       <!-- RESET (from furnished) button -->
       <v-btn flat
              class="mx-1 pa-0 action-button"
              id="examine-reset-button"
-             v-if="userCanEdit && is_complete && is_furnished && !is_cancelled && !is_approved_expired"
+             v-if="userCanEdit && is_complete && is_furnished && !is_cancelled && !is_approved_expired && showButtons"
              @click="reset()"><img src="/static/images/buttons/reset-req.png"/></v-btn>
 
       <!-- EXAMINE button - to claim/examine an NR that is on hold -->
@@ -69,7 +70,7 @@
              id="examine-button"
              v-shortkey="['alt', 'x']"
              @shortkey="claimNR()"
-             v-if="can_claim"
+             v-if="can_claim && showButtons"
              @click="claimNR()"><img src="/static/images/buttons/examine.png"/></v-btn>
     </v-flex>
 
@@ -109,6 +110,7 @@
 <script>
 /* eslint-disable */
 import moment from 'moment'
+import { isFutureDate } from "../../../../static/js/validators"
 
 export default {
   name: 'ActionButtons',
@@ -134,7 +136,7 @@ export default {
       else return false;
     },
     canCancel() {
-      return this.userCanEdit && !this.other_examiner_inprogress
+      return this.userCanEdit && !this.other_examiner_inprogress && this.showButtons && !this.expired
     },
     cancelSubmitDisabled() {
       if (this.cancel_comment_display) {
@@ -161,26 +163,34 @@ export default {
         return this.$store.getters.decision_made;
       },
       set: function (value) {
-        this.$store.commit('decision_made', value);
+        this.$store.commit('decision_made', value)
       }
+    },
+    expired() {
+      if (!this.$store.getters.expiryDate) return false
+      let expDate = moment(this.$store.state.expiryDate, 'YYYY-MM-DD').clone()
+      let today = new moment()
+      return today.isAfter(expDate)
     },
     internalComments: {
       get: function() {
         return this.$store.getters.internalComments;
       },
       set: function(value) {
-        this.$store.commit('internalComments', value);
+        this.$store.commit('internalComments', value)
       }
     },
     is_approved_expired() {
       // if there is no expiry date, this NR is not approved-expired
       if (this.$store.getters.expiryDate == null) return false;
 
-      let expired_date = moment(this.$store.state.expiryDate, 'YYYY-MM-DD').clone();
-      let today = new moment();
+      let expired_date = moment(this.$store.state.expiryDate, 'YYYY-MM-DD').clone()
+      let today = new moment()
 
-      if (this.$store.getters.currentState === 'APPROVED' && today.isAfter(expired_date)) return true;
-      return false;
+      if (['APPROVED', 'CONDITIONAL'].includes(this.$store.getters.currentState) && today.isAfter(expired_date)) {
+        return true
+      }
+      return false
     },
     is_cancelled() {
       if (this.$store.getters.currentState === 'CANCELLED') return true;
@@ -189,9 +199,10 @@ export default {
     is_complete() {
       return this.$store.getters.is_complete;
     },
-    is_consumed() {
-      if (this.consumptionDate != null) return true;
-      else return false;
+    showButtons() {
+      if (this.consumptionDate) return false
+      if (['HISTORICAL', 'COND-RESERVE', 'RESERVED'].includes(this.$store.getters.nr_status)) return false
+      return true
     },
     is_editing() {
       return  this.$store.state.is_editing;
@@ -220,7 +231,7 @@ export default {
       return false
     },
     userCanEdit() {
-      return this.$store.getters.userHasEditRole;
+      return this.$store.getters.userHasEditRole && this.showButtons
     },
     userId() {
       return this.$store.getters.userId;

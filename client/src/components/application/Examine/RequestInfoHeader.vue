@@ -403,6 +403,7 @@
         return ''
       },
       can_edit() {
+        if (this.is_consumed) return false
         if (this.is_my_current_nr) return true
         if (this.$store.getters.userHasEditRole && ['DRAFT', 'HOLD', 'REJECTED', 'APPROVED', 'CONDITIONAL'].indexOf(this.nr_status) > -1) return true
         return false
@@ -504,10 +505,7 @@
         },
       },
       is_consumed() {
-        if (this.consumptionDate && (this.nr_status === 'APPROVED' || this.nr_status === 'CONDITION')) {
-          return true
-        }
-        return false
+        return !!this.consumptionDate
       },
       internalComments_length() {
         if (this.$store.getters.internalComments) {

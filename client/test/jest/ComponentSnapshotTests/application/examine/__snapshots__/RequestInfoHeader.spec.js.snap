@@ -175,8 +175,6 @@ exports[`RequestInfoHeader.vue renders a RequestInfoHeader component 1`] = `
            
           <!---->
            
-          <!---->
-           
           <v-flex-stub
             class="grey--text"
             tag="div"

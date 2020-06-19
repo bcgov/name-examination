@@ -68,6 +68,7 @@ export default {
       },
       showWordClassification() {
         let { baseURL } = this.$store.state
+        if (!baseURL) return false
         if (baseURL.includes('-test') || baseURL.includes('-dev')) {
           return true
         }

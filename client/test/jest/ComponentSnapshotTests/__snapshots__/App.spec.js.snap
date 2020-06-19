@@ -21,6 +21,8 @@ exports[`App.vue  renders the App 1`] = `
       />
     </div>
      
+    <!---->
+     
     <v-dialog-stub
       class="pa-0"
       contentclass="shift-dialog-up"
