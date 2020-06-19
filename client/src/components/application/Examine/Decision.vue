@@ -296,12 +296,11 @@
     name: "Decision",
     mounted() {
       this.$root.$on('name-accept-reject', () => {
-        this.$store.commit('decision_made', 'APPROVED')
+        // eslint-disable-next-line
+        console.log("v-on was received")
         this.forceConditional = true
+        this.$store.commit('decision_made', 'APPROVED')
         this.nameAcceptReject()
-        this.$nextTick(function() {
-          this.forceConditional = false
-        })
       })
     },
     data() {
@@ -578,23 +577,22 @@
         this.$store.commit('decision_made', 'APPROVED')
         this.$nextTick(function () { this.nameAcceptReject() })
       },
-      nameAcceptReject() {
+       nameAcceptReject() {
         let { decision_made, currentNameObj, selected_conflicts } = this
         if ( decision_made === 'APPROVED' ) {
-          // if there were conflicts selected but this is an approval, this will result in
-          // accidental "rejected due to conflict" messaging. Remove it by clearing the selected
-          // conflicts (Issue #767).
-          // Do NOT clear the conflicts if the "Consent Required" condition is also set - then it's
-          // intentional.
           if ( this.acceptanceWillBeConditional || this.forceConditional) {
-            currentNameObj.state = 'CONDITION'
-          }
-          else {
-            currentNameObj.state = 'APPROVED'
+            this.$store.commit('setCurrentNameState', 'CONDITION')
+            this.forceConditional = false
+          } else {
+            this.$store.commit('setCurrentNameState', 'APPROVED')
+            // if there were conflicts selected but this is an approval, this will result in
+            // accidental "rejected due to conflict" messaging. Remove it by clearing the selected
+            // conflicts (Issue #767).
+            // Do NOT clear the conflicts if the "Consent Required" condition is also set - then it's
+            // intentional.
             this.selected_conflicts = []
           }
-        }
-        else {
+        } else {
           currentNameObj.state = 'REJECTED'
         }
         if ( selected_conflicts && selected_conflicts.length > 0 ) {

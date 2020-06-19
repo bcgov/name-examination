@@ -7,6 +7,7 @@
         <std-header style="z-index: 2"> </std-header>
         <router-view style="z-index: 1"></router-view>
       </div>
+      <WordClassificationModal v-if="showWordClassification" />
       <v-dialog v-model="showErrorModal"
                 width="50%"
                 content-class="shift-dialog-up"
@@ -39,6 +40,7 @@
 <script>
 /* eslint-disable */
 import StdHeader from '@/components/application/sections/StdHeader.vue'
+import WordClassificationModal from './components/application/Examine/WordClassificationModal';
 
 export default {
     name: 'App',
@@ -51,6 +53,7 @@ export default {
       }
     },
     components:{
+      WordClassificationModal,
       StdHeader
     },
     created () {
@@ -63,6 +66,13 @@ export default {
       is_editing() {
         return this.$store.state.is_editing
       },
+      showWordClassification() {
+        let { baseURL } = this.$store.state
+        if (baseURL.includes('-test') || baseURL.includes('-dev')) {
+          return true
+        }
+        return false
+      }
     },
     watch: {
       errorJSON(newErrors) {
@@ -74,7 +84,7 @@ export default {
             for (let warning of newErrors.warnings) {
               this.warningMsg += `${warning.message} \n`
             }
-            this.modalType = warning
+            this.modalType = 'warning'
             this.toggleErrorModal(true)
           }
 
