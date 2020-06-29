@@ -81,7 +81,7 @@
     </v-flex>
 
     <!--EXAMINATION AREA:  RECIPE CARDS DECISION INFO-->
-    <template v-if="!is_complete">
+    <template v-if="!is_complete && !reservedOrCondReserved">
 
       <!--LEFT COLUMN:  CONFLICTS/CONDITIONS/HISTORY/TRADEMARKS LISTS-->
       <v-flex lg6 py-4 pl-5 bg-grey style="z-index: 2">
@@ -255,6 +255,10 @@
         set(value) {
           this.$store.commit('decision_made', value)
         }
+      },
+      reservedOrCondReserved () {
+        if (['COND-RESERVE', 'RESERVED'].includes(this.$store.getters.nr_status)) return true
+        return false
       },
       is_complete() {
         return this.$store.getters.is_complete
