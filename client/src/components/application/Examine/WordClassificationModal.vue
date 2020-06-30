@@ -42,9 +42,9 @@
                   :class="i === focus ? 'focused' : ''"
                   class="word-column hairline">
           <v-flex lg6>{{ word }}</v-flex>
-          <v-flex lg3><v-checkbox value="descriptive"
+          <v-flex lg3><v-checkbox value="DESC"
                                   v-model="classifications[i]" /></v-flex>
-          <v-flex lg3><v-checkbox value="distinctive"
+          <v-flex lg3><v-checkbox value="DIST"
                                   v-model="classifications[i]" /></v-flex>
         </v-layout>
         <v-layout column align-end mt-4>
@@ -189,7 +189,7 @@ export default {
           Vue.set(
             this.classifications,
             this.focus,
-            'distinctive'
+            'DIST'
           )
           moveDown()
           return
@@ -197,7 +197,7 @@ export default {
           Vue.set(
             this.classifications,
             this.focus,
-            'descriptive'
+            'DESC'
           )
           moveDown()
           return
@@ -228,7 +228,8 @@ export default {
           data: {
             classification: this.classifications[i],
             examiner: this.userId,
-            name: this.name
+            name: this.name,
+            word: this.chunkedName[i]
           }
         }
         let resp = this.$store.dispatch('postWordForClassification', payload)
