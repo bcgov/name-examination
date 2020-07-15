@@ -855,7 +855,7 @@ export const actions = {
   postWordForClassification(context, payload) {
     const myToken = sessionStorage.getItem( 'KEYCLOAK_TOKEN' )
     const myHeader = { headers: { Authorization: `Bearer ${ myToken }` }, spinner: '.conditions-spinner' }
-    const url = `/api/v1/word_classification/${payload.url}`
+    const url = `/api/v1/word-classification/${payload.url}`
     let data = payload.data
 
     return axios.put( url, data, { headers: { Authorization: `Bearer ${ myToken }` } } )
