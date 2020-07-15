@@ -223,17 +223,19 @@ export default {
       }
       let promises = []
       for (let i in this.classifications) {
-        let payload = {
-          url: this.chunkedName[i],
-          data: {
-            classification: this.classifications[i],
-            examiner: this.userId,
-            name: this.name,
-            word: this.chunkedName[i]
+        if (this.classifications[i]) {
+          let payload = {
+            url: this.chunkedName[i],
+            data: {
+              classification: this.classifications[i],
+              examiner: this.userId,
+              name: this.name,
+              word: this.chunkedName[i]
+            }
           }
+          let resp = this.$store.dispatch('postWordForClassification', payload)
+          promises.push(resp)
         }
-        let resp = this.$store.dispatch('postWordForClassification', payload)
-        promises.push(resp)
       }
       Promise.all(promises).then( () => {
         this.modalVisible = false
