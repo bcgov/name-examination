@@ -146,7 +146,11 @@
           if (search) {
             let payload = {
               search,
-              router: this.$router
+              router: this.$router,
+              refresh: false
+            }
+            if (search === this.nrNumber) {
+              payload.refresh = true
             }
             this.$store.dispatch('newNrNumber', payload)
           }
