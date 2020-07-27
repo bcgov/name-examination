@@ -70,7 +70,7 @@ export default {
         let { baseURL } = this.$store.state
         if (!baseURL) return false
         if (baseURL.includes('-test') || baseURL.includes('-dev')) {
-          return true
+          return this.$store.state.allowWordClassificationModal
         }
         return false
       }

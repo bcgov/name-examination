@@ -297,13 +297,17 @@ export const actions = {
     dispatch( 'checkToken' )
     return axios.get( url, { headers: { Authorization: `Bearer ${ myToken }` } } )
                 .then( response => {
-                  if ( router && router.currentRoute.path !== '/nameExamination' ) {
-                    router.push( '/nameExamination' )
-                  }
+                  // setting showExaminationArea briefly to false causes the components to re-render when its set
+                  // to true again and call their created() and mounted() life cycle methods. This is necessary to
+                  // allow the act of searching for the same NR as is currently displayed to function as a refresh
+                  // mechanism
+                  commit( 'showExaminationArea', false )
                   dispatch( 'resetValues' ).then( () => {
                     commit( 'nrNumber', search )
                     commit( 'loadCompanyInfo', response.data )
                     commit( 'is_making_decision', false )
+                    router.push( '/nameExamination' )
+                    commit( 'showExaminationArea', true )
                   } )
                 } )
                 .catch( error => {
@@ -1423,6 +1427,9 @@ export const mutations = {
   reservationCount(state, value) {
     state.reservationCount = value
   },
+  showExaminationArea (state, value) {
+    state.showExaminationArea = value
+  },
   expiryDate(state, value) {
     state.expiryDate = value
   },
@@ -2374,6 +2381,7 @@ export const mutations = {
   },
 
   setBaseURL: (state, payload) => state.baseURL = payload,
+  mutateAllowWordClassificationModal: (state, payload) => state.allowWordClassificationModal = pay
 }
 
 export const state = {
@@ -2607,6 +2615,8 @@ export const state = {
   wordClassificationModalName: '',
 
   baseURL:'',
+  allowWordClassificationModal: true,
+  showExaminationArea: true,
 }
 
 export default new Vuex.Store({ actions, getters, mutations, state, })

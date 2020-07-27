@@ -11,7 +11,7 @@
     </div>
     <Transactions v-if="$store.state.transactionsModalVisible" />
     <CommentsPopUp v-if="showCommentsPopUp" />
-    <v-container fluid name-exam-container >
+    <v-container fluid name-exam-container v-if="showExaminationArea">
       <v-layout>
           <RequestInfoHeader />
       </v-layout>
@@ -76,6 +76,9 @@
       is_expanded() {
         if (this.is_editing || this.is_viewing) return true
         return false
+      },
+      showExaminationArea () {
+        return this.$store.state.showExaminationArea
       },
       exactHistoryMatches() {
         // initialize to reset any previous value

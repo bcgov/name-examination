@@ -63,6 +63,10 @@
                 <div class="ml-3 mt-auto mb-auto"><router-link to="/stats">Stats</router-link></div>
               </div>
             </v-form>
+            <v-form>
+              <v-switch class="mt-2 ml-5" v-model="allowWordClassificationModal" label="Word Classification" />
+            </v-form>
+
             <div id="userid" class="ml-5 mt-auto mb-auto fv-ital">{{ userId }}</div>
             <div class="vertical-divider"/>
             <a class="mt-auto mb-auto"
@@ -90,11 +94,16 @@
       }
     },
     computed: {
-      path() {
-        return this.$route.path
+      adminURL() {
+        return this.$store.getters.adminURL
       },
-      userId() {
-        return this.$store.getters.userId
+      allowWordClassificationModal: {
+        get() {
+          return this.$store.state.allowWordClassificationModal
+        },
+        set (value) {
+          this.$store.commit('mutateAllowWordClassificationModal', value)
+        }
       },
       auth() {
         return this.$store.getters.isAuthenticated
@@ -105,11 +114,14 @@
         }
         return ''
       },
+      path() {
+        return this.$route.path
+      },
       userCanExamine() {
         return this.$store.getters.userHasApproverRole
       },
-      adminURL() {
-        return this.$store.getters.adminURL
+      userId() {
+        return this.$store.getters.userId
       },
     },
     watch: {
@@ -135,10 +147,6 @@
             let payload = {
               search,
               router: this.$router
-            }
-            if (search == this.nrNumber) {
-              this.nrNum = ''
-              return
             }
             this.$store.dispatch('newNrNumber', payload)
           }
