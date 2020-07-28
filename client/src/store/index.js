@@ -291,12 +291,19 @@ export const actions = {
     }
   },
   newNrNumber({ commit, dispatch }, payload) {
-    let { search, router } = payload
+    let { search, router, refresh } = payload
     const myToken = sessionStorage.getItem( 'KEYCLOAK_TOKEN' )
     const url = '/api/v1/requests/' + search
     dispatch( 'checkToken' )
     return axios.get( url, { headers: { Authorization: `Bearer ${ myToken }` } } )
                 .then( response => {
+                  // setting showExaminationArea briefly to false causes the components to re-render when its set
+                  // to true again and call their created() and mounted() life cycle methods. This is necessary to
+                  // allow the act of searching for the same NR as is currently displayed to function as a refresh
+                  // mechanism
+                  if (refresh) {
+                    commit( 'showExaminationArea', false )
+                  }
                   if ( router && router.currentRoute.path !== '/nameExamination' ) {
                     router.push( '/nameExamination' )
                   }
@@ -304,6 +311,9 @@ export const actions = {
                     commit( 'nrNumber', search )
                     commit( 'loadCompanyInfo', response.data )
                     commit( 'is_making_decision', false )
+                    if (refresh) {
+                      commit( 'showExaminationArea', true )
+                    }
                   } )
                 } )
                 .catch( error => {
@@ -1423,6 +1433,9 @@ export const mutations = {
   reservationCount(state, value) {
     state.reservationCount = value
   },
+  showExaminationArea (state, value) {
+    state.showExaminationArea = value
+  },
   expiryDate(state, value) {
     state.expiryDate = value
   },
@@ -2374,6 +2387,7 @@ export const mutations = {
   },
 
   setBaseURL: (state, payload) => state.baseURL = payload,
+  mutateAllowWordClassificationModal: (state, payload) => state.allowWordClassificationModal = payload
 }
 
 export const state = {
@@ -2607,6 +2621,8 @@ export const state = {
   wordClassificationModalName: '',
 
   baseURL:'',
+  allowWordClassificationModal: true,
+  showExaminationArea: true,
 }
 
 export default new Vuex.Store({ actions, getters, mutations, state, })

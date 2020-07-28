@@ -4,7 +4,7 @@
   <div style="height: 100%;">
     <v-app >
       <div id="app" style="height: 100%;" :class="is_editing ? 'bg-grey' : ''">
-        <std-header style="z-index: 2"> </std-header>
+        <std-header style="z-index: 2" :wordClassificationFlag="wordClassificationFlag"> </std-header>
         <router-view style="z-index: 1"></router-view>
       </div>
       <WordClassificationModal v-if="showWordClassification" />
@@ -52,7 +52,7 @@ export default {
         modalType: 'error',
       }
     },
-    components:{
+    components: {
       WordClassificationModal,
       StdHeader
     },
@@ -66,11 +66,14 @@ export default {
       is_editing() {
         return this.$store.state.is_editing
       },
-      showWordClassification() {
+      wordClassificationFlag () {
         let { baseURL } = this.$store.state
         if (!baseURL) return false
-        if (baseURL.includes('-test') || baseURL.includes('-dev')) {
-          return true
+        return (baseURL.includes('-test') || baseURL.includes('-dev'))
+      },
+      showWordClassification() {
+        if (this.wordClassificationFlag) {
+          return this.$store.state.allowWordClassificationModal
         }
         return false
       }

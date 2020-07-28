@@ -39,7 +39,7 @@
       </div>
       <div class="ml-auto px-3">
         <v-toolbar flat color="white" height="70px">
-          <template v-if="auth">
+          <template v-if="auth">`
             <v-form @submit.prevent="submit">
               <div style="display: flex;">
                 <div>
@@ -50,20 +50,25 @@
                                 v-model="nrNum"
                                 id="header-search-input" />
                 </div>
-                <div class="search-icon mt-auto mb-auto">
+                <div class="search-icon">
                   <v-btn flat
                          id="header-search-button"
                          icon
                          color="white"
-                         class="m-1"
+                         class="pb-1 pr-1"
                          @click="submit">
                     <v-icon>search</v-icon>
                   </v-btn>
                 </div>
-                <div class="ml-3 mt-auto mb-auto"><router-link to="/stats">Stats</router-link></div>
+                <div class="ml-3 mt-auto mb-auto"
+                     :class="!wordClassificationFlag ? 'ml-1 mr-5 pr-5' : ''"><router-link to="/stats">Stats</router-link></div>
+                <div v-if="wordClassificationFlag">
+                  <v-switch class="mt-2 mx-4" v-model="allowWordClassificationModal" label="Classify Words" />
+                </div>
               </div>
             </v-form>
-            <div id="userid" class="ml-5 mt-auto mb-auto fv-ital">{{ userId }}</div>
+            <div id="userid" class="ml-1 mt-auto mb-auto fv-ital"
+                             :class="wordClassificationFlag ? 'mr-5 pr-5' : ''">{{ userId }}</div>
             <div class="vertical-divider"/>
             <a class="mt-auto mb-auto"
                id="header-logout-button"
@@ -83,6 +88,7 @@
 /* eslint-disable */
   export default {
     name: "std-header",
+    props: ['wordClassificationFlag'],
     data () {
       return {
         nrNum: '',
@@ -90,11 +96,16 @@
       }
     },
     computed: {
-      path() {
-        return this.$route.path
+      adminURL() {
+        return this.$store.getters.adminURL
       },
-      userId() {
-        return this.$store.getters.userId
+      allowWordClassificationModal: {
+        get() {
+          return this.$store.state.allowWordClassificationModal
+        },
+        set (value) {
+          this.$store.commit('mutateAllowWordClassificationModal', value)
+        }
       },
       auth() {
         return this.$store.getters.isAuthenticated
@@ -105,11 +116,14 @@
         }
         return ''
       },
+      path() {
+        return this.$route.path
+      },
       userCanExamine() {
         return this.$store.getters.userHasApproverRole
       },
-      adminURL() {
-        return this.$store.getters.adminURL
+      userId() {
+        return this.$store.getters.userId
       },
     },
     watch: {
@@ -134,11 +148,11 @@
           if (search) {
             let payload = {
               search,
-              router: this.$router
+              router: this.$router,
+              refresh: false
             }
-            if (search == this.nrNumber) {
-              this.nrNum = ''
-              return
+            if (search === this.nrNumber) {
+              payload.refresh = true
             }
             this.$store.dispatch('newNrNumber', payload)
           }
@@ -150,6 +164,9 @@
 </script>
 
 <style scoped>
+  label {
+    font-size: 15px !important;
+  }
   #admin {
     width: 170px
   }

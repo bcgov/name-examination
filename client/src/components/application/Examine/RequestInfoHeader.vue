@@ -670,11 +670,7 @@
         },
       },
       showConsent() {
-        let { baseURL } = this.$store.state
-        if (baseURL.includes('-test') || baseURL.includes('-dev')) {
-          return true
-        }
-        return false
+        return true
       },
       submitCount() {
         return this.$store.getters.submitCount
