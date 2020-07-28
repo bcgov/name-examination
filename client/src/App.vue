@@ -52,7 +52,7 @@ export default {
         modalType: 'error',
       }
     },
-    components:{
+    components: {
       WordClassificationModal,
       StdHeader
     },
