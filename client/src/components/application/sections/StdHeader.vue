@@ -60,13 +60,15 @@
                     <v-icon>search</v-icon>
                   </v-btn>
                 </div>
-                <div class="ml-3 mt-auto mb-auto"><router-link to="/stats">Stats</router-link></div>
-                <div>
+                <div class="ml-3 mt-auto mb-auto"
+                     :class="!wordClassificationFlag ? 'ml-1 mr-5 pr-5' : ''"><router-link to="/stats">Stats</router-link></div>
+                <div v-if="wordClassificationFlag">
                   <v-switch class="mt-2 mx-4" v-model="allowWordClassificationModal" label="Classify Words" />
                 </div>
               </div>
             </v-form>
-            <div id="userid" class="ml-1 mt-auto mb-auto fv-ital">{{ userId }}</div>
+            <div id="userid" class="ml-1 mt-auto mb-auto fv-ital"
+                             :class="wordClassificationFlag ? 'mr-5 pr-5' : ''">{{ userId }}</div>
             <div class="vertical-divider"/>
             <a class="mt-auto mb-auto"
                id="header-logout-button"
@@ -86,6 +88,7 @@
 /* eslint-disable */
   export default {
     name: "std-header",
+    props: ['wordClassificationFlag'],
     data () {
       return {
         nrNum: '',
@@ -161,10 +164,12 @@
 </script>
 
 <style scoped>
+  label {
+    font-size: 15px !important;
+  }
   #admin {
     width: 170px
   }
-
 
   #header-logout-button, #header-login-button {
     color: var(--link) !important;
