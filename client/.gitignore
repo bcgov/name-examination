@@ -7,7 +7,7 @@ yarn-error.log*
 /test/unit/coverage/
 /test/e2e/reports/
 selenium-debug.log
-package-lock.json
+#package-lock.json
 /static/keycloak/
 
 # Editor directories and files
