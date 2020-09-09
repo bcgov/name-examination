@@ -27,31 +27,32 @@
         </v-layout>
         <v-layout column align-center>
           <v-flex class="name-text mt-2 mb-4">
-          <span v-for="(word, i) in chunkedName"
+          <span :class="focus === i ? 'highlight' : ''"
+                :key="i+word"
                 class="mx-1"
-                :class="focus === i ? 'highlight' : ''"
-                :key="i+word">{{ word}}</span></v-flex>
+                v-for="(word, i) in chunkedName">{{ word}}</span></v-flex>
         </v-layout>
         <v-layout hairline pb-1>
           <v-flex lg6 />
-          <v-flex lg3 yellow-header>De<span class="ul">s</span>criptive</v-flex>
-          <v-flex lg3 blue-header><span class="ul">D</span>istinctive</v-flex>
+          <v-flex lg3 yellow-header><span class="ul">D</span>istinctive</v-flex>
+          <v-flex lg3 blue-header>De<span class="ul">s</span>criptive</v-flex>
         </v-layout>
-        <v-layout v-for="(word, i) in chunkedName"
+        <v-layout :class="i === focus ? 'focused' : ''"
                   :key="word+i"
-                  :class="i === focus ? 'focused' : ''"
-                  class="word-column hairline">
+                  class="word-column hairline"
+                  v-for="(word, i) in chunkedName">
           <v-flex lg6>{{ word }}</v-flex>
-          <v-flex lg3><v-checkbox value="DESC"
-                                  v-model="classifications[i]" /></v-flex>
           <v-flex lg3><v-checkbox value="DIST"
+                                  v-model="classifications[i]" /></v-flex>
+          <v-flex lg3><v-checkbox value="DESC"
                                   v-model="classifications[i]" /></v-flex>
         </v-layout>
         <v-layout column align-end mt-4>
           <v-flex>
-            <v-btn class="mx-1 pa-0 action-button"
-                   @click="showConfirmClose = true"
-                   flat><img src="/static/images/buttons/cancel.png" /></v-btn>
+            <v-btn @click="showConfirmClose = true"
+                   class="mx-1 pa-0 action-button"
+                   flat><img src="/static/images/buttons/cancel.png" />
+            </v-btn>
             <v-btn class="mx-1 pa-0 action-button"
                    @click="submit()"
                    flat><img src="/static/images/buttons/green-done.png" /></v-btn>
