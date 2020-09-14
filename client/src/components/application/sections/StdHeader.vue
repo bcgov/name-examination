@@ -60,9 +60,8 @@
                     <v-icon>search</v-icon>
                   </v-btn>
                 </div>
-                <div class="ml-3 mt-auto mb-auto"
-                     :class="!wordClassificationFlag ? 'ml-1 mr-5 pr-5' : ''"><router-link to="/stats">Stats</router-link></div>
-                <div v-if="wordClassificationFlag">
+                <div class="ml-3 mt-auto mb-auto"><router-link to="/stats">Stats</router-link></div>
+                <div>
                   <v-switch class="mt-2 mx-4" v-model="allowWordClassificationModal" label="Classify Words" />
                 </div>
               </div>
@@ -88,7 +87,6 @@
 /* eslint-disable */
   export default {
     name: "std-header",
-    props: ['wordClassificationFlag'],
     data () {
       return {
         nrNum: '',
