@@ -827,9 +827,6 @@
         // if jurisdiction not required, clear the data (ie: BC)
         if (!this.jurisdiction_required) this.$store.commit('jurisdiction', null)
 
-        // if corp num not required, clear the data
-        if (!this.corp_num_required) this.$store.commit('corpNum', null)
-
         // if previous NR not required, clear the data
         if (!this.prev_nr_required) this.$store.commit('previousNr', null)
 
