@@ -66,8 +66,7 @@
                 </div>
               </div>
             </v-form>
-            <div id="userid" class="ml-1 mt-auto mb-auto fv-ital"
-                             :class="wordClassificationFlag ? 'mr-5 pr-5' : ''">{{ userId }}</div>
+            <div id="userid" class="ml-1 mr-5 mt-auto mb-auto pr-5 fv-ital">{{ userId }}</div>
             <div class="vertical-divider"/>
             <a class="mt-auto mb-auto"
                id="header-logout-button"
