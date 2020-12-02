@@ -1962,6 +1962,9 @@ export const mutations = {
   },
   setConfig(state, configValues) {
   },
+  setPreviousStateCd(state, payload) {
+    state.previousStateCd = payload
+  },
   nrNumber(state, value) {
 
     state.compInfo.nrNumber = value
@@ -2281,6 +2284,7 @@ export const mutations = {
 
   //introduced by name-examination code with us upgrade
   is_making_decision: (state, payload) => state.is_making_decision = payload,
+  is_header_shown: (state, payload) => state.is_header_shown = payload,
   toggleRequestBannerPopUp: (state, payload) => state.activeRequestBannerPopUp = payload,//ReqInfoHeader active popup
   toggleCommentsPopUp: (state, payload) => state.showCommentsPopUp = payload,//app-wide comments popup visibility
   setNewComment: (state, payload) => state.newComment = payload,//captured user-input in app-wide comments popup

@@ -291,8 +291,8 @@ export default {
 
         // initialize user in edit mode, with previous state set so NR gets set back to draft
         //  when user is done changing name, adding comment, etc.
-        this.$store.state.previousStateCd = 'DRAFT';
-        this.$store.state.is_editing = true;
+        this.$store.commit('setPreviousStateCd', 'DRAFT')
+        this.$store.commit('setEditing', true)
       }
 
       // set reset flag so name data is managed between Namex and NRO correctly
@@ -322,10 +322,9 @@ export default {
 
         // initialize user in edit mode, with previous state set so NR gets set back to draft
         //  when user is done changing name, adding comment, etc.
-        this.$store.state.previousStateCd = 'DRAFT';
-        this.$store.state.is_editing = true;
+        this.$store.commit('setPreviousStateCd', 'DRAFT')
+        this.$store.commit('setEditing', true)
       }
-      this.$store.state.nrData.consent_dt = null
       this.$store.commit('resetConsent')
 
       this.$store.commit('furnished', 'N');

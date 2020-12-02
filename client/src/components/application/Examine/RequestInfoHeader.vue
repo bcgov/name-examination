@@ -522,25 +522,30 @@
 
         let expired_date = new Date(this.$store.state.expiryDate)
         let date = new moment().format('YYYY-MM-DD')
-        if (this.$store.getters.currentState === "APPROVED" && date > expired_date) return true
-        return false
+        return (this.$store.getters.currentState === "APPROVED" && date > expired_date)
       },
       is_closed() {
-        if (['REJECTED', 'APPROVED', 'CONDITIONAL'].indexOf(this.nr_status) > -1) return true
-        return false
+        return (['REJECTED', 'APPROVED', 'CONDITIONAL'].includes(this.nr_status))
       },
       is_editing() {
         return this.$store.state.is_editing
       },
       is_expanded() {
-        if (this.is_editing || this.is_viewing || this.$store.state.is_header_shown) return true
-        return false
+        return (this.is_editing || this.is_viewing || this.is_header_shown)
+      },
+      is_header_shown: {
+        get() {
+          return this.$store.state.is_header_shown
+        },
+        set(value) {
+          this.$store.commit('is_header_shown', value)
+        }
       },
       is_my_current_nr() {
         return this.$store.getters.is_my_current_nr
       },
       is_viewing() {
-        return this.$store.state.is_header_shown && !this.is_editing
+        return this.is_header_shown && !this.is_editing
       },
       jurisdiction: {
         get() {
@@ -736,8 +741,8 @@
         if (this.$store.state.previousStateCd == 'DRAFT') this.revertToPreviousState()
         else this.$store.dispatch('getpostgrescompInfo', this.nrNumber)
 
-        this.$store.state.is_editing = false
-        this.$store.state.is_header_shown = false
+        this.$store.commit('setEditing', false)
+        this.is_header_shown = false
         this.$nextTick(function() { this.scrollToTop() })
       },
       checkReqTypeRules(val) {
@@ -793,7 +798,7 @@
          this.$store.dispatch('syncNR',this.nrNumber); */
         this.$store.commit('toggleRequestBannerPopUp', null)
         this.toggleCommentsPopUp(false)
-        this.$store.state.is_editing = true
+        this.$store.commit('setEditing', true)
       },
       formatDate(d) {
         let date = moment(d, 'YYYY-MM-DD, hh:mm a')
@@ -843,20 +848,20 @@
         if (this.$refs.nwpta_sk != undefined) this.$refs.nwpta_sk.adjustUponSave()
 
         // set the state back if it was DRAFT, and clear previous value
-        if (this.$store.state.previousStateCd == 'DRAFT') {
-          this.$store.state.currentState = this.$store.state.previousStateCd
-          this.$store.state.previousStateCd = null
+        if (this.$store.state.previousStateCd === 'DRAFT') {
+          this.$store.commit('currentState', 'DRAFT')
+          this.$store.commit('setPreviousStateCd', null)
         }
 
         this.$store.dispatch('updateRequest')
-        this.$store.state.is_editing = false
+        this.$store.commit('setEditing', false)
 
         // show full header after editing so user can see everything they changed
         if (this.activePopUp === 'information') {
           this.$store.commit('toggleRequestBannerPopUp', null)
           return
         }
-        this.$store.state.is_header_shown = true
+        this.is_header_shown = true
         this.$nextTick(function() { window.scrollTo(0, 0) })
       },
       scrollToTop() {
@@ -866,8 +871,7 @@
         this.$store.commit('toggleCommentsPopUp', bool)
       },
       toggleDetails() {
-        if (this.$store.state.is_header_shown) this.$store.state.is_header_shown = false
-        else this.$store.state.is_header_shown = true
+        this.is_header_shown = !this.is_header_shown
         this.$store.commit('toggleRequestBannerPopUp', null)
         this.toggleCommentsPopUp(false)
       },
