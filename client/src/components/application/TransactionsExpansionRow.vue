@@ -129,114 +129,121 @@
 </template>
 
 <script>
-  import { mapGetters, mapState } from 'vuex'
-  import moment from 'moment'
+import { mapGetters, mapState } from 'vuex'
+import moment from 'moment'
 
-  export default {
-    name: 'TransactionsExpansionRow',
-    props: ['jsonData', 'item'],
+export default {
+  name: 'TransactionsExpansionRow',
+  props: ['jsonData', 'item'],
+  data() {
+    return {
+      addrFields: [
+        'addrLine1',
+        'addrLine2',
+        'addrLine3',
+        'countryTypeCd',
+        'city',
+        'stateProvinceCd',
+        'postalCd'
+      ]
+    }
+  },
+  computed: {
+    ...mapGetters(['nrNumber']),
+    ...mapState(['transactionsData', 'transactionsNR', 'transactionsRequestStatus']),
     data() {
-      return {
-        addrFields: [
-          'addrLine1',
-          'addrLine2',
-          'addrLine3',
-          'countryTypeCd',
-          'city',
-          'stateProvinceCd',
-          'postalCd'
-        ]
-      }
-    },
-    computed: {
-      ...mapGetters(['nrNumber']),
-      ...mapState(['transactionsData', 'transactionsNR', 'transactionsRequestStatus']),
-      data() {
-        if (typeof this.jsonData === 'object' && Object.keys(this.jsonData).length > 0) {
-          let output = []
+      if (typeof this.jsonData === 'object' && Object.keys(this.jsonData).length > 0) {
+        let output = []
 
-          for (let key in this.jsonData) {
-            if (Array.isArray(this.jsonData[key])) {
-              if ( this.jsonData[key].length > 0) {
-                output.push({ key: key, value: this.jsonData[key] })
-              }
-            } else if (typeof this.jsonData[key] === 'object' && this.jsonData[key] !== null) {
-              if ( Object.keys(this.jsonData[key]).length > 0) {
-                output.push({ key: key, value: this.jsonData[key] })
-              }
-            } else if (typeof this.jsonData[key] === 'string') {
+        for (let key in this.jsonData) {
+          if (Array.isArray(this.jsonData[key])) {
+            if ( this.jsonData[key].length > 0) {
               output.push({ key: key, value: this.jsonData[key] })
             }
+          } else if (typeof this.jsonData[key] === 'object' && this.jsonData[key] !== null) {
+            if ( Object.keys(this.jsonData[key]).length > 0) {
+              output.push({ key: key, value: this.jsonData[key] })
+            }
+          } else if (typeof this.jsonData[key] === 'string') {
+            output.push({ key: key, value: this.jsonData[key] })
           }
-          return output
         }
-      },
-
-    },
-    methods: {
-      addBottomBorder(index) {
-        let length = this.data.length
-        if (length === 1) return false
-        if ((length - 1) === index) return false
-        return true
-      },
-      formatDate(date) {
-        return moment(date).format('YYYY-MM-DD h:mm a')
-      },
-      getOrderedNames(value) {
-        let output = []
-        let keys = [1,2,3]
-        keys.forEach(number => {
-          let index = value.findIndex(name => name.choice === number)
-          if (index !== -1) {
-            output.push(value[index])
+        for (let tran of output) {
+          if (tran.key === 'applicants') {
+            if (Array.isArray(tran.value)) {
+              tran.value = tran.value[0]
+            }
           }
-        })
+        }
         return output
-      },
-      checkConditions(item) {
-        if (!item.value) return false
-        return true
       }
+    },
+
+  },
+  methods: {
+    addBottomBorder(index) {
+      let length = this.data.length
+      if (length === 1) return false
+      if ((length - 1) === index) return false
+      return true
+    },
+    formatDate(date) {
+      return moment(date).format('YYYY-MM-DD h:mm a')
+    },
+    getOrderedNames(value) {
+      let output = []
+      let keys = [1,2,3]
+      keys.forEach(number => {
+        let index = value.findIndex(name => name.choice === number)
+        if (index !== -1) {
+          output.push(value[index])
+        }
+      })
+      return output
+    },
+    checkConditions(item) {
+      if (!item.value) return false
+      return true
     }
   }
+}
 </script>
 
 <style scoped>
-  .text-overflow {
-    white-space: pre-line;
-    overflow-wrap: break-word !important;
-    overflow: hidden;
-  }
+.text-overflow {
+  white-space: pre-line;
+  overflow-wrap: break-word !important;
+  overflow: hidden;
+}
 
-  .fs-11 {
-    font-size: 11px;
-  }
+.fs-11 {
+  font-size: 11px;
+}
 
-  .json-data-header {
-    font-size: 15px;
-    font-weight: 600;
-    margin-top: 8px;
-    margin-bottom: 6px;
-  }
+.json-data-header {
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 8px;
+  margin-bottom: 6px;
+}
 
-  .margin-8-6 {
-    margin-top: 8px;
-    margin-bottom: 6px;
-  }
-  .bg-grey {
-    background-color: var(--xl-grey);
-  }
+.margin-8-6 {
+  margin-top: 8px;
+  margin-bottom: 6px;
+}
+.bg-grey {
+  background-color: var(--xl-grey);
+}
 
-  .border-bottom {
-    border-bottom: 1px solid grey;
-  }
+.border-bottom {
+  border-bottom: 1px solid grey;
+}
 
-  .sub-header {
-    font-size: 13px;
-    font-weight: 700;
-  }
-  .comment-style {
-    border-top: 1px dotted var(--l-grey);
-  }
+.sub-header {
+  font-size: 13px;
+  font-weight: 700;
+}
+.comment-style {
+  border-top: 1px dotted var(--l-grey);
+}
 </style>
