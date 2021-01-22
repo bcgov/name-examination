@@ -1887,20 +1887,26 @@ export const mutations = {
     state.nrData.lastUpdate = state.lastUpdate
 
     if (state.consentDateForEdit) {
-      let date = new moment(state.consentDateForEdit, 'YYYY-MM-DD').format('ddd, D MMM YYYY')
-      date = date + ' 07:00:00 GMT'
-      state.nrData.consent_dt = date
+      let date = new moment(state.consentDateForEdit + ' 00:01:00')
+      if (date) {
+        date = date.utc().format('ddd, D MMM YYYY HH:mm:ss [GMT]')
+        state.nrData.consent_dt = date
+      }
     }
 
     if (state.expiryDateForEdit) {
-      let date = new moment(state.expiryDateForEdit, 'YYYY-MM-DD').format('ddd, D MMM YYYY')
-      date = date + ' 07:00:00 GMT'
-      state.nrData.expirationDate = date
+      let date = new moment(state.expiryDateForEdit + ' 00:01:00')
+      if (date) {
+        date = date.utc().format('ddd, D MMM YYYY HH:mm:ss [GMT]')
+        state.nrData.expirationDate = date
+      }
     }
     else if ( state.expiryDate ) {
-      let date = new moment(state.expiryDate, 'YYYY-MM-DD').format('ddd, D MMM YYYY')
-      date = date + ' 07:00:00 GMT'
-      state.nrData.expirationDate = date
+      let date = new moment(state.expiryDate + ' 00:01:00')
+      if (date) {
+        date = date.utc().format('ddd, D MMM YYYY HH:mm:ss [GMT]')
+        state.nrData.expirationDate = date
+      }
     } else {
       state.nrData.expirationDate = null
     }
