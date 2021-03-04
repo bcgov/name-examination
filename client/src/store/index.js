@@ -629,6 +629,7 @@ export const actions = {
                            .replace( /\$/g, 'S' )
                            .replace( /¢/g, 'C' )
                            .replace( /(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '' )
+      const url = `/api/v1/documents:histories?content=${searchStr}`
       return axios.get( url, myHeader )
                   .then( response => {
                     commit( 'loadHistoriesJSON', response.data )
@@ -640,7 +641,6 @@ export const actions = {
     if ( searchStr != '' ) {
       const myToken = sessionStorage.getItem( 'KEYCLOAK_TOKEN' )
       const myHeader = { headers: { Authorization: `Bearer ${ myToken }` }, spinner: '.trademarks-spinner' }
-      const url = `/api/v1/documents:trademarks?content=${searchStr}`
       searchStr = searchStr.replace( /\//g, ' ' )
                            .replace( /\\/g, ' ' )
                            .replace( /&/g, ' ' )
@@ -660,6 +660,7 @@ export const actions = {
                            .replace( /\$/g, 'S' )
                            .replace( /¢/g, 'C' )
                            .replace( /(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '' )
+      const url = `/api/v1/documents:trademarks?content=${searchStr}`
       return axios.get( url, myHeader )
                   .then( response => {
                     commit( 'loadTrademarksJSON', response.data )
