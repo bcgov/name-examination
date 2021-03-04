@@ -606,9 +606,9 @@ export const actions = {
     if ( searchStr != '' ) {
       const myToken = sessionStorage.getItem( 'KEYCLOAK_TOKEN' )
       const myHeader = { headers: { Authorization: `Bearer ${ myToken }` }, spinner: '.conditions-spinner' }
-      const url = '/api/v1/documents:restricted_words'
+      const url = `/api/v1/documents:restricted_words?content=${searchStr}`
       const vm = this
-      return axios.post( url, { type: 'plain_text', content: searchStr }, myHeader ).then( response => {
+      return axios.get( url, myHeader ).then( response => {
         commit( 'loadConditionsJSON', response.data )
       } )
                   .catch( error => console.log( 'ERROR: ' + error ) )
