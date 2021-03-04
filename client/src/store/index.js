@@ -618,7 +618,6 @@ export const actions = {
     if ( searchStr != '' ) {
       const myToken = sessionStorage.getItem( 'KEYCLOAK_TOKEN' )
       const myHeader = { headers: { Authorization: `Bearer ${ myToken }` }, spinner: '.history-spinner' }
-      const url = `/api/v1/documents:histories?content=${searchStr}`
       searchStr = searchStr.replace( /\//g, ' ' )
                            .replace( /\\/g, ' ' )
                            .replace( /&/g, ' ' )
