@@ -1,7 +1,7 @@
 # Names Examination Project
 The Names Examination project will redesign an existing mainframe application and deliver a modern application/interface that allows business and corporate name requests to be examined and the results communicated to the requestor. The GCPE-GDX Team is working in partnership with Service BC on this project to foster alignment in how we improve the public's experience of accessing services and to help build capacity within the BC Registries team for further agile/devOps product development. 
 
-![Lifecycle](https://img.shields.io/badge/Lifecycle-Stable-97ca00)
+[![img](https://img.shields.io/badge/Lifecycle-Stable-97ca00)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
 
 ## Technology Stack Used
 
