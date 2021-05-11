@@ -1,6 +1,6 @@
 <!-- eslint-disable -->
 <template>
-  <fragment name="jurisdiction+'-nwpta-fragment'">
+  <div name="jurisdiction+'-nwpta-fragment'">
     <template v-if="is_editing && has_nwpta && (!is_numbered_assumed || nwpta_requested)">
       <v-flex fs-14><b>{{ jurisdiction }}: </b>{{ is_named_assumed ? '(Assumed)' : '' }}
                                                {{ nwpta_requested ?  'Requested' : ''}}</v-flex>
@@ -98,7 +98,7 @@
       <b>{{ jurisdiction }}:</b>
       <p class="text-center no-nwpta">n/a</p>
     </v-flex>
-  </fragment>
+  </div>
 </template>
 
 <script>

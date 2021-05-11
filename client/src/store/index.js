@@ -239,13 +239,13 @@ export const actions = {
   loadAdminLink({ state }, myArray) {
     //Set Admin URL
     if ( myArray[0]['NODE_ENV'] == 'production' ) {
-      state.adminURL = 'https://namex-solr.pathfinder.gov.bc.ca'
+      state.adminURL = 'https://namex-solr.apps.silver.devops.gov.bc.ca'
     }
     else if ( myArray[0]['NODE_ENV'] == 'test' ) {
-      state.adminURL = 'https://namex-solr-test.pathfinder.gov.bc.ca'
+      state.adminURL = 'https://namex-solr-test.apps.silver.devops.gov.bc.ca'
     }
     else {
-      state.adminURL = 'https://namex-solr-dev.pathfinder.gov.bc.ca'
+      state.adminURL = 'https://namex-solr-dev.apps.silver.devops.gov.bc.ca'
     }
   },
   loadDropdowns({ commit, state }) {
