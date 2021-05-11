@@ -3,7 +3,22 @@
   <v-container fluid ma-0 pa-0 id="find-filter">
     <v-layout pa-0 mt-3 px-4><h1>Search</h1></v-layout>
     <v-layout pa-0 px-4 align-center>
-      <v-flex><a @click="clearFilter()">Clear Filters</a></v-flex>
+      <v-flex shrink><a @click="clearFilter()">Clear Filters</a></v-flex>
+      <v-flex mx-4>
+        <v-select id="column-selection"
+                  class="text-input-style"
+                  attach
+                  browser-autocomplete="off"
+                  :items="headers"
+                  placeholder="Columns to Show"
+                  multiple
+                  style="width: 200px"
+                  v-model="selectedHeaderValues">
+          <template v-slot:selection="{index}">
+            <span v-if="index === 0">Columns to Show</span>
+          </template>
+        </v-select>
+      </v-flex>
       <v-flex shrink mx-4>Results: {{ total }}</v-flex>
       <v-flex shrink mx-2>Display:</v-flex>
       <v-flex shrink><v-select :items="pageSizeOptions"
@@ -42,24 +57,45 @@
         </v-btn>
       </v-flex>
     </v-layout>
-    <v-layout>
+    <v-layout style="overflow:auto">
       <v-flex>
         <v-data-table :headers="headers"
                       class="ma-3"
                       :items="data"
+                      style="min-width: 1800px"
+                      item-key="NameRequestNumber"
+                      sort-by="Submitted"
+                      :sort-desc="[false, true]"
                       hide-actions>
-          <template v-slot:headers="{headers}">
+          <template v-slot:headers>
             <tr>
-              <th v-for="(header, i) in headers"
+              <th v-for="(header, i) in getDisplayedHeaders"
                   :style="header.style"
                   :key="'find-header-'+i"
                   class="text-left header-row-1 pa-0 pl-2">
-                {{ header.text }}
+                <span>
+                  {{ header.text }}
+                  <v-icon v-if="header.value === 'Submitted' && submittedOrder === 'asc'"
+                          small
+                          style="color: white;"
+                          @click="submittedOrder='desc'">
+                    arrow_downward
+                  </v-icon>
+                  <v-icon v-else-if="header.value === 'Submitted' && submittedOrder === 'desc'"
+                          small
+                          style="color: white;"
+                          @click="submittedOrder='asc'">
+                    arrow_upward
+                  </v-icon>
+                </span>
               </th>
             </tr>
             <tr class="header-row-2">
-              <th class="pa-0 px-1">
-                <v-select id="search-filter-state"
+              <th v-for="(header, i) in getDisplayedHeaders"
+                  :key="'find-sub-header-'+i"
+                  class="pa-0 px-1">
+                <v-select v-if="header.value === 'Status'"
+                          id="search-filter-state"
                           browser-autocomplete="off"
                           class="text-input-style"
                           v-model="stateSort"
@@ -67,34 +103,52 @@
                           attach
                           :menu-props="selectProps"
                           value="state" />
-              </th>
-              <th class="pa-0 px-1">
-                <v-text-field id="search-filter-examiner"
+                <v-text-field v-if="header.value === 'LastModifiedBy'"
+                              id="search-filter-examiner"
                               browser-autocomplete="off"
                               class="text-input-style"
                               v-model="username"
                               placeholder="Username"
                               v-on:keypress="checkEnter" />
-              </th>
-              <th class="pa-0 px-1">
-                <v-text-field id="search-filter-nr-number"
+                <v-text-field v-if="header.value === 'NameRequestNumber'"
+                              id="search-filter-nr-number"
                               browser-autocomplete="off"
                               class="text-input-style"
                               v-model="nrSearch"
                               placeholder="NR Number"
                               v-on:keypress="checkEnter" />
-              </th>
-              <th class="pa-0 px-1">
-                <v-text-field id="search-filter-company"
+                <v-text-field v-if="header.value === 'Names'"
+                              id="search-filter-company"
                               browser-autocomplete="off"
                               class="text-input-style"
                               v-model="compName"
                               placeholder="Name"
                               v-on:keypress="checkEnter" />
-              </th>
-              <th class="pa-0 px-1"/>
-              <th class="pa-0 px-1">
-                <v-select id="search-filter-priority"
+                <v-text-field v-if="header.value === 'ApplicantFirstName'"
+                              id="search-filter-app-first"
+                              browser-autocomplete="off"
+                              class="text-input-style"
+                              v-model="firstName"
+                              placeholder="First Name"
+                              v-on:keypress="checkEnter" />
+                <v-text-field v-if="header.value === 'ApplicantLastName'"
+                              id="search-filter-app-last"
+                              browser-autocomplete="off"
+                              class="text-input-style"
+                              v-model="lastName"
+                              placeholder="Last Name"
+                              v-on:keypress="checkEnter" />
+                <v-select v-if="header.value === 'ConsentRequired'"
+                          id="search-filter-consent-required"
+                          browser-autocomplete="off"
+                          class="text-input-style"
+                          :items="consentOptions"
+                          :menu-props="priorityProps"
+                          attach
+                          value="option"
+                          v-model="consentOption" />
+                <v-select v-if="header.value === 'Priority'"
+                          id="search-filter-priority"
                           browser-autocomplete="off"
                           class="text-input-style"
                           :items="rankings"
@@ -102,27 +156,24 @@
                           attach
                           value="option"
                           v-model="ranking" />
-              </th>
-              <th class="pa-0 px-1">
-                <v-select id="search-filter-furnished"
+                <v-select v-if="header.value === 'ClientNotification'"
+                          id="search-filter-furnished"
                           class="text-input-style"
                           browser-autocomplete="off"
                           :items="notificationType"
                           attach
                           value="option"
                           v-model="notification" />
-              </th>
-              <th class="pa-0 px-1">
-                <v-select id="search-filter-submittedDate"
+                <v-select v-if="header.value === 'Submitted'"
+                          id="search-filter-submittedDate"
                           class="text-input-style"
                           browser-autocomplete="off"
                           :items="submittedDateIntervals"
                           value="option"
                           attach
                           v-model="submittedInterval" />
-              </th>
-              <th class="pa-0 px-1">
-                <v-select id="search-filter-lastUpdate"
+                <v-select v-if="header.value === 'LastUpdate'"
+                          id="search-filter-lastUpdate"
                           class="text-input-style"
                           browser-autocomplete="off"
                           v-model="lastUpdateInterval"
@@ -130,23 +181,25 @@
                           value="option"
                           :items="lastUpdateIntervals" />
               </th>
-              <th />
             </tr>
           </template>
-          <template v-slot:items="{item, index}">
+          <template v-slot:items="{item}">
             <tr>
-              <td class="pa-2">{{ item.Status }}</td>
-              <td class="pa-2">{{ item.LastModifiedBy }}</td>
-              <td class="pa-2">
+              <td v-if="selectedHeaderValues.includes('Status')" class="pa-2">{{ item.Status }}</td>
+              <td v-if="selectedHeaderValues.includes('LastModifiedBy')" class="pa-2">{{ item.LastModifiedBy }}</td>
+              <td v-if="selectedHeaderValues.includes('NameRequestNumber')" class="pa-2">
                 <a @click="examineNr(item.NameRequestNumber)">{{ item.NameRequestNumber }}</a>
               </td>
-              <td class="pa-2 cell-pre-line">{{ item.Names }}</td>
-              <td class="pa-2 cell-pre-line">{{ item.NatureOfBusiness }}</td>
-              <td class="pa-2">{{ item.Priority }}</td>
-              <td class="pa-2">{{ item.ClientNotification }}</td>
-              <td class="pa-2">{{ item.Submitted }}</td>
-              <td class="pa-2">{{ item.LastUpdate }}</td>
-              <td class="pa-2 cell-pre-line">{{ item.LastComment }}</td>
+              <td v-if="selectedHeaderValues.includes('Names')" class="pa-2 cell-pre-line">{{ item.Names }}</td>
+              <td v-if="selectedHeaderValues.includes('ApplicantFirstName')" class="pa-2 cell-pre-line">{{ item.ApplicantFirstName }}</td>
+              <td v-if="selectedHeaderValues.includes('ApplicantLastName')" class="pa-2 cell-pre-line">{{ item.ApplicantLastName }}</td>
+              <td v-if="selectedHeaderValues.includes('NatureOfBusiness')" class="pa-2 cell-pre-line">{{ item.NatureOfBusiness }}</td>
+              <td v-if="selectedHeaderValues.includes('ConsentRequired')" class="pa-2 cell-pre-line">{{ item.ConsentRequired }}</td>
+              <td v-if="selectedHeaderValues.includes('Priority')" class="pa-2">{{ item.Priority }}</td>
+              <td v-if="selectedHeaderValues.includes('ClientNotification')" class="pa-2">{{ item.ClientNotification }}</td>
+              <td v-if="selectedHeaderValues.includes('Submitted')" class="pa-2">{{ item.Submitted }}</td>
+              <td v-if="selectedHeaderValues.includes('LastUpdate')" class="pa-2">{{ item.LastUpdate }}</td>
+              <td v-if="selectedHeaderValues.includes('LastComment')" class="pa-2 cell-pre-line">{{ item.LastComment }}</td>
             </tr>
           </template>
         </v-data-table>
@@ -169,16 +222,34 @@ export default {
         minWidth: '100px'
       },
       headers:[
-        {value:'Status', text: 'Status', style: {width: '6%'}, },
-        {value:'LastModifiedBy', text: 'Modified By', style: {width: '5%'}, },
-        {value:'NameRequestNumber', text: 'NR Number', style: {width: '6%'}, },
-        {value:'Names', text: 'Names', style: {width: '29%'}, },
-        {value:'NatureOfBusiness', text: 'Nature Of Business', style: {width: '10%'}, },
-        {value:'Priority', text: 'Priority', style: {width: '6%'}, },
-        {value:'ClientNotification', text: 'Notified', style: {width: '6%'}, },
-        {value:'Submitted', text: 'Submitted', style: {width: '6%'}, },
-        {value:'LastUpdate', text: 'Last Update', style: {width: '6%'}, },
-        {value:'LastComment', text: 'Last Comment', style: {width: '20%'}, },
+        {value:'Status', text: 'Status', style: {width: '100px'}, display: true, },
+        {value:'LastModifiedBy', text: 'Modified By', style: {width: '100px'}, display: true, },
+        {value:'NameRequestNumber', text: 'NR Number', style: {width: '100px'}, display: true, },
+        {value:'Names', text: 'Names', style: {width: '400px'}, display: true, },
+        {value:'ApplicantFirstName', text: 'Applicant First Name', style: {width: '100px'}, display: true, },
+        {value:'ApplicantLastName', text: 'Applicant Last Name', style: {width: '100px'}, display: true, },
+        {value:'NatureOfBusiness', text: 'Nature Of Business', style: {width: '175px'}, display: true, },
+        {value:'ConsentRequired', text: 'Consent Required', style: {width: '100px'}, display: true, },
+        {value:'Priority', text: 'Priority', style: {width: '100px'}, display: true, },
+        {value:'ClientNotification', text: 'Notified', style: {width: '100px'}, display: true, },
+        {value:'Submitted', text: 'Submitted', style: {width: '110px'}, display: true, sortable: true },
+        {value:'LastUpdate', text: 'Last Update', style: {width: '100px'}, display: true, },
+        {value:'LastComment', text: 'Last Comment', style: {width: '300px'}, display: true, },
+      ],
+      selectedHeaderValues: [
+        'Status',
+        'LastModifiedBy',
+        'NameRequestNumber',
+        'Names',
+        'ApplicantFirstName',
+        'ApplicantLastName',
+        'NatureOfBusiness',
+        'ConsentRequired',
+        'Priority',
+        'ClientNotification',
+        'Submitted',
+        'LastUpdate',
+        'LastComment'
       ],
       data: [],
       pageSizeOptions: [5, 10, 20, 50, 100],
@@ -191,17 +262,22 @@ export default {
       stateSort: 'HOLD',
       username: '',
       nrSearch: '',
+      firstName: '',
+      lastName: '',
+      consentOption: 'All',
+      consentOptions: ['All', 'Yes', 'No', 'Received'],
       ranking: 'All',
       rankings:['All','Priority','Standard'],
       notification: 'All',
       notificationType:['All','Notified','Not Notified'],
       compName: '',
       selectedNR: '',
+      submittedOrder: 'asc',
       submittedInterval: 'All',
       submittedDateIntervals:['Today','7 days','30 days','90 days','1 year','3 years','5 years','All'],
       lastUpdateInterval: 'All',
       lastUpdateIntervals:['Today','Yesterday','2 days','7 days','30 days','All'],
-      searchQuery: '?order=priorityCd:desc,submittedDate:asc&queue=hold&ranking=All&notification=All&' +
+      searchQuery: '?order=priorityCd:desc,submittedDate:asc&queue=hold&consentOption=All&ranking=All&notification=All&' +
                    'submittedInterval=All&lastUpdateInterval=All&rows=10',
       clearing: false,
       mounting: false,
@@ -240,6 +316,30 @@ export default {
         this.$store.commit('searchCompName',val);
       }
     },
+    currentFirstName: {
+      get: function () {
+        return this.$store.state.searchFirstName;
+      },
+      set: function (val) {
+        this.$store.commit('searchFirstName',val);
+      }
+    },
+    currentLastName: {
+      get: function () {
+        return this.$store.state.searchLastName;
+      },
+      set: function (val) {
+        this.$store.commit('searchLastName',val);
+      }
+    },
+    currentConsentOption: {
+      get: function () {
+        return this.$store.state.searchConsentOption;
+      },
+      set: function (val) {
+        this.$store.commit('searchConsentOption',val);
+      }
+    },
     currentRanking: {
       get: function () {
         return this.$store.state.searchRanking;
@@ -254,6 +354,14 @@ export default {
       },
       set: function (val) {
         this.$store.commit('searchNotification',val);
+      }
+    },
+    currentSubmittedOrder: {
+      get: function () {
+        return this.$store.state.searchSubmittedOrder;
+      },
+      set: function (val) {
+        this.$store.commit('searchSubmittedOrder',val);
       }
     },
     currentSubmittedInterval: {
@@ -288,6 +396,15 @@ export default {
         this.$store.commit('searchCurrentPage',val);
       }
     },
+    getDisplayedHeaders() {
+      let displayed = []
+      for (let i = 0; i < this.headers.length; i++) {
+        if (this.headers[i].display) {
+          displayed.push(this.headers[i])
+        }
+      }
+      return displayed
+    },
     searchData() {
       return this.$store.getters.searchDataJSON;
     },
@@ -297,8 +414,11 @@ export default {
     examiner(){
       return this.username;
     },
+    searchColumns() {
+      return this.$store.getters.userSearchColumns
+    }
   },
-  mounted() {
+  async mounted() {
 
     // get rows from saved search filter info or if none saved then default search filter info
     this.mounting = true;
@@ -306,6 +426,11 @@ export default {
       this.updateQuery('queue',this.stateSort);
     else
       this.stateSort = this.currentStateSort;
+
+    if (!this.searchColumns) {
+      await this.$store.dispatch('getUserSettings')
+    }
+    this.selectedHeaderValues = this.searchColumns
   },
   methods: {
     populateTable(searchData){
@@ -480,10 +605,18 @@ export default {
           this.username = this.currentUsername;
         else if (this.compName !== this.currentCompName)
           this.compName = this.currentCompName;
+        else if (this.firstName !== this.currentFirstName)
+          this.firstName = this.currentFirstName
+        else if (this.lastName !== this.currentLastName)
+          this.lastName = this.currentLastName
+        else if (this.consentOption !== this.currentConsentOption)
+          this.consentOption = this.currentConsentOption
         else if (this.ranking !== this.currentRanking)
           this.ranking = this.currentRanking;
         else if (this.notification !== this.currentNotification)
           this.notification = this.currentNotification;
+        else if (this.submittedOrder !== this.currentSubmittedOrder)
+          this.submittedOrder = this.currentSubmittedOrder
         else if (this.submittedInterval !== this.currentSubmittedInterval)
           this.submittedInterval = this.currentSubmittedInterval;
         else if (this.lastUpdateInterval !== this.currentLastUpdatedInterval)
@@ -588,6 +721,21 @@ export default {
       this.currentCompName = val;
       this.updateQuery('compName', val);
     },
+    firstName: function (val) {
+
+      this.currentFirstName = val;
+      this.updateQuery('firstName', val);
+    },
+    lastName: function (val) {
+
+      this.currentLastName = val;
+      this.updateQuery('lastName', val);
+    },
+    consentOption: function (val) {
+
+      this.currentConsentOption = val;
+      this.updateQuery('consentOption', val);
+    },
     perPage: function (val) {
 
       this.pageNumbers = this.buildPages();
@@ -618,6 +766,27 @@ export default {
 
       this.currentNotification = val;
       this.updateQuery('notification',val);
+    },
+    selectedHeaderValues: function (val) {
+      if (val) {
+        for (let i = 0; i < this.headers.length; i++) {
+          if (!val.includes(this.headers[i].value)) {
+            this.headers[i].display = false
+          } else {
+            this.headers[i].display = true
+          }
+        }
+        this.$store.dispatch('updateUserSettings', val)
+      }
+    },
+    submittedOrder: function (val) {
+      if (val === 'asc') {
+        this.searchQuery = this.searchQuery.replace('submittedDate:desc', 'submittedDate:asc')
+      } else {
+        this.searchQuery = this.searchQuery.replace('submittedDate:asc', 'submittedDate:desc')
+      }
+      this.currentSubmittedOrder = val;
+      this.sort()
     },
     submittedInterval: function (val) {
 
@@ -662,6 +831,8 @@ export default {
     height: 50px;
     font-size: 14px;
     font-weight: 700;
+    text-align: left;
+    white-space: normal;
   }
 
   .header-row-2 {

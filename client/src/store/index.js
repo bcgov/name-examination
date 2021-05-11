@@ -7,6 +7,29 @@ import moment from 'moment'
 Vue.use(Vuex)
 
 export const actions = {
+  async getUserSettings({ commit }) {
+    const myToken = sessionStorage.getItem( 'KEYCLOAK_TOKEN' )
+    const url = '/api/v1/usersettings'
+    await axios.get( url, { headers: { Authorization: `Bearer ${ myToken }` } } )
+      .then( function (response) {
+        commit( 'userSettings', response.data )
+      } ).catch( error => console.log( 'ERROR: ' + error ) )
+    return
+  },
+  async updateUserSettings({ state, commit }, searchColumns) {
+    const myToken = sessionStorage.getItem( 'KEYCLOAK_TOKEN' )
+    const url = '/api/v1/usersettings'
+    const payload = { 'searchColumns': searchColumns }
+    await axios.put( url, payload,{ headers: { Authorization: `Bearer ${ myToken }` } } )
+      .then( function (response) {
+        if (response.status == 204) {
+          commit( 'userSettings', payload)
+        }
+      } ).catch( error => {
+        console.log( 'ERROR: ' + error )
+      })
+    return
+  },
   logout({ commit, state }) {
     commit( 'clearAuthData' )
     sessionStorage.removeItem( 'KEYCLOAK_REFRESH' )
@@ -887,6 +910,9 @@ export const getters = {
     let roles = state.user_roles
     return roles.includes( 'names_approver' )
   },
+  userSearchColumns(state) {
+    return state.userSettings.searchColumns
+  },
   is_my_current_nr(state) {
     // set flag indicating whether you own this NR and it's in progress
     if ( state.currentState == 'INPROGRESS' && state.examiner == state.userId ) {
@@ -1475,11 +1501,23 @@ export const mutations = {
   searchCompName(state, value) {
     state.searchCompName = value
   },
+  searchFirstName(state, value) {
+    state.searchFirstName = value
+  },
+  searchLastName(state, value) {
+    state.searchLastName = value
+  },
+  searchConsentOption(state, value) {
+    state.searchConsentOption = value
+  },
   searchRanking(state, value) {
     state.searchRanking = value
   },
   searchNotification(state, value) {
     state.searchNotification = value
+  },
+  searchSubmittedOrder(state, value) {
+    state.searchSubmittedOrder = value
   },
   searchSubmittedInterval(state, value) {
     state.searchSubmittedInterval = value
@@ -2393,7 +2431,8 @@ export const mutations = {
   },
 
   setBaseURL: (state, payload) => state.baseURL = payload,
-  mutateAllowWordClassificationModal: (state, payload) => state.allowWordClassificationModal = payload
+  mutateAllowWordClassificationModal: (state, payload) => state.allowWordClassificationModal = payload,
+  userSettings: (state, payload) => state.userSettings = payload
 }
 
 export const state = {
@@ -2548,14 +2587,18 @@ export const state = {
     issue_Format_Text: null,
   },
 
-  searchQuery: '?order=priorityCd:desc,submittedDate:asc&queue=hold&ranking=All&notification=All&' +
+  searchQuery: '?order=priorityCd:desc,submittedDate:asc&queue=hold&consentOption=All&ranking=All&notification=All&' +
     'submittedInterval=30 days&lastUpdateInterval=All&rows=10',
   searchState: 'HOLD',
   searchNr: '',
   searchUsername: '',
   searchCompName: '',
+  searchFirstName: '',
+  searchLastName: '',
+  searchConsentOption: 'All',
   searchRanking: 'All',
   searchNotification: 'All',
+  searchSubmittedOrder: 'asc',
   searchSubmittedInterval: 'All',
   searchLastUpdatedInterval: 'All',
   searchCurrentPage: 1,
@@ -2629,6 +2672,9 @@ export const state = {
   baseURL:'',
   allowWordClassificationModal: true,
   showExaminationArea: true,
+  userSettings: {
+    searchColumns: ''
+  }
 }
 
 export default new Vuex.Store({ actions, getters, mutations, state, })
