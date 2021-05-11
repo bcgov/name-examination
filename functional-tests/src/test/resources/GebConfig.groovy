@@ -1,6 +1,6 @@
 /*
 	This is the Geb configuration file.
-	
+
 	See: http://www.gebish.org/manual/current/#configuration
 */
 
@@ -22,7 +22,7 @@ waiting {
 atCheckWaiting = [20, 1]
 
 environments {
-	
+
 	// run via “./gradlew chromeTest”
 	// See: https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver
 	chrome {
@@ -35,18 +35,18 @@ environments {
 		driver = {
 			ChromeOptions o = new ChromeOptions()
 			o.addArguments('headless')
-			o.addArguments('disable-gpu') 
+			o.addArguments('disable-gpu')
 			o.addArguments('no-sandbox')
 			new ChromeDriver(o)
 		}
 	}
-	
+
 	// run via “./gradlew firefoxTest”
 	// See: https://github.com/SeleniumHQ/selenium/wiki/FirefoxDriver
 	firefox {
 		driver = { new FirefoxDriver() }
 	}
-		
+
 	firefoxHeadless {
 		driver = {
 			FirefoxOptions o = new FirefoxOptions()
@@ -54,7 +54,7 @@ environments {
 			new FirefoxDriver(o)
 		}
 	}
-	
+
 	// run via “./gradlew ieTest”
 	// See: https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver
 	ie {
@@ -63,8 +63,8 @@ environments {
 		d.setCapability(InternetExplorerDriver.IGNORE_ZOOM_SETTING,true);
 		d.setCapability(InternetExplorerDriver.NATIVE_EVENTS,false);
 		d.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS,true);
-		
-		driver = { new InternetExplorerDriver(d) }	
+
+		driver = { new InternetExplorerDriver(d) }
 	}
 
 	// run via “./gradlew edgeTest”
@@ -89,7 +89,7 @@ baseNavigatorWaiting = true
 def env = System.getenv()
 baseUrl = env['BASEURL']
 if (!baseUrl) {
-	baseUrl = "https://namex-dev.pathfinder.gov.bc.ca/"
+	baseUrl = "https://namex-dev.apps.silver.devops.gov.bc.ca/"
 }
 
 println "BaseURL: ${baseUrl}"

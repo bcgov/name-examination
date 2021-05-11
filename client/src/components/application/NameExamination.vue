@@ -1,6 +1,6 @@
 <!--eslint-disable-->
 <template>
-  <fragment name="namex-fragment">
+  <div name="namex-fragment">
     <div class="notice-banner being-examined"
          v-if="(currentState == 'INPROGRESS') && (examiner != userId) && auth">
       <v-icon class="notice-icon">lock</v-icon>This NR is being examined by {{ examiner }}
@@ -19,7 +19,7 @@
         <v-flex lg12><CompName /></v-flex>
       </v-layout>
     </v-container>
-  </fragment>
+  </div>
 </template>
 
 <script>
