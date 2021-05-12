@@ -7,6 +7,7 @@ import store from '@/store'
 const LandingPage = () => import(/* webpackChunkName: "home" */'@/components/LandingPage')
 const Signin = () => import(/* webpackChunkName: "signin" */'@/components/auth/Signin')
 const NameExamination = () => import(/* webpackChunkName: "nameexamination" */'@/components/application/NameExamination')
+const Transactions = () => import(/* webpackChunkName: "nameexamination" */'@/components/application/Transactions')
 const findFilter = () => import(/* webpackChunkName: "find" */'@/components/application/Find/findFilter')
 const Stats = () => import(/* webpackChunkName: "stats" */'@/components/application/Stats/Stats.vue')
 
@@ -35,6 +36,14 @@ let router = new Router({
       name: 'nameexamination',
       component: NameExamination,
       path: '/nameExamination',
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      name: 'transactions',
+      component: Transactions,
+      path: '/nameExamination/transactions',
       meta: {
         requiresAuth: true
       }
