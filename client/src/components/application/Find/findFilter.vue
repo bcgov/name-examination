@@ -62,7 +62,7 @@
         <v-data-table :headers="headers"
                       class="ma-3"
                       :items="data"
-                      style="min-width: 1800px"
+                      style="min-width: 1400px"
                       item-key="NameRequestNumber"
                       sort-by="Submitted"
                       :sort-desc="[false, true]"
@@ -224,16 +224,16 @@ export default {
       headers:[
         {value:'Status', text: 'Status', style: {width: '100px'}, display: true, },
         {value:'LastModifiedBy', text: 'Modified By', style: {width: '100px'}, display: true, },
-        {value:'NameRequestNumber', text: 'NR Number', style: {width: '100px'}, display: true, },
-        {value:'Names', text: 'Names', style: {width: '400px'}, display: true, },
-        {value:'ApplicantFirstName', text: 'Applicant First Name', style: {width: '100px'}, display: true, },
-        {value:'ApplicantLastName', text: 'Applicant Last Name', style: {width: '100px'}, display: true, },
-        {value:'NatureOfBusiness', text: 'Nature Of Business', style: {width: '175px'}, display: true, },
+        {value:'NameRequestNumber', text: 'NR Number', style: {width: '150px'}, display: true, },
+        {value:'Names', text: 'Names', style: {width: '600px'}, display: true, },
+        {value:'ApplicantFirstName', text: 'Applicant First Name', style: {width: '110px'}, display: true, },
+        {value:'ApplicantLastName', text: 'Applicant Last Name', style: {width: '110px'}, display: true, },
+        {value:'NatureOfBusiness', text: 'Nature Of Business', style: {width: '250px'}, display: true, },
         {value:'ConsentRequired', text: 'Consent Required', style: {width: '100px'}, display: true, },
         {value:'Priority', text: 'Priority', style: {width: '100px'}, display: true, },
         {value:'ClientNotification', text: 'Notified', style: {width: '100px'}, display: true, },
-        {value:'Submitted', text: 'Submitted', style: {width: '110px'}, display: true, sortable: true },
-        {value:'LastUpdate', text: 'Last Update', style: {width: '100px'}, display: true, },
+        {value:'Submitted', text: 'Submitted', style: {width: '150px'}, display: true, sortable: true },
+        {value:'LastUpdate', text: 'Last Update', style: {width: '150px'}, display: true, },
         {value:'LastComment', text: 'Last Comment', style: {width: '300px'}, display: true, },
       ],
       selectedHeaderValues: [
@@ -638,6 +638,19 @@ export default {
 
     },
     buildTableRow(val) {
+      // map applicant data
+      let firstName = ''
+      let lastName = ''
+      if (val.applicants && val.applicants.length > 0) {
+        firstName = val.applicants[0].firstName
+        lastName = val.applicants[0].lastName
+      }
+      // map consent data
+      let consent = ''
+      if (val.consent_dt) consent = 'Received'
+      else if (val.consentFlag == 'Y') consent = 'Yes'
+      else consent = 'No'
+
       return {
         Status:val.stateCd,
         NameRequestNumber:val.nrNum,
@@ -649,6 +662,9 @@ export default {
         LastUpdate:val.lastUpdate,
         Submitted:val.submittedDate,
         LastComment:val.comments,
+        ApplicantFirstName: firstName,
+        ApplicantLastName: lastName,
+        ConsentRequired: consent
       }
     },
     buildPages() {
