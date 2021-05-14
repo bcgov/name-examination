@@ -192,6 +192,14 @@ html {
   color: var(--priority) !important;
 }
 
+.primary--text a {
+  color: var(--blue) !important;
+}
+
+.primary--text i {
+  color: var(--blue) !important;
+}
+
 .red-text {
   color: var(--priority) !important;
 }
@@ -303,6 +311,11 @@ not(#find-filter, #stats-viewer) .v-table__overflow {
 .v-input__slot:after, .v-input__slot:before {
   display: none !important;
   text-decoration: none !important;
+}
+
+.v-list__tile__action {
+  min-width: 35px !important;
+  padding-top: 8px !important;
 }
 
 .v-ripple__animation {
