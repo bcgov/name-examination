@@ -43,9 +43,10 @@ let router = new Router({
     {
       name: 'transactions',
       component: Transactions,
-      path: '/nameExamination/transactions',
+      path: '/transactions',
+      props: true,
       meta: {
-        requiresAuth: true
+        requiresAuth: false
       }
     },
     {

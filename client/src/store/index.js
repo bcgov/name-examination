@@ -132,6 +132,21 @@ export const actions = {
       } )
       .catch( error => console.log( 'ERROR: ' + error ) )
   },
+  async getNameRequest({ dispatch, commit }, nrNumber) {
+    const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    console.log(myToken)
+    const url = '/api/v1/requests/' + nrNumber
+    dispatch( 'checkToken' )
+    axios.get( url, { headers: { Authorization: `Bearer ${ myToken }` } } )
+      .then( response => {
+        if (response.status == 200 && response.data) {
+          commit('setNrInfo', response.data)
+          return
+        }
+        throw Error(message=`Invalid api response when getting ${ nrNumber } info.`)
+      } )
+      .catch( error => console.log( 'ERROR: ' + error ) )
+  },
   updateNRState({ commit, state, dispatch }, nrState) {
     const myToken = sessionStorage.getItem( 'KEYCLOAK_TOKEN' )
     const url = '/api/v1/requests/' + state.compInfo.nrNumber
@@ -829,13 +844,11 @@ export const actions = {
     commit('setSelectedReasons', [])
     commit('setSelectedTrademarks', [])
   },
-  getTransactionsHistory({ commit, dispatch }, nrNumber) {
+  async getTransactionsHistory({ commit }, nrNumber) {
     const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+    console.log(myToken)
     const url = '/api/v1/events/' + nrNumber
-    commit('setTransactionsRequestStatus', 'pending')
-    commit('toggleCommentsPopUp', false)
-    commit('toggleRequestBannerPopUp', null)
-    commit('toggleTransactionsModal', true)
+    commit('setPendingTransactionsRequest', true)
     return new Promise((resolve, reject) => {
       axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` }})
         .then(response => {
@@ -874,12 +887,12 @@ export const actions = {
             data.push(item)
           }
           commit('setTransactionsData', data)
-          commit('setTransactionsRequestStatus', 'success')
+          commit('setPendingTransactionsRequest', false)
           resolve()
         })
         .catch( () => {
           commit('setTransactionsData', 'No data')
-          commit('setTransactionsRequestStatus', 'success')
+          commit('setPendingTransactionsRequest', false)
           resolve()
         })
     })
@@ -1369,6 +1382,7 @@ export const getters = {
 
     return '?'
   },
+  nrInfo: state => state.nrInfo
 }
 
 export const mutations = {
@@ -2409,9 +2423,7 @@ export const mutations = {
     Vue.set( state, 'selectedReasons', payload )
   },
   setConsentRequiredByUser: (state, payload) => state.consentRequiredByUser = payload,
-  toggleTransactionsModal: (state, payload) => state.transactionsModalVisible = payload,
   setTransactionsData: (state, payload) => state.transactionsData = payload,
-  setTransactionsRequestStatus: (state, payload) => state.transactionsRequestStatus = payload,
   setTransactionsModalState(state, {key, value}) {
     Vue.set(
       state.transactionsModalState,
@@ -2438,7 +2450,10 @@ export const mutations = {
 
   setBaseURL: (state, payload) => state.baseURL = payload,
   mutateAllowWordClassificationModal: (state, payload) => state.allowWordClassificationModal = payload,
-  userSettings: (state, payload) => state.userSettings = payload
+  userSettings: (state, payload) => state.userSettings = payload,
+  setNrInfo: (state, payload) => state.nrInfo = payload,
+  setPendingNameRequest: (state, payload) => state.pendingNameRequest = payload,
+  setPendingTransactionsRequest: (state, payload) => state.pendingTransactionsRequest = payload,
 }
 
 export const state = {
@@ -2665,7 +2680,6 @@ export const state = {
   showCommentsPopUp: false,
   transactionsModalVisible: false,
   transactionsData: null,
-  transactionsRequestStatus: 'pending',
   transactionsModalState: {
     maximized: true,
     page: 1,
@@ -2682,7 +2696,11 @@ export const state = {
   showExaminationArea: true,
   userSettings: {
     searchColumns: ''
-  }
+  },
+  // intoriduced with transaction history upgrade
+  nrInfo: null,  // nr response without extra processing
+  pendingNameRequest: false,
+  pendingTransactionsRequest: false,
 }
 
 export default new Vuex.Store({ actions, getters, mutations, state, })

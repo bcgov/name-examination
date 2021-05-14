@@ -1,98 +1,101 @@
 <template>
-  <v-container id="transactions-modal"
-               fluid
-               class="transactions-modal"
-               :class="maximized ? 'transactions-modal-lg' : 'transactions-modal-sm'"
-               pa-0>
-    <!--Top/Header Portion-->
-    <v-layout v-dragged="onDrag">
-        <v-flex title-font grow>Transaction History</v-flex>
-        <v-flex title-font shrink>
-          <v-icon class="min-max-icon" @click="clickResize">
-            {{ maximized ? 'remove_circle' : 'add_circle' }}
-          </v-icon>
-          <v-icon class="close-icon" @click="closeModal()">
-            add_circle
-          </v-icon>
+  <v-flex>
+    <v-container fluid class="transaction-container copy-normal">
+      <!--Top/Header Portion-->
+      <v-layout class="transaction-header-title" row>
+        <v-flex class="border-right priority title-font pr-3" shrink>
+          {{ nr }}
+        </v-flex>
+        <v-flex v-if="priority" class="border-right title-font px-3" shrink>
+          <span class="priority title-font-sm">
+            <v-icon class="priority" shrink>star</v-icon>
+            Priority
+          </span>
+        </v-flex>
+        <v-flex v-else class="border-right title-font px-3" shrink>
+          <span class="title-font-sm">Regular</span>
+        </v-flex>
+        <v-flex class="title-font pl-3" grow>
+          <span class="title-font-sm">{{ requestType_desc }}</span>
         </v-flex>
       </v-layout>
-    <v-layout grey-bar>
-      <v-flex fs-16-fw-700 grow>History for {{ nrNumber }}</v-flex>
-      <v-flex shrink>as at {{ timeStamp }}</v-flex>
-    </v-layout>
-
-    <!--Body/Table/Spinner portion-->
-    <v-layout :class="maximized ? 'main-panel-lg' : 'main-panel-sm'" id="trans-main-panel">
-      <v-layout v-if="transactionsRequestStatus === 'success'">
-        <v-flex v-if="sortedTransactionData">
-          <v-data-table :headers="headers"
-                        :pagination.sync="pagination"
-                        :items="sortedTransactionData"
-                        rows-per-page-text=""
-                        class="ma-2">
-            <template v-slot:headers="{ headers }">
-              <tr style="text-align: left" id="header-cells">
-                <th v-for="(header, i) in headers"
-                    style="text-align: left"
-                    :style="header.style">
-                  <template v-if="header.text === 'Date & Time'">
-                    <div class="date-sort" @click="sortDescending = !sortDescending">
-                      <div>{{ header.text }}</div>
-                      <div>
-
-                        <v-icon style="color: var(--link); position: relative; top: -3px;">
-                          {{ sortDescending ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}
-                        </v-icon>
-                      </div>
-                    </div>
-                  </template>
-                  <template v-else>
-                    {{ header.text }}
-                  </template>
-                </th>
-              </tr>
-            </template>
-
-            <template v-slot:items="{item, index}">
-              <tr :key="'trans-row'+index" :class="expand === index ? 'bg-xl-blue' : ''">
-                <td>{{ item.user_action ? item.user_action : item.action }}</td>
-                <td>{{ item.stateCd }}</td>
-                <td>{{ item.user_name }}</td>
-                <td :colspan="item.showJSONData ? 1 : 2">{{ parseDate(item.eventDate) }}</td>
-                <td v-if="item.showJSONData">
-                  <v-icon class="plus-icon"
-                          v-if="expand !== index"
-                          @click="expand = index">keyboard_arrow_down
-                  </v-icon>
-                  <v-icon class="plus-icon"
-                          v-else
-                          @click="expand = null">keyboard_arrow_up
-                  </v-icon>
-                </td>
-              </tr>
-              <tr v-if="expand === index"
-                  class="bg-xl-blue ma-0 pa-0">
-                <td colspan="5" class="pr-5 mr-5">
-                  <TransactionsExpansionRow :jsonData="item.jsonData" id="trans-expansion-row" />
-                </td>
-              </tr>
-            </template>
-          </v-data-table>
+      <v-layout v-for="name in names" :key="name.choice" class="transaction-header-names">
+        <v-flex class="copy-lg" shrink>{{ name.name }}</v-flex>
+      </v-layout>
+      <v-layout class="transaction-header-info">
+        <v-flex>
+          <v-layout>
+            <v-flex class="font-weight-bold">Submitted Date:</v-flex>
+            <v-flex>{{ submitted }}</v-flex>
+            <v-flex class="font-weight-bold">Expiry Date:</v-flex>
+            <v-flex>{{ expiry }}</v-flex>
+          </v-layout>
+          <v-layout class="pt-2">
+            <v-flex class="font-weight-bold">Request Status:</v-flex>
+            <v-flex>{{ status }}</v-flex>
+            <v-flex class="font-weight-bold">Consent:</v-flex>
+            <v-flex>{{ expiry }}</v-flex>
+          </v-layout>
+          <v-layout class="pt-2">
+            <v-flex class="font-weight-bold">Additional Information:</v-flex>
+            <v-flex>{{ submitted }}</v-flex>
+            <v-flex class="font-weight-bold">Conditions/Comments:</v-flex>
+            <v-flex>{{ expiry }}</v-flex>
+          </v-layout>
         </v-flex>
-        <v-flex v-else pa-5>No history to display.</v-flex>
       </v-layout>
-      <v-layout pa-5 v-if="transactionsRequestStatus === 'failed'">
-        <v-flex pa-5>Network Error. Something went wrong.</v-flex>
+    </v-container>
+    <v-container fluid text-xs-center class="pa-0">
+      <v-layout class="grey-bar" row align-center>
+        <v-flex class="py-1 title-font">TRANSACTION HISTORY</v-flex>
       </v-layout>
-      <v-layout mb-5 pb-3 v-if="transactionsRequestStatus === 'pending'">
-        <spinner />
+
+      <!--Body/Table/Spinner portion-->
+      <v-layout :class="maximized ? 'main-panel-lg' : 'main-panel-sm'" id="trans-main-panel">
+        <v-layout v-if="!pendingTransactionsRequest">
+          <v-flex v-if="sortedTransactionData">
+            <v-data-table :pagination.sync="pagination"
+                          :items="sortedTransactionData"
+                          rows-per-page-text=""
+                          class="ma-2">
+              <template v-slot:items="{item, index}">
+                <tr :key="'trans-row'+index" :class="expand === index ? 'bg-xl-blue' : ''">
+                  <td>{{ item.user_action ? item.user_action : item.action }}</td>
+                  <td>{{ item.stateCd }}</td>
+                  <td>{{ item.user_name }}</td>
+                  <td :colspan="item.showJSONData ? 1 : 2">{{ parseDate(item.eventDate) }}</td>
+                  <td v-if="item.showJSONData">
+                    <v-icon class="plus-icon"
+                            v-if="expand !== index"
+                            @click="expand = index">keyboard_arrow_down
+                    </v-icon>
+                    <v-icon class="plus-icon"
+                            v-else
+                            @click="expand = null">keyboard_arrow_up
+                    </v-icon>
+                  </td>
+                </tr>
+                <tr v-if="expand === index"
+                    class="bg-xl-blue ma-0 pa-0">
+                  <td colspan="5" class="pr-5 mr-5">
+                    <TransactionsExpansionRow :jsonData="item.jsonData" id="trans-expansion-row" />
+                  </td>
+                </tr>
+              </template>
+            </v-data-table>
+          </v-flex>
+          <v-flex v-else pa-5>No history to display.</v-flex>
+        </v-layout>
+        <v-layout v-else mb-5 pb-3>
+          <spinner />
+        </v-layout>
       </v-layout>
-    </v-layout>
-  </v-container>
+    </v-container>
+  </v-flex>
 </template>
 
 <script>
-  import { mapGetters, mapState } from 'vuex'
+  import { mapState } from 'vuex'
   import moment from 'moment'
   import Spinner from './spinner'
   import TransactionsExpansionRow from './TransactionsExpansionRow'
@@ -112,24 +115,100 @@
           { text: 'Date & Time', style: { width: '20%' } },
           { text: 'Expand', style: { width:'5%' } },
         ],
-        timeStamp: '',
+        nr: '',
       }
     },
-    mounted() {
-      this.timeStamp = moment().format('YYYY-MM-DD, h:mm a')
+    created() {
+      if (this.$route.query && this.$route.query.token) {
+        sessionStorage.setItem('KEYCLOAK_TOKEN', this.$route.query.token)
+        sessionStorage.setItem('AUTHORIZED', true)
+      } else {
+        alert('Not authorized')
+      }
+
+      if (this.$route.query && this.$route.query.nr) {
+        this.nr = this.$route.query.nr
+      } else {
+        alert('No NR passed to retrieve transaction history for.')
+      }
+    },
+    async mounted() {
+      this.$store.commit('setPendingNameRequest', true)
+      this.$store.commit('setPendingTransactionsRequest', true)
+      await this.$store.dispatch('getNameRequest', this.nr)
+      console.log(this.nrInfo)
+      // needs to be set again after this call for some reason
+      sessionStorage.setItem('KEYCLOAK_TOKEN', this.$route.query.token)
+      this.$store.commit('setPendingNameRequest', false)
+
+      await this.$store.dispatch('getTransactionsHistory', this.nr)
+      this.$store.commit('setPendingTransactionsRequest', false)
+
       document.getElementById('trans-main-panel').addEventListener(
         'scroll', debounce(this.saveScrollPosition, 350)
       )
+      console.log(this.listRequestTypes)
+      console.log(this.requestType)
+      console.log(this.nrInfo)
     },
     computed: {
-      ...mapGetters(['nrNumber']),
       ...mapState([
+        'nrInfo',
+        'listRequestTypes',
+        'pendingNameRequest',
+        'pendingTransactionsRequest',
         'transactionsData',
         'transactionsNR',
         'transactionsModalVisible',
-        'transactionsRequestStatus',
         'transactionsModalState'
       ]),
+      expiry() {
+        // moment().format('DD-MM-YYYY, h:mm a')
+        if (this.nrInfo && this.nrInfo.expirationDate) {
+          return this.nrInfo.expirationDate
+        }
+        return ''
+      },
+      names() {
+        if (this.nrInfo && this.nrInfo.names) {
+          return this.nrInfo.names.sort(function(a, b) { return a.choice < b.choice })
+        }
+        return []
+      },
+      priority() {
+        if (this.nrInfo && this.nrInfo.priorityCd) {
+          return this.nrInfo.priorityCd === 'Y'
+        }
+        return false
+      },
+      requestType() {
+        if (this.nrInfo && this.nrInfo.requestTypeCd) {
+          return this.nrInfo.requestTypeCd
+        }
+        return ''
+      },
+      requestType_desc() {
+        try {
+          return getDescFromList(this.listRequestTypes, this.requestType)
+        } catch (err) {
+          return 'Error getting Request Type'
+        }
+      },
+      submitted() {
+        if (this.nrInfo && this.nrInfo.submittedDate) {
+          return this.nrInfo.submittedDate
+        }
+        return ''
+      },
+      status() {
+        let state = 'N/A'
+        if (this.nrInfo && this.nrInfo.stateCd) {
+          state = this.nrInfo.stateCd
+          if (state == 'CONDITIONAL') state += ' APPROVED'
+          if (this.nrInfo.corpNum) state += ` / Used for ${this.nrInfo.corpNum}`
+        }
+        return state
+      },
       sortDescending: {
         get() {
           if ( this.transactionsModalState ) {
@@ -239,17 +318,8 @@
         this.savedScrollPosition = e.target.scrollTop
         return e
       },
-      closeModal() {
-        this.$store.commit('toggleTransactionsModal', false)
-        this.$store.commit('setTransactionsRequestStatus', 'pending')
-      },
       parseDate(date) {
         return moment(date).local().format('YYYY-MM-DD, h:mm a')
-      },
-      getTransactions() {
-        this.$store.dispatch('getTransactionsHistory', this.nrNumber).then( () => {
-          this.showSpinner = false
-        })
       },
       customSort(items, index, isDescending) {
         return items.sort((a,b) => {
@@ -291,43 +361,50 @@
     font-size: 22px;
     cursor: pointer;
   }
-
+  .border-right {
+    border-right: thin solid var(--l-grey);
+  }
   .close-icon {
     color: var(--priority);
     transform: rotate(45deg);
     font-size: 26px;
   }
-  .grey-bar {
+  .copy-normal {
     color: var(--text);
-    padding: 10px;
-    background-color: var(--xl-grey);
+    font-size: 16px;
   }
-
+  .copy-lg {
+    color: var(--text);
+    font-size: 19px;
+  }
+  .grey-bar {
+    background-color: var(--d-grey);
+    color: white;
+  }
   .min-max-icon {
     color: var(--link);
     font-size: 26px;
   }
-
   .title-font {
     font-size: 24px;
     font-weight: 600;
-    margin: 8px;
   }
-
-  .transactions-modal {
-    position: absolute;
-    top: 200px;
-    background-color: white;
-    box-shadow: 0px 0px 20px 4px grey;
-    z-index: 9999;
-    overflow: hidden;
+  .title-font-sm {
+    font-size: 19px;
+    font-weight: 600;
   }
-
-
-  .transactions-modal-lg {
-    width: 90%;
-    margin-left: 5%;
-    margin-right: 5%;
+  .transaction-container {
+    padding: 30px;
+  }
+  .transaction-header-info {
+    max-width: 1000px;
+    padding-top: 15px;
+  }
+  .transaction-header-names {
+    padding-top: 5px;
+  }
+  .transaction-header-title {
+    padding-bottom: 10px;
   }
 
   tr:hover:not(.bg-xl-blue) {
@@ -359,12 +436,6 @@
     color: var(--link);
     display: flex;
     cursor: pointer;
-  }
-
-  .transactions-modal-sm {
-    width: 55%;
-    margin-left: 22.5%;
-    margin-right: 22.5%;
   }
 
 </style>

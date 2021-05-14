@@ -7,7 +7,7 @@
         <v-flex :class="['nr-number', 'text-left',  'mx-4', priority ? 'rejected' : 'dk-grey']" shrink>
           <span id="nrNumberDisplay">{{ nrNumber }}</span>
           <v-icon style="position: relative; top: -8px; color: var(--link);"
-                  @click="getTransactionsHistory()">open_in_new</v-icon>
+                  @click="openTransactionHistory()">open_in_new</v-icon>
         </v-flex>
         <!--REQUEST DESCRIPTION / DROPDOWN -->
         <v-flex :lg5="is_editing" :grow="!is_editing">
@@ -799,8 +799,18 @@
         let date = moment(d, 'YYYY-MM-DD, hh:mm a')
         return date.format('YYYY-MM-DD, h:mma')
       },
-      getTransactionsHistory() {
-        this.$store.dispatch('getTransactionsHistory', this.nrNumber)
+      openTransactionHistory() {
+        console.log(this.$store.getters.nrData)
+        const routeData = this.$router.resolve(
+          {
+            name: 'transactions',
+            query: {
+              token: sessionStorage.getItem('KEYCLOAK_TOKEN'),
+              nr: this.nrNumber
+            }
+          }
+        )
+        window.open(routeData.href, '_blank')
       },
       revertToPreviousState() {
         // set current state to previous state, and clear previous state field

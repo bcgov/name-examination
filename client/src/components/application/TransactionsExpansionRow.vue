@@ -150,7 +150,7 @@
     },
     computed: {
       ...mapGetters(['nrNumber']),
-      ...mapState(['transactionsData', 'transactionsNR', 'transactionsRequestStatus']),
+      ...mapState(['transactionsData', 'transactionsNR', 'pendingTransactionsRequest']),
       data() {
         if (typeof this.jsonData === 'object' && Object.keys(this.jsonData).length > 0) {
           let output = []
