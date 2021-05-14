@@ -842,9 +842,7 @@ export default {
   td {
     vertical-align: top !important;
   }
-  .blue {
-    color: var(--blue) !important;
-  }
+
   .text-input-style {
     background-color: white !important;
     border: 1px solid var(--outline);
