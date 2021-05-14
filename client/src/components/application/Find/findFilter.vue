@@ -10,9 +10,10 @@
                   attach
                   browser-autocomplete="off"
                   :items="headers"
-                  placeholder="Columns to Show"
+                  :menu-props="dropdownPropsXl"
                   multiple
-                  style="width: 200px"
+                  placeholder="Columns to Show"
+                  style="width: 200px;"
                   v-model="selectedHeaderValues">
           <template v-slot:selection="{index}">
             <span v-if="index === 0">Columns to Show</span>
@@ -143,7 +144,7 @@
                           browser-autocomplete="off"
                           class="text-input-style"
                           :items="consentOptions"
-                          :menu-props="priorityProps"
+                          :menu-props="dropdownPropsMd"
                           attach
                           value="option"
                           v-model="consentOption" />
@@ -152,7 +153,7 @@
                           browser-autocomplete="off"
                           class="text-input-style"
                           :items="rankings"
-                          :menu-props="priorityProps"
+                          :menu-props="dropdownPropsMd"
                           attach
                           value="option"
                           v-model="ranking" />
@@ -161,6 +162,7 @@
                           class="text-input-style"
                           browser-autocomplete="off"
                           :items="notificationType"
+                          :menu-props="dropdownPropsLg"
                           attach
                           value="option"
                           v-model="notification" />
@@ -169,6 +171,7 @@
                           class="text-input-style"
                           browser-autocomplete="off"
                           :items="submittedDateIntervals"
+                          :menu-props="dropdownPropsMd"
                           value="option"
                           attach
                           v-model="submittedInterval" />
@@ -176,6 +179,7 @@
                           id="search-filter-lastUpdate"
                           class="text-input-style"
                           browser-autocomplete="off"
+                          :menu-props="dropdownPropsMd"
                           v-model="lastUpdateInterval"
                           attach
                           value="option"
@@ -218,8 +222,14 @@ export default {
         minWidth: '130px',
         minHeight: '400px'
       },
-      priorityProps: {
+      dropdownPropsLg: {
+        minWidth: '110px'
+      },
+      dropdownPropsMd: {
         minWidth: '100px'
+      },
+      dropdownPropsXl: {
+        minWidth: '200px'
       },
       headers:[
         {value:'Status', text: 'Status', style: {width: '100px'}, display: true, },
@@ -232,7 +242,7 @@ export default {
         {value:'ConsentRequired', text: 'Consent Required', style: {width: '100px'}, display: true, },
         {value:'Priority', text: 'Priority', style: {width: '100px'}, display: true, },
         {value:'ClientNotification', text: 'Notified', style: {width: '100px'}, display: true, },
-        {value:'Submitted', text: 'Submitted', style: {width: '150px'}, display: true, sortable: true },
+        {value:'Submitted', text: 'Submitted', style: {width: '150px'}, display: true },
         {value:'LastUpdate', text: 'Last Update', style: {width: '150px'}, display: true, },
         {value:'LastComment', text: 'Last Comment', style: {width: '300px'}, display: true, },
       ],
@@ -584,6 +594,12 @@ export default {
           this.username = '';
         else if (this.compName != '')
           this.compName = '';
+        else if (this.firstName != '')
+          this.firstName = '';
+        else if (this.lastName != '')
+          this.lastName = '';
+        else if (this.consentOption != 'All')
+          this.consentOption = 'All';
         else if (this.ranking !== 'All')
           this.ranking = 'All';
         else if (this.notification !== 'All')
