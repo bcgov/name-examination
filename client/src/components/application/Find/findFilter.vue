@@ -60,7 +60,7 @@
     </v-layout>
     <v-layout style="overflow:auto">
       <v-flex>
-        <v-card v-if="showSubmittedDatePicker" class="date-selection">
+        <v-card v-if="showSubmittedDatePicker" class="date-selection" elevation="6">
           <v-layout>
             <v-flex :class="pickerStartClass">Select Start Date:</v-flex>
             <v-flex :class="pickerEndClass">Select End Date:</v-flex>
