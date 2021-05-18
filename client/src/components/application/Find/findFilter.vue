@@ -60,10 +60,28 @@
     </v-layout>
     <v-layout style="overflow:auto">
       <v-flex>
+        <v-card v-if="showSubmittedDatePicker" class="date-selection">
+          <v-layout>
+            <v-flex :class="pickerStartClass">Select Start Date:</v-flex>
+            <v-flex :class="pickerEndClass">Select End Date:</v-flex>
+          </v-layout>
+          <v-layout class="pt-4" row>
+            <v-flex>
+              <v-date-picker color="#1A5A96" :max="submittedEndDateTmp" v-model="submittedStartDateTmp"/>
+            </v-flex>
+            <v-flex class="pl-4">
+              <v-date-picker color="#1A5A96" :min="submittedStartDateTmp" v-model="submittedEndDateTmp"/>
+            </v-flex>
+          </v-layout>
+          <v-layout class="pt-4" justify-end row>
+              <v-btn class="date-selection-btn bold" flat ripple small @click="updateSubmittedRange">OK</v-btn>
+              <v-btn class="date-selection-btn ml-4" flat ripple small @click="resetSubmittedRange">Cancel</v-btn>
+          </v-layout>
+        </v-card>
         <v-data-table :headers="headers"
                       class="ma-3"
                       :items="data"
-                      style="min-width: 1400px"
+                      style="min-width: 1420px"
                       item-key="NameRequestNumber"
                       sort-by="Submitted"
                       :sort-desc="[false, true]"
@@ -174,7 +192,12 @@
                           :menu-props="dropdownPropsMd"
                           value="option"
                           attach
-                          v-model="submittedInterval" />
+                          v-model="submittedInterval">
+                  <template slot="item" slot-scope="data">
+                    <option v-if="data.item === 'Custom'" @click="showSubmittedDatePicker = true">{{data.item}}</option>
+                    <option v-else>{{data.item}}</option>
+                  </template>
+                </v-select>
                 <v-select v-if="header.value === 'LastUpdate'"
                           id="search-filter-lastUpdate"
                           class="text-input-style"
@@ -232,19 +255,19 @@ export default {
         minWidth: '200px'
       },
       headers:[
-        {value:'Status', text: 'Status', style: {width: '100px'}, display: true, },
-        {value:'LastModifiedBy', text: 'Modified By', style: {width: '100px'}, display: true, },
-        {value:'NameRequestNumber', text: 'NR Number', style: {width: '150px'}, display: true, },
-        {value:'Names', text: 'Names', style: {width: '600px'}, display: true, },
-        {value:'ApplicantFirstName', text: 'Applicant First Name', style: {width: '110px'}, display: true, },
-        {value:'ApplicantLastName', text: 'Applicant Last Name', style: {width: '110px'}, display: true, },
-        {value:'NatureOfBusiness', text: 'Nature Of Business', style: {width: '250px'}, display: true, },
-        {value:'ConsentRequired', text: 'Consent Required', style: {width: '100px'}, display: true, },
-        {value:'Priority', text: 'Priority', style: {width: '100px'}, display: true, },
-        {value:'ClientNotification', text: 'Notified', style: {width: '100px'}, display: true, },
-        {value:'Submitted', text: 'Submitted', style: {width: '150px'}, display: true },
-        {value:'LastUpdate', text: 'Last Update', style: {width: '150px'}, display: true, },
-        {value:'LastComment', text: 'Last Comment', style: {width: '300px'}, display: true, },
+        {value:'Status', text: 'Status', style: {width: '100px'}, display: true, sortable: false, },
+        {value:'LastModifiedBy', text: 'Modified By', style: {width: '100px'}, display: true, sortable: false, },
+        {value:'NameRequestNumber', text: 'NR Number', style: {width: '150px'}, display: true, sortable: false, },
+        {value:'Names', text: 'Names', style: {width: '600px'}, display: true, sortable: false, },
+        {value:'ApplicantFirstName', text: 'Applicant First Name', style: {width: '110px'}, display: true, sortable: false, },
+        {value:'ApplicantLastName', text: 'Applicant Last Name', style: {width: '110px'}, display: true, sortable: false, },
+        {value:'NatureOfBusiness', text: 'Nature Of Business', style: {width: '250px'}, display: true, sortable: false, },
+        {value:'ConsentRequired', text: 'Consent Required', style: {width: '100px'}, display: true, sortable: false, },
+        {value:'Priority', text: 'Priority', style: {width: '100px'}, display: true, sortable: false, },
+        {value:'ClientNotification', text: 'Notified', style: {width: '100px'}, display: true, sortable: false, },
+        {value:'Submitted', text: 'Submitted', style: {width: '150px'}, display: true, sortable: false, },
+        {value:'LastUpdate', text: 'Last Update', style: {width: '150px'}, display: true, sortable: false, },
+        {value:'LastComment', text: 'Last Comment', style: {width: '300px'}, display: true, sortable: false, },
       ],
       selectedHeaderValues: [
         'Status',
@@ -284,7 +307,13 @@ export default {
       selectedNR: '',
       submittedOrder: 'asc',
       submittedInterval: 'All',
-      submittedDateIntervals:['Today','7 days','30 days','90 days','1 year','3 years','5 years','All'],
+      submittedDateIntervals:['Today','7 days','30 days','90 days','1 year','3 years','5 years','All', 'Custom'],
+      submittedStartDate: null,
+      submittedEndDate: null,
+      submittedStartDateTmp: null,
+      submittedEndDateTmp: null,
+      showSubmittedDatePicker: false,
+      datePickerErr: false,
       lastUpdateInterval: 'All',
       lastUpdateIntervals:['Today','Yesterday','2 days','7 days','30 days','All'],
       searchQuery: '?order=priorityCd:desc,submittedDate:asc&queue=hold&consentOption=All&ranking=All&notification=All&' +
@@ -382,6 +411,22 @@ export default {
         this.$store.commit('searchSubmittedInterval',val);
       }
     },
+    currentSubmittedStartDate: {
+      get: function () {
+        return this.$store.state.searchSubmittedStartDate;
+      },
+      set: function (val) {
+        this.$store.commit('searchSubmittedStartDate',val);
+      }
+    },
+    currentSubmittedEndDate: {
+      get: function () {
+        return this.$store.state.searchSubmittedEndDate;
+      },
+      set: function (val) {
+        this.$store.commit('searchSubmittedEndDate',val);
+      }
+    },
     currentLastUpdatedInterval: {
       get: function () {
         return this.$store.state.searchLastUpdatedInterval;
@@ -426,6 +471,14 @@ export default {
     },
     searchColumns() {
       return this.$store.getters.userSearchColumns
+    },
+    pickerStartClass() {
+      if (!this.submittedStartDateTmp && this.datePickerErr) return 'picker-title picker-red'
+      return 'picker-title'
+    },
+    pickerEndClass() {
+      if (!this.submittedEndDateTmp && this.datePickerErr) return 'picker-title picker-red pl-4'
+      return 'picker-title pl-4'
     }
   },
   async mounted() {
@@ -531,7 +584,6 @@ export default {
               }
             }
           } else { data[i].comments = null };
-
           data[i] = this.buildTableRow(data[i]);
         }
         return data;
@@ -586,6 +638,8 @@ export default {
       } else {
         this.searchQuery += '&' + sort + '=' + value;
       }
+      // remove &submittedInterval=Custom (backend doesn't like it) -> will have start/end date instead
+      this.searchQuery = this.searchQuery.replace('&submittedInterval=Custom', '')
       // checks that all filters are at default values before calling 'sort()' if 'clearing' is true
       if (this.clearing) {
         if (this.nrSearch != '') {
@@ -611,6 +665,9 @@ export default {
         else if (this.perPage !== 10)
           this.perPage = 10;
         else {
+          // submitted start/end dates down here since watchers don't call this function
+          this.submittedStartDate = null;
+          this.submittedEndDate = null;
           this.clearing = false;
           this.sort();
         }
@@ -642,10 +699,20 @@ export default {
         else if (this.currentPage !== this.storeCurrentPage)
           this.currentPage = this.storeCurrentPage;
         else {
+          // submitted start/end dates down here since watchers don't call this function
+          this.submittedStartDate = this.currentSubmittedStartDate;
+          this.submittedEndDate = this.currentSubmittedEndDate;
           this.mounting = false;
           this.sort();
         }
-      } else if (['nrNum','activeUser','compName'].includes(sort)) {
+      } else if ([
+        'nrNum',
+        'activeUser',
+        'compName',
+        'firstName',
+        'lastName',
+        'submittedStartDate',
+        'submittedEndDate'].includes(sort) || sort === 'submittedInterval' && value === 'Custom') {
         //do nothing
       } else if (this.currentPage !== 1 && sort !== 'start')
         this.currentPage = 1;
@@ -720,10 +787,37 @@ export default {
         else
           this.sort();
       }
+    },
+    updateSubmittedRange() {
+      if (!this.submittedStartDateTmp || !this.submittedEndDateTmp) {
+        this.datePickerErr = true
+        return
+      }
+      this.datePickerErr = false
+      // watchers on these will update current.. versions in store as well
+      this.submittedStartDate = this.submittedStartDateTmp
+      this.submittedEndDate = this.submittedEndDateTmp
+      // we will have skipped this in the watcher for submittedInterval previously
+      this.currentSubmittedInterval = this.submittedInterval
+      this.showSubmittedDatePicker = false
+      // update query with start/end dates and search
+      this.updateQuery('submittedStartDate', this.submittedStartDate)
+      this.updateQuery('submittedEndDate', this.submittedEndDate)
+      this.sort()
+    },
+    resetSubmittedRange() {
+      // reset validation
+      this.datePickerErr = false
+      // reset tmp values
+      this.submittedStartDateTmp = this.submittedStartDate
+      this.submittedEndDateTmp = this.submittedEndDate
+      // reset submittedInterval (will not trigger a search)
+      this.submittedInterval = this.currentSubmittedInterval
+      // hide date picker
+      this.showSubmittedDatePicker = false
     }
   },
   watch: {
-
     searchData: function (val) {
 
       this.total = val.response.numFound;
@@ -821,54 +915,96 @@ export default {
       this.sort()
     },
     submittedInterval: function (val) {
-
-      this.currentSubmittedInterval = val;
+      if (val === 'Custom') this.showSubmittedDatePicker = true
+      else if (this.currentSubmittedInterval != val) {
+        this.submittedStartDate = null
+        this.submittedEndDate = null
+        this.submittedStartDateTmp = null
+        this.submittedEndDateTmp = null
+        this.showSubmittedDatePicker = false
+        this.currentSubmittedInterval = val;
+      } else this.showSubmittedDatePicker = false
       this.updateQuery('submittedInterval',val);
     },
+    submittedStartDate: function (val) {
+      this.currentSubmittedStartDate = val
+    },
+    submittedEndDate: function (val) {
+      this.currentSubmittedEndDate = val
+    },
     lastUpdateInterval: function (val) {
-
       this.currentLastUpdatedInterval = val;
       this.updateQuery('lastUpdateInterval',val);
-    }
+    },
   },
 }
 </script>
 
 <style scoped>
-  a {
-    color: var(--link) !important;
-  }
-
-  td {
-    vertical-align: top !important;
-  }
-
-  .text-input-style {
-    background-color: white !important;
-    border: 1px solid var(--outline);
-    height: 32px;
-    padding: 0 0 5px 8px;
-    font-size: 13px;
-    margin: 0;
-    color: var(--text)
-  }
-
-  .cell-pre-line {
-    white-space: pre-line;
-  }
-
-  .header-row-1 {
-    background-color: var(--d-blue);
-    color: white !important;
-    height: 50px;
-    font-size: 14px;
-    font-weight: 700;
-    text-align: left;
-    white-space: normal;
-  }
-
-  .header-row-2 {
-    background-color: var(--l-blue);
-    padding: 10px;
-  }
+a {
+  color: var(--link) !important;
+}
+option {
+  font-size: 13px !important;
+}
+td {
+  vertical-align: top !important;
+}
+.cell-pre-line {
+  white-space: pre-line;
+}
+.date-selection {
+  border-radius: 5px;
+  left: 50%;
+  margin-top: 110px;
+  overflow: auto;
+  padding: 24px 34px 24px 34px;
+  position: absolute;
+  transform: translate(-50%, 0);
+}
+.date-selection td {
+  padding: 0;
+}
+.date-selection-btn {
+  color: var(--blue);
+  margin: 0;
+  opacity: 1;
+  padding: 0;
+  min-width: 20px;
+}
+.date-selection-btn:hover {
+  opacity: 0.7;
+}
+.date-selection-btn.bold {
+  font-weight: 800 !important;
+}
+.header-row-1 {
+  background-color: var(--d-blue);
+  color: white !important;
+  height: 50px;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+  white-space: normal;
+}
+.header-row-2 {
+  background-color: var(--l-blue);
+  padding: 10px;
+}
+.picker-red {
+  color: var(--red);
+}
+.picker-title {
+  font-size: 14px;
+  font-weight: bold;
+}
+.text-input-style {
+  background-color: white !important;
+  border: 1px solid var(--outline);
+  height: 32px;
+  padding: 0 0 5px 8px;
+  font-size: 13px;
+  margin: 0;
+  color: var(--text)
+}
 </style>

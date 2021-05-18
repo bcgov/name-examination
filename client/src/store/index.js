@@ -1522,6 +1522,12 @@ export const mutations = {
   searchSubmittedInterval(state, value) {
     state.searchSubmittedInterval = value
   },
+  searchSubmittedStartDate(state, value) {
+    state.searchSubmittedStartDate = value
+  },
+  searchSubmittedEndDate(state, value) {
+    state.searchSubmittedEndDate = value
+  },
   searchLastUpdatedInterval(state, value) {
     state.searchLastUpdatedInterval = value
   },
@@ -2588,7 +2594,7 @@ export const state = {
   },
 
   searchQuery: '?order=priorityCd:desc,submittedDate:asc&queue=hold&consentOption=All&ranking=All&notification=All&' +
-    'submittedInterval=30 days&lastUpdateInterval=All&rows=10',
+    'submittedInterval=All&lastUpdateInterval=All&rows=10',
   searchState: 'HOLD',
   searchNr: '',
   searchUsername: '',
@@ -2600,6 +2606,8 @@ export const state = {
   searchNotification: 'All',
   searchSubmittedOrder: 'asc',
   searchSubmittedInterval: 'All',
+  searchSubmittedStartDate: null,
+  searchSubmittedEndDate: null,
   searchLastUpdatedInterval: 'All',
   searchCurrentPage: 1,
   searchPerPage: 10,

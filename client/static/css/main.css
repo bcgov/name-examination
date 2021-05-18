@@ -192,14 +192,6 @@ html {
   color: var(--priority) !important;
 }
 
-.primary--text a {
-  color: var(--blue) !important;
-}
-
-.primary--text i {
-  color: var(--blue) !important;
-}
-
 .red-text {
   color: var(--priority) !important;
 }
@@ -291,6 +283,10 @@ html {
   font-weight: 400 !important;
 }
 
+.v-btn__content, .date-selection-btn.v-btn  {
+  font-weight: inherit !important;
+}
+
 not(#find-filter, #stats-viewer) .v-table__overflow {
   overflow-x: hidden !important;
   overflow-y: auto !important;
@@ -316,6 +312,14 @@ not(#find-filter, #stats-viewer) .v-table__overflow {
 .v-list__tile__action {
   min-width: 35px !important;
   padding-top: 8px !important;
+}
+
+a.primary--text .v-list__tile__action .primary--text {
+  color: var(--blue) !important;
+}
+
+a.primary--text .v-list__tile__content {
+  color: var(--blue) !important;
 }
 
 .v-ripple__animation {
@@ -370,6 +374,40 @@ not(#find-filter, #stats-viewer) .v-table__overflow {
   padding: 0px !important;
 }
 .v-tabs__item :not(.v-tabs__item--active) {
+  opacity: 1 !important;
+}
+
+.date-selection .v-picker {
+  border-radius: 8px;
+}
+
+.date-selection .v-date-picker-header {
+  padding: 0;
+}
+
+.date-selection .v-date-picker-table th {
+  padding: 0;
+}
+
+.date-selection .v-picker__title {
+  padding: 16px !important;
+}
+
+.date-selection .v-picker__title__btn {
+  font-size: 22px !important;
+  font-weight: 800 !important;
+  padding-bottom: 4px !important;
+}
+
+.date-selection .v-picker__title__btn.v-date-picker-title__year {
+  color: white !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  margin: 0;
+  opacity: 0.85 !important;
+}
+
+.date-selection .v-picker__title__btn.v-date-picker-title__year:hover {
   opacity: 1 !important;
 }
 
@@ -429,6 +467,10 @@ table {
 
 td {
   padding: 4px;
+}
+
+.v-date-picker-table--date td {
+  padding: 0px;
 }
 
 th {
