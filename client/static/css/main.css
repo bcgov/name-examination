@@ -297,7 +297,7 @@ not(#find-filter, #stats-viewer) .v-table__overflow {
 /*min height to allow v-select's in table header not to get cut off when few
  items returned in search */
 #find-filter .v-table__overflow {
-  min-height: 400px !important;
+  min-height: 600px !important;
 }
 
 #stats-viewer .v-table__overflow {
@@ -385,7 +385,14 @@ a.primary--text .v-list__tile__content {
   padding: 0;
 }
 
+.date-selection .v-date-picker-table table {
+  margin: 0;
+  padding-top: 10px;
+}
+
 .date-selection .v-date-picker-table th {
+  color: rgba(0,0,0,0.87) !important;
+  font-weight: bold;
   padding: 0;
 }
 
