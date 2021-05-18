@@ -243,16 +243,19 @@ export default {
     return {
       selectProps: {
         minWidth: '130px',
-        minHeight: '400px'
+        maxHeight: 'none',
       },
       dropdownPropsLg: {
-        minWidth: '110px'
+        minWidth: '110px',
+        maxHeight: 'none',
       },
       dropdownPropsMd: {
-        minWidth: '100px'
+        minWidth: '100px',
+        maxHeight: 'none',
       },
       dropdownPropsXl: {
-        minWidth: '200px'
+        minWidth: '200px',
+        maxHeight: 'none',
       },
       headers:[
         {value:'Status', text: 'Status', style: {width: '100px'}, display: true, sortable: false, },
