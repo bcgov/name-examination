@@ -800,7 +800,6 @@
         return date.format('YYYY-MM-DD, h:mma')
       },
       openTransactionHistory() {
-        console.log(this.$store.getters.nrData)
         const routeData = this.$router.resolve(
           {
             name: 'transactions',

@@ -134,7 +134,6 @@ export const actions = {
   },
   async getNameRequest({ dispatch, commit }, nrNumber) {
     const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-    console.log(myToken)
     const url = '/api/v1/requests/' + nrNumber
     dispatch( 'checkToken' )
     axios.get( url, { headers: { Authorization: `Bearer ${ myToken }` } } )
@@ -846,52 +845,18 @@ export const actions = {
   },
   async getTransactionsHistory({ commit }, nrNumber) {
     const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-    console.log(myToken)
     const url = '/api/v1/events/' + nrNumber
     commit('setPendingTransactionsRequest', true)
     return new Promise((resolve, reject) => {
       axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` }})
         .then(response => {
           let { transactions } = response.data
-          let jsonDataFalse = [
-            'Get NR Details from NRO',
-            'Decision',
-            'Load NR',
-            'Updated NRO',
-            'Hold Request',
-            'Get Next NR',
-            'Marked on Hold',
-            'Migrated by NRO',
-            'Set to Historical by NRO(Migration)',
-            'Expired by NRO',
-            'Cancelled in NRO',
-          ]
-          let data = []
-
-          for (let entry in transactions) {
-            let item = transactions[entry]
-            if (!item.user_action) {
-              item.user_action = item.action
-            }
-            if (typeof item.jsonData === 'string') {
-              item.jsonData = JSON.parse(item.jsonData)
-            }
-            if (item.jsonData && Object.keys(item.jsonData).length > 0) {
-              item.showJSONData = true
-              if ( jsonDataFalse.includes(item.user_action) ) {
-                item.showJSONData = false
-              }
-            } else {
-              item.showJSONData = false
-            }
-            data.push(item)
-          }
-          commit('setTransactionsData', data)
+          commit('setTransactionsData', transactions)
           commit('setPendingTransactionsRequest', false)
           resolve()
         })
         .catch( () => {
-          commit('setTransactionsData', 'No data')
+          commit('setTransactionsData', null)
           commit('setPendingTransactionsRequest', false)
           resolve()
         })

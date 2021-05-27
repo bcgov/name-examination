@@ -287,7 +287,7 @@ html {
   font-weight: inherit !important;
 }
 
-not(#find-filter, #stats-viewer) .v-table__overflow {
+:not(#find-filter, #stats-viewer) .v-table__overflow {
   overflow-x: hidden !important;
   overflow-y: auto !important;
   height: 450px !important;
