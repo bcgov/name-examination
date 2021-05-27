@@ -231,7 +231,7 @@ module.exports = {
       showCommentsPopUp: false,
       transactionsModalVisible: false,
       transactionsData: null,
-      transactionsRequestStatus: 'pending',
+      pendingTransactionsRequest: false,
       transactionsModalState: {
         maximized: true,
         page: 1,

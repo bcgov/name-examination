@@ -4,7 +4,7 @@
   <div style="height: 100%;">
     <v-app >
       <div id="app" style="height: 100%;" :class="is_editing ? 'bg-grey' : ''">
-        <std-header style="z-index: 2"> </std-header>
+        <std-header v-if="showHeader" style="z-index: 2"> </std-header>
         <router-view style="z-index: 1"></router-view>
       </div>
       <WordClassificationModal v-if="showWordClassification" />
@@ -66,8 +66,11 @@ export default {
       is_editing() {
         return this.$store.state.is_editing
       },
+      showHeader() {
+        return this.$route.name != 'transactions'
+      },
       showWordClassification() {
-        return this.$store.state.allowWordClassificationModal
+        return this.$store.state.allowWordClassificationModal && this.$route.name != 'transactions'
       }
     },
     watch: {
