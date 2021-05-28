@@ -182,7 +182,7 @@
         let activeChoice = 1
         for (let i = 0; i < this.names.length; i++) {
           const name = this.names[i]
-          if (['APPROVED', 'CONDITIONAL', 'NE'].includes(name.state)) {
+          if (['APPROVED', 'CONDITION', 'NE'].includes(name.state)) {
             // set first encounter of one of the above states as the active choice then break loop
             activeChoice = name.choice
             break
@@ -280,10 +280,9 @@
 <style scoped>
 #transaction-background {
   background-color: var(--l-grey);
-  height: 155vh;
 }
 #transaction-main-container {
-  height: 100vh;
+  height: 1210px;
   max-width: 1200px;
   padding: 0;
 }
@@ -337,7 +336,7 @@
 }
 .transaction-container {
   background-color: white;
-  max-height: 100vh;
+  max-height: 750px;
   padding: 30px;
 }
 .transaction-header-info {
