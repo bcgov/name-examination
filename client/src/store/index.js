@@ -851,11 +851,17 @@ export const actions = {
       axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` }})
         .then(response => {
           let { transactions } = response.data
+          for (let i=0; i<transactions.length; i++) {
+            transactions[i].names = transactions[i].names.sort(function(a, b) { 
+              if (a.choice > b.choice) return 1
+              return -1 })
+          }
           commit('setTransactionsData', transactions)
           commit('setPendingTransactionsRequest', false)
           resolve()
         })
-        .catch( () => {
+        .catch( (err) => {
+          console.error(err)
           commit('setTransactionsData', null)
           commit('setPendingTransactionsRequest', false)
           resolve()

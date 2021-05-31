@@ -9,7 +9,7 @@
         <v-layout v-else>
           <v-flex>
             <v-layout class="transaction-header-title" row>
-              <v-flex class="border-right priority title-font pr-3" shrink>
+              <v-flex class="border-right title-font pr-3" :class="priority ? 'priority' : ''" shrink>
                 {{ nr }}
               </v-flex>
               <v-flex v-if="priority" class="border-right title-font px-3" shrink>
@@ -17,9 +17,6 @@
                   <v-icon class="priority" shrink>star</v-icon>
                   Priority
                 </span>
-              </v-flex>
-              <v-flex v-else class="border-right title-font px-3" shrink>
-                <span class="title-font-sm">Regular</span>
               </v-flex>
               <v-flex class="title-font pl-3" grow>
                 <span class="title-font-sm">{{ requestType_desc(requestType) }}</span>
@@ -72,59 +69,61 @@
         </v-layout>
       </v-container>
       <!-- Transaction History List -->
-      <v-container class="transaction-container copy-normal pa-0" fluid style="overflow: auto;">  
-        <v-layout v-if="pendingTransactionsRequest" class="pt-5" style="height: 100vh">
-          <spinner />
-        </v-layout>
-        <v-layout v-else v-for="(transaction, index) in transactionsData" :key="index" :class="getTransactionItemClasses(index)" row>
-          <v-flex>
-            <v-layout style="padding-bottom: 20px;">
-              <v-flex class="font-weight-bold" shrink style="width: 200px;">
-                <v-layout no-wrap row>Date/Time:</v-layout>
-                <v-layout class="pt-2" no-wrap row>Transaction Type:</v-layout>
-                <v-layout class="pt-2" no-wrap row>Request Status:</v-layout>
-                <v-layout class="pt-2" no-wrap row>Request Type:</v-layout>
-                <v-layout class="pt-2" no-wrap row>Additional Information:</v-layout>
-              </v-flex>
-              <v-flex class="pl-4" shrink style="width: 400px;">
-                <v-layout no-wrap row>{{ formatDate(transaction.eventDate) }}</v-layout>
-                <v-layout class="pt-2" no-wrap row>{{ transaction.user_action }}</v-layout>
-                <v-layout class="pt-2" no-wrap row style="overflow: auto">{{ displayState(transaction) }}</v-layout>
-                <v-layout class="pt-2" no-wrap row>{{ requestType_desc(transaction.requestTypeCd) }}</v-layout>
-                <v-layout class="pt-2">
-                  <v-flex style="overflow: auto;">
-                    <p class="ma-0">{{ transaction.additionalInfo }}</p>
-                  </v-flex>
-                </v-layout>
-              </v-flex>
-              <v-flex class="font-weight-bold" shrink style="padding-left: 32px;">
-                <v-layout no-wrap row>Expiry Date:</v-layout>
-                <v-layout class="pt-2" no-wrap row>User Id:</v-layout>
-                <v-layout class="pt-2" no-wrap row>Consent:</v-layout>
-                <v-layout class="pt-2" no-wrap row>Queue:</v-layout>
-              </v-flex>
-              <v-flex class="pl-4">
-                <v-layout no-wrap row>{{ formatDate(transaction.expirationDate) }}</v-layout>
-                <v-layout class="pt-2" no-wrap row>{{ transaction.user_name }}</v-layout>
-                <v-layout class="pt-2" no-wrap row>{{ displayConsent(transaction) }}</v-layout>
-                <v-layout class="pt-2" no-wrap row>
-                  <v-flex v-if="transaction.priorityCd === 'Y'" class="priority bold" shrink style="font-size: 15px;">
-                      <v-icon class="priority" shrink style="font-size: 20px;">star</v-icon> Priority
-                  </v-flex>
-                  <v-flex v-else shrink>Regular</v-flex>
-                </v-layout>
-              </v-flex>
-            </v-layout>
-            <v-layout v-for="name in transaction.names" :key="name.choice" class="border-top" style="padding: 20px 0px;">
-              <v-flex class="bold" shrink style="font-size: 15px; width: 200px;">Name {{ name.choice }}:</v-flex>
-              <v-flex class="pl-4" shrink style="font-size: 17px;">
-                {{ name.name }}
-                <CompNameIcon v-if="name.state && name.state !== 'NE'" :state="name.state" />
-                <span v-else> (Draft)</span>
-              </v-flex>
-            </v-layout>
-          </v-flex>
-        </v-layout>
+      <v-container id="transaction-list-wrapper" class="transaction-container copy-normal pa-0" fluid>
+        <v-container id="transaction-list" fluid> 
+          <v-layout v-if="pendingTransactionsRequest" class="pt-5" style="height: 100vh">
+            <spinner />
+          </v-layout>
+          <v-layout v-else v-for="(transaction, index) in transactionsData" :key="index" :class="getTransactionItemClasses(index)" row>
+            <v-flex>
+              <v-layout style="padding-bottom: 20px;">
+                <v-flex class="font-weight-bold" shrink style="width: 200px;">
+                  <v-layout no-wrap row>Date/Time:</v-layout>
+                  <v-layout class="pt-2" no-wrap row>Transaction Type:</v-layout>
+                  <v-layout class="pt-2" no-wrap row>Request Status:</v-layout>
+                  <v-layout class="pt-2" no-wrap row>Request Type:</v-layout>
+                  <v-layout class="pt-2" no-wrap row>Additional Information:</v-layout>
+                </v-flex>
+                <v-flex class="pl-4" shrink style="width: 400px;">
+                  <v-layout no-wrap row>{{ formatDate(transaction.eventDate) }}</v-layout>
+                  <v-layout class="pt-2" no-wrap row>{{ transaction.user_action }}</v-layout>
+                  <v-layout class="pt-2" no-wrap row style="overflow: auto">{{ displayState(transaction) }}</v-layout>
+                  <v-layout class="pt-2" no-wrap row>{{ requestType_desc(transaction.requestTypeCd) }}</v-layout>
+                  <v-layout class="pt-2">
+                    <v-flex style="overflow: auto;">
+                      <p class="ma-0">{{ transaction.additionalInfo }}</p>
+                    </v-flex>
+                  </v-layout>
+                </v-flex>
+                <v-flex class="font-weight-bold" shrink style="padding-left: 32px;">
+                  <v-layout no-wrap row>Expiry Date:</v-layout>
+                  <v-layout class="pt-2" no-wrap row>User Id:</v-layout>
+                  <v-layout class="pt-2" no-wrap row>Consent:</v-layout>
+                  <v-layout class="pt-2" no-wrap row>Queue:</v-layout>
+                </v-flex>
+                <v-flex class="pl-4" grow>
+                  <v-layout no-wrap row>{{ formatDate(transaction.expirationDate) }}</v-layout>
+                  <v-layout class="pt-2" no-wrap row>{{ transaction.user_name }}</v-layout>
+                  <v-layout class="pt-2" no-wrap row>{{ displayConsent(transaction) }}</v-layout>
+                  <v-layout class="pt-2" no-wrap row>
+                    <v-flex v-if="transaction.priorityCd === 'Y'" class="priority bold" shrink style="font-size: 15px;">
+                        <v-icon class="priority" shrink style="font-size: 20px;">star</v-icon> Priority
+                    </v-flex>
+                    <v-flex v-else shrink>Regular</v-flex>
+                  </v-layout>
+                </v-flex>
+              </v-layout>
+              <v-layout v-for="name in transaction.names" :key="name.choice" class="border-top" style="padding: 20px 0px;">
+                <v-flex class="bold" shrink style="font-size: 15px; width: 200px;">Name {{ name.choice }}:</v-flex>
+                <v-flex class="pl-4" shrink style="font-size: 17px;">
+                  {{ name.name }}
+                  <CompNameIcon v-if="name.state && name.state !== 'NE'" :state="name.state" />
+                  <span v-else> (Draft)</span>
+                </v-flex>
+              </v-layout>
+            </v-flex>
+          </v-layout>
+        </v-container>
       </v-container>
     </v-container>
   </div>
@@ -202,7 +201,12 @@
       },
       names() {
         if (this.nrInfo && this.nrInfo.names) {
-          return this.nrInfo.names.sort(function(a, b) { return a.choice < b.choice })
+          return this.nrInfo.names.sort(
+            function(a, b) { 
+              if (a.choice > b.choice) return 1
+              return -1
+            }
+          )
         }
         return []
       },
@@ -281,8 +285,19 @@
 #transaction-background {
   background-color: var(--l-grey);
 }
+#transaction-list {
+  overflow: auto;
+  padding: 0;
+  position: absolute;
+}
+#transaction-list-wrapper {
+  flex: 1;
+  height: 90vh;
+  overflow: auto;
+  padding: 0;
+  position: relative;
+}
 #transaction-main-container {
-  height: 1210px;
   max-width: 1200px;
   padding: 0;
 }
@@ -336,7 +351,6 @@
 }
 .transaction-container {
   background-color: white;
-  max-height: 750px;
   padding: 30px;
 }
 .transaction-header-info {
