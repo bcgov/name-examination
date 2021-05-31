@@ -234,7 +234,7 @@
         if (nrInfo) {
           if (nrInfo.consent_dt) return 'Required. Received.'
           if (nrInfo.consentFlag === 'Y') return 'Required. Not Yet Received.'
-          return 'Not Required.'
+          return 'Not Required'
         }
         return 'N/A'
       },
