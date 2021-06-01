@@ -70,9 +70,15 @@
       </v-container>
       <!-- Transaction History List -->
       <v-container id="transaction-list-wrapper" class="transaction-container copy-normal pa-0" fluid>
-        <v-container id="transaction-list" fluid> 
+        <v-container id="transaction-list" fluid>
           <v-layout v-if="pendingTransactionsRequest" class="pt-5" style="height: 100vh">
             <spinner />
+          </v-layout>
+          <v-layout v-else-if="transactionsData && transactionsData.length === 0" class="pa-5" justify-center>
+            No Data
+          </v-layout>
+          <v-layout v-else-if="!transactionsData" class="pt-5" justify-center>
+            There was an error loading the transaction history for this NR. Please try again by reloading the page.
           </v-layout>
           <v-layout v-else v-for="(transaction, index) in transactionsData" :key="index" :class="getTransactionItemClasses(index)" row>
             <v-flex>
