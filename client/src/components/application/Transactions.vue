@@ -75,7 +75,7 @@
             <spinner />
           </v-layout>
           <v-layout v-else-if="transactionsData && transactionsData.length === 0" class="pa-5" justify-center>
-            No Data
+            No transaction history data available.
           </v-layout>
           <v-layout v-else-if="!transactionsData" class="pt-5" justify-center>
             There was an error loading the transaction history for this NR. Please try again by reloading the page.
