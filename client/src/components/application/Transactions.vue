@@ -94,7 +94,7 @@
                   <v-layout no-wrap row>{{ formatDate(transaction.eventDate) }}</v-layout>
                   <v-layout class="pt-2" no-wrap row>{{ transaction.user_action }}</v-layout>
                   <v-layout class="pt-2" no-wrap row style="overflow: auto">{{ displayState(transaction) }}</v-layout>
-                  <v-layout class="pt-2" no-wrap row>{{ requestType_desc(transaction.requestTypeCd) }}</v-layout>
+                  <v-layout class="pt-2" no-wrap row style="overflow: auto">{{ requestType_desc(transaction.requestTypeCd) }}</v-layout>
                   <v-layout class="pt-2">
                     <v-flex style="overflow: auto;">
                       <p class="ma-0">{{ transaction.additionalInfo }}</p>
