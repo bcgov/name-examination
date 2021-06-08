@@ -239,7 +239,6 @@
                          :text="natureOfBusiness">
           <!--CONTENT HERE GOES IN SLOT UNDER NATURE OF BUSINESS-->
           <v-layout column>
-            <v-flex mt-4 v-if="submitCount > 0"><b>Submit Count: </b>{{submitCount}}</v-flex>
             <template v-if="prev_nr_required">
               <v-layout column v-if="is_editing && !is_closed">
                 <v-flex mt-4 fw-600>Previous NR</v-flex>

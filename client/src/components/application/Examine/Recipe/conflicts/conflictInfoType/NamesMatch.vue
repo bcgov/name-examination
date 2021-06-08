@@ -28,8 +28,6 @@
         <v-flex lg8>{{ applicants.clientFirstName }} {{ applicants.clientLastName}}</v-flex>
         <v-flex header-mg lg4 item-heading>Contact</v-flex>
         <v-flex header-mg lg8>{{ applicants.contact }}</v-flex>
-        <v-flex header-mg lg4 mt-3 item-heading>Submit Count</v-flex>
-        <v-flex header-mg lg8 mt-3>{{ submitCount }}</v-flex>
         <v-flex header-mg lg4 item-heading>Name State</v-flex>
         <v-flex header-mg lg8>{{nameState}}</v-flex>
       </v-layout>

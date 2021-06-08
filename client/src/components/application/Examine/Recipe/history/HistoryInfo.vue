@@ -22,8 +22,6 @@
         <v-flex header-mg lg9>{{ contactName }}</v-flex>
       </v-layout>
       <v-layout wrap style="width: 55%;" align-items-start>
-        <v-flex header-mg lg3 item-heading>Submit Count</v-flex>
-        <v-flex header-mg lg9>{{ submitCount }}</v-flex>
         <v-flex header-mg lg3 item-heading>Name State</v-flex>
         <v-flex header-mg lg9>{{nameState}}</v-flex>
         <v-flex lg12 header-mg v-if="conflicts.length > 0">
