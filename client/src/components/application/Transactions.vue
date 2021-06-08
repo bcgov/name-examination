@@ -333,9 +333,6 @@
   font-size: 11px;
   position: relative;
   display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 .grey-bar {
   background-color: var(--d-grey);
