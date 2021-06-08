@@ -539,9 +539,6 @@
     width: 600px;
     position: relative;
     display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   .completed-decision-text {
