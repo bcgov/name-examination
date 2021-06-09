@@ -519,15 +519,7 @@ export default {
             let adjustCount = false;
             let namesStr = '';
             for (let namesIter = 0; namesIter < data[i].names.length; namesIter++) {
-              if (data[i].names[namesIter] != undefined && data[i].names[namesIter].choice !== undefined) {
-                if (this.compName != '') {
-                  if (data[i].names[namesIter].name.search(this.compName.toUpperCase()) != -1) {
-                    if (adjustCount)
-                      this.total--;
-                    else
-                      adjustCount = true;
-                  }
-                }
+              if (data[i].names[namesIter] && data[i].names[namesIter].choice) {
                 data[i].names[namesIter] = data[i].names[namesIter].choice + '. ' + data[i].names[namesIter].name;
                 namesStr += data[i].names[namesIter] + ' \n';
               }
