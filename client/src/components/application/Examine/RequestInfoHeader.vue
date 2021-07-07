@@ -142,10 +142,10 @@
             </v-flex>
             <v-flex v-else class="grey--text"><b>Expiry:</b> n/a</v-flex>
             <v-flex :class="!consumptionDate ? 'grey--text' : ''">
-              <b>Consumed:</b> {{ consumptionDate ? consumptionDate : 'n/a' }}
+              <b>Consumed:</b> {{ consumptionDate || 'n/a' }}
             </v-flex>
             <v-flex :class="!consumedBy ? 'grey--text' : ''">
-              <b>Consumed By:</b> {{ consumedBy ? consumedBy : 'n/a' }}
+              <b>Consumed by:</b> {{ consumedBy || 'n/a' }}
             </v-flex>
             <template v-if="nr_status === 'CONDITIONAL' && showConsent">
               <v-flex>
