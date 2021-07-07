@@ -159,7 +159,7 @@ export default {
         }
       }
       return {
-        maxWidth: '260px',
+        maxWidth: '300px',
       }
     }
   },
