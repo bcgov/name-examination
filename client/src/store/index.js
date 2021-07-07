@@ -852,7 +852,7 @@ export const actions = {
         .then(response => {
           let { transactions } = response.data
           for (let i=0; i<transactions.length; i++) {
-            transactions[i].names = transactions[i].names.sort(function(a, b) { 
+            transactions[i].names = transactions[i].names.sort(function(a, b) {
               if (a.choice > b.choice) return 1
               return -1 })
           }
@@ -1093,6 +1093,20 @@ export const getters = {
     }
     return null
 
+  },
+  consumedBy(state) {
+    let consumedBy = ''
+    if ( state.compInfo.compNames.compName1.corpNum != null ) {
+      consumedBy = state.compInfo.compNames.compName1.corpNum
+    }
+    else if ( state.compInfo.compNames.compName2.corpNum != null ) {
+      consumedBy = state.compInfo.compNames.compName2.corpNum
+    }
+    else {
+      consumedBy = state.compInfo.compNames.compName3.corpNum
+    }
+
+    return consumedBy
   },
   submitCount(state) {
     return state.submitCount

@@ -142,7 +142,10 @@
             </v-flex>
             <v-flex v-else class="grey--text"><b>Expiry:</b> n/a</v-flex>
             <v-flex :class="!consumptionDate ? 'grey--text' : ''">
-              <b>Consumed:</b> {{ consumptionDate ? consumptionDate : 'n/a' }}
+              <b>Consumed:</b> {{ consumptionDate || 'n/a' }}
+            </v-flex>
+            <v-flex :class="!consumedBy ? 'grey--text' : ''">
+              <b>Consumed by:</b> {{ consumedBy || 'n/a' }}
             </v-flex>
             <template v-if="nr_status === 'CONDITIONAL' && showConsent">
               <v-flex>
@@ -187,35 +190,7 @@
           <v-divider vertical/>
         </v-flex>
 
-        <!--COL 3:  NWPTA  AB-->
-        <v-flex fs-15
-                :style="nwptaABStyle">
-          <v-layout column id="nwpta-ab" :style="nwptaABStyle">
-            <NWPTA ref="nwpta_ab"
-                   :style="nwptaABStyle"
-                   jurisdiction="AB"
-                   :is_lp_nwpta_type="is_lp_nwpta_type"
-                   :is_cp_nwpta_type="is_cp_nwpta_type"/>
-          </v-layout>
-        </v-flex>
-
-        <!--COL 4:  NWPTA  SK-->
-        <v-flex fs-15
-                :style="nwptaSKStyle">
-          <v-layout column id="nwpta-sk" :style="nwptaSKStyle">
-            <NWPTA ref="nwpta_sk"
-                   jurisdiction="SK"
-                   :style="nwptaSKStyle"
-                   :is_lp_nwpta_type="is_lp_nwpta_type"
-                   :is_cp_nwpta_type="is_cp_nwpta_type"/>
-          </v-layout>
-        </v-flex>
-
-        <v-flex shrink mx-2 style="height: 100px" v-if="!is_expanded">
-          <v-divider vertical/>
-        </v-flex>
-
-        <!--COL 5:  ADDITIONAL INFORMATION -->
+        <!--COL 3:  ADDITIONAL INFORMATION -->
         <InfoHeaderPopup title="Additional Info:"
                          :class="is_editing ? 'ml-2' : ''"
                          infoType="information"
@@ -225,11 +200,11 @@
                          :save="save"
                          :text="additionalInfo"/>
 
-        <v-flex shrink mx-3 style="height: 100px" v-if="!is_expanded">
+        <v-flex shrink mx-2 style="height: 100px" v-if="!is_expanded">
           <v-divider vertical/>
         </v-flex>
 
-        <!--COL 6:  NATURE OF BUSINESS -->
+        <!--COL 4:  NATURE OF BUSINESS -->
         <InfoHeaderPopup title="N.O.B.:"
                          :class="is_editing ? 'ml-2' : ''"
                          :is_editing="is_editing"
@@ -279,11 +254,11 @@
           </v-layout>
         </InfoHeaderPopup>
 
-        <v-flex shrink mx-3 style="height: 100px" v-if="!is_expanded">
+        <v-flex shrink mx-2 style="height: 100px" v-if="!is_expanded">
           <v-divider vertical/>
         </v-flex>
 
-        <!--COL 7:  APPLICANT INFORMATION -->
+        <!--COL 5:  APPLICANT INFORMATION -->
         <InfoHeaderPopup
                          title="Applicant Information:"
                          :class="['ma-0', is_editing ? 'pr-4' : 'pr-2']"
@@ -467,6 +442,11 @@
           return new moment(this.$store.getters.consumptionDate).format('YYYY-MM-DD')
         }
         return ''
+      },
+      consumedBy: {
+        get() {
+          return this.$store.getters.consumedBy
+        }
       },
       corpNum: {
         get() {
