@@ -523,7 +523,7 @@
       },
       jurisdiction: {
         get() {
-          return this.$store.getters.jurisdiction
+          return this.$store.getters.jurisdiction && this.$store.getters.jurisdiction.toUpperCase()
         },
         set(value) {
           this.$store.commit('jurisdiction', value)
@@ -624,6 +624,12 @@
           return this.$store.getters.requestType
         },
         set(value) {
+          const requestType = this.requestType_options.find(x => x.value === value)
+          const entityTypeCd = requestType.ENTITY_TYPE_CD
+          const requestActionCd = requestType.REQUEST_ACTION_CD
+
+          this.$store.commit('entityTypeCd', entityTypeCd)
+          this.$store.commit('requestActionCd', requestActionCd)
           this.$store.commit('requestType', value)
         },
       },

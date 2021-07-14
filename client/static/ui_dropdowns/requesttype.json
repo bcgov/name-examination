@@ -6,7 +6,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "CR",
 		"ADDITIONAL_INFO": "",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "CR",
+    "REQUEST_ACTION_CD": "NEW"
 	},
 	{
 		"value": "CCR",
@@ -15,8 +17,10 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "CR",
 		"ADDITIONAL_INFO": "Change of Name",
-		"SOURCE_APPLICATION": "COLIN"
-	},
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "CR",
+    "REQUEST_ACTION_CD": "CHG"
+  },
 	{
 		"value": "CT",
 		"SHORT_DESC": "B.C. Company",
@@ -24,7 +28,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "CR",
 		"ADDITIONAL_INFO": "Continuation In",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "CR",
+    "REQUEST_ACTION_CD": "MVE"
 	},
 	{
 		"value": "RCR",
@@ -33,7 +39,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "CR",
 		"ADDITIONAL_INFO": "Restoration",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "CR",
+    "REQUEST_ACTION_CD": "REH"
 	},
 	{
 		"value": "XCR",
@@ -42,7 +50,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "CR",
 		"ADDITIONAL_INFO": "",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "XCR",
+    "REQUEST_ACTION_CD": "NEW"
 	},
 	{
 		"value": "XCCR",
@@ -51,7 +61,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "CR",
 		"ADDITIONAL_INFO": "Change of Name",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "XCR",
+    "REQUEST_ACTION_CD": "CHG"
 	},
 	{
 		"value": "XRCR",
@@ -60,7 +72,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "CR",
 		"ADDITIONAL_INFO": "Reinstatement",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "XCR",
+    "REQUEST_ACTION_CD": "REH"
 	},
 	{
 		"value": "AS",
@@ -69,7 +83,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "AS",
 		"ADDITIONAL_INFO": "",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "XCR",
+    "REQUEST_ACTION_CD": "ASSUMED"
 	},
 	{
 		"value": "LC",
@@ -78,7 +94,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "LC",
 		"ADDITIONAL_INFO": "",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "RLC",
+    "REQUEST_ACTION_CD": "NEW"
 	},
 	{
 		"value": "CLC",
@@ -87,7 +105,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "LC",
 		"ADDITIONAL_INFO": "Change of Name",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "RLC",
+    "REQUEST_ACTION_CD": "CHG"
 	},
 	{
 		"value": "RLC",
@@ -96,7 +116,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "LC",
 		"ADDITIONAL_INFO": "Reinstatement",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "RLC",
+    "REQUEST_ACTION_CD": "REH"
 	},
 	{
 		"value": "AL",
@@ -105,7 +127,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "AL",
 		"ADDITIONAL_INFO": "",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "RLC",
+    "REQUEST_ACTION_CD": "ASSUMED"
 	},
 	{
 		"value": "FR",
@@ -114,7 +138,9 @@
 		"CLASS_TYPE_CD": "FIRM",
 		"LEGACY_CD": "FR",
 		"ADDITIONAL_INFO": "",
-		"SOURCE_APPLICATION": ""
+		"SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "FR",
+    "REQUEST_ACTION_CD": "NEW"
 	},
 	{
 		"value": "CFR",
@@ -123,7 +149,9 @@
 		"CLASS_TYPE_CD": "FIRM",
 		"LEGACY_CD": "FR",
 		"ADDITIONAL_INFO": "Change of Name",
-		"SOURCE_APPLICATION": ""
+		"SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "FR",
+    "REQUEST_ACTION_CD": "CHG"
 	},
 	{
 		"value": "LL",
@@ -132,7 +160,9 @@
 		"CLASS_TYPE_CD": "FIRM",
 		"LEGACY_CD": "LL",
 		"ADDITIONAL_INFO": "",
-		"SOURCE_APPLICATION": ""
+		"SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "LL",
+    "REQUEST_ACTION_CD": "NEW"
 	},
 	{
 		"value": "CLL",
@@ -141,7 +171,9 @@
 		"CLASS_TYPE_CD": "FIRM",
 		"LEGACY_CD": "LL",
 		"ADDITIONAL_INFO": "Change of Name",
-		"SOURCE_APPLICATION": ""
+		"SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "LL",
+    "REQUEST_ACTION_CD": "CHG"
 	},
 	{
 		"value": "XLL",
@@ -150,7 +182,9 @@
 		"CLASS_TYPE_CD": "FIRM",
 		"LEGACY_CD": "LL",
 		"ADDITIONAL_INFO": "",
-		"SOURCE_APPLICATION": ""
+		"SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "XLL",
+    "REQUEST_ACTION_CD": "NEW"
 	},
 	{
 		"value": "XCLL",
@@ -159,7 +193,9 @@
 		"CLASS_TYPE_CD": "FIRM",
 		"LEGACY_CD": "LL",
 		"ADDITIONAL_INFO": "Change of Name",
-		"SOURCE_APPLICATION": ""
+		"SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "XLL",
+    "REQUEST_ACTION_CD": "CHG"
 	},
 	{
 		"value": "LP",
@@ -168,7 +204,9 @@
 		"CLASS_TYPE_CD": "FIRM",
 		"LEGACY_CD": "FR",
 		"ADDITIONAL_INFO": "Limited Partnership",
-		"SOURCE_APPLICATION": ""
+		"SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "LP",
+    "REQUEST_ACTION_CD": "NEW"
 	},
 	{
 		"value": "CLP",
@@ -177,7 +215,9 @@
 		"CLASS_TYPE_CD": "FIRM",
 		"LEGACY_CD": "FR",
 		"ADDITIONAL_INFO": "Change of Name",
-		"SOURCE_APPLICATION": ""
+		"SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "LP",
+    "REQUEST_ACTION_CD": "CHG"
 	},
 	{
 		"value": "XLP",
@@ -186,7 +226,9 @@
 		"CLASS_TYPE_CD": "FIRM",
 		"LEGACY_CD": "FR",
 		"ADDITIONAL_INFO": "",
-		"SOURCE_APPLICATION": ""
+		"SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "XLP",
+    "REQUEST_ACTION_CD": "NEW"
 	},
 	{
 		"value": "XCLP",
@@ -195,7 +237,9 @@
 		"CLASS_TYPE_CD": "FIRM",
 		"LEGACY_CD": "FR",
 		"ADDITIONAL_INFO": "Change of Name",
-		"SOURCE_APPLICATION": ""
+		"SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "XLP",
+    "REQUEST_ACTION_CD": "CHG"
 	},
 	{
 		"value": "SO",
@@ -303,7 +347,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "CP",
 		"ADDITIONAL_INFO": "",
-		"SOURCE_APPLICATION": ""
+		"SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "CP",
+    "REQUEST_ACTION_CD": "NEW"
 	},
 	{
 		"value": "CCP",
@@ -312,7 +358,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "CP",
 		"ADDITIONAL_INFO": "Change of Name",
-		"SOURCE_APPLICATION": ""
+		"SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "CP",
+    "REQUEST_ACTION_CD": "CHG"
 	},
 	{
 		"value": "CTC",
@@ -321,7 +369,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "CP",
 		"ADDITIONAL_INFO": "",
-		"SOURCE_APPLICATION": ""
+		"SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "CP",
+    "REQUEST_ACTION_CD": "MVE"
 	},
 	{
 		"value": "RCP",
@@ -330,7 +380,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "CP",
 		"ADDITIONAL_INFO": "Restoration",
-		"SOURCE_APPLICATION": ""
+		"SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "CP",
+    "REQUEST_ACTION_CD": "REH"
 	},
 	{
 		"value": "XCP",
@@ -339,7 +391,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "CP",
 		"ADDITIONAL_INFO": "",
-		"SOURCE_APPLICATION": ""
+		"SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "XCP",
+    "REQUEST_ACTION_CD": "NEW"
 	},
 	{
 		"value": "XCCP",
@@ -348,7 +402,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "CP",
 		"ADDITIONAL_INFO": "Change of Name",
-		"SOURCE_APPLICATION": ""
+		"SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "XCP",
+    "REQUEST_ACTION_CD": "CHG"
 	},
 	{
 		"value": "XRCP",
@@ -357,7 +413,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "CP",
 		"ADDITIONAL_INFO": "Restoration",
-		"SOURCE_APPLICATION": ""
+		"SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "XCP",
+    "REQUEST_ACTION_CD": "REH"
 	},
 	{
 		"value": "CC",
@@ -366,7 +424,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "CC",
 		"ADDITIONAL_INFO": "",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "CC",
+    "REQUEST_ACTION_CD": "NEW"
 	},
 	{
 		"value": "CCV",
@@ -375,7 +435,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "CN",
 		"ADDITIONAL_INFO": "Change of Name",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "CC",
+    "REQUEST_ACTION_CD": "CNV"
 	},
 	{
 		"value": "CCC",
@@ -384,7 +446,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "CN",
 		"ADDITIONAL_INFO": "Change of Name",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "CC",
+    "REQUEST_ACTION_CD": "CHG"
 	},
 	{
 		"value": "CCCT",
@@ -393,7 +457,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "CI",
 		"ADDITIONAL_INFO": "Continuation In",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "CC",
+    "REQUEST_ACTION_CD": "MVE"
 	},
 	{
 		"value": "RCC",
@@ -402,7 +468,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "CS",
 		"ADDITIONAL_INFO": "Restoration",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "CC",
+    "REQUEST_ACTION_CD": "REH"
 	},
 	{
 		"value": "UL",
@@ -411,7 +479,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "UL",
 		"ADDITIONAL_INFO": "",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "UL",
+    "REQUEST_ACTION_CD": "NEW"
 	},
 	{
 		"value": "UC",
@@ -420,7 +490,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "UC",
 		"ADDITIONAL_INFO": "",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "UC",
+    "REQUEST_ACTION_CD": "CNV"
 	},
 	{
 		"value": "CUL",
@@ -429,7 +501,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "UL",
 		"ADDITIONAL_INFO": "Change of Name",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "UL",
+    "REQUEST_ACTION_CD": "CHG"
 	},
 	{
 		"value": "ULCT",
@@ -438,7 +512,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "UL",
 		"ADDITIONAL_INFO": "Continuation In",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "UL",
+    "REQUEST_ACTION_CD": "MVE"
 	},
 	{
 		"value": "RUL",
@@ -447,7 +523,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "UL",
 		"ADDITIONAL_INFO": "Restoration",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "UL",
+    "REQUEST_ACTION_CD": "REH"
 	},
 	{
 		"value": "UA",
@@ -456,7 +534,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "UA",
 		"ADDITIONAL_INFO": "",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "XUL",
+    "REQUEST_ACTION_CD": "ASSUMED"
 	},
 	{
 		"value": "XUL",
@@ -465,7 +545,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "UL",
 		"ADDITIONAL_INFO": "",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "XUL",
+    "REQUEST_ACTION_CD": "NEW"
 	},
 	{
 		"value": "XCUL",
@@ -474,7 +556,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "UL",
 		"ADDITIONAL_INFO": "Change of Name",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "XUL",
+    "REQUEST_ACTION_CD": "CHG"
 	},
 	{
 		"value": "XRUL",
@@ -483,7 +567,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "UL",
 		"ADDITIONAL_INFO": "Reinstatement",
-		"SOURCE_APPLICATION": "COLIN"
+		"SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "XUL",
+    "REQUEST_ACTION_CD": "REH"
 	},
 	{
 		"value": "FI",
@@ -492,7 +578,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "FI",
 		"ADDITIONAL_INFO": "",
-		"SOURCE_APPLICATION": ""
+		"SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "FI",
+    "REQUEST_ACTION_CD": "NEW"
 	},
   {
 		"value": "CFI",
@@ -501,7 +589,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "FI",
 		"ADDITIONAL_INFO": "Change of Name",
-		"SOURCE_APPLICATION": ""
+		"SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "FI",
+    "REQUEST_ACTION_CD": "CHG"
 	},
 	{
 		"value": "RFI",
@@ -510,7 +600,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "FI",
 		"ADDITIONAL_INFO": "Restoration",
-		"SOURCE_APPLICATION": ""
+		"SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "FI",
+    "REQUEST_ACTION_CD": "REH"
 	},
 	{
 		"value": "PA",
@@ -519,7 +611,9 @@
 		"CLASS_TYPE_CD": "CORP",
 		"LEGACY_CD": "PA",
 		"ADDITIONAL_INFO": "",
-		"SOURCE_APPLICATION": ""
+		"SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "PA",
+    "REQUEST_ACTION_CD": "NEW"
 	},
 	{
 		"value": "CEM",
@@ -555,7 +649,9 @@
 		"CLASS_TYPE_CD": "MISC",
 		"LEGACY_CD": "PAR",
 		"ADDITIONAL_INFO": "",
-		"SOURCE_APPLICATION": ""
+		"SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "PAR",
+    "REQUEST_ACTION_CD": "NEW"
 	},
 	{
 		"value": "RLY",
@@ -582,7 +678,9 @@
     "CLASS_TYPE_CD": "CORP",
     "LEGACY_CD": "BC",
     "ADDITIONAL_INFO": "",
-    "SOURCE_APPLICATION": "COLIN"
+    "SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "BC",
+    "REQUEST_ACTION_CD": "NEW"
   },
   {
     "value": "BEAM",
@@ -591,7 +689,9 @@
     "CLASS_TYPE_CD": "CORP",
     "LEGACY_CD": "BEAM",
     "ADDITIONAL_INFO": "",
-    "SOURCE_APPLICATION": "COLIN"
+    "SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "BC",
+    "REQUEST_ACTION_CD": "AML"
   },
   {
     "value": "BEC",
@@ -600,7 +700,9 @@
     "CLASS_TYPE_CD": "CORP",
     "LEGACY_CD": "BEC",
     "ADDITIONAL_INFO": "",
-    "SOURCE_APPLICATION": "COLIN"
+    "SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "BC",
+    "REQUEST_ACTION_CD": "CHG"
   },
   {
     "value": "BECT",
@@ -609,7 +711,9 @@
     "CLASS_TYPE_CD": "CORP",
     "LEGACY_CD": "BECT",
     "ADDITIONAL_INFO": "",
-    "SOURCE_APPLICATION": "COLIN"
+    "SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "BC",
+    "REQUEST_ACTION_CD": "MVE"
   },
   {
     "value": "BERE",
@@ -618,7 +722,9 @@
     "CLASS_TYPE_CD": "CORP",
     "LEGACY_CD": "BERE",
     "ADDITIONAL_INFO": "",
-    "SOURCE_APPLICATION": "COLIN"
+    "SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "BC",
+    "REQUEST_ACTION_CD": "REH"
   },
   {
     "value": "BECV",
@@ -627,7 +733,9 @@
     "CLASS_TYPE_CD": "CORP",
     "LEGACY_CD": "BECV",
     "ADDITIONAL_INFO": "",
-    "SOURCE_APPLICATION": "COLIN"
+    "SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "BECV",
+    "REQUEST_ACTION_CD": "CNV"
   },
   {
     "value": "BECR",
@@ -636,6 +744,8 @@
     "CLASS_TYPE_CD": "CORP",
     "LEGACY_CD": "BECR",
     "ADDITIONAL_INFO": "",
-    "SOURCE_APPLICATION": "COLIN"
+    "SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "BECR",
+    "REQUEST_ACTION_CD": "CNV"
   }
 ]
