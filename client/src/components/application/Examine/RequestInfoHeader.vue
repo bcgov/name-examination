@@ -624,13 +624,17 @@
           return this.$store.getters.requestType
         },
         set(value) {
-          const requestType = this.requestType_options.find(x => x.value === value)
-          const entityTypeCd = requestType.ENTITY_TYPE_CD
-          const requestActionCd = requestType.REQUEST_ACTION_CD
-
-          this.$store.commit('entityTypeCd', entityTypeCd)
-          this.$store.commit('requestActionCd', requestActionCd)
           this.$store.commit('requestType', value)
+
+          // Set the corresponding Name Request codes to keep cross app edits in sync
+          const requestType = this.requestType_options.find(x => x.value === value) || null
+          if (requestType) {
+            const entityTypeCd = requestType['ENTITY_TYPE_CD']
+            const requestActionCd = requestType['REQUEST_ACTION_CD']
+
+            this.$store.commit('entityTypeCd', entityTypeCd)
+            this.$store.commit('requestActionCd', requestActionCd)
+          }
         },
       },
       requestType_desc() {
