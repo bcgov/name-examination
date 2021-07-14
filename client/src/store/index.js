@@ -1374,6 +1374,12 @@ export const mutations = {
   requestType(state, value) {
     state.compInfo.requestType = value
   },
+  entityTypeCd(state, value) {
+    state.compInfo.entityTypeCd = value
+  },
+  requestActionCd(state, value) {
+    state.compInfo.requestActionCd = value
+  },
   is_my_current_nr(state, value) {
     state.is_my_current_nr = value
   },
@@ -1870,8 +1876,9 @@ export const mutations = {
         state.nrData.names[2] = state.compInfo.compNames.compName3
       }
     }
-
     state.nrData.requestTypeCd = state.compInfo.requestType
+    state.nrData.entity_type_cd = state.compInfo.entityTypeCd
+    state.nrData.request_action_cd = state.compInfo.requestActionCd
 
     state.applicantOrigData.clientFirstName = state.applicantInfo.clientName.firstName
     state.applicantOrigData.clientLastName = state.applicantInfo.clientName.lastName
@@ -2533,7 +2540,10 @@ export const state = {
         decision_text: null,
         comment: null,
       },
-    }, requestType: null,
+    },
+    requestType: null,
+    entityTypeCd: null,
+    requestActionCd: null
   },
   applicantInfo: {
     clientName: {
