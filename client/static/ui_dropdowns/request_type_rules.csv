@@ -28,6 +28,7 @@ RCP,Cooperative - Restore,TRUE,,,,,,TRUE
 AS,Corporation (Foreign) - Extraprovincial Assumed Name,,TRUE,TRUE,,**Previous <prev_nr>** ,,
 XCCR,Corporation (Foreign) - Extraprovincial Change of Name,,TRUE,,,**Change of Name** ,,
 XCR,Corporation (Foreign) - Extraprovincial Registration/Amalgamation,,TRUE,,,,,
+XACR,Corporation (Foreign) - Extraprovincial Registration/Amalgamation,,TRUE,,,,,
 XRCR,Corporation (Foreign) - Extraprovincial Reinstatement,,TRUE,,,**Reinstatement**,,
 CFI,Financial Institution (BC) - Change of Name,,,,,**Change of Name** ,,
 FI,Financial Institution (BC) - Incorporation,,,,,,,

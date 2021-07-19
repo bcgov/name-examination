@@ -2,13 +2,24 @@
   {
     "value": "CR",
     "SHORT_DESC": "B.C. Company",
-    "text": "B.C. Company - Incorporation/Amalgamation",
+    "text": "B.C. Company - Incorporation",
     "CLASS_TYPE_CD": "CORP",
     "LEGACY_CD": "CR",
     "ADDITIONAL_INFO": "",
     "SOURCE_APPLICATION": "COLIN",
     "ENTITY_TYPE_CD": "CR",
     "REQUEST_ACTION_CD": "NEW"
+  },
+  {
+    "value": "ACR",
+    "SHORT_DESC": "B.C. Company",
+    "text": "B.C. Company - Amalgamation",
+    "CLASS_TYPE_CD": "CORP",
+    "LEGACY_CD": "CR",
+    "ADDITIONAL_INFO": "",
+    "SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "CR",
+    "REQUEST_ACTION_CD": "AML"
   },
   {
     "value": "CCR",
@@ -46,13 +57,24 @@
   {
     "value": "XCR",
     "SHORT_DESC": "Extraprovincial Registration",
-    "text": "Corporation (Foreign) - Extraprovincial Registration/Amalgamation",
+    "text": "Corporation (Foreign) - Extraprovincial Registration",
     "CLASS_TYPE_CD": "CORP",
     "LEGACY_CD": "CR",
     "ADDITIONAL_INFO": "",
     "SOURCE_APPLICATION": "COLIN",
     "ENTITY_TYPE_CD": "XCR",
     "REQUEST_ACTION_CD": "NEW"
+  },
+  {
+    "value": "XACR",
+    "SHORT_DESC": "Extraprovincial Registration",
+    "text": "Corporation (Foreign) - Extraprovincial Amalgamation",
+    "CLASS_TYPE_CD": "CORP",
+    "LEGACY_CD": "CR",
+    "ADDITIONAL_INFO": "",
+    "SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "XCR",
+    "REQUEST_ACTION_CD": "AML"
   },
   {
     "value": "XCCR",
@@ -133,8 +155,8 @@
   },
   {
     "value": "FR",
-    "SHORT_DESC": "General Partnership/Proprietorship ",
-    "text": "Sole Proprietorship/General Partnership - Registration",
+    "SHORT_DESC": "Proprietorship ",
+    "text": "Sole Proprietorship - Registration",
     "CLASS_TYPE_CD": "FIRM",
     "LEGACY_CD": "FR",
     "ADDITIONAL_INFO": "",
@@ -145,12 +167,34 @@
   {
     "value": "CFR",
     "SHORT_DESC": "General Partnership/Proprietorship ",
-    "text": "Sole Proprietorship/General Partnership - Change of Name",
+    "text": "Sole Proprietorship - Change of Name",
     "CLASS_TYPE_CD": "FIRM",
     "LEGACY_CD": "FR",
     "ADDITIONAL_INFO": "Change of Name",
     "SOURCE_APPLICATION": "",
     "ENTITY_TYPE_CD": "FR",
+    "REQUEST_ACTION_CD": "CHG"
+  },
+  {
+    "value": "GP",
+    "SHORT_DESC": "General Partnership ",
+    "text": "General Partnership - Registration",
+    "CLASS_TYPE_CD": "FIRM",
+    "LEGACY_CD": "FR",
+    "ADDITIONAL_INFO": "",
+    "SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "GP",
+    "REQUEST_ACTION_CD": "NEW"
+  },
+  {
+    "value": "CGP",
+    "SHORT_DESC": "General Partnership ",
+    "text": "General Partnership - Change of Name",
+    "CLASS_TYPE_CD": "FIRM",
+    "LEGACY_CD": "FR",
+    "ADDITIONAL_INFO": "Change of Name",
+    "SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "GP",
     "REQUEST_ACTION_CD": "CHG"
   },
   {
@@ -343,13 +387,24 @@
   {
     "value": "CP",
     "SHORT_DESC": "Cooperative",
-    "text": "Cooperative - Incorporation/Amalgamation",
+    "text": "Cooperative - Incorporation",
     "CLASS_TYPE_CD": "CORP",
     "LEGACY_CD": "CP",
     "ADDITIONAL_INFO": "",
     "SOURCE_APPLICATION": "",
     "ENTITY_TYPE_CD": "CP",
     "REQUEST_ACTION_CD": "NEW"
+  },
+  {
+    "value": "ACP",
+    "SHORT_DESC": "Cooperative",
+    "text": "Cooperative - Amalgamation",
+    "CLASS_TYPE_CD": "CORP",
+    "LEGACY_CD": "CP",
+    "ADDITIONAL_INFO": "",
+    "SOURCE_APPLICATION": "",
+    "ENTITY_TYPE_CD": "CP",
+    "REQUEST_ACTION_CD": "AML"
   },
   {
     "value": "CCP",
@@ -419,14 +474,25 @@
   },
   {
     "value": "CC",
-    "SHORT_DESC": "CCC - Inc/Amal ",
-    "text": "CCC - Incorporation/Amalgamation",
+    "SHORT_DESC": "CCC - Inc ",
+    "text": "CCC - Incorporation",
     "CLASS_TYPE_CD": "CORP",
     "LEGACY_CD": "CC",
     "ADDITIONAL_INFO": "",
     "SOURCE_APPLICATION": "COLIN",
     "ENTITY_TYPE_CD": "CC",
     "REQUEST_ACTION_CD": "NEW"
+  },
+  {
+    "value": "ACC",
+    "SHORT_DESC": "CCC - Amal ",
+    "text": "CCC - Amalgamation",
+    "CLASS_TYPE_CD": "CORP",
+    "LEGACY_CD": "CC",
+    "ADDITIONAL_INFO": "",
+    "SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "CC",
+    "REQUEST_ACTION_CD": "AML"
   },
   {
     "value": "CCV",
