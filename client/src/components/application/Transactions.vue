@@ -1,30 +1,28 @@
 <template>
-  <div id="transaction-background">
+  <div id="transaction-component">
     <v-container id="transaction-main-container" fluid>
-      <!--Top/Header Portion-->
-      <v-container id="transaction-header" class="transaction-container copy-normal" fluid>
-        <v-layout v-if="pendingNameRequest" style="height: 50vh">
-          <spinner />
-        </v-layout>
-        <v-layout v-else>
-          <v-flex>
-            <v-layout class="transaction-header-title" row>
-              <v-flex class="border-right title-font pr-3" :class="priority ? 'priority' : ''" shrink>
-                {{ nr }}
-              </v-flex>
-              <v-flex v-if="priority" class="border-right title-font px-3" shrink>
-                <span class="priority title-font-sm">
-                  <v-icon class="priority" shrink>star</v-icon>
-                  Priority
-                </span>
-              </v-flex>
-              <v-flex class="title-font pl-3" grow>
-                <span class="title-font-sm">{{ requestType_desc(requestType) }}</span>
-              </v-flex>
-            </v-layout>
-            <v-layout v-for="name in names" :key="name.choice" class="transaction-header-names">
+      <!-- Header + Title Bar -->
+      <v-container id="transaction-header" fluid>
+        <spinner v-if="pendingNameRequest" style="height: 15vh" />
+
+        <template v-else>
+          <v-layout id="transaction-header-title">
+            <v-flex class="fs-24 fw-700 pr-3" :class="{ 'priority' : priority }" shrink>
+              {{ nr }}
+            </v-flex>
+            <v-flex v-if="priority" class="border-x pt-1 px-3" shrink>
+              <v-icon class="priority">star</v-icon>
+              <span class="priority fs-18 fw-700">Priority</span>
+            </v-flex>
+            <v-flex class="pt-1 pl-3" grow>
+              <span class="fs-18 fw-700">{{ requestType_desc(requestType) }}</span>
+            </v-flex>
+          </v-layout>
+
+          <div class="transaction-header-names">
+            <v-layout v-for="name in names" :key="name.choice">
               <v-flex>
-                <v-layout :class="getNameClasses(name)">
+                <v-layout class="name-option" :class="getNameClasses(name)">
                   <v-flex shrink>{{ name.choice }}.</v-flex>
                   <v-flex class="pl-2" shrink>
                     {{ name.name }}
@@ -32,103 +30,117 @@
                   </v-flex>
                 </v-layout>
                 <v-layout>
-                  <v-flex lg12 class="decision-text ml-4">{{ name.decision_text }}</v-flex>
+                  <v-flex lg12 class="decision-text">{{ name.decision_text }}</v-flex>
                 </v-layout>
               </v-flex>
             </v-layout>
-            <v-layout class="transaction-header-info">
-              <v-flex class="font-weight-bold" shrink style="width: 200px;">
-                <v-layout no-wrap row>Submitted Date:</v-layout>
-                <v-layout class="pt-2" no-wrap row>Request Status:</v-layout>
-                <v-layout class="pt-2" no-wrap row>Additional Information:</v-layout>
-              </v-flex>
-              <v-flex class="pl-4" shrink style="width: 400px;">
-                <v-layout no-wrap row>{{ submitted }}</v-layout>
-                <v-layout class="pt-2" no-wrap row>{{ displayState(nrInfo) }}</v-layout>
-                <v-layout class="pt-2">
-                  <v-flex style="overflow: auto">
-                    <p v-if="nrInfo" class="ma-0">{{ nrInfo.additionalInfo }}</p>
-                  </v-flex>
-                </v-layout>
-              </v-flex>
-              <v-flex class="font-weight-bold" shrink style="padding-left: 32px;">
-                <v-layout no-wrap row>Expiry Date:</v-layout>
-                <v-layout class="pt-2">Consent:</v-layout>
-              </v-flex>
-              <v-flex class="pl-4">
-                <v-layout no-wrap row>{{ expiry }}</v-layout>
-                <v-layout class="pt-2" no-wrap row>{{ displayConsent(nrInfo) }}</v-layout>
-              </v-flex>
+          </div>
+
+          <!-- Line 1 -->
+          <div id="transaction-header-info">
+            <v-layout>
+              <v-flex xs3 class="fw-700">Submitted Date:</v-flex>
+              <v-flex xs4>{{ submitted }}</v-flex>
+              <v-flex xs2 class="fw-700">Expiry Date:</v-flex>
+              <v-flex xs3>{{ expiry }}</v-flex>
             </v-layout>
-          </v-flex>
+
+            <!-- Line 2 -->
+            <v-layout>
+              <v-flex xs3 class="fw-700">Request Status:</v-flex>
+              <v-flex xs4>{{ displayState(nrInfo) }}</v-flex>
+              <v-flex xs2 class="fw-700">Consent:</v-flex>
+              <v-flex xs3>{{ displayConsent(nrInfo) }}</v-flex>
+            </v-layout>
+
+            <!-- Line 3 -->
+            <v-layout>
+              <v-flex xs3 class="fw-700">Additional Information:</v-flex>
+              <v-flex xs9 v-if="nrInfo">{{ nrInfo.additionalInfo }}</v-flex>
+            </v-layout>
+          </div>
+        </template>
+
+        <v-layout id="transaction-title-bar" text-xs-center>
+          <v-flex class="py-2 fs-18 fw-700">TRANSACTION HISTORY</v-flex>
         </v-layout>
       </v-container>
-      <v-container id="transaction-title-bar" fluid text-xs-center class="pa-0">
-        <v-layout class="grey-bar" row align-center>
-          <v-flex class="py-1 title-font">TRANSACTION HISTORY</v-flex>
-        </v-layout>
-      </v-container>
+
       <!-- Transaction History List -->
-      <v-container id="transaction-list-wrapper" class="transaction-container copy-normal pa-0" fluid>
+      <v-container id="transaction-list-wrapper" fluid>
         <v-container id="transaction-list" fluid>
           <v-layout v-if="pendingTransactionsRequest" class="pt-5" style="height: 100vh">
             <spinner />
           </v-layout>
+
           <v-layout v-else-if="transactionsData && transactionsData.length === 0" class="pa-5" justify-center>
             No transaction history data available.
           </v-layout>
+
           <v-layout v-else-if="!transactionsData" class="pt-5" justify-center>
             There was an error loading the transaction history for this NR. Please try again by reloading the page.
           </v-layout>
-          <v-layout v-else v-for="(transaction, index) in transactionsData" :key="index" :class="getTransactionItemClasses(index)" row>
-            <v-flex>
-              <v-layout style="padding-bottom: 20px;">
-                <v-flex class="font-weight-bold" shrink style="width: 200px;">
-                  <v-layout no-wrap row>Date/Time:</v-layout>
-                  <v-layout class="pt-2" no-wrap row>Transaction Type:</v-layout>
-                  <v-layout class="pt-2" no-wrap row>Request Status:</v-layout>
-                  <v-layout class="pt-2" no-wrap row>Request Type:</v-layout>
-                  <v-layout class="pt-2" no-wrap row>Additional Information:</v-layout>
-                </v-flex>
-                <v-flex class="pl-4" shrink style="width: 400px;">
-                  <v-layout no-wrap row>{{ formatDate(transaction.eventDate) }}</v-layout>
-                  <v-layout class="pt-2" no-wrap row>{{ transaction.user_action }}</v-layout>
-                  <v-layout class="pt-2" no-wrap row style="overflow: auto">{{ displayState(transaction) }}</v-layout>
-                  <v-layout class="pt-2" no-wrap row style="overflow: auto">{{ requestType_desc(transaction.requestTypeCd) }}</v-layout>
-                  <v-layout class="pt-2">
-                    <v-flex style="overflow: auto;">
-                      <p class="ma-0">{{ transaction.additionalInfo }}</p>
-                    </v-flex>
-                  </v-layout>
-                </v-flex>
-                <v-flex class="font-weight-bold" shrink style="padding-left: 32px;">
-                  <v-layout no-wrap row>Expiry Date:</v-layout>
-                  <v-layout class="pt-2" no-wrap row>User Id:</v-layout>
-                  <v-layout class="pt-2" no-wrap row>Consent:</v-layout>
-                  <v-layout class="pt-2" no-wrap row>Queue:</v-layout>
-                </v-flex>
-                <v-flex class="pl-4" grow>
-                  <v-layout no-wrap row>{{ formatDate(transaction.expirationDate) }}</v-layout>
-                  <v-layout class="pt-2" no-wrap row>{{ transaction.user_name }}</v-layout>
-                  <v-layout class="pt-2" no-wrap row>{{ displayConsent(transaction) }}</v-layout>
-                  <v-layout class="pt-2" no-wrap row>
-                    <v-flex v-if="transaction.priorityCd === 'Y'" class="priority bold" shrink style="font-size: 15px;">
-                        <v-icon class="priority" shrink style="font-size: 20px;">star</v-icon> Priority
-                    </v-flex>
-                    <v-flex v-else shrink>Regular</v-flex>
-                  </v-layout>
-                </v-flex>
-              </v-layout>
-              <v-layout v-for="name in transaction.names" :key="name.choice" class="border-top" style="padding: 20px 0px;">
-                <v-flex class="bold" shrink style="font-size: 15px; width: 200px;">Name {{ name.choice }}:</v-flex>
-                <v-flex class="pl-4" shrink style="font-size: 17px;">
+
+          <!-- Items -->
+          <div v-else
+            v-for="(transaction, index) in transactionsData"
+            :key="index"
+            class="transaction-item fs-15"
+          >
+            <!-- Line 1 -->
+            <v-layout>
+              <v-flex xs3 class="fw-700">Date/Time:</v-flex>
+              <v-flex xs4>{{ formatDate(transaction.eventDate) }}</v-flex>
+              <v-flex xs2 class="fw-700">Expiry Date:</v-flex>
+              <v-flex xs3>{{ formatDate(transaction.expirationDate) }}</v-flex>
+            </v-layout>
+
+            <!-- Line 2 -->
+            <v-layout>
+              <v-flex xs3 class="fw-700">Transaction Type:</v-flex>
+              <v-flex xs4>{{ transaction.user_action }}</v-flex>
+              <v-flex xs2 class="fw-700">User Id:</v-flex>
+              <v-flex xs3>{{ transaction.user_name }}</v-flex>
+            </v-layout>
+
+            <!-- Line 3 -->
+            <v-layout>
+              <v-flex xs3 class="fw-700">Request Status:</v-flex>
+              <v-flex xs4>{{ displayState(transaction) }}</v-flex>
+              <v-flex xs2 class="fw-700">Queue:</v-flex>
+              <v-flex xs3 v-if="transaction.priorityCd === 'Y'">
+                <v-icon size="21" class="priority">star</v-icon>
+                <span class="priority fw-700">Priority</span>
+              </v-flex>
+              <v-flex xs3 v-else >Regular</v-flex>
+            </v-layout>
+
+            <!-- Line 4 -->
+            <v-layout>
+              <v-flex xs3 class="fw-700">Request Type:</v-flex>
+              <v-flex xs4>{{ requestType_desc(transaction.requestTypeCd) }}</v-flex>
+              <v-flex xs2 class="fw-700">Consent:</v-flex>
+              <v-flex xs3>{{ displayConsent(transaction) }}</v-flex>
+            </v-layout>
+
+            <!-- Line 5 -->
+            <v-layout>
+              <v-flex xs3 class="fw-700">Additional Information:</v-flex>
+              <v-flex xs9>{{ transaction.additionalInfo }}</v-flex>
+            </v-layout>
+
+            <!-- Names -->
+            <div>
+              <v-layout v-for="name in transaction.names" :key="name.choice" class="transaction-names py-2 fs-16">
+                <v-flex xs3>NAME {{ name.choice }}:</v-flex>
+                <v-flex xs9>
                   {{ name.name }}
                   <CompNameIcon v-if="name.state && name.state !== 'NE'" :state="name.state" />
                   <span v-else> (Draft)</span>
                 </v-flex>
               </v-layout>
-            </v-flex>
-          </v-layout>
+            </div>
+          </div>
         </v-container>
       </v-container>
     </v-container>
@@ -138,7 +150,6 @@
 <script>
   import { mapState } from 'vuex'
   import moment from 'moment'
-
   import CompNameIcon from './Examine/CompNameIcon'
   import Spinner from './spinner'
 
@@ -258,16 +269,9 @@
         return moment(date).format('YYYY-MM-DD, h:mm a') + ' Pacific time'
       },
       getNameClasses(name) {
-        let classes = ['name-option']
-        if ( this.activeNameChoice == name.choice) { classes.push('bold') }
-        if (name.state === 'APPROVED' || name.state === 'CONDITION') {
-          classes.push('accepted')
-        }
-        return classes
-      },
-      getTransactionItemClasses(index) {
-        let classes = ['transaction-item']
-        if (index%2 === 0) classes.push('bg-shaded')
+        let classes = []
+        if (this.activeNameChoice == name.choice) classes.push('fw-700')
+        if (name.state === 'APPROVED' || name.state === 'CONDITION') classes.push('accepted')
         return classes
       },
       requestType_desc(requestType) {
@@ -288,85 +292,82 @@
 </style>
 
 <style scoped>
-#transaction-background {
-  background-color: var(--l-grey);
-}
-#transaction-list {
-  overflow: auto;
-  padding: 0;
-  position: absolute;
-}
-#transaction-list-wrapper {
-  flex: 1;
-  height: 90vh;
-  overflow: auto;
-  padding: 0;
-  position: relative;
-}
-#transaction-main-container {
-  max-width: 1200px;
-  padding: 0;
-}
-.bg-shaded {
-  background-color: var(--xl-grey);
-}
-.bold {
-  font-weight: 600;
-}
-.border-right {
-  border-right: thin solid var(--l-grey);
-}
-.border-top {
-  border-top: thin solid var(--grey);
-}
-.copy-normal {
-  color: var(--text);
-  font-size: 16px;
-}
-.copy-lg {
-  color: var(--text);
-  font-size: 19px;
-}
-.decision-text {
-  padding: 0;
-  margin: 0;
-  font-size: 11px;
-  position: relative;
-  display: block;
-}
-.grey-bar {
-  background-color: var(--d-grey);
-  color: white;
-}
-.name-option {
-  font-size: 17px;
-}
-.name-option.accepted {
-  color: var(--cyan);
-}
-.title-font {
-  font-size: 24px;
-  font-weight: 600;
-}
-.title-font-sm {
-  font-size: 19px;
-  font-weight: 600;
-}
-.transaction-container {
-  background-color: white;
-  padding: 30px;
-}
-.transaction-header-info {
-  overflow: auto;
-  padding-top: 25px;
-}
-.transaction-header-names {
-  padding-top: 5px;
-}
-.transaction-header-title {
-  padding-bottom: 20px;
-}
-.transaction-item {
-  padding: 40px 30px 20px 30px;
-}
+  ::v-deep html {
+    overflow-y: hidden; /* doesn't work */
+  }
+  #transaction-component {
+    color: var(--gray9) !important;
+    background-color: var(--l-grey);
+  }
+  #transaction-main-container {
+    max-width: 1200px;
+    padding: 0;
+    background-color: white;
+    font-size: 16px;
+  }
+  #transaction-header {
+    padding: 24px 40px 0 40px;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+  }
+  .transaction-header-names {
+    margin-top: 20px;
+  }
+  #transaction-header-info {
+    margin-top: 20px;
+    font-size: 15px;
+    overflow: auto;
+  }
+  #transaction-title-bar {
+    margin: 20px -40px 0 -40px;
+    color: white !important;
+    background-color: var(--d-grey);
+  }
+  #transaction-list-wrapper {
+    flex: 1;
+    height: 100vh;
+    overflow: auto;
+    padding: 0;
+    position: relative;
+  }
+  #transaction-list {
+    overflow: auto;
+    padding: 0;
+    position: absolute;
+  }
+  .transaction-item {
+    padding: 20px 40px;
+  }
+  .transaction-item:nth-child(even) {
+    background-color: var(--xl-grey);
+  }
+  .transaction-names {
+    border-top: thin solid var(--grey);
+  }
+  .transaction-names:first-of-type {
+    margin-top: 16px;
+  }
+  .transaction-names:last-of-type {
+    border-bottom: thin solid var(--grey);
+  }
+  .border-x {
+    border-left: thin solid var(--l-grey);
+    border-right: thin solid var(--l-grey);
+  }
+  .decision-text {
+    font-size: 12px;
+    margin-left: 24px;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    display: block;
+  }
+  .name-option {
+    font-size: 18px;
+    margin-top: 4px;
+  }
+  .name-option.accepted {
+    color: var(--cyan);
+  }
 </style>
