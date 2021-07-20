@@ -1,6 +1,6 @@
 <template>
   <div id="transaction-component">
-    <v-container id="transaction-main-container" fluid>
+    <v-container id="transaction-main-container" class="fs-15 pa-0" fluid>
       <!-- Header + Title Bar -->
       <v-container id="transaction-header" fluid>
         <spinner v-if="pendingNameRequest" style="height: 15vh" />
@@ -19,10 +19,10 @@
             </v-flex>
           </v-layout>
 
-          <div class="transaction-header-names">
+          <div id="transaction-header-names">
             <v-layout v-for="name in names" :key="name.choice">
               <v-flex>
-                <v-layout class="name-option" :class="getNameClasses(name)">
+                <v-layout class="name-option fs-18" :class="getNameClasses(name)">
                   <v-flex shrink>{{ name.choice }}.</v-flex>
                   <v-flex class="pl-2" shrink>
                     {{ name.name }}
@@ -30,14 +30,14 @@
                   </v-flex>
                 </v-layout>
                 <v-layout>
-                  <v-flex lg12 class="decision-text">{{ name.decision_text }}</v-flex>
+                  <v-flex lg12 class="decision-text pa-0 ma-0 fs-12">{{ name.decision_text }}</v-flex>
                 </v-layout>
               </v-flex>
             </v-layout>
           </div>
 
-          <!-- Line 1 -->
           <div id="transaction-header-info">
+            <!-- Line 1 -->
             <v-layout>
               <v-flex xs3 class="fw-700">Submitted Date:</v-flex>
               <v-flex xs4>{{ submitted }}</v-flex>
@@ -67,8 +67,8 @@
       </v-container>
 
       <!-- Transaction History List -->
-      <v-container id="transaction-list-wrapper" fluid>
-        <v-container id="transaction-list" fluid>
+      <v-container id="transaction-list-wrapper" class="pa-0" fluid>
+        <v-container id="transaction-list" class="pa-0" fluid>
           <v-layout v-if="pendingTransactionsRequest" class="pt-5" style="height: 100vh">
             <spinner />
           </v-layout>
@@ -85,7 +85,7 @@
           <div v-else
             v-for="(transaction, index) in transactionsData"
             :key="index"
-            class="transaction-item fs-15"
+            class="transaction-item"
           >
             <!-- Line 1 -->
             <v-layout>
@@ -131,7 +131,7 @@
 
             <!-- Names -->
             <div>
-              <v-layout v-for="name in transaction.names" :key="name.choice" class="transaction-names py-2 fs-16">
+              <v-layout v-for="name in transaction.names" :key="name.choice" class="transaction-name py-2">
                 <v-flex xs3>NAME {{ name.choice }}:</v-flex>
                 <v-flex xs9>
                   {{ name.name }}
@@ -185,6 +185,14 @@
 
       await this.$store.dispatch('getTransactionsHistory', this.nr)
       this.$store.commit('setPendingTransactionsRequest', false)
+
+      // once page is mounted, set height of list for proper scrolling
+      this.$nextTick(() => {
+        const page = this.$el
+        const header = this.$el.querySelector('#transaction-header')
+        const list = this.$el.querySelector('#transaction-list-wrapper')
+        list.style.height = (page.clientHeight - header.clientHeight) + 'px'
+      })
     },
     computed: {
       ...mapState([
@@ -286,37 +294,45 @@
 </script>
 
 <style>
-  #trans-main-panel > div > div > div > div.v-datatable.v-table.theme--light > div > div.v-datatable__actions__select {
-    display: none !important;
+  html {
+    overflow-y: hidden;
   }
 </style>
 
 <style scoped>
-  ::v-deep html {
-    overflow-y: hidden; /* doesn't work */
-  }
   #transaction-component {
-    color: var(--gray9) !important;
+    color: var(--text) !important;
     background-color: var(--l-grey);
+    height: 100%;
   }
   #transaction-main-container {
     max-width: 1200px;
-    padding: 0;
-    background-color: white;
-    font-size: 16px;
+    min-width: 840px;
+    height: inherit;
   }
   #transaction-header {
     padding: 24px 40px 0 40px;
     position: sticky;
     position: -webkit-sticky;
     top: 0;
+    background-color: white;
   }
-  .transaction-header-names {
+  #transaction-header-names {
     margin-top: 20px;
+  }
+  .name-option {
+    margin-top: 4px;
+  }
+  .name-option.accepted {
+    color: var(--cyan);
+  }
+  .decision-text {
+    margin-left: 24px;
+    position: relative;
+    display: block;
   }
   #transaction-header-info {
     margin-top: 20px;
-    font-size: 15px;
     overflow: auto;
   }
   #transaction-title-bar {
@@ -325,49 +341,38 @@
     background-color: var(--d-grey);
   }
   #transaction-list-wrapper {
-    flex: 1;
-    height: 100vh;
     overflow: auto;
-    padding: 0;
     position: relative;
+    background-color: white;
   }
   #transaction-list {
-    overflow: auto;
-    padding: 0;
     position: absolute;
   }
   .transaction-item {
     padding: 20px 40px;
   }
-  .transaction-item:nth-child(even) {
+  .transaction-item:nth-child(odd) {
     background-color: var(--xl-grey);
   }
-  .transaction-names {
+  .transaction-name {
     border-top: thin solid var(--grey);
   }
-  .transaction-names:first-of-type {
+  .transaction-name:first-of-type {
     margin-top: 16px;
   }
-  .transaction-names:last-of-type {
+  .transaction-name:last-of-type {
     border-bottom: thin solid var(--grey);
   }
   .border-x {
     border-left: thin solid var(--l-grey);
     border-right: thin solid var(--l-grey);
   }
-  .decision-text {
-    font-size: 12px;
-    margin-left: 24px;
-    padding: 0;
-    margin: 0;
-    position: relative;
-    display: block;
+
+  /* Helper classes missing from Vuetify: */
+  .pa-0 {
+    padding: 0 !important;
   }
-  .name-option {
-    font-size: 18px;
-    margin-top: 4px;
-  }
-  .name-option.accepted {
-    color: var(--cyan);
+  .ma-0 {
+    margin: 0 !important;
   }
 </style>
