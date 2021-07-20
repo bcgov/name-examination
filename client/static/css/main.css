@@ -96,15 +96,6 @@ html {
   background-color: white;
 }
 
-.fs-20 {
-  font-size: 20px !important;
-}
-
-.fs-24 {
-  font-size: 24px;
-  font-weight: 600;
-}
-
 .c-priority {
   color: var(--priority) !important;
 }
@@ -154,13 +145,9 @@ html {
   font-size: 20px !important;
 }
 
-.fs-16-fw-700 {
-  font-size: 16px !important;
-  font-weight: 700 !important;
-}
-
-.fs-18 {
-  font-size: 18px !important;
+.fs-24 {
+  font-size: 24px;
+  font-weight: 600;
 }
 
 .ft-ital {
@@ -172,7 +159,7 @@ html {
 }
 
 .fw-700 {
-  font-weight: 700;
+  font-weight: 700 !important;
 }
 
 .input-box-editing {
