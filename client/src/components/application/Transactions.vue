@@ -60,9 +60,19 @@
             </v-layout>
           </div>
         </template>
-
-        <v-layout id="transaction-title-bar" text-xs-center>
-          <v-flex class="py-2 fs-18 fw-700">TRANSACTION HISTORY</v-flex>
+        <v-layout id="transaction-title-bar">
+          <v-flex class="ml-4 pl-3 pt-1 fs-16 fw-700">TRANSACTION HISTORY</v-flex>
+          <v-flex class="mr-4 pr-3 fs-16 justify-end">
+            <v-checkbox
+              v-model="showSystemTransactions"
+              class="justify-end"
+              color="white"
+            >
+              <template v-slot:label>
+                <span class="checkbox-label">Show system transactions</span>
+              </template>
+            </v-checkbox>
+          </v-flex>
         </v-layout>
       </v-container>
 
@@ -72,7 +82,6 @@
           <v-layout v-if="pendingTransactionsRequest" class="pt-5" style="height: 100vh">
             <spinner />
           </v-layout>
-
           <v-layout v-else-if="transactionsData && transactionsData.length === 0" class="pa-5" justify-center>
             No transaction history data available.
           </v-layout>
@@ -83,7 +92,8 @@
 
           <!-- Items -->
           <div v-else
-            v-for="(transaction, index) in transactionsData"
+            id="transaction-list-item"
+            v-for="(transaction, index) in filteredTransactions"
             :key="index"
             class="transaction-item"
           >
@@ -148,156 +158,163 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
-  import moment from 'moment'
-  import CompNameIcon from './Examine/CompNameIcon'
-  import Spinner from './spinner'
+import { mapState } from 'vuex';
+import moment from 'moment';
+import CompNameIcon from './Examine/CompNameIcon';
+import Spinner from './spinner';
 
-  export default {
-    name: 'Transactions',
-    components: { CompNameIcon, Spinner },
-    data() {
-      return {
-        nr: '',
-      }
-    },
-    created() {
-      // watch resize events
-      window.addEventListener('resize', this.onResize)
+export default {
+  name: 'Transactions',
+  components: {CompNameIcon, Spinner},
+  data() {
+    return {
+      nr: '',
+      showSystemTransactions: false,
+      defaultTransactions: ['Cancelled in Name Request', 'Created NR (Payment Completed)', 'Created NR (Unknown)', 'Decision', 'Edit NR Details (Name Request)', 'Edit NR Details (NameX)', 'Edit NR Details after Completion', 'Marked on Hold', 'patch', 'Reapplied NR (Unknown)'],
+    };
+  },
+  created() {
+    // watch resize events
+    window.addEventListener('resize', this.onResize)
 
-      if (this.$route.query && this.$route.query.token) {
-        sessionStorage.setItem('KEYCLOAK_TOKEN', this.$route.query.token)
-        sessionStorage.setItem('AUTHORIZED', true)
-      } else {
-        alert('Not authorized')
-      }
-
-      if (this.$route.query && this.$route.query.nr) {
-        this.nr = this.$route.query.nr
-      } else {
-        alert('No NR passed to retrieve transaction history for.')
-      }
-    },
-    async mounted() {
-      this.$store.commit('setPendingNameRequest', true)
-      this.$store.commit('setPendingTransactionsRequest', true)
-      await this.$store.dispatch('getNameRequest', this.nr)
-      // needs to be set again after ^ dispatch?? I don't know why
+    if (this.$route.query && this.$route.query.token) {
       sessionStorage.setItem('KEYCLOAK_TOKEN', this.$route.query.token)
-      this.$store.commit('setPendingNameRequest', false)
+      sessionStorage.setItem('AUTHORIZED', true)
+    } else {
+      alert('Not authorized')
+    }
 
-      await this.$store.dispatch('getTransactionsHistory', this.nr)
-      this.$store.commit('setPendingTransactionsRequest', false)
+    if (this.$route.query && this.$route.query.nr) {
+      this.nr = this.$route.query.nr
+    } else {
+      alert('No NR passed to retrieve transaction history for.')
+    }
+  },
+  async mounted() {
+    this.$store.commit('setPendingNameRequest', true)
+    this.$store.commit('setPendingTransactionsRequest', true)
+    await this.$store.dispatch('getNameRequest', this.nr)
+    // needs to be set again after ^ dispatch?? I don't know why
+    sessionStorage.setItem('KEYCLOAK_TOKEN', this.$route.query.token)
+    this.$store.commit('setPendingNameRequest', false)
 
-      // set initial size
-      this.onResize(null)
-    },
-    destroyed() {
-      window.removeEventListener('resize', this.onResize)
-    },
-    computed: {
-      ...mapState([
-        'nrInfo',
-        'listRequestTypes',
-        'pendingNameRequest',
-        'pendingTransactionsRequest',
-        'transactionsData'
-      ]),
-      activeNameChoice() {
-        let activeChoice = 1
-        for (let i = 0; i < this.names.length; i++) {
-          const name = this.names[i]
-          if (['APPROVED', 'CONDITION', 'NE'].includes(name.state)) {
-            // set first encounter of one of the above states as the active choice then break loop
-            activeChoice = name.choice
-            break
-          } else if (i + 1 === this.names.length) {
-            // will only get here if all names are rejected. Set last one as the active choice
-            activeChoice = name.choice
-          }
-        } 
-        return activeChoice
-      },
-      expiry() {
-        // moment().format('DD-MM-YYYY, h:mm a')
-        if (this.nrInfo && this.nrInfo.expirationDate) {
-          return this.formatDate(this.nrInfo.expirationDate)
+    await this.$store.dispatch('getTransactionsHistory', this.nr)
+    this.$store.commit('setPendingTransactionsRequest', false)
+
+    // set initial size
+    this.onResize(null)
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.onResize)
+  },
+  computed: {
+    ...mapState([
+      'nrInfo',
+      'listRequestTypes',
+      'pendingNameRequest',
+      'pendingTransactionsRequest',
+      'transactionsData'
+    ]),
+    activeNameChoice() {
+      let activeChoice = 1
+      for (let i = 0; i < this.names.length; i++) {
+        const name = this.names[i]
+        if (['APPROVED', 'CONDITION', 'NE'].includes(name.state)) {
+          // set first encounter of one of the above states as the active choice then break loop
+          activeChoice = name.choice
+          break
+        } else if (i + 1 === this.names.length) {
+          // will only get here if all names are rejected. Set last one as the active choice
+          activeChoice = name.choice
         }
-        return 'N/A'
-      },
-      names() {
-        if (this.nrInfo && this.nrInfo.names) {
-          return this.nrInfo.names.sort(
-            function(a, b) { 
-              if (a.choice > b.choice) return 1
-              return -1
-            }
-          )
-        }
-        return []
-      },
-      priority() {
-        if (this.nrInfo && this.nrInfo.priorityCd) {
-          return this.nrInfo.priorityCd === 'Y'
-        }
-        return false
-      },
-      requestType() {
-        if (this.nrInfo && this.nrInfo.requestTypeCd) {
-          return this.nrInfo.requestTypeCd
-        }
-        return ''
-      },
-      submitted() {
-        if (this.nrInfo && this.nrInfo.submittedDate) {
-          return this.formatDate(this.nrInfo.submittedDate)
-        }
-        return 'N/A'
-      },
-    },
-    methods: {
-      displayConsent(nrInfo) {
-        if (nrInfo) {
-          if (nrInfo.consent_dt) return 'Required. Received.'
-          if (nrInfo.consentFlag === 'Y') return 'Required. Not Yet Received.'
-          return 'Not Required'
-        }
-        return 'N/A'
-      },
-      displayState(nrInfo) {
-        let displayState = 'N/A'
-        if (nrInfo && nrInfo.stateCd) {
-          displayState = nrInfo.stateCd
-          if (displayState == 'CONDITIONAL') displayState += ' APPROVED'
-          if (nrInfo.corpNum) displayState += ` / Used for ${nrInfo.corpNum}`
-        }
-        return displayState
-      },
-      formatDate(date) {
-        if (!date) return 'N/A'
-        return moment(date).format('YYYY-MM-DD, h:mm a') + ' Pacific time'
-      },
-      getNameClasses(name) {
-        let classes = []
-        if (this.activeNameChoice == name.choice) classes.push('fw-700')
-        if (name.state === 'APPROVED' || name.state === 'CONDITION') classes.push('accepted')
-        return classes
-      },
-      requestType_desc(requestType) {
-        try {
-          return getDescFromList(this.listRequestTypes, requestType)
-        } catch (err) {
-          return 'N/A'
-        }
-      },
-      onResize(e) {
-        const pageHeight = e ? e.currentTarget.innerHeight : this.$el.clientHeight
-        const headerHeight = this.$el.querySelector('#transaction-header').clientHeight
-        // set list height for proper scrolling
-        this.$el.querySelector('#transaction-list-wrapper').style.height = (pageHeight - headerHeight) + 'px'
       }
+      return activeChoice
+    },
+    expiry() {
+      // moment().format('DD-MM-YYYY, h:mm a')
+      if (this.nrInfo && this.nrInfo.expirationDate) {
+        return this.formatDate(this.nrInfo.expirationDate)
+      }
+      return 'N/A'
+    },
+    filteredTransactions() {
+      return this.showSystemTransactions
+        ? this.transactionsData
+        : this.transactionsData.filter(item => this.defaultTransactions.includes(item.user_action));
+    },
+    names() {
+      if (this.nrInfo && this.nrInfo.names) {
+        return this.nrInfo.names.sort(
+          function (a, b) {
+            if (a.choice > b.choice) return 1
+            return -1
+          }
+        )
+      }
+      return []
+    },
+    priority() {
+      if (this.nrInfo && this.nrInfo.priorityCd) {
+        return this.nrInfo.priorityCd === 'Y'
+      }
+      return false
+    },
+    requestType() {
+      if (this.nrInfo && this.nrInfo.requestTypeCd) {
+        return this.nrInfo.requestTypeCd
+      }
+      return ''
+    },
+    submitted() {
+      if (this.nrInfo && this.nrInfo.submittedDate) {
+        return this.formatDate(this.nrInfo.submittedDate)
+      }
+      return 'N/A'
+    },
+  },
+  methods: {
+    displayConsent(nrInfo) {
+      if (nrInfo) {
+        if (nrInfo.consent_dt) return 'Required. Received.'
+        if (nrInfo.consentFlag === 'Y') return 'Required. Not Yet Received.'
+        return 'Not Required'
+      }
+      return 'N/A'
+    },
+    displayState(nrInfo) {
+      let displayState = 'N/A'
+      if (nrInfo && nrInfo.stateCd) {
+        displayState = nrInfo.stateCd
+        if (displayState == 'CONDITIONAL') displayState += ' APPROVED'
+        if (nrInfo.corpNum) displayState += ` / Used for ${nrInfo.corpNum}`
+      }
+      return displayState
+    },
+    formatDate(date) {
+      if (!date) return 'N/A'
+      return moment(date).format('YYYY-MM-DD, h:mm a') + ' Pacific time'
+    },
+    getNameClasses(name) {
+      let classes = []
+      if (this.activeNameChoice == name.choice) classes.push('fw-700')
+      if (name.state === 'APPROVED' || name.state === 'CONDITION') classes.push('accepted')
+      return classes
+    },
+    requestType_desc(requestType) {
+      try {
+        return getDescFromList(this.listRequestTypes, requestType)
+      } catch (err) {
+        return 'N/A'
+      }
+    },
+    onResize(e) {
+      const pageHeight = e ? e.currentTarget.innerHeight : this.$el.clientHeight
+      const headerHeight = this.$el.querySelector('#transaction-header').clientHeight
+      // set list height for proper scrolling
+      this.$el.querySelector('#transaction-list-wrapper').style.height = (pageHeight - headerHeight) + 'px'
     }
   }
+}
 </script>
 
 <style>
@@ -355,6 +372,12 @@
   #transaction-list {
     position: absolute;
   }
+  #transaction-filter-checkbox:hover {
+    cursor: pointer;
+  }
+  .checkbox-label {
+    color: white;
+  }
   .transaction-item {
     padding: 20px 40px;
   }
@@ -381,5 +404,10 @@
   }
   .ma-0 {
     margin: 0 !important;
+  }
+
+  /* Vuetify overrides: */
+  >>> .v-input__control {
+    height: 28px !important;
   }
 </style>
