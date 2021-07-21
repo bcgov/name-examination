@@ -22,7 +22,7 @@
           <div id="transaction-header-names">
             <v-layout v-for="name in names" :key="name.choice">
               <v-flex>
-                <v-layout class="name-option fs-18" :class="getNameClasses(name)">
+                <v-layout class="name-option fs-16" :class="getNameClasses(name)">
                   <v-flex shrink>{{ name.choice }}.</v-flex>
                   <v-flex class="pl-2" shrink>
                     {{ name.name }}
@@ -162,6 +162,9 @@
       }
     },
     created() {
+      // watch resize events
+      window.addEventListener('resize', this.onResize)
+
       if (this.$route.query && this.$route.query.token) {
         sessionStorage.setItem('KEYCLOAK_TOKEN', this.$route.query.token)
         sessionStorage.setItem('AUTHORIZED', true)
@@ -186,13 +189,11 @@
       await this.$store.dispatch('getTransactionsHistory', this.nr)
       this.$store.commit('setPendingTransactionsRequest', false)
 
-      // once page is mounted, set height of list for proper scrolling
-      this.$nextTick(() => {
-        const page = this.$el
-        const header = this.$el.querySelector('#transaction-header')
-        const list = this.$el.querySelector('#transaction-list-wrapper')
-        list.style.height = (page.clientHeight - header.clientHeight) + 'px'
-      })
+      // set initial size
+      this.onResize(null)
+    },
+    destroyed() {
+      window.removeEventListener('resize', this.onResize)
     },
     computed: {
       ...mapState([
@@ -289,6 +290,12 @@
           return 'N/A'
         }
       },
+      onResize(e) {
+        const pageHeight = e ? e.currentTarget.innerHeight : this.$el.clientHeight
+        const headerHeight = this.$el.querySelector('#transaction-header').clientHeight
+        // set list height for proper scrolling
+        this.$el.querySelector('#transaction-list-wrapper').style.height = (pageHeight - headerHeight) + 'px'
+      }
     }
   }
 </script>
@@ -318,7 +325,7 @@
     background-color: white;
   }
   #transaction-header-names {
-    margin-top: 20px;
+    margin-top: 10px;
   }
   .name-option {
     margin-top: 4px;
@@ -332,7 +339,7 @@
     display: block;
   }
   #transaction-header-info {
-    margin-top: 20px;
+    margin-top: 10px;
     overflow: auto;
   }
   #transaction-title-bar {
