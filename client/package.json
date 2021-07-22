@@ -7,8 +7,8 @@
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
-    "unit": "jest --config test/unit/jest.conf.js --runInBand --coverage --verbose",
-    "features": "jest --config test/unit/jest.conf.js test/features/specs/ --coverage --runInBand",
+    "unit": "jest --config test/unit/jest.conf.js --runInBand --verbose",
+    "features": "jest --config test/unit/jest.conf.js test/features/specs/ --runInBand",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit",
     "jest": "jest --config test/unit/jest.conf.js",
