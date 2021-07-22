@@ -1,14 +1,14 @@
 {
   "name": "namex",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "BC Registry: Name Examination",
   "author": "Thor Wolpert <thor@wolpert.ca>",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
-    "unit": "jest --config test/unit/jest.conf.js --runInBand --coverage --verbose",
-    "features": "jest --config test/unit/jest.conf.js test/features/specs/ --coverage --runInBand",
+    "unit": "jest --config test/unit/jest.conf.js --runInBand --verbose",
+    "features": "jest --config test/unit/jest.conf.js test/features/specs/ --runInBand",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit",
     "jest": "jest --config test/unit/jest.conf.js",
@@ -32,6 +32,7 @@
     "webpack": "^3.12.0"
   },
   "devDependencies": {
+    "@mdi/font": "^5.9.55",
     "@vue/test-utils": "^1.0.0-beta.25",
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",

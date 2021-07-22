@@ -13,11 +13,14 @@ import store from '@/store'
 
 import 'vuetify/dist/vuetify.min.css'
 import '../static/stylus/overrides.styl'
+import '@mdi/font/css/materialdesignicons.css'
 
 Vue.use(Plugin)
 Vue.use(require('vue-shortkey'))
 Vue.use(Vuelidate)
-Vue.use(Vuetify)
+Vue.use(Vuetify, {
+  iconfont: 'mdi'
+})
 Vue.use(VDragged)
 
 Vue.config.productionTip = false

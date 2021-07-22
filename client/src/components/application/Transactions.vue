@@ -60,9 +60,20 @@
             </v-layout>
           </div>
         </template>
-
-        <v-layout id="transaction-title-bar" text-xs-center>
-          <v-flex class="py-2 fs-18 fw-700">TRANSACTION HISTORY</v-flex>
+        <v-layout id="transaction-title-bar">
+          <v-flex class="ml-4 pl-3 pt-1 fs-16 fw-700">TRANSACTION HISTORY</v-flex>
+          <v-flex class="mr-4 pr-3 justify-end">
+            <v-checkbox
+              off-icon="mdi-checkbox-blank"
+              v-model="showSystemTransactions"
+              class="justify-end"
+              color="white"
+            >
+              <template v-slot:label>
+                <span class="checkbox-label fs-16">Show system transactions</span>
+              </template>
+            </v-checkbox>
+          </v-flex>
         </v-layout>
       </v-container>
 
@@ -72,7 +83,6 @@
           <v-layout v-if="pendingTransactionsRequest" class="pt-5" style="height: 100vh">
             <spinner />
           </v-layout>
-
           <v-layout v-else-if="transactionsData && transactionsData.length === 0" class="pa-5" justify-center>
             No transaction history data available.
           </v-layout>
@@ -83,7 +93,7 @@
 
           <!-- Items -->
           <div v-else
-            v-for="(transaction, index) in transactionsData"
+            v-for="(transaction, index) in filteredTransactions"
             :key="index"
             class="transaction-item"
           >
@@ -165,7 +175,11 @@
     data() {
       return {
         nr: '',
-      }
+        showSystemTransactions: false,
+        defaultTransactions: ['Cancelled in Name Request', 'Created NR (Payment Completed)', 'Created NR (Unknown)',
+          'Decision', 'Edit NR Details (Name Request)', 'Edit NR Details (NameX)', 'Edit NR Details after Completion',
+          'Marked on Hold', 'Reapplied NR (Unknown)', 'Reset'],
+      };
     },
     created() {
       // watch resize events
@@ -221,7 +235,7 @@
             // will only get here if all names are rejected. Set last one as the active choice
             activeChoice = name.choice
           }
-        } 
+        }
         return activeChoice
       },
       expiry() {
@@ -231,10 +245,15 @@
         }
         return 'N/A'
       },
+      filteredTransactions() {
+        return this.showSystemTransactions
+          ? this.transactionsData
+          : this.transactionsData.filter(item => this.defaultTransactions.includes(item.user_action))
+      },
       names() {
         if (this.nrInfo && this.nrInfo.names) {
           return this.nrInfo.names.sort(
-            function(a, b) { 
+            function (a, b) {
               if (a.choice > b.choice) return 1
               return -1
             }
@@ -361,6 +380,12 @@
   #transaction-list {
     position: absolute;
   }
+  #transaction-filter-checkbox:hover {
+    cursor: pointer;
+  }
+  .checkbox-label {
+    color: white;
+  }
   .transaction-item {
     padding: 20px 40px;
   }
@@ -387,5 +412,13 @@
   }
   .ma-0 {
     margin: 0 !important;
+  }
+
+  /* Vuetify overrides: */
+  >>> .v-input__control {
+    height: 28px !important;
+  }
+  >>> .theme--light.v-icon {
+    color: white;
   }
 </style>
