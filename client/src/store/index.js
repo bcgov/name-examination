@@ -142,7 +142,7 @@ export const actions = {
           commit('setNrInfo', response.data)
           return
         }
-        throw Error(message=`Invalid api response when getting ${ nrNumber } info.`)
+        throw new Error(`Invalid api response when getting ${ nrNumber } info.`)
       } )
       .catch( error => console.log( 'ERROR: ' + error ) )
   },

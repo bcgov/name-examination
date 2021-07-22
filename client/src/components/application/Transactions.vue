@@ -30,7 +30,7 @@
                   </v-flex>
                 </v-layout>
                 <v-layout>
-                  <v-flex lg12 class="decision-text pa-0 ma-0 fs-12">{{ name.decision_text }}</v-flex>
+                  <v-flex xs12 class="decision-text fs-12">{{ name.decision_text }}</v-flex>
                 </v-layout>
               </v-flex>
             </v-layout>
@@ -40,23 +40,23 @@
             <!-- Line 1 -->
             <v-layout>
               <v-flex xs3 class="fw-700">Submitted Date:</v-flex>
-              <v-flex xs4>{{ submitted }}</v-flex>
+              <v-flex xs4 class="submitted-date">{{ submitted }}</v-flex>
               <v-flex xs2 class="fw-700">Expiry Date:</v-flex>
-              <v-flex xs3>{{ expiry }}</v-flex>
+              <v-flex xs3 class="expiry-date">{{ expiry }}</v-flex>
             </v-layout>
 
             <!-- Line 2 -->
             <v-layout>
               <v-flex xs3 class="fw-700">Request Status:</v-flex>
-              <v-flex xs4>{{ displayState(nrInfo) }}</v-flex>
+              <v-flex xs4 class="request-status">{{ displayState(nrInfo) }}</v-flex>
               <v-flex xs2 class="fw-700">Consent:</v-flex>
-              <v-flex xs3>{{ displayConsent(nrInfo) }}</v-flex>
+              <v-flex xs3 class="consent-text">{{ displayConsent(nrInfo) }}</v-flex>
             </v-layout>
 
             <!-- Line 3 -->
             <v-layout>
               <v-flex xs3 class="fw-700">Additional Information:</v-flex>
-              <v-flex xs9 v-if="nrInfo">{{ nrInfo.additionalInfo }}</v-flex>
+              <v-flex xs9 class="addl-info" v-if="nrInfo">{{ nrInfo.additionalInfo }}</v-flex>
             </v-layout>
           </div>
         </template>
@@ -90,55 +90,61 @@
             <!-- Line 1 -->
             <v-layout>
               <v-flex xs3 class="fw-700">Date/Time:</v-flex>
-              <v-flex xs4>{{ formatDate(transaction.eventDate) }}</v-flex>
+              <v-flex xs4 class="event-date">{{ formatDate(transaction.eventDate) }}</v-flex>
               <v-flex xs2 class="fw-700">Expiry Date:</v-flex>
-              <v-flex xs3>{{ formatDate(transaction.expirationDate) }}</v-flex>
+              <v-flex xs3 class="expiry-date">{{ formatDate(transaction.expirationDate) }}</v-flex>
             </v-layout>
 
             <!-- Line 2 -->
             <v-layout>
               <v-flex xs3 class="fw-700">Transaction Type:</v-flex>
-              <v-flex xs4>{{ transaction.user_action }}</v-flex>
+              <v-flex xs4 class="user-action">{{ transaction.user_action }}</v-flex>
               <v-flex xs2 class="fw-700">User Id:</v-flex>
-              <v-flex xs3>{{ transaction.user_name }}</v-flex>
+              <v-flex xs3 class="user-name">{{ transaction.user_name }}</v-flex>
             </v-layout>
 
             <!-- Line 3 -->
             <v-layout>
               <v-flex xs3 class="fw-700">Request Status:</v-flex>
-              <v-flex xs4>{{ displayState(transaction) }}</v-flex>
+              <v-flex xs4 class="request-status">{{ displayState(transaction) }}</v-flex>
               <v-flex xs2 class="fw-700">Queue:</v-flex>
-              <v-flex xs3 v-if="transaction.priorityCd === 'Y'">
+              <v-flex xs3 class="priority-text" v-if="transaction.priorityCd === 'Y'">
                 <v-icon size="21" class="priority">star</v-icon>
                 <span class="priority fw-700">Priority</span>
               </v-flex>
-              <v-flex xs3 v-else >Regular</v-flex>
+              <v-flex xs3 class="priority-text" v-else >Regular</v-flex>
             </v-layout>
 
             <!-- Line 4 -->
             <v-layout>
               <v-flex xs3 class="fw-700">Request Type:</v-flex>
-              <v-flex xs4>{{ requestType_desc(transaction.requestTypeCd) }}</v-flex>
+              <v-flex xs4 class="request-type">{{ requestType_desc(transaction.requestTypeCd) }}</v-flex>
               <v-flex xs2 class="fw-700">Consent:</v-flex>
-              <v-flex xs3>{{ displayConsent(transaction) }}</v-flex>
+              <v-flex xs3 class="consent-text">{{ displayConsent(transaction) }}</v-flex>
             </v-layout>
 
             <!-- Line 5 -->
             <v-layout>
               <v-flex xs3 class="fw-700">Additional Information:</v-flex>
-              <v-flex xs9>{{ transaction.additionalInfo }}</v-flex>
+              <v-flex xs9 class="addl-info">{{ transaction.additionalInfo }}</v-flex>
             </v-layout>
 
             <!-- Names -->
-            <div>
-              <v-layout v-for="name in transaction.names" :key="name.choice" class="transaction-name py-2">
-                <v-flex xs3>NAME {{ name.choice }}:</v-flex>
-                <v-flex xs9>
-                  {{ name.name }}
-                  <CompNameIcon v-if="name.state && name.state !== 'NE'" :state="name.state" />
-                  <span v-else> (Draft)</span>
-                </v-flex>
-              </v-layout>
+            <div class="transaction-names">
+              <div v-for="name in transaction.names" :key="name.choice" class="transaction-name py-2">
+                <v-layout>
+                  <v-flex xs3>NAME {{ name.choice }}:</v-flex>
+                  <v-flex xs9>
+                    {{ name.name }}
+                    <CompNameIcon v-if="name.state && name.state !== 'NE'" :state="name.state" />
+                    <span v-else> (Draft)</span>
+                  </v-flex>
+                </v-layout>
+                <v-layout>
+                  <v-flex xs3 />
+                  <v-flex xs9 class="fs-12">{{ name.decision_text }}</v-flex>
+                </v-layout>
+              </div>
             </div>
           </div>
         </v-container>
