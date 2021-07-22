@@ -151,6 +151,22 @@ describe('Testing Transactions.vue', () => {
         stateCd: 'COMPLETED',
         user_action: 'Edit NR Details after Completion',
         user_name: 'github/cameronidir',
+      },
+      {
+        additionalInfo: '*** New Request ***',
+        consentFlag: null,
+        consent_dt: null,
+        corpNum: null,
+        eventDate: 'Thu, 15 Jul 2021 21:36:03 GMT',
+        expirationDate: '2021-09-11T07:01:00+00:00',
+        furnished: 'Y',
+        names: [{ choice: 1, comment: null, conflict1: '', conflict1_num: '', conflict2: '', conflict2_num: '' }],
+        priorityCd: 'Y',
+        requestTypeCd: 'CR',
+        request_action_cd: null,
+        stateCd: 'INPROGRESS',
+        user_action: 'Reset',
+        user_name: 'github/cameronidir',
       }]
   })
 
@@ -183,6 +199,7 @@ describe('Testing Transactions.vue', () => {
     expect(data.vm.$el.innerHTML).toContain('Created NR (Unknown)')
     expect(data.vm.$el.innerHTML).toContain('Cancelled in Name Request')
     expect(data.vm.$el.innerHTML).toContain('Edit NR Details after Completion')
+    expect(data.vm.$el.innerHTML).toContain('Reset')
   })
 
   test('It hides system transactions by default', () => {
