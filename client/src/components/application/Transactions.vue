@@ -242,7 +242,7 @@
       filteredTransactions() {
         return this.showSystemTransactions
           ? this.transactionsData
-          : this.transactionsData.filter(item => this.defaultTransactions.includes(item.user_action));
+          : this.transactionsData.filter(item => this.defaultTransactions.includes(item.user_action))
       },
       names() {
         if (this.nrInfo && this.nrInfo.names) {

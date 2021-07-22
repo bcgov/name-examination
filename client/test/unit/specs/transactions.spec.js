@@ -1,26 +1,26 @@
-import Vue from 'vue';
-import VDragged from 'v-dragged';
+import Vue from 'vue'
+import VDragged from 'v-dragged'
 
-import Transactions from '@/components/application/Transactions';
-import store from '@/store';
-import { cleanState } from '../../features/specs/support/clean.state';
+import Transactions from '@/components/application/Transactions'
+import store from '@/store'
+import { cleanState } from '../../features/specs/support/clean.state'
 
-Vue.use(VDragged);
+Vue.use(VDragged)
 
 describe('Testing Transactions.vue', () => {
-  const data = {};
-  const Constructor = Vue.extend(Transactions);
+  const data = {}
+  const Constructor = Vue.extend(Transactions)
 
   beforeAll((done) => {
-    store.replaceState(cleanState());
-    data.instance = new Constructor({ store });
-    data.vm = data.instance.$mount();
-    data.vm.$store.dispatch('getTransactionsHistory');
-    data.vm.$store.state.transactionsModalVisible = true;
+    store.replaceState(cleanState())
+    data.instance = new Constructor({ store })
+    data.vm = data.instance.$mount()
+    data.vm.$store.dispatch('getTransactionsHistory')
+    data.vm.$store.state.transactionsModalVisible = true
     setTimeout(() => {
-      done();
-    }, 1000);
-  });
+      done()
+    }, 1000)
+  })
 
   beforeEach(() => {
     data.vm.$store.state.transactionsData = [
@@ -151,52 +151,52 @@ describe('Testing Transactions.vue', () => {
         stateCd: 'COMPLETED',
         user_action: 'Edit NR Details after Completion',
         user_name: 'github/cameronidir',
-      }];
-  });
+      }]
+  })
 
   test('It displays the no transaction available message', async () => {
-    data.vm.$store.state.pendingTransactionsRequest = false;
-    data.vm.$store.state.transactionsData = [];
+    data.vm.$store.state.pendingTransactionsRequest = false
+    data.vm.$store.state.transactionsData = []
 
-    await Vue.nextTick();
+    await Vue.nextTick()
 
     expect(data.vm.$el.querySelector('#transaction-list').textContent)
-      .toContain('No transaction history data available.');
+      .toContain('No transaction history data available.')
   });
 
   test('It displays the transaction error message', async () => {
     data.vm.$store.state.pendingTransactionsRequest = false;
-    data.vm.$store.state.transactionsData = false;
+    data.vm.$store.state.transactionsData = false
 
-    await Vue.nextTick();
+    await Vue.nextTick()
 
     expect(data.vm.$el.querySelector('#transaction-list').textContent)
       .toContain('There was an error loading the transaction history for this NR. Please try again by ' +
         'reloading the page.');
-  });
+  })
 
   test('It displays default transactions', () => {
     expect(data.vm.$el.querySelector('#transaction-list').textContent).toContain('Marked on Hold');
-    expect(data.vm.$el.innerHTML).toContain('Marked on Hold');
-    expect(data.vm.$el.innerHTML).toContain('Decision');
-    expect(data.vm.$el.innerHTML).toContain('Created NR (Payment Completed)');
-    expect(data.vm.$el.innerHTML).toContain('Created NR (Unknown)');
-    expect(data.vm.$el.innerHTML).toContain('Cancelled in Name Request');
-    expect(data.vm.$el.innerHTML).toContain('Edit NR Details after Completion');
-  });
+    expect(data.vm.$el.innerHTML).toContain('Marked on Hold')
+    expect(data.vm.$el.innerHTML).toContain('Decision')
+    expect(data.vm.$el.innerHTML).toContain('Created NR (Payment Completed)')
+    expect(data.vm.$el.innerHTML).toContain('Created NR (Unknown)')
+    expect(data.vm.$el.innerHTML).toContain('Cancelled in Name Request')
+    expect(data.vm.$el.innerHTML).toContain('Edit NR Details after Completion')
+  })
 
   test('It hides system transactions by default', () => {
-    expect(data.vm.$el.innerHTML).not.toContain('Get NR Details from NRO');
-    expect(data.vm.$el.innerHTML).not.toContain('Get Next NR');
-  });
+    expect(data.vm.$el.innerHTML).not.toContain('Get NR Details from NRO')
+    expect(data.vm.$el.innerHTML).not.toContain('Get Next NR')
+  })
 
   test('it sets the showJSONData flag to false for every transaction', () => {
-    const { transactionsData } = data.vm.$store.state;
-    const values = Object.values(transactionsData);
-    expect(values.every(value => !value.showJSONData)).toBeTruthy();
+    const { transactionsData } = data.vm.$store.state
+    const values = Object.values(transactionsData)
+    expect(values.every(value => !value.showJSONData)).toBeTruthy()
   });
 
   test('it does not display the transaction expansion row', () => {
-    expect(data.vm.$el.querySelector('#trans-expansion-row')).toBeNull();
-  });
-});
+    expect(data.vm.$el.querySelector('#trans-expansion-row')).toBeNull()
+  })
+})
