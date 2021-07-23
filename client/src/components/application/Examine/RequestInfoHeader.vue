@@ -357,9 +357,9 @@
         jurisdiction_required: false,
         nwpta_required: false,
         prev_nr_required: false,
-        RequestActionCode: RequestActionCode,
-        RequestTypeCode: RequestTypeCode,
-        EntityTypeCode: EntityTypeCode
+        RequestActionCode,
+        RequestTypeCode,
+        EntityTypeCode
       }
     },
     computed: {
