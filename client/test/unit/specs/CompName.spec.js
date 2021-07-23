@@ -2,17 +2,16 @@
 import Vue from 'vue'
 import CompName from '@/components/application/Examine/CompName'
 import store from '@/store'
-import axios from '@/axios-auth.js'
 import { createApiSandbox} from '../sandbox/CompNameSpec-api-stubs'
 import sinon from 'sinon'
-
+import { sleep } from '@/utils/sleep'
 
 describe('CompName.vue Spec', () => {
   let instance
 
   beforeEach(() => {
     const Constructor = Vue.extend(CompName)
-    instance = new Constructor({ store: store })
+    instance = new Constructor({ store })
     instance.$store.state.myKeycloak = {}
     instance.setFocus = () => {
     }
@@ -22,37 +21,37 @@ describe('CompName.vue Spec', () => {
     let sandbox
     let vm
 
-    beforeEach((done) => {
+    beforeEach(async () => {
       sandbox = createApiSandbox()
       sandbox.getStub.withArgs('/api/v1/requests/queues/@me/oldest', sinon.match.any).returns(
         new Promise((resolve) => resolve({ data: { nameRequest: 'NR 1234' } })))
       vm = instance.$mount()
+      await sleep(2000)
 
-      setTimeout(() => {
-        vm.$store.state.currentState = 'INPROGRESS'
-        vm.$store.state.examiner = 'Joe'
-        vm.$store.state.userId = instance.$store.state.examiner
+      vm.$store.state.currentState = 'INPROGRESS'
+      vm.$store.state.examiner = 'Joe'
+      vm.$store.state.userId = instance.$store.state.examiner
 
-        vm.$store.state.compInfo.compNames = {
-          compName1: {
-            choice: 1,
-            name: 'Bad Name',
-            state: 'REJECTED',
-            decision_text: 'A Foreign Entity That Is Registering In British Columbia As An Extraprovincial Company And Adopting An Assumed Name Must Provide The Registrar With A Covering Letter Attaching An Undertaking To Carry On Business Under The Assumed Name.  Sample Working For The Undertaking Can Be Found On Page 34 Of The Information For Registration Of An ',
-          },
-          compName2: { choice: 2, name: 'Good Name', state: 'NE' },
-          compName3: { choice: 3, name: null, state: 'NE' },
-        }
+      vm.$store.state.compInfo.compNames = {
+        compName1: {
+          choice: 1,
+          name: 'Bad Name',
+          state: 'REJECTED',
+          decision_text: 'A Foreign Entity That Is Registering In British Columbia As An Extraprovincial Company And Adopting An Assumed Name Must Provide The Registrar With A Covering Letter Attaching An Undertaking To Carry On Business Under The Assumed Name.  Sample Working For The Undertaking Can Be Found On Page 34 Of The Information For Registration Of An ',
+        },
+        compName2: { choice: 2, name: 'Good Name', state: 'NE' },
+        compName3: { choice: 3, name: null, state: 'NE' },
+      }
 
-        // set current name
-        vm.$store.commit('currentNameObj', instance.$store.getters.compName2)
+      // set current name
+      vm.$store.commit('currentNameObj', instance.$store.getters.compName2)
 
-        sessionStorage.setItem('USER_ROLES', [ 'names_approver' ])
-        sessionStorage.setItem('USERNAME', 'Joe')
-        vm.$store.commit('setLoginValues')
-        setTimeout(() => {done()}, 1000)
-      }, 2000)
+      sessionStorage.setItem('USER_ROLES', [ 'names_approver' ])
+      sessionStorage.setItem('USERNAME', 'Joe')
+      vm.$store.commit('setLoginValues')
+      await sleep(1000)
     })
+
     afterEach(() => {
       sandbox.restore()
     })
@@ -71,7 +70,7 @@ describe('CompName.vue Spec', () => {
     let sandbox
     let vm
 
-    beforeEach((done) => {
+    beforeEach(async () => {
       sandbox = createApiSandbox()
       instance.$store.state.currentState = 'APPROVED'
       instance.$store.state.compInfo.compNames = {
@@ -85,9 +84,7 @@ describe('CompName.vue Spec', () => {
         compName3: { choice: 3, name: null, state: 'NE' },
       }
       vm = instance.$mount()
-      setTimeout(() => {
-        done()
-      }, 100)
+      await sleep(100)
     })
 
     afterEach(() => {
@@ -104,7 +101,7 @@ describe('CompName.vue Spec', () => {
     let sandbox
     let vm
 
-    beforeEach((done) => {
+    beforeEach(async () => {
       sandbox = createApiSandbox()
       instance.$store.state.currentState = 'APPROVED'
       instance.$store.state.compInfo.compNames = {
@@ -120,9 +117,7 @@ describe('CompName.vue Spec', () => {
         compName3: { choice: 3, name: null, state: 'NE' },
       }
       vm = instance.$mount()
-      setTimeout(() => {
-        done()
-      }, 100)
+      await sleep(100)
     })
 
     afterEach(() => {
@@ -140,7 +135,7 @@ describe('CompName.vue Spec', () => {
     let sandbox
     let vm
 
-    beforeEach((done) => {
+    beforeEach(async () => {
       sandbox = createApiSandbox()
       instance.$store.state.currentState = 'INPROGRESS'
       instance.$store.state.examiner = 'Joe'
@@ -153,10 +148,7 @@ describe('CompName.vue Spec', () => {
       sessionStorage.setItem('USER_ROLES', [ 'names_approver' ])
       sessionStorage.setItem('USERNAME', 'Joe')
       vm.$store.commit('setLoginValues')
-
-      setTimeout(() => {
-        done()
-      }, 300)
+      await sleep(300)
     })
 
     afterEach(() => {
@@ -176,7 +168,7 @@ describe('CompName.vue Spec', () => {
     let sandbox
     let vm
 
-    beforeEach((done) => {
+    beforeEach(async () => {
       instance.$store.state.currentState = 'APPROVED'
       instance.$store.state.examiner = 'Joe'
       instance.$store.state.compInfo.compNames = {
@@ -192,9 +184,7 @@ describe('CompName.vue Spec', () => {
       vm.$store.commit('setLoginValues')
 
       sandbox = createApiSandbox()
-      setTimeout(() => {
-        done()
-      }, 100)
+      await sleep(100)
     })
 
     afterEach(() => {
@@ -215,14 +205,13 @@ describe('CompName.vue Spec', () => {
 
     //TODO : TEST FOR RESET BUTTON reopen button for completed NRs for examiners and editors
     // also for completed NRs for viewers.  SHouldn't see them
-
   })
 
   describe('Viewers cannot see any buttons', () => {
     let sandbox
     let vm
 
-    beforeEach((done) => {
+    beforeEach(async () => {
       instance.$store.state.currentState = 'HOLD'
       instance.$store.state.furnished = 'N'
       instance.$store.state.compInfo.compNames = {
@@ -238,9 +227,7 @@ describe('CompName.vue Spec', () => {
       vm.$store.commit('setLoginValues')
 
       sandbox = createApiSandbox()
-      setTimeout(() => {
-        done()
-      }, 100)
+      await sleep(100)
     })
 
     afterEach(() => {
@@ -261,7 +248,6 @@ describe('CompName.vue Spec', () => {
       expect(vm.$el.querySelector('#name1 button')).toBeNull()
       expect(vm.$el.querySelector('#name2 button')).toBeNull()
     })
-
   })
 
   describe('Transitions Between NRs', () => {
@@ -275,11 +261,11 @@ describe('CompName.vue Spec', () => {
       button.dispatchEvent(click)
     }
 
-    beforeEach((done) => {
+    beforeEach(async () => {
       sandbox = createApiSandbox()
 
       // stub out updateRequest action from index - we don't care what it does and it errors during testing
-      //instance.$store._actions.updateRequest[0] = sinon.stub();
+      // instance.$store._actions.updateRequest[0] = sinon.stub()
 
       // NR that is completed with one rejected name (conflict) and one approved name
       sandbox.getStub.withArgs('/api/v1/requests/NR 2000951', sinon.match.any).returns(
@@ -500,84 +486,72 @@ describe('CompName.vue Spec', () => {
         })))
 
       vm = instance.$mount()
-      setTimeout(() => {
-        done()
-      }, 100)
+      await sleep(100)
     })
 
     afterEach(() => {
       sandbox.restore()
     })
 
-    it('can load an NR (unexamined) with a clean slate after another (unexamined)', () => {
-
+    it('can load an NR (unexamined) with a clean slate after another (unexamined)', async () => {
       // load first NR
       vm.$store.dispatch('getpostgrescompInfo', 'NR 2000952')
-      setTimeout(() => {
+      await sleep(100)
 
-        // expect name 1 to be from first NR
-        expect(vm.compName1.name).toEqual('NAME ONE')
+      // expect name 1 to be from first NR
+      expect(vm.compName1.name).toEqual('NAME ONE')
 
-        // expect name 1 conflict 1 name and number to be null
-        expect(vm.compName1.conflict1).toEqual(null)
-        expect(vm.compName1.conflict1_num).toEqual(null)
+      // expect name 1 conflict 1 name and number to be null
+      expect(vm.compName1.conflict1).toEqual(null)
+      expect(vm.compName1.conflict1_num).toEqual(null)
 
-        // load second NR
-        vm.$store.dispatch('getpostgrescompInfo', 'NR 2000953')
-        setTimeout(() => {
+      // load second NR
+      vm.$store.dispatch('getpostgrescompInfo', 'NR 2000953')
+      await sleep(100)
 
-          // expect name 1 to be from second NR
-          expect(vm.compName1.name).toEqual('NAME ONE ALPHA')
+      // expect name 1 to be from second NR
+      expect(vm.compName1.name).toEqual('NAME ONE ALPHA')
 
-          // expect name 2 to be from first NR
-          expect(vm.compName2.name).toEqual('NAME TWO ALPHA')
+      // expect name 2 to be from first NR
+      expect(vm.compName2.name).toEqual('NAME TWO ALPHA')
 
-          // expect name 1 conflict 1 name and number to be null
-          expect(vm.compName1.conflict1).toEqual(null)
-          expect(vm.compName1.conflict1_num).toEqual(null)
+      // expect name 1 conflict 1 name and number to be null
+      expect(vm.compName1.conflict1).toEqual(null)
+      expect(vm.compName1.conflict1_num).toEqual(null)
 
-          // expect name 1 conflict 1 name and number to be null
-          expect(vm.compName2.conflict1).toEqual(null)
-          expect(vm.compName2.conflict1_num).toEqual(null)
-
-        }, 100)
-      }, 100)
-
+      // expect name 1 conflict 1 name and number to be null
+      expect(vm.compName2.conflict1).toEqual(null)
+      expect(vm.compName2.conflict1_num).toEqual(null)
     })
 
-    it('can load an NR (unexamined) with a clean slate after another (examined)', () => {
-
+    it('can load an NR (unexamined) with a clean slate after another (examined)', async () => {
       // load first NR
       vm.$store.dispatch('getpostgrescompInfo', 'NR 2000951')
-      setTimeout(() => {
+      await sleep(100)
 
-        // expect name 1 to be from first NR
-        expect(vm.compName1.name).toEqual('COLDSTREAM REFRIGERATION  HVAC SERVICES LIMITED')
+      // expect name 1 to be from first NR
+      expect(vm.compName1.name).toEqual('COLDSTREAM REFRIGERATION  HVAC SERVICES LIMITED')
 
-        // expect name 2 to be from first NR
-        expect(vm.compName2.name).toEqual('NAME TWO')
+      // expect name 2 to be from first NR
+      expect(vm.compName2.name).toEqual('NAME TWO')
 
-        // expect name 1 conflict 1 name and number from first NR
-        expect(vm.compName1.conflict1).toEqual('MY FIRST CONFLICT')
-        expect(vm.compName1.conflict1_num).toEqual('A1010101')
+      // expect name 1 conflict 1 name and number from first NR
+      expect(vm.compName1.conflict1).toEqual('MY FIRST CONFLICT')
+      expect(vm.compName1.conflict1_num).toEqual('A1010101')
 
-        // load second (unexamined) NR
-        vm.$store.dispatch('getpostgrescompInfo', 'NR 2000952')
-        setTimeout(() => {
+      // load second (unexamined) NR
+      vm.$store.dispatch('getpostgrescompInfo', 'NR 2000952')
+      await sleep(100)
 
-          // expect name 1 to be from second NR
-          expect(vm.compName1.name).toEqual('NAME ONE')
+      // expect name 1 to be from second NR
+      expect(vm.compName1.name).toEqual('NAME ONE')
 
-          // expect name 2 to be null, ie: not left over from first NR
-          expect(vm.compName2.name).toEqual(null)
+      // expect name 2 to be null, ie: not left over from first NR
+      expect(vm.compName2.name).toEqual(null)
 
-          // expect name 1 conflict 1 name and number to be null
-          expect(vm.compName1.conflict1).toEqual(null)
-          expect(vm.compName1.conflict1_num).toEqual(null)
-
-        }, 100)
-      }, 100)
+      // expect name 1 conflict 1 name and number to be null
+      expect(vm.compName1.conflict1).toEqual(null)
+      expect(vm.compName1.conflict1_num).toEqual(null)
     })
   })
-
 })

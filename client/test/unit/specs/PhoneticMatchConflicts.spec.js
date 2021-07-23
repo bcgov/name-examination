@@ -2,21 +2,20 @@
 import staticFilesServer from '../static.files.server'
 import { createApiSandbox, sinon } from '../../features/specs/support/api.stubs'
 import Vue from 'vue'
-
 import App from '@/App.vue'
 import store from '@/store'
 import router from '@/router'
 import { cleanState } from '../../features/specs/support/clean.state'
+import { sleep } from '@/utils/sleep'
 
 const { any } = sinon.match
 
 describe('PhoneticMatchesConflict Spec', () => {
-
   describe('When there are conflicts returned by the backend', () => {
     let data = {}
     const Constructor = Vue.extend(App)
 
-    beforeAll( done => {
+    beforeAll(done => {
       data.apiSandbox = createApiSandbox()
       let { getStub } = data.apiSandbox
 
@@ -94,22 +93,22 @@ describe('PhoneticMatchesConflict Spec', () => {
       staticFilesServer.start(done)
     })
 
-    afterAll( done => {
+    afterAll(done => {
       data.apiSandbox.restore()
       staticFilesServer.stop(done)
     })
 
-    beforeEach( done  => {
+    beforeEach(async ()  => {
       store.replaceState(cleanState())
-      data.instance = new Constructor({ store: store, router: router })
+      data.instance = new Constructor({ store, router })
       data.vm = data.instance.$mount(document.getElementById('app'))
       data.vm.$store.state.userId = 'Joe'
       sessionStorage.setItem('AUTHORIZED', true)
       data.vm.$router.push('/nameExamination')
-      setTimeout(() => { done() }, 2000)
+      await sleep(2000)
     })
 
-    afterEach( () => {
+    afterEach(() => {
       router.push('/')
     })
 
@@ -180,10 +179,10 @@ describe('PhoneticMatchesConflict Spec', () => {
   })
 
   describe('When there are no phonetic conflicts or conflicts', () => {
-  let data = {}
-  let Constructor = Vue.extend(App)
+    let data = {}
+    let Constructor = Vue.extend(App)
 
-    beforeAll((done) => {
+    beforeAll(async done => {
       data.api = createApiSandbox()
       let { getStub } = data.api
 
@@ -223,25 +222,26 @@ describe('PhoneticMatchesConflict Spec', () => {
           names: [],
         },
       })
-      setTimeout(() => { staticFilesServer.start(done) }, 2000)
+      await sleep(2000)
+      staticFilesServer.start(done)
     })
 
-    afterAll( done => {
+    afterAll(done => {
       data.api.restore()
       staticFilesServer.stop(done)
     })
 
-    beforeEach( done => {
+    beforeEach(async () => {
       store.replaceState(cleanState())
-      data.instance = new Constructor({ store: store, router: router })
+      data.instance = new Constructor({ store, router })
       data.vm = data.instance.$mount(document.getElementById('app'))
       data.vm.$store.state.userId = 'Joe'
       sessionStorage.setItem('AUTHORIZED', true)
       data.vm.$router.push('/nameExamination')
-      setTimeout(() => { done() }, 2000)
+      await sleep(2000)
     })
 
-      afterEach(() => {
+    afterEach(() => {
       router.push('/')
     })
 

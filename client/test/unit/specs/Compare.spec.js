@@ -1,9 +1,8 @@
-import RecipeArea from '@/components/application/Examine/Recipe/RecipeArea'
 import store from '@/store'
 import Vue from 'vue'
 import Compare from '@/components/application/Examine/Recipe/compare/Compare'
 import { cleanState } from '../../features/specs/support/clean.state'
-
+import { sleep } from '@/utils/sleep'
 
 describe('Compare.vue Template/Presentational Logic', () => {
   let Constructor = Vue.extend(Compare)
@@ -11,17 +10,17 @@ describe('Compare.vue Template/Presentational Logic', () => {
 
   describe('Initializing', () => {
 
-    beforeEach( done => {
+    beforeEach(async () => {
       store.replaceState(cleanState())
       data.instance = new Constructor({ store })
-      setTimeout(() => { done() }, 1000)
+      await sleep(1000)
     })
 
     describe('When there are no items added to comparedConflicts', () => {
-      beforeEach( done => {
+      beforeEach(async () => {
         data.vm = data.instance.$mount()
         data.vm.$store.commit('setComparedConflicts', [])
-        setTimeout(() => { done() }, 1000)
+        await sleep(1000)
       })
 
       test('It loads the Compare component with "no items" message', () => {
@@ -38,15 +37,14 @@ describe('Compare.vue Template/Presentational Logic', () => {
     })
 
     describe('When there is a Corp Conflict in comparedConflicts', () => {
-      beforeEach(done => {
+      beforeEach(async () => {
         data.vm = data.instance.$mount()
         data.vm.$store.commit('setComparedConflicts', [])
-        setTimeout(() => { done() }, 1000)
+        await sleep(1000)
       })
 
       describe('Testing', () => {
-
-        beforeEach(done => {
+        beforeEach(async () => {
           data.vm.$store.commit('setComparedConflicts', [
             {
               "nrNumber": "A0077536",
@@ -69,7 +67,7 @@ describe('Compare.vue Template/Presentational Logic', () => {
               "type": "corp"
             }
           ])
-          setTimeout(() => { done() }, 1000)
+          await sleep(1000)
         })
 
         test('It loads the CorpMatch Component', () => {
@@ -97,8 +95,6 @@ describe('Compare.vue Template/Presentational Logic', () => {
           expect(item2).toEqual('ON')
         })
       })
-
-
     })
   })
 })

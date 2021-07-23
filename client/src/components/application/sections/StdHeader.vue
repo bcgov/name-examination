@@ -175,7 +175,7 @@
   }
 
   .std-header-tab-width {
-    wdith: 170px !important;
+    wdith: 170px !important; /* FUTURE: fix typo and test */
   }
 
   .top-nav-toolbar {

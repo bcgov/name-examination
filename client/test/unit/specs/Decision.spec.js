@@ -1,28 +1,28 @@
 import Vue from 'vue'
-
 import Decision from '@/components/application/Examine/Decision'
 import store from '@/store'
 import { cleanState } from '../../features/specs/support/clean.state'
 import { createApiSandbox } from '../sandbox/Generic-api-stubs.js'
+import { sleep } from '@/utils/sleep'
 
 describe('Testing Decision.vue', () => {
   let data = {}
   let makeDecision
   const Constructor = Vue.extend(Decision)
 
-  beforeAll( () => {
+  beforeAll(() => {
     //There are no api calls that actually influence the outcomes of these tests.  They will all pass without
     //the sandbox, however, have included it to prevent console errors.
     data.api = createApiSandbox()
   })
 
-  afterAll( () => {
+  afterAll(() => {
     data.api.restore()
   })
 
-  beforeEach( done => {
+  beforeEach(async () => {
     store.replaceState(cleanState())
-    data.instance = new Constructor({store})
+    data.instance = new Constructor({ store })
     data.vm = data.instance.$mount()
 
     makeDecision = (decision) => {
@@ -37,11 +37,11 @@ describe('Testing Decision.vue', () => {
       return [customer_message_initial, customer_message_after_decision]
     }
 
-    setTimeout( () => { done() }, 1000)
+    await sleep(1000)
   })
 
   describe('Testing the Decision customer message text:  starting with conflicts requiring consent', () => {
-    beforeEach( done => {
+    beforeEach(async () => {
       let { state } = data.vm.$store
       state.is_making_decision = true
       state.userId = 'Joe'
@@ -66,7 +66,7 @@ describe('Testing Decision.vue', () => {
           'instructions': 'Sample condition requiring consent.',
         },
       ]
-      setTimeout(() => { done() }, 1000)
+      await sleep(1000)
     })
 
     test('It displays each condition in customer message', () => {
@@ -94,7 +94,7 @@ describe('Testing Decision.vue', () => {
   })
 
   describe('When conditions have been selected with NO consent required', () => {
-    beforeEach( done => {
+    beforeEach(async () => {
       let { state } = data.vm.$store
       state.is_making_decision = true
       state.userId = 'Joe'
@@ -119,7 +119,7 @@ describe('Testing Decision.vue', () => {
           'instructions': 'Sample condition NOT requiring consent.',
         },
       ]
-      setTimeout(() => { done() }, 1000)
+      await sleep(1000)
     })
 
     test('Does not set conditional approval flag', () => {
@@ -128,7 +128,7 @@ describe('Testing Decision.vue', () => {
   })
 
   describe('When "consent required" condition has been selected WITHOUT conflicts', () => {
-    beforeEach (done => {
+    beforeEach (async () => {
       let { state } = data.vm.$store
       state.is_making_decision = true
       state.userId = 'Joe'
@@ -138,7 +138,7 @@ describe('Testing Decision.vue', () => {
         choice: null,
       }
       state.consentRequiredByUser = true
-      setTimeout(() => { done() }, 1000)
+      await sleep(1000)
     })
 
     test('Contains "consent required" message', () => {
@@ -158,11 +158,10 @@ describe('Testing Decision.vue', () => {
 
       expect(customer_message_after_decision).toBe(customer_message_initial)
     })
-
   })
 
   describe('When "consent required" condition has been selected WITH conflicts', () => {
-    beforeEach( done => {
+    beforeEach(async () => {
       let { state } = data.vm.$store
       state.is_making_decision = true
       state.userId = 'Joe'
@@ -179,7 +178,7 @@ describe('Testing Decision.vue', () => {
         },
       ]
       state.consentRequiredByUser = true
-      setTimeout(() => { done() }, 1000)
+      await sleep(1000)
     })
 
     test('Conflict message includes "consent required" and not "rejected"', () => {
@@ -200,11 +199,10 @@ describe('Testing Decision.vue', () => {
 
       expect(customer_message_after_decision).toBe(customer_message_initial)
     })
-
   })
 
   describe('When conflicts have been selected without "consent required" condition', () => {
-    beforeEach(done => {
+    beforeEach(async () => {
       let { state } = data.vm.$store
       state.is_making_decision = true
       state.userId = 'Joe'
@@ -225,7 +223,7 @@ describe('Testing Decision.vue', () => {
           'source': 'CORP',
         },
       ]
-      setTimeout(() => { done() }, 1000)
+      await sleep(1000)
     })
 
     test('Conflict message includes "rejected" and not "consent required"', () => {
@@ -235,7 +233,6 @@ describe('Testing Decision.vue', () => {
     test('Contains message for each conflicts', () => {
       expect(data.vm.customer_message_display).toContain('Rejected due to conflict with DR. EARL J. MCDONALD INC.')
       expect(data.vm.customer_message_display).toContain('Rejected due to conflict with SAMPLE CONFLICT')
-
     })
 
     test('Clears the decision text re. conflicts upon APPROVED decision made', () => {
@@ -252,11 +249,10 @@ describe('Testing Decision.vue', () => {
 
       expect(customer_message_after_decision).toBe(customer_message_initial)
     })
-
   })
 
   describe('When there are possible conflicts dropdown', () => {
-    beforeEach( done => {
+    beforeEach(async () => {
       let { state } = data.vm.$store
       state.is_making_decision = true
       state.userId = 'Joe'
@@ -279,7 +275,7 @@ describe('Testing Decision.vue', () => {
           source: 'CORP',
         },
       ]
-      setTimeout(() => { done() }, 1000)
+      await sleep(1000)
     })
 
     test('displays the conflicts in exactMatch and synonymMatch in the dropdown', () => {

@@ -4,7 +4,7 @@ import ConflictList from '@/components/application/Examine/Recipe/conflicts/Conf
 
 describe('ConflictList.vue phonetic matches titles and children classes', () => {
   const Constructor = Vue.extend(ConflictList)
-  const vm = new Constructor({ store: store }).$mount()
+  const vm = new Constructor({ store }).$mount()
 
   beforeEach(() => {
     vm.$store.commit('setPhoneticConflicts', {

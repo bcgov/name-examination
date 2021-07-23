@@ -4,6 +4,7 @@ import VDragged from 'v-dragged'
 import Transactions from '@/components/application/Transactions'
 import store from '@/store'
 import { cleanState } from '../../features/specs/support/clean.state'
+import { sleep } from '@/utils/sleep'
 
 Vue.use(VDragged)
 
@@ -11,15 +12,13 @@ describe('Testing Transactions.vue', () => {
   const data = {}
   const Constructor = Vue.extend(Transactions)
 
-  beforeAll((done) => {
+  beforeAll(async () => {
     store.replaceState(cleanState())
     data.instance = new Constructor({ store })
     data.vm = data.instance.$mount()
     data.vm.$store.dispatch('getTransactionsHistory')
     data.vm.$store.state.transactionsModalVisible = true
-    setTimeout(() => {
-      done()
-    }, 1000)
+    await sleep(1000)
   })
 
   beforeEach(() => {

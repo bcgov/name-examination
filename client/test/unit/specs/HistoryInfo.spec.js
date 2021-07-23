@@ -1,17 +1,17 @@
-import axios from '@/axios-auth'
 import HistoryList from '@/components/application/Examine/Recipe/history/HistoryList'
 import sinon from 'sinon'
 import store from '@/store/index'
 import Vue from 'vue'
 import { cleanState } from '../../features/specs/support/clean.state'
 import { createApiSandbox } from '../sandbox/CompNameSpec-api-stubs'
+import { sleep } from '@/utils/sleep'
 
 describe('HistoryList & HistoryInfo', () => {
   let data = {}
   const Constructor = Vue.extend(HistoryList)
 
 
-  beforeEach((done) => {
+  beforeEach(async () => {
     store.replaceState(cleanState())
     data.instance = new Constructor({ store })
     data.instance.$store.commit('loadHistoriesJSON', {
@@ -44,7 +44,7 @@ describe('HistoryList & HistoryInfo', () => {
         "start": 0
       }
     })
-    setTimeout(() => { done() }, 1000)
+    await sleep(1000)
   })
 
   it('builds a list of History items', () => {
@@ -52,9 +52,9 @@ describe('HistoryList & HistoryInfo', () => {
   })
 
   describe('mount the historyList with data', () => {
-    beforeEach((done) => {
+    beforeEach(async () => {
       data.vm = data.instance.$mount()
-      setTimeout(() => { done() }, 1000)
+      await sleep(1000)
     })
 
     it('displays the history table', () => {
@@ -65,7 +65,7 @@ describe('HistoryList & HistoryInfo', () => {
     })
 
     describe('load the historyInfo Component', () => {
-      beforeEach((done) => {
+      beforeEach(async () => {
         data.sandbox = createApiSandbox()
         data.sandbox.getStub.withArgs('/api/v1/requests/NR 0151876', sinon.match.any).resolves({
           "additionalInfo": null,
@@ -110,11 +110,11 @@ describe('HistoryList & HistoryInfo', () => {
           "userId": "nro_service_account",
           "xproJurisdiction": null
         })
-          let { id } = data.vm.historiesJSON[0]
-          let tr = data.vm.$el.querySelector('#' + id)
-          let clickEvent = new Event('click')
-          tr.dispatchEvent(clickEvent)
-          setTimeout(() => { done() }, 1000)
+        let { id } = data.vm.historiesJSON[0]
+        let tr = data.vm.$el.querySelector('#' + id)
+        let clickEvent = new Event('click')
+        tr.dispatchEvent(clickEvent)
+        await sleep(1000)
       })
 
       afterEach(() => {
@@ -128,4 +128,3 @@ describe('HistoryList & HistoryInfo', () => {
     })
   })
 })
-

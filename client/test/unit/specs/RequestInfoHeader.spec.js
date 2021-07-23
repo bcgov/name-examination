@@ -1,10 +1,10 @@
 /* eslint-disable */
 import Vue from 'vue'
 import sinon from 'sinon'
-
 import RequestInfoHeader from '@/components/application/Examine/RequestInfoHeader'
 import store from '@/store'
 import axios from '@/axios-auth.js'
+import { sleep } from '@/utils/sleep'
 
 window.HTMLElement.prototype.scrollTo = function () { return null }
 
@@ -17,7 +17,7 @@ describe('RequestInfoHeader', () => {
     sessionStorage.setItem('AUTHORIZED', 'true')
 
     const Constructor = Vue.extend(RequestInfoHeader)
-    instance = new Constructor({ store: store })
+    instance = new Constructor({ store })
     instance.$store.state.myKeycloak = {}
   })
 
@@ -31,8 +31,8 @@ describe('RequestInfoHeader', () => {
       var click = new window.Event('click')
       button.dispatchEvent(click)
     }
-    beforeEach((done) => {
 
+    beforeEach(async () => {
       sandbox = sinon.createSandbox()
       sandbox.stub(axios, 'put').withArgs('/api/v1/requests/NR 2000948', sinon.match.any).returns(
         new Promise((resolve) => resolve({
@@ -171,10 +171,9 @@ describe('RequestInfoHeader', () => {
       vm = instance.$mount()
       vm.$store.commit('setLoginValues')
       vm.$store.commit('nrNumber', 'NR 2000948')
-      setTimeout(() => {
-        done()
-      }, 1000)
+      await sleep(1000)
     })
+
     afterEach(() => {
       sandbox.restore()
     })
@@ -194,16 +193,16 @@ describe('RequestInfoHeader', () => {
       expect(vm.$el.querySelector('#nrStatusText').textContent.trim()).toEqual('INPROGRESS')
     })
 
-    it('Has a Show/Hide Button that toggles properly', () => {
+    it('Has a Show/Hide Button that toggles properly', async () => {
       //TODO: tests for all fields that are hidden/shown in header
       expect(vm.$el.querySelector('#show-details-graphic')).not.toBeNull()
       expect(vm.$el.querySelector('#hide-details-graphic')).toBeNull()
-      click('#nr-details-show-hide-details-button')
 
-      vm.$nextTick(function () {
-        expect(vm.$el.querySelector('#show-details-graphic')).toBeNull()
-        expect(vm.$el.querySelector('#hide-details-graphic')).not.toBeNull()
-      })
+      click('#nr-details-show-hide-details-button')
+      await vm.$nextTick()
+
+      expect(vm.$el.querySelector('#show-details-graphic')).toBeNull()
+      expect(vm.$el.querySelector('#hide-details-graphic')).not.toBeNull()
     })
   })
 
@@ -220,7 +219,7 @@ describe('RequestInfoHeader', () => {
       button.dispatchEvent(click)
     }
 
-    beforeEach((done) => {
+    beforeEach(async () => {
       sandbox = sinon.createSandbox()
       putCall = sandbox.stub(axios, 'put').withArgs('/api/v1/requests/NR 2000950', sinon.match.any).returns(
         new Promise((resolve) => resolve({
@@ -367,61 +366,56 @@ describe('RequestInfoHeader', () => {
       vm = instance.$mount()
       vm.$store.commit('setLoginValues')
       vm.$store.commit('nrNumber', 'NR 2000950')
-      setTimeout(() => {
-        done()
-      }, 1000)
+      await sleep(1000)
     })
+
     afterEach(() => {
       sandbox.restore()
     })
 
     describe('And in Edit Mode', () => {
-
-      beforeEach((done) => {
+      beforeEach(async () => {
         click('#nr-details-edit-button')
-        setTimeout(() => {
-          done()
-        }, 1000)
-      })
-      afterEach((done) => {
-        setTimeout(() => {
-          done()
-        }, 100)
+        await sleep(1000)
       })
 
-      it('RequestInfo Header has show/cancel buttons that toggle properly', () => {
+      afterEach(async () => {
+        await sleep(100)
+      })
+
+      it('RequestInfo Header has show/cancel buttons that toggle properly', async () => {
         click('#nr-details-cancel-button')
-        setTimeout(() => {
-          expect(vm.$el.querySelector('#nr-details-save-button')).toEqual(null)
-          expect(vm.$el.querySelector('#nr-details-cancel-button')).toEqual(null)
-          expect(vm.$el.querySelector('#nr-details-edit-button')).not.toEqual(null)
-          // the PATCH should have been called to revert state to DRAFT
-          expect(patchCall.lastCall).not.toBeNull()
-          expect(patchCall.lastCall.args[1].state).toEqual('DRAFT')
-          expect(patchCall.lastCall.args[1].previousStateCd).toEqual(null)
-        }, 100)
+        await sleep(100)
+
+        expect(vm.$el.querySelector('#nr-details-save-button')).toEqual(null)
+        expect(vm.$el.querySelector('#nr-details-cancel-button')).toEqual(null)
+        expect(vm.$el.querySelector('#nr-details-edit-button')).not.toEqual(null)
+
+        // the PATCH should have been called to revert state to DRAFT
+        expect(patchCall.lastCall).not.toBeNull()
+        expect(patchCall.lastCall.args[1].state).toEqual('DRAFT')
+        expect(patchCall.lastCall.args[1].previousStateCd).toEqual(null)
       })
 
-      it('Has a Save Edits button that works when clicked', () => {
-
+      it('Has a Save Edits button that works when clicked', async () => {
         expect(vm.validate()).toBeTruthy()
         expect(vm.$el.querySelector('#nr-details-save-button')).not.toBeNull()
+
         click('#nr-details-save-button')
+        await sleep(100)
 
-        setTimeout(() => {
-          expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull()
-          expect(vm.$el.querySelector('#nr-details-save-button')).toBeNull()
-          expect(vm.$el.querySelector('#nr-details-cancel-button')).toBeNull()
+        expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull()
+        expect(vm.$el.querySelector('#nr-details-save-button')).toBeNull()
+        expect(vm.$el.querySelector('#nr-details-cancel-button')).toBeNull()
 
-          // the PUT is called, saving state back to DRAFT
-          expect(putCall.lastCall).not.toBeNull()
-          expect(putCall.lastCall.args[1].state).toEqual('DRAFT')
-          expect(putCall.lastCall.args[1].previousStateCd).toEqual(null)
-        }, 100)
+        // the PUT is called, saving state back to DRAFT
+        expect(putCall.lastCall).not.toBeNull()
+        expect(putCall.lastCall.args[1].state).toEqual('DRAFT')
+        expect(putCall.lastCall.args[1].previousStateCd).toEqual(null)
       })
-
     })
   })
+
   describe('When an examiner loads an INPROGRESS NR that is their current NR', () => {
     let vm
     let sandbox
@@ -434,8 +428,8 @@ describe('RequestInfoHeader', () => {
       var click = new window.Event('click')
       button.dispatchEvent(click)
     }
-    beforeEach((done) => {
 
+    beforeEach(async () => {
       sandbox = sinon.createSandbox()
       putCall = sandbox.stub(axios, 'put').withArgs('/api/v1/requests/NR 2000948', sinon.match.any).returns(
         new Promise((resolve) => resolve({
@@ -582,56 +576,51 @@ describe('RequestInfoHeader', () => {
       vm = instance.$mount()
       vm.$store.commit('setLoginValues')
       vm.$store.commit('nrNumber', 'NR 2000948')
-      setTimeout(() => {
-        done()
-      }, 2000)
+      await sleep(2000)
     })
+
     afterEach(() => {
       sandbox.restore()
     })
 
     describe('And they are in Edit Mode', () => {
-      beforeEach((done) => {
+      beforeEach(async () => {
         click('#nr-details-edit-button')
-        setTimeout(() => {
-          done()
-        }, 1000)
-      })
-      afterEach((done) => {
-        setTimeout(() => {
-          done()
-        }, 100)
+        await sleep(1000)
       })
 
-      it('And they click Cancel, the Edit Details button is visible and the Save/Cancel are not', () => {
+      afterEach(async () => {
+        await sleep(100)
+      })
+
+      it('And they click Cancel, the Edit Details button is visible and the Save/Cancel are not', async () => {
         click('#nr-details-cancel-button')
-        setTimeout(() => {
-          expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull()
-          expect(vm.$el.querySelector('#nr-details-save-button')).toBeNull()
-          expect(vm.$el.querySelector('#nr-details-cancel-button')).toBeNull()
+        await sleep(10)
 
-          // the PATCH should not have been called (ie: no change in state), just a GET
-          expect(patchCall.lastCall).toBeNull()
-          expect(getCall.lastCall).not.toBeNull()
-        }, 10)
+        expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull()
+        expect(vm.$el.querySelector('#nr-details-save-button')).toBeNull()
+        expect(vm.$el.querySelector('#nr-details-cancel-button')).toBeNull()
+
+        // the PATCH should not have been called (ie: no change in state), just a GET
+        expect(patchCall.lastCall).toBeNull()
+        expect(getCall.lastCall).not.toBeNull()
       })
 
-      it('And they click Edit Request, and the Save Button is visible, and it works', () => {
-
+      it('And they click Edit Request, and the Save Button is visible, and it works', async () => {
         expect(vm.validate()).toBeTruthy()
         expect(vm.$el.querySelector('#nr-details-save-button')).not.toBeNull()
+
         click('#nr-details-save-button')
+        await sleep(10)
 
-        setTimeout(() => {
-          expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull()
-          expect(vm.$el.querySelector('#nr-details-save-button')).toBeNull()
-          expect(vm.$el.querySelector('#nr-details-cancel-button')).toBeNull()
+        expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull()
+        expect(vm.$el.querySelector('#nr-details-save-button')).toBeNull()
+        expect(vm.$el.querySelector('#nr-details-cancel-button')).toBeNull()
 
-          // the PUT is called without changing the state, ie: it's still INPROGRESS
-          expect(putCall.lastCall).not.toBeNull()
-          expect(putCall.lastCall.args[1].state).toEqual('INPROGRESS')
-          expect(putCall.lastCall.args[1].previousStateCd).toEqual(null)
-        })
+        // the PUT is called without changing the state, ie: it's still INPROGRESS
+        expect(putCall.lastCall).not.toBeNull()
+        expect(putCall.lastCall.args[1].state).toEqual('INPROGRESS')
+        expect(putCall.lastCall.args[1].previousStateCd).toEqual(null)
       })
 
       it('And Validates the name choices properly', () => {
@@ -665,20 +654,16 @@ describe('RequestInfoHeader', () => {
     })
 
     describe('And the Edit Button logic is working correctly, so that an Examiner', () => {
-
-      beforeEach((done) => {
+      beforeEach(async () => {
         sessionStorage.setItem('USER_ROLES', ['names_approver'])
         sessionStorage.setItem('USERNAME', 'max')
         vm = instance.$mount()
         vm.$store.commit('setLoginValues')
         vm.$store.commit('nrNumber', 'NR 2000948')
-        setTimeout(() => {
-          done()
-        }, 100)
+        await sleep(100)
       })
 
       describe('Cannot edit an INPROGRESS NR that is not their own', () => {
-
         it('Edit Request Button is hidden', () => {
           expect(vm.$el.querySelector('#nr-details-edit-button')).toBeNull()
         })
@@ -686,38 +671,30 @@ describe('RequestInfoHeader', () => {
     })
 
     describe('But when its their own NR', () => {
-
-      beforeEach((done) => {
+      beforeEach(async () => {
         sessionStorage.setItem('USER_ROLES', ['names_approver'])
         sessionStorage.setItem('USERNAME', 'tester')
         vm = instance.$mount()
         vm.$store.commit('setLoginValues')
         vm.$store.commit('nrNumber', 'NR 2000948')
-        setTimeout(() => {
-          done()
-        }, 100)
+        await sleep(100)
       })
 
       describe('They can edit', () => {
-
         it('It shows the edit button', () => {
           expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull()
-
         })
       })
     })
 
     describe('And for Staff', () => {
-
-      beforeEach((done) => {
+      beforeEach(async () => {
         sessionStorage.setItem('USER_ROLES', ['names_editor'])
         sessionStorage.setItem('USERNAME', 'tester')
         vm = instance.$mount()
         vm.$store.commit('setLoginValues')
         vm.$store.commit('nrNumber', 'NR 2000948')
-        setTimeout(() => {
-          done()
-        }, 100)
+        await sleep(100)
       })
 
       describe('When they are currently editing', () => {
@@ -740,8 +717,8 @@ describe('RequestInfoHeader', () => {
       var click = new window.Event('click')
       button.dispatchEvent(click)
     }
-    beforeEach((done) => {
 
+    beforeEach(async () => {
       sandbox = sinon.createSandbox()
       putCall = sandbox.stub(axios, 'put').withArgs('/api/v1/requests/NR 2000952', sinon.match.any).returns(
         new Promise((resolve) => resolve({
@@ -888,76 +865,67 @@ describe('RequestInfoHeader', () => {
       vm = instance.$mount()
       vm.$store.commit('setLoginValues')
       vm.$store.commit('nrNumber', 'NR 2000952')
-      setTimeout(() => {
-        done()
-      }, 100)
+      await sleep(100)
     })
+
     afterEach(() => {
       sandbox.restore()
     })
 
     describe('After clicking Cancel, The Edit Request Button', () => {
-      beforeEach((done) => {
+      beforeEach(async () => {
         click('#nr-details-edit-button')
-        setTimeout(() => {
-          done()
-        }, 100)
-      })
-      afterEach((done) => {
-        setTimeout(() => {
-          done()
-        }, 100)
+        await sleep(100)
       })
 
-      it('is visible and the cancel/save button is not ', () => {
+      afterEach(async () => {
+        await sleep(100)
+      })
+
+      it('is visible and the cancel/save button is not ', async () => {
         click('#nr-details-cancel-button')
-        setTimeout(() => {
-          expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull()
-          expect(vm.$el.querySelector('#nr-details-save-button')).toBeNull()
-          expect(vm.$el.querySelector('#nr-details-cancel-button')).toBeNull()
+        await sleep(10)
 
-          // the PATCH should not have been called (ie: no change in state), just a GET
-          expect(patchCall.lastCall).toBeNull()
-          expect(getCall.lastCall).not.toBeNull()
+        expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull()
+        expect(vm.$el.querySelector('#nr-details-save-button')).toBeNull()
+        expect(vm.$el.querySelector('#nr-details-cancel-button')).toBeNull()
 
-        }, 10)
+        // the PATCH should not have been called (ie: no change in state), just a GET
+        expect(patchCall.lastCall).toBeNull()
+        expect(getCall.lastCall).not.toBeNull()
       })
 
-      it('And after clicking Edit Request, the Cancel/Save buttons are visible and working', () => {
-
+      it('And after clicking Edit Request, the Cancel/Save buttons are visible and working', async () => {
         expect(vm.validate()).toBeTruthy()
         expect(vm.$el.querySelector('#nr-details-save-button')).not.toBeNull()
+
         click('#nr-details-save-button')
+        await sleep(10)
 
-        setTimeout(() => {
-          expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull()
-          expect(vm.$el.querySelector('#nr-details-save-button')).toBeNull()
-          expect(vm.$el.querySelector('#nr-details-cancel-button')).toBeNull()
+        expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull()
+        expect(vm.$el.querySelector('#nr-details-save-button')).toBeNull()
+        expect(vm.$el.querySelector('#nr-details-cancel-button')).toBeNull()
 
-          // the PUT is called without changing the state, ie: it's still REJECTED
-          expect(putCall.lastCall).not.toBeNull()
-          expect(putCall.lastCall.args[1].state).toEqual('REJECTED')
-          expect(putCall.lastCall.args[1].previousStateCd).toEqual(null)
-
-        })
+        // the PUT is called without changing the state, ie: it's still REJECTED
+        expect(putCall.lastCall).not.toBeNull()
+        expect(putCall.lastCall.args[1].state).toEqual('REJECTED')
+        expect(putCall.lastCall.args[1].previousStateCd).toEqual(null)
       })
     })
-
   })
 
   describe('Testing View-only users cannot see the Edit button even when the NR is in DRAFT', () => {
     let vm
     let sandbox
 
-    beforeEach((done) => {
+    beforeEach(async () => {
       sessionStorage.setItem('USER_ROLES', ['names_viewer'])
       sandbox = sinon.createSandbox()
       vm = instance.$mount()
       vm.$store.commit('setLoginValues')
-      setTimeout(() => {
-        done()
-      }, 100)
+      await sleep(100)
     })
+
     afterEach(() => {
       sandbox.restore()
     })
@@ -971,15 +939,14 @@ describe('RequestInfoHeader', () => {
     let vm
     let sandbox
 
-    beforeEach((done) => {
+    beforeEach(async () => {
       sessionStorage.setItem('USER_ROLES', ['names_editor'])
       sandbox = sinon.createSandbox()
       vm = instance.$mount()
       vm.$store.commit('setLoginValues')
-      setTimeout(() => {
-        done()
-      }, 100)
+      await sleep(100)
     })
+
     afterEach(() => {
       sandbox.restore()
     })
@@ -988,5 +955,4 @@ describe('RequestInfoHeader', () => {
       expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull()
     })
   })
-
 })

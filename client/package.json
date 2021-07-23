@@ -16,6 +16,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@mdi/font": "^5.9.55",
     "axios": "^0.18.1",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
@@ -24,7 +25,6 @@
     "vue-fragment": "^1.5.1",
     "vue-router": "^3.0.7",
     "vue-shortkey": "^3.1.4",
-    "vue-test-utils": "^1.0.0-beta.11",
     "vue-virtual-scroll-list": "^1.4.1",
     "vuelidate": "^0.6.2",
     "vuetify": "^1.5.16",
@@ -32,8 +32,7 @@
     "webpack": "^3.12.0"
   },
   "devDependencies": {
-    "@mdi/font": "^5.9.55",
-    "@vue/test-utils": "^1.0.0-beta.25",
+    "@vue/test-utils": "1.1.4",
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
     "babel-eslint": "^8.2.1",

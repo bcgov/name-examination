@@ -1,4 +1,4 @@
-let getNext = (when, data)=>{
+let getNext = (when, data) => {
     when(/^(.*) accesses the next examination$/, (userId) => {
         data.stubApi({ user:userId })
         return new Promise((done) => {
@@ -7,7 +7,7 @@ let getNext = (when, data)=>{
             let window = button.ownerDocument.defaultView;
             var click = new window.Event('click');
             button.dispatchEvent(click);
-            setTimeout(()=>{
+            setTimeout(() => {
                 done();
             }, 1000)
         });

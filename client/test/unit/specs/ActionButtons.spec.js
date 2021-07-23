@@ -1,10 +1,10 @@
 /* es-lint disable */
 import Vue from 'vue'
 import sinon from 'sinon'
-
 import ActionButtons from '@/components/application/Examine/ActionButtons'
 import store from '@/store'
 import axios from '@/axios-auth'
+import { sleep } from '@/utils/sleep'
 
 const data = {
   additionalInfo: 'More info',
@@ -92,7 +92,6 @@ const data = {
   xproJurisdiction: null,
 }
 
-
 describe('ActionButtons.vue', () => {
   let instance
 
@@ -109,7 +108,7 @@ describe('ActionButtons.vue', () => {
   describe('Initialization', () => {
     let vm
 
-    beforeEach((done) => {
+    beforeEach(async () => {
       let response = sinon.fake.resolves({ data })
       sinon.replace(axios, 'get', response)
 
@@ -129,10 +128,7 @@ describe('ActionButtons.vue', () => {
       sessionStorage.setItem('USER_ROLES', [ 'names_approver' ])
       sessionStorage.setItem('USERNAME', 'GraceHopper')
       vm.$store.commit('setLoginValues')
-
-      setTimeout(() => {
-        done()
-      }, 100)
+      await sleep(100)
     })
 
     afterEach(() => {
@@ -153,7 +149,7 @@ describe('ActionButtons.vue', () => {
   describe('Editors/Staff cannot see Decision-related buttons for APPROVED NRs ', () => {
     let vm
 
-    beforeEach((done) => {
+    beforeEach(async () => {
       let response = sinon.fake.resolves({ data })
       sinon.replace(axios, 'get', response)
 
@@ -173,10 +169,7 @@ describe('ActionButtons.vue', () => {
       sessionStorage.setItem('USER_ROLES', [ 'names_editor' ])
       sessionStorage.setItem('USERNAME', 'GraceHopper')
       vm.$store.commit('setLoginValues')
-
-      setTimeout(() => {
-        done()
-      }, 100)
+      await sleep(100)
     })
 
     afterEach(() => {
@@ -194,13 +187,12 @@ describe('ActionButtons.vue', () => {
 
     //TODO : TEST FOR RESET BUTTON reopen button for completed NRs for examiners and editors
     // also for completed NRs for viewers.  SHouldn't see them
-
   })
 
   describe('Viewers cannot see any buttons', () => {
     let vm
 
-    beforeEach((done) => {
+    beforeEach(async () => {
       let response = sinon.fake.resolves({ data })
       sinon.replace(axios, 'get', response)
 
@@ -220,10 +212,7 @@ describe('ActionButtons.vue', () => {
       sessionStorage.setItem('USER_ROLES', [ 'names_viewer' ])
       sessionStorage.setItem('USERNAME', 'GraceHopper')
       vm.$store.commit('setLoginValues')
-
-      setTimeout(() => {
-        done()
-      }, 100)
+      await sleep(100)
     })
 
     afterEach(() => {
@@ -243,7 +232,7 @@ describe('ActionButtons.vue', () => {
   describe('Editors/Staff can see Cancel Buttons on DRAFT NRs', () => {
     let vm
 
-    beforeEach((done) => {
+    beforeEach(async () => {
       let response = sinon.fake.resolves({ data })
       sinon.replace(axios, 'get', response)
 
@@ -262,10 +251,7 @@ describe('ActionButtons.vue', () => {
       sessionStorage.setItem('USER_ROLES', [ 'names_editor' ])
       sessionStorage.setItem('USERNAME', 'GraceHopper')
       vm.$store.commit('setLoginValues')
-
-      setTimeout(() => {
-        done()
-      }, 100)
+      await sleep(100)
     })
 
     afterEach(() => {
@@ -275,13 +261,12 @@ describe('ActionButtons.vue', () => {
     it('Shows the cancel button for an editor user on an DRAFT NR', () => {
       expect(vm.$el.querySelector('#examine-cancel-button')).not.toBeNull()
     })
-
   })
 
   describe('Viewers cannot see the reset button for a furnished completed NR', () => {
     let vm
 
-    beforeEach((done) => {
+    beforeEach(async () => {
       let response = sinon.fake.resolves({ data })
       sinon.replace(axios, 'get', response)
 
@@ -301,10 +286,7 @@ describe('ActionButtons.vue', () => {
       sessionStorage.setItem('USER_ROLES', [ 'names_viewer' ])
       sessionStorage.setItem('USERNAME', 'AdaLovelace')
       vm.$store.commit('setLoginValues')
-
-      setTimeout(() => {
-        done()
-      }, 100)
+      await sleep(100)
     })
 
     afterEach(() => {
@@ -319,7 +301,7 @@ describe('ActionButtons.vue', () => {
   describe('Editors can see the reset button for a completed, furnished NR', () => {
     let vm
 
-    beforeEach((done) => {
+    beforeEach(async () => {
       let response = sinon.fake.resolves({ data })
       sinon.replace(axios, 'get', response)
 
@@ -339,11 +321,7 @@ describe('ActionButtons.vue', () => {
       sessionStorage.setItem('USER_ROLES', [ 'names_editor' ])
       sessionStorage.setItem('USERNAME', 'Ada')
       vm.$store.commit('setLoginValues')
-
-
-      setTimeout(() => {
-        done()
-      }, 100)
+      await sleep(100)
     })
 
     afterEach(() => {
@@ -358,7 +336,7 @@ describe('ActionButtons.vue', () => {
   describe('Viewers cannot see the reopen button for a completed NR', () => {
     let vm
 
-    beforeEach((done) => {
+    beforeEach(async () => {
       let response = sinon.fake.resolves({ data })
       sinon.replace(axios, 'get', response)
 
@@ -378,10 +356,7 @@ describe('ActionButtons.vue', () => {
       sessionStorage.setItem('USER_ROLES', [ 'names_viewer' ])
       sessionStorage.setItem('USERNAME', 'AdaLovelace')
       vm.$store.commit('setLoginValues')
-
-      setTimeout(() => {
-        done()
-      }, 100)
+      await sleep(100)
     })
 
     afterEach(() => {
@@ -396,7 +371,7 @@ describe('ActionButtons.vue', () => {
   describe('Editors can see the reopen button for a completed, unfurnished NR', () => {
     let vm
 
-    beforeEach((done) => {
+    beforeEach(async () => {
       let response = sinon.fake.resolves({ data })
       sinon.replace(axios, 'get', response)
 
@@ -416,10 +391,7 @@ describe('ActionButtons.vue', () => {
       sessionStorage.setItem('USER_ROLES', [ 'names_editor' ])
       sessionStorage.setItem('USERNAME', 'Ada')
       vm.$store.commit('setLoginValues')
-
-      setTimeout(() => {
-        done()
-      }, 100)
+      await sleep(100)
     })
 
     afterEach(() => {
@@ -434,7 +406,7 @@ describe('ActionButtons.vue', () => {
   describe('Editors cannot see the examine button for a draft NR', () => {
     let vm
 
-    beforeEach((done) => {
+    beforeEach(async () => {
       instance.$store.state.currentState = 'DRAFT'
       instance.$store.state.furnished = 'N'
       instance.$store.state.compInfo.compNames = {
@@ -451,10 +423,7 @@ describe('ActionButtons.vue', () => {
       sessionStorage.setItem('USER_ROLES', [ 'names_editor' ])
       sessionStorage.setItem('USERNAME', 'Ada')
       vm.$store.commit('setLoginValues')
-
-      setTimeout(() => {
-        done()
-      }, 100)
+      await sleep(100)
     })
 
     afterEach(() => {
@@ -469,21 +438,19 @@ describe('ActionButtons.vue', () => {
   describe('Reset & Re-Open', () => {
     let vm
 
-    beforeEach((done) => {
+    beforeEach(async () => {
       let response = sinon.fake.resolves({ data })
       sinon.replace(axios, 'get', response)
       sinon.replace(axios, 'put', response)
 
       // stub out updateRequest action from index - we don't care what it does and it errors during testing
-      //instance.$store._actions.updateRequest[0] = sinon.stub();
+      // instance.$store._actions.updateRequest[0] = sinon.stub()
 
       // NR that is completed with one rejected name (conflict) and one approved name
 
       vm = instance.$mount()
       vm.$store.dispatch('getpostgrescompInfo', 'NR 2000951')
-      setTimeout(() => {
-        done()
-      }, 100)
+      await sleep(100)
     })
 
     afterEach(() => {
@@ -491,7 +458,6 @@ describe('ActionButtons.vue', () => {
     })
 
     describe('Reset', () => {
-
       beforeEach(() => {
         instance.$store.state.furnished = 'Y'
       })
@@ -501,42 +467,36 @@ describe('ActionButtons.vue', () => {
         expect(vm.$el.querySelector('#examine-re-open-button')).toBeNull()
       })
 
-      it('Resets NR status upon reset', () => {
+      it('Resets NR status upon reset', async () => {
         vm.reset()
+        await sleep(10000)
 
-        setTimeout(() => {
-          expect(instance.$store.state.currentState).toEqual('INPROGRESS')
-        }, 10000)
+        expect(instance.$store.state.currentState).toEqual('INPROGRESS')
       })
 
-      it('keeps decision data upon reset', () => {
+      it('keeps decision data upon reset',async () => {
         vm.reset()
+        await sleep(10)
 
-        setTimeout(() => {
-          expect(instance.$store.state.compInfo.compNames.compName1.state).toEqual('REJECTED')
-          expect(instance.$store.state.compInfo.compNames.compName1.decision_text).toEqual('Nope.')
-          expect(instance.$store.state.compInfo.compNames.compName1.conflict1).toEqual('Bada Boom Bad Name')
-          expect(instance.$store.state.compInfo.compNames.compName1.conflict1_num).toEqual(123)
-          expect(instance.$store.state.compInfo.compNames.compName2.comment.comment).toEqual('My internal decision comment.')
-        }, 10)
+        expect(instance.$store.state.compInfo.compNames.compName1.state).toEqual('REJECTED')
+        expect(instance.$store.state.compInfo.compNames.compName1.decision_text).toEqual('Nope.')
+        expect(instance.$store.state.compInfo.compNames.compName1.conflict1).toEqual('Bada Boom Bad Name')
+        expect(instance.$store.state.compInfo.compNames.compName1.conflict1_num).toEqual(123)
+        expect(instance.$store.state.compInfo.compNames.compName2.comment.comment).toEqual('My internal decision comment.')
       })
 
       describe('For Editors', () => {
-        beforeEach((done) => {
+        beforeEach(async () => {
           sessionStorage.setItem('USER_ROLES', [ 'names_editor' ])
           vm.$store.commit('setLoginValues')
-          setTimeout(() => {
-            done()
-          }, 100)
+          await sleep(100)
         })
 
-        it('NR is opened to edit screen', () => {
+        it('NR is opened to edit screen', async () => {
           vm.reset()
+          await sleep(10)
 
-          setTimeout(() => {
-            expect(instance.$store.state.is_editing).toEqual(true)
-          }, 10)
-
+          expect(instance.$store.state.is_editing).toEqual(true)
         })
       })
     }) // end RESET
@@ -554,46 +514,38 @@ describe('ActionButtons.vue', () => {
       })
 
 
-      it('Re-opens NR status upon button click', () => {
+      it('Re-opens NR status upon button click', async () => {
         vm.reOpen()
+        await sleep(10000)
 
-        setTimeout(() => {
-          expect(instance.$store.state.currentState).toEqual('INPROGRESS')
-        }, 10000)
+        expect(instance.$store.state.currentState).toEqual('INPROGRESS')
       })
 
-      it('keeps decision data upon re-open', () => {
+      it('keeps decision data upon re-open', async () => {
         vm.reOpen()
+        await sleep(10)
 
-        setTimeout(() => {
-          expect(instance.$store.state.compInfo.compNames.compName1.state).toEqual('REJECTED')
-          expect(instance.$store.state.compInfo.compNames.compName1.decision_text).toEqual('Nope.')
-          expect(instance.$store.state.compInfo.compNames.compName1.conflict1).toEqual('Bada Boom Bad Name')
-          expect(instance.$store.state.compInfo.compNames.compName1.conflict1_num).toEqual(123)
-          expect(instance.$store.state.compInfo.compNames.compName2.comment.comment).toEqual('My internal decision comment.')
-        }, 10)
+        expect(instance.$store.state.compInfo.compNames.compName1.state).toEqual('REJECTED')
+        expect(instance.$store.state.compInfo.compNames.compName1.decision_text).toEqual('Nope.')
+        expect(instance.$store.state.compInfo.compNames.compName1.conflict1).toEqual('Bada Boom Bad Name')
+        expect(instance.$store.state.compInfo.compNames.compName1.conflict1_num).toEqual(123)
+        expect(instance.$store.state.compInfo.compNames.compName2.comment.comment).toEqual('My internal decision comment.')
       })
 
       describe('For Editors', () => {
-        beforeEach((done) => {
-
+        beforeEach(async () => {
           sessionStorage.setItem('USER_ROLES', [ 'names_editor' ])
           vm.$store.commit('setLoginValues')
-          setTimeout(() => {
-            done()
-          }, 100)
+          await sleep(100)
         })
 
-        it('NR is opened to edit screen', () => {
+        it('NR is opened to edit screen', async () => {
           vm.reOpen()
+          await sleep(10)
 
-          setTimeout(() => {
-            expect(instance.$store.state.is_editing).toEqual(true)
-          }, 10)
-
+          expect(instance.$store.state.is_editing).toEqual(true)
         })
       })
-
     })
   })
 })

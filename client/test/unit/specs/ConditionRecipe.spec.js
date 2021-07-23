@@ -2,9 +2,9 @@
 import Vue from 'vue'
 import ConditionInfo from '@/components/application/Examine/Recipe/conditions/ConditionsInfo'
 import store from '@/store'
+import { sleep } from '@/utils/sleep'
 
 Vue.use(require('vue-shortkey'))
-
 
 describe('ConditionInfo.vue', () => {
   let instance
@@ -49,7 +49,6 @@ describe('ConditionInfo.vue', () => {
       phrase: 'DR',
       text: 'You may be able to use this term if it is not related to medical services or health care. ' +
         'Ie: Staging Doctor Solutions Corp.',
-
     } ])
   })
 
@@ -84,32 +83,29 @@ describe('ConditionInfo.vue', () => {
       'bcregistries@gov.bc.ca')
   })
 
-  it('sets currentCondition successfully in the state after a condition is clicked', () => {
+  it('sets currentCondition successfully in the state after a condition is clicked', async () => {
     var click = new window.Event('click')
     let button = vm.$el.querySelector('tr td:first-child')
     button.dispatchEvent(click)
-    setTimeout(() => {
-      expect(vm.$store.state.currentCondition).toEqual({
-        word: 'DR',
-        allow_use: 'Y',
-        consent_required: '',
-        text: 'You may be able to use this term if it is not related to medical services or health care. ' +
-          'Ie: Staging Doctor Solutions Corp.',
-        instructions: 'Use Of This Term Requires Written Consent From The Accredited BC College ' +
-          'Authorizing Its Use. Please Scan Your Consent To bcregistries@gov.bc.ca',
-      })
-      expect(vm.currentCondition).toEqual({
-        word: 'DR',
-        allow_use: 'Y',
-        consent_required: '',
-        text: 'You may be able to use this term if it is not related to medical services or health care. ' +
-          'Ie: Staging Doctor Solutions Corp.',
-        instructions: 'Use Of This Term Requires Written Consent From The Accredited BC College ' +
-          'Authorizing Its Use. Please Scan Your Consent To bcregistries@gov.bc.ca',
-      })
-      done()
-    }, 300)
+    await sleep(300)
+
+    expect(vm.$store.state.currentCondition).toEqual({
+      word: 'DR',
+      allow_use: 'Y',
+      consent_required: '',
+      text: 'You may be able to use this term if it is not related to medical services or health care. ' +
+        'Ie: Staging Doctor Solutions Corp.',
+      instructions: 'Use Of This Term Requires Written Consent From The Accredited BC College ' +
+        'Authorizing Its Use. Please Scan Your Consent To bcregistries@gov.bc.ca',
+    })
+    expect(vm.currentCondition).toEqual({
+      word: 'DR',
+      allow_use: 'Y',
+      consent_required: '',
+      text: 'You may be able to use this term if it is not related to medical services or health care. ' +
+        'Ie: Staging Doctor Solutions Corp.',
+      instructions: 'Use Of This Term Requires Written Consent From The Accredited BC College ' +
+        'Authorizing Its Use. Please Scan Your Consent To bcregistries@gov.bc.ca',
+    })
   })
-
-
 })

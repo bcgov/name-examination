@@ -9,7 +9,7 @@ import store from '@/store'
 import router from '@/router'
 import { cleanState } from '../support/clean.state'
 
-let openNameExamination = (when, data)=>{
+let openNameExamination = (when, data) => {
     when(/^(.*) accesses Name examination$/, (userId) => {
         data.stubApi({ user:userId, user_roles: ['names_approver'] })
         return new Promise((done) => {
@@ -20,11 +20,11 @@ let openNameExamination = (when, data)=>{
             sessionStorage.setItem('USER_ROLES', ['names_approver']);
             data.vm.$store.commit('setLoginValues');
 
-            setTimeout(()=>{
+            setTimeout(() => {
                 data.instance.$store.state.userId = userId
                 sessionStorage.setItem('AUTHORIZED', true)
                 router.push('/nameExamination')
-                setTimeout(()=>{
+                setTimeout(() => {
                     done();
                 }, 1000)
             }, 1000)

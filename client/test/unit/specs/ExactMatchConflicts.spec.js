@@ -5,6 +5,7 @@ import store from '@/store'
 import Vue from 'vue'
 import { cleanState } from '../../features/specs/support/clean.state'
 import { createApiSandbox, sinon } from '../../features/specs/support/api.stubs'
+import { sleep } from '@/utils/sleep'
 
 const encode = encodeURIComponent
 
@@ -13,7 +14,7 @@ describe('Exact Match Conflict Handling by ConflictList', () => {
     let data = {}
     let Constructor = Vue.extend(App)
 
-    beforeAll( done => {
+    beforeAll(async done => {
       data.api = createApiSandbox()
       let { getStub } = data.api
 
@@ -74,25 +75,26 @@ describe('Exact Match Conflict Handling by ConflictList', () => {
           }],
         },
       })
-      setTimeout(() => { staticFilesServer.start(done) }, 2000)
+      await sleep(2000)
+      staticFilesServer.start(done)
     })
 
-    afterAll( done => {
+    afterAll(done => {
       data.api.restore()
       staticFilesServer.stop(done)
     })
 
-    beforeEach( done => {
+    beforeEach(async () => {
       store.replaceState(cleanState())
-      data.instance = new Constructor({ store: store, router: router })
+      data.instance = new Constructor({ store, router })
       data.vm = data.instance.$mount(document.getElementById('app'))
       data.vm.$store.state.userId = 'Joe'
       sessionStorage.setItem('AUTHORIZED', true)
       data.vm.$router.push('/nameExamination')
-      setTimeout(() => { done() }, 2000)
+      await sleep(2000)
     })
 
-    afterEach( () => {
+    afterEach(() => {
       router.push('/')
     })
 
@@ -135,7 +137,7 @@ describe('Exact Match Conflict Handling by ConflictList', () => {
     let data = {}
     let Constructor = Vue.extend(App)
 
-    beforeAll((done) => {
+    beforeAll(async done => {
       data.api = createApiSandbox()
       let { getStub } = data.api
 
@@ -175,22 +177,23 @@ describe('Exact Match Conflict Handling by ConflictList', () => {
           names: [],
         },
       })
-      setTimeout(() => { staticFilesServer.start(done) }, 2000)
+      await sleep(2000)
+      staticFilesServer.start(done)
     })
 
-    afterAll( done => {
+    afterAll(done => {
       data.api.restore()
       staticFilesServer.stop(done)
     })
 
-    beforeEach( done => {
+    beforeEach(async () => {
       store.replaceState(cleanState())
-      data.instance = new Constructor({ store: store, router: router })
+      data.instance = new Constructor({ store, router })
       data.vm = data.instance.$mount(document.getElementById('app'))
       data.vm.$store.state.userId = 'Joe'
       sessionStorage.setItem('AUTHORIZED', true)
       data.vm.$router.push('/nameExamination')
-      setTimeout(() => { done() }, 2000)
+      await sleep(2000)
     })
 
     afterEach(() => {
