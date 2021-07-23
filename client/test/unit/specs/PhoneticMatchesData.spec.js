@@ -1,7 +1,6 @@
 import store from '@/store'
 
 describe('store > setPhoneticConflicts', () => {
-
   it('resists empty data', () => {
     store.commit('setPhoneticConflicts', {names: []})
 
@@ -9,8 +8,8 @@ describe('store > setPhoneticConflicts', () => {
   })
 
   describe('class marker', () => {
-
     var data
+
     beforeEach(() => {
       store.commit('setPhoneticConflicts', {
         names: [
@@ -30,9 +29,11 @@ describe('store > setPhoneticConflicts', () => {
     it('all the entries are conflict-phonetic-titles', () => {
       expect(data.every(d => d.class === 'conflict-phonetic-title')).toBeTruthy()
     })
+
     it('all the children of the entries are conflict-results', () => {
       expect(data.every(d => d.children.every(child => child.class === 'conflict-result'))).toBeTruthy()
     })
+
     it('entries have correct counts', () => {
       expect(data[0].count).toEqual(1)
       expect(data[1].count).toEqual(2)
@@ -40,8 +41,8 @@ describe('store > setPhoneticConflicts', () => {
     })
 
     describe('no match', () => {
-
       var data
+
       beforeEach(() => {
         store.commit('setPhoneticConflicts', {
           names: [
@@ -51,9 +52,11 @@ describe('store > setPhoneticConflicts', () => {
         })
         data = store.state.parsedPhoneticConflicts
       })
+
       it('has count of 0', () => {
         expect(data[0].count).toEqual(0)
       })
+
       it('lives alone', () => {
         expect(data.length).toEqual(2)
       })
