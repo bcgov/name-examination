@@ -96,7 +96,7 @@
             v-for="(transaction, index) in filteredTransactions"
             :key="index"
             class="transaction-item"
-          >{{transaction.comment = 'Testing testing 123 Testing testing 123 Testing testing 123 Testing testing 123 Testing testing 123 '}}
+          >
             <!-- Line 1 -->
             <v-layout>
               <v-flex xs3 class="fw-700">Date/Time:</v-flex>
