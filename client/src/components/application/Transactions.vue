@@ -128,7 +128,11 @@
             <!-- Line 4 -->
             <v-layout>
               <v-flex xs3 class="fw-700">Request Type:</v-flex>
-              <v-flex xs4 class="request-type">{{ requestType_desc(transaction.requestTypeCd) }}</v-flex>
+              <v-flex xs4 class="request-type">
+                {{ requestType_desc(
+                getMappedRequestType(transaction.requestTypeCd, transaction.request_action_cd, nrInfo.entity_type_cd))
+                }}
+              </v-flex>
               <v-flex xs2 class="fw-700">Consent:</v-flex>
               <v-flex xs3 class="consent-text">{{ displayConsent(transaction) }}</v-flex>
             </v-layout>
@@ -137,6 +141,12 @@
             <v-layout>
               <v-flex xs3 class="fw-700">Additional Information:</v-flex>
               <v-flex xs9 class="addl-info">{{ transaction.additionalInfo }}</v-flex>
+            </v-layout>
+
+            <!-- Line 6 -->
+            <v-layout v-if="transaction.user_action === 'Staff Comment'">
+              <v-flex xs3 class="fw-700">Staff Comment:</v-flex>
+              <v-flex xs9 class="staff-comment">{{ transaction.comment }}</v-flex>
             </v-layout>
 
             <!-- Names -->
@@ -164,10 +174,15 @@
 </template>
 
 <script>
+/* eslint-disable */
   import { mapState } from 'vuex'
   import moment from 'moment'
   import CompNameIcon from './Examine/CompNameIcon'
   import Spinner from './spinner'
+  import RequestActionCode from '@/enums/request-action-code'
+  import RequestTypeCode from '@/enums/request-type-code'
+  import EntityTypeCode from '@/enums/entity-type-code'
+
 
   export default {
     name: 'Transactions',
@@ -178,7 +193,10 @@
         showSystemTransactions: false,
         defaultTransactions: ['Cancelled in Name Request', 'Created NR (Payment Completed)', 'Created NR (Unknown)',
           'Decision', 'Edit NR Details (Name Request)', 'Edit NR Details (NameX)', 'Edit NR Details after Completion',
-          'Marked on Hold', 'Reapplied NR (Unknown)', 'Reset'],
+          'Marked on Hold', 'Reapplied NR (Unknown)', 'Reset', 'Staff Comment'],
+        RequestActionCode,
+        RequestTypeCode,
+        EntityTypeCode
       };
     },
     created() {
@@ -269,7 +287,11 @@
       },
       requestType() {
         if (this.nrInfo && this.nrInfo.requestTypeCd) {
-          return this.nrInfo.requestTypeCd
+          return this.getMappedRequestType(
+            this.nrInfo.requestTypeCd,
+            this.nrInfo.request_action_cd,
+            this.nrInfo.entity_type_cd
+          )
         }
         return ''
       },
@@ -281,6 +303,26 @@
       },
     },
     methods: {
+      getMappedRequestType(request, action, type) {
+        // Map amalgamation split requests
+        if (action === RequestActionCode.AML) {
+          switch (request) {
+            case RequestTypeCode.CR: return RequestTypeCode.ACR
+            case RequestTypeCode.XCR: return RequestTypeCode.XACR
+            case RequestTypeCode.CP: return RequestTypeCode.ACP
+            case RequestTypeCode.CC: return RequestTypeCode.ACC
+          }
+        }
+
+        // Map sole general partnership split requests
+        if (type === EntityTypeCode.GP) {
+          switch (request) {
+            case RequestTypeCode.FR: return RequestTypeCode.GP
+            case RequestTypeCode.CFR: return RequestTypeCode.CGP
+          }
+        }
+        return request
+      },
       displayConsent(nrInfo) {
         if (nrInfo) {
           if (nrInfo.consent_dt) return 'Required. Received.'
