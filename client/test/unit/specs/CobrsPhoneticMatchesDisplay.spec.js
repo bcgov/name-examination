@@ -1,15 +1,14 @@
 /* eslint-disable */
-import Vue from 'vue';
-
+import Vue from 'vue'
 import store from '@/store'
-import ConflictList from '@/components/application/examine/recipe/conflicts/ConflictList';
-
+import ConflictList from '@/components/application/examine/recipe/conflicts/ConflictList'
+import { sleep } from '@/utils/sleep'
 
 describe('ConflictList.vue cobrs phonetic matches titles and children classes', () => {
-  const Constructor = Vue.extend(ConflictList);
-  const vm = new Constructor({ store: store }).$mount();
+  const Constructor = Vue.extend(ConflictList)
+  const vm = new Constructor({ store }).$mount()
 
-  beforeEach((done) => {
+  beforeEach(async () => {
     vm.$store.commit('setCobrsPhoneticConflicts', {
       names: [
         {name_info: {name: 'first title'}, stems: []},
@@ -22,7 +21,7 @@ describe('ConflictList.vue cobrs phonetic matches titles and children classes', 
         {name_info: {name: 'third match #2', source: 'CORP'}, stems: []},
       ]
     })
-    setTimeout(()=> { done() }, 2000)
+    await sleep(2000)
   })
 
   it('renders correctly', () => {

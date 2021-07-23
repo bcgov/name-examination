@@ -1,11 +1,10 @@
 /* eslint-disable */
-import { shallowMount } from '@vue/test-utils';
-import Signin from '@/components/auth/Signin';
+import { shallowMount } from '@vue/test-utils'
+import Signin from '@/components/auth/Signin'
 import store from '@/store'
 import router from '@/router'
 
 describe('Signin.vue', () => {
-
   //window.Keycloak mocks the basic functions of Keycloak
   window.Keycloak = function() {
     return {
@@ -41,17 +40,18 @@ describe('Signin.vue', () => {
     }
   }
 
-    let component;
-    beforeEach(() => {
-          Object.defineProperty(router, 'push', {
-            value: function(path) { }
-          })
-        component = shallowMount(Signin, {store: store, router: router});
-    });
+  let component
 
-   it("renders a Signin component", () => {
-     expect(component.element).toMatchSnapshot();
-   })
+  beforeEach(() => {
+    Object.defineProperty(router, 'push', {
+      value: function(path) { }
+    })
+    component = shallowMount(Signin, { store, router })
+  })
+
+  it("renders a Signin component", () => {
+    expect(component.element).toMatchSnapshot()
+  })
 
   // Add other tests specific to this component and not its sub-components
-});
+})

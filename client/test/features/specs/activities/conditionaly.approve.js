@@ -1,6 +1,6 @@
 import sinon from 'sinon'
 
-let conditionalyApprove = (when, data)=>{
+let conditionalyApprove = (when, data) => {
     when(/^he approves (.*)$/, (nr) => {
         return new Promise((done) => {
             data.apiSandbox.getStub.withArgs('/api/v1/requests/'+nr, sinon.match.any).returns(
@@ -20,7 +20,7 @@ let conditionalyApprove = (when, data)=>{
             let window = button.ownerDocument.defaultView;
             var click = new window.Event('click');
             button.dispatchEvent(click);
-            setTimeout(()=>{
+            setTimeout(() => {
                 done();
             }, 1000)
         });

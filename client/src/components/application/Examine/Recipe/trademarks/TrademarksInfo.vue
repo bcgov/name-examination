@@ -235,7 +235,7 @@
   }
 
   .light-blue {
-    backgroundColor: rgba(91, 194, 231, 0.2);
+    backgroundColor: rgba(91, 194, 231, 0.2); /* FUTURE: fix typo and test */
   }
 
   tr:hover {

@@ -3,16 +3,16 @@ import staticFilesServer from '../static.files.server'
 import { createApiSandbox } from '../sandbox/SynMatchConf-api-stubs'
 import { cleanState } from '../../features/specs/support/clean.state'
 import Vue from 'vue'
-
 import App from '@/App.vue'
 import store from '@/store'
 import router from '@/router'
+import { sleep } from '@/utils/sleep'
 
 describe('Synonym-Match Conflicts', () => {
   let data = {}
   const Constructor = Vue.extend(App)
 
-  beforeAll( done => {
+  beforeAll(done => {
     //createApiSandbox module exported from 'test/unit/sandbox/SynMatchConf-api-stubs.js' is a custom instance
     //of sinon.sandbox with custom stubs that allow this particular set of unit tests to run.  The API response data is
     //fully defined in that file as well as stubs of the other calls needed to initialize the app.  Refer to
@@ -21,22 +21,22 @@ describe('Synonym-Match Conflicts', () => {
     staticFilesServer.start(done)
   })
 
-  afterAll( done => {
+  afterAll(done => {
     data.apiSandbox.restore()
     staticFilesServer.stop(done)
   })
 
-  beforeEach( done => {
+  beforeEach(async () => {
     store.replaceState(cleanState())
-    data.instance = new Constructor({ store: store, router: router })
+    data.instance = new Constructor({ store, router })
     data.vm = data.instance.$mount(document.getElementById('app'))
     data.vm.$store.state.userId = 'Joe'
     sessionStorage.setItem('AUTHORIZED', true)
     data.vm.$router.push('/nameExamination')
-    setTimeout(() => { done() }, 2000)
+    await sleep(2000)
   })
 
-  afterEach( () => {
+  afterEach(() => {
     router.push('/')
   })
 
@@ -59,12 +59,12 @@ describe('Synonym-Match Conflicts', () => {
   })
 
   describe('clearing the conflicts', () => {
-    beforeEach((done) => {
+    beforeEach(async () => {
       data.vm.$store.commit('setExactMatchesConflicts', [])
       data.vm.$store.commit('setSynonymMatchesConflicts', [])
       data.vm.$store.commit('setCobrsPhoneticConflicts', [])
       data.vm.$store.commit('setPhoneticConflicts', [])
-      setTimeout(() => { done() }, 2000)
+      await sleep(2000)
     })
 
     it('the conflict icon defaults to green', () => {
@@ -144,6 +144,3 @@ describe('Synonym-Match Conflicts', () => {
     )
   })
 })
-
-
-

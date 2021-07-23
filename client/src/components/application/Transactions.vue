@@ -185,14 +185,14 @@
       // watch resize events
       window.addEventListener('resize', this.onResize)
 
-      if (this.$route.query && this.$route.query.token) {
+      if (this.$route && this.$route.query && this.$route.query.token) {
         sessionStorage.setItem('KEYCLOAK_TOKEN', this.$route.query.token)
         sessionStorage.setItem('AUTHORIZED', true)
       } else {
         alert('Not authorized')
       }
 
-      if (this.$route.query && this.$route.query.nr) {
+      if (this.$route && this.$route.query && this.$route.query.nr) {
         this.nr = this.$route.query.nr
       } else {
         alert('No NR passed to retrieve transaction history for.')
@@ -203,9 +203,10 @@
       this.$store.commit('setPendingTransactionsRequest', true)
       await this.$store.dispatch('getNameRequest', this.nr)
       // needs to be set again after ^ dispatch?? I don't know why
-      sessionStorage.setItem('KEYCLOAK_TOKEN', this.$route.query.token)
+      if (this.$route && this.$route.query && this.$route.query.token) {
+        sessionStorage.setItem('KEYCLOAK_TOKEN', this.$route.query.token)
+      }
       this.$store.commit('setPendingNameRequest', false)
-
       await this.$store.dispatch('getTransactionsHistory', this.nr)
       this.$store.commit('setPendingTransactionsRequest', false)
 

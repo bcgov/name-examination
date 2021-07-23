@@ -1,4 +1,4 @@
-let accessDecisionScreen = (when, data)=>{
+let accessDecisionScreen = (when, data) => {
     when(/^he goes to Decision screen$/, (userId) => {
         return new Promise((done) => {
             let button = data.vm.$el.querySelector('#examine-decide-button');
@@ -6,7 +6,7 @@ let accessDecisionScreen = (when, data)=>{
             let window = button.ownerDocument.defaultView;
             var click = new window.Event('click');
             button.dispatchEvent(click);
-            setTimeout(()=>{
+            setTimeout(() => {
                 done();
             }, 1000)
         });
