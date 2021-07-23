@@ -2,8 +2,7 @@
 module.exports = {
   cleanState: () => {
     return {
-      //User Info
-      //User Info
+      // User Info
       myKeycloak: null,
       userId: null,
       user_roles: [],
@@ -12,7 +11,7 @@ module.exports = {
       errorJSON: null,
       adminURL: null,
 
-      //Interface settings
+      // Interface settings
       currentChoice: null, // CURRENT NAME BEING EXAMINED (choice number)
       currentName: null, // CURRENT NAME BEING EXAMINED (string)
       currentNameObj: { // CURRENT NAME BEING EXAMINED (complete object)
@@ -41,8 +40,8 @@ module.exports = {
       listDecisionReasons: null,
       requestTypeRules: null, // list of request type rules, internal use only no display
 
-      //Names Data
-      //nr_conflict: null,
+      // Names Data
+      // nr_conflict: null,
       details: null,
       additionalInfo: null,
       internalComments: [],
@@ -205,7 +204,7 @@ module.exports = {
         rejected: { response: { numfound: '' } },
       },
 
-      //introduced during name-examination code with us upgrade
+      // introduced during name-examination code with us upgrade
       activeRequestBannerPopUp: null,
       comparedConflicts: [],
       conflictsAutoAdd: true,
@@ -238,6 +237,21 @@ module.exports = {
         expand: null,
         scrollOffset: 0,
         sortDescending: true,
+      },
+
+      nrInfo: {
+        additionalInfo: '',
+        consent_dt: null,
+        consentFlag: null,
+        corpNum: null,
+        entity_type_cd: null,
+        expirationDate: null,
+        names: [],
+        priorityCd: null,
+        request_action_cd: null,
+        requestTypeCd: null,
+        stateCd: null,
+        submittedDate: null
       }
     }
   }

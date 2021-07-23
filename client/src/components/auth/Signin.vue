@@ -57,10 +57,10 @@
             }
 
           } else {
-            alert('not authenticated');
+            alert('Error - not authenticated');
           }
         }).error(function () {
-          alert('failed to initialize');
+          alert('Error - failed to initialize');
         });
 
       }else{
