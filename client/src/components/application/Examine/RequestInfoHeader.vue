@@ -331,6 +331,9 @@
   import Spinner from '../spinner'
   import { isActualDate, isFutureDate, isNotBlankSpace, isValidFormat } from "../../../../static/js/validators"
   import { required } from 'vuelidate/lib/validators'
+  import RequestActionCode from '@/enums/request-action-code'
+  import RequestTypeCode from '@/enums/request-type-code'
+  import EntityTypeCode from '@/enums/entity-type-code'
 
   export default {
     name: 'RequestInfoHeader',
@@ -354,6 +357,9 @@
         jurisdiction_required: false,
         nwpta_required: false,
         prev_nr_required: false,
+        RequestActionCode: RequestActionCode,
+        RequestTypeCode: RequestTypeCode,
+        EntityTypeCode: EntityTypeCode
       }
     },
     computed: {
@@ -621,11 +627,13 @@
       requestType: {
         get() {
           this.checkReqTypeRules(this.$store.getters.requestType)
-          return this.$store.getters.requestType
+          return this.getMappedRequestType(
+            this.$store.getters.requestType,
+            this.$store.getters.requestActionCd,
+            this.$store.getters.entityTypeCd
+          )
         },
         set(value) {
-          this.$store.commit('requestType', value)
-
           // Set the corresponding Name Request codes to keep cross app edits in sync
           const requestType = this.requestType_options.find(x => x.value === value) || null
           if (requestType) {
@@ -635,6 +643,8 @@
             this.$store.commit('entityTypeCd', entityTypeCd)
             this.$store.commit('requestActionCd', requestActionCd)
           }
+
+          this.$store.commit('requestType', this.setMappedRequestType(value, this.$store.getters.requestActionCd))
         },
       },
       requestType_desc() {
@@ -730,7 +740,6 @@
         this.$nextTick(function() { this.scrollToTop() })
       },
       checkReqTypeRules(val) {
-
         if (this.requestTypeRules != null) {
           let rules = this.requestTypeRules.filter(findArrValueByAttr(val, 'request_type'))[0]
 
@@ -903,6 +912,44 @@
         }
         // return opposite of 'invalid' flags, since we want to know if this IS valid
         return !this.$v.$invalid && !nwpta_ab_invalid && !nwpta_sk_invalid
+      },
+      getMappedRequestType(request, action, type) {
+        // Map amalgamation split requests
+        if (action === RequestActionCode.AML) {
+          switch (request) {
+            case RequestTypeCode.CR: return RequestTypeCode.ACR
+            case RequestTypeCode.XCR: return RequestTypeCode.XACR
+            case RequestTypeCode.CP: return RequestTypeCode.ACP
+            case RequestTypeCode.CC: return RequestTypeCode.ACC
+          }
+        }
+
+        // Map sole general partnership split requests
+        if (type === EntityTypeCode.GP) {
+          switch (request) {
+            case RequestTypeCode.FR: return RequestTypeCode.GP
+            case RequestTypeCode.CFR: return RequestTypeCode.CGP
+          }
+        }
+        return request
+      },
+      setMappedRequestType(request, action) {
+        // Map amalgamation split requests
+        if (action === RequestActionCode.AML) {
+          switch (request) {
+            case RequestTypeCode.ACR: return RequestTypeCode.CR
+            case RequestTypeCode.XACR: return RequestTypeCode.XCR
+            case RequestTypeCode.ACP: return RequestTypeCode.CP
+            case RequestTypeCode.ACC: return RequestTypeCode.CC
+          }
+        }
+
+        // Map sole general partnership split requests
+        switch (request) {
+          case RequestTypeCode.GP: return RequestTypeCode.FR
+          case RequestTypeCode.CGP: return RequestTypeCode.CFR
+        }
+        return request
       },
     },
     validations() {

@@ -981,6 +981,12 @@ export const getters = {
   requestType(state) {
     return state.compInfo.requestType
   },
+  entityTypeCd(state) {
+    return state.compInfo.entityTypeCd
+  },
+  requestActionCd(state) {
+    return state.compInfo.requestActionCd
+  },
   clientFirstName(state) {
     return state.applicantInfo.clientName.firstName
   },
@@ -1688,6 +1694,8 @@ export const mutations = {
     state.currentState = dbcompanyInfo.state
     state.previousStateCd = dbcompanyInfo.previousStateCd
     state.compInfo.requestType = dbcompanyInfo.requestTypeCd
+    state.compInfo.entityTypeCd = dbcompanyInfo.entity_type_cd
+    state.compInfo.requestActionCd = dbcompanyInfo.request_action_cd
 
     if (dbcompanyInfo.consent_dt && moment(dbcompanyInfo.consent_dt).isValid()) {
       let dateString = new moment(dbcompanyInfo.consent_dt).format('YYYY-MM-DD')
