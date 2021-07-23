@@ -96,7 +96,7 @@
             v-for="(transaction, index) in filteredTransactions"
             :key="index"
             class="transaction-item"
-          >
+          >{{transaction.comment = 'Testing testing 123 Testing testing 123 Testing testing 123 Testing testing 123 Testing testing 123 '}}
             <!-- Line 1 -->
             <v-layout>
               <v-flex xs3 class="fw-700">Date/Time:</v-flex>
@@ -130,7 +130,11 @@
               <v-flex xs3 class="fw-700">Request Type:</v-flex>
               <v-flex xs4 class="request-type">
                 {{ requestType_desc(
-                getMappedRequestType(transaction.requestTypeCd, transaction.request_action_cd, nrInfo.entity_type_cd))
+                    getMappedRequestType(
+                      transaction.requestTypeCd,
+                      transaction.request_action_cd,
+                      nrInfo.entity_type_cd
+                    ))
                 }}
               </v-flex>
               <v-flex xs2 class="fw-700">Consent:</v-flex>
