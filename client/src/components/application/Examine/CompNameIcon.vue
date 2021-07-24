@@ -2,7 +2,6 @@
 <template>
   <v-icon v-if="state"
           :style="setup.style"
-          class="fw-700"
           :class="setup.class">{{ setup.icon }}
   </v-icon>
 </template>
@@ -27,7 +26,7 @@
           output.class = 'c-cyan fs-20'
           output.icon = 'done'
           output.style = {
-            position: 'relative', top: '-4px',
+            position: 'relative', top: '-2px',
           }
         }
         return output
@@ -35,9 +34,3 @@
     },
   }
 </script>
-
-<style scoped>
-  .c-cyan {
-    color: var(--cyan)
-  }
-</style>

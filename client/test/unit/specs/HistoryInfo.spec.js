@@ -10,7 +10,6 @@ describe('HistoryList & HistoryInfo', () => {
   let data = {}
   const Constructor = Vue.extend(HistoryList)
 
-
   beforeEach(async () => {
     store.replaceState(cleanState())
     data.instance = new Constructor({ store })

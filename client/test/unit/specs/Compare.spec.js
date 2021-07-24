@@ -9,7 +9,6 @@ describe('Compare.vue Template/Presentational Logic', () => {
   let data = {}
 
   describe('Initializing', () => {
-
     beforeEach(async () => {
       store.replaceState(cleanState())
       data.instance = new Constructor({ store })

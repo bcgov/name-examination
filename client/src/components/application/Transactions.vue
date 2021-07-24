@@ -60,6 +60,7 @@
             </v-layout>
           </div>
         </template>
+
         <v-layout id="transaction-title-bar">
           <v-flex class="ml-4 pl-3 pt-1 fs-16 fw-700">TRANSACTION HISTORY</v-flex>
           <v-flex class="mr-4 pr-3 justify-end">
@@ -83,6 +84,7 @@
           <v-layout v-if="pendingTransactionsRequest" class="pt-5" style="height: 100vh">
             <spinner />
           </v-layout>
+
           <v-layout v-else-if="transactionsData && transactionsData.length === 0" class="pa-5" justify-center>
             No transaction history data available.
           </v-layout>
@@ -187,7 +189,6 @@
   import RequestTypeCode from '@/enums/request-type-code'
   import EntityTypeCode from '@/enums/entity-type-code'
 
-
   export default {
     name: 'Transactions',
     components: { CompNameIcon, Spinner },
@@ -207,28 +208,33 @@
       // watch resize events
       window.addEventListener('resize', this.onResize)
 
+      // get token
       if (this.$route && this.$route.query && this.$route.query.token) {
         sessionStorage.setItem('KEYCLOAK_TOKEN', this.$route.query.token)
         sessionStorage.setItem('AUTHORIZED', true)
       } else {
-        alert('Not authorized')
+        alert('Error - not authorized')
       }
 
+      // get NR number
       if (this.$route && this.$route.query && this.$route.query.nr) {
         this.nr = this.$route.query.nr
       } else {
-        alert('No NR passed to retrieve transaction history for.')
+        alert('Error - no NR passed to retrieve transaction history')
       }
     },
     async mounted() {
+      // fetch NR
       this.$store.commit('setPendingNameRequest', true)
-      this.$store.commit('setPendingTransactionsRequest', true)
       await this.$store.dispatch('getNameRequest', this.nr)
       // needs to be set again after ^ dispatch?? I don't know why
       if (this.$route && this.$route.query && this.$route.query.token) {
         sessionStorage.setItem('KEYCLOAK_TOKEN', this.$route.query.token)
       }
       this.$store.commit('setPendingNameRequest', false)
+
+      // fetch transactions
+      this.$store.commit('setPendingTransactionsRequest', true)
       await this.$store.dispatch('getTransactionsHistory', this.nr)
       this.$store.commit('setPendingTransactionsRequest', false)
 
@@ -350,10 +356,7 @@
         return moment(date).format('YYYY-MM-DD, h:mm a') + ' Pacific time'
       },
       getNameClasses(name) {
-        let classes = []
-        if (this.activeNameChoice == name.choice) classes.push('fw-700')
-        if (name.state === 'APPROVED' || name.state === 'CONDITION') classes.push('accepted')
-        return classes
+        return (name.state === 'APPROVED' || name.state === 'CONDITION') ? ['c-cyan'] : []
       },
       requestType_desc(requestType) {
         try {
@@ -402,9 +405,6 @@
   .name-option {
     margin-top: 4px;
   }
-  .name-option.accepted {
-    color: var(--cyan);
-  }
   .decision-text {
     margin-left: 24px;
     position: relative;
@@ -447,6 +447,9 @@
   }
   .transaction-name:last-of-type {
     border-bottom: thin solid var(--grey);
+  }
+  .transaction-name .v-icon {
+    top: 0 !important;
   }
   .border-x {
     border-left: thin solid var(--l-grey);

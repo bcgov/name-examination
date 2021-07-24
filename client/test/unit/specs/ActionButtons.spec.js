@@ -459,6 +459,7 @@ describe('ActionButtons.vue', () => {
 
     describe('Reset', () => {
       beforeEach(() => {
+        jest.setTimeout(100000)
         instance.$store.state.furnished = 'Y'
       })
 
@@ -503,6 +504,7 @@ describe('ActionButtons.vue', () => {
 
     describe('Re-Open', () => {
       beforeEach(() => {
+        jest.setTimeout(100000)
         instance.$store.state.furnished = 'N'
       })
 
