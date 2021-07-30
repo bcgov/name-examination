@@ -238,6 +238,7 @@ export default {
           promises.push(resp)
         }
       }
+      // resolve all promises (ie, make multiple calls to API) concurrently
       Promise.all(promises).then( () => {
         this.modalVisible = false
       }).catch(err => {

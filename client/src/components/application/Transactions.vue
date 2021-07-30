@@ -196,9 +196,19 @@
       return {
         nr: '',
         showSystemTransactions: false,
-        defaultTransactions: ['Cancelled in Name Request', 'Created NR (Payment Completed)', 'Created NR (Unknown)',
-          'Decision', 'Edit NR Details (Name Request)', 'Edit NR Details (NameX)', 'Edit NR Details after Completion',
-          'Marked on Hold', 'Reapplied NR (Unknown)', 'Reset', 'Staff Comment'],
+        defaultTransactions: [
+          'Cancelled in Name Request',
+          'Created NR (Payment Completed)',
+          'Created NR (Unknown)',
+          'Decision',
+          'Edit NR Details (Name Request)',
+          'Edit NR Details (NameX)',
+          'Edit NR Details after Completion',
+          'Marked on Hold',
+          'Reapplied NR (Unknown)',
+          'Reset',
+          'Staff Comment'
+        ],
         RequestActionCode,
         RequestTypeCode,
         EntityTypeCode

@@ -39,7 +39,7 @@
       </div>
       <div class="ml-auto px-3">
         <v-toolbar flat color="white" height="70px">
-          <template v-if="auth">`
+          <template v-if="auth">
             <v-form @submit.prevent="submit">
               <div style="display: flex;">
                 <div>
