@@ -184,12 +184,8 @@ export default {
       // if there is no expiry date, this NR is not approved-expired
       if (this.$store.getters.expiryDate == null) return false;
 
-      let expired_date = moment(this.$store.state.expiryDate, 'YYYY-MM-DD').clone()
-      let today = new moment()
+      if (this.$store.getters.currentState === 'EXPIRED') return true
 
-      if (['APPROVED', 'CONDITIONAL'].includes(this.$store.getters.currentState) && today.isAfter(expired_date)) {
-        return true
-      }
       return false
     },
     is_cancelled() {

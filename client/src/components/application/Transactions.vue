@@ -357,7 +357,11 @@
         if (nrInfo && nrInfo.stateCd) {
           displayState = nrInfo.stateCd
           if (displayState == 'CONDITIONAL') displayState += ' APPROVED'
-          if (nrInfo.corpNum) displayState += ` / Used for ${nrInfo.corpNum}`
+          else if (displayState == 'CONSUMED') {
+            let approvedName = nrInfo.names.find(name => ['APPROVED', 'CONDITION'].includes(name.state))
+            displayState = approvedName.state === 'CONDITION' ? 'CONDITIONAL APPROVED' : 'APPROVED'
+            displayState += ` / Used for ${approvedName.corpNum}`
+          }
         }
         return displayState
       },
