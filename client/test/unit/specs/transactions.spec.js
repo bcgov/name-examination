@@ -35,7 +35,8 @@ describe('Testing Transactions.vue', () => {
           choice: 1,
           name: 'First',
           state: 'APPROVED',
-          decision_text: 'Looks good'
+          decision_text: 'Looks good',
+          corpNum: 'BC1234567'
         },
         {
           choice: 2,
@@ -47,7 +48,7 @@ describe('Testing Transactions.vue', () => {
       priorityCd: 'Y',
       request_action_cd: null,
       requestTypeCd: 'XUL',
-      stateCd: 'APPROVED',
+      stateCd: 'CONSUMED',
       submittedDate: '2021-07-12T16:49:21+00:00'
     })
 

@@ -16,6 +16,7 @@ exports[`NamesMatch.vue renders a NamesMatch component 1`] = `
   >
     <v-layout-stub
       align-items-start=""
+      style="width: 50%;"
       tag="div"
       wrap=""
     >
@@ -105,6 +106,7 @@ exports[`NamesMatch.vue renders a NamesMatch component 1`] = `
      
     <v-layout-stub
       align-items-start=""
+      style="width: 50%;"
       tag="div"
       wrap=""
     >
@@ -135,25 +137,6 @@ exports[`NamesMatch.vue renders a NamesMatch component 1`] = `
       <v-flex-stub
         header-mg=""
         lg8=""
-        tag="div"
-      >
-        
-      </v-flex-stub>
-       
-      <v-flex-stub
-        header-mg=""
-        item-heading=""
-        lg4=""
-        mt-3=""
-        tag="div"
-      >
-        Submit Count
-      </v-flex-stub>
-       
-      <v-flex-stub
-        header-mg=""
-        lg8=""
-        mt-3=""
         tag="div"
       >
         

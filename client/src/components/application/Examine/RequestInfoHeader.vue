@@ -379,10 +379,11 @@
       },
       additionalStatus() {
         let approvedName = this.$store.getters.nrData.names.find(name => ['APPROVED', 'CONDITION'].includes(name.state))
-        let displayState = approvedName.state === 'CONDITION' ? 'CONDITIONAL APPROVED' : 'APPROVED'
-
-        if (this.nr_status == 'CONSUMED') return displayState + '-CONSUMED'
-        if (this.is_approved_expired) return displayState + '-EXPIRED'
+        if (approvedName) {
+          let displayState = approvedName.state === 'CONDITION' ? 'CONDITIONAL APPROVED' : 'APPROVED'
+          if (this.nr_status == 'CONSUMED') return displayState + '-CONSUMED'
+          if (this.is_approved_expired) return displayState + '-EXPIRED'
+        }
         return this.nr_status
       },
       can_edit() {
