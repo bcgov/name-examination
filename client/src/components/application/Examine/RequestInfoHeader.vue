@@ -378,7 +378,10 @@
         },
       },
       additionalStatus() {
-        let approvedName = this.$store.getters.nrData.names.find(name => ['APPROVED', 'CONDITION'].includes(name.state))
+        let approvedName =
+          this.$store.getters.nrData ?
+            this.$store.getters.nrData.names.find(name => ['APPROVED', 'CONDITION'].includes(name.state)):
+            null
         if (approvedName) {
           let displayState = approvedName.state === 'CONDITION' ? 'CONDITIONAL APPROVED' : 'APPROVED'
           if (this.nr_status == 'CONSUMED') return displayState + '-CONSUMED'
@@ -506,9 +509,13 @@
         return 0
       },
       is_approved_expired() {
-        // if there is no expiry date, this NR is not approved-expired
-        if (this.$store.getters.expiryDate == null) return false
+        // return true if NR is approved and expired
 
+        // if there is no expiry date, this NR is not approved-expired
+        if (this.$store.getters.expiryDate == null) return false;
+
+        // NR will move to 'EXPIRED' state once expiry date is reached for 'APPROVED', 'CONDITIONAL' state.
+        // If currentState is 'EXPIRED', then it was approved and expired.
         if (this.$store.getters.currentState === 'EXPIRED') return true
 
         return false
