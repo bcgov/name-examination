@@ -35,7 +35,8 @@ describe('Testing Transactions.vue', () => {
           choice: 1,
           name: 'First',
           state: 'APPROVED',
-          decision_text: 'Looks good'
+          decision_text: 'Looks good',
+          corpNum: 'BC1234567'
         },
         {
           choice: 2,
@@ -47,7 +48,7 @@ describe('Testing Transactions.vue', () => {
       priorityCd: 'Y',
       request_action_cd: null,
       requestTypeCd: 'XUL',
-      stateCd: 'APPROVED',
+      stateCd: 'CONSUMED',
       submittedDate: '2021-07-12T16:49:21+00:00'
     })
 
@@ -290,5 +291,83 @@ describe('Testing Transactions.vue', () => {
   it('hides system transactions by default', () => {
     expect(vm.$el.innerHTML).not.toContain('Get NR Details from NRO')
     expect(vm.$el.innerHTML).not.toContain('Get Next NR')
+  })
+})
+
+describe('Testing Transactions.vue EXPIRED', () => {
+  let component, vm
+
+  beforeAll(async () => {
+    store.replaceState(cleanState())
+    component = shallowMount(Transactions, {
+      store,
+      mocks: { $route: { query: { token: 'token', nr: 'NR 1234567' } } }
+    })
+    vm = component.vm
+    vm.$store.state.transactionsModalVisible = true
+    await Vue.nextTick()
+  })
+
+  beforeEach(() => {
+    // set NR info
+    vm.$store.commit('setNrInfo', {
+      additionalInfo: 'The quick brown fox...',
+      consent_dt: '2021-08-01T07:01:00+00:00',
+      consentFlag: 'R',
+      corpNum: 'BC1234567',
+      entity_type_cd: null,
+      expirationDate: '2021-09-01T07:01:00+00:00',
+      names: [
+        {
+          choice: 1,
+          name: 'First',
+          state: 'CONDITION',
+          decision_text: 'Looks good',
+          corpNum: 'BC1234567'
+        },
+        {
+          choice: 2,
+          name: 'Second',
+          state: 'REJECTED',
+          decision_text: 'Not good'
+        }
+      ],
+      priorityCd: 'Y',
+      request_action_cd: null,
+      requestTypeCd: 'XUL',
+      stateCd: 'EXPIRED',
+      submittedDate: '2021-07-12T16:49:21+00:00'
+    })
+
+    // set transactions data
+    vm.$store.commit('setTransactionsData', [])
+
+    vm.$store.commit('setPendingTransactionsRequest', false)
+  })
+
+  it('displays the transaction header', () => {
+    expect(vm.$el.querySelector('#transaction-header-title').textContent).toContain('NR 1234567')
+    expect(vm.$el.querySelector('#transaction-header-title').textContent).toContain('Priority')
+    expect(vm.$el.querySelector('#transaction-header-title').textContent).toContain('N/A')
+
+    expect(vm.$el.querySelector('#transaction-header-names').textContent).toContain('First')
+    expect(vm.$el.querySelector('#transaction-header-names').textContent).toContain('Looks good')
+    expect(vm.$el.querySelector('#transaction-header-names').textContent).toContain('Second')
+    expect(vm.$el.querySelector('#transaction-header-names').textContent).toContain('Not good')
+
+    expect(vm.$el.querySelector('#transaction-header-info').textContent).toContain('Submitted Date:')
+    expect(vm.$el.querySelector('.submitted-date').textContent).toBe('2021-07-12, 9:49 am Pacific time')
+
+    expect(vm.$el.querySelector('#transaction-header-info').textContent).toContain('Expiry Date:')
+    expect(vm.$el.querySelector('.expiry-date').textContent).toBe('2021-09-01, 12:01 am Pacific time')
+
+    expect(vm.$el.querySelector('#transaction-header-info').textContent).toContain('Request Status:')
+    expect(vm.$el.querySelector('.request-status').textContent).toContain('EXPIRED')
+
+    expect(vm.$el.querySelector('#transaction-header-info').textContent).toContain('Consent:')
+    expect(vm.$el.querySelector('.consent-text').textContent).toBe('Required. Received.')
+
+    expect(vm.$el.querySelector('#transaction-header-info').textContent).toContain('Additional Information:')
+    expect(vm.$el.querySelector('.addl-info').textContent).toBe('The quick brown fox...')
   })
 })

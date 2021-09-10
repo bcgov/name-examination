@@ -3,6 +3,7 @@
 exports[`Stats.vue renders a Stats component 1`] = `
 <v-container-stub
   id="stats-viewer"
+  style="min-width: 99.5%; max-width: 99.5%;"
   tag="div"
 >
   <v-layout-stub

@@ -22,6 +22,7 @@ exports[`HistoryInfo.vue renders a HistoryInfo component 1`] = `
   >
     <v-layout-stub
       align-items-start=""
+      style="width: 45%;"
       tag="div"
       wrap=""
     >
@@ -138,26 +139,10 @@ exports[`HistoryInfo.vue renders a HistoryInfo component 1`] = `
      
     <v-layout-stub
       align-items-start=""
+      style="width: 55%;"
       tag="div"
       wrap=""
     >
-      <v-flex-stub
-        header-mg=""
-        item-heading=""
-        lg3=""
-        tag="div"
-      >
-        Submit Count
-      </v-flex-stub>
-       
-      <v-flex-stub
-        header-mg=""
-        lg9=""
-        tag="div"
-      >
-        
-      </v-flex-stub>
-       
       <v-flex-stub
         header-mg=""
         item-heading=""

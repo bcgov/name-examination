@@ -914,7 +914,7 @@ export const getters = {
   },
   is_complete(state) {
     // indicates a complete NR
-    if ( ['APPROVED', 'REJECTED', 'CONDITIONAL', 'COMPLETED', 'CANCELLED', 'HISTORICAL', 'EXPIRED'].indexOf(
+    if (['APPROVED', 'REJECTED', 'CONDITIONAL', 'CONSUMED', 'COMPLETED', 'CANCELLED', 'HISTORICAL', 'EXPIRED'].indexOf(
       state.currentState ) >= 0 )
     {
       return true

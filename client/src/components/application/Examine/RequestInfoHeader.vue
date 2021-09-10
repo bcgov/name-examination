@@ -72,7 +72,7 @@
               <v-icon id="priorityStarIcon"
                       class="priority fs-18">star</v-icon>Priority</v-flex>
             <v-flex id="div1"><b>Status:</b><span id="nrStatusText">
-              {{ nr_status }}{{ additionalStatus }}</span></v-flex>
+              {{ additionalStatus }}</span></v-flex>
 
             <v-flex><b>Examiner:</b> {{ examiner }}</v-flex>
             <v-flex v-shortkey="{toggle:['alt','o'], save:['alt','v']}"
@@ -378,9 +378,16 @@
         },
       },
       additionalStatus() {
-        if (this.is_consumed) return '-CONSUMED'
-        if (this.is_approved_expired) return '-EXPIRED'
-        return ''
+        let approvedName =
+          this.$store.getters.nrData ?
+            this.$store.getters.nrData.names.find(name => ['APPROVED', 'CONDITION'].includes(name.state)):
+            null
+        if (approvedName) {
+          let displayState = approvedName.state === 'CONDITION' ? 'CONDITIONAL APPROVED' : 'APPROVED'
+          if (this.nr_status == 'CONSUMED') return displayState + '-CONSUMED'
+          if (this.is_approved_expired) return displayState + '-EXPIRED'
+        }
+        return this.nr_status
       },
       can_edit() {
         if (this.is_consumed) return false
@@ -502,16 +509,19 @@
         return 0
       },
       is_approved_expired() {
-        // if there is no expiry date, this NR is not approved-expired
-        if (this.$store.getters.expiryDate == null) return false
+        // return true if NR is approved and expired
 
-        let expired_date = new Date(this.$store.state.expiryDate)
-        let date = new moment().format('YYYY-MM-DD')
-        if (this.$store.getters.currentState === "APPROVED" && date > expired_date) return true
+        // if there is no expiry date, this NR is not approved-expired
+        if (this.$store.getters.expiryDate == null) return false;
+
+        // NR will move to 'EXPIRED' state once expiry date is reached for 'APPROVED', 'CONDITIONAL' state.
+        // If currentState is 'EXPIRED', then it was approved and expired.
+        if (this.$store.getters.currentState === 'EXPIRED') return true
+
         return false
       },
       is_closed() {
-        if (['REJECTED', 'APPROVED', 'CONDITIONAL'].indexOf(this.nr_status) > -1) return true
+        if (['REJECTED', 'APPROVED', 'CONDITIONAL', 'CONSUMED'].indexOf(this.nr_status) > -1) return true
         return false
       },
       is_editing() {
