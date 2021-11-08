@@ -1,25 +1,25 @@
 /* styles introduced by namex-ui-enhancements code-with-us */
 
 @font-face {
-  font-family: 'OpenSans';
+  font-family: 'BCSans';
   font-weight: 400;
-  src: url('../fonts/open-sans/OpenSans-Regular.ttf');
+  src: url('../fonts/bc-sans/BCSans-Regular.ttf');
 }
 @font-face {
-  font-family: 'OpenSans';
+  font-family: 'BCSans';
   font-weight: 700;
-  src: url('../fonts/open-sans/OpenSans-Bold.ttf');
+  src: url('../fonts/bc-sans/BCSans-Bold.ttf');
 }
 @font-face {
-  font-family: 'OpenSans';
+  font-family: 'BCSans';
   font-weight: 600;
-  src: url('../fonts/open-sans/OpenSans-SemiBold.ttf');
+  src: url('../fonts/bc-sans/BCSans-SemiBold.ttf');
 }
 @font-face {
-  font-family: 'OpenSans';
+  font-family: 'BCSans';
   font-weight: 400;
   font-style: italic;
-  src: url('../fonts/open-sans/OpenSans-Italic.ttf');
+  src: url('../fonts/bc-sans/BCSans-Italic.ttf');
 }
 
 @import './variables.css';
@@ -41,7 +41,7 @@ html {
 }
 
 #admin {
-  font-family: OpenSans !important;
+  font-family: BCSans !important;
   font-size: 16px;
   font-weight: 400;
   padding-top: 1px;
@@ -270,7 +270,7 @@ html {
 }
 
 .v-btn__content, .v-btn {
-  font-family: OpenSans !important;
+  font-family: BCSans !important;
   font-weight: 400 !important;
 }
 
@@ -333,7 +333,7 @@ a.primary--text .v-list__tile__content {
 }
 
 .v-tabs__item {
-  font-family: OpenSans !important;
+  font-family: BCSans !important;
   opacity: 1 !important;
 }
 
@@ -433,7 +433,7 @@ html, body {
 body {
   background-color: var(--xl-grey) !important;
   color: #494949;
-  font-family: OpenSans, Calibri, Arial, 'sans serif';
+  font-family: BCSans, Calibri, Arial, 'sans serif';
   font-size: 13px;
 }
 
