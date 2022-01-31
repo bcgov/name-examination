@@ -232,7 +232,7 @@ describe('Testing Transactions.vue', () => {
     expect(vm.$el.querySelector('.submitted-date').textContent).toBe('2021-12-07, 9:49 am Pacific time')
 
     expect(vm.$el.querySelector('#transaction-header-info').textContent).toContain('Expiry Date:')
-    expect(vm.$el.querySelector('.expiry-date').textContent).toBe('2022-02-01, 11:59 am Pacific time')
+    expect(vm.$el.querySelector('.expiry-date').textContent).toBe('2022-02-01, 11:59 pm Pacific time')
 
     expect(vm.$el.querySelector('#transaction-header-info').textContent).toContain('Request Status:')
     expect(vm.$el.querySelector('.request-status').textContent).toContain('APPROVED / Used for BC1234567')
@@ -312,11 +312,11 @@ describe('Testing Transactions.vue EXPIRED', () => {
     // set NR info
     vm.$store.commit('setNrInfo', {
       additionalInfo: 'The quick brown fox...',
-      consent_dt: '2021-08-01T06:59:00+00:00',
+      consent_dt: '2021-08-01T07:00:00+00:00',
       consentFlag: 'R',
       corpNum: 'BC1234567',
       entity_type_cd: null,
-      expirationDate: '2021-09-01T06:59:00+00:00',
+      expirationDate: '2021-09-01T07:59:00+00:00',
       names: [
         {
           choice: 1,
@@ -359,7 +359,7 @@ describe('Testing Transactions.vue EXPIRED', () => {
     expect(vm.$el.querySelector('.submitted-date').textContent).toBe('2022-01-13, 9:49 am Pacific time')
 
     expect(vm.$el.querySelector('#transaction-header-info').textContent).toContain('Expiry Date:')
-    expect(vm.$el.querySelector('.expiry-date').textContent).toBe('2022-03-16, 11:59 am Pacific time')
+    expect(vm.$el.querySelector('.expiry-date').textContent).toBe('2022-03-16, 11:59 pm Pacific time')
 
     expect(vm.$el.querySelector('#transaction-header-info').textContent).toContain('Request Status:')
     expect(vm.$el.querySelector('.request-status').textContent).toContain('EXPIRED')
