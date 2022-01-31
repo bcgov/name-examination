@@ -76,7 +76,7 @@ describe('Testing Transactions.vue', () => {
         consent_dt: null,
         corpNum: null,
         eventDate: 'Thu, 07 Oct 2021 21:36:03 GMT',
-        expirationDate: '2021-12-01T07:59:00+00:00',
+        expirationDate: '2021-12-01T06:59:00+00:00',
         furnished: 'Y',
         names: [{ choice: 1, comment: null, conflict1: '', conflict1_num: '', conflict2: '', conflict2_num: '' }],
         priorityCd: 'Y',
@@ -356,7 +356,7 @@ describe('Testing Transactions.vue EXPIRED', () => {
     expect(vm.$el.querySelector('#transaction-header-names').textContent).toContain('Not good')
 
     expect(vm.$el.querySelector('#transaction-header-info').textContent).toContain('Submitted Date:')
-    expect(vm.$el.querySelector('.submitted-date').textContent).toBe('2022-01-13, 9:49 am Pacific time')
+    expect(vm.$el.querySelector('.submitted-date').textContent).toBe('2022-01-19, 9:49 am Pacific time')
 
     expect(vm.$el.querySelector('#transaction-header-info').textContent).toContain('Expiry Date:')
     expect(vm.$el.querySelector('.expiry-date').textContent).toBe('2022-03-16, 11:59 pm Pacific time')
