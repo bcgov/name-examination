@@ -1945,7 +1945,7 @@ export const mutations = {
     state.nrData.lastUpdate = state.lastUpdate
 
     if (state.consentDateForEdit) {
-      let date = new moment(state.consentDateForEdit + ' 00:01:00')
+      let date = new moment(state.consentDateForEdit + ' 00:00:00')
       if (date) {
         date = date.utc().format('ddd, D MMM YYYY HH:mm:ss [GMT]')
         state.nrData.consent_dt = date
@@ -1953,14 +1953,14 @@ export const mutations = {
     }
 
     if (state.expiryDateForEdit) {
-      let date = new moment(state.expiryDateForEdit + ' 00:01:00')
+      let date = new moment(state.expiryDateForEdit + ' 23:59:00')
       if (date) {
         date = date.utc().format('ddd, D MMM YYYY HH:mm:ss [GMT]')
         state.nrData.expirationDate = date
       }
     }
     else if ( state.expiryDate ) {
-      let date = new moment(state.expiryDate + ' 00:01:00')
+      let date = new moment(state.expiryDate + ' 23:59:00')
       if (date) {
         date = date.utc().format('ddd, D MMM YYYY HH:mm:ss [GMT]')
         state.nrData.expirationDate = date
