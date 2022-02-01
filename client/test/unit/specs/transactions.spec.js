@@ -29,7 +29,7 @@ describe('Testing Transactions.vue', () => {
       consentFlag: 'Y',
       corpNum: 'BC1234567',
       entity_type_cd: null,
-      expirationDate: '2021-09-11T07:01:00+00:00',
+      expirationDate: '2022-02-01T06:59:00+00:00',
       names: [
         {
           choice: 1,
@@ -49,7 +49,7 @@ describe('Testing Transactions.vue', () => {
       request_action_cd: null,
       requestTypeCd: 'XUL',
       stateCd: 'CONSUMED',
-      submittedDate: '2021-07-12T16:49:21+00:00'
+      submittedDate: '2021-12-07T16:49:21+00:00'
     })
 
     // set transactions data
@@ -59,8 +59,8 @@ describe('Testing Transactions.vue', () => {
         consentFlag: null,
         consent_dt: null,
         corpNum: null,
-        eventDate: 'Thu, 15 Jul 2021 21:36:03 GMT',
-        expirationDate: '2021-09-11T07:01:00+00:00',
+        eventDate: 'Thu, 07 Oct 2021 21:36:03 GMT',
+        expirationDate: '2022-12-01T06:59:00+00:00',
         furnished: 'Y',
         names: [{ choice: 1, comment: null, conflict1: '', conflict1_num: '', conflict2: '', conflict2_num: '' }],
         priorityCd: 'Y',
@@ -75,8 +75,8 @@ describe('Testing Transactions.vue', () => {
         consentFlag: null,
         consent_dt: null,
         corpNum: null,
-        eventDate: 'Thu, 15 Jul 2021 21:36:03 GMT',
-        expirationDate: '2021-09-11T07:01:00+00:00',
+        eventDate: 'Thu, 07 Oct 2021 21:36:03 GMT',
+        expirationDate: '2021-12-01T06:59:00+00:00',
         furnished: 'Y',
         names: [{ choice: 1, comment: null, conflict1: '', conflict1_num: '', conflict2: '', conflict2_num: '' }],
         priorityCd: 'Y',
@@ -91,8 +91,8 @@ describe('Testing Transactions.vue', () => {
         consentFlag: null,
         consent_dt: null,
         corpNum: null,
-        eventDate: 'Thu, 15 Jul 2021 21:36:03 GMT',
-        expirationDate: '2021-09-11T07:01:00+00:00',
+        eventDate: 'Tue, 07 Dec 2021 21:36:03 GMT',
+        expirationDate: '2022-02-01T06:59:00+00:00',
         furnished: 'Y',
         names: [{ choice: 1, comment: null, conflict1: '', conflict1_num: '', conflict2: '', conflict2_num: '' }],
         priorityCd: 'Y',
@@ -107,8 +107,8 @@ describe('Testing Transactions.vue', () => {
         consentFlag: null,
         consent_dt: null,
         corpNum: null,
-        eventDate: 'Thu, 15 Jul 2021 21:36:03 GMT',
-        expirationDate: '2021-09-11T07:01:00+00:00',
+        eventDate: 'Tue, 07 Dec 2021 21:36:03 GMT',
+        expirationDate: '2022-02-01T06:59:00+00:00',
         furnished: 'Y',
         names: [{ choice: 1, comment: null, conflict1: '', conflict1_num: '', conflict2: '', conflict2_num: '' }],
         priorityCd: 'Y',
@@ -123,8 +123,8 @@ describe('Testing Transactions.vue', () => {
         consentFlag: null,
         consent_dt: null,
         corpNum: null,
-        eventDate: 'Thu, 15 Jul 2021 21:36:03 GMT',
-        expirationDate: '2021-09-11T07:01:00+00:00',
+        eventDate: 'Tue, 07 Dec 2021 21:36:03 GMT',
+        expirationDate: '2022-02-01T06:59:00+00:00',
         furnished: 'Y',
         names: [{ choice: 1, comment: null, conflict1: '', conflict1_num: '', conflict2: '', conflict2_num: '' }],
         priorityCd: 'Y',
@@ -139,8 +139,8 @@ describe('Testing Transactions.vue', () => {
         consentFlag: null,
         consent_dt: null,
         corpNum: null,
-        eventDate: 'Thu, 15 Jul 2021 21:36:03 GMT',
-        expirationDate: '2021-09-11T07:01:00+00:00',
+        eventDate: 'Tue, 07 Dec 2021 21:36:03 GMT',
+        expirationDate: '2022-02-01T06:59:00+00:00',
         furnished: 'Y',
         names: [{ choice: 1, comment: null, conflict1: '', conflict1_num: '', conflict2: '', conflict2_num: '' }],
         priorityCd: 'Y',
@@ -155,8 +155,8 @@ describe('Testing Transactions.vue', () => {
         consentFlag: null,
         consent_dt: null,
         corpNum: null,
-        eventDate: 'Thu, 15 Jul 2021 21:36:03 GMT',
-        expirationDate: '2021-09-11T07:01:00+00:00',
+        eventDate: 'Tue, 07 Dec 2021 21:36:03 GMT',
+        expirationDate: '2022-02-01T06:59:00+00:00',
         furnished: 'Y',
         names: [{ choice: 1, comment: null, conflict1: '', conflict1_num: '', conflict2: '', conflict2_num: '' }],
         priorityCd: 'Y',
@@ -171,8 +171,8 @@ describe('Testing Transactions.vue', () => {
         consentFlag: null,
         consent_dt: null,
         corpNum: null,
-        eventDate: 'Thu, 15 Jul 2021 21:36:03 GMT',
-        expirationDate: '2021-09-11T07:01:00+00:00',
+        eventDate: 'Tue, 07 Dec 2021 21:36:03 GMT',
+        expirationDate: '2022-03-12T06:59:00+00:00',
         furnished: 'Y',
         names: [{ choice: 1, comment: null, conflict1: '', conflict1_num: '', conflict2: '', conflict2_num: '' }],
         priorityCd: 'Y',
@@ -187,8 +187,8 @@ describe('Testing Transactions.vue', () => {
         consentFlag: null,
         consent_dt: null,
         corpNum: null,
-        eventDate: 'Thu, 15 Jul 2021 21:36:03 GMT',
-        expirationDate: '2021-09-11T07:01:00+00:00',
+        eventDate: 'Tue, 07 Dec 2021 21:36:03 GMT',
+        expirationDate: '2022-03-16T07:59:00+00:00',
         furnished: 'Y',
         names: [{ choice: 1, comment: null, conflict1: '', conflict1_num: '', conflict2: '', conflict2_num: '' }],
         priorityCd: 'Y',
@@ -229,10 +229,10 @@ describe('Testing Transactions.vue', () => {
     expect(vm.$el.querySelector('#transaction-header-names').textContent).toContain('Not good')
 
     expect(vm.$el.querySelector('#transaction-header-info').textContent).toContain('Submitted Date:')
-    expect(vm.$el.querySelector('.submitted-date').textContent).toBe('2021-07-12, 9:49 am Pacific time')
+    expect(vm.$el.querySelector('.submitted-date').textContent).toBe('2021-12-07, 9:49 am Pacific time')
 
     expect(vm.$el.querySelector('#transaction-header-info').textContent).toContain('Expiry Date:')
-    expect(vm.$el.querySelector('.expiry-date').textContent).toBe('2021-09-11, 12:01 am Pacific time')
+    expect(vm.$el.querySelector('.expiry-date').textContent).toBe('2022-02-01, 11:59 pm Pacific time')
 
     expect(vm.$el.querySelector('#transaction-header-info').textContent).toContain('Request Status:')
     expect(vm.$el.querySelector('.request-status').textContent).toContain('APPROVED / Used for BC1234567')
@@ -312,11 +312,11 @@ describe('Testing Transactions.vue EXPIRED', () => {
     // set NR info
     vm.$store.commit('setNrInfo', {
       additionalInfo: 'The quick brown fox...',
-      consent_dt: '2021-08-01T07:01:00+00:00',
+      consent_dt: '2021-08-01T07:00:00+00:00',
       consentFlag: 'R',
       corpNum: 'BC1234567',
       entity_type_cd: null,
-      expirationDate: '2021-09-01T07:01:00+00:00',
+      expirationDate: '2021-09-01T07:59:00+00:00',
       names: [
         {
           choice: 1,
@@ -356,10 +356,10 @@ describe('Testing Transactions.vue EXPIRED', () => {
     expect(vm.$el.querySelector('#transaction-header-names').textContent).toContain('Not good')
 
     expect(vm.$el.querySelector('#transaction-header-info').textContent).toContain('Submitted Date:')
-    expect(vm.$el.querySelector('.submitted-date').textContent).toBe('2021-07-12, 9:49 am Pacific time')
+    expect(vm.$el.querySelector('.submitted-date').textContent).toBe('2022-01-19, 9:49 am Pacific time')
 
     expect(vm.$el.querySelector('#transaction-header-info').textContent).toContain('Expiry Date:')
-    expect(vm.$el.querySelector('.expiry-date').textContent).toBe('2021-09-01, 12:01 am Pacific time')
+    expect(vm.$el.querySelector('.expiry-date').textContent).toBe('2022-03-16, 11:59 pm Pacific time')
 
     expect(vm.$el.querySelector('#transaction-header-info').textContent).toContain('Request Status:')
     expect(vm.$el.querySelector('.request-status').textContent).toContain('EXPIRED')
