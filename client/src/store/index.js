@@ -1038,6 +1038,9 @@ export const getters = {
   jurisdiction(state) {
     return state.additionalCompInfo.jurisdiction
   },
+  jurisdictionNumber(state) {
+    return state.nrData.homeJurisNum
+  },
   natureOfBusiness(state) {
     return state.additionalCompInfo.natureOfBussiness
   },
