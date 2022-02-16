@@ -15,7 +15,7 @@
               <span class="priority fs-18 fw-700">Priority</span>
             </v-flex>
             <v-flex class="pt-1 pl-3" grow>
-              <span class="fs-18 fw-700">{{ requestType_desc(requestType) }}</span>
+              <span class="fs-18 fw-700">{{ requestType_desc(requestType) }} {{ displayJurisName(nrInfo) }} {{ displayJurisNum(nrInfo) }} </span>
             </v-flex>
           </v-layout>
 
@@ -364,6 +364,16 @@
           }
         }
         return displayState
+      },
+      displayJurisNum(nrInfo) {
+        if (nrInfo && nrInfo.xproJurisdiction) {
+          return '(' + nrInfo.homeJurisNum + ')'
+        }
+      },
+      displayJurisName(nrInfo) {
+        if (nrInfo) {
+          return nrInfo.xproJurisdiction
+        }
       },
       formatDate(date) {
         if (!date) return 'N/A'

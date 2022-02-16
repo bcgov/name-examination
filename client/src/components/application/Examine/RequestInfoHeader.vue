@@ -13,7 +13,7 @@
         <v-flex :lg5="is_editing" :grow="!is_editing">
           <v-layout v-if="!is_editing || is_closed" column>
             <v-flex fw-600 fs-16 mt-2 id="request-type-desc">{{ requestType_desc }}</v-flex>
-            <v-flex fw-600 fs-14>{{ jurisdiction_display }}</v-flex>
+            <v-flex fw-600 fs-14>{{ jurisdiction_display }} {{ jurisdiction_number}}</v-flex>
           </v-layout>
           <v-layout column v-else>
             <v-flex mt-2>
@@ -537,6 +537,18 @@
       is_viewing() {
         return this.$store.state.is_header_shown && !this.is_editing
       },
+      jurisdiction_number() {
+        debugger
+        console.log('REQUESTINFOHEADER - JURISDICTION NUMBER ',this.nr)
+        if (this.$store.getters.jurisdiction) {
+          debugger
+          let fullnumber = " (" + this.$store.getters.jurisdictionNumber + ")"
+          debugger
+          return fullnumber
+        } else
+          return ""
+        
+      },
       jurisdiction: {
         get() {
           return this.$store.getters.jurisdiction && this.$store.getters.jurisdiction.toUpperCase()
@@ -548,8 +560,7 @@
       jurisdiction_display() {
         if (this.jurisdiction && this.jurisdiction_options) {
           if (this.jurisdiction.length === 2) {
-            let fullname = this.jurisdiction_options.find(opt => opt.SHORT_DESC === this.jurisdiction).text
-            return fullname
+            return this.jurisdiction_options.find(opt => opt.SHORT_DESC === this.jurisdiction).text
           }
           if (this.jurisdiction.length > 2) {
             return this.jurisdiction
