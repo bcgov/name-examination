@@ -538,16 +538,10 @@
         return this.$store.state.is_header_shown && !this.is_editing
       },
       jurisdiction_number() {
-        debugger
-        console.log('REQUESTINFOHEADER - JURISDICTION NUMBER ',this.nr)
-        if (this.$store.getters.jurisdiction) {
-          debugger
-          let fullnumber = " (" + this.$store.getters.jurisdictionNumber + ")"
-          debugger
-          return fullnumber
+        if (this.$store.getters.jurisdiction && this.$store.getters.jurisdictionNumber) {
+          return " (" + this.$store.getters.jurisdictionNumber + ")"
         } else
-          return ""
-        
+          return ''
       },
       jurisdiction: {
         get() {
