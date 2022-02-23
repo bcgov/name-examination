@@ -369,11 +369,13 @@
         if (nrInfo && nrInfo.xproJurisdiction && nrInfo.homeJurisNum) {
           return '(' + nrInfo.homeJurisNum + ')'
         }
+        return ''
       },
       displayJurisName(nrInfo) {
         if (nrInfo && nrInfo.xproJurisdiction) {
           return nrInfo.xproJurisdiction
         }
+        return ''
       },
       formatDate(date) {
         if (!date) return 'N/A'

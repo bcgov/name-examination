@@ -541,8 +541,7 @@
         if (this.$store.getters.jurisdiction && this.$store.getters.jurisdictionNumber) {
           return " (" + this.$store.getters.jurisdictionNumber + ")"
         } else
-          return ""
-        
+          return ''
       },
       jurisdiction: {
         get() {
