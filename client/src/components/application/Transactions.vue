@@ -366,12 +366,12 @@
         return displayState
       },
       displayJurisNum(nrInfo) {
-        if (nrInfo && nrInfo.xproJurisdiction) {
+        if (nrInfo && nrInfo.xproJurisdiction && nrInfo.homeJurisNum) {
           return '(' + nrInfo.homeJurisNum + ')'
         }
       },
       displayJurisName(nrInfo) {
-        if (nrInfo) {
+        if (nrInfo && nrInfo.xproJurisdiction) {
           return nrInfo.xproJurisdiction
         }
       },
