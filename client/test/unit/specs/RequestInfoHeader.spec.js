@@ -955,4 +955,231 @@ describe('RequestInfoHeader', () => {
       expect(vm.$el.querySelector('#nr-details-edit-button')).not.toBeNull()
     })
   })
+
+  describe('When a CONDITIONAL NR with corpNum is loaded', () => {
+    let vm
+    let sandbox
+
+    let getCall
+
+    beforeEach(async () => {
+      sandbox = sinon.createSandbox()
+      getCall = sandbox.stub(axios, 'get').withArgs('/api/v1/requests/NR 2000111', sinon.match.any).returns(
+        new Promise((resolve) => resolve({
+          data:
+            {
+              "additionalInfo": "**Change of Name** **S1000744** ",
+              "applicants": {
+                "addrLine1": "200 - 940 BLANSHARD ST",
+                "addrLine2": null,
+                "addrLine3": null,
+                "city": "VICTORIA",
+                "clientFirstName": null,
+                "clientLastName": null,
+                "contact": "John Test",
+                "countryTypeCd": "CA",
+                "declineNotificationInd": "N",
+                "emailAddress": "testoutputs@gov.bc.ca",
+                "faxNumber": null,
+                "firstName": "John",
+                "lastName": "test",
+                "middleName": "a",
+                "partyId": 1822,
+                "phoneNumber": "2505555555",
+                "postalCd": "V8V4K8",
+                "stateProvinceCd": "BC"
+              },
+              "checkedOutBy": null,
+              "checkedOutDt": null,
+              "comments": [],
+              "consentFlag": "Y",
+              "consent_dt": null,
+              "corpNum": "S1000744",
+              "entity_type_cd": null,
+              "expirationDate": "2022-06-02T06:59:00+00:00",
+              "furnished": "Y",
+              "hasBeenReset": false,
+              "homeJurisNum": null,
+              "id": 2264301,
+              "lastUpdate": "2022-04-06T17:34:10.209632+00:00",
+              "names": [
+                {
+                  "choice": 1,
+                  "comment": null,
+                  "conflict1": "",
+                  "conflict1_num": "",
+                  "conflict2": "",
+                  "conflict2_num": "",
+                  "conflict3": "",
+                  "conflict3_num": "",
+                  "consumptionDate": null,
+                  "corpNum": "S1000744",
+                  "decision_text": "BC - Use of 'British Columbia' requires consent from:  The Office of Protocol. Approval Takes 7 - 10 Business Days.  Applications Forms at http://gov.bc.ca/useofbcname. Please scan your consent to bcregistries@gov.bc.ca\n\n",
+                  "designation": null,
+                  "id": 4265876,
+                  "name": "xyz NEWLY NAMED SOCIETY",
+                  "name_type_cd": null,
+                  "state": "CONDITION"
+                }
+              ],
+              "natureBusinessInfo": "stuff",
+              "notifiedBeforeExpiry": false,
+              "notifiedExpiry": false,
+              "nrNum": "NR 2000111",
+              "nwpta": [],
+              "previousNr": null,
+              "previousRequestId": null,
+              "previousStateCd": null,
+              "priorityCd": "N",
+              "priorityDate": null,
+              "requestTypeCd": "CSO",
+              "request_action_cd": null,
+              "source": "NRO",
+              "state": "CONDITIONAL",
+              "stateCd": "CONDITIONAL",
+              "submitCount": 1,
+              "submittedDate": "2022-04-06T17:29:51+00:00",
+              "submitter_userid": "",
+              "tradeMark": null,
+              "userId": "tester",
+              "xproJurisdiction": null
+            },
+        })),
+      )
+      vm = instance.$mount()
+      vm.$store.commit('setLoginValues')
+      vm.$store.commit('nrNumber', 'NR 2000111')
+      await sleep(1000)
+    })
+
+    afterEach(() => {
+      sandbox.restore()
+    })
+
+    it('Displays the Proper NR Status Text', () => {
+      expect(vm.nr_status).toEqual('CONDITIONAL')
+      expect(vm.$el.querySelector('#nrStatusText').textContent.trim()).toEqual('CONDITIONAL')
+    })
+
+    it('Displays consume fields properly', () => {
+      expect(vm.consumptionDate).toEqual('')
+      expect(vm.$el.querySelector('#consumption-date').textContent.trim()).toEqual('Consumed: n/a')
+      expect(vm.consumedBy).toEqual('')
+      expect(vm.$el.querySelector('#consumed-by').textContent.trim()).toEqual('Consumed by: n/a')
+    })
+  })
+
+  describe('When a CONSUMED NR with corpNum is loaded', () => {
+    let vm
+    let sandbox
+
+    let getCall
+
+    beforeEach(async () => {
+      sandbox = sinon.createSandbox()
+      getCall = sandbox.stub(axios, 'get').withArgs('/api/v1/requests/NR 2000222', sinon.match.any).returns(
+        new Promise((resolve) => resolve({
+          data:
+            {
+              "additionalInfo": "**Change of Name** **S1000744** ",
+              "applicants": {
+                "addrLine1": "200 - 940 BLANSHARD ST",
+                "addrLine2": null,
+                "addrLine3": null,
+                "city": "VICTORIA",
+                "clientFirstName": null,
+                "clientLastName": null,
+                "contact": "John Test",
+                "countryTypeCd": "CA",
+                "declineNotificationInd": "N",
+                "emailAddress": "testoutputs@gov.bc.ca",
+                "faxNumber": null,
+                "firstName": "John",
+                "lastName": "test",
+                "middleName": "a",
+                "partyId": 1822,
+                "phoneNumber": "2505555555",
+                "postalCd": "V8V4K8",
+                "stateProvinceCd": "BC"
+              },
+              "checkedOutBy": null,
+              "checkedOutDt": null,
+              "comments": [],
+              "consentFlag": "Y",
+              "consent_dt": null,
+              "corpNum": "S1000744",
+              "entity_type_cd": null,
+              "expirationDate": "2022-06-02T06:59:00+00:00",
+              "furnished": "Y",
+              "hasBeenReset": false,
+              "homeJurisNum": null,
+              "id": 2264301,
+              "lastUpdate": "2022-04-06T17:34:10.209632+00:00",
+              "names": [
+                {
+                  "choice": 1,
+                  "comment": null,
+                  "conflict1": "",
+                  "conflict1_num": "",
+                  "conflict2": "",
+                  "conflict2_num": "",
+                  "conflict3": "",
+                  "conflict3_num": "",
+                  "consumptionDate": "2021-10-27T12:45:22+00:00",
+                  "corpNum": "S1000744",
+                  "decision_text": "BC - Use of 'British Columbia' requires consent from:  The Office of Protocol. Approval Takes 7 - 10 Business Days.  Applications Forms at http://gov.bc.ca/useofbcname. Please scan your consent to bcregistries@gov.bc.ca\n\n",
+                  "designation": null,
+                  "id": 4265876,
+                  "name": "xyz NEWLY NAMED SOCIETY",
+                  "name_type_cd": null,
+                  "state": "CONDITION"
+                }
+              ],
+              "natureBusinessInfo": "stuff",
+              "notifiedBeforeExpiry": false,
+              "notifiedExpiry": false,
+              "nrNum": "NR 2000222",
+              "nwpta": [],
+              "previousNr": null,
+              "previousRequestId": null,
+              "previousStateCd": null,
+              "priorityCd": "N",
+              "priorityDate": null,
+              "requestTypeCd": "CSO",
+              "request_action_cd": null,
+              "source": "NRO",
+              "state": "CONSUMED",
+              "stateCd": "CONSUMED",
+              "submitCount": 1,
+              "submittedDate": "2022-04-06T17:29:51+00:00",
+              "submitter_userid": "",
+              "tradeMark": null,
+              "userId": "tester",
+              "xproJurisdiction": null
+            },
+        })),
+      )
+      vm = instance.$mount()
+      vm.$store.commit('setLoginValues')
+      vm.$store.commit('nrNumber', 'NR 2000222')
+      await sleep(1000)
+    })
+
+    afterEach(() => {
+      sandbox.restore()
+    })
+
+    it('Displays the Proper NR Status Text', () => {
+      expect(vm.nr_status).toEqual('CONSUMED')
+      expect(vm.$el.querySelector('#nrStatusText').textContent.trim()).toEqual('CONDITIONAL APPROVED-CONSUMED')
+    })
+
+    it('Displays consume fields properly', () => {
+      expect(vm.consumptionDate).toEqual('2021-10-27')
+      expect(vm.$el.querySelector('#consumption-date').textContent.trim()).toEqual('Consumed: 2021-10-27')
+      expect(vm.consumedBy).toEqual('S1000744')
+      expect(vm.$el.querySelector('#consumed-by').textContent.trim()).toEqual('Consumed by: S1000744')
+    })
+  })
+
 })

@@ -1105,14 +1105,21 @@ export const getters = {
   },
   consumedBy(state) {
     let consumedBy = ''
-    if ( state.compInfo.compNames.compName1.corpNum != null ) {
+
+    // Note: consumptionDate checks were added as NRs from Society include corpNum even when the NR hasn't been
+    // consumed yet.  This was causing consumed by field to be populated and caused confusion for examiners.
+    if ( state.compInfo.compNames.compName1.corpNum != null &&
+         !!state.compInfo.compNames.compName1.consumptionDate) {
       consumedBy = state.compInfo.compNames.compName1.corpNum
     }
-    else if ( state.compInfo.compNames.compName2.corpNum != null ) {
+    else if ( state.compInfo.compNames.compName2.corpNum != null &&
+              !!state.compInfo.compNames.compName2.consumptionDate) {
       consumedBy = state.compInfo.compNames.compName2.corpNum
     }
     else {
-      consumedBy = state.compInfo.compNames.compName3.corpNum
+      if ( !!state.compInfo.compNames.compName3.consumptionDate ) {
+        consumedBy = state.compInfo.compNames.compName3.corpNum
+      }
     }
 
     return consumedBy
