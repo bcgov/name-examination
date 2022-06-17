@@ -89,9 +89,14 @@ instance.interceptors.response.use(function (response) {
     $(error.config.spinner).addClass('hidden')
   }
 
-  if (error.request && error.request.responseURL && 
-    (error.request.responseURL.includes('/api/v1/events/')
-    || error.request.responseURL.includes('api/v1/corporations') && error.response.data.message=="Error: Could not find corporation details")) {
+  if (
+    error.request && error.request.responseURL && 
+    (
+      error.request.responseURL.includes('/api/v1/events/') ||
+      error.request.responseURL.includes('api/v1/corporations') && 
+      error.response.data.message=="Error: Could not find corporation details"
+    )
+  ) {
     return Promise.reject(error)
   }
 
