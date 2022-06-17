@@ -1015,9 +1015,9 @@
 
             const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
 
-            // igonre corpNum prefix 'BC' if applicable
-            const corpNumber = value.replace(/^BC+/i, '')
-            const url = '/api/v1/corporations/' + corpNumber
+            // igonre corpNum prefix 'BC' if applicable to match colin BC corpNum format for the validation
+            value = value.replace(/^BC+/i, '')
+            const url = '/api/v1/corporations/' + value
             return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
               $('.corp-num-spinner').addClass('hidden')
               return true
