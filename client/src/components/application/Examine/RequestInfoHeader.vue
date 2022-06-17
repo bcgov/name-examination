@@ -235,8 +235,7 @@
                 <v-flex>
                   <v-text-field class="name-choice-input"
                                       v-model="corpNum"
-                                      autocomplete="off"
-                                      @input="$v.corpNum.$touch()">
+                                      autocomplete="off">
                     <template v-slot:append-outer>
                       <spinner style="transform: scale(.4); position: relative; top: -95px"
                                className="corp-num-spinner hidden" />
@@ -1015,7 +1014,10 @@
             $('.corp-num-spinner').removeClass('hidden')
 
             const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-            const url = '/api/v1/corporations/' + value
+
+            // igonre corpNum prefix 'BC' if applicable to match colin BC corpNum format for the validation
+            const corpNumber = value.replace(/^BC+/i, '')
+            const url = '/api/v1/corporations/' + corpNumber
             return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
               $('.corp-num-spinner').addClass('hidden')
               return true
