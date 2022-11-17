@@ -1,6 +1,6 @@
 {
   "name": "namex",
-  "version": "2.1.13",
+  "version": "2.1.14",
   "description": "BC Registry: Name Examination",
   "author": "Thor Wolpert <thor@wolpert.ca>",
   "private": true,
@@ -71,7 +71,7 @@
     "jquery": "^3.3.1",
     "nightwatch": "^1.1.13",
     "node-notifier": "^5.1.2",
-    "node-sass": "^4.12.0",
+    "node-sass": "^6.*.*",
     "optimize-css-assets-webpack-plugin": "^3.2.1",
     "ora": "^1.2.0",
     "portfinder": "^1.0.21",
