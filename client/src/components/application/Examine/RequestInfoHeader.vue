@@ -233,7 +233,6 @@
                         column>
                 <v-flex mt-4 fw-600>Related Corp #:</v-flex>
                 <v-flex>
-                  <p> using @blur </p>
                   <v-text-field class="name-choice-input"
                                       v-model="corpNum"
                                       autocomplete="off">
