@@ -236,8 +236,7 @@
                   <p> using @blur </p>
                   <v-text-field class="name-choice-input"
                                       v-model="corpNum"
-                                      autocomplete="off"
-                                      @blur="$v.corpNum.$touch()">
+                                      autocomplete="off">
                     <template v-slot:append-outer>
                       <spinner style="transform: scale(.4); position: relative; top: -95px"
                                className="corp-num-spinner hidden" />
