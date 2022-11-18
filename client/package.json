@@ -29,7 +29,7 @@
     "vuelidate": "^0.6.2",
     "vuetify": "^1.5.16",
     "vuex": "^3.0.1",
-    "webpack": "^3.12.0"
+    "webpack": "^4.0.0"
   },
   "devDependencies": {
     "@vue/test-utils": "1.1.4",
@@ -60,10 +60,9 @@
     "eslint-loader": "^1.7.1",
     "eslint-plugin-import": "^2.18.0",
     "eslint-plugin-vue": "^4.0.0",
-    "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.4",
     "friendly-errors-webpack-plugin": "^1.6.1",
-    "html-webpack-plugin": "^2.30.1",
+    "html-webpack-plugin": "^3.*.*",
     "jest": "^22.4.4",
     "jest-cucumber": "^1.0.11",
     "jest-serializer-vue": "^0.3.0",
@@ -94,7 +93,6 @@
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.6.10",
     "webpack-bundle-analyzer": "^3.5.1",
-    "webpack-dev-server": "^2.11.5",
     "webpack-merge": "^4.1.0"
   },
   "engines": {
