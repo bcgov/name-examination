@@ -1,7 +1,6 @@
 'use strict'
 const path = require('path')
 const config = require('../config')
-const ExtractTextPlugin = require('mini-css-extract-plugin')
 const packageConfig = require('../package.json')
 
 exports.assetsPath = function (_path) {
@@ -46,12 +45,6 @@ exports.cssLoaders = function (options) {
     // (which is the case during production build)
     if (options.extract) {
     	return ['vue-style-loader'].concat(loaders)
-      //return ExtractTextPlugin.extract({
-      //  use: loaders,
-      //  fallback: 'vue-style-loader'
-     // })
-    } else {
-      return ['vue-style-loader'].concat(loaders)
     }
   }
 
