@@ -386,6 +386,15 @@
           if (this.nr_status == 'CONSUMED') return displayState + '-CONSUMED'
           if (this.is_approved_expired) return displayState + '-EXPIRED'
         }
+
+        if (this.nr_status == 'REFUND_REQUESTED') {
+          // Get refund status from pay api
+          // Same logic as payment-mixin of namerequest
+          let displayState = 'CANCELLED'
+
+          return displayState + ' - ' + this.$store.getters.refundPaymentState
+        }
+
         return this.nr_status
       },
       can_edit() {
