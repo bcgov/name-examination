@@ -1069,19 +1069,36 @@
             }
             $('.corp-num-spinner').removeClass('hidden')
 
-            const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-
-            // igonre corpNum prefix 'BC' if applicable to match colin BC corpNum format for the validation
-            const corpNumber = value.replace(/^BC+/i, '')
-            const url = '/api/v1/corporations/' + corpNumber
-            return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
-              $('.corp-num-spinner').addClass('hidden')
-              return true
-            }).catch(error => {
-              $('.corp-num-spinner').addClass('hidden')
-              return false
+            // look for the corporation/business in entities
+            isValidCorpNum = (function(corpNum) {
+              const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+              const url = '/api/v1/businesses/' + corpNumber
+              return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
+                return true
+              }).catch(error => {
+                return false
+              })
             })
-          },
+
+            if (!isValidCorpNum) {
+            // if not found from entities, look for the corporation in colin again
+              isValidCorpNum = (function(corpNum) {
+              const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
+
+              // igonre corpNum prefix 'BC' if applicable to match colin BC corpNum format for the validation
+              const corpNumber = value.replace(/^BC+/i, '')
+              const url = '/api/v1/corporations/' + corpNumber
+              return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
+                return true
+              }).catch(error => {
+                return false
+              })
+            })
+          }
+          
+          $('.corp-num-spinner').addClass('hidden')
+          return isValidCorpNum
+          }
         }
       }
 
