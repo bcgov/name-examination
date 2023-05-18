@@ -1070,7 +1070,7 @@
             $('.corp-num-spinner').removeClass('hidden')
 
             // look for the corporation/business in entities
-            isValidCorpNum = (function(value) {
+            let isValid = (function(value) {
               const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
               const url = '/api/v1/businesses/' + value
               return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
@@ -1080,9 +1080,9 @@
               })
             })
 
-            if (!isValidCorpNum) {
+            if (!isValid) {
             // if not found from entities, look for the corporation in colin again
-              isValidCorpNum = (function(value) {
+              isValid = (function(value) {
               const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
 
               // igonre corpNum prefix 'BC' if applicable to match colin BC corpNum format for the validation
@@ -1097,7 +1097,7 @@
           }
           
           $('.corp-num-spinner').addClass('hidden')
-          return isValidCorpNum
+          return isValid
           }
         }
       }
