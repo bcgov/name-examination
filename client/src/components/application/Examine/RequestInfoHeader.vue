@@ -1070,9 +1070,9 @@
             $('.corp-num-spinner').removeClass('hidden')
 
             // look for the corporation/business in entities
-            isValidCorpNum = (function(corpNum) {
+            isValidCorpNum = (function(value) {
               const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-              const url = '/api/v1/businesses/' + corpNumber
+              const url = '/api/v1/businesses/' + value
               return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
                 return true
               }).catch(error => {
@@ -1082,7 +1082,7 @@
 
             if (!isValidCorpNum) {
             // if not found from entities, look for the corporation in colin again
-              isValidCorpNum = (function(corpNum) {
+              isValidCorpNum = (function(value) {
               const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
 
               // igonre corpNum prefix 'BC' if applicable to match colin BC corpNum format for the validation
