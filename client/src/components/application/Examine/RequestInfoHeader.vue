@@ -343,6 +343,7 @@
     mounted() {
       this.$root.$on('saveEdits', this.save)
       this.$root.$on('cancelSave', this.cancelSave)
+      console.log('***MOUNTED****')
       this.setNewExaminer()
     },
     data() {
@@ -616,7 +617,9 @@
         },
       },
       nrNumber() {
+        console.log('nrNumber **** FETCH NEW NR NUMBER',this.$store.getters.nrNumber)
         return this.$store.getters.nrNumber
+        
       },
       nwptaABStyle() {
         if (this.$store.getters.nwpta_ab) {
@@ -717,6 +720,8 @@
     watch: {
       nrNumber(val) {
         this.$store.dispatch('getpostgrescompInfo', this.nrNumber)
+        console.log('WATCH nrNumber **** set new examiner')
+        this.setNewExaminer()
         this.checkReqTypeRules(this.requestType)
       },
       requestType(val) {
@@ -740,9 +745,9 @@
             
           for (let i = 0; i < this.transactionsData.length; i++) {
             const transactionList = this.transactionsData[i]
-            console.log('INSIDE LOOP -->i',i)
+            /* console.log('INSIDE LOOP -->i',i)
             console.log('INSIDE LOOP -->user_name',transactionList.user_name)
-            console.log('INSIDE LOOP -->user_action',transactionList.user_action)
+            console.log('INSIDE LOOP -->user_action',transactionList.user_action) */
             if (transactionList.user_name.includes('idir') && transactionList.user_action.includes('Decision')) {
                   this.examinerDisplay = transactionList.user_name
                   return
@@ -881,6 +886,7 @@
         }, { headers: { Authorization: `Bearer ${ myToken }` } })
           .then(response => {
             this.$store.dispatch('getpostgrescompInfo', this.nrNumber)
+            console.log('revertToPreviousState nrNumber **** set new examiner')
             this.setNewExaminer()
           })
           .catch(error => { console.log('ERROR: ' + error) })
@@ -954,6 +960,7 @@
         }, { headers: { Authorization: `Bearer ${ myToken }` } })
           .then(response => {
             this.$store.dispatch('getpostgrescompInfo', this.nrNumber)
+            console.log('revertToPreviousState nrNumber **** set new examiner')
             this.setNewExaminer()
           })
           .catch(error => {
