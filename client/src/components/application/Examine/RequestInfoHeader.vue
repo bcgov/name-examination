@@ -726,7 +726,7 @@
     },
     methods: {
       async setNewExaminer() {
-        console.log('OMZAMANI-->setNewExaminer')
+        console.log('Calling the set new examiner function-->setNewExaminer')
         this.examinerDisplay = this.$store.getters.examiner
         if (this.examinerDisplay.includes('account')) { 
           // fetch transactions
