@@ -1359,9 +1359,10 @@ export const getters = {
   selectedConflictNRs: state => state.selectedConflictNRs,
   selectedReasons: state => state.selectedReasons,
   acceptanceWillBeConditional: state => {
+    const noConsentRequiredConditions = ['PERSONAL REAL ESTATE CORPORATION', 'PERSONAL REAL ESTATE', 'PERSONAL REAL']
     let checkConditions = () => {
       if (state.selectedConditions && Array.isArray(state.selectedConditions) ) {
-        return state.selectedConditions.some(condition => condition.consent_required)
+        return (state.selectedConditions.some(condition => condition.consent_required) && !(noConsentRequiredConditions.includes(state.selectedConditions[0].phrase)))
       }
       return false
     }
