@@ -94,7 +94,9 @@ instance.interceptors.response.use(function (response) {
     (
       error.request.responseURL.includes('/api/v1/events/') ||
       (error.request.responseURL.includes('api/v1/corporations') && 
-      error.response.data.message === "Error: Could not find corporation details")
+      error.response.data.message === "Error: Could not find corporation details") ||
+      error.request.responseURL.includes('api/v1/businesses') &&
+      error.response.status === 404
     )
   ) {
     return Promise.reject(error)

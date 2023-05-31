@@ -1069,36 +1069,26 @@
             }
             $('.corp-num-spinner').removeClass('hidden')
 
-            // look for the corporation/business in entities
-            let isValid = (function(value) {
-              const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-              const url = '/api/v1/businesses/' + value
-              return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
-                return true
-              }).catch(error => {
-                return false
-              })
-            })
+            const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
 
-            if (!isValid) {
-            // if not found from entities, look for the corporation in colin again
-              isValid = (function(value) {
-              const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
-
+            // query entities for the corp num. If not found, query again from colin
+            let url = '/api/v1/businesses/' + value
+            return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
+              $('.corp-num-spinner').addClass('hidden')
+              return true
+            }).catch(error => {
               // igonre corpNum prefix 'BC' if applicable to match colin BC corpNum format for the validation
               const corpNumber = value.replace(/^BC+/i, '')
-              const url = '/api/v1/corporations/' + corpNumber
+              url = '/api/v1/corporations/' + corpNumber
               return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
+                $('.corp-num-spinner').addClass('hidden')
                 return true
               }).catch(error => {
+                $('.corp-num-spinner').addClass('hidden')
                 return false
               })
             })
-          }
-          
-          $('.corp-num-spinner').addClass('hidden')
-          return isValid
-          }
+          },
         }
       }
 
