@@ -1,10 +1,9 @@
 {
-  "realm": "nest",
-  "auth-server-url": "https://dev-sso.pathfinder.gov.bc.ca/auth",
+  "realm": "bcregistry",
+  "auth-server-url": "https://dev.loginproxy.gov.bc.ca/auth/",
   "ssl-required": "external",
-  "resource": "namex-DEV",
-  "credentials": {
-    "secret": "1bb5bfc6-0fdd-4d77-b176-090d6cf39cf4"
-  },
-  "use-resource-role-mappings": true
-}
+  "resource": "NameX-Dev",
+  "public-client": true,
+  "verify-token-audience": true,
+  "confidential-port": 0
+  }
