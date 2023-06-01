@@ -1073,7 +1073,7 @@
 
             // query entities for the corp num. If not found, query again from colin
             let url = '/api/v1/businesses/' + value
-            return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
+            return axios.get(url, {}).then(response => {
               $('.corp-num-spinner').addClass('hidden')
               return true
             }).catch(error => {
