@@ -1071,15 +1071,22 @@
 
             const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
 
-            // igonre corpNum prefix 'BC' if applicable to match colin BC corpNum format for the validation
-            const corpNumber = value.replace(/^BC+/i, '')
-            const url = '/api/v1/corporations/' + corpNumber
-            return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
+            // query entities for the corp num. If not found, query again from colin
+            let url = '/api/v1/businesses/' + value
+            return axios.get(url, {}).then(response => {
               $('.corp-num-spinner').addClass('hidden')
               return true
             }).catch(error => {
-              $('.corp-num-spinner').addClass('hidden')
-              return false
+              // igonre corpNum prefix 'BC' if applicable to match colin BC corpNum format for the validation
+              const corpNumber = value.replace(/^BC+/i, '')
+              url = '/api/v1/corporations/' + corpNumber
+              return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
+                $('.corp-num-spinner').addClass('hidden')
+                return true
+              }).catch(error => {
+                $('.corp-num-spinner').addClass('hidden')
+                return false
+              })
             })
           },
         }
