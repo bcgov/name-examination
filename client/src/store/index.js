@@ -876,6 +876,17 @@ export const actions = {
     let data = payload.data
 
     return axios.put( url, data, { headers: { Authorization: `Bearer ${ myToken }` } } )
+  },
+
+  getPayments({ commit, state }) {
+    console.log('getPayments')
+    const myToken = sessionStorage.getItem( 'KEYCLOAK_TOKEN' )
+    const url = '/api/v1/payments/' + state.nrData.id
+    return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` }})
+        .then(response => {
+          console.log('payments: ' + response.data)
+          commit('setPaymentsData', response.data)
+          })
   }
 }
 
@@ -1384,7 +1395,102 @@ export const getters = {
 
     return '?'
   },
-  nrInfo: state => state.nrInfo
+  nrInfo: state => state.nrInfo,
+  isNoFeePayment(state) {
+    if (Array.isArray(state.paymentsData) && state.paymentsData.length) {
+      // Payments might not have been processed yet, e.g., PAD
+      if (state.paymentsData.length > 1) {
+        return state.paymentsData.reduce((paymentA, paymentB) => paymentA.sbcPayment.paid + paymentB.sbcPayment.paid) === 0
+      } else {
+        return state.paymentsData[0].sbcPayment.paid === 0
+      }
+    }
+    return true
+  },
+  isNoRefund(state) {
+    if (Array.isArray(state.paymentsData) && state.paymentsData.length) {
+      // Payments might not have been processed yet, e.g., PAD
+      if (state.paymentsData.length > 1) {
+        return state.paymentsData.reduce(
+          (paymentA, paymentB) => paymentA.sbcPayment.refund + paymentB.sbcPayment.refund
+        ) === 0
+      } else {
+        return state.paymentsData[0].refund === 0
+      }
+    }
+    return true
+  },
+  isDifferentPaymentStatus(state) {
+    if (Array.isArray(state.paymentsData) && state.paymentsData.length > 1) {
+      const paymentStatus = state.paymentsData.map(payment => payment.sbcPayment.statusCode)
+      return paymentStatus.some(method => method !== paymentStatus[0])
+    }
+    return false
+  },
+  refundState(state, getters) {
+    const paymentMethod = state.paymentsData[0]?.sbcPayment?.paymentMethod
+    const paymentStatus = state.paymentsData[0]?.sbcPayment?.statusCode
+    if (paymentStatus === 'REFUNDED') {
+      return 'Refund process is completed'
+    } else if (paymentStatus === 'CREDITED') {
+      return 'Funds have been credited'
+    } else if (paymentStatus === 'CANCELLED') {
+      return 'Payment Cancelled'
+    } else {
+      // REFUND_REQUESTED or other status
+      if (paymentMethod === 'PAD') {
+        // Premium Account
+        if (!getters.isNoRefund) {
+          return 'Refund has been requested'
+        } else {
+          return 'Refund Not Processed'
+        }
+      } else if (paymentMethod === 'INTERNAL') {
+        // INTERNAL is a Staff payment. It can be 'Routing Slip' or 'No Fee' payments.
+        if (getters.isNoFeePayment) {
+          // No Fee payment
+          return 'Refund Not Processed'
+        } else {
+          // Routing Slip
+          return 'Refund Not Processed'
+        }
+      } else if (['DIRECT_PAY', 'DRAWDOWN'].includes(paymentMethod)) {
+        // Credit Card or BCOL
+        if (!getters.isNoFeePayment) {
+          return 'Refund Request Processed'
+        } else {
+          return 'Refund process is completed'
+        }
+      }
+    }
+  },
+  refundPaymentState(state, getters) {
+    console.log('getters paymentsData' + state.paymentsData)
+    if (state.paymentsData && state.paymentsData.length > 0) {
+      if (state.paymentsData.length == 1) {
+        return getters.refundState
+      }else {
+        // More than 1 payment. (e.g. paid priority service)
+        if (!getters.isDifferentPaymentStatus) {
+          // all payments have the same status
+          return getters.refundState
+        } else {
+          // the payments have the different status (.e.g one REFUNDED and another one REFUND_REQUESTED)
+          if (!getters.isNoRefund) {
+            // Multi-transaction scenario returns success
+            return 'Refund Request Processed'
+          } else {
+            // This should not happen
+            return 'Refund Not Processed'
+          }
+        }
+      }
+
+      return state.paymentsData[0].sbcPayment.statusCode
+    }
+
+    return null
+  },
 }
 
 export const mutations = {
@@ -1694,8 +1800,6 @@ export const mutations = {
       }
     }
 
-
-
     //if no currentName selected choose 1st
     if ( state.currentName == null ) {
 
@@ -1836,6 +1940,9 @@ export const mutations = {
     if ( state.currentState === 'INPROGRESS' ) {
       state.is_making_decision = true
     }
+
+    // load payment data
+    this.dispatch('getPayments', null)
   },
   loadConflictsJSON(state, JSONdata) {
     state.conflictsJSON = JSONdata
@@ -2465,6 +2572,9 @@ export const mutations = {
   setNrInfo: (state, payload) => state.nrInfo = payload,
   setPendingNameRequest: (state, payload) => state.pendingNameRequest = payload,
   setPendingTransactionsRequest: (state, payload) => state.pendingTransactionsRequest = payload,
+  setPaymentsData(state, payload) {
+    state.paymentsData = payload
+  },
 }
 
 export const state = {
@@ -2685,6 +2795,7 @@ export const state = {
   parsedCOBRSConflicts: [],
   parsedPhoneticConflicts: [],
   parsedSynonymConflicts: [],
+  paymentsData: [],
   selectedConditions: [],
   selectedConflictID: null,
   selectedConflictNRs: [],
@@ -2718,4 +2829,3 @@ export const state = {
 }
 
 export default new Vuex.Store({ actions, getters, mutations, state, })
-

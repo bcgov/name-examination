@@ -221,6 +221,7 @@ module.exports = {
       parsedCOBRSConflicts: [],
       parsedPhoneticConflicts: [],
       parsedSynonymConflicts: [],
+      paymentsData: [],
       selectedConditions: [],
       selectedConflictID: null,
       selectedConflictNRs: [],

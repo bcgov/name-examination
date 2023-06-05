@@ -321,6 +321,7 @@
 
 <script>
 /* eslint-disable */
+  import { mapState } from 'vuex'
   import ActionButtons from './ActionButtons'
   import axios from '@/axios-auth'
   import ClientInfoHeader from '@/components/application/Examine/client/ClientInfoHeader.vue'
@@ -334,12 +335,16 @@
   import RequestTypeCode from '@/enums/request-type-code'
   import EntityTypeCode from '@/enums/entity-type-code'
 
+  let transactionList = null
+
   export default {
     name: 'RequestInfoHeader',
     components: { Spinner, ActionButtons, ClientInfoHeader, InfoHeaderPopup, NWPTA },
     mounted() {
       this.$root.$on('saveEdits', this.save)
       this.$root.$on('cancelSave', this.cancelSave)
+      console.log('***MOUNTED****')
+      this.setNewExaminer()
     },
     data() {
       return {
@@ -350,7 +355,12 @@
           {text: 'Waived', value: 'N'},
           {text: '-', value: null}
         ],
+        filterUsers: [
+          'nro_service_account',
+          'name_request_service_account'
+        ],
         corp_num_required: false,
+        examinerDisplay: null,
         is_cp_nwpta_type: null,
         is_lp_nwpta_type: null,
         jurisdiction_required: false,
@@ -362,6 +372,9 @@
       }
     },
     computed: {
+      ...mapState([
+        'transactionsData'
+      ]),
       activePopUp() {
         if (this.$store.state.activeRequestBannerPopUp) {
           return this.$store.state.activeRequestBannerPopUp
@@ -386,6 +399,15 @@
           if (this.nr_status == 'CONSUMED') return displayState + '-CONSUMED'
           if (this.is_approved_expired) return displayState + '-EXPIRED'
         }
+
+        if (this.nr_status == 'REFUND_REQUESTED') {
+          // Get refund status from pay api
+          // Same logic as payment-mixin of namerequest
+          let displayState = 'CANCELLED'
+
+          return displayState + ' - ' + this.$store.getters.refundPaymentState
+        }
+
         return this.nr_status
       },
       can_edit() {
@@ -477,7 +499,8 @@
         },
       },
       examiner() {
-        return this.$store.getters.examiner
+        console.log('examiner computed - LAST CONSOLE LOG- this.examinerDisplay',this.examinerDisplay)
+        return this.examinerDisplay
       },
       expiryDate: {
         get() {
@@ -594,7 +617,9 @@
         },
       },
       nrNumber() {
+        console.log('nrNumber **** FETCH NEW NR NUMBER',this.$store.getters.nrNumber)
         return this.$store.getters.nrNumber
+        
       },
       nwptaABStyle() {
         if (this.$store.getters.nwpta_ab) {
@@ -695,6 +720,8 @@
     watch: {
       nrNumber(val) {
         this.$store.dispatch('getpostgrescompInfo', this.nrNumber)
+        console.log('WATCH nrNumber **** set new examiner')
+        this.setNewExaminer()
         this.checkReqTypeRules(this.requestType)
       },
       requestType(val) {
@@ -703,6 +730,31 @@
       },
     },
     methods: {
+      async setNewExaminer() {
+        console.log('Calling the set new examiner function-->setNewExaminer')
+        this.examinerDisplay = this.$store.getters.examiner
+        if (this.examinerDisplay.includes('account')) { 
+          // fetch transactions
+          this.$store.commit('setPendingTransactionsRequest', true)
+          await this.$store.dispatch('getTransactionsHistory', this.nrNumber)
+          this.$store.commit('setPendingTransactionsRequest', false)
+          console.log('REQUESTINFOHEADER-->this.transactionsData',this.transactionsData)
+          if ( this.transactionsData == null ) {
+            return
+          }
+            
+          for (let i = 0; i < this.transactionsData.length; i++) {
+            const transactionList = this.transactionsData[i]
+            /* console.log('INSIDE LOOP -->i',i)
+            console.log('INSIDE LOOP -->user_name',transactionList.user_name)
+            console.log('INSIDE LOOP -->user_action',transactionList.user_action) */
+            if (transactionList.user_name.includes('idir') && transactionList.user_action.includes('Decision')) {
+                  this.examinerDisplay = transactionList.user_name
+                  return
+                }
+          }
+        }
+      },
       buildAdditionalInfo() {
         let newAddInfo = ""
         // create new additional info from template if relevant; add to top of additional info
@@ -834,6 +886,8 @@
         }, { headers: { Authorization: `Bearer ${ myToken }` } })
           .then(response => {
             this.$store.dispatch('getpostgrescompInfo', this.nrNumber)
+            console.log('revertToPreviousState nrNumber **** set new examiner')
+            this.setNewExaminer()
           })
           .catch(error => { console.log('ERROR: ' + error) })
       },
@@ -906,6 +960,8 @@
         }, { headers: { Authorization: `Bearer ${ myToken }` } })
           .then(response => {
             this.$store.dispatch('getpostgrescompInfo', this.nrNumber)
+            console.log('revertToPreviousState nrNumber **** set new examiner')
+            this.setNewExaminer()
           })
           .catch(error => {
             console.log('ERROR: ' + error)
@@ -1015,15 +1071,22 @@
 
             const myToken = sessionStorage.getItem('KEYCLOAK_TOKEN')
 
-            // igonre corpNum prefix 'BC' if applicable to match colin BC corpNum format for the validation
-            const corpNumber = value.replace(/^BC+/i, '')
-            const url = '/api/v1/corporations/' + corpNumber
-            return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
+            // query entities for the corp num. If not found, query again from colin
+            let url = '/api/v1/businesses/' + value
+            return axios.get(url, {}).then(response => {
               $('.corp-num-spinner').addClass('hidden')
               return true
             }).catch(error => {
-              $('.corp-num-spinner').addClass('hidden')
-              return false
+              // igonre corpNum prefix 'BC' if applicable to match colin BC corpNum format for the validation
+              const corpNumber = value.replace(/^BC+/i, '')
+              url = '/api/v1/corporations/' + corpNumber
+              return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
+                $('.corp-num-spinner').addClass('hidden')
+                return true
+              }).catch(error => {
+                $('.corp-num-spinner').addClass('hidden')
+                return false
+              })
             })
           },
         }

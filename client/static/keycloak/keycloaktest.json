@@ -1,6 +1,6 @@
 {
   "realm": "nest",
-  "auth-server-url": "https://dev-sso.pathfinder.gov.bc.ca/auth",
+  "auth-server-url": "https://test.loginproxy.gov.bc.ca/auth/",
   "ssl-required": "external",
   "resource": "namex-TEST",
   "credentials": {
