@@ -1077,16 +1077,26 @@
               $('.corp-num-spinner').addClass('hidden')
               return true
             }).catch(error => {
-              // igonre corpNum prefix 'BC' if applicable to match colin BC corpNum format for the validation
-              const corpNumber = value.replace(/^BC+/i, '')
-              url = '/api/v1/corporations/' + corpNumber
-              return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
-                $('.corp-num-spinner').addClass('hidden')
-                return true
-              }).catch(error => {
-                $('.corp-num-spinner').addClass('hidden')
-                return false
-              })
+              if (error.response && error.response.status === 404) {
+                // igonre corpNum prefix 'BC' if applicable to match colin BC corpNum format for the validation
+                const corpNumber = value.replace(/^BC+/i, '')
+                url = '/api/v1/corporations/' + corpNumber
+                return axios.get(url, { headers: { Authorization: `Bearer ${ myToken }` } }).then(response => {
+                  if (response.data.incorporated === 'Not Available' && response.data.directors === 'Not Available') {
+                    // throw new Error('Not Found')
+                    $('.corp-num-spinner').addClass('hidden')
+                    return false
+                  }
+                  $('.corp-num-spinner').addClass('hidden')
+                  return true
+                }).catch(error => {
+                  $('.corp-num-spinner').addClass('hidden')
+                  return false
+                })
+              } else {
+                  $('.corp-num-spinner').addClass('hidden')
+                  return false
+              }
             })
           },
         }
