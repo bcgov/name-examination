@@ -1742,7 +1742,7 @@ export const mutations = {
           state.compInfo.compNames.compName1.comment = record.comment
 
           // if this name is not yet examined or it is approved (in case of reset/re-open), set it as current name
-          if ( record.state == 'NE' || record.state == 'APPROVED' ) {
+          if ( record.state == 'NE' || record.state == 'APPROVED' || record.state == 'CONDITION' ) {
 
             this.dispatch( 'setCurrentName', record )
           }
@@ -1764,7 +1764,7 @@ export const mutations = {
           state.compInfo.compNames.compName2.comment = record.comment
 
           // if this name is not yet examined or it is approved (in case of reset/re-open), set it as current name
-          if ( ( record.state == 'NE' || record.state == 'APPROVED' ) &&
+          if ( ( record.state == 'NE' || record.state == 'APPROVED' || record.state == 'CONDITION' ) &&
             ( record.choice < state.currentChoice || state.currentChoice == null ) )
           {
 
@@ -1788,7 +1788,7 @@ export const mutations = {
           state.compInfo.compNames.compName3.comment = record.comment
 
           // if this name is not yet examined or it is approved (in case of reset/re-open), set it as current name
-          if ( ( record.state == 'NE' || record.state == 'APPROVED' ) &&
+          if ( ( record.state == 'NE' || record.state == 'APPROVED' || record.state == 'CONDITION' ) &&
             ( record.choice < state.currentChoice || state.currentChoice == null ) )
           {
             this.dispatch( 'setCurrentName', record )
