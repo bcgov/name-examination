@@ -1,3 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`Find.vue renders a Find component 1`] = `<findfilter-stub />`;

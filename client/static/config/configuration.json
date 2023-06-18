@@ -1,8 +1,0 @@
-[
-  {
-    "API":"base_url",
-    "DESC":"The base url for the API",
-    "URL":"https://namex-dev.apps.silver.devops.gov.bc.ca",
-    "NODE_ENV": "master"
-  }
-]
