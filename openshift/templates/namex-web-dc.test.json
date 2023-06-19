@@ -1,0 +1,123 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "namex-web-test",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "namex-web-test",
+                "generation": 1,
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "namex-web-test",
+                    "template": "caddy-dc"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Rolling",
+                    "rollingParams": {
+                        "updatePeriodSeconds": 1,
+                        "intervalSeconds": 1,
+                        "timeoutSeconds": 600,
+                        "maxUnavailable": "25%",
+                        "maxSurge": "25%"
+                    },
+                    "resources": {},
+                    "activeDeadlineSeconds": 21600
+                },
+                "triggers": [
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "namex-fe-web-caddy"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "namespace": "servicebc-ne-tools",
+                                "name": "namex-front-caddy:test"
+                            }
+                        }
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ],
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "test": false,
+                "selector": {
+                    "app": "namex-web-test",
+                    "deploymentconfig": "namex-web-test"
+                },
+                "template": {
+                    "metadata": {
+                        "creationTimestamp": null,
+                        "labels": {
+                            "app": "namex-web-test",
+                            "deploymentconfig": "namex-web-test"
+                        }
+                    },
+                    "spec": {
+                        "volumes": [
+                            {
+                                "name": "web-caddy-config",
+                                "configMap": {
+                                    "name": "web-caddy-config",
+                                    "defaultMode": 420
+                                }
+                            }
+                        ],
+                        "containers": [
+                            {
+                                "name": "namex-fe-web-caddy",
+                                "image": "docker-registry.default.svc:5000/servicebc-ne-tools/namex-front-caddy@sha256:e6bbb575ab13393e3370f8d1a2262ad47123a5092925eebace8aaa4d5f9cf1fe",
+                                "args": [
+                                    "/tmp/scripts/run"
+                                ],
+                                "ports": [
+                                    {
+                                        "containerPort": 2015,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "resources": {},
+                                "volumeMounts": [
+                                    {
+                                        "name": "web-caddy-config",
+                                        "readOnly": true,
+                                        "mountPath": "/etc/Caddyfile",
+                                        "subPath": "Caddyfile"
+                                    }
+                                ],
+                                "terminationMessagePath": "/test/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "imagePullPolicy": "Always"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {},
+                        "schedulerName": "default-scheduler"
+                    }
+                }
+            },
+            "status": {
+                "latestVersion": 0,
+                "observedGeneration": 0,
+                "replicas": 0,
+                "updatedReplicas": 0,
+                "availableReplicas": 0,
+                "unavailableReplicas": 0
+            }
+        }
+    ]
+}

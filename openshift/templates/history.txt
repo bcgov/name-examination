@@ -1,0 +1,233 @@
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew cask install keepassxc
+cd Downloads/
+ll
+ls -la
+ls -la
+less CHECKSUM 
+man cksum
+cksum openshift-origin-client-tools-v3.7.1-ab0f056-mac.zip CHECKSUM 
+cat CHECKSUM 
+ls -la
+rm 'CHECKSUM (1)'
+ls -la
+man md5
+md5 openshift-origin-client-tools-v3.7.1-ab0f056-mac.zip 
+cat CHECKSUM 
+shasum openshift-origin-client-tools-v3.7.1-ab0f056-mac.zip 
+shasum -a 256 openshift-origin-client-tools-v3.7.1-ab0f056-mac.zip 
+man shasum
+man shasum
+shasum -a 256 openshift-origin-client-tools-v3.7.1-ab0f056-mac.zip -c CHECKSUM 
+oc login https://console.pathfinder.gov.bc.ca:8443 --token=BGaLr-QGdMoEtu44zYnBfzQRuNF5RVgRmyvqTOaLLpA
+brew install git
+git
+exit
+cd Downloads/
+ls 
+ls 0-la
+ls -la
+less cdk-3.3.0-1-minishift-darwin-amd64 
+man chmod
+chmod +x cdk-3.3.0-1-minishift-darwin-amd64 
+ls -la
+./cdk-3.3.0-1-minishift-darwin-amd64 
+which minishift
+pwd
+cd ..
+mkdir -p ~/bin
+ll
+ls -la
+cd .bash_sessions/
+ll
+ls -la
+cd ..
+ls
+ls -la
+vi .bashrc
+exit
+ll
+source ./.bashrc 
+ll
+ls
+cd bin
+mv ../Downloads/cdk-3.3.0-1-minishift-darwin-amd64 .
+ll
+echo $PATH
+which minishift
+cd ~
+ll
+echo ‘export PATH=$PATH:$HOME/bin’ >> ~/.bash_profile
+export PATH=$PATH:$HOME/bin
+which minishift
+ll
+less .bash_profile 
+exit
+echo $PATH
+.bash_profile
+vi .bash_profile 
+exit
+minishift setup-cdk
+which oc
+less .bashrc
+ll
+Textedit
+TextEdit
+which TextEdit.app
+nedit
+cat .bashrc
+vi .bash_profile 
+export MINISHIFT_USERNAME='varek.boettcher@gov.bc.ca'
+export MINISHIFT_PASSWORD='oxJwM4MQ9nA12STL'
+echo export MINISHIFT_USERNAME=$MINISHIFT_USERNAME >> ~/.bash_profile
+echo export MINISHIFT_PASSWORD=$MINISHIFT_PASSWORD >> ~/.bash_profile
+less .bash_profile 
+ll
+minishift
+exit
+minishift config set vm-driver virtualbox
+which minishift
+minishift config get vm-driver
+cat .bash_profile 
+minishift start
+oc login https://console.pathfinder.gov.bc.ca:8443 --token=mK5LfCfoimj7lDnPw6lhjL5rOBfGePMAxFBepoRUi3s
+oc project service-ne-tools
+oc project servicebc-ne-tools
+oc policy add-role-to-user system:image-puller system:serviceaccount:<project>-dev:default -n <project>-tools
+oc policy add-role-to-user system:image-puller system:serviceaccount:servicebc-ne-dev:default -n servicebc-ne-tools
+oc policy add-role-to-user edit system:serviceaccount:servicebc-ne-tools:default -n servicebc-ne-dev
+oc policy add-role-to-user view -z system:serviceaccount:servicebc-ne-tools:jenkins -n servicebc-ne-dev
+oc project
+oc policy add-role-to-user view -z system:serviceaccount:servicebc-ne-tools:jenkins -n servicebc-ne-dev
+oc policy add-role-to-user view -z system:serviceaccount:servicebc-ne-tools:jenkins -n servicebc-ne-dev
+oc project
+oc policy add-role-to-user view -z system:serviceaccount:servicebc-ne-tools:jenkins -n servicebc-ne-dev
+oc policy add-role-to-user view system:serviceaccount:servicebc-ne-tools:jenkins -n servicebc-ne-dev
+oc --version
+oc version
+which java
+java -version
+java -version
+ifconfig
+ifconfig
+cd Development/
+ll
+ll
+cd ~
+ll
+less .bashrc 
+less .bash_profile 
+rm .bashrc
+vi .bash_profile 
+cd Development/
+cd names/
+ll
+pwd
+source ~/.bash_profile 
+git clone git clone https://github.com/$user/name-examination.git
+git clone https://github.com/$user/name-examination.git
+ll
+cd name-examination/
+ll
+cd ..
+ll
+cd name-examination/
+ll
+git remote add upstream https://github.com/bcgov/name-examination.git
+git remote set-url --push upstream no_push
+git remote -v
+get fetch
+git fetch
+git rebase
+cd name-examination/
+ll
+less Jenkinsfile 
+cd ..
+ll
+git fetch upstream
+git checkout master
+git rebase upstream/master
+git push origin
+git push origin
+pip
+which python
+python -version
+python -h
+python --version
+exit
+python
+homebrew
+brew
+pythone --version
+python --version
+npm
+which brew
+brew
+brew update
+oc status
+oc login https://console.pathfinder.gov.bc.ca:8443 --token=6LddUAPlBJnQLr6IM2DYTe6xDMgRdODfx7eBxZGnziA
+oc status
+oc status
+pwd
+cd Development
+ll
+cd Build.Examples/
+ll
+oc process -f namex-fe-build.json 
+oc status
+oc login https://console.pathfinder.gov.bc.ca:8443 --token=6LddUAPlBJnQLr6IM2DYTe6xDMgRdODfx7eBxZGnziA
+oc login https://console.pathfinder.gov.bc.ca:8443 --token=oFvPiRaC6EGYPCCCeSy-a32OyVEhfU0A5Oit0NtAMPs
+oc process -f namex-fe-build.json 
+oc process -f namex-fe-build.json | oc create -f -
+oc create is namex-front
+oc process -f namex-fe-web-build.json 
+oc process -f namex-fe-web-build.json 
+oc process -f namex-fe-web-build.json | oc create -f -
+oc process -f namex-fe-web-build.json | oc replace -f -
+oc tag namex-front-caddy:latest namex-front-caddy:dev
+oc status
+oc projects
+oc project servicebc-ne-dev
+oc projects
+lt
+oc process -f namex-fe-web-deploy.json 
+oc process -f namex-fe-web-deploy.json | oc create -f -
+oc process -f namex-fe-web-deploy.json | oc replace -f -
+oc process -f namex-fe-web-deploy.json | oc replace -f -
+oc process -f namex-fe-web-deploy.json | oc replace -f -
+oc projects
+oc project servicebc-ne-tools
+oc process -f namex-fe-web-build.json 
+oc process -f namex-fe-web-build.json | oc replace -f -
+oc process -f namex-fe-web-build.json | oc replace -f -
+oc tag servicebc-ne-tools/namex-front-caddy:latest servicebc-ne-tools/namex-front-caddy:dev
+cd ..
+pwd
+ll
+cd name
+cd names
+ll
+cd name-examination/
+ll
+git fetch upstream
+git checkout master
+git rebase upstream/master
+git checkout -b s2i
+git commit -m "added assemble to s2i directory to try to get npm to build front-end code during chain build.  Issue #232"
+git push origin s2i
+git login
+git push origin s2i
+git push origin s2i
+cd ..
+cd ..
+ll
+cd Build.Examples/
+ll
+lt
+oc project
+oc projects
+oc process -f namex-fe-web-build.json | oc replace -f -
+oc tag servicebc-ne-tools/namex-front-caddy:latest servicebc-ne-tools/namex-front-caddy:dev
+man history
+ls -la
+history -w history.txt
