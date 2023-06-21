@@ -61,3 +61,10 @@ selenium-debug.log
 *.ntvs*
 *.njsproj
 *.sln
+
+*.log*
+.nuxt
+.nitro
+.cache
+.output
+dist
