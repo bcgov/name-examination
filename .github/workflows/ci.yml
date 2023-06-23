@@ -3,13 +3,10 @@ name: NAME-EXAMINATION UI CI
 on:
   pull_request:
     types: [assigned, synchronize]
-    paths:
-        - "web/**"
 
 defaults:
   run:
     shell: bash
-    working-directory: ./web
 
 jobs:
   setup-job:
@@ -27,7 +24,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.16.0]
+        node-version: [16.14.2]
 
     steps:
       - uses: actions/checkout@v3
@@ -48,7 +45,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.16.0]
+        node-version: [16.14.2]
 
     steps:
       - uses: actions/checkout@v3
@@ -66,7 +63,7 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-            flags: analyticsui
+            flags: name-examination-ui
             name: codecov-analytics
             fail_ci_if_error: true
 
@@ -76,7 +73,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.16.0]
+        node-version: [16.14.2]
 
     steps:
       - uses: actions/checkout@v3
