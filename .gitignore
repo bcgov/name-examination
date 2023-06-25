@@ -143,3 +143,6 @@ dist
 
 .npmrc
 .nvmrc
+
+#firebase hosting
+.firebase

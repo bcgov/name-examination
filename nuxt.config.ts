@@ -10,11 +10,6 @@ export default defineNuxtConfig({
   },
   vite: {
     mode: "spa",
-    build: {
-      rollupOptions: {
-        external: ['utils/feature-flags', 'utils/constants'],
-      }
-    },
     css: {
       preprocessorOptions: {
         sass: {
