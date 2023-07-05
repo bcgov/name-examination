@@ -5,9 +5,9 @@
 export default async function fetchConfig (): Promise<any> {
     // get config from environment
     const origin: string = window.location.origin
-    const windowLocationPathname = window.location.pathname // eg, /basePath/...
-    const windowLocationOrigin = window.location.origin // eg, http://localhost:8080
-    const windowLocationSearch = window.location.search
+    const windowLocationPathname: string = window.location.pathname // eg, /basePath/...
+    const windowLocationOrigin: string = window.location.origin // eg, http://localhost:8080
+    const windowLocationSearch: string = window.location.search
   
     if (!origin || !windowLocationPathname || !windowLocationOrigin) {
       return Promise.reject(new Error('Missing environment variables'))

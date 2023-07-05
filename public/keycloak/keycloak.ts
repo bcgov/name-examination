@@ -1,11 +1,11 @@
 import Keycloak, { KeycloakInitOptions, KeycloakLoginOptions, KeycloakTokenParsed } from 'keycloak-js'
 import { KCUserProfile } from '~/public/keycloak/KCUserProfile' 
-import ConfigHelper from '~/public/keycloak/config-helper'
-import { SessionStorageKeys } from '~/public/keycloak/constants'
+import ConfigHelper from '~/util/config-helper'
+import { SessionStorageKeys } from '~/util/constants'
 import { Store } from 'pinia'
 import { getModule } from 'vuex-module-decorators'
 import AuthModule from '../store/modules/auth'
-import { decodeKCToken } from '~/public/keycloak/common-util'
+import { decodeKCToken } from '~/util/common-util'
 
 class KeyCloakService {
   private kc: Keycloak | undefined
@@ -46,7 +46,7 @@ class KeyCloakService {
       }
       return kcLogin(options)
     }
-    let kcOptions :KeycloakInitOptions = {
+    const kcOptions :KeycloakInitOptions = {
       onLoad: 'login-required',
       checkLoginIframe: false,
       timeSkew: 0,
@@ -83,7 +83,6 @@ class KeyCloakService {
       lastName: this.parsedToken?.lastname,
       firstName: this.parsedToken?.firstname,
       email: this.parsedToken?.email,
-      // eslint-disable-next-line camelcase
       roles: this.parsedToken?.realm_access?.roles,
       keycloakGuid: this.parsedToken?.sub,
       userName: this.parsedToken?.username,
@@ -96,7 +95,7 @@ class KeyCloakService {
     let token = ConfigHelper.getFromSession(SessionStorageKeys.KeyCloakToken) || undefined
     if (token) {
       this.kc = new Keycloak(ConfigHelper.getKeycloakConfigUrl())
-      let kcOptions :KeycloakInitOptions = {
+      const kcOptions :KeycloakInitOptions = {
         onLoad: 'login-required',
         checkLoginIframe: false,
         timeSkew: 0,
@@ -141,7 +140,7 @@ class KeyCloakService {
       return
     }
     // if isForceRefresh is true, send -1 in updateToken to force update the token
-    let tokenExpiresIn = (isForceRefresh) ? -1 : this.kc.tokenParsed.exp - Math.ceil(new Date().getTime() / 1000) + this.kc.timeSkew + 100
+    const tokenExpiresIn = (isForceRefresh) ? -1 : this.kc.tokenParsed.exp - Math.ceil(new Date().getTime() / 1000) + this.kc.timeSkew + 100
     if (this.kc) {
       this.kc.updateToken(tokenExpiresIn)
         .then(refreshed => {
