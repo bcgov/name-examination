@@ -11,7 +11,7 @@ interface AuthState {
   loginSource: string;
 }
 
-export const useAuthStore = defineStore({
+export const AuthModule = defineStore({
   id: 'auth',
   state: (): AuthState => ({
     token: '',

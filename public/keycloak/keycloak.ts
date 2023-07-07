@@ -3,8 +3,8 @@ import { KCUserProfile } from '~/public/keycloak/KCUserProfile'
 import ConfigHelper from '~/util/config-helper'
 import { SessionStorageKeys } from '~/util/constants'
 import { Store } from 'pinia'
-import { getModule } from 'vuex-module-decorators'
-import AuthModule from '../store/modules/auth'
+import { AuthModule } from '~/store/auth'
+const authModule = AuthModule()
 import { decodeKCToken } from '~/util/common-util'
 
 class KeyCloakService {
@@ -62,8 +62,6 @@ class KeyCloakService {
     if (!this.store) {
       return
     }
-
-    const authModule = getModule(AuthModule, this.store)
     authModule.setKCToken(this.kc?.token || '')
     authModule.setIDToken(this.kc?.idToken || '')
     authModule.setRefreshToken(this.kc?.refreshToken || '')
@@ -140,7 +138,7 @@ class KeyCloakService {
       return
     }
     // if isForceRefresh is true, send -1 in updateToken to force update the token
-    const tokenExpiresIn = (isForceRefresh) ? -1 : this.kc.tokenParsed.exp - Math.ceil(new Date().getTime() / 1000) + this.kc.timeSkew + 100
+    const tokenExpiresIn = isForceRefresh  ? -1 : (this.kc?.tokenParsed?.exp || 0) - Math.ceil(new Date().getTime() / 1000) + (this.kc?.tokenParsed?.timeSkew || 0) + 100;
     if (this.kc) {
       this.kc.updateToken(tokenExpiresIn)
         .then(refreshed => {
@@ -265,7 +263,6 @@ class KeyCloakService {
 
   private async clearSession () {
     if (this.store) {
-      const authModule = getModule(AuthModule, this.store)
       authModule.clearSession()
     }
     ConfigHelper.removeFromSession(SessionStorageKeys.KeyCloakToken)
