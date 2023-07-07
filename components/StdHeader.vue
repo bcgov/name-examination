@@ -6,13 +6,13 @@
               <img src="../public/images/top-nav.png" alt="Name Examination" class="h-full">
           </div>
 
-          <div class="flex gap-24 mt-6 text-blue-800" v-if="store.auth">
+          <div class="flex gap-24 mt-6 text-blue-800" v-if="this.auth">
               <a href="" class="ml-16 text-2xl" >Admin</a>
               <a href="" class="text-2xl">Examine</a>
               <a href="" class="text-2xl">Search</a>
           </div>
 
-          <div class="flex ml-auto" v-if="store.auth">
+          <div class="flex ml-auto" v-if="this.auth">
 
             <form class="flex items-center">   
               <label for="allowWordClassificationModal" class="sr-only">NR Number Lookup</label>
@@ -44,7 +44,7 @@
              </div>
           </div>
 
-          <div class="flex ml-auto mx-10 mt-7 text-blue-800" v-if="!store.auth" @click.prevent="store.toggleAuth()">
+          <div class="flex ml-auto mx-10 mt-7 text-blue-800" v-if="!this.auth">
               <a href="">Login</a>
              </div>
 
@@ -52,7 +52,15 @@
   </nav>
 </template>
 
-<script setup>
-import { useAuthStore } from "~/store/AuthStatus"
-const store = useAuthStore()
+<script>
+export default{
+  data(){
+    return{
+      auth: true
+    }
+  },
+  computed:{
+
+  }
+}
 </script>

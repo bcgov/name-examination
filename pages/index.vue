@@ -2,7 +2,7 @@
 
 <div class="w-10/12">
 
-  <div class="text-2xl text-gray-800 font-semibold relative top-28 left-72" v-if="!store.auth">
+  <div class="text-2xl text-gray-800 font-semibold relative top-28 left-72" v-if="!this.auth">
     <span>Your authorization is missing or has expired. Please login.</span>
   </div>
 
@@ -34,7 +34,7 @@
     </div>
 
     <div class="stats-box shadow-lg rounded-md">
-      <div class="mt-2 mb-6 ml-2">Current status on 2023-06-28, 1:00 pm</div>
+      <div class="mt-2 mb-6 ml-2">Current status on <span class=" font-bold"></span> {{ this.todayStr }}</div>
       <div class="my-6 ml-2">Not Examined: <span class=" font-bold">{{ notExamined }}</span></div>
       <div class="mt-6 mb-2 ml-2">Hold: <span class=" font-bold">{{ hold }}</span></div>
     </div>
@@ -45,9 +45,21 @@
 
 </template>
 
-<script setup>
-import { useAuthStore } from "~/store/AuthStatus"
-const store = useAuthStore()
+<script>
+import moment from 'moment';
+
+export default{
+  data(){
+    return{
+      auth: true
+    }
+  },
+  computed:{
+    todayStr(){
+      return moment().format('YYYY-MM-DD, h:mm a')
+    } 
+  }
+}
 </script>
 
 <style>
