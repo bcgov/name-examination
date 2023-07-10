@@ -1,0 +1,9 @@
+{
+  "pre-commit": "npm run lint-staged && npm run check",
+  "commit-msg": "node scripts/verifyCommit.js",
+  "scripts": {
+    "lint-staged": "npm run lint",
+    "lint": "eslint .",
+    "check": "npm run test"
+  }
+} 
