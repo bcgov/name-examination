@@ -8,6 +8,9 @@ export default defineNuxtConfig({
   typescript: {
     typeCheck: true,
   },
+  app:{
+    baseURL: '/'
+  },
   vite: {
     mode: "spa",
     css: {

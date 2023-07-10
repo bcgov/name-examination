@@ -9,7 +9,7 @@
           <div class="flex gap-24 mt-6 text-blue-800" v-if="this.auth">
               <a href="" class="ml-16 text-2xl" >Admin</a>
               <a href="" class="text-2xl">Examine</a>
-              <a href="" class="text-2xl">Search</a>
+              <a href="" class="text-2xl"><nuxt-link to="/search">Search</nuxt-link></a>
           </div>
 
           <div class="flex ml-auto" v-if="this.auth">

@@ -6,7 +6,7 @@
     <span>Your authorization is missing or has expired. Please login.</span>
   </div>
 
-  <div class="text-2xl text-gray-800 relative top-8 left-72" v-else>
+  <div class="text-2xl text-gray-800 relative top-10 left-72" v-else>
     <header class="font-bold text-5xl mb-10">Welcome to Name X!</header>
     <span>Canada's most modern, semi-automated way to examine business name requests. Automated indicators show you:</span>
 

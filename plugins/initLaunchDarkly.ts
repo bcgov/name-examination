@@ -5,17 +5,9 @@ declare const window: any
 
 /**
  * Default flag values when LD is not available.
- * NB: Uses "business-edit" project (per LD client id in config).
  */
 const defaultFlagSet: LDFlagSet = {
   'banner-text': '', // by default, there is no banner text
-  'enable-digital-credentials': false,
-  'sentry-enable': false, // by default, no sentry logs
-  'show-alert-phone-numbers-firm': false,
-  'supported-business-summary-entities': [],
-  'supported-correction-entities': [],
-  'supported-dissolution-entities': [],
-  'supported-consent-continuation-out-entities': []
 }
 
 /**
