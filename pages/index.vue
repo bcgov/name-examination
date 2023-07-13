@@ -46,8 +46,7 @@
 </template>
 
 <script>
-import moment from 'moment';
-
+import { DateTime } from 'luxon';
 export default{
   data(){
     return{
@@ -56,7 +55,8 @@ export default{
   },
   computed:{
     todayStr(){
-      return moment().format('YYYY-MM-DD, h:mm a')
+      const now = DateTime.now();
+      return now.toFormat('yyyy-MM-dd, h:mm a');
     } 
   }
 }

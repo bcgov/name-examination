@@ -3,13 +3,21 @@ import path from 'path'
 
 export default defineNuxtConfig({
   ssr: false,
+  devServer: {
+    port: 8080
+  },
+  app: {
+    head: {
+      charset: 'utf-8',
+      viewport: 'width=device-width, initial-scale=1',
+      title: 'BC Registry: Name Examination'
+    },
+    baseURL: '/'
+  },
   modules: ["@nuxt/content", "@nuxtjs/tailwindcss", "@pinia/nuxt"],
   css: ["@/assets/main.scss"],
   typescript: {
     typeCheck: true,
-  },
-  app:{
-    baseURL: '/'
   },
   vite: {
     mode: "spa",

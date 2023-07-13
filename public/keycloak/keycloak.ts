@@ -3,6 +3,12 @@ import { KCUserProfile } from '~/public/keycloak/KCUserProfile'
 import ConfigHelper from '~/util/config-helper'
 import { SessionStorageKeys } from '~/util/constants'
 import { Store } from 'pinia'
+import { createPinia } from 'pinia';
+import { createApp } from 'vue'
+import App from '~/app.vue'
+const pinia = createPinia()
+const app = createApp(App)
+app.use(pinia)
 import { AuthModule } from '~/store/auth'
 const authModule = AuthModule()
 import { decodeKCToken } from '~/util/common-util'
@@ -137,8 +143,20 @@ class KeyCloakService {
     if (!isForceRefresh && (!this.kc?.tokenParsed?.exp || !this.kc.timeSkew)) {
       return
     }
+
+    let tokenholder = null;
     // if isForceRefresh is true, send -1 in updateToken to force update the token
-    const tokenExpiresIn = isForceRefresh  ? -1 : (this.kc?.tokenParsed?.exp || 0) - Math.ceil(new Date().getTime() / 1000) + (this.kc?.tokenParsed?.timeSkew || 0) + 100;
+    if (isForceRefresh){
+      tokenholder = -1;
+    }
+    else{
+      const tokenExp  = this.kc?.tokenParsed?.exp || 0
+      const currentTime = Math.ceil(new Date().getTime() / 1000)
+      const timeSkew = this.kc?.tokenParsed?.timeSkew || 0
+      tokenholder = tokenExp - currentTime + timeSkew + 100
+    }
+    const tokenExpiresIn = tokenholder;
+    
     if (this.kc) {
       this.kc.updateToken(tokenExpiresIn)
         .then(refreshed => {
