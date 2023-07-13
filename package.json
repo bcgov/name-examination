@@ -6,7 +6,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "format": "prettier --write .",
-    "format-check": "prettier --check ."
+    "format-check": "prettier --check .",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "@nuxt/content": "^2.6.0",
