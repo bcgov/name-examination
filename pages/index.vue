@@ -2,7 +2,7 @@
 
 <div class="w-10/12">
 
-  <div class="text-2xl text-gray-800 font-semibold relative top-28 left-72" v-if="!this.auth">
+  <div class="text-2xl text-gray-800 font-semibold relative top-28 left-72" v-if="!authModule.isAuthenticated">
     <span>Your authorization is missing or has expired. Please login.</span>
   </div>
 
@@ -33,10 +33,10 @@
 
     </div>
 
-    <div class="stats-box shadow-lg rounded-md">
-      <div class="mt-2 mb-6 ml-2">Current status on <span class=" font-bold"></span> {{ this.todayStr }}</div>
-      <div class="my-6 ml-2">Not Examined: <span class=" font-bold">{{ notExamined }}</span></div>
-      <div class="mt-6 mb-2 ml-2">Hold: <span class=" font-bold">{{ hold }}</span></div>
+    <div class="stats-box shadow-lg mr-20">
+      <div class="mt-2 mb-6 ml-2">Current status on {{ status.todayStr }}</div>
+      <div class="my-6 ml-2">Not Examined: <span class=" font-bold">{{ status.notExaminedNum }}</span></div>
+      <div class="mt-6 mb-2 ml-2">Hold: <span class=" font-bold">{{ status.holdNum }}</span></div>
     </div>
   
   </div>
@@ -45,28 +45,21 @@
 
 </template>
 
-<script>
-import { DateTime } from 'luxon';
-export default{
-  data(){
-    return{
-      auth: true
-    }
-  },
-  computed:{
-    todayStr(){
-      const now = DateTime.now();
-      return now.toFormat('yyyy-MM-dd, h:mm a');
-    } 
-  }
-}
-</script>
+<script setup>
+import { Fetchstatus } from '~/store/fetchstatus';
+import { useAuthStore } from '~/store/auth';
 
-<style>
-.stats-box{
-  border: 1px solid black;
-  background-color:aliceblue;
-  width: 100%;
-  height: fit-content;
-}
-</style>
+const status = Fetchstatus()
+const authModule = useAuthStore()
+
+// Watch for changes in the authentication status
+watch(() => authModule.isAuthenticated, (newVal, oldVal) => {
+  // newVal is the new authentication status
+  // oldVal is the old authentication status
+  if (newVal === true) { // if user is authenticated
+    status.getHoldedNum()
+    status.getExaminedNum()
+  }
+}, { immediate: false }) // 'immediate: false' ensures the watcher only triggers on changes, not on initialization
+
+</script>
