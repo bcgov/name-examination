@@ -9,21 +9,10 @@ export default async function () {
   console.log('Starting Keycloak service...')
 
   const keycloakConfig: any = {
-    url: 'https://dev.loginproxy.gov.bc.ca/auth',
-    realm: "bcregistry",
-    clientId: "NameX-Dev"
+    url: import.meta.env.VITE_APP_KEYCLOAK_AUTH_URL,
+    realm: import.meta.env.VITE_APP_KEYCLOAK_REALM,
+    clientId: import.meta.env.VITE_APP_KEYCLOAK_CLIENTID 
   }
 
   await KeycloakService.setKeycloakConfigUrl(keycloakConfig)
-
-  // Auto-authenticate user unless they are trying to log out.
-  if (!isSignoutRoute(window.location.pathname)) {
-    // Initialize token service which will do a check-sso to initiate session.
-    await KeycloakService.initializeToken(null)
-      .catch(err => {
-        if (err?.message !== 'NOT_AUTHENTICATED') {
-          throw err
-        }
-      })
-  }
 }

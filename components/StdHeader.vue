@@ -6,24 +6,24 @@
               <img src="../public/images/top-nav.png" alt="Name Examination" class="h-full">
           </div>
 
-          <div class="flex gap-24 mt-6 text-blue-800" v-if="this.auth">
+          <div class="flex gap-24 mt-6 text-blue-800" v-if="authModule.isAuthenticated">
               <a href="" class="ml-16 text-2xl" >Admin</a>
               <a href="" class="text-2xl">Examine</a>
               <a href="" class="text-2xl"><nuxt-link to="/search">Search</nuxt-link></a>
           </div>
 
-          <div class="flex ml-auto" v-if="this.auth">
+          <div class="flex ml-auto" v-if="authModule.isAuthenticated">
 
             <form class="flex items-center">   
               <label for="allowWordClassificationModal" class="sr-only">NR Number Lookup</label>
               <div class="relative w-full">
                   <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                      <svg aria-hidden="true" class="w-7 h-7 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
+                    <svg-icon type="mdi" :path="path"></svg-icon>
                   </div>
                   <input type="text" id="allowWordClassificationModal" class="w-72 h-14 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 text-lg" placeholder="NR Number Lookup" required>
               </div>
-              <button type="submit" class="p-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                  <img src="../public/images/searchbutton.png" alt="" class="h-8 w-9">
+              <button type="submit" class="p-2.5 ml-3 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <svg-icon type="mdi" :path="path" class="h-7 w-7"></svg-icon>
               </button>
              </form>
 
@@ -40,27 +40,60 @@
             <div class="divider"></div>
 
             <div class="mx-10 mt-7 text-blue-800">
-              <a href="">Log Out</a>
+              <a href="#" @click="logout">Log Out</a>
              </div>
           </div>
 
-          <div class="flex ml-auto mx-10 mt-7 text-blue-800" v-if="!this.auth">
-              <a href="">Login</a>
+          <div class="flex ml-auto mx-10 mt-7 text-blue-800" v-if="!authModule.isAuthenticated">
+              <a href="#" @click="login">Login</a> 
              </div>
 
       </div>
   </nav>
 </template>
 
-<script>
-export default{
-  data(){
-    return{
-      auth: true
-    }
-  },
-  computed:{
+<script setup>
+import SvgIcon from '@jamescoyle/vue-icon';
+import { mdiMagnify } from '@mdi/js';
+import { useAuthStore } from '~/store/auth';
+import KeycloakService from '~/public/keycloak/keycloak'
 
+const authModule = useAuthStore()
+const path = mdiMagnify
+
+const login = async () => {
+  // If the user is already authenticated, do nothing
+  if (authModule.isAuthenticated) return
+
+  try {
+    // Start the token initialization process and wait for it to finish
+    await KeycloakService.initializeToken(authModule, true, !authModule.isAuthenticated);
+
+    // Token should now be generated
+    await KeycloakService.initSession()
+
+    
+  } catch (err) {
+    if (err?.message !== 'NOT_AUTHENTICATED') {
+      console.error(err)
+      // Handle the error appropriately, possibly by showing an error message to the user
+    }
   }
 }
+
+
+const logout = async () => {
+  // If the user is already logged out, do nothing
+  if (!authModule.isAuthenticated) return
+
+  try {
+    await KeycloakService.logout("http://localhost:8080/")
+  } catch (err) {
+    if (err?.message !== 'LOGOUT FAILED') {
+      console.error(err)
+      // Handle the error appropriately, possibly by showing an error message to the user
+    }
+  }
+}
+
 </script>

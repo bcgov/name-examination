@@ -3,14 +3,7 @@ import { KCUserProfile } from '~/public/keycloak/KCUserProfile'
 import ConfigHelper from '~/util/config-helper'
 import { SessionStorageKeys } from '~/util/constants'
 import { Store } from 'pinia'
-import { createPinia } from 'pinia';
-import { createApp } from 'vue'
-import App from '~/app.vue'
-const pinia = createPinia()
-const app = createApp(App)
-app.use(pinia)
-import { AuthModule } from '~/store/auth'
-const authModule = AuthModule()
+import { useAuthStore } from '~/store/auth'
 import { decodeKCToken } from '~/util/common-util'
 
 class KeyCloakService {
@@ -68,13 +61,14 @@ class KeyCloakService {
     if (!this.store) {
       return
     }
-    authModule.setKCToken(this.kc?.token || '')
-    authModule.setIDToken(this.kc?.idToken || '')
-    authModule.setRefreshToken(this.kc?.refreshToken || '')
+    const authStore = useAuthStore() // Now you have access to the AuthModule store
+    authStore.setKCToken(this.kc?.token || '')
+    authStore.setIDToken(this.kc?.idToken || '')
+    authStore.setRefreshToken(this.kc?.refreshToken || '')
 
     const userInfo = this.getUserInfo()
-    authModule.setKCGuid(userInfo?.keycloakGuid || '')
-    authModule.setLoginSource(userInfo?.loginSource || '')
+    authStore.setKCGuid(userInfo?.keycloakGuid || '')
+    authStore.setLoginSource(userInfo?.loginSource || '')
 
     await this.syncSessionAndScheduleTokenRefresh()
   }
@@ -281,7 +275,8 @@ class KeyCloakService {
 
   private async clearSession () {
     if (this.store) {
-      authModule.clearSession()
+      const authStore = useAuthStore() // Now you have access to the AuthModule store
+      authStore.clearSession()
     }
     ConfigHelper.removeFromSession(SessionStorageKeys.KeyCloakToken)
     ConfigHelper.removeFromSession(SessionStorageKeys.KeyCloakIdToken)
