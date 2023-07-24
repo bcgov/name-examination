@@ -1,4 +1,3 @@
-import { defineStore } from 'pinia';
 import ConfigHelper from '~/util/config-helper';
 import KeycloakServices from '~/public/keycloak/keycloak';
 import { SessionStorageKeys } from '~/util/constants';
@@ -11,7 +10,7 @@ interface AuthState {
   loginSource: string;
 }
 
-export const AuthModule = defineStore({
+export const useAuthStore = defineStore({
   id: 'auth',
   state: (): AuthState => ({
     token: '',
@@ -51,7 +50,17 @@ export const AuthModule = defineStore({
       this.loginSource = loginSource;
     },
     clearSession(): void {
-        this.$reset()
+      // Reset all state properties related to the user's session
+      this.token = '';
+      this.idToken = '';
+      this.refreshToken = '';
+      this.kcGuid = '';
+      this.loginSource = '';
+
+      // Clear the session storage values
+      ConfigHelper.removeFromSession(SessionStorageKeys.KeyCloakToken);
+      ConfigHelper.removeFromSession(SessionStorageKeys.KeyCloakIdToken);
+      ConfigHelper.removeFromSession(SessionStorageKeys.KeyCloakRefreshToken);
     },
     syncWithSessionStorage(): void {
       const token = ConfigHelper.getFromSession(SessionStorageKeys.KeyCloakToken) || '';
@@ -64,3 +73,7 @@ export const AuthModule = defineStore({
     },
   },
 });
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useAuthStore, import.meta.hot))
+}
