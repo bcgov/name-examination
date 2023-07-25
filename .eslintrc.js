@@ -1,15 +1,15 @@
 module.exports = {
-  parser: "@typescript-eslint/parser",
+  parser: '@typescript-eslint/parser',
   env: {
     browser: true,
-    es2021: true,
+    es2021: true
   },
   extends: [
-    "google",
-    "plugin:vue/vue3-essential",
-    "plugin:prettier/recommended",
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
+    'google',
+    'plugin:vue/vue3-essential',
+    // 'plugin:prettier/recommended',
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
     'plugin:vue/base',
     'plugin:vue/essential',
     'plugin:vue/recommended',
@@ -20,12 +20,11 @@ module.exports = {
     '@vue/typescript'
   ],
   parserOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module",
+    ecmaVersion: 'latest',
+    sourceType: 'module'
   },
-  plugins: ["vue", "@typescript-eslint"],
-  rules: {},
-  overrides:{
+  plugins: ['vue', '@typescript-eslint'],
+  rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'max-len': ['warn', { code: 120 }],
@@ -38,5 +37,15 @@ module.exports = {
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-var-requires': 'off'
-  }
-};
+  },
+  overrides: [
+    {
+      files: ['*.vue'],
+      parser: 'vue-eslint-parser',
+      parserOptions: {
+        parser: '@typescript-eslint/parser',
+        ecmaVersion: 2020
+      }
+    }
+  ]
+}

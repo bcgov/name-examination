@@ -1,5 +1,4 @@
 import KeycloakService from '~/public/keycloak/keycloak'
-import { isSignoutRoute } from '~/util/misc-helpers'
 /**
  * This middleware function is called before the default layout is rendered.
  * It initializes Keycloak and syncs the session (eg, logged in/out).
@@ -11,7 +10,7 @@ export default async function () {
   const keycloakConfig: any = {
     url: import.meta.env.VITE_APP_KEYCLOAK_AUTH_URL,
     realm: import.meta.env.VITE_APP_KEYCLOAK_REALM,
-    clientId: import.meta.env.VITE_APP_KEYCLOAK_CLIENTID 
+    clientId: import.meta.env.VITE_APP_KEYCLOAK_CLIENTID
   }
 
   await KeycloakService.setKeycloakConfigUrl(keycloakConfig)

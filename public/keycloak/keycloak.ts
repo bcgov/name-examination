@@ -1,11 +1,12 @@
-import Keycloak, { KeycloakInitOptions, KeycloakLoginOptions, KeycloakTokenParsed } from 'keycloak-js'
-import { KCUserProfile } from '~/public/keycloak/KCUserProfile' 
+import Keycloak, { KeycloakInitOptions, KeycloakLoginOptions } from 'keycloak-js'
+import { KCUserProfile } from '~/public/keycloak/KCUserProfile'
 import ConfigHelper from '~/util/config-helper'
 import { SessionStorageKeys } from '~/util/constants'
 import { Store } from 'pinia'
 import { useAuthStore } from '~/store/auth'
 import { decodeKCToken } from '~/util/common-util'
 
+/* eslint-disable require-jsdoc */
 class KeyCloakService {
   private kc: Keycloak | undefined
   private parsedToken: any
@@ -90,7 +91,7 @@ class KeyCloakService {
   }
 
   async logout (redirectUrl?: string) {
-    let token = ConfigHelper.getFromSession(SessionStorageKeys.KeyCloakToken) || undefined
+    const token = ConfigHelper.getFromSession(SessionStorageKeys.KeyCloakToken) || undefined
     if (token) {
       this.kc = new Keycloak(ConfigHelper.getKeycloakConfigUrl())
       const kcOptions :KeycloakInitOptions = {
@@ -109,7 +110,7 @@ class KeyCloakService {
       ConfigHelper.addToSession(SessionStorageKeys.PreventStorageSync, true)
       return new Promise<void>((resolve, reject) => {
         this.kc && this.kc.init(kcOptions)
-          .then(authenticated => {
+          .then((authenticated) => {
             if (!authenticated) {
               resolve()
             }
@@ -121,11 +122,11 @@ class KeyCloakService {
               .then(() => {
                 resolve()
               })
-              .catch(error => {
+              .catch((error) => {
                 reject(error)
               })
           })
-          .catch(error => {
+          .catch((error) => {
             reject(error)
           })
       })
@@ -138,22 +139,21 @@ class KeyCloakService {
       return
     }
 
-    let tokenholder = null;
+    let tokenholder = null
     // if isForceRefresh is true, send -1 in updateToken to force update the token
-    if (isForceRefresh){
-      tokenholder = -1;
-    }
-    else{
-      const tokenExp  = this.kc?.tokenParsed?.exp || 0
+    if (isForceRefresh) {
+      tokenholder = -1
+    } else {
+      const tokenExp = this.kc?.tokenParsed?.exp || 0
       const currentTime = Math.ceil(new Date().getTime() / 1000)
       const timeSkew = this.kc?.tokenParsed?.timeSkew || 0
       tokenholder = tokenExp - currentTime + timeSkew + 100
     }
-    const tokenExpiresIn = tokenholder;
-    
+    const tokenExpiresIn = tokenholder
+
     if (this.kc) {
       this.kc.updateToken(tokenExpiresIn)
-        .then(refreshed => {
+        .then((refreshed) => {
           if (refreshed) {
             this.initSession()
           }
@@ -170,15 +170,17 @@ class KeyCloakService {
   verifyRoles (allowedRoles:[], disabledRoles:[]) {
     let isAuthorized = false
     if (allowedRoles || disabledRoles) {
-      let userInfo = this.getUserInfo()
-      isAuthorized = allowedRoles ? allowedRoles.some(role => userInfo.roles.includes(role)) : !disabledRoles.some(role => userInfo.roles.includes(role))
+      const userInfo = this.getUserInfo()
+      isAuthorized = allowedRoles
+        ? allowedRoles.some((role) => userInfo.roles.includes(role))
+        : !disabledRoles.some((role) => userInfo.roles.includes(role))
     } else {
       isAuthorized = true
     }
     return isAuthorized
   }
 
-  async initializeToken (store?: any, isScheduleRefresh: boolean = true, forceLogin: boolean = false) {
+  async initializeToken (store?: any, isScheduleRefresh = true, forceLogin = false) {
     this.store = store
     const kcOptions: KeycloakInitOptions = {
       onLoad: forceLogin ? 'login-required' : 'check-sso',
@@ -194,17 +196,17 @@ class KeyCloakService {
       this.kc = new Keycloak(ConfigHelper.getKeycloakConfigUrl())
       ConfigHelper.addToSession(SessionStorageKeys.SessionSynced, false)
       this.kc.init(kcOptions)
-        .then(authenticated => {
+        .then((authenticated) => {
           console.info('[TokenServices] is User Authenticated?: Syncing ' + authenticated)
           resolve(this.syncSessionAndScheduleTokenRefresh(isScheduleRefresh))
         })
-        .catch(error => {
+        .catch((error) => {
           reject(new Error('Could not Initialize KC' + error))
         })
     })
   }
 
-  async syncSessionAndScheduleTokenRefresh (isScheduleRefresh: boolean = true) {
+  async syncSessionAndScheduleTokenRefresh (isScheduleRefresh = true) {
     if (this.kc?.authenticated) {
       this.syncSessionStorage()
       if (isScheduleRefresh) {
@@ -218,7 +220,7 @@ class KeyCloakService {
   }
 
   scheduleRefreshTimer (refreshEarlyTime = 0) {
-    let refreshEarlyTimeinMilliseconds = Math.max(this.REFRESH_ATTEMPT_INTERVAL, refreshEarlyTime) * 1000
+    const refreshEarlyTimeinMilliseconds = Math.max(this.REFRESH_ATTEMPT_INTERVAL, refreshEarlyTime) * 1000
     this.scheduleRefreshToken(refreshEarlyTimeinMilliseconds)
   }
 
@@ -226,7 +228,8 @@ class KeyCloakService {
     let refreshTokenExpiresIn = -1
     // check if refresh token is still valid . Or else clear all timers and throw errors
     if (this.kc && this.kc.timeSkew !== undefined && this.kc.refreshTokenParsed) {
-      refreshTokenExpiresIn = this.kc.refreshTokenParsed['exp']! - Math.ceil(new Date().getTime() / 1000) + this.kc.timeSkew
+      refreshTokenExpiresIn = this.kc.refreshTokenParsed['exp']! - Math.ceil(new Date().getTime() / 1000) +
+      this.kc.timeSkew
     }
     if (refreshTokenExpiresIn < 0) {
       throw new Error('Refresh Token Expired. No more token refreshes')
@@ -238,12 +241,12 @@ class KeyCloakService {
     if (expiresIn < 0) {
       throw new Error('Refresh Token Expired. No more token refreshes')
     }
-    let refreshInMilliSeconds = (expiresIn * 1000) - refreshEarlyTimeinMilliseconds // in milliseconds
+    const refreshInMilliSeconds = (expiresIn * 1000) - refreshEarlyTimeinMilliseconds // in milliseconds
     console.info('[TokenServices] Token Refresh Scheduled in %s Seconds', (refreshInMilliSeconds / 1000))
     this.timerId = setTimeout(() => {
       console.log('[TokenServices] Refreshing Token Attempt: %s ', ++this.counter)
       this.kc!.updateToken(-1)
-        .then(refreshed => {
+        .then((refreshed) => {
           if (refreshed) {
             console.log('Token successfully refreshed')
             this.syncSessionStorage()

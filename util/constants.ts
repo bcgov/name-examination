@@ -16,37 +16,37 @@ export enum SessionStorageKeys {
     PprWebUrl = 'PPR_WEB_URL',
     SiteminderLogoutUrl = 'SITEMINDER_LOGOUT_URL'
   }
-  
-  export enum Account {
+
+export enum Account {
     ANONYMOUS = 'ANONYMOUS',
     PREMIUM = 'PREMIUM',
     BASIC = 'BASIC',
     SBC_STAFF = 'SBC_STAFF',
     STAFF = 'STAFF'
   }
-  
-  export enum IdpHint {
+
+export enum IdpHint {
     BCROS = 'bcros',
     IDIR = 'idir',
     BCSC = 'bcsc',
     BCEID = 'bceid'
   }
-  
-  export enum LoginSource {
+
+export enum LoginSource {
     BCROS = 'BCROS',
     IDIR = 'IDIR',
     BCSC = 'BCSC',
     BCEID = 'BCEID'
   }
-  
-  export enum Role {
+
+export enum Role {
     AccountHolder = 'account_holder',
     PublicUser = 'public_user',
     Staff = 'staff',
     GOVMAccountUser = 'gov_account_user'
   }
-  
-  export enum Pages {
+
+export enum Pages {
     HOME = 'home',
     USER_PROFILE = 'userprofile',
     ACCOUNT = 'account',
@@ -61,7 +61,7 @@ export enum SessionStorageKeys {
     ACCOUNT_SWITCHING = 'account-switching',
     REGISTRY_DASHBOARD = 'dashboard'
   }
-  
-  export const ALLOWED_URIS_FOR_PENDING_ORGS = ['setup-non-bcsc-account']
-  
-  export const ACCOUNT_ID = 'accountid'
+
+export const ALLOWED_URIS_FOR_PENDING_ORGS = ['setup-non-bcsc-account']
+
+export const ACCOUNT_ID = 'accountid'
