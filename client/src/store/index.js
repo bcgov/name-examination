@@ -111,7 +111,7 @@ export const actions = {
   },
   getpostgrescompNo({ commit, dispatch, state }) {
     const myToken = sessionStorage.getItem( 'KEYCLOAK_TOKEN' )
-    const url = '/api/v1/requests/queues/@me/oldest'
+    const url = '/api/v1/requests/queues/@me/oldest?priorityQueue=' + state.priorityQueue
     const vm = this
 
     dispatch( 'checkToken' )
@@ -2566,6 +2566,7 @@ export const mutations = {
     }
   },
 
+  priorityQueue:(state, payload) => state.priorityQueue = payload,
   setBaseURL: (state, payload) => state.baseURL = payload,
   mutateAllowWordClassificationModal: (state, payload) => state.allowWordClassificationModal = payload,
   userSettings: (state, payload) => state.userSettings = payload,
@@ -2818,6 +2819,7 @@ export const state = {
 
   baseURL:'',
   allowWordClassificationModal: true,
+  priorityQueue: true,
   showExaminationArea: true,
   userSettings: {
     searchColumns: ''
