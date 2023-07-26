@@ -116,7 +116,8 @@ class KeyCloakService {
             }
             redirectUrl = redirectUrl || `${window.location.origin}${process.env.VUE_APP_PATH}`
             if (siteminderLogoutUrl?.includes('http')) {
-              redirectUrl = `${siteminderLogoutUrl}?returl=${redirectUrl.replace(/(https?:\/\/)|(\/)+/g, '$1$2')}&retnow=1`
+              redirectUrl =
+               `${siteminderLogoutUrl}?returl=${redirectUrl.replace(/(https?:\/\/)|(\/)+/g, '$1$2')}&retnow=1`
             }
             this.kc && this.kc.logout({ redirectUri: redirectUrl })
               .then(() => {
@@ -139,7 +140,7 @@ class KeyCloakService {
       return
     }
 
-    let tokenholder = null
+    let tokenholder: number
     // if isForceRefresh is true, send -1 in updateToken to force update the token
     if (isForceRefresh) {
       tokenholder = -1

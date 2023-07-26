@@ -41,6 +41,7 @@
               <svg-icon
                 type="mdi"
                 :path="path"
+                class="h-6"
               />
             </div>
             <input
@@ -62,7 +63,6 @@
             <svg-icon
               type="mdi"
               :path="path"
-              class="h-7 w-7"
             />
           </button>
         </form>
@@ -112,7 +112,7 @@
 </template>
 
 <script setup>
-import SvgIcon from '@jamescoyle/vue-icon'
+import '@jamescoyle/vue-icon'
 import { mdiMagnify } from '@mdi/js'
 import { useAuthStore } from '~/store/auth'
 import KeycloakService from '~/public/keycloak/keycloak'
@@ -147,7 +147,7 @@ const logout = async () => {
   if (!authModule.isAuthenticated) return
 
   try {
-    await KeycloakService.logout('http://localhost:8080/')
+    await KeycloakService.logout(import.meta.env.VITE_APP_BASE_URL)
   } catch (err) {
     if (err?.message !== 'LOGOUT FAILED') {
       console.error(err)
