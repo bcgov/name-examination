@@ -64,13 +64,18 @@
                 <div>
                   <v-switch class="mt-2 mx-4" v-model="allowWordClassificationModal" label="Classify Words" />
                 </div>
+                <div>
+                  <v-switch class="mt-2 mx-4" v-model="localPriorityQueue" label="Priority Queue"/>
+                </div>
               </div>
             </v-form>
-            <div id="userid" class="ml-1 mt-auto mb-auto fv-ital">{{ userId }}</div>
             <div class="vertical-divider"/>
+            <div>
+            <div id="userid" class="ml-1 mt-auto mb-auto fv-ital">{{ userId }}</div>
             <a class="mt-auto mb-auto"
                id="header-logout-button"
                @click="onLogout">Log Out</a>
+            </div>
           </template>
           <router-link v-if="!auth"
                        class="mt-auto mb-auto"
@@ -122,6 +127,14 @@
       userId() {
         return this.$store.getters.userId
       },
+      localPriorityQueue: {
+        get() {
+          return this.$store.state.priorityQueue
+        },
+        set(value) {
+          this.$store.commit('priorityQueue', value)
+        }
+      }
     },
     watch: {
       path(newPath) {
