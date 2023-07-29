@@ -56,41 +56,15 @@
         </div>
       </div>
 
-      <div class="stats-box mr-20 shadow-lg">
-        <div class="mb-6 ml-2 mt-2">
-          Current status on {{ status.todayStr }}
-        </div>
-        <div class="my-6 ml-2">
-          Not Examined:
-          <span class="font-bold">{{ status.notExaminedNum }}</span>
-        </div>
-        <div class="mb-2 ml-2 mt-6">
-          Hold: <span class="font-bold">{{ status.holdNum }}</span>
-        </div>
-      </div>
+      <StatsBox />
     </div>
   </div>
 </template>
 
 <script setup>
-import { Fetchstatus } from '~/store/fetchstatus'
-import { useAuthStore } from '~/store/auth'
-import { watch } from 'vue'
 
-const status = Fetchstatus()
+import { useAuthStore } from '~/store/auth'
+import StatsBox from '~/components/StatsBox.vue'
 const authModule = useAuthStore()
 
-// Watch for changes in the authentication status
-watch(
-  () => authModule.isAuthenticated,
-  (newVal) => {
-    // newVal is the new authentication status
-    // oldVal is the old authentication status
-    if (newVal === true) {
-      // if user is authenticated
-      status.getHoldedNum()
-      status.getExaminedNum()
-    }
-  }
-)
 </script>
