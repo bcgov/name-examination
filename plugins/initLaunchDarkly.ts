@@ -1,3 +1,4 @@
+/* eslint-disable valid-jsdoc */
 import { initialize, LDClient, LDFlagSet, LDOptions, LDUser } from 'launchdarkly-js-client-sdk'
 
 // get rid of "element implicitly has an 'any' type..."
@@ -7,7 +8,7 @@ declare const window: any
  * Default flag values when LD is not available.
  */
 const defaultFlagSet: LDFlagSet = {
-  'banner-text': '', // by default, there is no banner text
+  'banner-text': '' // by default, there is no banner text
 }
 
 /**
@@ -71,7 +72,7 @@ async function UpdateLdUser (
 /**
  * A method that gets the value of the specified feature flag.
  * @param name the name of the feature flag
- * @returns the flag value/variation, or undefined if the flag is not found
+ * @return the flag value/variation, or undefined if the flag is not found
  */
 function GetFeatureFlag (name: string): any {
   return ldClient ? ldClient.variation(name) : defaultFlagSet[name]

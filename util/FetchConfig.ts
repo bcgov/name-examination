@@ -1,13 +1,10 @@
-/**
- * Fetches config from environment and API.
- * @return A promise to get & set session storage keys with appropriate values.
- */
+/* eslint-disable require-jsdoc */
 export default async function fetchConfig (): Promise<any> {
   // get config from environment
   const origin: string = window.location.origin
   const windowLocationPathname: string = window.location.pathname // eg, /basePath/...
   const windowLocationOrigin: string = window.location.origin // eg, http://localhost:8080
-  const windowLocationSearch: string = window.location.search
+  // const windowLocationSearch: string = window.location.search
 
   if (!origin || !windowLocationPathname || !windowLocationOrigin) {
     return Promise.reject(new Error('Missing environment variables'))

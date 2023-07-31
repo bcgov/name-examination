@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon'
+import { defineStore } from 'pinia'
 
 export const Fetchstatus = defineStore({
   id: 'status',

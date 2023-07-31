@@ -10,6 +10,7 @@ import { decodeKCToken } from '~/util/common-util'
 class KeyCloakService {
   private kc: Keycloak | undefined
   private parsedToken: any
+  // eslint-disable-next-line no-use-before-define
   private static instance: KeyCloakService
   private store: Store<any> | null = null
   private counter = 0

@@ -1,5 +1,5 @@
+/* eslint-disable valid-jsdoc */
 import { Routes } from '~/enums/routes'
-
 const LOGOUT_URL = 'LOGOUT_URL'
 const LOGIN_URL = 'LOGIN_URL'
 const SITEMINDER_LOGOUT_URL = 'SITEMINDER_LOGOUT_URL'

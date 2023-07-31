@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 import { SessionStorageKeys } from './constants'
 import { trimTrailingSlashURL } from './common-util'
 

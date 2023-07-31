@@ -1,3 +1,4 @@
+/* eslint-disable valid-jsdoc */
 import { initialize, LDClient, LDFlagSet, LDOptions, LDUser } from 'launchdarkly-js-client-sdk'
 
 // get rid of "element implicitly has an 'any' type..."
