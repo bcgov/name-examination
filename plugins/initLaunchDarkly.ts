@@ -1,12 +1,13 @@
 /* eslint-disable valid-jsdoc */
 import { initLdClient } from '../util/feature-flags'
 import { SessionStorageKeys } from '../util/constants'
-
+// get rid of "element implicitly has an 'any' type..."
+declare const window: any
 /**
  * This plugin function is called before instantiating the root Vue.js application.
  * It initializes LaunchDarkly.
  */
- export default async function (context) {
+export default async function (context: { $config: { ldClientId: string } }) {
   // save id to window object for init function
   window['ldClientId'] = context.$config.ldClientId
 

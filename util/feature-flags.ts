@@ -19,7 +19,7 @@ let ldClient: LDClient
 /**
  * An async method that initializes the Launch Darkly client.
  */
-export async function initLdClient (): Promise<void> {
+export async function initLdClient (): Promise<LDClient> {
   const envKey: string = window['ldClientId']
 
   if (envKey) {
@@ -46,6 +46,8 @@ export async function initLdClient (): Promise<void> {
       // NB: LD logs its own errors
     }
   }
+  // return the ldClient
+  return ldClient
 }
 
 /**
