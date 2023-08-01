@@ -1,4 +1,4 @@
-<template id="AppHeader">
+<template id="app-header">
   <nav class="flex h-20 bg-white text-lg font-medium shadow-2xl">
     <div class="flex min-w-full">
       <div class="image">
