@@ -1,4 +1,4 @@
-<template>
+<template id="StatsBox">
   <div class="stats-box mr-20 shadow-lg">
     <div class="mb-6 ml-2 mt-2">
       Current status on

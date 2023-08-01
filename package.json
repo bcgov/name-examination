@@ -8,7 +8,7 @@
     "format": "prettier --write .",
     "format-check": "prettier --check .",
     "lint": "eslint .",
-    "test": "vitest --config vite.config.test.ts --environment jsdom"
+    "test": "vitest --config vite.config.test.ts"
   },
   "devDependencies": {
     "@nuxt/content": "^2.6.0",

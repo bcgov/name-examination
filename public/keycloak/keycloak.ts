@@ -230,7 +230,8 @@ class KeyCloakService {
     let refreshTokenExpiresIn = -1
     // check if refresh token is still valid . Or else clear all timers and throw errors
     if (this.kc && this.kc.timeSkew !== undefined && this.kc.refreshTokenParsed) {
-      refreshTokenExpiresIn = this.kc.refreshTokenParsed['exp']! - Math.ceil(new Date().getTime() / 1000) +
+      refreshTokenExpiresIn = (this.kc.refreshTokenParsed['exp'] ?? 0) -
+      Math.ceil(new Date().getTime() / 1000) +
       this.kc.timeSkew
     }
     if (refreshTokenExpiresIn < 0) {
@@ -247,7 +248,7 @@ class KeyCloakService {
     console.info('[TokenServices] Token Refresh Scheduled in %s Seconds', (refreshInMilliSeconds / 1000))
     this.timerId = setTimeout(() => {
       console.log('[TokenServices] Refreshing Token Attempt: %s ', ++this.counter)
-      this.kc!.updateToken(-1)
+      this.kc?.updateToken(-1)
         .then((refreshed) => {
           if (refreshed) {
             console.log('Token successfully refreshed')

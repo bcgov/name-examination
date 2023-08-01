@@ -1,4 +1,4 @@
-<template>
+<template id="AppHeader">
   <nav class="flex h-20 bg-white text-lg font-medium shadow-2xl">
     <div class="flex min-w-full">
       <div class="image">
@@ -117,8 +117,9 @@
 
         <div class="mx-10 mt-7 text-blue-800">
           <a
+            id="logout-button"
             href="#"
-            @click="logout"
+            @click="logout()"
           >Log Out</a>
         </div>
       </div>
@@ -129,7 +130,7 @@
       >
         <a
           href="#"
-          @click="login"
+          @click="login()"
         >Login</a>
       </div>
     </div>
@@ -139,13 +140,14 @@
 <script setup>
 import '@jamescoyle/vue-icon'
 import { mdiMagnify } from '@mdi/js'
-import { useAuthStore } from '~/store/auth'
-import KeycloakService from '~/public/keycloak/keycloak'
+import { useAuthStore } from '../store/auth'
+import KeycloakService from '../public/keycloak/keycloak'
+/* eslint-disable require-jsdoc */
 
 const authModule = useAuthStore()
 const path = mdiMagnify
 
-const login = async () => {
+async function login () {
   // If the user is already authenticated, do nothing
   if (authModule.isAuthenticated) return
 
@@ -167,7 +169,7 @@ const login = async () => {
   }
 }
 
-const logout = async () => {
+async function logout () {
   // If the user is already logged out, do nothing
   if (!authModule.isAuthenticated) return
 
