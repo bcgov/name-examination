@@ -1,10 +1,10 @@
 import Keycloak, { KeycloakInitOptions, KeycloakLoginOptions } from 'keycloak-js'
-import { KCUserProfile } from '~/public/keycloak/KCUserProfile'
-import ConfigHelper from '~/util/config-helper'
-import { SessionStorageKeys } from '~/util/constants'
+import { KCUserProfile } from '../../public/keycloak/KCUserProfile'
+import ConfigHelper from '../../util/config-helper'
+import { SessionStorageKeys } from '../../util/constants'
 import { Store } from 'pinia'
-import { useAuthStore } from '~/store/auth'
-import { decodeKCToken } from '~/util/common-util'
+import { useAuthStore } from '../../store/auth'
+import { decodeKCToken } from '../../util/common-util'
 
 /* eslint-disable require-jsdoc */
 class KeyCloakService {

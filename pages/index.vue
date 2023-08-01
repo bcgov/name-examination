@@ -4,7 +4,7 @@
       v-if="!authModule.isAuthenticated"
       class="relative left-72 top-28 text-2xl font-semibold text-gray-800"
     >
-      <span>Your authorization is missing or has expired. Please login.</span>
+      <p>Your authorization is missing or has expired. Please login.</p>
     </div>
 
     <div
@@ -63,8 +63,8 @@
 
 <script setup>
 
-import { useAuthStore } from '~/store/auth'
-import StatsBox from '~/components/StatsBox.vue'
+import { useAuthStore } from '../store/auth'
+import StatsBox from '../components/StatsBox.vue'
 const authModule = useAuthStore()
 
 </script>

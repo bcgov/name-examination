@@ -69,8 +69,12 @@
 
         <span class="mx-10 mt-7 underline">Stats</span>
 
-        <label class="relative mt-2 inline-flex cursor-pointer items-center">
+        <label
+          for="classifyWords"
+          class="relative mt-2 inline-flex cursor-pointer items-center"
+        >
           <input
+            id="classifyWords"
             type="checkbox"
             value=""
             class="peer sr-only"
@@ -86,8 +90,12 @@
           <span class="ml-3 font-medium text-gray-500 dark:text-gray-300">Classify Words</span>
         </label>
 
-        <label class="relative mt-2 inline-flex cursor-pointer items-center ml-5">
+        <label
+          for="priorityQueue"
+          class="relative mt-2 inline-flex cursor-pointer items-center ml-5"
+        >
           <input
+            id="priorityQueue"
             type="checkbox"
             value=""
             class="peer sr-only"

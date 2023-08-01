@@ -1,6 +1,7 @@
-import ConfigHelper from '~/util/config-helper'
-import KeycloakServices from '~/public/keycloak/keycloak'
-import { SessionStorageKeys } from '~/util/constants'
+import ConfigHelper from '../util/config-helper'
+import KeycloakServices from '../public/keycloak/keycloak'
+import { SessionStorageKeys } from '../util/constants'
+import { defineStore } from 'pinia'
 
 interface AuthState {
   token: string;
