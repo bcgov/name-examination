@@ -1,5 +1,5 @@
 import { beforeEach, describe, it, expect, vitest } from 'vitest'
-import LandingPage from '../pages/index.vue'
+import LandingPage from '../pages/LandingPage.vue'
 import { mount } from '@vue/test-utils'
 import { createTestingPinia } from '@pinia/testing'
 import { useAuthStore } from '../store/auth'
