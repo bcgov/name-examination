@@ -1,5 +1,5 @@
 import KeycloakService from '~/public/keycloak/keycloak'
-import { isSigningIn } from '../util/utilities'
+import { isSigninRoute } from '../util/misc-helpers'
 import ConfigHelper from '../util/config-helper'
 import { SessionStorageKeys } from '../util/constants'
 import { useAuthStore } from '../store/auth'
@@ -21,7 +21,7 @@ export default async function () {
   await KeycloakService.setKeycloakConfigUrl(keycloakConfig)
 
   // Auto authenticate user once they are redirected from BC regisrty login page after enter credentials
-  if (isSigningIn()) {
+  if (isSigninRoute()) {
     // Initialize token service which will do a check-sso to initiate session
     await KeycloakService.initializeToken(authModule,
       true,

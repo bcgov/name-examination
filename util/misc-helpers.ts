@@ -6,8 +6,11 @@ const SITEMINDER_LOGOUT_URL = 'SITEMINDER_LOGOUT_URL'
 const REGISTRY_HOME_URL = 'REGISTRY_HOME_URL'
 
 /** Returns true if current route is Signin. */
-export function isSigninRoute (path = window.location.pathname): boolean {
-  return path.startsWith(Routes.SIGNIN)
+export function isSigninRoute (): boolean {
+  const path = window.location.pathname
+  const hashFragment = window.location.hash
+  return path.includes('/signin') || path.includes('/signin-redirect') || path.includes('/signin-redirect-full') ||
+  hashFragment.includes('#state')
 }
 
 /** Returns true if current route is Signout. */
