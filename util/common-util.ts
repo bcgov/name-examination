@@ -1,3 +1,5 @@
+/* eslint-disable require-jsdoc */
+/* eslint-disable valid-jsdoc */
 import ConfigHelper from './config-helper'
 import { SessionStorageKeys, ACCOUNT_ID } from './constants'
 

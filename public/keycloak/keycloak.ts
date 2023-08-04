@@ -1,15 +1,16 @@
-import Keycloak, { KeycloakInitOptions, KeycloakLoginOptions, KeycloakTokenParsed } from 'keycloak-js'
-import { KCUserProfile } from '~/public/keycloak/KCUserProfile' 
-import ConfigHelper from '~/util/config-helper'
-import { SessionStorageKeys } from '~/util/constants'
+import Keycloak, { KeycloakInitOptions, KeycloakLoginOptions } from 'keycloak-js'
+import { KCUserProfile } from '../../public/keycloak/KCUserProfile'
+import ConfigHelper from '../../util/config-helper'
+import { SessionStorageKeys } from '../../util/constants'
 import { Store } from 'pinia'
-import { getModule } from 'vuex-module-decorators'
-import AuthModule from '../store/modules/auth'
-import { decodeKCToken } from '~/util/common-util'
+import { useAuthStore } from '../../store/auth'
+import { decodeKCToken } from '../../util/common-util'
 
+/* eslint-disable require-jsdoc */
 class KeyCloakService {
   private kc: Keycloak | undefined
   private parsedToken: any
+  // eslint-disable-next-line no-use-before-define
   private static instance: KeyCloakService
   private store: Store<any> | null = null
   private counter = 0
@@ -62,15 +63,14 @@ class KeyCloakService {
     if (!this.store) {
       return
     }
-
-    const authModule = getModule(AuthModule, this.store)
-    authModule.setKCToken(this.kc?.token || '')
-    authModule.setIDToken(this.kc?.idToken || '')
-    authModule.setRefreshToken(this.kc?.refreshToken || '')
+    const authStore = useAuthStore() // Now you have access to the AuthModule store
+    authStore.setKCToken(this.kc?.token || '')
+    authStore.setIDToken(this.kc?.idToken || '')
+    authStore.setRefreshToken(this.kc?.refreshToken || '')
 
     const userInfo = this.getUserInfo()
-    authModule.setKCGuid(userInfo?.keycloakGuid || '')
-    authModule.setLoginSource(userInfo?.loginSource || '')
+    authStore.setKCGuid(userInfo?.keycloakGuid || '')
+    authStore.setLoginSource(userInfo?.loginSource || '')
 
     await this.syncSessionAndScheduleTokenRefresh()
   }
@@ -92,7 +92,7 @@ class KeyCloakService {
   }
 
   async logout (redirectUrl?: string) {
-    let token = ConfigHelper.getFromSession(SessionStorageKeys.KeyCloakToken) || undefined
+    const token = ConfigHelper.getFromSession(SessionStorageKeys.KeyCloakToken) || undefined
     if (token) {
       this.kc = new Keycloak(ConfigHelper.getKeycloakConfigUrl())
       const kcOptions :KeycloakInitOptions = {
@@ -111,23 +111,24 @@ class KeyCloakService {
       ConfigHelper.addToSession(SessionStorageKeys.PreventStorageSync, true)
       return new Promise<void>((resolve, reject) => {
         this.kc && this.kc.init(kcOptions)
-          .then(authenticated => {
+          .then((authenticated) => {
             if (!authenticated) {
               resolve()
             }
             redirectUrl = redirectUrl || `${window.location.origin}${process.env.VUE_APP_PATH}`
             if (siteminderLogoutUrl?.includes('http')) {
-              redirectUrl = `${siteminderLogoutUrl}?returl=${redirectUrl.replace(/(https?:\/\/)|(\/)+/g, '$1$2')}&retnow=1`
+              redirectUrl =
+               `${siteminderLogoutUrl}?returl=${redirectUrl.replace(/(https?:\/\/)|(\/)+/g, '$1$2')}&retnow=1`
             }
             this.kc && this.kc.logout({ redirectUri: redirectUrl })
               .then(() => {
                 resolve()
               })
-              .catch(error => {
+              .catch((error) => {
                 reject(error)
               })
           })
-          .catch(error => {
+          .catch((error) => {
             reject(error)
           })
       })
@@ -139,11 +140,22 @@ class KeyCloakService {
     if (!isForceRefresh && (!this.kc?.tokenParsed?.exp || !this.kc.timeSkew)) {
       return
     }
+
+    let tokenholder: number
     // if isForceRefresh is true, send -1 in updateToken to force update the token
-    const tokenExpiresIn = (isForceRefresh) ? -1 : this.kc.tokenParsed.exp - Math.ceil(new Date().getTime() / 1000) + this.kc.timeSkew + 100
+    if (isForceRefresh) {
+      tokenholder = -1
+    } else {
+      const tokenExp = this.kc?.tokenParsed?.exp || 0
+      const currentTime = Math.ceil(new Date().getTime() / 1000)
+      const timeSkew = this.kc?.tokenParsed?.timeSkew || 0
+      tokenholder = tokenExp - currentTime + timeSkew + 100
+    }
+    const tokenExpiresIn = tokenholder
+
     if (this.kc) {
       this.kc.updateToken(tokenExpiresIn)
-        .then(refreshed => {
+        .then((refreshed) => {
           if (refreshed) {
             this.initSession()
           }
@@ -160,15 +172,17 @@ class KeyCloakService {
   verifyRoles (allowedRoles:[], disabledRoles:[]) {
     let isAuthorized = false
     if (allowedRoles || disabledRoles) {
-      let userInfo = this.getUserInfo()
-      isAuthorized = allowedRoles ? allowedRoles.some(role => userInfo.roles.includes(role)) : !disabledRoles.some(role => userInfo.roles.includes(role))
+      const userInfo = this.getUserInfo()
+      isAuthorized = allowedRoles
+        ? allowedRoles.some((role) => userInfo.roles.includes(role))
+        : !disabledRoles.some((role) => userInfo.roles.includes(role))
     } else {
       isAuthorized = true
     }
     return isAuthorized
   }
 
-  async initializeToken (store?: any, isScheduleRefresh: boolean = true, forceLogin: boolean = false) {
+  async initializeToken (store?: any, isScheduleRefresh = true, forceLogin = false) {
     this.store = store
     const kcOptions: KeycloakInitOptions = {
       onLoad: forceLogin ? 'login-required' : 'check-sso',
@@ -184,17 +198,17 @@ class KeyCloakService {
       this.kc = new Keycloak(ConfigHelper.getKeycloakConfigUrl())
       ConfigHelper.addToSession(SessionStorageKeys.SessionSynced, false)
       this.kc.init(kcOptions)
-        .then(authenticated => {
+        .then((authenticated) => {
           console.info('[TokenServices] is User Authenticated?: Syncing ' + authenticated)
           resolve(this.syncSessionAndScheduleTokenRefresh(isScheduleRefresh))
         })
-        .catch(error => {
+        .catch((error) => {
           reject(new Error('Could not Initialize KC' + error))
         })
     })
   }
 
-  async syncSessionAndScheduleTokenRefresh (isScheduleRefresh: boolean = true) {
+  async syncSessionAndScheduleTokenRefresh (isScheduleRefresh = true) {
     if (this.kc?.authenticated) {
       this.syncSessionStorage()
       if (isScheduleRefresh) {
@@ -208,7 +222,7 @@ class KeyCloakService {
   }
 
   scheduleRefreshTimer (refreshEarlyTime = 0) {
-    let refreshEarlyTimeinMilliseconds = Math.max(this.REFRESH_ATTEMPT_INTERVAL, refreshEarlyTime) * 1000
+    const refreshEarlyTimeinMilliseconds = Math.max(this.REFRESH_ATTEMPT_INTERVAL, refreshEarlyTime) * 1000
     this.scheduleRefreshToken(refreshEarlyTimeinMilliseconds)
   }
 
@@ -216,7 +230,9 @@ class KeyCloakService {
     let refreshTokenExpiresIn = -1
     // check if refresh token is still valid . Or else clear all timers and throw errors
     if (this.kc && this.kc.timeSkew !== undefined && this.kc.refreshTokenParsed) {
-      refreshTokenExpiresIn = this.kc.refreshTokenParsed['exp']! - Math.ceil(new Date().getTime() / 1000) + this.kc.timeSkew
+      refreshTokenExpiresIn = (this.kc.refreshTokenParsed['exp'] ?? 0) -
+      Math.ceil(new Date().getTime() / 1000) +
+      this.kc.timeSkew
     }
     if (refreshTokenExpiresIn < 0) {
       throw new Error('Refresh Token Expired. No more token refreshes')
@@ -228,12 +244,12 @@ class KeyCloakService {
     if (expiresIn < 0) {
       throw new Error('Refresh Token Expired. No more token refreshes')
     }
-    let refreshInMilliSeconds = (expiresIn * 1000) - refreshEarlyTimeinMilliseconds // in milliseconds
+    const refreshInMilliSeconds = (expiresIn * 1000) - refreshEarlyTimeinMilliseconds // in milliseconds
     console.info('[TokenServices] Token Refresh Scheduled in %s Seconds', (refreshInMilliSeconds / 1000))
     this.timerId = setTimeout(() => {
       console.log('[TokenServices] Refreshing Token Attempt: %s ', ++this.counter)
-      this.kc!.updateToken(-1)
-        .then(refreshed => {
+      this.kc?.updateToken(-1)
+        .then((refreshed) => {
           if (refreshed) {
             console.log('Token successfully refreshed')
             this.syncSessionStorage()
@@ -265,8 +281,8 @@ class KeyCloakService {
 
   private async clearSession () {
     if (this.store) {
-      const authModule = getModule(AuthModule, this.store)
-      authModule.clearSession()
+      const authStore = useAuthStore() // Now you have access to the AuthModule store
+      authStore.clearSession()
     }
     ConfigHelper.removeFromSession(SessionStorageKeys.KeyCloakToken)
     ConfigHelper.removeFromSession(SessionStorageKeys.KeyCloakIdToken)

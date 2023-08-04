@@ -4,3 +4,13 @@
 @import "tailwindcss/utilities";
 
 // Add your custom SCSS code here
+.divider{
+  border-left: 1px solid gray;
+  height: 45px; /* Adjust the height as needed */
+  margin-top: 1em;
+}
+
+.stats-box{
+  border: 1px solid silver;
+  background-color:white;
+}
