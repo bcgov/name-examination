@@ -16,7 +16,7 @@ steps:
   - name: node:16.14.2
     entrypoint: npm
     env:
-      - 'VUE_APP_NAMEEXAMINATION_LD_CLIENT_ID=$VUE_APP_NAMEEXAMINATION_LD_CLIENT_ID'
+      - 'VUE_APP_NAMEEXAMINATION_LD_CLIENT_ID=$_VUE_APP_NAMEEXAMINATION_LD_CLIENT_ID'
     args: ['--openssl-legacy-provider', 'run', 'build']
 
   #
