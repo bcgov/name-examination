@@ -1,3 +1,4 @@
+<!--eslint-disable -->
 <template>
   <div class="w-10/12">
     <div
@@ -62,6 +63,7 @@
 </template>
 
 <script setup>
+/* eslint-disable vue/multi-word-component-names */
 
 import { useAuthStore } from '../store/auth'
 import StatsBox from '../components/StatsBox.vue'
