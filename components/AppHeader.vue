@@ -24,7 +24,7 @@
         <a
           href=""
           class="text-2xl"
-        ><nuxt-link to="/search">Search</nuxt-link></a>
+        ><nuxt-link to="/SearchPage">Search</nuxt-link></a>
       </div>
 
       <div
