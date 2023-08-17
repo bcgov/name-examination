@@ -12,7 +12,7 @@
         class="text-blue-800 mr-5 font-semibold align-middle hover:text-blue-900 transition duration-150"
         @click="clearFilters()"
       >Clear Filters</a>
-      <div class="relative columnsDropdown">
+      <div class="relative columnsDropdown z-10">
         <button
           class="transition ease-in-out delay-120 hover:-translate-y-2 hover:scale-115 duration-300
           px-4 py-2 border border-gray-300 bg-white text-black w-60 ml-5 mt-1"
@@ -20,7 +20,7 @@
         >
           <span class="mr-2">Columns to Show</span>
           <font-awesome-icon
-            :icon="['fas', columnsDropdown ? 'arrow-up' : 'arrow-down']"
+            :icon="['fas', 'arrow-down']"
             :class="columnsDropdown ? 'rotate-180' : 'rotate-0'"
             class=""
           />
@@ -46,8 +46,8 @@
           </div>
         </transition>
       </div>
-      <div class="text-lg ml-auto mr-10 flex">
-        <span class="align-middle ml-10 font-semibold mt-3">Results: {{ results }}</span>
+      <div class="text-lg ml-auto mr-10 flex z-10">
+        <span class="align-middle ml-10 font-semibold mt-3">Results: {{ numResults }}</span>
         <div class="relative displayDropdown ml-5">
           <button
             class="transition ease-in-out delay-120 hover:-translate-y-2 hover:scale-115 duration-300
@@ -56,7 +56,7 @@
           >
             <span class="mr-2">Display</span>
             <font-awesome-icon
-              :icon="['fas', displayDropdown ? 'arrow-up' : 'arrow-down']"
+              :icon="['fas', 'arrow-down']"
               :class="displayDropdown ? 'rotate-180' : 'rotate-0'"
             />
           </button>
@@ -82,7 +82,7 @@
           </transition>
         </div>
 
-        <div class="relative pageDropdown ml-5">
+        <div class="relative pageDropdown ml-5 z-10">
           <button
             class="transition ease-in-out delay-120 hover:-translate-y-2 hover:scale-115 duration-300
             px-4 py-2 border border-gray-300 bg-white text-black w-60 mt-1"
@@ -90,7 +90,7 @@
           >
             <span class="mr-2">Page</span>
             <font-awesome-icon
-              :icon="['fas', pageDropdown ? 'arrow-up' : 'arrow-down']"
+              :icon="['fas', 'arrow-down']"
               :class="pageDropdown ? 'rotate-180' : 'rotate-0'"
             />
           </button>
@@ -118,25 +118,26 @@
       </div>
       <div class="relative ml-5 mr-10 mt-1 flex space-x-2">
         <button
-          class="w-20 transition ease-in-out delay-120 hover:-translate-y-2 hover:scale-115 duration-300 px-4 py-2
-          text-white bg-blue-700 border
-          border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300
-          dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 rounded-md"
-          @click="previousPage"
+          class="bcgovblue-btn w-20 transition ease-in-out delay-120 hover:-translate-y-2
+   hover:scale-115 duration-300 px-4 py-2 text-white border
+   rounded-lg focus:ring-4 focus:outline-none
+   focus:ring-amber-300 dark:bg-amber-200 dark:hover:bg-amber-400 dark:focus:ring-amber-200"
+          @click="previousPage()"
         >
           <font-awesome-icon :icon="['fas', 'arrow-left']" />
         </button>
         <button
-          class="w-20 transition ease-in-out delay-120 hover:-translate-y-2 hover:scale-115 duration-300 px-4 py-2
-          text-white bg-blue-700 border
-          border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300
-          dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 rounded-md"
-          @click="nextPage"
+          class="bcgovblue-btn w-20 transition ease-in-out delay-120 hover:-translate-y-2
+   hover:scale-115 duration-300 px-4 py-2 text-white border
+   rounded-lg focus:ring-4 focus:outline-none
+   focus:ring-amber-300 dark:bg-amber-200 dark:hover:bg-amber-400 dark:focus:ring-amber-200"
+          @click="nextPage()"
         >
           <font-awesome-icon :icon="['fas', 'arrow-right']" />
         </button>
       </div>
     </div>
+    <SearchBox class="mx-10 mt-14 search-box" />
   </div>
 </template>
 
@@ -144,26 +145,62 @@
 import { faArrowDown, faArrowUp, faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { useAuthStore } from '../store/auth'
-import { ref, onMounted, onUnmounted, computed } from 'vue'
-
-const authModule = useAuthStore()
+import { useSearchFilters } from '../store/searchfilters'
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
+import SearchBox from '../components/SearchBox.vue'
 library.add(faArrowDown, faArrowUp, faArrowRight, faArrowLeft)
 
+const authModule = useAuthStore()
+const filters = useSearchFilters()
+
 // reactive values
+
+// Ref for which dropdowns to display
 const columnsDropdown = ref(false)
 const displayDropdown = ref(false)
 const pageDropdown = ref(false)
-const selectedDisplay = ref(10)
-const selectedPage = ref(1)
-// all columns selected by defualt
-const selectedColumns = ref(['Status', 'LastModifiedBy', 'NameRequestNumber', 'Names', 'ApplicantFirstName',
-  'ApplicantLastName', 'NatureOfBusiness', 'ConsentRequired', 'Priority', 'ClientNotification', 'Submitted',
-  'LastUpdate', 'LastComment'])
+// Values selected form the dropdown, also being updated in the pinia store
+const selectedColumns = ref(filters.selectedColumns)
+const selectedDisplay = ref(filters.selectedDisplay)
+const selectedPage = ref(filters.selectedPage)
+
+// Watch for changes in selected display, page, and columns to re-render table accordingly
+watch(
+  [selectedColumns, selectedDisplay, selectedPage],
+  async ([newSelectedColumns, newSelectedDisplay, newSelectedPage],
+    [prevSelectedColumns, prevSelectedDisplay, prevSelectedPage]) => {
+    if (newSelectedColumns !== prevSelectedColumns) {
+      filters.setSelectedColumns(newSelectedColumns)
+    }
+
+    if (newSelectedDisplay !== prevSelectedDisplay) {
+      filters.setSelectedDisplay(newSelectedDisplay)
+      await filters.getRows()
+    }
+
+    if (newSelectedPage !== prevSelectedPage) {
+      filters.setSelectedPage(newSelectedPage)
+      await filters.getRows()
+    }
+  }
+)
+// page change functions
+const previousPage = () => {
+  if (selectedPage.value > 1) {
+    selectedPage.value--
+  }
+}
+
+const nextPage = () => {
+  if (selectedPage.value < pageOptions.value) {
+    selectedPage.value++
+  }
+}
 
 // dropdown option values
 const displayOptions = [5, 10, 20, 50, 100]
-const results = ref(1380) // need to set this based on actual results from api
-const pageOptions = computed(() => Math.ceil(results.value / selectedDisplay.value))
+const numResults = computed(() => filters.resultNum) // need to set this based on results from api
+const pageOptions = computed(() => Math.ceil(numResults.value / selectedDisplay.value)) // last page number
 const columns = [
   { name: 'Status', key: 'Status' },
   { name: 'LastModifiedBy', key: 'Modified By' },
@@ -182,15 +219,14 @@ const columns = [
 
 // clear filters i.e return to orignal ref values
 
-const clearFilters = () => {
-  columnsDropdown.value = false
-  displayDropdown.value = false
-  pageDropdown.value = false
+const clearFilters = async () => {
   selectedDisplay.value = 10
   selectedPage.value = 1
   selectedColumns.value = ['Status', 'LastModifiedBy', 'NameRequestNumber', 'Names', 'ApplicantFirstName',
     'ApplicantLastName', 'NatureOfBusiness', 'ConsentRequired', 'Priority', 'ClientNotification', 'Submitted',
     'LastUpdate', 'LastComment']
+  filters.resetFilters()
+  await filters.getRows()
 }
 
 // to close dropdown when click triggered outside of it OR when it's itself clicked
@@ -220,7 +256,7 @@ onUnmounted(() => {
   })
 })
 
-// not authenticated? go back to homepage
+// not authenticated? go back to loginpage
 
 if (!authModule.isAuthenticated) {
   window.location.href = '/'
@@ -251,6 +287,16 @@ if (!authModule.isAuthenticated) {
 .rotate-0 {
   transition: transform 0.3s;
   transform: rotate(0deg);
+}
+
+.search-box{
+  max-height: 60rem;
+}
+.bcgovblue-btn {
+  background-color: #003366;
+  &:hover {
+    background-color: #fcba19;
+  }
 }
 </style>
 

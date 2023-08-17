@@ -1,4 +1,6 @@
 {
+  "name": "name-examination",
+  "version": "1.2.0",
   "private": true,
   "scripts": {
     "build": "nuxt build",
@@ -7,7 +9,7 @@
     "preview": "nuxt preview",
     "format": "prettier --write .",
     "format-check": "prettier --check .",
-    "lint": "eslint .",
+    "lint": "eslint",
     "test": "vitest --config vite.config.test.ts"
   },
   "devDependencies": {

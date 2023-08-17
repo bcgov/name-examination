@@ -56,14 +56,16 @@
           </div>
           <button
             type="submit"
-            class="p-2.5 ml-3 h-12 text-white bg-blue-700 rounded-lg border
-            border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300
-            dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            class="bcgovblue-btn p-2.5 ml-3 h-12 transition ease-in-out delay-120
+   hover:scale-115 duration-300 px-4 py-2 text-white border
+   rounded-lg focus:ring-4 focus:outline-none
+   focus:ring-amber-300 dark:bg-amber-200 dark:hover:bg-amber-400 dark:focus:ring-amber-200"
           >
             <svg-icon
               type="mdi"
               :path="path"
             />
+            Submit
           </button>
         </form>
 
@@ -183,3 +185,12 @@ async function logout () {
   }
 }
 </script>
+
+<style scoped>
+.bcgovblue-btn {
+  background-color: #003364;
+  &:hover {
+    background-color: #fcba19;
+  }
+}
+</style>
