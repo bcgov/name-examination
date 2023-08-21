@@ -27,11 +27,26 @@ export const useSearchFilters = defineStore({
   id: 'searchFilters',
   state: () => {
     return {
+      fixedColumns: [
+        { name: 'Status', key: 'Status' },
+        { name: 'LastModifiedBy', key: 'Modified By' },
+        { name: 'NameRequestNumber', key: 'NR Number' },
+        { name: 'Names', key: 'Names' },
+        { name: 'ApplicantFirstName', key: 'Applicant First Name' },
+        { name: 'ApplicantLastName', key: 'Applicant Last Name' },
+        { name: 'NatureOfBusiness', key: 'Nature Of Business' },
+        { name: 'ConsentRequired', key: 'Consent Required' },
+        { name: 'Priority', key: 'Priority' },
+        { name: 'ClientNotification', key: 'Notified' },
+        { name: 'Submitted', key: 'Submitted' },
+        { name: 'LastUpdate', key: 'Last Update' },
+        { name: 'LastComment', key: 'Last Comment' }
+      ],
       selectedColumns: ['Status', 'LastModifiedBy', 'NameRequestNumber', 'Names', 'ApplicantFirstName',
         'ApplicantLastName', 'NatureOfBusiness', 'ConsentRequired', 'Priority', 'ClientNotification', 'Submitted',
         'LastUpdate', 'LastComment'], // Initialize as default selected columns
-      rows: [], // Initialize rows array
-      resultNum: 0,
+      rows: [], // Initialize rows array, this is populated and displayed in the table
+      resultNum: 0, // Total number of results returned
       filters: {
         'Status': 'HOLD',
         'LastModifiedBy': '',
@@ -56,7 +71,7 @@ export const useSearchFilters = defineStore({
     formattedUrl ():string {
       // Convert filters object to query string format
       const consentOption = this.filters.ConsentRequired
-      const status = this.filters.Status === 'All' ? '' : this.filters.Status
+      const status = this.filters.Status === 'ALL' ? '' : this.filters.Status
       const priority = this.filters.Priority
       const notification = this.filters.ClientNotification
       const submitted = this.filters.Submitted
@@ -76,11 +91,15 @@ export const useSearchFilters = defineStore({
     setSelectedColumns (columns:any) {
       this.selectedColumns = columns
     },
-    setSelectedDisplay (display:number) {
+    async setSelectedDisplay (display:number) {
       this.selectedDisplay = display
+      // Go back to first page whenever diplay is changed
+      this.selectedPage = 1
+      await this.getRows()
     },
-    setSelectedPage (page: number) {
+    async setSelectedPage (page: number) {
       this.selectedPage = page
+      await this.getRows()
     },
     // This action updates the filters state
     updateFilters (newFilters: any) {
@@ -114,12 +133,16 @@ export const useSearchFilters = defineStore({
           LastComment: request.comments[request.comments.length - 1]?.comment
         }))
         this.isLoading = false // end loading
-        console.log(this.rows)
       } catch (error) {
         console.error(error)
       }
     },
-    resetFilters () {
+    async resetFilters () {
+      this.selectedDisplay = 10
+      this.selectedPage = 1
+      this.selectedColumns = ['Status', 'LastModifiedBy', 'NameRequestNumber', 'Names', 'ApplicantFirstName',
+        'ApplicantLastName', 'NatureOfBusiness', 'ConsentRequired', 'Priority', 'ClientNotification', 'Submitted',
+        'LastUpdate', 'LastComment']
       this.filters = {
         'Status': 'HOLD',
         'LastModifiedBy': '',
@@ -135,6 +158,7 @@ export const useSearchFilters = defineStore({
         'LastUpdate': 'All',
         'LastComment': 'All'
       }
+      await this.getRows()
     }
   }
 })

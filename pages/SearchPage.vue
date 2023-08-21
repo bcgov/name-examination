@@ -10,7 +10,7 @@
       <a
         href="#"
         class="text-blue-800 mr-5 font-semibold align-middle hover:text-blue-900 transition duration-150"
-        @click="clearFilters()"
+        @click="filters.resetFilters()"
       >Clear Filters</a>
       <div class="relative columnsDropdown z-10">
         <button
@@ -146,7 +146,7 @@ import { faArrowDown, faArrowUp, faArrowRight, faArrowLeft } from '@fortawesome/
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { useAuthStore } from '../store/auth'
 import { useSearchFilters } from '../store/searchfilters'
-import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import SearchBox from '../components/SearchBox.vue'
 library.add(faArrowDown, faArrowUp, faArrowRight, faArrowLeft)
 
@@ -155,35 +155,27 @@ const filters = useSearchFilters()
 
 // reactive values
 
-// Ref for which dropdowns to display
+// Ref for which dropdowns to toggle
 const columnsDropdown = ref(false)
 const displayDropdown = ref(false)
 const pageDropdown = ref(false)
+
 // Values selected form the dropdown, also being updated in the pinia store
-const selectedColumns = ref(filters.selectedColumns)
-const selectedDisplay = ref(filters.selectedDisplay)
-const selectedPage = ref(filters.selectedPage)
+const selectedColumns = computed({
+  get: () => filters.selectedColumns,
+  set: (newValue) => { filters.setSelectedColumns(newValue) }
+})
 
-// Watch for changes in selected display, page, and columns to re-render table accordingly
-watch(
-  [selectedColumns, selectedDisplay, selectedPage],
-  async ([newSelectedColumns, newSelectedDisplay, newSelectedPage],
-    [prevSelectedColumns, prevSelectedDisplay, prevSelectedPage]) => {
-    if (newSelectedColumns !== prevSelectedColumns) {
-      filters.setSelectedColumns(newSelectedColumns)
-    }
+const selectedDisplay = computed({
+  get: () => filters.selectedDisplay,
+  set: (newValue) => { filters.setSelectedDisplay(newValue) }
+})
 
-    if (newSelectedDisplay !== prevSelectedDisplay) {
-      filters.setSelectedDisplay(newSelectedDisplay)
-      await filters.getRows()
-    }
+const selectedPage = computed({
+  get: () => filters.selectedPage,
+  set: (newValue) => { filters.setSelectedPage(newValue) }
+})
 
-    if (newSelectedPage !== prevSelectedPage) {
-      filters.setSelectedPage(newSelectedPage)
-      await filters.getRows()
-    }
-  }
-)
 // page change functions
 const previousPage = () => {
   if (selectedPage.value > 1) {
@@ -199,35 +191,9 @@ const nextPage = () => {
 
 // dropdown option values
 const displayOptions = [5, 10, 20, 50, 100]
-const numResults = computed(() => filters.resultNum) // need to set this based on results from api
+const numResults = computed(() => filters.resultNum)
 const pageOptions = computed(() => Math.ceil(numResults.value / selectedDisplay.value)) // last page number
-const columns = [
-  { name: 'Status', key: 'Status' },
-  { name: 'LastModifiedBy', key: 'Modified By' },
-  { name: 'NameRequestNumber', key: 'NR Number' },
-  { name: 'Names', key: 'Names' },
-  { name: 'ApplicantFirstName', key: 'Applicant First Name' },
-  { name: 'ApplicantLastName', key: 'Applicant Last Name' },
-  { name: 'NatureOfBusiness', key: 'Nature Of Business' },
-  { name: 'ConsentRequired', key: 'Consent Required' },
-  { name: 'Priority', key: 'Priority' },
-  { name: 'ClientNotification', key: 'Notified' },
-  { name: 'Submitted', key: 'Submitted' },
-  { name: 'LastUpdate', key: 'Last Update' },
-  { name: 'LastComment', key: 'Last Comment' }
-]
-
-// clear filters i.e return to orignal ref values
-
-const clearFilters = async () => {
-  selectedDisplay.value = 10
-  selectedPage.value = 1
-  selectedColumns.value = ['Status', 'LastModifiedBy', 'NameRequestNumber', 'Names', 'ApplicantFirstName',
-    'ApplicantLastName', 'NatureOfBusiness', 'ConsentRequired', 'Priority', 'ClientNotification', 'Submitted',
-    'LastUpdate', 'LastComment']
-  filters.resetFilters()
-  await filters.getRows()
-}
+const columns = filters.fixedColumns
 
 // to close dropdown when click triggered outside of it OR when it's itself clicked
 
@@ -263,7 +229,8 @@ if (!authModule.isAuthenticated) {
 }
 </script>
 
-<style scoped>
+<style lang ='scss' scoped>
+@import '../assets/theme.scss';
 /*cool transitions for when the dropdowns are opened or closed */
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
@@ -293,9 +260,9 @@ if (!authModule.isAuthenticated) {
   max-height: 60rem;
 }
 .bcgovblue-btn {
-  background-color: #003366;
+  background-color: $BCgovBlue5;
   &:hover {
-    background-color: #fcba19;
+    background-color: $BCgovGold5;
   }
 }
 </style>

@@ -186,11 +186,12 @@ async function logout () {
 }
 </script>
 
-<style scoped>
+<style lang ='scss' scoped>
+@import '../assets/theme.scss';
 .bcgovblue-btn {
-  background-color: #003364;
+  background-color: $BCgovBlue5;
   &:hover {
-    background-color: #fcba19;
+    background-color: $BCgovGold5;
   }
 }
 </style>

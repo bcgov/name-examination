@@ -30,7 +30,7 @@
               type="text"
               :placeholder="column.key"
               class="border rounded px-2 py-1 w-full"
-              @keyup.enter="handleFilterChange"
+              @keyup.enter="handleFilterChange($event)"
             >
 
             <!-- Render dropdown for other columns excluding 'NatureOfBusiness' and 'LastComment' -->
@@ -95,14 +95,24 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted, watch } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useSearchFilters } from '../store/searchfilters'
+import {
+  Status,
+  ConsentRequired,
+  Priority,
+  ClientNotification,
+  Submitted,
+  LastUpdate
+} from '../enums/dropdownEnums'
 
 const filters = useSearchFilters()
 
 // Reactive reference for rows
-const rows = ref([])
+const rows = computed(() => filters.rows)
 const results = computed(() => filters.resultNum)
+
+const fixedColumns = filters.fixedColumns
 
 // Selected from dropdown by user
 const selectedColumns = computed(() => filters.selectedColumns)
@@ -110,24 +120,9 @@ const selectedColumns = computed(() => filters.selectedColumns)
 const filteredColumns = computed(() => {
   return fixedColumns.filter((column) => selectedColumns.value.includes(column.name))
 })
+
 // Object to store the filter values entered by the user
 const columnFilters = computed(() => filters.filters)
-
-const fixedColumns = [
-  { name: 'Status', key: 'Status' },
-  { name: 'LastModifiedBy', key: 'Modified By' },
-  { name: 'NameRequestNumber', key: 'NR Number' },
-  { name: 'Names', key: 'Names' },
-  { name: 'ApplicantFirstName', key: 'Applicant First Name' },
-  { name: 'ApplicantLastName', key: 'Applicant Last Name' },
-  { name: 'NatureOfBusiness', key: 'Nature Of Business' },
-  { name: 'ConsentRequired', key: 'Consent Required' },
-  { name: 'Priority', key: 'Priority' },
-  { name: 'ClientNotification', key: 'Notified' },
-  { name: 'Submitted', key: 'Submitted' },
-  { name: 'LastUpdate', key: 'Last Update' },
-  { name: 'LastComment', key: 'Last Comment' }
-]
 
 const handleFilterChange = async () => {
   // Update the Pinia store with the new filter values
@@ -135,45 +130,33 @@ const handleFilterChange = async () => {
 
   // Fetch rows based on the updated filters from the Pinia store
   await filters.getRows() // Now, this uses the updated filters for the API call
-  rows.value = filters.rows
-  console.log(rows.value)
 }
 
-// When component is mounted, to display initial values from the table
-onMounted(async () => {
-  await filters.getRows()
-  rows.value = filters.rows
-})
-
 const dropdownOptions = {
-  Status: ['All', 'HOLD', 'INPROGRESS', 'DRAFT', 'EXPIRED',
-    'CANCELLED', 'APPROVED', 'CONDITIONAL', 'CONSUMED', 'REJECTED', 'COMPLETED'],
-  ConsentRequired: ['All', 'Yes', 'No', 'Received'],
-  Priority: ['All', 'Priority', 'Standard'],
-  ClientNotification: ['All', 'Notified', 'Not Notified'],
-  Submitted: ['All', 'Today', '7 days', '30 days', '90 days', '1 year', '3 years', '5 years', 'All', 'Custom'],
-  LastUpdate: ['All', 'Today', 'Yesterday', '2 days', '7 days', '30 days', 'All']
+  Status: Object.values(Status),
+  ConsentRequired: Object.values(ConsentRequired),
+  Priority: Object.values(Priority),
+  ClientNotification: Object.values(ClientNotification),
+  Submitted: Object.values(Submitted),
+  LastUpdate: Object.values(LastUpdate)
 }
 
 const getDropdownOptions = (columnName) => {
   return dropdownOptions[columnName] || []
 }
 
-// To re-render table body whenver rows is changed due to changed display or page number
-watch(
-  () => filters.rows,
-  (newRows) => {
-    rows.value = newRows
-  }
-)
-
+// When component is mounted, to display initial values from the table
+onMounted(async () => {
+  await filters.getRows()
+})
 </script>
 
-<style scoped>
+<style lang ='scss' scoped>
+@import '../assets/theme.scss';
 .headers{
-  background-color: #003366
+  background-color: $BCgovBlue5;
 }
 .bcgovgold {
-    background-color: #fcba19;
+    background-color: $BCgovGold5;
 }
 </style>
