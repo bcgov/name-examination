@@ -16,15 +16,26 @@
         <a
           href=""
           class="ml-16 text-2xl"
+          :class="{ 'text-amber-400': selectedLink === 'admin' }"
+          @click="selectedLink = 'admin'"
         >Admin</a>
+
         <a
           href=""
           class="text-2xl"
+          :class="{ 'text-amber-400': selectedLink === 'examine' }"
+          @click="selectedLink = 'examine'"
         >Examine</a>
-        <a
-          href=""
-          class="text-2xl"
-        ><nuxt-link to="/SearchPage">Search</nuxt-link></a>
+
+        <nuxt-link to="/SearchPage">
+          <span
+            class="text-2xl"
+            :class="{ 'text-amber-400': selectedLink === 'search' }"
+            @click="selectedLink = 'search'"
+          >
+            Search
+          </span>
+        </nuxt-link>
       </div>
 
       <div
