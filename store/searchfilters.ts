@@ -1,29 +1,7 @@
 /* eslint-disable require-jsdoc */
 import { defineStore } from 'pinia'
-
-function formatDate (input: string) {
-  const date = new Date(input)
-  // Formatting the date part
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0') // Months are 0-indexed
-  const day = String(date.getDate()).padStart(2, '0')
-
-  // Formatting the time part
-  const hours = date.getHours()
-  const minutes = String(date.getMinutes()).padStart(2, '0')
-  const period = hours < 12 ? 'a.m.' : 'p.m.'
-  const formattedHours = ((hours + 11) % 12 + 1) // Convert 24-hour format to 12-hour format
-
-  return `${year}-${month}-${day}, ${formattedHours}:${minutes} ${period}`
-}
-
-function formatName (input: string) {
-  const formattedName = input.replace(/^[(]+|[)]+$/g, '')
-  return formattedName.replace(/\|1(.*?)1\|/g, '1. $1 ').replace(/\|2(.*?)2\|/g, '2. $1 ').replace(/\|3(.*?)3\|/g, '3. $1 ')
-}
-
 // Pinia store
-export const useSearchFilters = defineStore({
+export const searchFiltersStore = defineStore({
   id: 'searchFilters',
   state: () => {
     return {
@@ -163,6 +141,27 @@ export const useSearchFilters = defineStore({
   }
 })
 
+function formatDate (input: string) {
+  const date = new Date(input)
+  // Formatting the date part
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0') // Months are 0-indexed
+  const day = String(date.getDate()).padStart(2, '0')
+
+  // Formatting the time part
+  const hours = date.getHours()
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  const period = hours < 12 ? 'a.m.' : 'p.m.'
+  const formattedHours = ((hours + 11) % 12 + 1) // Convert 24-hour format to 12-hour format
+
+  return `${year}-${month}-${day}, ${formattedHours}:${minutes} ${period}`
+}
+
+function formatName (input: string) {
+  const formattedName = input.replace(/^[(]+|[)]+$/g, '')
+  return formattedName.replace(/\|1(.*?)1\|/g, '1. $1 ').replace(/\|2(.*?)2\|/g, '2. $1 ').replace(/\|3(.*?)3\|/g, '3. $1 ')
+}
+
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useSearchFilters, import.meta.hot))
+  import.meta.hot.accept(acceptHMRUpdate(searchFiltersStore, import.meta.hot))
 }

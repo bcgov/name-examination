@@ -15,7 +15,6 @@
 </template>
 
 <script setup>
-/* eslint-disable vue/multi-word-component-names */
 import { useAuthStore } from '../store/auth'
 import HomePage from './HomePage.vue'
 

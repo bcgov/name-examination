@@ -50,16 +50,16 @@
 </template>
 
 <script setup>
-/* eslint-disable vue/multi-word-component-names */
 import StatsBox from '../components/StatsBox.vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../store/auth'
+import { Routes } from '../enums/routes'
 
 const authModule = useAuthStore()
 const router = useRouter()
 
 const gotoHomePage = () => {
-  router.push('/HomePage')
+  router.push(Routes.HOME)
 }
 
 // Function called when the component is mounted

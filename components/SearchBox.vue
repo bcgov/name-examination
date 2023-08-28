@@ -96,7 +96,7 @@
 
 <script setup>
 import { computed, onMounted } from 'vue'
-import { useSearchFilters } from '../store/searchfilters'
+import { searchFiltersStore } from '../store/searchfilters'
 import {
   Status,
   ConsentRequired,
@@ -106,7 +106,7 @@ import {
   LastUpdate
 } from '../enums/dropdownEnums'
 
-const filters = useSearchFilters()
+const filters = searchFiltersStore()
 
 // Reactive reference for rows
 const rows = computed(() => filters.rows)

@@ -16,21 +16,21 @@
         <a
           href=""
           class="ml-16 text-2xl"
-          :class="{ 'text-amber-400': selectedLink === 'admin' }"
+          :class="{ 'text-amber-400': selectedLink === SelectedLink.Admin}"
           @click="selectedLink = 'admin'"
         >Admin</a>
 
         <a
           href=""
           class="text-2xl"
-          :class="{ 'text-amber-400': selectedLink === 'examine' }"
+          :class="{ 'text-amber-400': selectedLink === SelectedLink.Examine }"
           @click="selectedLink = 'examine'"
         >Examine</a>
 
         <nuxt-link to="/SearchPage">
           <span
             class="text-2xl"
-            :class="{ 'text-amber-400': selectedLink === 'search' }"
+            :class="{ 'text-amber-400': selectedLink === SelectedLink.Search }"
             @click="selectedLink = 'search'"
           >
             Search
@@ -152,13 +152,17 @@
 
 <script setup>
 import '@jamescoyle/vue-icon'
+import { ref } from 'vue'
 import { mdiMagnify } from '@mdi/js'
 import { useAuthStore } from '../store/auth'
 import KeycloakService from '../public/keycloak/keycloak'
+import { SelectedLink } from '../enums/dropdownEnums'
 /* eslint-disable require-jsdoc */
 
 const authModule = useAuthStore()
 const path = mdiMagnify
+
+const selectedLink = ref('/')
 
 async function login () {
   // If the user is already authenticated, do nothing

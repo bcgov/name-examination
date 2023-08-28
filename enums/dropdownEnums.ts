@@ -53,11 +53,18 @@ enum LastUpdate {
   Days7 = '7 days'
 }
 
+enum SelectedLink{
+  Admin = 'admin',
+  Examine = 'examine',
+  Search = 'search'
+}
+
 export {
   Status,
   ConsentRequired,
   Priority,
   ClientNotification,
   Submitted,
-  LastUpdate
+  LastUpdate,
+  SelectedLink
 }

@@ -145,13 +145,13 @@
 import { faArrowDown, faArrowUp, faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { useAuthStore } from '../store/auth'
-import { useSearchFilters } from '../store/searchfilters'
+import { searchFiltersStore } from '../store/searchfilters'
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import SearchBox from '../components/SearchBox.vue'
 library.add(faArrowDown, faArrowUp, faArrowRight, faArrowLeft)
 
 const authModule = useAuthStore()
-const filters = useSearchFilters()
+const filters = searchFiltersStore()
 
 // reactive values
 
