@@ -1,21 +1,39 @@
 import { beforeEach, describe, it, expect, vitest } from 'vitest'
-import LandingPage from '../pages/LandingPage.vue'
+import LandingPage from '../pages/index.vue'
 import { mount } from '@vue/test-utils'
 import { createTestingPinia } from '@pinia/testing'
 import { useAuthStore } from '../store/auth'
 import flushPromises from 'flush-promises'
+import { createRouter, createMemoryHistory, RouteRecordRaw } from 'vue-router'
+import HomePage from '../pages/HomePage.vue'
 /* eslint-disable require-jsdoc */
 
 describe('Welcome Message', () => {
   let wrapper: any = null
   let authModule: any = null
   beforeEach(() => {
+    // To mock router
+    const routes: RouteRecordRaw[] = [
+      {
+        path: '/',
+        component: LandingPage
+      },
+      {
+        path: '/HomePage',
+        component: HomePage
+      }
+    ]
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes
+    })
+    // To mock pinia store
     const pinia = createTestingPinia({
       createSpy: vitest.fn
     })
     wrapper = mount(LandingPage, {
       global: {
-        plugins: [pinia]
+        plugins: [pinia, router]
       }
     })
     authModule = useAuthStore(pinia)

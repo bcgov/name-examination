@@ -15,7 +15,7 @@ export default defineNuxtConfig({
     baseURL: '/'
   },
   modules: ['@nuxt/content', '@nuxtjs/tailwindcss', '@pinia/nuxt'],
-  css: ['@/assets/main.scss'],
+  css: ['@/assets/main.scss', '@fortawesome/fontawesome-svg-core/styles.css'],
   typescript: {
     typeCheck: true
   },
