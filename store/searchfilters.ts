@@ -62,7 +62,7 @@ export const searchFiltersStore = defineStore({
       const lastName = this.filters.ApplicantLastName === '' ? '' : this.filters.ApplicantLastName
       const modifiedBy = this.filters.LastModifiedBy === '' ? '' : this.filters.LastModifiedBy
       // eslint-disable-next-line max-len
-      return `${import.meta.env.VITE_APP_NAMEX_API_URL}${import.meta.env.VITE_APP_NAMEX_API_VERSION}/requests?order=priorityCd:desc,submittedDate:asc&queue=${status}&consentOption=${consentOption}&ranking=${priority}&notification=${notification}&submittedInterval=${submitted}&lastUpdateInterval=${lastUpdate}&rows=${rows}&start=${pagenumber}&activeUser=${modifiedBy}&nrNum=${nrnum}&compName=${compName}&firstName=${firstName}&lastName=${lastName}`
+      return `${useRuntimeConfig().public.namexAPIURL}${useRuntimeConfig().public.namexAPIVersion}/requests?order=priorityCd:desc,submittedDate:asc&queue=${status}&consentOption=${consentOption}&ranking=${priority}&notification=${notification}&submittedInterval=${submitted}&lastUpdateInterval=${lastUpdate}&rows=${rows}&start=${pagenumber}&activeUser=${modifiedBy}&nrNum=${nrnum}&compName=${compName}&firstName=${firstName}&lastName=${lastName}`
     }
   },
   actions: {

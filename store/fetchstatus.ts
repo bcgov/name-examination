@@ -19,8 +19,10 @@ export const Fetchstatus = defineStore({
   actions: {
     async getHoldedNum () {
       try {
-        const url = import.meta.env.VITE_APP_NAMEX_API_URL + import.meta.env.VITE_APP_NAMEX_API_VERSION +
-        import.meta.env.VITE_APP_HOLD_QUEUE_URL
+        const NAMEX_API = `${useRuntimeConfig().public.namexAPIURL}${useRuntimeConfig().public.namexAPIVersion}`
+        const HOLD_QUEUE_URL = '/requests?order=priorityCd:desc,submittedDate:asc&' +
+                                'queue=hold&furnished=true&unfurnished=true&rows=3&start=0'
+        const url = NAMEX_API + HOLD_QUEUE_URL
         const token = sessionStorage.getItem('KEYCLOAK_TOKEN')
         const response = await fetch(url, {
           headers: {
@@ -36,8 +38,10 @@ export const Fetchstatus = defineStore({
     },
     async getExaminedNum () {
       try {
-        const url = import.meta.env.VITE_APP_NAMEX_API_URL + import.meta.env.VITE_APP_NAMEX_API_VERSION +
-        import.meta.env.VITE_APP_DRAFT_QUEUE_URL
+        const NAMEX_API = `${useRuntimeConfig().public.namexAPIURL}${useRuntimeConfig().public.namexAPIVersion}`
+        const DRAFT_QUEUE_URL = '/requests?order=priorityCd:desc,submittedDate:asc&' +
+                                'queue=draft&furnished=true&unfurnished=true&rows=3&start=0'
+        const url = NAMEX_API + DRAFT_QUEUE_URL
         const token = sessionStorage.getItem('KEYCLOAK_TOKEN')
         const response = await fetch(url, {
           headers: {
