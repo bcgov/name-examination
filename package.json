@@ -1,6 +1,6 @@
 {
   "name": "name-examination",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "private": true,
   "scripts": {
     "build": "nuxt generate",
@@ -10,7 +10,7 @@
     "format": "prettier --write .",
     "format-check": "prettier --check .",
     "lint": "eslint",
-    "test": "vitest --config vite.config.test.ts"
+    "test": "vitest --config vite.config.test.ts --coverage"
   },
   "devDependencies": {
     "@nuxt/content": "^2.6.0",
