@@ -148,3 +148,6 @@ dist
 #firebase hosting
 .firebase
 .firebaserc
+
+# IDEs
+.vscode
