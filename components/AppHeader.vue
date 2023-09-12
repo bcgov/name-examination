@@ -1,35 +1,34 @@
 <template id="app-header">
-  <nav class="flex h-20 bg-white text-lg font-medium shadow-2xl">
-    <div class="flex min-w-full">
-      <div class="image">
-        <img
-          src="../public/images/top-nav.png"
-          alt="Name Examination"
-          class="h-full"
-        >
+  <nav class="h-16 border-b border-gray-300">
+    <div class="flex h-full w-full items-center justify-between">
+      <div class="h-full">
+        <nuxt-link to="/HomePage">
+          <img
+            src="../images/top-nav.png"
+            class="min-w-8 h-full"
+            alt="Name Examination"
+          />
+        </nuxt-link>
       </div>
 
-      <div
-        v-if="authModule.isAuthenticated"
-        class="mt-6 flex gap-24 text-blue-800"
-      >
+      <div v-if="authModule.isAuthenticated" class="flex gap-12 text-blue-800">
         <a
           href=""
-          class="ml-16 text-2xl"
-          :class="{ 'text-amber-400': selectedLink === SelectedLink.Admin}"
+          class="ml-8"
+          :class="{ 'text-amber-400': selectedLink === SelectedLink.Admin }"
           @click="selectedLink = 'admin'"
-        >Admin</a>
+          >Admin</a
+        >
 
         <a
           href=""
-          class="text-2xl"
           :class="{ 'text-amber-400': selectedLink === SelectedLink.Examine }"
           @click="selectedLink = 'examine'"
-        >Examine</a>
+          >Examine</a
+        >
 
         <nuxt-link to="/SearchPage">
           <span
-            class="text-2xl"
             :class="{ 'text-amber-400': selectedLink === SelectedLink.Search }"
             @click="selectedLink = 'search'"
           >
@@ -38,113 +37,52 @@
         </nuxt-link>
       </div>
 
-      <div
-        v-if="authModule.isAuthenticated"
-        class="ml-auto flex"
-      >
-        <form class="flex items-center">
-          <label
-            for="allowWordClassificationModal"
-            class="sr-only"
-          >NR Number Lookup</label>
-          <div class="relative w-full">
-            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <svg-icon
-                type="mdi"
-                :path="path"
-                class="h-6"
-              />
-            </div>
-            <input
-              id="allowWordClassificationModal"
-              type="text"
-              class="w-72 h-13 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500
-             focus:border-blue-500 block pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600
-             dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 text-lg"
-              placeholder="NR Number Lookup"
-              required
-            >
-          </div>
-          <button
-            type="submit"
-            class="bcgovblue-btn p-2.5 ml-3 h-12 transition ease-in-out delay-120
-   hover:scale-115 duration-300 px-4 py-2 text-white border
-   rounded-lg focus:ring-4 focus:outline-none
-   focus:ring-amber-300 dark:bg-amber-200 dark:hover:bg-amber-400 dark:focus:ring-amber-200"
-          >
-            <svg-icon
-              type="mdi"
-              :path="path"
-            />
-            Submit
-          </button>
-        </form>
+      <div v-if="authModule.isAuthenticated" class="ml-auto flex items-center">
 
-        <span class="mx-10 mt-7 underline">Stats</span>
+  <form class="flex items-center">
+    <label for="allowWordClassificationModal" class="sr-only">NR Number Lookup</label>
+    <div>
+      <input
+        id="allowWordClassificationModal"
+        type="text"
+        class="block w-48 rounded-l-md border border-gray-300 bg-gray-100 p-1.5 text-lg text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+        placeholder="NR Number Lookup"
+        required
+      />
+    </div>
+    <button
+      type="submit"
+      class="bcgovblue-btn delay-120 flex items-center rounded-r-md p-1.5 text-white transition duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-amber-300"
+    >
+      <svg-icon type="mdi" viewBox="0 -4 24 24" :path="mdiMagnify" />
+    </button>
+  </form>
 
-        <label
-          for="classifyWords"
-          class="relative mt-2 inline-flex cursor-pointer items-center"
-        >
-          <input
-            id="classifyWords"
-            type="checkbox"
-            value=""
-            class="peer sr-only"
-          >
-          <div
-            class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300
-          dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full
-          peer-checked:after:border-white after:content-[''] after:absolute after:left-[2px] after:top-[25px]
-          after:bg-white after:border-gray-300
-          after:border after:rounded-full after:h-5 after:w-5 after:transition-all
-         dark:border-gray-600 peer-checked:bg-blue-600"
-          />
-          <span class="ml-3 font-medium text-gray-500 dark:text-gray-300">Classify Words</span>
-        </label>
+        <span class="mx-10 underline">Stats</span>
 
-        <label
-          for="priorityQueue"
-          class="relative mt-2 inline-flex cursor-pointer items-center ml-5"
-        >
-          <input
-            id="priorityQueue"
-            type="checkbox"
-            value=""
-            class="peer sr-only"
-          >
-          <div
-            class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300
-          dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full
-          peer-checked:after:border-white after:content-[''] after:absolute after:left-[2px] after:top-[25px]
-          after:bg-white after:border-gray-300
-          after:border after:rounded-full after:h-5 after:w-5 after:transition-all
-         dark:border-gray-600 peer-checked:bg-blue-600"
-          />
-          <span class="ml-3 font-medium text-gray-500 dark:text-gray-300">Priority Queue</span>
-        </label>
+        <ToggleSwitch
+          class="mr-3"
+          input-id="classifyWords"
+          display="Classify Words"
+        />
 
-        <span class="mx-10 mt-7 flex text-gray-800">{{ KeycloakService.getUserInfo().fullName }}</span>
+        <ToggleSwitch input-id="priorityQueue" display="Priority Queue" />
+
+        <span class="mx-10 text-gray-800">{{
+          KeycloakService.getUserInfo().fullName
+        }}</span>
 
         <div class="divider" />
 
-        <div class="mx-10 mt-7 text-blue-800">
-          <a
-            id="logout-button"
-            href="#"
-            @click="logout()"
-          >Log Out</a>
+        <div class="mx-10 text-blue-800">
+          <a id="logout-button" href="#" @click="logout()"
+            >Log Out</a
+          >
         </div>
       </div>
 
-      <div
-        v-if="!authModule.isAuthenticated"
-        class="mx-10 ml-auto mt-7 flex text-blue-800"
-      >
-        <a
-          href="#"
-          @click="login()"
-        >Login</a>
+      <div v-if="!authModule.isAuthenticated" class="mx-10 text-blue-800">
+        <a href="#" @click="login()">Login</a>
       </div>
     </div>
   </nav>
@@ -162,11 +100,10 @@ import { useRuntimeConfig } from '#imports'
 
 const authModule = useAuthStore()
 const config = useRuntimeConfig()
-const path = mdiMagnify
 
 const selectedLink = ref('/')
 
-async function login () {
+async function login() {
   // If the user is already authenticated, do nothing
   if (authModule.isAuthenticated) return
 
@@ -188,7 +125,7 @@ async function login () {
   }
 }
 
-async function logout () {
+async function logout() {
   // If the user is already logged out, do nothing
   if (!authModule.isAuthenticated) return
 
@@ -203,7 +140,7 @@ async function logout () {
 }
 </script>
 
-<style lang ='scss' scoped>
+<style lang="scss" scoped>
 @import '../assets/theme.scss';
 .bcgovblue-btn {
   background-color: $BCgovBlue5;

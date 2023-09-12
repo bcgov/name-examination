@@ -1,5 +1,5 @@
 <template id="stats-box">
-  <div class="stats-box shadow-lg">
+  <div class="stats-box border-gray-300 rounded-md">
     <div class="mb-6 ml-2 mt-2">
       Current status on
       <span
