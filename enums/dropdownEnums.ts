@@ -56,7 +56,8 @@ enum LastUpdate {
 enum SelectedLink{
   Admin = 'admin',
   Examine = 'examine',
-  Search = 'search'
+  Search = 'search',
+  Stats = 'stats'
 }
 
 export {
