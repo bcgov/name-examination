@@ -41,5 +41,22 @@ export default defineNuxtConfig({
     output: {
       publicDir: path.join(__dirname, 'dist')
     }
+  },
+  runtimeConfig: {
+    // Private keys are only available on the server
+    // apiSecret: '123',
+
+    // Public keys that are exposed to the client
+    public: {
+      firebaseApiKey: process.env.NUXT_API_KEY,
+      firebaseAuthDomain: process.env.NUXT_AUTH_DOMAIN,
+      firebaseProjectId: process.env.NUXT_PROJECT_ID,
+      firebaseAppId: process.env.NUXT_APP_ID,
+      namexAPIURL: process.env.NUXT_NAMEX_API_URL,
+      namexAPIVersion: process.env.NUXT_NAMEX_API_VERSION,
+      keycloakAuthUrl: process.env.NUXT_KEYCLOAK_AUTH_URL,
+      keycloakRealm: process.env.NUXT_KEYCLOAK_REALM,
+      keycloakClientId: process.env.NUXT_KEYCLOAK_CLIENTID
+    }
   }
 })

@@ -65,3 +65,7 @@ export enum Pages {
 export const ALLOWED_URIS_FOR_PENDING_ORGS = ['setup-non-bcsc-account']
 
 export const ACCOUNT_ID = 'accountid'
+
+export enum FeatureFlags {
+  NAMEX_BANNER = 'namex_banner'
+}

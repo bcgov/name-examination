@@ -157,9 +157,11 @@ import { mdiMagnify } from '@mdi/js'
 import { useAuthStore } from '../store/auth'
 import KeycloakService from '../public/keycloak/keycloak'
 import { SelectedLink } from '../enums/dropdownEnums'
+import { useRuntimeConfig } from '#imports'
 /* eslint-disable require-jsdoc */
 
 const authModule = useAuthStore()
+const config = useRuntimeConfig()
 const path = mdiMagnify
 
 const selectedLink = ref('/')
@@ -191,7 +193,7 @@ async function logout () {
   if (!authModule.isAuthenticated) return
 
   try {
-    await KeycloakService.logout(import.meta.env.VITE_APP_BASE_URL)
+    await KeycloakService.logout(config.app.baseURL)
   } catch (err) {
     if (err?.message !== 'LOGOUT FAILED') {
       console.error(err)

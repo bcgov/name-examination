@@ -10,12 +10,13 @@ import { useAuthStore } from '../store/auth'
  */
 export default async function () {
   const authModule = useAuthStore()
+  const config = useRuntimeConfig()
   console.log('Starting Keycloak service...')
 
   const keycloakConfig: any = {
-    url: import.meta.env.VITE_APP_KEYCLOAK_AUTH_URL,
-    realm: import.meta.env.VITE_APP_KEYCLOAK_REALM,
-    clientId: import.meta.env.VITE_APP_KEYCLOAK_CLIENTID
+    url: config.public.keycloakAuthUrl,
+    realm: config.public.keycloakRealm,
+    clientId: config.public.keycloakClientId
   }
 
   await KeycloakService.setKeycloakConfigUrl(keycloakConfig)

@@ -21,30 +21,6 @@ export default class ConfigHelper {
     sessionStorage.clear()
   }
 
-  static getStatusAPIUrl (): string {
-    return trimTrailingSlashURL(sessionStorage.getItem(SessionStorageKeys.StatusApiUrl) || '')
-  }
-
-  static getAuthAPIUrl (): string {
-    return trimTrailingSlashURL(sessionStorage.getItem(SessionStorageKeys.AuthApiUrl) || '')
-  }
-
-  static getAuthContextPath (): string {
-    return trimTrailingSlashURL(sessionStorage.getItem(SessionStorageKeys.AuthWebUrl) || '')
-  }
-
-  static getRegistryHomeURL () {
-    return trimTrailingSlashURL(sessionStorage.getItem(SessionStorageKeys.RegistryHomeUrl) || '')
-  }
-
-  static getNameRequestURL () {
-    return trimTrailingSlashURL(sessionStorage.getItem(SessionStorageKeys.NameRequestUrl) || '')
-  }
-
-  static getPprWebURL () {
-    return trimTrailingSlashURL(sessionStorage.getItem(SessionStorageKeys.PprWebUrl) || '')
-  }
-
   static setKeycloakConfigUrl (keycloakConfigUrl: string) {
     this.keycloakConfigUrl = keycloakConfigUrl
   }

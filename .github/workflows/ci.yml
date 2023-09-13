@@ -24,7 +24,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.14.2]
+        node-version: [20.5.1]
 
     steps:
       - uses: actions/checkout@v3
@@ -32,9 +32,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - uses: pnpm/action-setup@v2
+        with:
+            version: 8
       - name: Install dependencies
         run: |
-          npm ci
+          npm install
       - name: Linting
         run: |
           npm run lint
@@ -45,7 +48,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.14.2]
+        node-version: [20.5.1]
 
     steps:
       - uses: actions/checkout@v3
@@ -53,19 +56,22 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - name: Install dependencies
         run: |
-          npm ci
-      - name: Test with Jest
+          npm install
+      - name: Testing
         id: test
         run: |
           npm run test
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-            flags: name-examination-ui
-            name: codecov-analytics
-            fail_ci_if_error: true
+          flags: name-examination-ui
+          name: codecov-namex
+          fail_ci_if_error: true
 
   build-check:
     needs: setup-job
@@ -73,7 +79,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.14.2]
+        node-version: [20.5.1]
 
     steps:
       - uses: actions/checkout@v3
@@ -81,9 +87,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - name: Install dependencies
         run: |
-          npm ci
+          npm install
       - name: build
         id: build
         run: |

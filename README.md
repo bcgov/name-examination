@@ -7,29 +7,46 @@ Look at the [Content documentation](https://content-v2.nuxtjs.org/) to learn mor
 Make sure to install the dependencies:
 
 ```bash
+# pnpm
+pnpm install
+
 # yarn
 yarn install
 
 # npm
 npm install
 
-# pnpm
-pnpm install
 ```
+
+## Setup Environment Variables
+
+```bash
+
+cp .env.example .env
+
+```
+
+## Linting
+
+```bash
+pnmp run lint
+```
+
 ## Testing
 
 ```Vitest
-npx vitest
+pnmp run test
+```
 
 ```Cyprus
 npx cypress open
 
 ## Development Server
 
-Start the development server on http://localhost:3000
+Start the development server on http://localhost:8080
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 ## Production
@@ -37,13 +54,13 @@ npm run dev
 Build the application for production:
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 Locally preview production build:
 
 ```bash
-npm run preview
+pnpm run preview
 ```
 
 Checkout the [deployment documentation](https://v3.nuxtjs.org/docs/deployment) for more information.
