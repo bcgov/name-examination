@@ -63,7 +63,7 @@
           </div>
           <button
             type="submit"
-            class="bcgovblue-btn delay-120 flex items-center rounded-r-md p-2 text-white transition duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-amber-300"
+            class="bg-bcgov-blue5 hover:bg-bcgov-gold5 delay-120 flex items-center rounded-r-md p-2 text-white transition duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-amber-300"
           >
             <svg-icon type="mdi" viewBox="0 -4 24 24" :path="mdiMagnify" />
           </button>
@@ -136,13 +136,3 @@ async function logout() {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-@import '../assets/theme.scss';
-.bcgovblue-btn {
-  background-color: $BCgovBlue5;
-  &:hover {
-    background-color: $BCgovGold5;
-  }
-}
-</style>
