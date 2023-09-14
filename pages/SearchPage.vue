@@ -1,15 +1,12 @@
 <template>
   <div v-if="authModule.isAuthenticated">
-    <h1 class="text-4xl font-bold text-gray-700 mt-10 ml-10">
+    <h1 class="text-2xl font-bold text-gray-700 mt-5 ml-5">
       Search
     </h1>
-    <div
-      id=""
-      class="ml-10 mt-6 flex items-center text-lg"
-    >
+    <div class="ml-5 flex items-center">
       <a
         href="#"
-        class="text-blue-800 mr-5 font-semibold align-middle hover:text-blue-900 transition duration-150"
+        class="text-blue-800 mr-5 font-semibold hover:text-blue-900 transition duration-150"
         @click="filters.resetFilters()"
       >Clear Filters</a>
       <div class="relative columnsDropdown z-10">
@@ -118,26 +115,24 @@
       </div>
       <div class="relative ml-5 mr-10 mt-1 flex space-x-2">
         <button
-          class="bcgovblue-btn w-20 transition ease-in-out delay-120 hover:-translate-y-2
+          class="bg-bcgov-blue5 hover:bg-bcgov-gold5 w-20 transition ease-in-out delay-120 hover:-translate-y-2
    hover:scale-115 duration-300 px-4 py-2 text-white border
-   rounded-lg focus:ring-4 focus:outline-none
-   focus:ring-amber-300 dark:bg-amber-200 dark:hover:bg-amber-400 dark:focus:ring-amber-200"
+   rounded-lg focus:ring-4 focus:outline-none focus:ring-amber-300"
           @click="previousPage()"
         >
           <font-awesome-icon :icon="['fas', 'arrow-left']" />
         </button>
         <button
-          class="bcgovblue-btn w-20 transition ease-in-out delay-120 hover:-translate-y-2
+          class="bg-bcgov-blue5 hover:bg-bcgov-gold5 w-20 transition ease-in-out delay-120 hover:-translate-y-2
    hover:scale-115 duration-300 px-4 py-2 text-white border
-   rounded-lg focus:ring-4 focus:outline-none
-   focus:ring-amber-300 dark:bg-amber-200 dark:hover:bg-amber-400 dark:focus:ring-amber-200"
+   rounded-lg focus:ring-4 focus:outline-none focus:ring-amber-300"
           @click="nextPage()"
         >
           <font-awesome-icon :icon="['fas', 'arrow-right']" />
         </button>
       </div>
     </div>
-    <SearchBox class="mx-10 mt-14 search-box" />
+    <SearchBox class="mx-10 mt-14 h-screen" />
   </div>
 </template>
 
@@ -223,48 +218,9 @@ onUnmounted(() => {
 })
 
 // not authenticated? go back to loginpage
-
 if (!authModule.isAuthenticated) {
   window.location.href = '/'
 }
 </script>
-
-<style lang ='scss' scoped>
-@import '../assets/theme.scss';
-/*cool transitions for when the dropdowns are opened or closed */
-.fade-enter-from, .fade-leave-to {
-  opacity: 0;
-  transform: translateY(-20px);
-}
-
-.fade-enter-to, .fade-leave-from {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s, transform .5s;
-}
-
-.rotate-180 {
-  transition: transform 0.3s;
-  transform: rotate(180deg);
-}
-
-.rotate-0 {
-  transition: transform 0.3s;
-  transform: rotate(0deg);
-}
-
-.search-box{
-  max-height: 60rem;
-}
-.bcgovblue-btn {
-  background-color: $BCgovBlue5;
-  &:hover {
-    background-color: $BCgovGold5;
-  }
-}
-</style>
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
