@@ -6,43 +6,43 @@
       <thead class="sticky top-0 z-1">
         <tr class="text-left headers text-white h-14 text-lg">
           <th
-            v-for="column in filteredColumns"
+            v-for="column in selectedColumns"
             :key="column.key"
             class="py-2 px-4 border-b border-gray-200"
           >
-            {{ column.key }}
+            {{ column.name }}
           </th>
         </tr>
 
         <!-- Filters Row -->
         <tr>
           <th
-            v-for="column in filteredColumns"
+            v-for="column in selectedColumns"
             :key="column.key"
             class="text-lg py-2 px-4 border-y border-gray-200 bcgovgold"
           >
             <!-- Render text input for specified columns -->
             <input
-              v-if="column.name !== 'NatureOfBusiness' && column.name !== 'LastComment'&&
+              v-if="column.key !== 'NatureOfBusiness' && column.key !== 'LastComment'&&
                 ['LastModifiedBy','NameRequestNumber', 'Names', 'ApplicantFirstName', 'ApplicantLastName']
-                  .includes(column.name)"
-              v-model="columnFilters[column.name]"
+                  .includes(column.key)"
+              v-model="columnFilters[column.key]"
               type="text"
-              :placeholder="column.key"
+              :placeholder="column.name"
               class="border rounded px-2 py-1 w-full"
               @keyup.enter="handleFilterChange($event)"
             >
 
             <!-- Render dropdown for other columns excluding 'NatureOfBusiness' and 'LastComment' -->
             <select
-              v-else-if="column.name !== 'NatureOfBusiness' && column.name !== 'LastComment'"
+              v-else-if="column.key !== 'NatureOfBusiness' && column.key !== 'LastComment'"
               v-model="columnFilters[column.name]"
               class="border rounded px-2 py-1"
               @change="handleFilterChange"
             >
               <!-- Render the dropdown options for the current column -->
               <option
-                v-for="option in getDropdownOptions(column.name)"
+                v-for="option in getDropdownOptions(column.key)"
                 :key="option"
                 :value="option"
               >
@@ -63,11 +63,11 @@
           class="transition duration-75 ease-in-out hover:bg-gray-200"
         >
           <td
-            v-for="column in filteredColumns"
+            v-for="column in selectedColumns"
             :key="column.key"
             class="py-2 px-4 border-b border-gray-200"
           >
-            {{ row[column.name] }}
+            {{ row[column.key] }}
           </td>
         </tr>
       </tbody>
@@ -112,14 +112,8 @@ const filters = searchFiltersStore()
 const rows = computed(() => filters.rows)
 const results = computed(() => filters.resultNum)
 
-const fixedColumns = filters.fixedColumns
-
 // Selected from dropdown by user
-const selectedColumns = computed(() => filters.selectedColumns)
-// Columns to be displayed
-const filteredColumns = computed(() => {
-  return fixedColumns.filter((column) => selectedColumns.value.includes(column.name))
-})
+const selectedColumns = computed(() => filters.fixedColumns.filter(column => filters.selectedColumns.includes(column)))
 
 // Object to store the filter values entered by the user
 const columnFilters = computed(() => filters.filters)
@@ -141,8 +135,8 @@ const dropdownOptions = {
   LastUpdate: Object.values(LastUpdate)
 }
 
-const getDropdownOptions = (columnName) => {
-  return dropdownOptions[columnName] || []
+const getDropdownOptions = (columnKey) => {
+  return dropdownOptions[columnKey] || []
 }
 
 // When component is mounted, to display initial values from the table

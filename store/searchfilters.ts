@@ -1,52 +1,53 @@
 /* eslint-disable require-jsdoc */
 import { defineStore } from 'pinia'
+
+const fixedColumns = [
+  { key: 'Status', name: 'Status' },
+  { key: 'LastModifiedBy', name: 'Modified By' },
+  { key: 'NameRequestNumber', name: 'NR Number' },
+  { key: 'Names', name: 'Names' },
+  { key: 'ApplicantFirstName', name: 'Applicant First Name' },
+  { key: 'ApplicantLastName', name: 'Applicant Last Name' },
+  { key: 'NatureOfBusiness', name: 'Nature Of Business' },
+  { key: 'ConsentRequired', name: 'Consent Required' },
+  { key: 'Priority', name: 'Priority' },
+  { key: 'ClientNotification', name: 'Notified' },
+  { key: 'Submitted', name: 'Submitted' },
+  { key: 'LastUpdate', name: 'Last Update' },
+  { key: 'LastComment', name: 'Last Comment' },
+]
+
 // Pinia store
 export const searchFiltersStore = defineStore({
   id: 'searchFilters',
   state: () => {
     return {
-      fixedColumns: [
-        { name: 'Status', key: 'Status' },
-        { name: 'LastModifiedBy', key: 'Modified By' },
-        { name: 'NameRequestNumber', key: 'NR Number' },
-        { name: 'Names', key: 'Names' },
-        { name: 'ApplicantFirstName', key: 'Applicant First Name' },
-        { name: 'ApplicantLastName', key: 'Applicant Last Name' },
-        { name: 'NatureOfBusiness', key: 'Nature Of Business' },
-        { name: 'ConsentRequired', key: 'Consent Required' },
-        { name: 'Priority', key: 'Priority' },
-        { name: 'ClientNotification', key: 'Notified' },
-        { name: 'Submitted', key: 'Submitted' },
-        { name: 'LastUpdate', key: 'Last Update' },
-        { name: 'LastComment', key: 'Last Comment' }
-      ],
-      selectedColumns: ['Status', 'LastModifiedBy', 'NameRequestNumber', 'Names', 'ApplicantFirstName',
-        'ApplicantLastName', 'NatureOfBusiness', 'ConsentRequired', 'Priority', 'ClientNotification', 'Submitted',
-        'LastUpdate', 'LastComment'], // Initialize as default selected columns
+      fixedColumns: fixedColumns,
+      selectedColumns: fixedColumns, // Initialize selected columns to all columns
       rows: [], // Initialize rows array, this is populated and displayed in the table
       resultNum: 0, // Total number of results returned
       filters: {
-        'Status': 'HOLD',
-        'LastModifiedBy': '',
-        'NameRequestNumber': '',
-        'Names': '',
-        'ApplicantFirstName': '',
-        'ApplicantLastName': '',
-        'NatureOfBusiness': '',
-        'ConsentRequired': 'All',
-        'Priority': 'All',
-        'ClientNotification': 'All',
-        'Submitted': 'All',
-        'LastUpdate': 'All',
-        'LastComment': 'All'
+        Status: 'HOLD',
+        LastModifiedBy: '',
+        NameRequestNumber: '',
+        Names: '',
+        ApplicantFirstName: '',
+        ApplicantLastName: '',
+        NatureOfBusiness: '',
+        ConsentRequired: 'All',
+        Priority: 'All',
+        ClientNotification: 'All',
+        Submitted: 'All',
+        LastUpdate: 'All',
+        LastComment: 'All',
       },
       selectedDisplay: 10,
       selectedPage: 1,
-      isLoading: false
+      isLoading: false,
     }
   },
   getters: {
-    formattedUrl ():string {
+    formattedUrl(): string {
       // Convert filters object to query string format
       const consentOption = this.filters.ConsentRequired
       const status = this.filters.Status === 'ALL' ? '' : this.filters.Status
@@ -55,43 +56,56 @@ export const searchFiltersStore = defineStore({
       const submitted = this.filters.Submitted
       const lastUpdate = this.filters.LastUpdate
       const rows = this.selectedDisplay
-      const pagenumber = this.selectedPage === 1 ? 0 : (this.selectedPage - 1) * this.selectedDisplay
-      const nrnum = this.filters.NameRequestNumber === '' ? '' : this.filters.NameRequestNumber
+      const pagenumber =
+        this.selectedPage === 1
+          ? 0
+          : (this.selectedPage - 1) * this.selectedDisplay
+      const nrnum =
+        this.filters.NameRequestNumber === ''
+          ? ''
+          : this.filters.NameRequestNumber
       const compName = this.filters.Names
-      const firstName = this.filters.ApplicantFirstName === '' ? '' : this.filters.ApplicantFirstName
-      const lastName = this.filters.ApplicantLastName === '' ? '' : this.filters.ApplicantLastName
-      const modifiedBy = this.filters.LastModifiedBy === '' ? '' : this.filters.LastModifiedBy
+      const firstName =
+        this.filters.ApplicantFirstName === ''
+          ? ''
+          : this.filters.ApplicantFirstName
+      const lastName =
+        this.filters.ApplicantLastName === ''
+          ? ''
+          : this.filters.ApplicantLastName
+      const modifiedBy =
+        this.filters.LastModifiedBy === '' ? '' : this.filters.LastModifiedBy
       // eslint-disable-next-line max-len
       return `${useRuntimeConfig().public.namexAPIURL}${useRuntimeConfig().public.namexAPIVersion}/requests?order=priorityCd:desc,submittedDate:asc&queue=${status}&consentOption=${consentOption}&ranking=${priority}&notification=${notification}&submittedInterval=${submitted}&lastUpdateInterval=${lastUpdate}&rows=${rows}&start=${pagenumber}&activeUser=${modifiedBy}&nrNum=${nrnum}&compName=${compName}&firstName=${firstName}&lastName=${lastName}`
     }
   },
   actions: {
-    setSelectedColumns (columns:any) {
+    setSelectedColumns(columns: any) {
       this.selectedColumns = columns
     },
-    async setSelectedDisplay (display:number) {
+    async setSelectedDisplay(display: number) {
       this.selectedDisplay = display
       // Go back to first page whenever diplay is changed
       this.selectedPage = 1
       await this.getRows()
     },
-    async setSelectedPage (page: number) {
+    async setSelectedPage(page: number) {
       this.selectedPage = page
       await this.getRows()
     },
     // This action updates the filters state
-    updateFilters (newFilters: any) {
+    updateFilters(newFilters: any) {
       this.filters = { ...this.filters, ...newFilters }
     },
-    async getRows () {
+    async getRows() {
       this.isLoading = true // Start loading
       try {
         const url = this.formattedUrl
         const token = sessionStorage.getItem('KEYCLOAK_TOKEN')
         const response = await fetch(url, {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         })
         const data = await response.json()
         this.resultNum = data.response.numFound
@@ -102,46 +116,36 @@ export const searchFiltersStore = defineStore({
           Names: formatName(request.nameSearch),
           ApplicantFirstName: request.applicants[0]?.firstName,
           ApplicantLastName: request.applicants[0]?.lastName,
-          NatureOfBusiness: request.natureBusinessInfo === null ? '' : request.natureBusinessInfo,
-          ConsentRequired: request.consentFlag === 'R' ? 'Received' : (request.consentFlag === 'Y' ? 'Yes' : 'No'),
+          NatureOfBusiness:
+            request.natureBusinessInfo === null
+              ? ''
+              : request.natureBusinessInfo,
+          ConsentRequired:
+            request.consentFlag === 'R'
+              ? 'Received'
+              : request.consentFlag === 'Y'
+              ? 'Yes'
+              : 'No',
           Priority: request.priorityCd === 'Y' ? 'Priority' : 'Standard',
-          ClientNotification: request.furnished === 'Y' ? 'Notified' : 'Not Notified',
+          ClientNotification:
+            request.furnished === 'Y' ? 'Notified' : 'Not Notified',
           Submitted: formatDate(request.submittedDate),
           LastUpdate: formatDate(request.lastUpdate),
-          LastComment: request.comments[request.comments.length - 1]?.comment
+          LastComment: request.comments[request.comments.length - 1]?.comment,
         }))
         this.isLoading = false // end loading
       } catch (error) {
         console.error(error)
       }
     },
-    async resetFilters () {
-      this.selectedDisplay = 10
-      this.selectedPage = 1
-      this.selectedColumns = ['Status', 'LastModifiedBy', 'NameRequestNumber', 'Names', 'ApplicantFirstName',
-        'ApplicantLastName', 'NatureOfBusiness', 'ConsentRequired', 'Priority', 'ClientNotification', 'Submitted',
-        'LastUpdate', 'LastComment']
-      this.filters = {
-        'Status': 'HOLD',
-        'LastModifiedBy': '',
-        'NameRequestNumber': '',
-        'Names': '',
-        'ApplicantFirstName': '',
-        'ApplicantLastName': '',
-        'NatureOfBusiness': '',
-        'ConsentRequired': 'All',
-        'Priority': 'All',
-        'ClientNotification': 'All',
-        'Submitted': 'All',
-        'LastUpdate': 'All',
-        'LastComment': 'All'
-      }
+    async resetFilters() {
+      this.$reset()
       await this.getRows()
-    }
-  }
+    },
+  },
 })
 
-function formatDate (input: string) {
+function formatDate(input: string) {
   const date = new Date(input)
   // Formatting the date part
   const year = date.getFullYear()
@@ -152,14 +156,17 @@ function formatDate (input: string) {
   const hours = date.getHours()
   const minutes = String(date.getMinutes()).padStart(2, '0')
   const period = hours < 12 ? 'a.m.' : 'p.m.'
-  const formattedHours = ((hours + 11) % 12 + 1) // Convert 24-hour format to 12-hour format
+  const formattedHours = ((hours + 11) % 12) + 1 // Convert 24-hour format to 12-hour format
 
   return `${year}-${month}-${day}, ${formattedHours}:${minutes} ${period}`
 }
 
-function formatName (input: string) {
+function formatName(input: string) {
   const formattedName = input.replace(/^[(]+|[)]+$/g, '')
-  return formattedName.replace(/\|1(.*?)1\|/g, '1. $1 ').replace(/\|2(.*?)2\|/g, '2. $1 ').replace(/\|3(.*?)3\|/g, '3. $1 ')
+  return formattedName
+    .replace(/\|1(.*?)1\|/g, '1. $1 ')
+    .replace(/\|2(.*?)2\|/g, '2. $1 ')
+    .replace(/\|3(.*?)3\|/g, '3. $1 ')
 }
 
 if (import.meta.hot) {
