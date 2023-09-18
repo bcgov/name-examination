@@ -5,11 +5,11 @@
         <tr class="bg-bcgov-blue5 text-left text-sm text-white">
           <th
             v-for="column in selectedColumns"
-            :key="column.key"
+            :key="column"
             class="border-b border-gray-200 px-2 py-1"
-            :class="[column.key === 'Names' ? 'w-[22rem]' : 'w-fit']"
+            :class="[column === SearchColumns.Names ? 'w-[22rem]' : 'w-fit']"
           >
-            {{ column.name }}
+            {{ column }}
           </th>
         </tr>
 
@@ -17,25 +17,25 @@
         <tr>
           <th
             v-for="column in selectedColumns"
-            :key="column.key"
-            class="bg-sky-100 px-1 py-1 text-sm font-normal"
+            :key="column"
+            class="bg-sky-100 px-1 py-1 text-sm font-normal whitespace-nowrap"
           >
             <!-- Render text input for specified columns -->
             <input
               v-if="
-                column.key !== 'NatureOfBusiness' &&
-                column.key !== 'LastComment' &&
+                column !== SearchColumns.NatureOfBusiness &&
+                column !== SearchColumns.LastComment &&
                 [
-                  'LastModifiedBy',
-                  'NameRequestNumber',
-                  'Names',
-                  'ApplicantFirstName',
-                  'ApplicantLastName',
-                ].includes(column.key)
+                  SearchColumns.LastModifiedBy,
+                  SearchColumns.NameRequestNumber,
+                  SearchColumns.Names,
+                  SearchColumns.ApplicantFirstName,
+                  SearchColumns.ApplicantLastName,
+                ].includes(column)
               "
-              v-model="columnFilters[column.key]"
+              v-model="columnFilters[column]"
               type="text"
-              :placeholder="column.name"
+              :placeholder="column"
               class="w-full rounded border px-2 py-1"
               @keyup.enter="handleFilterChange($event)"
             />
@@ -43,14 +43,14 @@
             <!-- Render dropdown for other columns excluding 'NatureOfBusiness' and 'LastComment' -->
             <ListSelect
               v-else-if="
-                column.key !== 'NatureOfBusiness' &&
-                column.key !== 'LastComment'
+                column !== SearchColumns.NatureOfBusiness &&
+                column !== SearchColumns.LastComment
               "
-              v-model="columnFilters[column.name]"
-              :options="getDropdownOptions(column.key)"
+              v-model="columnFilters[column]"
+              :options="getDropdownOptions(column)"
               @change="handleFilterChange"
             >
-              Select
+            {{ columnFilters[column] }}
             </ListSelect>
           </th>
         </tr>
@@ -58,20 +58,20 @@
 
       <tbody
         v-if="results !== 0 && filters.isLoading == false"
-        class="text-left text-sm"
+        class="text-sm"
       >
         <tr
           v-for="row in rows"
-          :key="row.id"
+          :key="row"
           class="align-top transition duration-75 ease-in-out hover:bg-gray-200"
         >
           <td
             v-for="column in selectedColumns"
-            :key="column.key"
-            class="border-b border-gray-300 px-2 py-2"
+            :key="column"
+            class="border-b border-gray-300 px-2 py-2 whitespace-pre-line"
           >
             <p class="line-clamp-4">
-              {{ row[column.key] }}
+              {{ row[column] }}
             </p>
           </td>
         </tr>
@@ -109,6 +109,7 @@ import {
   Submitted,
   LastUpdate,
 } from '../enums/dropdownEnums'
+import { SearchColumns } from '../enums/SearchColumns'
 
 const filters = searchFiltersStore()
 
@@ -135,12 +136,12 @@ const handleFilterChange = async () => {
 }
 
 const dropdownOptions = {
-  Status: Object.values(Status),
-  ConsentRequired: Object.values(ConsentRequired),
-  Priority: Object.values(Priority),
-  ClientNotification: Object.values(ClientNotification),
-  Submitted: Object.values(Submitted),
-  LastUpdate: Object.values(LastUpdate),
+  [SearchColumns.Status]: Object.values(Status),
+  [SearchColumns.ConsentRequired]: Object.values(ConsentRequired),
+  [SearchColumns.Priority]: Object.values(Priority),
+  [SearchColumns.ClientNotification]: Object.values(ClientNotification),
+  [SearchColumns.Submitted]: Object.values(Submitted),
+  [SearchColumns.LastUpdate]: Object.values(LastUpdate),
 }
 
 const getDropdownOptions = (columnKey) => {

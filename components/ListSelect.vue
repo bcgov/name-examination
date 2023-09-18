@@ -5,7 +5,7 @@
         <ListboxButton
           class="relative w-full rounded-lg border border-gray-300 bg-white py-1.5 pl-3 pr-10 text-left transition hover:bg-gray-100 sm:text-sm"
         >
-          <span class="block"><slot></slot></span>
+          <span class="block"><slot>Select</slot></span>
           <span class="absolute inset-y-0 right-0 flex items-center pr-3">
             <svg-icon
               v-if="!open"
@@ -46,7 +46,7 @@
                   'relative cursor-default select-none py-2 pl-10 pr-4',
                 ]"
               >
-                <span>{{ isObject ? option.name : option }}</span>
+                <span>{{ option }}</span>
                 <span
                   v-if="selected"
                   class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
@@ -78,7 +78,6 @@ const { modelValue, options, multiple } = defineProps<{
   modelValue: Array<object> | any
   options: Array<any>
   multiple?: boolean
-  isObject?: boolean
 }>()
 
 const emit = defineEmits()

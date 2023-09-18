@@ -1,45 +1,36 @@
 /* eslint-disable require-jsdoc */
 import { defineStore } from 'pinia'
-
-const fixedColumns = [
-  { key: 'Status', name: 'Status' },
-  { key: 'LastModifiedBy', name: 'Modified By' },
-  { key: 'NameRequestNumber', name: 'NR Number' },
-  { key: 'Names', name: 'Names' },
-  { key: 'ApplicantFirstName', name: 'Applicant First Name' },
-  { key: 'ApplicantLastName', name: 'Applicant Last Name' },
-  { key: 'NatureOfBusiness', name: 'Nature Of Business' },
-  { key: 'ConsentRequired', name: 'Consent Required' },
-  { key: 'Priority', name: 'Priority' },
-  { key: 'ClientNotification', name: 'Notified' },
-  { key: 'Submitted', name: 'Submitted' },
-  { key: 'LastUpdate', name: 'Last Update' },
-  { key: 'LastComment', name: 'Last Comment' },
-]
+import { SearchColumns } from '~/enums/SearchColumns'
+import {
+  ClientNotification,
+  ConsentRequired,
+  LastUpdate,
+  Priority,
+  Status,
+  Submitted,
+} from '~/enums/dropdownEnums'
 
 // Pinia store
 export const searchFiltersStore = defineStore({
   id: 'searchFilters',
   state: () => {
     return {
-      fixedColumns: fixedColumns,
-      selectedColumns: fixedColumns, // Initialize selected columns to all columns
+      fixedColumns: Object.values(SearchColumns),
+      selectedColumns: Object.values(SearchColumns), // Initialize selected columns to all columns
       rows: [], // Initialize rows array, this is populated and displayed in the table
       resultNum: 0, // Total number of results returned
       filters: {
-        Status: 'HOLD',
-        LastModifiedBy: '',
-        NameRequestNumber: '',
-        Names: '',
-        ApplicantFirstName: '',
-        ApplicantLastName: '',
-        NatureOfBusiness: '',
-        ConsentRequired: 'All',
-        Priority: 'All',
-        ClientNotification: 'All',
-        Submitted: 'All',
-        LastUpdate: 'All',
-        LastComment: 'All',
+        [SearchColumns.Status]: Status.Hold,
+        [SearchColumns.LastModifiedBy]: '',
+        [SearchColumns.NameRequestNumber]: '',
+        [SearchColumns.Names]: '',
+        [SearchColumns.ApplicantFirstName]: '',
+        [SearchColumns.ApplicantLastName]: '',
+        [SearchColumns.ConsentRequired]: ConsentRequired.All,
+        [SearchColumns.Priority]: Priority.All,
+        [SearchColumns.ClientNotification]: ClientNotification.All,
+        [SearchColumns.Submitted]: Submitted.All,
+        [SearchColumns.LastUpdate]: LastUpdate.All,
       },
       selectedDisplay: 10,
       selectedPage: 1,
@@ -49,32 +40,37 @@ export const searchFiltersStore = defineStore({
   getters: {
     formattedUrl(): string {
       // Convert filters object to query string format
-      const consentOption = this.filters.ConsentRequired
-      const status = this.filters.Status === 'ALL' ? '' : this.filters.Status
-      const priority = this.filters.Priority
-      const notification = this.filters.ClientNotification
-      const submitted = this.filters.Submitted
-      const lastUpdate = this.filters.LastUpdate
+      const consentOption = this.filters[SearchColumns.ConsentRequired]
+      const status =
+        this.filters[SearchColumns.Status] === 'ALL'
+          ? ''
+          : this.filters[SearchColumns.Status]
+      const priority = this.filters[SearchColumns.Priority]
+      const notification = this.filters[SearchColumns.ClientNotification]
+      const submitted = this.filters[SearchColumns.Submitted]
+      const lastUpdate = this.filters[SearchColumns.LastUpdate]
       const rows = this.selectedDisplay
       const pagenumber =
         this.selectedPage === 1
           ? 0
           : (this.selectedPage - 1) * this.selectedDisplay
       const nrnum =
-        this.filters.NameRequestNumber === ''
+        this.filters[SearchColumns.NameRequestNumber] === ''
           ? ''
-          : this.filters.NameRequestNumber
+          : this.filters[SearchColumns.NameRequestNumber]
       const compName = this.filters.Names
       const firstName =
-        this.filters.ApplicantFirstName === ''
+        this.filters[SearchColumns.ApplicantFirstName] === ''
           ? ''
-          : this.filters.ApplicantFirstName
+          : this.filters[SearchColumns.ApplicantFirstName]
       const lastName =
-        this.filters.ApplicantLastName === ''
+        this.filters[SearchColumns.ApplicantLastName] === ''
           ? ''
-          : this.filters.ApplicantLastName
+          : this.filters[SearchColumns.ApplicantLastName]
       const modifiedBy =
-        this.filters.LastModifiedBy === '' ? '' : this.filters.LastModifiedBy
+        this.filters[SearchColumns.LastModifiedBy] === ''
+          ? ''
+          : this.filters[SearchColumns.LastModifiedBy]
       // eslint-disable-next-line max-len
       return `${useRuntimeConfig().public.namexAPIURL}${useRuntimeConfig().public.namexAPIVersion}/requests?order=priorityCd:desc,submittedDate:asc&queue=${status}&consentOption=${consentOption}&ranking=${priority}&notification=${notification}&submittedInterval=${submitted}&lastUpdateInterval=${lastUpdate}&rows=${rows}&start=${pagenumber}&activeUser=${modifiedBy}&nrNum=${nrnum}&compName=${compName}&firstName=${firstName}&lastName=${lastName}`
     }
@@ -110,28 +106,30 @@ export const searchFiltersStore = defineStore({
         const data = await response.json()
         this.resultNum = data.response.numFound
         this.rows = data.nameRequests[0].map((request: any) => ({
-          Status: request.stateCd,
-          LastModifiedBy: request.activeUser,
-          NameRequestNumber: request.nrNum,
-          Names: formatName(request.nameSearch),
-          ApplicantFirstName: request.applicants[0]?.firstName,
-          ApplicantLastName: request.applicants[0]?.lastName,
-          NatureOfBusiness:
+          [SearchColumns.Status]: request.stateCd,
+          [SearchColumns.LastModifiedBy]: request.activeUser,
+          [SearchColumns.NameRequestNumber]: request.nrNum,
+          [SearchColumns.Names]: formatName(request.nameSearch),
+          [SearchColumns.ApplicantFirstName]: request.applicants[0]?.firstName,
+          [SearchColumns.ApplicantLastName]: request.applicants[0]?.lastName,
+          [SearchColumns.NatureOfBusiness]:
             request.natureBusinessInfo === null
               ? ''
               : request.natureBusinessInfo,
-          ConsentRequired:
+          [SearchColumns.ConsentRequired]:
             request.consentFlag === 'R'
               ? 'Received'
               : request.consentFlag === 'Y'
               ? 'Yes'
               : 'No',
-          Priority: request.priorityCd === 'Y' ? 'Priority' : 'Standard',
-          ClientNotification:
+          [SearchColumns.Priority]:
+            request.priorityCd === 'Y' ? 'Priority' : 'Standard',
+          [SearchColumns.ClientNotification]:
             request.furnished === 'Y' ? 'Notified' : 'Not Notified',
-          Submitted: formatDate(request.submittedDate),
-          LastUpdate: formatDate(request.lastUpdate),
-          LastComment: request.comments[request.comments.length - 1]?.comment,
+          [SearchColumns.Submitted]: formatDate(request.submittedDate),
+          [SearchColumns.LastUpdate]: formatDate(request.lastUpdate),
+          [SearchColumns.LastComment]:
+            request.comments[request.comments.length - 1]?.comment,
         }))
         this.isLoading = false // end loading
       } catch (error) {
@@ -164,8 +162,8 @@ function formatDate(input: string) {
 function formatName(input: string) {
   const formattedName = input.replace(/^[(]+|[)]+$/g, '')
   return formattedName
-    .replace(/\|1(.*?)1\|/g, '1. $1 ')
-    .replace(/\|2(.*?)2\|/g, '2. $1 ')
+    .replace(/\|1(.*?)1\|/g, '1. $1 \n')
+    .replace(/\|2(.*?)2\|/g, '2. $1 \n')
     .replace(/\|3(.*?)3\|/g, '3. $1 ')
 }
 

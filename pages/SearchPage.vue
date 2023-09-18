@@ -14,7 +14,6 @@
         v-model="selectedColumns"
         :options="filters.fixedColumns"
         multiple
-        is-object
       >
         Columns to Show
       </ListSelect>
