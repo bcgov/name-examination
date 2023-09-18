@@ -68,7 +68,7 @@ const nextPage = () => {
 // dropdown option values
 const displayOptions = [5, 10, 20, 50, 100]
 const lastPageNumber = computed(() =>
-  Math.ceil(filters.resultNum / filters.selectedDisplay)
+  Math.max(1, Math.ceil(filters.resultNum / filters.selectedDisplay))
 )
 const pageOptions = lastPageNumber
 
