@@ -1,14 +1,13 @@
 <template>
-  <div
-    class="overflow-x-auto border border-silver-200"
-  >
-    <table class="min-w-full bg-white table-auto">
-      <thead class="sticky top-0 z-1">
-        <tr class="text-left headers text-white h-14 text-lg">
+  <div class="overflow-x-auto border">
+    <table class="min-w-full table-auto">
+      <thead class="sticky top-0">
+        <tr class="bg-bcgov-blue5 text-left text-sm text-white">
           <th
             v-for="column in selectedColumns"
             :key="column.key"
-            class="py-2 px-4 border-b border-gray-200"
+            class="border-b border-gray-200 px-2 py-1"
+            :class="{ 'min-w-48': column.key === 'Names' }"
           >
             {{ column.name }}
           </th>
@@ -19,73 +18,76 @@
           <th
             v-for="column in selectedColumns"
             :key="column.key"
-            class="text-lg py-2 px-4 border-y border-gray-200 bcgovgold"
+            class="bg-sky-100 px-1 py-1 text-sm font-normal"
           >
             <!-- Render text input for specified columns -->
             <input
-              v-if="column.key !== 'NatureOfBusiness' && column.key !== 'LastComment'&&
-                ['LastModifiedBy','NameRequestNumber', 'Names', 'ApplicantFirstName', 'ApplicantLastName']
-                  .includes(column.key)"
+              v-if="
+                column.key !== 'NatureOfBusiness' &&
+                column.key !== 'LastComment' &&
+                [
+                  'LastModifiedBy',
+                  'NameRequestNumber',
+                  'Names',
+                  'ApplicantFirstName',
+                  'ApplicantLastName',
+                ].includes(column.key)
+              "
               v-model="columnFilters[column.key]"
               type="text"
               :placeholder="column.name"
-              class="border rounded px-2 py-1 w-full"
+              class="w-full rounded border px-2 py-1"
               @keyup.enter="handleFilterChange($event)"
-            >
+            />
 
             <!-- Render dropdown for other columns excluding 'NatureOfBusiness' and 'LastComment' -->
-            <select
-              v-else-if="column.key !== 'NatureOfBusiness' && column.key !== 'LastComment'"
+            <ListSelect
+              v-else-if="
+                column.key !== 'NatureOfBusiness' &&
+                column.key !== 'LastComment'
+              "
               v-model="columnFilters[column.name]"
-              class="border rounded px-2 py-1"
+              :options="getDropdownOptions(column.key)"
               @change="handleFilterChange"
             >
-              <!-- Render the dropdown options for the current column -->
-              <option
-                v-for="option in getDropdownOptions(column.key)"
-                :key="option"
-                :value="option"
-              >
-                {{ option }}
-              </option>
-            </select>
+              Select
+            </ListSelect>
           </th>
         </tr>
       </thead>
 
       <tbody
-        v-if="results !== 0 && (filters.isLoading==false)"
-        class="text-lg text-left z-0"
+        v-if="results !== 0 && filters.isLoading == false"
+        class="text-left text-sm"
       >
         <tr
           v-for="row in rows"
           :key="row.id"
-          class="transition duration-75 ease-in-out hover:bg-gray-200"
+          class="transition align-top duration-75 ease-in-out hover:bg-gray-200"
         >
           <td
             v-for="column in selectedColumns"
             :key="column.key"
-            class="py-2 px-4 border-b border-gray-200"
+            class="border-b border-gray-300 px-2 py-2"
           >
             {{ row[column.key] }}
           </td>
         </tr>
       </tbody>
-      <tbody
-        v-else-if="(filters.isLoading==true)"
-      >
+      <tbody v-else-if="filters.isLoading == true">
         <!-- Spinner-->
-        <div class="absolute right-1/2 bottom-1/2  transform translate-x-1/2 translate-y-1/2">
-          <div class="border-t-transparent border-solid animate-spin rounded-full border-blue-400 border-8 h-56 w-56" />
+        <div
+          class="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 transform"
+        >
+          <div
+            class="h-24 w-24 animate-spin rounded-full border-8 border-solid border-blue-400 border-t-transparent"
+          />
         </div>
       </tbody>
 
       <tbody v-else>
         <tr>
-          <td
-            colspan="13"
-            class="text-center py-4 border-b border-gray-200"
-          >
+          <td colspan="13" class="border-b border-gray-200 py-4 text-center">
             No Data Available
           </td>
         </tr>
@@ -103,7 +105,7 @@ import {
   Priority,
   ClientNotification,
   Submitted,
-  LastUpdate
+  LastUpdate,
 } from '../enums/dropdownEnums'
 
 const filters = searchFiltersStore()
@@ -113,7 +115,11 @@ const rows = computed(() => filters.rows)
 const results = computed(() => filters.resultNum)
 
 // Selected from dropdown by user
-const selectedColumns = computed(() => filters.fixedColumns.filter(column => filters.selectedColumns.includes(column)))
+const selectedColumns = computed(() =>
+  filters.fixedColumns.filter((column) =>
+    filters.selectedColumns.includes(column)
+  )
+)
 
 // Object to store the filter values entered by the user
 const columnFilters = computed(() => filters.filters)
@@ -132,25 +138,15 @@ const dropdownOptions = {
   Priority: Object.values(Priority),
   ClientNotification: Object.values(ClientNotification),
   Submitted: Object.values(Submitted),
-  LastUpdate: Object.values(LastUpdate)
+  LastUpdate: Object.values(LastUpdate),
 }
 
 const getDropdownOptions = (columnKey) => {
   return dropdownOptions[columnKey] || []
 }
 
-// When component is mounted, to display initial values from the table
+// When component is mounted, display initial values from the table
 onMounted(async () => {
   await filters.getRows()
 })
 </script>
-
-<style lang ='scss' scoped>
-@import '../assets/theme.scss';
-.headers{
-  background-color: $BCgovBlue5;
-}
-.bcgovgold {
-    background-color: $BCgovGold5;
-}
-</style>

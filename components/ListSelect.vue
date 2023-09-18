@@ -1,9 +1,9 @@
 <template>
   <div>
     <Listbox :modelValue="modelValue" @update:modelValue="updateModelValue" :multiple="multiple" v-slot="{ open }">
-      <div class="relative mt-1 w-full">
+      <div class="relative w-full">
         <ListboxButton
-          class="relative w-full rounded-lg border border-gray-300 bg-white py-2 pl-3 pr-10 text-left transition hover:bg-gray-100 sm:text-sm"
+          class="relative w-full rounded-lg border border-gray-300 bg-white py-1.5 pl-3 pr-10 text-left transition hover:bg-gray-100 sm:text-sm"
         >
           <span class="block"><slot></slot></span>
           <span class="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -31,7 +31,7 @@
           enter-to-class="opacity-100"
         >
           <ListboxOptions
-            class="absolute mt-1 max-h-screen w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            class="absolute mt-1 max-h-[60vh] w-fit overflow-auto rounded-md bg-white py-1 text-base text-left shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
           >
             <ListboxOption
               v-slot="{ active, selected }"

@@ -1,7 +1,7 @@
 <template>
-  <div v-if="authModule.isAuthenticated">
+  <div v-if="authModule.isAuthenticated" class="flex flex-col h-[93vh]">
     <h1 class="ml-5 mt-5 text-2xl font-bold text-gray-700">Search</h1>
-    <div class="ml-5 flex items-center">
+    <div class="ml-5 flex items-center sm:flex-row">
       <a
         href="#"
         class="mr-5 font-semibold text-blue-800 transition duration-150 hover:text-blue-900"
@@ -26,7 +26,6 @@
         <ListSelect
           v-model="selectedDisplay"
           :options="displayOptions"
-          class="w-20"
         >
           {{ selectedDisplay }}
         </ListSelect>
@@ -42,7 +41,7 @@
         <IconButton @click="nextPage()" :icon-path="mdiArrowRight" />
       </div>
     </div>
-    <SearchBox class="mx-5 mt-14 h-fit" />
+    <SearchResultsBox class="mx-4 my-4" />
   </div>
 </template>
 
@@ -50,7 +49,6 @@
 import { useAuthStore } from '../store/auth'
 import { searchFiltersStore } from '../store/searchfilters'
 import { computed } from 'vue'
-import SearchBox from '../components/SearchBox.vue'
 import { mdiArrowLeft, mdiArrowRight } from '@mdi/js'
 
 const authModule = useAuthStore()
