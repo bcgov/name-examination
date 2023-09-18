@@ -1,10 +1,10 @@
 <template>
-  <div v-if="authModule.isAuthenticated" class="flex flex-col h-[93vh]">
-    <h1 class="ml-5 mt-5 text-2xl font-bold text-gray-700">Search</h1>
-    <div class="ml-5 flex items-center sm:flex-row">
+  <div v-if="authModule.isAuthenticated" class="flex flex-col h-[91vh] mx-4 mt-4">
+    <h1 class="text-2xl font-bold text-gray-700">Search</h1>
+    <div class="flex items-center">
       <a
         href="#"
-        class="mr-5 font-semibold text-blue-800 transition duration-150 hover:text-blue-900"
+        class="mr-4 font-semibold text-blue-800 transition duration-150 hover:text-blue-900"
         @click="filters.resetFilters()"
         >Clear Filters</a
       >
@@ -19,8 +19,8 @@
         Columns to Show
       </ListSelect>
 
-      <div class="z-10 ml-auto flex items-center space-x-3">
-        <span class="mr-5 font-semibold">Results: {{ numResults }}</span>
+      <div class="z-10 ml-auto flex items-center space-x-2">
+        <span class="mr-4 font-semibold">Results: {{ numResults }}</span>
 
         <span>Display: </span>
         <ListSelect
@@ -36,12 +36,12 @@
         </ListSelect>
       </div>
 
-      <div class="relative ml-5 mr-10 mt-1 flex space-x-2">
+      <div class="ml-4 space-x-2">
         <IconButton @click="previousPage()" :icon-path="mdiArrowLeft" />
         <IconButton @click="nextPage()" :icon-path="mdiArrowRight" />
       </div>
     </div>
-    <SearchResultsBox class="mx-4 my-4" />
+    <SearchResultsBox class="my-4" />
   </div>
 </template>
 
