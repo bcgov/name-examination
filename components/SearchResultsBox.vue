@@ -1,13 +1,13 @@
 <template>
-  <div class="overflow-x-auto border">
-    <table class="min-w-full table-auto">
+  <div class="overflow-x-auto rounded-md border">
+    <table class="table-auto">
       <thead class="sticky top-0">
         <tr class="bg-bcgov-blue5 text-left text-sm text-white">
           <th
             v-for="column in selectedColumns"
             :key="column.key"
             class="border-b border-gray-200 px-2 py-1"
-            :class="{ 'min-w-48': column.key === 'Names' }"
+            :class="[column.key === 'Names' ? 'w-[22rem]' : 'w-fit']"
           >
             {{ column.name }}
           </th>
@@ -63,14 +63,16 @@
         <tr
           v-for="row in rows"
           :key="row.id"
-          class="transition align-top duration-75 ease-in-out hover:bg-gray-200"
+          class="align-top transition duration-75 ease-in-out hover:bg-gray-200"
         >
           <td
             v-for="column in selectedColumns"
             :key="column.key"
             class="border-b border-gray-300 px-2 py-2"
           >
-            {{ row[column.key] }}
+            <p class="line-clamp-4">
+              {{ row[column.key] }}
+            </p>
           </td>
         </tr>
       </tbody>
