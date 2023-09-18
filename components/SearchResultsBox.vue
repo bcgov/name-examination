@@ -1,6 +1,6 @@
 <template>
   <div class="overflow-x-auto rounded-md border">
-    <table class="table-auto">
+    <table class="table-auto min-h-fit">
       <thead class="sticky top-0">
         <tr class="bg-bcgov-blue5 text-left text-sm text-white">
           <th
@@ -37,7 +37,6 @@
               type="text"
               :placeholder="column"
               class="w-full rounded border px-2 py-1"
-              @keyup.enter="handleFilterChange($event)"
             />
 
             <!-- Render dropdown for other columns excluding 'NatureOfBusiness' and 'LastComment' -->
@@ -48,7 +47,6 @@
               "
               v-model="columnFilters[column]"
               :options="getDropdownOptions(column)"
-              @change="handleFilterChange"
             >
             {{ columnFilters[column] }}
             </ListSelect>
@@ -63,7 +61,7 @@
         <tr
           v-for="row in rows"
           :key="row"
-          class="align-top transition duration-75 ease-in-out hover:bg-gray-200"
+          class="align-top transition duration-200 ease-in-out hover:bg-gray-200"
         >
           <td
             v-for="column in selectedColumns"
@@ -100,7 +98,7 @@
 
 <script setup>
 import { computed, onMounted } from 'vue'
-import { searchFiltersStore } from '../store/searchfilters'
+import { useSearchFiltersStore } from '../store/searchfilters'
 import {
   Status,
   ConsentRequired,
@@ -111,7 +109,7 @@ import {
 } from '../enums/dropdownEnums'
 import { SearchColumns } from '../enums/SearchColumns'
 
-const filters = searchFiltersStore()
+const filters = useSearchFiltersStore()
 
 // Reactive reference for rows
 const rows = computed(() => filters.rows)
@@ -125,15 +123,7 @@ const selectedColumns = computed(() =>
 )
 
 // Object to store the filter values entered by the user
-const columnFilters = computed(() => filters.filters)
-
-const handleFilterChange = async () => {
-  // Update the Pinia store with the new filter values
-  await filters.updateFilters(columnFilters.value)
-
-  // Fetch rows based on the updated filters from the Pinia store
-  await filters.getRows() // Now, this uses the updated filters for the API call
-}
+const columnFilters = ref(filters.filters)
 
 const dropdownOptions = {
   [SearchColumns.Status]: Object.values(Status),

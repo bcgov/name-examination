@@ -1,17 +1,20 @@
 <template>
-  <div v-if="authModule.isAuthenticated" class="flex flex-col h-[91vh] mx-4 mt-4">
+  <div
+    v-if="authModule.isAuthenticated"
+    class="mx-4 mt-4 flex h-[91vh] flex-col"
+  >
     <h1 class="text-2xl font-bold text-gray-700">Search</h1>
     <div class="flex items-center">
       <a
         href="#"
         class="mr-4 font-semibold text-blue-800 transition duration-150 hover:text-blue-900"
-        @click="filters.resetFilters()"
+        @click="filters.$reset()"
         >Clear Filters</a
       >
 
       <ListSelect
         class="z-10 w-48"
-        v-model="selectedColumns"
+        v-model="filters.selectedColumns"
         :options="filters.fixedColumns"
         multiple
       >
@@ -19,19 +22,16 @@
       </ListSelect>
 
       <div class="z-10 ml-auto flex items-center space-x-2">
-        <span class="mr-4 font-semibold">Results: {{ numResults }}</span>
+        <span class="mr-4 font-semibold">Results: {{ filters.resultNum }}</span>
 
         <span>Display: </span>
-        <ListSelect
-          v-model="selectedDisplay"
-          :options="displayOptions"
-        >
-          {{ selectedDisplay }}
+        <ListSelect v-model="filters.selectedDisplay" :options="displayOptions">
+          {{ filters.selectedDisplay }}
         </ListSelect>
 
         <span>Page: </span>
-        <ListSelect v-model="selectedPage" :options="pageOptions">
-          {{ selectedPage }} of {{ pageOptions }}
+        <ListSelect v-model="filters.selectedPage" :options="pageOptions">
+          {{ filters.selectedPage }} of {{ lastPageNumber }}
         </ListSelect>
       </div>
 
@@ -46,55 +46,30 @@
 
 <script setup>
 import { useAuthStore } from '../store/auth'
-import { searchFiltersStore } from '../store/searchfilters'
+import { useSearchFiltersStore } from '../store/searchfilters'
 import { computed } from 'vue'
 import { mdiArrowLeft, mdiArrowRight } from '@mdi/js'
 
 const authModule = useAuthStore()
-const filters = searchFiltersStore()
+const filters = useSearchFiltersStore()
 
-// Values selected form the dropdown, also being updated in the pinia store
-const selectedColumns = computed({
-  get: () => filters.selectedColumns,
-  set: (newValue) => {
-    filters.setSelectedColumns(newValue)
-  },
-})
-
-const selectedDisplay = computed({
-  get: () => filters.selectedDisplay,
-  set: (newValue) => {
-    filters.setSelectedDisplay(newValue)
-  },
-})
-
-const selectedPage = computed({
-  get: () => filters.selectedPage,
-  set: (newValue) => {
-    filters.setSelectedPage(newValue)
-  },
-})
-
-// page change functions
 const previousPage = () => {
-  if (selectedPage.value > 1) {
-    selectedPage.value--
+  if (filters.selectedPage > 1) {
+    filters.selectedPage--
   }
 }
 
 const nextPage = () => {
-  if (selectedPage.value < pageOptions.value) {
-    selectedPage.value++
+  if (filters.selectedPage < lastPageNumber.value) {
+    filters.selectedPage++
   }
 }
 
 // dropdown option values
-const numResults = computed(() => filters.resultNum)
 const displayOptions = [5, 10, 20, 50, 100]
 const lastPageNumber = computed(() =>
-  Math.ceil(numResults.value / selectedDisplay.value)
+  Math.ceil(filters.resultNum / filters.selectedDisplay)
 )
-// const pageOptions = computed(() => [...Array(lastPageNumber+1).keys()])
 const pageOptions = lastPageNumber
 
 // not authenticated? go back to loginpage

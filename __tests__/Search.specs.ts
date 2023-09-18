@@ -3,7 +3,7 @@ import SearchBox from '../components/SearchBox.vue'
 import flushPromises from 'flush-promises'
 import { mount } from '@vue/test-utils'
 import { createTestingPinia } from '@pinia/testing'
-import { searchFiltersStore } from '../store/searchfilters'
+import { useSearchFiltersStore } from '../store/searchfilters'
 /* eslint-disable require-jsdoc */
 
 describe('Search Page', () => {
@@ -18,7 +18,7 @@ describe('Search Page', () => {
         plugins: [pinia]
       }
     })
-    filters = searchFiltersStore(pinia)
+    filters = useSearchFiltersStore(pinia)
     // Mock rows
     filters.rows = [{
       Status: 'APPROVED',
