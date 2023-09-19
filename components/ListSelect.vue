@@ -3,7 +3,7 @@
     <Listbox :modelValue="modelValue" @update:modelValue="updateModelValue" :multiple="multiple" v-slot="{ open }">
       <div class="relative w-full">
         <ListboxButton
-          class="relative w-full rounded-lg border border-gray-300 bg-white py-1.5 pl-3 pr-10 text-left transition hover:bg-gray-100 sm:text-sm"
+          class="relative w-full rounded-md border border-gray-300 bg-white py-1.5 pl-3 pr-10 text-left transition hover:bg-gray-100 sm:text-sm"
         >
           <span class="block"><slot>Select</slot></span>
           <span class="absolute inset-y-0 right-0 flex items-center pr-3">

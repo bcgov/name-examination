@@ -39,7 +39,7 @@
               v-if="'text_input' in layout[column]"
               type="text"
               :placeholder="layout[column].text_input"
-              class="w-full rounded border p-1.5"
+              class="w-full rounded-md border p-1.5"
               @keyup.enter="filters.filters[column] = $event.target.value"
             />
 
