@@ -72,14 +72,14 @@ export const useSearchFiltersStore = defineStore('searchfilters', () => {
       filters.value[SearchColumns.LastModifiedBy] === ''
         ? ''
         : filters.value[SearchColumns.LastModifiedBy]
+      const hour = DateTime.now().hour
     // eslint-disable-next-line max-len
     return `${import.meta.env.VITE_APP_NAMEX_API_URL}${
       import.meta.env.VITE_APP_NAMEX_API_VERSION
-    }/requests?order=priorityCd:desc,submittedDate:${submittedDateOrderString}&queue=${status}&consentOption=${consentOption}&ranking=${priority}&notification=${notification}&submittedInterval=${submitted}&lastUpdateInterval=${lastUpdate}&rows=${rows}&start=${pagenumber}&activeUser=${modifiedBy}&nrNum=${nrnum}&compName=${compName}&firstName=${firstName}&lastName=${lastName}`
+    }/requests?order=priorityCd:desc,submittedDate:${submittedDateOrderString}&queue=${status}&consentOption=${consentOption}&ranking=${priority}&notification=${notification}&submittedInterval=${submitted}&lastUpdateInterval=${lastUpdate}&rows=${rows}&start=${pagenumber}&activeUser=${modifiedBy}&nrNum=${nrnum}&compName=${compName}&firstName=${firstName}&lastName=${lastName}&hour=${hour}`
   })
 
   async function getRows() {
-    console.log('firing')
     isLoading.value = true // Start loading
     try {
       const url = formattedUrl.value
