@@ -8,7 +8,22 @@
             :key="column"
             class="border-b border-gray-200 px-2 py-1"
           >
-            {{ column }}
+            <a
+              v-if="layout[column].clickable"
+              href="#"
+              @click="layout[column].clickable.onClick"
+              class="flex items-center"
+            >
+              {{ column }}
+              <svg-icon
+                type="mdi"
+                viewBox="0 -6 28 28"
+                :path="layout[column].clickable.icon.value"
+              />
+            </a>
+            <span v-else>
+              {{ column }}
+            </span>
           </th>
         </tr>
 
@@ -18,24 +33,20 @@
             v-for="column in selectedColumns"
             :key="column"
             class="whitespace-nowrap bg-sky-100 px-1 py-1 text-sm font-normal"
-            :class="
-              'width' in columnLayout[column]
-                ? columnLayout[column].width
-                : 'w-fit'
-            "
+            :class="'width' in layout[column] ? layout[column].width : 'w-fit'"
           >
             <input
-              v-if="'text_input' in columnLayout[column]"
+              v-if="'text_input' in layout[column]"
               type="text"
-              :placeholder="columnLayout[column].text_input"
+              :placeholder="layout[column].text_input"
               class="w-full rounded border p-1.5"
               @keyup.enter="filters.filters[column] = $event.target.value"
             />
 
             <ListSelect
-              v-else-if="'dropdown' in columnLayout[column]"
+              v-else-if="'dropdown' in layout[column]"
               v-model="filters.filters[column]"
-              :options="columnLayout[column].dropdown"
+              :options="layout[column].dropdown"
             >
               {{ filters.filters[column] }}
             </ListSelect>
@@ -43,11 +54,7 @@
         </tr>
       </thead>
 
-      <tbody v-if="filters.isLoading">
-        <LoadingSpinner />
-      </tbody>
-
-      <tbody v-else-if="filters.resultNum == 0">
+      <tbody v-if="filters.resultNum == 0">
         <tr>
           <td colspan="13" class="border-b border-gray-200 py-4 text-center">
             No Data Available
@@ -55,7 +62,7 @@
         </tr>
       </tbody>
 
-      <tbody v-else class="text-sm">
+      <tbody v-else class="text-sm" :class="{ collapse: filters.isLoading }">
         <tr
           v-for="row in filters.rows"
           :key="row"
@@ -72,6 +79,7 @@
           </td>
         </tr>
       </tbody>
+      <LoadingSpinner v-if="filters.isLoading" />
     </table>
   </div>
 </template>
@@ -88,6 +96,16 @@ import {
   LastUpdate,
 } from '../enums/dropdownEnums'
 import { SearchColumns } from '../enums/SearchColumns'
+import { mdiArrowDown, mdiArrowUp } from '@mdi/js'
+
+const filters = useSearchFiltersStore()
+
+// User-selected columns in order
+const selectedColumns = computed(() =>
+  filters.fixedColumns.filter((column) =>
+    filters.selectedColumns.includes(column)
+  )
+)
 
 /**
  * An object describing how to display the columns in the table header.
@@ -95,7 +113,7 @@ import { SearchColumns } from '../enums/SearchColumns'
  * the `text_input` property will create a text input with the given placeholder.
  * A `width` property can be given to specify a custom column width, the value should be a valid Tailwind class.
  */
-const columnLayout = {
+const layout = {
   [SearchColumns.Status]: {
     dropdown: Object.values(Status),
   },
@@ -128,21 +146,18 @@ const columnLayout = {
   },
   [SearchColumns.Submitted]: {
     dropdown: Object.values(Submitted),
+    clickable: {
+      icon: computed(() =>
+        filters.submittedDateOrder === 'asc' ? mdiArrowDown : mdiArrowUp
+      ),
+      onClick: filters.toggleSubmittedDateOrder,
+    },
   },
   [SearchColumns.LastUpdate]: {
     dropdown: Object.values(LastUpdate),
   },
   [SearchColumns.LastComment]: {},
 }
-
-const filters = useSearchFiltersStore()
-
-// User-selected columns in order
-const selectedColumns = computed(() =>
-  filters.fixedColumns.filter((column) =>
-    filters.selectedColumns.includes(column)
-  )
-)
 
 // When component is mounted, display initial values from the table
 onMounted(async () => {

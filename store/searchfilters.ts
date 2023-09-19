@@ -35,6 +35,7 @@ export const useSearchFiltersStore = defineStore('searchfilters', () => {
   const filters = ref(defaultFilters())
   const selectedDisplay = ref(10)
   const selectedPage = ref(1)
+  const submittedDateOrder: Ref<'asc' | 'desc'> = ref('asc')
   const isLoading = ref(false)
 
   const formattedUrl = computed(() => {
@@ -47,6 +48,7 @@ export const useSearchFiltersStore = defineStore('searchfilters', () => {
     const priority = filters.value[SearchColumns.Priority]
     const notification = filters.value[SearchColumns.ClientNotification]
     const submitted = filters.value[SearchColumns.Submitted]
+    const submittedDateOrderString = submittedDateOrder.value
     const lastUpdate = filters.value[SearchColumns.LastUpdate]
     const rows = selectedDisplay.value
     const pagenumber =
@@ -73,10 +75,11 @@ export const useSearchFiltersStore = defineStore('searchfilters', () => {
     // eslint-disable-next-line max-len
     return `${import.meta.env.VITE_APP_NAMEX_API_URL}${
       import.meta.env.VITE_APP_NAMEX_API_VERSION
-    }/requests?order=priorityCd:desc,submittedDate:asc&queue=${status}&consentOption=${consentOption}&ranking=${priority}&notification=${notification}&submittedInterval=${submitted}&lastUpdateInterval=${lastUpdate}&rows=${rows}&start=${pagenumber}&activeUser=${modifiedBy}&nrNum=${nrnum}&compName=${compName}&firstName=${firstName}&lastName=${lastName}`
+    }/requests?order=priorityCd:desc,submittedDate:${submittedDateOrderString}&queue=${status}&consentOption=${consentOption}&ranking=${priority}&notification=${notification}&submittedInterval=${submitted}&lastUpdateInterval=${lastUpdate}&rows=${rows}&start=${pagenumber}&activeUser=${modifiedBy}&nrNum=${nrnum}&compName=${compName}&firstName=${firstName}&lastName=${lastName}`
   })
 
   async function getRows() {
+    console.log('firing')
     isLoading.value = true // Start loading
     try {
       const url = formattedUrl.value
@@ -118,6 +121,14 @@ export const useSearchFiltersStore = defineStore('searchfilters', () => {
     }
   }
 
+  function toggleSubmittedDateOrder() {
+    if (submittedDateOrder.value === 'asc') {
+      submittedDateOrder.value = 'desc'
+    } else {
+      submittedDateOrder.value = 'asc'
+    }
+  }
+
   function $reset() {
     selectedColumns.value = Object.values(SearchColumns)
     filters.value = defaultFilters()
@@ -126,7 +137,7 @@ export const useSearchFiltersStore = defineStore('searchfilters', () => {
   }
 
   watch(
-    () => [filters, selectedDisplay],
+    () => [filters, selectedDisplay, submittedDateOrder],
     async (_state) => {
       selectedPage.value = 1
       await getRows()
@@ -150,9 +161,11 @@ export const useSearchFiltersStore = defineStore('searchfilters', () => {
     filters,
     selectedDisplay,
     selectedPage,
+    submittedDateOrder,
     isLoading,
     formattedUrl,
     getRows,
+    toggleSubmittedDateOrder,
     $reset,
   }
 })
@@ -162,12 +175,12 @@ function formatDate(input: string): string {
 }
 
 interface NameObject {
-  choice: number,
+  choice: number
   name: string
 }
 function formatNames(names: Array<NameObject>): string {
   names.sort((n1, n2) => n1.choice - n2.choice)
-  let formatted = ""
+  let formatted = ''
   for (let name of names) {
     formatted += `${name.choice}. ${name.name}\n`
   }
