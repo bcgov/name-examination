@@ -42,44 +42,50 @@ export const useSearchFiltersStore = defineStore('searchfilters', () => {
   const isLoading = ref(false)
 
   const formattedUrl = computed(() => {
-    // Convert filters object to query string format
-    const consentOption = filters.value[SearchColumns.ConsentRequired]
-    const status =
-      filters.value[SearchColumns.Status] === 'ALL'
-        ? ''
-        : filters.value[SearchColumns.Status]
-    const priority = filters.value[SearchColumns.Priority]
-    const notification = filters.value[SearchColumns.ClientNotification]
-    const submitted = filters.value.Submitted != Submitted.Custom ? filters.value[SearchColumns.Submitted] : ''
-    const submittedDateOrderString = submittedDateOrder.value
-    const lastUpdate = filters.value[SearchColumns.LastUpdate]
-    const rows = selectedDisplay.value
-    const pagenumber =
-      selectedPage.value === 1
-        ? 0
-        : (selectedPage.value - 1) * selectedDisplay.value
-    const nrnum =
-      filters.value[SearchColumns.NameRequestNumber] === ''
-        ? ''
-        : filters.value[SearchColumns.NameRequestNumber]
-    const compName = filters.value.Names
-    const firstName =
-      filters.value[SearchColumns.ApplicantFirstName] === ''
-        ? ''
-        : filters.value[SearchColumns.ApplicantFirstName]
-    const lastName =
-      filters.value[SearchColumns.ApplicantLastName] === ''
-        ? ''
-        : filters.value[SearchColumns.ApplicantLastName]
-    const modifiedBy =
-      filters.value[SearchColumns.LastModifiedBy] === ''
-        ? ''
-        : filters.value[SearchColumns.LastModifiedBy]
-    const hour = DateTime.now().hour
-    // eslint-disable-next-line max-len
-    return `${import.meta.env.VITE_APP_NAMEX_API_URL}${
-      import.meta.env.VITE_APP_NAMEX_API_VERSION
-    }/requests?order=priorityCd:desc,submittedDate:${submittedDateOrderString}&queue=${status}&consentOption=${consentOption}&ranking=${priority}&notification=${notification}&submittedInterval=${submitted}&lastUpdateInterval=${lastUpdate}&rows=${rows}&start=${pagenumber}&activeUser=${modifiedBy}&nrNum=${nrnum}&compName=${compName}&firstName=${firstName}&lastName=${lastName}&hour=${hour}&submittedStartDate=${submittedStartDate.value}&submittedEndDate=${submittedEndDate.value}`
+    const filtersVal = filters.value
+    const params = new URLSearchParams({
+      order: `priorityCd:desc,submittedDate:${submittedDateOrder.value}`,
+      queue:
+        filtersVal[SearchColumns.Status] === Status.All
+          ? ''
+          : filtersVal[SearchColumns.Status],
+      consentOption: filters.value[SearchColumns.ConsentRequired],
+      ranking: filters.value[SearchColumns.Priority],
+      notification: filters.value[SearchColumns.ClientNotification],
+      submittedInterval:
+        filters.value.Submitted != Submitted.Custom
+          ? filters.value[SearchColumns.Submitted]
+          : '',
+      lastUpdateInterval: filters.value[SearchColumns.LastUpdate],
+      rows: selectedDisplay.value.toString(),
+      start: (
+        Math.max(0, selectedPage.value - 1) * selectedDisplay.value
+      ).toString(),
+      activeUser:
+        filters.value[SearchColumns.LastModifiedBy] === ''
+          ? ''
+          : filters.value[SearchColumns.LastModifiedBy],
+      nrNum:
+        filters.value[SearchColumns.NameRequestNumber] === ''
+          ? ''
+          : filters.value[SearchColumns.NameRequestNumber],
+      compName: filters.value.Names,
+      firstName:
+        filters.value[SearchColumns.ApplicantFirstName] === ''
+          ? ''
+          : filters.value[SearchColumns.ApplicantFirstName],
+      lastName:
+        filters.value[SearchColumns.ApplicantLastName] === ''
+          ? ''
+          : filters.value[SearchColumns.ApplicantLastName],
+      hour: DateTime.now().hour.toString(),
+      submittedStartDate: submittedStartDate.value,
+      submittedEndDate: submittedEndDate.value,
+    })
+    return new URL(
+      `${import.meta.env.VITE_APP_NAMEX_API_VERSION}/requests?${params}`,
+      import.meta.env.VITE_APP_NAMEX_API_URL
+    )
   })
 
   async function getRows() {
