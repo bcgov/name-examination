@@ -3,12 +3,12 @@ import SearchBox from '../components/SearchBox.vue'
 import flushPromises from 'flush-promises'
 import { mount } from '@vue/test-utils'
 import { createTestingPinia } from '@pinia/testing'
-import { useSearchFiltersStore } from '../store/searchfilters'
+import { useSearchStore } from '../store/search'
 /* eslint-disable require-jsdoc */
 
 describe('Search Page', () => {
   let wrapper: any = null
-  let filters: any = null
+  let search: any = null
   beforeEach(() => {
     const pinia = createTestingPinia({
       createSpy: vitest.fn
@@ -18,9 +18,9 @@ describe('Search Page', () => {
         plugins: [pinia]
       }
     })
-    filters = useSearchFiltersStore(pinia)
+    search = useSearchStore(pinia)
     // Mock rows
-    filters.rows = [{
+    search.rows = [{
       Status: 'APPROVED',
       LastModifiedBy: 'user112',
       NameRequestNumber: 'NR112345',
@@ -172,12 +172,12 @@ describe('Search Page', () => {
     }
     ]
     // 10 rows have been mocked
-    filters.resultNum = 10
+    search.resultNum = 10
     global.fetch = vi.fn()
   })
 
   it('the selected columns are shown/hidden correctly', async () => {
-    filters.selectedColumns = ['NameRequestNumber', 'Names', 'ApplicantFirstName',
+    search.selectedColumns = ['NameRequestNumber', 'Names', 'ApplicantFirstName',
       'ApplicantLastName', 'NatureOfBusiness', 'ConsentRequired', 'Priority', 'ClientNotification', 'Submitted',
       'LastUpdate'] // Hidden 3 columns (Status, Last Comment, Modified By)
 
@@ -195,7 +195,7 @@ describe('Search Page', () => {
   })
 
   it('shows loading spinner when isLoading is true', async () => {
-    filters.isLoading = true
+    search.isLoading = true
     await flushPromises()// wait for updates
     expect(wrapper.find('.border-t-transparent').exists()).toBe(true)
   })

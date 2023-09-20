@@ -8,30 +8,30 @@
       <a
         href="#"
         class="mr-4 font-semibold text-blue-800 transition duration-150 hover:text-blue-900"
-        @click="filters.$reset()"
+        @click="search.$reset()"
         >Clear Filters</a
       >
 
       <ListSelect
         class="z-10 w-48"
-        v-model="filters.selectedColumns"
-        :options="filters.fixedColumns"
+        v-model="search.selectedColumns"
+        :options="search.fixedColumns"
         multiple
       >
         Columns to Show
       </ListSelect>
 
       <div class="z-10 ml-auto flex items-center space-x-2">
-        <span class="mr-4 font-semibold">Results: {{ filters.resultNum }}</span>
+        <span class="mr-4 font-semibold">Results: {{ search.resultNum }}</span>
 
         <span>Display: </span>
-        <ListSelect v-model="filters.selectedDisplay" :options="displayOptions">
-          {{ filters.selectedDisplay }}
+        <ListSelect v-model="search.selectedDisplay" :options="displayOptions">
+          {{ search.selectedDisplay }}
         </ListSelect>
 
         <span>Page: </span>
-        <ListSelect v-model="filters.selectedPage" :options="pageOptions">
-          {{ filters.selectedPage }} of {{ lastPageNumber }}
+        <ListSelect v-model="search.selectedPage" :options="pageOptions">
+          {{ search.selectedPage }} of {{ lastPageNumber }}
         </ListSelect>
       </div>
 
@@ -46,29 +46,29 @@
 
 <script setup>
 import { useAuthStore } from '../store/auth'
-import { useSearchFiltersStore } from '../store/searchfilters'
+import { useSearchStore } from '../store/search'
 import { computed } from 'vue'
 import { mdiArrowLeft, mdiArrowRight } from '@mdi/js'
 
 const authModule = useAuthStore()
-const filters = useSearchFiltersStore()
+const search = useSearchStore()
 
 const previousPage = () => {
-  if (filters.selectedPage > 1) {
-    filters.selectedPage--
+  if (search.selectedPage > 1) {
+    search.selectedPage--
   }
 }
 
 const nextPage = () => {
-  if (filters.selectedPage < lastPageNumber.value) {
-    filters.selectedPage++
+  if (search.selectedPage < lastPageNumber.value) {
+    search.selectedPage++
   }
 }
 
 // dropdown option values
 const displayOptions = [5, 10, 20, 50, 100]
 const lastPageNumber = computed(() =>
-  Math.max(1, Math.ceil(filters.resultNum / filters.selectedDisplay))
+  Math.max(1, Math.ceil(search.resultNum / search.selectedDisplay))
 )
 const pageOptions = lastPageNumber
 

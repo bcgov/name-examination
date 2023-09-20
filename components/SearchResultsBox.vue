@@ -40,22 +40,22 @@
               type="text"
               :placeholder="layout[column].text_input"
               class="w-full rounded-md border p-1.5"
-              :value="filters.filters[column]"
-              @keyup.enter="filters.filters[column] = $event.target.value"
+              :value="search.filters[column]"
+              @keyup.enter="search.filters[column] = $event.target.value"
             />
 
             <ListSelect
               v-else-if="'dropdown' in layout[column]"
-              v-model="filters.filters[column]"
+              v-model="search.filters[column]"
               :options="layout[column].dropdown"
             >
-              {{ filters.filters[column] }}
+              {{ search.filters[column] }}
             </ListSelect>
           </th>
         </tr>
       </thead>
 
-      <tbody v-if="filters.resultNum == 0">
+      <tbody v-if="search.resultNum == 0">
         <tr>
           <td colspan="13" class="border-b border-gray-200 py-4 text-center">
             No Data Available
@@ -63,9 +63,9 @@
         </tr>
       </tbody>
 
-      <tbody v-else class="text-sm" :class="{ collapse: filters.isLoading }">
+      <tbody v-else class="text-sm" :class="{ collapse: search.isLoading }">
         <tr
-          v-for="row in filters.rows"
+          v-for="row in search.rows"
           :key="row"
           class="align-top transition duration-200 ease-in-out hover:bg-gray-200"
         >
@@ -80,13 +80,13 @@
           </td>
         </tr>
       </tbody>
-      <LoadingSpinner v-if="filters.isLoading" />
+      <LoadingSpinner v-if="search.isLoading" />
     </table>
 
     <DateDialog
       :isOpen="showDateDialog"
-      :initialStart="filters.submittedStartDate"
-      :initialEnd="filters.submittedEndDate"
+      :initialStart="search.submittedStartDate"
+      :initialEnd="search.submittedEndDate"
       @submit="onDateDialogSubmit"
       @cancel="onDateDialogCancel"
     />
@@ -95,7 +95,7 @@
 
 <script setup>
 import { computed, onMounted } from 'vue'
-import { useSearchFiltersStore } from '../store/searchfilters'
+import { useSearchStore } from '../store/search'
 import {
   Status,
   ConsentRequired,
@@ -107,14 +107,14 @@ import {
 import { SearchColumns } from '../enums/SearchColumns'
 import { mdiArrowDown, mdiArrowUp } from '@mdi/js'
 
-const filters = useSearchFiltersStore()
+const search = useSearchStore()
 
 const showDateDialog = ref(false)
 
 // User-selected columns in order
 const selectedColumns = computed(() =>
-  filters.fixedColumns.filter((column) =>
-    filters.selectedColumns.includes(column)
+  search.fixedColumns.filter((column) =>
+    search.selectedColumns.includes(column)
   )
 )
 
@@ -159,9 +159,9 @@ const layout = {
     dropdown: Object.values(Submitted),
     clickable: {
       icon: computed(() =>
-        filters.submittedDateOrder === 'asc' ? mdiArrowDown : mdiArrowUp
+        search.submittedDateOrder === 'asc' ? mdiArrowDown : mdiArrowUp
       ),
-      onClick: filters.toggleSubmittedDateOrder,
+      onClick: search.toggleSubmittedDateOrder,
     },
   },
   [SearchColumns.LastUpdate]: {
@@ -171,7 +171,7 @@ const layout = {
 }
 
 watch(
-  [filters.filters],
+  [search.filters],
   (state) => {
     if (state[0].Submitted == Submitted.Custom) {
       showDateDialog.value = true
@@ -180,18 +180,18 @@ watch(
 )
 
 function onDateDialogSubmit(startDate, endDate) {
-  filters.submittedStartDate = startDate
-  filters.submittedEndDate = endDate
+  search.submittedStartDate = startDate
+  search.submittedEndDate = endDate
   showDateDialog.value = false
 }
 
 function onDateDialogCancel() {
-  filters.filters.Submitted = filters.lastSubmittedDateOption
+  search.filters.Submitted = search.lastSubmittedDateOption
   showDateDialog.value = false
 }
 
 // When component is mounted, display initial values from the table
 onMounted(async () => {
-  await filters.getRows()
+  await search.getRows()
 })
 </script>

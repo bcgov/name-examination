@@ -27,7 +27,7 @@ const defaultFilters = () => {
   }
 }
 
-export const useSearchFiltersStore = defineStore('searchfilters', () => {
+export const useSearchStore = defineStore('search', () => {
   const fixedColumns = Object.values(SearchColumns)
   const selectedColumns = ref(Object.values(SearchColumns)) // Initialize selected columns to all columns
   const rows = ref([])
@@ -41,8 +41,8 @@ export const useSearchFiltersStore = defineStore('searchfilters', () => {
   const lastSubmittedDateOption = ref(filters.Submitted)
   const isLoading = ref(false)
 
-  const formattedUrl = computed(() => {
-    const params = new URLSearchParams({
+  const formattedSearchParams = computed(() => {
+    return new URLSearchParams({
       order: `priorityCd:desc,submittedDate:${submittedDateOrder.value}`,
       queue:
         filters[SearchColumns.Status] === Status.All
@@ -52,7 +52,7 @@ export const useSearchFiltersStore = defineStore('searchfilters', () => {
       ranking: filters[SearchColumns.Priority],
       notification: filters[SearchColumns.ClientNotification],
       submittedInterval:
-        filters.Submitted != Submitted.Custom
+        filters[SearchColumns.Submitted] != Submitted.Custom
           ? filters[SearchColumns.Submitted]
           : '',
       lastUpdateInterval: filters[SearchColumns.LastUpdate],
@@ -68,7 +68,7 @@ export const useSearchFiltersStore = defineStore('searchfilters', () => {
         filters[SearchColumns.NameRequestNumber] === ''
           ? ''
           : filters[SearchColumns.NameRequestNumber],
-      compName: filters.Names,
+      compName: filters[SearchColumns.Names],
       firstName:
         filters[SearchColumns.ApplicantFirstName] === ''
           ? ''
@@ -81,8 +81,13 @@ export const useSearchFiltersStore = defineStore('searchfilters', () => {
       submittedStartDate: submittedStartDate.value,
       submittedEndDate: submittedEndDate.value,
     })
+  })
+
+  const formattedUrl = computed(() => {
     return new URL(
-      `${import.meta.env.VITE_APP_NAMEX_API_VERSION}/requests?${params}`,
+      `${
+        import.meta.env.VITE_APP_NAMEX_API_VERSION
+      }/requests?${formattedSearchParams.value}`,
       import.meta.env.VITE_APP_NAMEX_API_URL
     )
   })
@@ -210,7 +215,5 @@ function formatNames(names: Array<NameObject>): string {
 }
 
 if (import.meta.hot) {
-  import.meta.hot.accept(
-    acceptHMRUpdate(useSearchFiltersStore, import.meta.hot)
-  )
+  import.meta.hot.accept(acceptHMRUpdate(useSearchStore, import.meta.hot))
 }
