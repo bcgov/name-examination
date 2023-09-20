@@ -42,7 +42,7 @@ export const useSearchStore = defineStore('search', () => {
   const isLoading = ref(false)
 
   const formattedSearchParams = computed(() => {
-    return new URLSearchParams({
+    const params = {
       order: `priorityCd:desc,submittedDate:${submittedDateOrder.value}`,
       queue:
         filters[SearchColumns.Status] === Status.All
@@ -60,34 +60,29 @@ export const useSearchStore = defineStore('search', () => {
       start: (
         Math.max(0, selectedPage.value - 1) * selectedDisplay.value
       ).toString(),
-      activeUser:
-        filters[SearchColumns.LastModifiedBy] === ''
-          ? ''
-          : filters[SearchColumns.LastModifiedBy],
-      nrNum:
-        filters[SearchColumns.NameRequestNumber] === ''
-          ? ''
-          : filters[SearchColumns.NameRequestNumber],
+      activeUser: filters[SearchColumns.LastModifiedBy],
+      nrNum: filters[SearchColumns.NameRequestNumber],
       compName: filters[SearchColumns.Names],
-      firstName:
-        filters[SearchColumns.ApplicantFirstName] === ''
-          ? ''
-          : filters[SearchColumns.ApplicantFirstName],
-      lastName:
-        filters[SearchColumns.ApplicantLastName] === ''
-          ? ''
-          : filters[SearchColumns.ApplicantLastName],
+      firstName: filters[SearchColumns.ApplicantFirstName],
+      lastName: filters[SearchColumns.ApplicantLastName],
       hour: DateTime.now().hour.toString(),
       submittedStartDate: submittedStartDate.value,
       submittedEndDate: submittedEndDate.value,
-    })
+    }
+
+    // return the params object with all properties that have a defined value
+    return new URLSearchParams(
+      Object.fromEntries(
+        Object.entries(params).filter(([_, val]) => val !== '')
+      )
+    )
   })
 
   const formattedUrl = computed(() => {
     return new URL(
-      `${
-        import.meta.env.VITE_APP_NAMEX_API_VERSION
-      }/requests?${formattedSearchParams.value}`,
+      `${import.meta.env.VITE_APP_NAMEX_API_VERSION}/requests?${
+        formattedSearchParams.value
+      }`,
       import.meta.env.VITE_APP_NAMEX_API_URL
     )
   })
