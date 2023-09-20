@@ -40,6 +40,7 @@
               type="text"
               :placeholder="layout[column].text_input"
               class="w-full rounded-md border p-1.5"
+              :value="filters.filters[column]"
               @keyup.enter="filters.filters[column] = $event.target.value"
             />
 
@@ -81,6 +82,14 @@
       </tbody>
       <LoadingSpinner v-if="filters.isLoading" />
     </table>
+
+    <DateDialog
+      :isOpen="showDateDialog"
+      :initialStart="filters.submittedStartDate"
+      :initialEnd="filters.submittedEndDate"
+      @submit="onDateDialogSubmit"
+      @cancel="onDateDialogCancel"
+    />
   </div>
 </template>
 
@@ -99,6 +108,8 @@ import { SearchColumns } from '../enums/SearchColumns'
 import { mdiArrowDown, mdiArrowUp } from '@mdi/js'
 
 const filters = useSearchFiltersStore()
+
+const showDateDialog = ref(false)
 
 // User-selected columns in order
 const selectedColumns = computed(() =>
@@ -157,6 +168,27 @@ const layout = {
     dropdown: Object.values(LastUpdate),
   },
   [SearchColumns.LastComment]: {},
+}
+
+watch(
+  [filters.filters],
+  (state) => {
+    if (state[0].Submitted == Submitted.Custom) {
+      showDateDialog.value = true
+    }
+  },
+  { deep: true }
+)
+
+function onDateDialogSubmit(startDate, endDate) {
+  filters.submittedStartDate = startDate
+  filters.submittedEndDate = endDate
+  showDateDialog.value = false
+}
+
+function onDateDialogCancel() {
+  filters.filters.Submitted = filters.lastSubmittedDateOption
+  showDateDialog.value = false
 }
 
 // When component is mounted, display initial values from the table

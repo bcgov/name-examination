@@ -36,6 +36,9 @@ export const useSearchFiltersStore = defineStore('searchfilters', () => {
   const selectedDisplay = ref(10)
   const selectedPage = ref(1)
   const submittedDateOrder: Ref<'asc' | 'desc'> = ref('asc')
+  const submittedStartDate = ref('')
+  const submittedEndDate = ref('')
+  const lastSubmittedDateOption = ref(filters.value.Submitted)
   const isLoading = ref(false)
 
   const formattedUrl = computed(() => {
@@ -47,7 +50,7 @@ export const useSearchFiltersStore = defineStore('searchfilters', () => {
         : filters.value[SearchColumns.Status]
     const priority = filters.value[SearchColumns.Priority]
     const notification = filters.value[SearchColumns.ClientNotification]
-    const submitted = filters.value[SearchColumns.Submitted]
+    const submitted = filters.value.Submitted != Submitted.Custom ? filters.value[SearchColumns.Submitted] : ''
     const submittedDateOrderString = submittedDateOrder.value
     const lastUpdate = filters.value[SearchColumns.LastUpdate]
     const rows = selectedDisplay.value
@@ -72,11 +75,11 @@ export const useSearchFiltersStore = defineStore('searchfilters', () => {
       filters.value[SearchColumns.LastModifiedBy] === ''
         ? ''
         : filters.value[SearchColumns.LastModifiedBy]
-      const hour = DateTime.now().hour
+    const hour = DateTime.now().hour
     // eslint-disable-next-line max-len
     return `${import.meta.env.VITE_APP_NAMEX_API_URL}${
       import.meta.env.VITE_APP_NAMEX_API_VERSION
-    }/requests?order=priorityCd:desc,submittedDate:${submittedDateOrderString}&queue=${status}&consentOption=${consentOption}&ranking=${priority}&notification=${notification}&submittedInterval=${submitted}&lastUpdateInterval=${lastUpdate}&rows=${rows}&start=${pagenumber}&activeUser=${modifiedBy}&nrNum=${nrnum}&compName=${compName}&firstName=${firstName}&lastName=${lastName}&hour=${hour}`
+    }/requests?order=priorityCd:desc,submittedDate:${submittedDateOrderString}&queue=${status}&consentOption=${consentOption}&ranking=${priority}&notification=${notification}&submittedInterval=${submitted}&lastUpdateInterval=${lastUpdate}&rows=${rows}&start=${pagenumber}&activeUser=${modifiedBy}&nrNum=${nrnum}&compName=${compName}&firstName=${firstName}&lastName=${lastName}&hour=${hour}&submittedStartDate=${submittedStartDate.value}&submittedEndDate=${submittedEndDate.value}`
   })
 
   async function getRows() {
@@ -137,9 +140,20 @@ export const useSearchFiltersStore = defineStore('searchfilters', () => {
   }
 
   watch(
-    () => [filters, selectedDisplay, submittedDateOrder],
+    () => [
+      filters,
+      selectedDisplay,
+      submittedDateOrder,
+      submittedStartDate,
+      submittedEndDate,
+    ],
     async (_state) => {
       selectedPage.value = 1
+      if (filters.value.Submitted != Submitted.Custom) {
+        submittedStartDate.value = ''
+        submittedEndDate.value = ''
+        lastSubmittedDateOption.value = filters.value.Submitted
+      }
       await getRows()
     },
     { deep: true }
@@ -162,6 +176,9 @@ export const useSearchFiltersStore = defineStore('searchfilters', () => {
     selectedDisplay,
     selectedPage,
     submittedDateOrder,
+    submittedStartDate,
+    submittedEndDate,
+    lastSubmittedDateOption,
     isLoading,
     formattedUrl,
     getRows,
