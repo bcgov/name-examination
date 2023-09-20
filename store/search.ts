@@ -87,7 +87,34 @@ export const useSearchStore = defineStore('search', () => {
     )
   })
 
-  async function getRows() {
+  function parseRow(obj: any): { [column in SearchColumns]: string } {
+    return {
+      [SearchColumns.Status]: obj.stateCd,
+      [SearchColumns.LastModifiedBy]: obj.activeUser,
+      [SearchColumns.NameRequestNumber]: obj.nrNum,
+      [SearchColumns.Names]: formatNames(obj.names),
+      [SearchColumns.ApplicantFirstName]: obj.applicants[0]?.firstName,
+      [SearchColumns.ApplicantLastName]: obj.applicants[0]?.lastName,
+      [SearchColumns.NatureOfBusiness]:
+        obj.natureBusinessInfo === null ? '' : obj.natureBusinessInfo,
+      [SearchColumns.ConsentRequired]:
+        obj.consentFlag === 'R'
+          ? 'Received'
+          : obj.consentFlag === 'Y'
+          ? 'Yes'
+          : 'No',
+      [SearchColumns.Priority]:
+        obj.priorityCd === 'Y' ? 'Priority' : 'Standard',
+      [SearchColumns.ClientNotification]:
+        obj.furnished === 'Y' ? 'Notified' : 'Not Notified',
+      [SearchColumns.Submitted]: formatDate(obj.submittedDate),
+      [SearchColumns.LastUpdate]: formatDate(obj.lastUpdate),
+      [SearchColumns.LastComment]:
+        obj.comments[obj.comments.length - 1]?.comment,
+    }
+  }
+
+  async function updateRows() {
     isLoading.value = true // Start loading
     try {
       const url = formattedUrl.value
@@ -98,31 +125,9 @@ export const useSearchStore = defineStore('search', () => {
         },
       })
       const data = await response.json()
+
       resultNum.value = data.response.numFound
-      rows.value = data.nameRequests[0].map((request: any) => ({
-        [SearchColumns.Status]: request.stateCd,
-        [SearchColumns.LastModifiedBy]: request.activeUser,
-        [SearchColumns.NameRequestNumber]: request.nrNum,
-        [SearchColumns.Names]: formatNames(request.names),
-        [SearchColumns.ApplicantFirstName]: request.applicants[0]?.firstName,
-        [SearchColumns.ApplicantLastName]: request.applicants[0]?.lastName,
-        [SearchColumns.NatureOfBusiness]:
-          request.natureBusinessInfo === null ? '' : request.natureBusinessInfo,
-        [SearchColumns.ConsentRequired]:
-          request.consentFlag === 'R'
-            ? 'Received'
-            : request.consentFlag === 'Y'
-            ? 'Yes'
-            : 'No',
-        [SearchColumns.Priority]:
-          request.priorityCd === 'Y' ? 'Priority' : 'Standard',
-        [SearchColumns.ClientNotification]:
-          request.furnished === 'Y' ? 'Notified' : 'Not Notified',
-        [SearchColumns.Submitted]: formatDate(request.submittedDate),
-        [SearchColumns.LastUpdate]: formatDate(request.lastUpdate),
-        [SearchColumns.LastComment]:
-          request.comments[request.comments.length - 1]?.comment,
-      }))
+      rows.value = data.nameRequests[0].map(parseRow)
       isLoading.value = false // end loading
     } catch (error) {
       console.error(error)
@@ -159,7 +164,7 @@ export const useSearchStore = defineStore('search', () => {
         submittedEndDate.value = ''
         lastSubmittedDateOption.value = filters.Submitted
       }
-      await getRows()
+      await updateRows()
     },
     { deep: true }
   )
@@ -167,7 +172,7 @@ export const useSearchStore = defineStore('search', () => {
   watch(
     () => [selectedPage],
     async (_state) => {
-      await getRows()
+      await updateRows()
     },
     { deep: true }
   )
@@ -186,7 +191,7 @@ export const useSearchStore = defineStore('search', () => {
     lastSubmittedDateOption,
     isLoading,
     formattedUrl,
-    getRows,
+    updateRows,
     toggleSubmittedDateOrder,
     $reset,
   }

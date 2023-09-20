@@ -192,6 +192,6 @@ function onDateDialogCancel() {
 
 // When component is mounted, display initial values from the table
 onMounted(async () => {
-  await search.getRows()
+  await search.updateRows()
 })
 </script>
