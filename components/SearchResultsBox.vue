@@ -176,8 +176,7 @@ watch(
     if (state[0].Submitted == Submitted.Custom) {
       showDateDialog.value = true
     }
-  },
-  { deep: true }
+  }
 )
 
 function onDateDialogSubmit(startDate, endDate) {

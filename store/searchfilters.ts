@@ -32,52 +32,51 @@ export const useSearchFiltersStore = defineStore('searchfilters', () => {
   const selectedColumns = ref(Object.values(SearchColumns)) // Initialize selected columns to all columns
   const rows = ref([])
   const resultNum = ref(0)
-  const filters = ref(defaultFilters())
+  const filters = reactive(defaultFilters())
   const selectedDisplay = ref(10)
   const selectedPage = ref(1)
   const submittedDateOrder: Ref<'asc' | 'desc'> = ref('asc')
   const submittedStartDate = ref('')
   const submittedEndDate = ref('')
-  const lastSubmittedDateOption = ref(filters.value.Submitted)
+  const lastSubmittedDateOption = ref(filters.Submitted)
   const isLoading = ref(false)
 
   const formattedUrl = computed(() => {
-    const filtersVal = filters.value
     const params = new URLSearchParams({
       order: `priorityCd:desc,submittedDate:${submittedDateOrder.value}`,
       queue:
-        filtersVal[SearchColumns.Status] === Status.All
+        filters[SearchColumns.Status] === Status.All
           ? ''
-          : filtersVal[SearchColumns.Status],
-      consentOption: filters.value[SearchColumns.ConsentRequired],
-      ranking: filters.value[SearchColumns.Priority],
-      notification: filters.value[SearchColumns.ClientNotification],
+          : filters[SearchColumns.Status],
+      consentOption: filters[SearchColumns.ConsentRequired],
+      ranking: filters[SearchColumns.Priority],
+      notification: filters[SearchColumns.ClientNotification],
       submittedInterval:
-        filters.value.Submitted != Submitted.Custom
-          ? filters.value[SearchColumns.Submitted]
+        filters.Submitted != Submitted.Custom
+          ? filters[SearchColumns.Submitted]
           : '',
-      lastUpdateInterval: filters.value[SearchColumns.LastUpdate],
+      lastUpdateInterval: filters[SearchColumns.LastUpdate],
       rows: selectedDisplay.value.toString(),
       start: (
         Math.max(0, selectedPage.value - 1) * selectedDisplay.value
       ).toString(),
       activeUser:
-        filters.value[SearchColumns.LastModifiedBy] === ''
+        filters[SearchColumns.LastModifiedBy] === ''
           ? ''
-          : filters.value[SearchColumns.LastModifiedBy],
+          : filters[SearchColumns.LastModifiedBy],
       nrNum:
-        filters.value[SearchColumns.NameRequestNumber] === ''
+        filters[SearchColumns.NameRequestNumber] === ''
           ? ''
-          : filters.value[SearchColumns.NameRequestNumber],
-      compName: filters.value.Names,
+          : filters[SearchColumns.NameRequestNumber],
+      compName: filters.Names,
       firstName:
-        filters.value[SearchColumns.ApplicantFirstName] === ''
+        filters[SearchColumns.ApplicantFirstName] === ''
           ? ''
-          : filters.value[SearchColumns.ApplicantFirstName],
+          : filters[SearchColumns.ApplicantFirstName],
       lastName:
-        filters.value[SearchColumns.ApplicantLastName] === ''
+        filters[SearchColumns.ApplicantLastName] === ''
           ? ''
-          : filters.value[SearchColumns.ApplicantLastName],
+          : filters[SearchColumns.ApplicantLastName],
       hour: DateTime.now().hour.toString(),
       submittedStartDate: submittedStartDate.value,
       submittedEndDate: submittedEndDate.value,
@@ -140,7 +139,7 @@ export const useSearchFiltersStore = defineStore('searchfilters', () => {
 
   function $reset() {
     selectedColumns.value = Object.values(SearchColumns)
-    filters.value = defaultFilters()
+    Object.assign(filters, defaultFilters())
     selectedDisplay.value = 10
     selectedPage.value = 1
   }
@@ -155,10 +154,10 @@ export const useSearchFiltersStore = defineStore('searchfilters', () => {
     ],
     async (_state) => {
       selectedPage.value = 1
-      if (filters.value.Submitted != Submitted.Custom) {
+      if (filters.Submitted != Submitted.Custom) {
         submittedStartDate.value = ''
         submittedEndDate.value = ''
-        lastSubmittedDateOption.value = filters.value.Submitted
+        lastSubmittedDateOption.value = filters.Submitted
       }
       await getRows()
     },
