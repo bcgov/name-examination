@@ -27,10 +27,12 @@ const defaultFilters = () => {
   }
 }
 
+type Row = { [column in SearchColumns]: string }
+
 export const useSearchStore = defineStore('search', () => {
   const fixedColumns = Object.values(SearchColumns)
   const selectedColumns = ref(Object.values(SearchColumns)) // Initialize selected columns to all columns
-  const rows = ref([])
+  const rows: Ref<Row[]> = ref([])
   const resultNum = ref(0)
   const filters = reactive(defaultFilters())
   const selectedDisplay = ref(10)
@@ -87,7 +89,7 @@ export const useSearchStore = defineStore('search', () => {
     )
   })
 
-  function parseRow(obj: any): { [column in SearchColumns]: string } {
+  function parseRow(obj: any): Row {
     return {
       [SearchColumns.Status]: obj.stateCd,
       [SearchColumns.LastModifiedBy]: obj.activeUser,
@@ -114,24 +116,35 @@ export const useSearchStore = defineStore('search', () => {
     }
   }
 
-  async function updateRows() {
-    isLoading.value = true // Start loading
+  async function getRows(url: URL): Promise<[numResults: number, rows: Row[]]> {
+    const token = sessionStorage.getItem('KEYCLOAK_TOKEN')
     try {
-      const url = formattedUrl.value
-      const token = sessionStorage.getItem('KEYCLOAK_TOKEN')
       const response = await fetch(url, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       const data = await response.json()
-
-      resultNum.value = data.response.numFound
-      rows.value = data.nameRequests[0].map(parseRow)
-      isLoading.value = false // end loading
+      return [data.response.numFound, data.nameRequests[0].map(parseRow)]
     } catch (error) {
-      console.error(error)
+      console.log(error)
+      return [0, []]
     }
+  }
+
+  async function updateRows() {
+    isLoading.value = true // start loading
+
+    const url = formattedUrl.value
+    const [numResults, responseRows] = await getRows(url)
+
+    // if the filters were changed while we were waiting for this response, discard the reponse
+    if (url != formattedUrl.value) return
+    
+    resultNum.value = numResults
+    rows.value = responseRows
+
+    isLoading.value = false // end loading
   }
 
   function toggleSubmittedDateOrder() {
