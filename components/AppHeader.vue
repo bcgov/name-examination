@@ -4,7 +4,7 @@
       <div class="hidden h-full 2xl:block">
         <nuxt-link to="/HomePage">
           <img
-            src="../images/top-nav.png"
+            src="../public/images/top-nav.png"
             class="min-w-8 h-full"
             alt="Name Examination"
           />
