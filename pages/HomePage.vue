@@ -46,13 +46,12 @@
       </div>
     </div>
 
-    <StatsBox />
+    <StatusBox />
   </div>
 </div>
 </template>
 
 <script setup>
-import StatsBox from '../components/StatsBox.vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../store/auth'
 import { Routes } from '../enums/routes'

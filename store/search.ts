@@ -10,6 +10,11 @@ import {
   Status,
   Submitted,
 } from '~/enums/dropdownEnums'
+import { getFormattedDateFromString } from '~/util/date'
+import {
+  callNamexApi,
+  getNamexApiUrl,
+} from '~/util/namex-api'
 
 const defaultFilters = () => {
   return {
@@ -80,14 +85,9 @@ export const useSearchStore = defineStore('search', () => {
     )
   })
 
-  const formattedUrl = computed(() => {
-    return new URL(
-      `${import.meta.env.VITE_APP_NAMEX_API_VERSION}/requests?${
-        formattedSearchParams.value
-      }`,
-      import.meta.env.VITE_APP_NAMEX_API_URL
-    )
-  })
+  const formattedUrl = computed(() =>
+    getNamexApiUrl(`/requests?${formattedSearchParams.value}`)
+  )
 
   function parseRow(obj: any): Row {
     return {
@@ -109,22 +109,16 @@ export const useSearchStore = defineStore('search', () => {
         obj.priorityCd === 'Y' ? 'Priority' : 'Standard',
       [SearchColumns.ClientNotification]:
         obj.furnished === 'Y' ? 'Notified' : 'Not Notified',
-      [SearchColumns.Submitted]: formatDate(obj.submittedDate),
-      [SearchColumns.LastUpdate]: formatDate(obj.lastUpdate),
+      [SearchColumns.Submitted]: getFormattedDateFromString(obj.submittedDate),
+      [SearchColumns.LastUpdate]: getFormattedDateFromString(obj.lastUpdate),
       [SearchColumns.LastComment]:
         obj.comments[obj.comments.length - 1]?.comment,
     }
   }
 
   async function getRows(url: URL): Promise<[numResults: number, rows: Row[]]> {
-    const token = sessionStorage.getItem('KEYCLOAK_TOKEN')
     try {
-      const response = await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      const data = await response.json()
+      const data = await callNamexApi(url)
       return [data.response.numFound, data.nameRequests[0].map(parseRow)]
     } catch (error) {
       console.log(error)
@@ -138,9 +132,9 @@ export const useSearchStore = defineStore('search', () => {
     const url = formattedUrl.value
     const [numResults, responseRows] = await getRows(url)
 
-    // if the filters were changed while we were waiting for this response, discard the reponse
+    // if the filters were changed while we were waiting for this response, discard the response
     if (url != formattedUrl.value) return
-    
+
     resultNum.value = numResults
     rows.value = responseRows
 
@@ -209,10 +203,6 @@ export const useSearchStore = defineStore('search', () => {
     $reset,
   }
 })
-
-function formatDate(input: string): string {
-  return DateTime.fromISO(input).toFormat('yyyy-MM-dd, hh:mm a')
-}
 
 interface NameObject {
   choice: number

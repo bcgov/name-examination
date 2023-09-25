@@ -2,7 +2,7 @@ import { beforeEach, describe, it, expect, vitest } from 'vitest'
 import StatsBox from '../components/StatsBox.vue'
 import { mount } from '@vue/test-utils'
 import { createTestingPinia } from '@pinia/testing'
-import { Fetchstatus } from '../store/fetchstatus'
+import { useStatusStore } from '../store/status'
 /* eslint-disable require-jsdoc */
 
 describe('Stats', () => {
@@ -17,7 +17,7 @@ describe('Stats', () => {
         plugins: [pinia]
       }
     })
-    status = Fetchstatus(pinia)
+    status = useStatusStore(pinia)
     status.holdNum = '1378'
     status.notExaminedNum = '15691'
   })
