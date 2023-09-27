@@ -1,9 +1,9 @@
 import { beforeEach, describe, it, expect, vitest, vi } from 'vitest'
-import SearchBox from '../components/SearchBox.vue'
 import flushPromises from 'flush-promises'
 import { mount } from '@vue/test-utils'
 import { createTestingPinia } from '@pinia/testing'
 import { useSearchStore } from '../store/search'
+import SearchResultsBox from '~/components/SearchResultsBox.vue'
 /* eslint-disable require-jsdoc */
 
 describe('Search Page', () => {
@@ -13,7 +13,7 @@ describe('Search Page', () => {
     const pinia = createTestingPinia({
       createSpy: vitest.fn
     })
-    wrapper = mount(SearchBox, {
+    wrapper = mount(SearchResultsBox, {
       global: {
         plugins: [pinia]
       }
