@@ -11,6 +11,8 @@ import { SearchColumns } from '~/enums/SearchColumns'
 import { findWithText } from './util'
 import { Status } from '~/enums/dropdownEnums'
 
+const TEST_INPUT_STRING = 'test123'
+
 describe('Search Results Box Component', () => {
   let wrapper = mount(SearchResultsBox)
   let search = useSearchStore()
@@ -23,15 +25,15 @@ describe('Search Results Box Component', () => {
   }
 
   /**
-   * Get a filter input (i.e. dropdown, text input) for the given column
+   * Get the filter input (i.e. dropdown, text input) for the given column in the table
    */
   function getFilterInput(column: SearchColumns) {
     return wrapper
       .findAll('thead > tr')
       .at(1)
       ?.findAll('th')
-      .at(search.selectedColumns.indexOf(SearchColumns.Status))
-      ?.find('*')
+      .at(search.selectedColumns.indexOf(column))
+      ?.find('*') // get the first child element of the 'th' element
   }
 
   beforeEach(() => {
@@ -86,5 +88,14 @@ describe('Search Results Box Component', () => {
 
       expect(statusDropdown.text()).toBe(status)
     }
+  })
+
+  it('updates the modified by filter', async () => {
+    const modifiedByInput = getFilterInput(SearchColumns.LastModifiedBy)!
+    expect(modifiedByInput).toBeDefined()
+
+    await modifiedByInput.setValue(TEST_INPUT_STRING)
+    await modifiedByInput.trigger('keyup.enter')
+    expect(search.filters[SearchColumns.LastModifiedBy]).toBe(TEST_INPUT_STRING)
   })
 })
