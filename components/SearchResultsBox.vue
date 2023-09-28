@@ -55,7 +55,7 @@
         </tr>
       </thead>
 
-      <tbody v-if="search.resultNum == 0">
+      <tbody v-if="search.resultNum == 0" :class="{ collapse: search.isLoading }">
         <tr>
           <td colspan="13" class="border-b border-gray-200 py-4 text-center">
             {{ NO_DATA_STRING }}
