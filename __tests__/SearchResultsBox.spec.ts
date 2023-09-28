@@ -125,14 +125,20 @@ describe('Search Results Box Component', () => {
       search.selectedColumns = search.fixedColumns.slice(0, end)
       await flushPromises()
 
-      const titleCells = wrapper.findAll('thead > tr').at(0)?.findAll('th')!
-      const filterInputCells = wrapper.findAll('thead > tr').at(1)?.findAll('th')!
+      const columnNameCells = wrapper
+        .findAll('thead > tr')
+        .at(0)
+        ?.findAll('th')!
+      const filterInputCells = wrapper
+        .findAll('thead > tr')
+        .at(1)
+        ?.findAll('th')!
 
-      expect(titleCells).toHaveLength(search.selectedColumns.length)
+      expect(columnNameCells).toHaveLength(search.selectedColumns.length)
       expect(filterInputCells).toHaveLength(search.selectedColumns.length)
 
       search.selectedColumns.forEach((column, i) => {
-        expect(titleCells[i].text().trim()).toBe(column.trim())
+        expect(columnNameCells[i].text().trim()).toBe(column.trim())
       })
     }
   })
@@ -177,6 +183,22 @@ describe('Search Results Box Component', () => {
       SearchColumns.Submitted,
       Object.values(Submitted).filter((v) => v !== Submitted.Custom)
     )
+  })
+
+  it('updates the submitted filter order', async () => {
+    const columnNamesRow = wrapper.findAll('thead > tr').at(0)!
+
+    search.submittedDateOrder = 'asc'
+    await flushPromises()
+
+    const submittedElement = findWithText(
+      columnNamesRow,
+      SearchColumns.Submitted
+    )
+    await submittedElement.find('a').trigger('click')
+    await flushPromises()
+
+    expect(search.submittedDateOrder).toBe('desc')
   })
 
   it('updates the last update filter', async () => {
