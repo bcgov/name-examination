@@ -13,7 +13,17 @@ import {
 import { getFormattedDateFromString } from '~/util/date'
 import { callNamexApi, getNamexApiUrl } from '~/util/namex-api'
 
-const defaultFilters = () => {
+type Row = { [column in SearchColumns]: string }
+// a filter key is any search column excluding those that can't be filtered (e.g. nature of business)
+export type FilterKey = Exclude<
+  SearchColumns,
+  SearchColumns.NatureOfBusiness | SearchColumns.LastComment
+>
+export type Filters = {
+  [key in FilterKey]: any
+}
+
+const defaultFilters = (): Filters => {
   return {
     [SearchColumns.Status]: Status.Hold,
     [SearchColumns.LastModifiedBy]: '',
@@ -28,8 +38,6 @@ const defaultFilters = () => {
     [SearchColumns.LastUpdate]: LastUpdate.All,
   }
 }
-
-type Row = { [column in SearchColumns]: string }
 
 export const useSearchStore = defineStore('search', () => {
   const fixedColumns = Object.values(SearchColumns)
