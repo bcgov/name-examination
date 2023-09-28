@@ -58,7 +58,7 @@
       <tbody v-if="search.resultNum == 0">
         <tr>
           <td colspan="13" class="border-b border-gray-200 py-4 text-center">
-            No Data Available
+            {{ NO_DATA_STRING }}
           </td>
         </tr>
       </tbody>
@@ -107,8 +107,9 @@ import {
 import { SearchColumns } from '../enums/SearchColumns'
 import { mdiArrowDown, mdiArrowUp } from '@mdi/js'
 
-const search = useSearchStore()
+const NO_DATA_STRING = 'No Data Available'
 
+const search = useSearchStore()
 const showDateDialog = ref(false)
 
 // User-selected columns in order
@@ -170,14 +171,11 @@ const layout = {
   [SearchColumns.LastComment]: {},
 }
 
-watch(
-  [search.filters],
-  (state) => {
-    if (state[0].Submitted == Submitted.Custom) {
-      showDateDialog.value = true
-    }
+watch([search.filters], (state) => {
+  if (state[0].Submitted == Submitted.Custom) {
+    showDateDialog.value = true
   }
-)
+})
 
 function onDateDialogSubmit(startDate, endDate) {
   search.submittedStartDate = startDate

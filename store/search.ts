@@ -11,10 +11,7 @@ import {
   Submitted,
 } from '~/enums/dropdownEnums'
 import { getFormattedDateFromString } from '~/util/date'
-import {
-  callNamexApi,
-  getNamexApiUrl,
-} from '~/util/namex-api'
+import { callNamexApi, getNamexApiUrl } from '~/util/namex-api'
 
 const defaultFilters = () => {
   return {
@@ -112,7 +109,9 @@ export const useSearchStore = defineStore('search', () => {
       [SearchColumns.Submitted]: getFormattedDateFromString(obj.submittedDate),
       [SearchColumns.LastUpdate]: getFormattedDateFromString(obj.lastUpdate),
       [SearchColumns.LastComment]:
-        obj.comments[obj.comments.length - 1]?.comment,
+        obj.comments.length > 0
+          ? obj.comments[obj.comments.length - 1].comment
+          : '',
     }
   }
 
