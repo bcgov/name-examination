@@ -3,15 +3,19 @@ import { mount } from '@vue/test-utils'
 import SearchResultsBox from '~/components/SearchResultsBox.vue'
 import mockNameRequests from './mockNameRequests.json'
 import mockZeroNameRequests from './mockZeroNameRequests.json'
-import { useSearchStore } from '~/store/search'
+import { FilterKey, useSearchStore } from '~/store/search'
 import LoadingSpinner from '~/components/LoadingSpinner.vue'
 import { createPinia, setActivePinia } from 'pinia'
 import flushPromises from 'flush-promises'
 import { SearchColumns } from '~/enums/SearchColumns'
 import { findWithText } from './util'
-import { Status } from '~/enums/dropdownEnums'
-
-const TEST_INPUT_STRING = 'test123'
+import {
+  ConsentRequired,
+  LastUpdate,
+  Priority,
+  Status,
+  Submitted,
+} from '~/enums/dropdownEnums'
 
 describe('Search Results Box Component', () => {
   let wrapper = mount(SearchResultsBox)
@@ -27,13 +31,55 @@ describe('Search Results Box Component', () => {
   /**
    * Get the filter input (i.e. dropdown, text input) for the given column in the table
    */
-  function getFilterInput(column: SearchColumns) {
+  function getFilterInput(filter: FilterKey) {
     return wrapper
       .findAll('thead > tr')
       .at(1)
       ?.findAll('th')
-      .at(search.selectedColumns.indexOf(column))
+      .at(search.selectedColumns.indexOf(filter))
       ?.find('*') // get the first child element of the 'th' element
+  }
+
+  /**
+   * Test a filter that uses a dropdown for filter values
+   * @param filter The name of the column that the filter input is located
+   * @param options The list of options that should be clicked in the dropdown
+   */
+  async function testDropdownFilter(filter: FilterKey, options: Array<any>) {
+    const dropdown = getFilterInput(filter)!
+    expect(dropdown).toBeDefined()
+    expect(dropdown.exists()).toBe(true)
+
+    for (let option of options) {
+      const dropdownButton = dropdown.find('button')
+      expect(dropdownButton.exists()).toBe(true)
+      await dropdownButton.trigger('click')
+
+      const dropdownOption = findWithText(dropdown, option)
+      expect(dropdownOption.exists()).toBe(true)
+      await dropdownOption.trigger('click')
+
+      expect(search.filters[filter]).toBe(option)
+
+      await flushPromises() // wait for ui updates
+
+      expect(dropdown.text()).toBe(option)
+    }
+  }
+
+  /**
+   * Test a filter that uses a text input for filter values
+   * @param filter The name of the column that the text input filter is located
+   * @param text The text that should be typed into the input
+   */
+  async function testTextInputFilter(filter: FilterKey, text = 'test') {
+    const textInput = getFilterInput(filter)!
+    expect(textInput).toBeDefined()
+    expect(textInput.exists()).toBe(true)
+
+    await textInput.setValue(text)
+    await textInput.trigger('keyup.enter')
+    expect(search.filters[filter]).toBe(text)
   }
 
   beforeEach(() => {
@@ -74,28 +120,69 @@ describe('Search Results Box Component', () => {
     expect(wrapper.findAllComponents(LoadingSpinner)).toHaveLength(1)
   })
 
-  it('updates the status filter', async () => {
-    const statusDropdown = getFilterInput(SearchColumns.Status)!
-    expect(statusDropdown).toBeDefined()
+  it('displays the right columns when the columns are changed', async () => {
+    for (let end = 1; end <= search.fixedColumns.length; end++) {
+      search.selectedColumns = search.fixedColumns.slice(0, end)
+      await flushPromises()
 
-    for (let status of Object.values(Status)) {
-      await statusDropdown.find('button').trigger('click')
-      await findWithText(statusDropdown, status).trigger('click')
+      const titleCells = wrapper.findAll('thead > tr').at(0)?.findAll('th')!
+      const filterInputCells = wrapper.findAll('thead > tr').at(1)?.findAll('th')!
 
-      expect(search.filters[SearchColumns.Status]).toBe(status)
+      expect(titleCells).toHaveLength(search.selectedColumns.length)
+      expect(filterInputCells).toHaveLength(search.selectedColumns.length)
 
-      await flushPromises() // wait for ui updates
-
-      expect(statusDropdown.text()).toBe(status)
+      search.selectedColumns.forEach((column, i) => {
+        expect(titleCells[i].text().trim()).toBe(column.trim())
+      })
     }
   })
 
-  it('updates the modified by filter', async () => {
-    const modifiedByInput = getFilterInput(SearchColumns.LastModifiedBy)!
-    expect(modifiedByInput).toBeDefined()
+  it('updates the status filter', async () => {
+    await testDropdownFilter(SearchColumns.Status, Object.values(Status))
+  })
 
-    await modifiedByInput.setValue(TEST_INPUT_STRING)
-    await modifiedByInput.trigger('keyup.enter')
-    expect(search.filters[SearchColumns.LastModifiedBy]).toBe(TEST_INPUT_STRING)
+  it('updates the modified by filter', async () => {
+    await testTextInputFilter(SearchColumns.LastModifiedBy)
+  })
+
+  it('updates the NR number filter', async () => {
+    await testTextInputFilter(SearchColumns.NameRequestNumber)
+  })
+
+  it('updates the names filter', async () => {
+    await testTextInputFilter(SearchColumns.Names)
+  })
+
+  it('updates the first name filter', async () => {
+    await testTextInputFilter(SearchColumns.ApplicantFirstName)
+  })
+
+  it('updates the last name filter', async () => {
+    await testTextInputFilter(SearchColumns.ApplicantLastName)
+  })
+
+  it('updates the consent required filter', async () => {
+    await testDropdownFilter(
+      SearchColumns.ConsentRequired,
+      Object.values(ConsentRequired)
+    )
+  })
+
+  it('updates the priority filter', async () => {
+    await testDropdownFilter(SearchColumns.Priority, Object.values(Priority))
+  })
+
+  it('updates the submitted filter excluding custom dates', async () => {
+    await testDropdownFilter(
+      SearchColumns.Submitted,
+      Object.values(Submitted).filter((v) => v !== Submitted.Custom)
+    )
+  })
+
+  it('updates the last update filter', async () => {
+    await testDropdownFilter(
+      SearchColumns.LastUpdate,
+      Object.values(LastUpdate)
+    )
   })
 })
