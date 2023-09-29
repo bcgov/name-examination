@@ -1,7 +1,7 @@
 import { beforeEach, describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { useSearchStore } from '~/store/search'
-import { clickDropdownOption } from './util'
+import { clickDropdownOption } from '../util'
 import SearchResultsControl from '~/components/SearchResultsControl.vue'
 import { createTestingPinia } from '@pinia/testing'
 import ListSelect from '~/components/ListSelect.vue'

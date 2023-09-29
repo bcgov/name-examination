@@ -1,14 +1,14 @@
 import { beforeEach, describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import SearchResultsBox from '~/components/SearchResultsBox.vue'
-import mockNameRequests from './mockNameRequests.json'
-import mockZeroNameRequests from './mockZeroNameRequests.json'
+import mockNameRequests from '../data/mockNameRequests.json'
+import mockZeroNameRequests from '../data/mockZeroNameRequests.json'
 import { FilterKey, useSearchStore } from '~/store/search'
 import LoadingSpinner from '~/components/LoadingSpinner.vue'
 import { createPinia, setActivePinia } from 'pinia'
 import flushPromises from 'flush-promises'
 import { SearchColumns } from '~/enums/SearchColumns'
-import { clickDropdownOption } from './util'
+import { clickDropdownOption } from '../util'
 import {
   ConsentRequired,
   LastUpdate,

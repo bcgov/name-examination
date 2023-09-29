@@ -1,7 +1,7 @@
 import { beforeEach, describe, it, expect, vitest } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createTestingPinia } from '@pinia/testing'
-import { useStatusStore } from '../store/status'
+import { useStatusStore } from '~/store/status'
 import StatusBox from '~/components/StatusBox.vue'
 /* eslint-disable require-jsdoc */
 
