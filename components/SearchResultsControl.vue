@@ -4,7 +4,7 @@
       href="#"
       class="mr-4 font-semibold text-blue-800 transition duration-150 hover:text-blue-900"
       @click="search.$reset()"
-      >Clear Filters</a
+      >{{ CLEAR_FILTERS_TEXT }}</a
     >
 
     <ListSelect
@@ -43,6 +43,8 @@
 <script setup lang="ts">
 import { mdiArrowLeft, mdiArrowRight } from '@mdi/js'
 import { useSearchStore } from '~/store/search'
+
+const CLEAR_FILTERS_TEXT = 'Clear Filters'
 
 const search = useSearchStore()
 

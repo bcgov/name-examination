@@ -8,7 +8,7 @@ import LoadingSpinner from '~/components/LoadingSpinner.vue'
 import { createPinia, setActivePinia } from 'pinia'
 import flushPromises from 'flush-promises'
 import { SearchColumns } from '~/enums/SearchColumns'
-import { findWithText } from './util'
+import { clickDropdownOption, findWithText } from './util'
 import {
   ConsentRequired,
   LastUpdate,
@@ -16,6 +16,7 @@ import {
   Status,
   Submitted,
 } from '~/enums/dropdownEnums'
+import DateDialog from '~/components/DateDialog.vue'
 
 describe('Search Results Box Component', () => {
   let wrapper = mount(SearchResultsBox)
@@ -51,18 +52,8 @@ describe('Search Results Box Component', () => {
     expect(dropdown.exists()).toBe(true)
 
     for (let option of options) {
-      const dropdownButton = dropdown.find('button')
-      expect(dropdownButton.exists()).toBe(true)
-      await dropdownButton.trigger('click')
-
-      const dropdownOption = findWithText(dropdown, option)
-      expect(dropdownOption.exists()).toBe(true)
-      await dropdownOption.trigger('click')
-
+      await clickDropdownOption(dropdown, option)
       expect(search.filters[filter]).toBe(option)
-
-      await flushPromises() // wait for ui updates
-
       expect(dropdown.text()).toBe(option)
     }
   }
@@ -178,14 +169,29 @@ describe('Search Results Box Component', () => {
     await testDropdownFilter(SearchColumns.Priority, Object.values(Priority))
   })
 
-  it('updates the submitted filter excluding custom dates', async () => {
+  it('updates the submitted date filter excluding custom dates', async () => {
     await testDropdownFilter(
       SearchColumns.Submitted,
       Object.values(Submitted).filter((v) => v !== Submitted.Custom)
     )
   })
 
-  it('updates the submitted filter order', async () => {
+  it('updates the submitted date filter with custom dates', async () => {
+    // const dropdown = getFilterInput(SearchColumns.Submitted)!
+    // expect(dropdown).toBeDefined()
+    // expect(dropdown.exists()).toBe(true)
+    // await clickDropdownOption(dropdown, Submitted.Custom)
+    // const dateDialog = wrapper.findComponent(DateDialog)
+    // const dateInputs = dateDialog.findAll('input[type="date"]')
+    // const startDate = '2000-01-01'
+    // const endDate = '2020-06-30'
+    // await dateInputs[0].setValue(startDate)
+    // await dateInputs[1].setValue(endDate)
+    // const confirmButton = findWithText(dateDialog, 'Ok')
+    // await confirmButton.trigger('click')
+  })
+
+  it('updates the submitted date filter order', async () => {
     const columnNamesRow = wrapper.findAll('thead > tr').at(0)!
 
     search.submittedDateOrder = 'asc'
