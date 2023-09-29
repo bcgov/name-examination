@@ -15,7 +15,7 @@ export default defineNuxtConfig({
     baseURL: '/'
   },
   modules: ['@nuxt/content', '@nuxtjs/tailwindcss', '@pinia/nuxt', 'nuxt-vitest'],
-  css: ['@/assets/main.scss', '@fortawesome/fontawesome-svg-core/styles.css'],
+  css: ['@/assets/css/main.scss', '@fortawesome/fontawesome-svg-core/styles.css'],
   typescript: {
     typeCheck: true
   },
@@ -29,13 +29,6 @@ export default defineNuxtConfig({
   },
   vite: {
     mode: 'spa',
-    css: {
-      preprocessorOptions: {
-        sass: {
-          additionalData: '@import "@/assets/theme.scss"'
-        }
-      }
-    }
   },
   nitro: {
     output: {
