@@ -23,7 +23,7 @@ export type Filters = {
   [key in FilterKey]: any
 }
 
-const defaultFilters = (): Filters => {
+export const defaultFilters = (): Filters => {
   return {
     [SearchColumns.Status]: Status.Hold,
     [SearchColumns.LastModifiedBy]: '',
@@ -47,6 +47,9 @@ export const useSearchStore = defineStore('search', () => {
   const filters = reactive(defaultFilters())
   const selectedDisplay = ref(10)
   const selectedPage = ref(1)
+  const lastPageNumber = computed(() =>
+    Math.max(1, Math.ceil(resultNum.value / selectedDisplay.value))
+  )
   const submittedDateOrder: Ref<'asc' | 'desc'> = ref('asc')
   const submittedStartDate = ref('')
   const submittedEndDate = ref('')
@@ -156,6 +159,18 @@ export const useSearchStore = defineStore('search', () => {
     }
   }
 
+  function goToPreviousPage() {
+    if (selectedPage.value > 1) {
+      selectedPage.value--
+    }
+  }
+
+  function goToNextPage() {
+    if (selectedPage.value < lastPageNumber.value) {
+      selectedPage.value++
+    }
+  }
+
   function $reset() {
     selectedColumns.value = Object.values(SearchColumns)
     Object.assign(filters, defaultFilters())
@@ -199,6 +214,7 @@ export const useSearchStore = defineStore('search', () => {
     filters,
     selectedDisplay,
     selectedPage,
+    lastPageNumber,
     submittedDateOrder,
     submittedStartDate,
     submittedEndDate,
@@ -207,6 +223,8 @@ export const useSearchStore = defineStore('search', () => {
     formattedUrl,
     updateRows,
     toggleSubmittedDateOrder,
+    goToPreviousPage,
+    goToNextPage,
     $reset,
   }
 })
