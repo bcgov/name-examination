@@ -8,7 +8,7 @@ import LoadingSpinner from '~/components/LoadingSpinner.vue'
 import { createPinia, setActivePinia } from 'pinia'
 import flushPromises from 'flush-promises'
 import { SearchColumns } from '~/enums/SearchColumns'
-import { clickDropdownOption, findWithText } from './util'
+import { clickDropdownOption } from './util'
 import {
   ConsentRequired,
   LastUpdate,
@@ -197,8 +197,7 @@ describe('Search Results Box Component', () => {
     search.submittedDateOrder = 'asc'
     await flushPromises()
 
-    const submittedElement = findWithText(
-      columnNamesRow,
+    const submittedElement = columnNamesRow.findWithText(
       SearchColumns.Submitted
     )
     await submittedElement.find('a').trigger('click')

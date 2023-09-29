@@ -1,7 +1,7 @@
 import { beforeEach, describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { useSearchStore } from '~/store/search'
-import { clickDropdownOption, findWithText } from './util'
+import { clickDropdownOption } from './util'
 import SearchResultsControl from '~/components/SearchResultsControl.vue'
 import { createTestingPinia } from '@pinia/testing'
 import ListSelect from '~/components/ListSelect.vue'
@@ -22,7 +22,9 @@ describe('Search Page', () => {
   })
 
   it('resets the filters', async () => {
-    await findWithText(wrapper, wrapper.vm.CLEAR_FILTERS_TEXT).trigger('click')
+    await wrapper
+      .findWithText((wrapper.vm as any).CLEAR_FILTERS_TEXT)
+      .trigger('click')
     expect(search.$reset).toHaveBeenCalledOnce()
   })
 
@@ -36,7 +38,7 @@ describe('Search Page', () => {
     // updated accordingly. this assumes all columns are enabled by default
     const excluded = []
     for (let column of search.fixedColumns) {
-      await findWithText(columnsDropdown, column).trigger('click')
+      await columnsDropdown.findWithText(column).trigger('click')
       excluded.push(column)
       expect(
         excluded.every((c) => !search.selectedColumns.includes(c))
