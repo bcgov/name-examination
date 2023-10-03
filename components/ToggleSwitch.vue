@@ -1,16 +1,15 @@
 <template>
   <SwitchGroup>
     <div class="flex items-center">
-      <Switch v-model="enabled">
+      <Switch :modelValue="modelValue" @update:modelValue="updateModelValue">
         <button
           class="relative inline-flex h-6 w-11 items-center rounded-full transition"
-          :class="enabled ? 'bg-bcgov-blue5 hover:bg-bcgov-blue4' : 'bg-gray-200'"
-          @click="
-            examineOptions[storeFieldName] = !examineOptions[storeFieldName]
+          :class="
+            modelValue ? 'bg-bcgov-blue5 hover:bg-bcgov-blue4' : 'bg-gray-200'
           "
         >
           <span
-            :class="enabled ? 'translate-x-6' : 'translate-x-1'"
+            :class="modelValue ? 'translate-x-6' : 'translate-x-1'"
             class="inline-block h-4 w-4 transform rounded-full bg-white transition"
           />
         </button>
@@ -20,13 +19,15 @@
   </SwitchGroup>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue'
-import { useExamineOptionsStore } from '../store/ExamineOptions'
-const props = defineProps({
-  label: String,
-  storeFieldName: String, // name of the field that the toggle switch represents in the state store
-})
-const examineOptions = useExamineOptionsStore()
-const enabled = computed(() => examineOptions[props.storeFieldName])
+const props = defineProps<{
+  modelValue: boolean
+  label: string
+}>()
+
+const emit = defineEmits()
+const updateModelValue = (newValue: any) => {
+  emit('update:modelValue', newValue)
+}
 </script>

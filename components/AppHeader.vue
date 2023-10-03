@@ -28,8 +28,8 @@
         </nuxt-link>
 
         <div class="flex space-x-2 px-3">
-          <ToggleSwitch label="Classify Words" storeFieldName="classifyWords" />
-          <ToggleSwitch label="Priority Queue" storeFieldName="priorityQueue" />
+          <ToggleSwitch label="Classify Words" v-model="examineOptions.classifyWords" />
+          <ToggleSwitch label="Priority Queue" v-model="examineOptions.priorityQueue" />
         </div>
 
         <div class="flex flex-col px-3 border-l-2 border-gray-300">
@@ -56,10 +56,12 @@ import KeycloakService from '../public/keycloak/keycloak'
 import { useRuntimeConfig } from '#imports'
 import { NavbarLink } from '../enums/dropdownEnums'
 import {ArrowRightOnRectangleIcon} from '@heroicons/vue/24/solid'
+import { useExamineOptionsStore } from '~/store/examine-options';
 /* eslint-disable require-jsdoc */
 
 const authModule = useAuthStore()
 const config = useRuntimeConfig()
+const examineOptions = useExamineOptionsStore()
 
 async function login() {
   // If the user is already authenticated, do nothing
