@@ -39,13 +39,15 @@ export const defaultFilters = (): Filters => {
   }
 }
 
+export const DEFAULT_DISPLAY = 10
+
 export const useSearchStore = defineStore('search', () => {
   const fixedColumns = Object.values(SearchColumns)
   const selectedColumns = ref(Object.values(SearchColumns)) // Initialize selected columns to all columns
   const rows: Ref<Row[]> = ref([])
   const resultNum = ref(0)
   const filters = reactive(defaultFilters())
-  const selectedDisplay = ref(10)
+  const selectedDisplay = ref(DEFAULT_DISPLAY)
   const selectedPage = ref(1)
   const lastPageNumber = computed(() =>
     Math.max(1, Math.ceil(resultNum.value / selectedDisplay.value))
@@ -174,7 +176,7 @@ export const useSearchStore = defineStore('search', () => {
   function $reset() {
     selectedColumns.value = Object.values(SearchColumns)
     Object.assign(filters, defaultFilters())
-    selectedDisplay.value = 10
+    selectedDisplay.value = DEFAULT_DISPLAY
     selectedPage.value = 1
   }
 
