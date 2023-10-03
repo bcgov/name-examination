@@ -4,8 +4,8 @@ import { getFormattedDateFromDateTime } from '~/util/date'
 import { callNamexApi, getNamexApiUrl } from '~/util/namex-api'
 
 export const useStatusStore = defineStore('status', () => {
-  const holdNum = ref(null)
-  const notExaminedNum = ref(null)
+  const holdNum = ref(0)
+  const notExaminedNum = ref(0)
   const todayStr = computed(() => getFormattedDateFromDateTime(DateTime.now()))
 
   /**
