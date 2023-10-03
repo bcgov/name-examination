@@ -7,9 +7,9 @@ declare const window: any
  * This plugin function is called before instantiating the root Vue.js application.
  * It initializes LaunchDarkly.
  */
-export default async function (context: { $config: { ldClientId: string } }) {
+export default defineNuxtPlugin(async (nuxtApp) => {
   // save id to window object for init function
-  window['ldClientId'] = context.$config.ldClientId
+  window['ldClientId'] = nuxtApp.$config.ldClientId
 
   if (window['ldClientId']) {
     console.info('Initializing LaunchDarkly...')
@@ -21,4 +21,4 @@ export default async function (context: { $config: { ldClientId: string } }) {
     const allFlags = JSON.stringify(ldClient.allFlags())
     sessionStorage.setItem(SessionStorageKeys.LaunchDarklyFlags, allFlags)
   }
-}
+})
