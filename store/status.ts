@@ -11,8 +11,7 @@ export const useStatusStore = defineStore('status', () => {
   /**
    * Return the number of name requests found from the given API call
    */
-  async function getNumFound(endpoint: string) {
-    const url = getNamexApiUrl(endpoint)
+  async function getNumFound(url: URL): Promise<number> {
     try {
       const data = await callNamexApi(url)
       return data.response.numFound
@@ -33,12 +32,13 @@ export const useStatusStore = defineStore('status', () => {
       rows: '3',
       start: '0',
     })
+    const url = () => getNamexApiUrl(`/requests?${baseParams}`)
 
     baseParams.set('queue', 'hold')
-    const newHoldNum = await getNumFound(`/requests?${baseParams}`)
+    const newHoldNum = await getNumFound(url())
 
     baseParams.set('queue', 'draft')
-    const newNotExaminedNum = await getNumFound(`/requests?${baseParams}`)
+    const newNotExaminedNum = await getNumFound(url())
 
     holdNum.value = newHoldNum
     notExaminedNum.value = newNotExaminedNum

@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import { createPinia, setActivePinia } from 'pinia'
-import { beforeEach, describe, it, expect, vi } from 'vitest'
+import { beforeEach, describe, it, expect } from 'vitest'
 import { SearchColumns } from '~/enums/SearchColumns'
 import {
   ClientNotification,
