@@ -3,8 +3,8 @@
     <div class="flex items-center">
       <Switch v-model="enabled">
         <button
-          class="relative inline-flex h-6 w-11 items-center rounded-full"
-          :class="enabled ? 'bg-bcgov-blue5' : 'bg-gray-200'"
+          class="relative inline-flex h-6 w-11 items-center rounded-full transition"
+          :class="enabled ? 'bg-bcgov-blue5 hover:bg-bcgov-blue4' : 'bg-gray-200'"
           @click="
             examineOptions[storeFieldName] = !examineOptions[storeFieldName]
           "

@@ -12,15 +12,12 @@
         required
       />
     </div>
-    <button
-      type="submit"
-      class="delay-120 flex items-center rounded-r-md bg-bcgov-blue5 p-1 text-white transition duration-300 ease-in-out hover:bg-bcgov-gold5 focus:outline-none focus:ring-4 focus:ring-amber-300"
-    >
-      <svg-icon type="mdi" viewBox="0 -4 24 24" :path="mdiMagnify" />
-    </button>
+    <IconButton class="rounded-none rounded-r-md border-bcgov-blue5 !px-2">
+      <MagnifyingGlassIcon class="h-5 stroke-2" />
+    </IconButton>
   </form>
 </template>
 
 <script setup>
-import { mdiMagnify } from '@mdi/js'
+import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 </script>

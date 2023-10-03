@@ -4,7 +4,7 @@
       <div class="hidden h-full 2xl:block">
         <nuxt-link to="/HomePage">
           <img
-            src="../public/images/top-nav.png"
+            src="/images/top-nav.png"
             class="min-w-8 h-full"
             alt="Name Examination"
           />
@@ -41,26 +41,21 @@
       </div>
 
       <div v-if="!authModule.isAuthenticated" class="mx-5">
-        <button
-          class="inline-flex w-full items-center justify-between rounded-md border-2 border-gray-300 px-1.5 py-1 font-medium hover:bg-gray-300 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-          @click="login"
-        >
+        <IconButton class="font-medium" @click="login">
+          <ArrowRightOnRectangleIcon class="h-6"/>
           Login
-          <svg-icon type="mdi" viewBox="0 -2 24 24" :path="mdiLogin" />
-        </button>
+        </IconButton>
       </div>
     </div>
   </nav>
 </template>
 
 <script setup>
-import '@jamescoyle/vue-icon'
-import { ref } from 'vue'
-import { mdiLogin, mdiMagnify } from '@mdi/js'
 import { useAuthStore } from '../store/auth'
 import KeycloakService from '../public/keycloak/keycloak'
 import { useRuntimeConfig } from '#imports'
 import { NavbarLink } from '../enums/dropdownEnums'
+import {ArrowRightOnRectangleIcon} from '@heroicons/vue/24/solid'
 /* eslint-disable require-jsdoc */
 
 const authModule = useAuthStore()

@@ -31,17 +31,18 @@
     </div>
 
     <div class="ml-4 space-x-2">
-      <IconButton
-        @click="search.goToPreviousPage()"
-        :icon-path="mdiArrowLeft"
-      />
-      <IconButton @click="search.goToNextPage()" :icon-path="mdiArrowRight" />
+      <IconButton class="!py-[0.3125rem] px-5" @click="search.goToPreviousPage()">
+        <ChevronLeftIcon class="h-6 stroke-2" />
+      </IconButton>
+      <IconButton class="!py-[0.3125rem] px-5" @click="search.goToNextPage()">
+        <ChevronRightIcon class="h-6 stroke-2" />
+      </IconButton>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { mdiArrowLeft, mdiArrowRight } from '@mdi/js'
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
 import { useSearchStore } from '~/store/search'
 
 const CLEAR_FILTERS_TEXT = 'Clear Filters'

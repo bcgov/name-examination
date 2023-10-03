@@ -15,11 +15,7 @@
               class="flex items-center"
             >
               {{ column }}
-              <svg-icon
-                type="mdi"
-                viewBox="0 -6 28 28"
-                :path="layout[column].clickable.icon.value"
-              />
+              <component :is="layout[column].clickable.icon.value" class="h-4 stroke-2"/>
             </a>
             <span v-else>
               {{ column }}
@@ -106,6 +102,7 @@ import {
 } from '../enums/dropdownEnums'
 import { SearchColumns } from '../enums/SearchColumns'
 import { mdiArrowDown, mdiArrowUp } from '@mdi/js'
+import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/vue/24/outline'
 
 const NO_DATA_STRING = 'No Data Available'
 
@@ -160,7 +157,7 @@ const layout = {
     dropdown: Object.values(Submitted),
     clickable: {
       icon: computed(() =>
-        search.submittedDateOrder === 'asc' ? mdiArrowDown : mdiArrowUp
+        search.submittedDateOrder === 'asc' ? ArrowDownIcon : ArrowUpIcon
       ),
       onClick: search.toggleSubmittedDateOrder,
     },

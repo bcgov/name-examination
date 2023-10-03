@@ -7,18 +7,8 @@
         >
           <span class="block"><slot>Select</slot></span>
           <span class="absolute inset-y-0 right-0 flex items-center pr-3">
-            <svg-icon
-              v-if="!open"
-              type="mdi"
-              viewBox="0 -4 24 24"
-              :path="mdiChevronDown"
-            />
-            <svg-icon
-              v-else
-              type="mdi"
-              viewBox="0 -4 24 24"
-              :path="mdiChevronUp"
-            />
+            <ChevronDownIcon v-if="!open" class="h-5 mt-0.5"/>
+            <ChevronUpIcon v-else class="h-5 mt-0.5"/>
           </span>
         </ListboxButton>
 
@@ -51,7 +41,7 @@
                   v-if="selected"
                   class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
                 >
-                  <svg-icon class="h-5 w-5" type="mdi" :path="mdiCheck" />
+                  <CheckIcon class="h-5"/>
                 </span>
               </li>
             </ListboxOption>
@@ -73,6 +63,7 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 import { mdiCheck, mdiChevronDown, mdiChevronUp } from '@mdi/js'
+import { ChevronUpIcon, ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/outline';
 
 const { modelValue, options, multiple } = defineProps<{
   modelValue: Array<object> | any

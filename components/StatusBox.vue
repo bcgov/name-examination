@@ -1,5 +1,5 @@
-<template id="stats-box">
-  <div class="stats-box rounded-md border-gray-300">
+<template>
+  <div class="rounded-md border border-gray-300">
     <div class="mb-6 ml-2 mt-2">
       Current status on
       <span id="date">{{ status.todayStr }}</span>

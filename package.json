@@ -57,7 +57,7 @@
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.16",
-    "@jamescoyle/vue-icon": "git+https://github.com/bcgov/svg-icon.git",
+    "@heroicons/vue": "^2.0.18",
     "@mdi/js": "^7.2.96",
     "@nuxtjs/router": "^1.7.0",
     "@pinia/nuxt": "^0.4.11",

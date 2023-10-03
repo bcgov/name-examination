@@ -1,19 +1,14 @@
 <template>
   <button
-    class="inline-flex items-center justify-center w-20 rounded-md border bg-bcgov-blue5 px-4 py-0.5 text-white transition hover:bg-bcgov-blue8"
+    class="inline-flex items-center justify-center space-x-1 rounded-md border bg-bcgov-blue5 px-3 py-2 text-white transition hover:bg-bcgov-blue4"
   >
-    <svg-icon
-      v-if="iconPath"
-      type="mdi"
-      viewBox="0 -3 24 24"
-      :path="iconPath"
-    />
     <slot></slot>
+    <span>{{ text }}</span>
   </button>
 </template>
 
 <script setup lang="ts">
 defineProps<{
-  iconPath?: string
+  text?: string
 }>()
 </script>
