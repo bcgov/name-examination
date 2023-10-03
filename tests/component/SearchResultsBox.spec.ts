@@ -8,7 +8,7 @@ import LoadingSpinner from '~/components/LoadingSpinner.vue'
 import { createPinia, setActivePinia } from 'pinia'
 import flushPromises from 'flush-promises'
 import { SearchColumns } from '~/enums/SearchColumns'
-import { clickDropdownOption } from '../util'
+import { clickDropdownOption, setFetchResponse } from '../util'
 import {
   ConsentRequired,
   LastUpdate,
@@ -16,18 +16,10 @@ import {
   Status,
   Submitted,
 } from '~/enums/dropdownEnums'
-import DateDialog from '~/components/DateDialog.vue'
 
 describe('Search Results Box Component', () => {
   let wrapper = mount(SearchResultsBox)
   let search = useSearchStore()
-
-  /**
-   * Set the return value of the next call to `fetch`
-   */
-  function setFetchResponse(data: any) {
-    global.fetch = vi.fn().mockResolvedValueOnce({ json: () => data })
-  }
 
   /**
    * Get the filter input (i.e. dropdown, text input) for the given column in the table
