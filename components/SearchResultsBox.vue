@@ -39,16 +39,20 @@
               type="text"
               :placeholder="layout[column].text_input"
               class="w-full rounded-md border p-1.5"
-              :value="search.filters[column]"
-              @keyup.enter="search.filters[column] = $event.target.value"
+              :value="search.filters[column as FilterKey]"
+              @keyup.enter="
+                search.filters[column as FilterKey] = (
+                  $event.target as HTMLInputElement
+                ).value
+              "
             />
 
             <ListSelect
               v-else-if="'dropdown' in layout[column]"
-              v-model="search.filters[column]"
+              v-model="search.filters[column as FilterKey]"
               :options="layout[column].dropdown"
             >
-              {{ search.filters[column] }}
+              {{ search.filters[column as FilterKey] }}
             </ListSelect>
           </th>
         </tr>
@@ -95,9 +99,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted } from 'vue'
-import { useSearchStore } from '../store/search'
+import { FilterKey, useSearchStore } from '../store/search'
 import {
   Status,
   ConsentRequired,
@@ -108,6 +112,7 @@ import {
 } from '../enums/filter-dropdowns'
 import { SearchColumns } from '../enums/search-columns'
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/vue/24/outline'
+import { FunctionalComponent } from 'nuxt/dist/app/compat/capi'
 
 const NO_DATA_STRING = 'No Data Available'
 
@@ -127,7 +132,10 @@ const selectedColumns = computed(() =>
  * the `text_input` property will create a text input with the given placeholder.
  * A `width` property can be given to specify a custom column width, the value should be a valid Tailwind class.
  */
-const layout = {
+type ILayout = {
+  [key in SearchColumns]: any
+}
+const layout: ILayout = {
   [SearchColumns.Status]: {
     dropdown: Object.values(Status),
   },
@@ -179,7 +187,7 @@ watch([search.filters], (state) => {
   }
 })
 
-function onDateDialogSubmit(startDate, endDate) {
+function onDateDialogSubmit(startDate: string, endDate: string) {
   search.submittedStartDate = startDate
   search.submittedEndDate = endDate
   showDateDialog.value = false
