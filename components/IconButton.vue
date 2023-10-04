@@ -8,6 +8,9 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * A styled button that contains an icon and/or text
+ */
 defineProps<{
   text?: string
 }>()

@@ -69,6 +69,9 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * A dialog for choosing a date range.
+ */
 import { ref } from 'vue'
 import {
   TransitionRoot,

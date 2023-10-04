@@ -100,6 +100,9 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * A component for showing the results of a name request search
+ */
 import { computed, onMounted } from 'vue'
 import { FilterKey, useSearchStore } from '../store/search'
 import {
@@ -112,7 +115,6 @@ import {
 } from '../enums/filter-dropdowns'
 import { SearchColumns } from '../enums/search-columns'
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/vue/24/outline'
-import { FunctionalComponent } from 'nuxt/dist/app/compat/capi'
 
 const NO_DATA_STRING = 'No Data Available'
 

@@ -42,6 +42,9 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * A component that contains disply, page, and column controls for the search page
+ */
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
 import { useSearchStore } from '~/store/search'
 
