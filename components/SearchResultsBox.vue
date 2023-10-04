@@ -60,7 +60,7 @@
 
       <tbody
         v-if="search.resultNum == 0"
-        :class="{ collapse: search.isLoading }"
+        :class="{ 'opacity-10': search.isLoading }"
       >
         <tr>
           <td colspan="13" class="border-b border-gray-200 py-4 text-center">
@@ -69,7 +69,7 @@
         </tr>
       </tbody>
 
-      <tbody v-else class="text-sm" :class="{ collapse: search.isLoading }">
+      <tbody v-else class="text-sm" :class="{ 'opacity-10': search.isLoading }">
         <tr
           v-for="row in search.rows"
           :key="row[SearchColumns.NameRequestNumber]"
