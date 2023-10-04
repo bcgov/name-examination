@@ -9,7 +9,7 @@ import {
   Priority,
   Status,
   Submitted,
-} from '~/enums/dropdownEnums'
+} from '~/enums/filter-dropdowns'
 import { DEFAULT_DISPLAY, defaultFilters, useSearchStore } from '~/store/search'
 import { setFetchResponse } from '../util'
 import mockOneNameRequest from '../data/mockOneNameRequest.json'

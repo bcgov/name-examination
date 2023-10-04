@@ -105,7 +105,7 @@ import {
   ClientNotification,
   Submitted,
   LastUpdate,
-} from '../enums/dropdownEnums'
+} from '../enums/filter-dropdowns'
 import { SearchColumns } from '../enums/SearchColumns'
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/vue/24/outline'
 

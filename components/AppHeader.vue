@@ -60,7 +60,6 @@
 import { useAuthStore } from '../store/auth'
 import KeycloakService from '../public/keycloak/keycloak'
 import { useRuntimeConfig } from '#imports'
-import { NavbarLink } from '../enums/dropdownEnums'
 import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/solid'
 import { useExamineOptionsStore } from '~/store/examine-options'
 import { Routes } from '~/enums/routes'

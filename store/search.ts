@@ -9,7 +9,7 @@ import {
   Priority,
   Status,
   Submitted,
-} from '~/enums/dropdownEnums'
+} from '~/enums/filter-dropdowns'
 import { getFormattedDateFromString } from '~/util/date'
 import { callNamexApi, getNamexApiUrl } from '~/util/namex-api'
 

@@ -15,7 +15,7 @@ import {
   Priority,
   Status,
   Submitted,
-} from '~/enums/dropdownEnums'
+} from '~/enums/filter-dropdowns'
 
 describe('Search Results Box Component', () => {
   let wrapper = mount(SearchResultsBox)

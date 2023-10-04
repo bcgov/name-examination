@@ -1,5 +1,3 @@
-// dropdownEnums.ts
-
 enum Status {
   All = 'ALL',
   Hold = 'HOLD',
