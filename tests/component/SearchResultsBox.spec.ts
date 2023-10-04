@@ -169,18 +169,7 @@ describe('Search Results Box Component', () => {
   })
 
   it('updates the submitted date filter with custom dates', async () => {
-    // const dropdown = getFilterInput(SearchColumns.Submitted)!
-    // expect(dropdown).toBeDefined()
-    // expect(dropdown.exists()).toBe(true)
-    // await clickDropdownOption(dropdown, Submitted.Custom)
-    // const dateDialog = wrapper.findComponent(DateDialog)
-    // const dateInputs = dateDialog.findAll('input[type="date"]')
-    // const startDate = '2000-01-01'
-    // const endDate = '2020-06-30'
-    // await dateInputs[0].setValue(startDate)
-    // await dateInputs[1].setValue(endDate)
-    // const confirmButton = findWithText(dateDialog, 'Ok')
-    // await confirmButton.trigger('click')
+    // todo
   })
 
   it('updates the submitted date filter order', async () => {
