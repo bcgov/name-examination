@@ -15,9 +15,9 @@
         v-if="authModule.isAuthenticated"
         class="ml-3 flex gap-10 text-bcgov-blue5"
       >
-        <AppHeaderNavLink text="Admin" :route="NavbarLink.Admin" />
-        <AppHeaderNavLink text="Examine Names" :route="NavbarLink.Examine" />
-        <AppHeaderNavLink text="Search" :route="NavbarLink.Search" />
+        <AppHeaderNavLink text="Admin" :route="Routes.Admin" />
+        <AppHeaderNavLink text="Examine Names" :route="Routes.Examine" />
+        <AppHeaderNavLink text="Search" :route="Routes.Search" />
       </div>
 
       <div v-if="authModule.isAuthenticated" class="ml-auto flex items-center">
@@ -63,6 +63,7 @@ import { useRuntimeConfig } from '#imports'
 import { NavbarLink } from '../enums/dropdownEnums'
 import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/solid'
 import { useExamineOptionsStore } from '~/store/examine-options'
+import { Routes } from '~/enums/routes'
 /* eslint-disable require-jsdoc */
 
 const authModule = useAuthStore()

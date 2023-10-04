@@ -1,5 +1,4 @@
 /* eslint-disable valid-jsdoc */
-import { Routes } from '~/enums/routes'
 const LOGOUT_URL = 'LOGOUT_URL'
 const LOGIN_URL = 'LOGIN_URL'
 const SITEMINDER_LOGOUT_URL = 'SITEMINDER_LOGOUT_URL'
@@ -11,16 +10,6 @@ export function isSigninRoute (): boolean {
   const hashFragment = window.location.hash
   return path.includes('/signin') || path.includes('/signin-redirect') || path.includes('/signin-redirect-full') ||
   hashFragment.includes('#state')
-}
-
-/** Returns true if current route is Signout. */
-export function isSignoutRoute (path = window.location.pathname): boolean {
-  return path.startsWith(Routes.SIGNOUT)
-}
-
-/** Returns true if current route is Login. */
-export function isLoginRoute (path = window.location.pathname): boolean {
-  return path.startsWith(Routes.LOGIN)
 }
 
 /** "Sleeps" for specified timeout. Must be awaited. */

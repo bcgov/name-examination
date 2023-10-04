@@ -13,10 +13,10 @@
 </template>
 
 <script setup lang="ts">
-import { NavbarLink } from '~/enums/dropdownEnums'
+import { Routes } from '~/enums/routes';
 
 defineProps<{
   text: string
-  route: NavbarLink
+  route: Routes
 }>()
 </script>

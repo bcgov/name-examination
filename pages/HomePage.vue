@@ -60,7 +60,7 @@ const authModule = useAuthStore()
 const router = useRouter()
 
 const gotoHomePage = () => {
-  router.push(Routes.HOME)
+  router.push(Routes.Home)
 }
 
 // Function called when the component is mounted

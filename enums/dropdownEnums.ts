@@ -53,13 +53,6 @@ enum LastUpdate {
   Days7 = '7 days',
 }
 
-enum NavbarLink {
-  Admin = 'admin',
-  Examine = 'examine',
-  Search = 'SearchPage',
-  Stats = 'stats',
-}
-
 export {
   Status,
   ConsentRequired,
@@ -67,5 +60,4 @@ export {
   ClientNotification,
   Submitted,
   LastUpdate,
-  NavbarLink,
 }
