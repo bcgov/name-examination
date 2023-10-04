@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useStatusStore } from '~/store/status'
 
 const status = useStatusStore()

@@ -1,14 +1,19 @@
 <template>
   <div>
-    <Listbox :modelValue="modelValue" @update:modelValue="updateModelValue" :multiple="multiple" v-slot="{ open }">
+    <Listbox
+      :modelValue="modelValue"
+      @update:modelValue="updateModelValue"
+      :multiple="multiple"
+      v-slot="{ open }"
+    >
       <div class="relative w-full">
         <ListboxButton
           class="relative w-full rounded-md border border-gray-300 bg-white py-1.5 pl-3 pr-10 text-left transition hover:bg-gray-100 sm:text-sm"
         >
           <span class="block"><slot>Select</slot></span>
           <span class="absolute inset-y-0 right-0 flex items-center pr-3">
-            <ChevronDownIcon v-if="!open" class="h-5 mt-0.5"/>
-            <ChevronUpIcon v-else class="h-5 mt-0.5"/>
+            <ChevronDownIcon v-if="!open" class="mt-0.5 h-5" />
+            <ChevronUpIcon v-else class="mt-0.5 h-5" />
           </span>
         </ListboxButton>
 
@@ -21,7 +26,7 @@
           enter-to-class="opacity-100"
         >
           <ListboxOptions
-            class="absolute mt-1 max-h-[60vh] w-fit overflow-auto rounded-md bg-white py-1 text-base text-left shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            class="absolute mt-1 max-h-[60vh] w-fit overflow-auto rounded-md bg-white py-1 text-left text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
           >
             <ListboxOption
               v-slot="{ active, selected }"
@@ -41,7 +46,7 @@
                   v-if="selected"
                   class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
                 >
-                  <CheckIcon class="h-5"/>
+                  <CheckIcon class="h-5" />
                 </span>
               </li>
             </ListboxOption>
@@ -62,8 +67,11 @@ import {
   ListboxOptions,
   ListboxOption,
 } from '@headlessui/vue'
-import { mdiCheck, mdiChevronDown, mdiChevronUp } from '@mdi/js'
-import { ChevronUpIcon, ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/outline';
+import {
+  ChevronUpIcon,
+  ChevronDownIcon,
+  CheckIcon,
+} from '@heroicons/vue/24/outline'
 
 const { modelValue, options, multiple } = defineProps<{
   modelValue: Array<object> | any

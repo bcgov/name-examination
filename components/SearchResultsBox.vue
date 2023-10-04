@@ -15,7 +15,10 @@
               class="flex items-center"
             >
               {{ column }}
-              <component :is="layout[column].clickable.icon.value" class="h-4 stroke-2"/>
+              <component
+                :is="layout[column].clickable.icon.value"
+                class="h-4 stroke-2"
+              />
             </a>
             <span v-else>
               {{ column }}
@@ -51,7 +54,10 @@
         </tr>
       </thead>
 
-      <tbody v-if="search.resultNum == 0" :class="{ collapse: search.isLoading }">
+      <tbody
+        v-if="search.resultNum == 0"
+        :class="{ collapse: search.isLoading }"
+      >
         <tr>
           <td colspan="13" class="border-b border-gray-200 py-4 text-center">
             {{ NO_DATA_STRING }}
@@ -62,7 +68,7 @@
       <tbody v-else class="text-sm" :class="{ collapse: search.isLoading }">
         <tr
           v-for="row in search.rows"
-          :key="row"
+          :key="row[SearchColumns.NameRequestNumber]"
           class="align-top transition duration-200 ease-in-out hover:bg-gray-200"
         >
           <td
@@ -101,7 +107,6 @@ import {
   LastUpdate,
 } from '../enums/dropdownEnums'
 import { SearchColumns } from '../enums/SearchColumns'
-import { mdiArrowDown, mdiArrowUp } from '@mdi/js'
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/vue/24/outline'
 
 const NO_DATA_STRING = 'No Data Available'

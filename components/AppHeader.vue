@@ -28,11 +28,17 @@
         </nuxt-link>
 
         <div class="flex space-x-2 px-3">
-          <ToggleSwitch label="Classify Words" v-model="examineOptions.classifyWords" />
-          <ToggleSwitch label="Priority Queue" v-model="examineOptions.priorityQueue" />
+          <ToggleSwitch
+            label="Classify Words"
+            v-model="examineOptions.classifyWords"
+          />
+          <ToggleSwitch
+            label="Priority Queue"
+            v-model="examineOptions.priorityQueue"
+          />
         </div>
 
-        <div class="flex flex-col px-3 border-l-2 border-gray-300">
+        <div class="flex flex-col border-l-2 border-gray-300 px-3">
           <span class="text-sm">{{
             KeycloakService.getUserInfo().fullName
           }}</span>
@@ -42,7 +48,7 @@
 
       <div v-if="!authModule.isAuthenticated" class="mx-5">
         <IconButton class="font-medium" @click="login">
-          <ArrowRightOnRectangleIcon class="h-6"/>
+          <ArrowRightOnRectangleIcon class="h-6" />
           Login
         </IconButton>
       </div>
@@ -50,13 +56,13 @@
   </nav>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useAuthStore } from '../store/auth'
 import KeycloakService from '../public/keycloak/keycloak'
 import { useRuntimeConfig } from '#imports'
 import { NavbarLink } from '../enums/dropdownEnums'
-import {ArrowRightOnRectangleIcon} from '@heroicons/vue/24/solid'
-import { useExamineOptionsStore } from '~/store/examine-options';
+import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/solid'
+import { useExamineOptionsStore } from '~/store/examine-options'
 /* eslint-disable require-jsdoc */
 
 const authModule = useAuthStore()
@@ -78,7 +84,7 @@ async function login() {
     // Token should now be generated
     await KeycloakService.initSession()
   } catch (err) {
-    if (err?.message !== 'NOT_AUTHENTICATED') {
+    if ((err as any)?.message !== 'NOT_AUTHENTICATED') {
       console.error(err)
       // Handle the error appropriately, possibly by showing an error message to the user
     }
@@ -92,7 +98,7 @@ async function logout() {
   try {
     await KeycloakService.logout(config.app.baseURL)
   } catch (err) {
-    if (err?.message !== 'LOGOUT FAILED') {
+    if ((err as any)?.message !== 'LOGOUT FAILED') {
       console.error(err)
       // Handle the error appropriately, possibly by showing an error message to the user
     }

@@ -9,7 +9,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useAuthStore } from '../store/auth'
 
 // not authenticated? go back to loginpage

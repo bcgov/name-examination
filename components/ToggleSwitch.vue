@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue'
-const props = defineProps<{
+defineProps<{
   modelValue: boolean
   label: string
 }>()
