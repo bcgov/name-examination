@@ -106,7 +106,7 @@ import {
   Submitted,
   LastUpdate,
 } from '../enums/filter-dropdowns'
-import { SearchColumns } from '../enums/SearchColumns'
+import { SearchColumns } from '../enums/search-columns'
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/vue/24/outline'
 
 const NO_DATA_STRING = 'No Data Available'

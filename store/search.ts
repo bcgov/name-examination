@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
 import { DateTime } from 'luxon'
 import { defineStore } from 'pinia'
-import { SearchColumns } from '~/enums/SearchColumns'
+import { SearchColumns } from '~/enums/search-columns'
 import {
   ClientNotification,
   ConsentRequired,

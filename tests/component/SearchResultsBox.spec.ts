@@ -7,7 +7,7 @@ import { FilterKey, useSearchStore } from '~/store/search'
 import LoadingSpinner from '~/components/LoadingSpinner.vue'
 import { createPinia, setActivePinia } from 'pinia'
 import flushPromises from 'flush-promises'
-import { SearchColumns } from '~/enums/SearchColumns'
+import { SearchColumns } from '~/enums/search-columns'
 import { clickDropdownOption, setFetchResponse } from '../util'
 import {
   ConsentRequired,
