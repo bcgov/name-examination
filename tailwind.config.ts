@@ -2,7 +2,12 @@
 module.exports = {
   content: [],
   theme: {
-    extend: {}
+    extend: {
+      colors: {
+        'bcgov-blue5': '#003366',
+        'bcgov-gold5': '#fcba19'
+      }
+    }
   },
   plugins: []
 }

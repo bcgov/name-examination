@@ -53,10 +53,11 @@ enum LastUpdate {
   Days7 = '7 days'
 }
 
-enum SelectedLink{
+enum NavbarLink {
   Admin = 'admin',
   Examine = 'examine',
-  Search = 'search'
+  Search = 'SearchPage',
+  Stats = 'stats'
 }
 
 export {
@@ -66,5 +67,5 @@ export {
   ClientNotification,
   Submitted,
   LastUpdate,
-  SelectedLink
+  NavbarLink
 }
