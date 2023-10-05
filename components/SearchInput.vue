@@ -1,7 +1,7 @@
 <template>
   <form class="mx-3 flex items-center">
     <label for="allowWordClassificationModal" class="sr-only"
-      >NR Number Lookup</label
+      >{{ placeholder }}</label
     >
     <div>
       <input
@@ -20,4 +20,7 @@
 
 <script setup lang="ts">
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
+defineProps<{
+  placeholder: string
+}>()
 </script>

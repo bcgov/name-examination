@@ -21,7 +21,7 @@
       </div>
 
       <div v-if="authModule.isAuthenticated" class="ml-auto flex items-center">
-        <SearchInput />
+        <SearchInput placeholder="NR Number Lookup"/>
 
         <nuxt-link to="/stats" class="mx-3 text-sm text-blue-800 underline">
           <a>Stats</a>
