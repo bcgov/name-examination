@@ -1,8 +1,8 @@
 <template>
   <div class="h-full overflow-x-auto rounded-md border">
-    <table class="min-h-fit table-auto">
+    <table class="min-h-fit min-w-full table-auto">
       <thead class="sticky top-0">
-        <tr class="bg-bcgov-blue5 text-left text-sm text-white">
+        <tr class="h-12 bg-bcgov-blue5 text-left text-sm text-white">
           <th
             v-for="column in selectedColumns"
             :key="column"

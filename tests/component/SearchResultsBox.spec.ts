@@ -1,6 +1,6 @@
 import { beforeEach, describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import SearchResultsBox from '~/components/search/SearchResultsBox.vue'
+import SearchResultsBox from '~/components/search/ResultsBox.vue'
 import mockNameRequests from '../data/mockNameRequests.json'
 import mockZeroNameRequests from '../data/mockZeroNameRequests.json'
 import { FilterKey, useSearchStore } from '~/store/search'
