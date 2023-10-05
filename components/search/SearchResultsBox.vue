@@ -104,7 +104,7 @@
  * A component for showing the results of a name request search
  */
 import { computed, onMounted } from 'vue'
-import { FilterKey, useSearchStore } from '../store/search'
+import { FilterKey, useSearchStore } from '~/store/search'
 import {
   Status,
   ConsentRequired,
@@ -112,8 +112,8 @@ import {
   ClientNotification,
   Submitted,
   LastUpdate,
-} from '../enums/filter-dropdowns'
-import { SearchColumns } from '../enums/search-columns'
+} from '~/enums/filter-dropdowns'
+import { SearchColumns } from '~/enums/search-columns'
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/vue/24/outline'
 
 const NO_DATA_STRING = 'No Data Available'

@@ -57,9 +57,9 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '../store/auth'
-import KeycloakService from '../public/keycloak/keycloak'
 import { useRuntimeConfig } from '#imports'
+import { useAuthStore } from '~/store/auth'
+import KeycloakService from '~/public/keycloak/keycloak'
 import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/solid'
 import { useExamineOptionsStore } from '~/store/examine-options'
 import { Routes } from '~/enums/routes'

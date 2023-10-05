@@ -1,4 +1,4 @@
-import { beforeEach, describe, it, expect, vitest, vi } from 'vitest'
+import { beforeEach, describe, it, expect, vi } from 'vitest'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createTestingPinia } from '@pinia/testing'
 import { useStatusStore } from '~/store/status'
