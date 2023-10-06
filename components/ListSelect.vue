@@ -34,6 +34,7 @@
               :key="option"
               :value="option"
               as="template"
+              @click="emit('option_clicked', option)"
             >
               <li
                 :class="[
@@ -79,7 +80,10 @@ const { modelValue, options, multiple } = defineProps<{
   multiple?: boolean
 }>()
 
-const emit = defineEmits()
+const emit = defineEmits<{
+  (e: 'option_clicked', option: any): void
+  (e: 'update:modelValue', newValue: any): void
+}>()
 
 const updateModelValue = (newValue: any) => {
   emit('update:modelValue', newValue)

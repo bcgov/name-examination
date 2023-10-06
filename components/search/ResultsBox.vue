@@ -27,7 +27,7 @@
         </tr>
 
         <!-- Filters Row -->
-        <tr>
+        <tr ref="filter_inputs">
           <th
             v-for="column in selectedColumns"
             :key="column"
@@ -37,20 +37,18 @@
             <input
               v-if="'text_input' in layout[column]"
               type="text"
+              :id="column"
               :placeholder="layout[column].text_input"
               class="w-full rounded-md border p-1.5"
               :value="search.filters[column as FilterKey]"
-              @keyup.enter="
-                search.filters[column as FilterKey] = (
-                  $event.target as HTMLInputElement
-                ).value
-              "
+              @keyup.enter="updateTextInputFilters()"
             />
 
             <ListSelect
               v-else-if="'dropdown' in layout[column]"
               v-model="search.filters[column as FilterKey]"
               :options="layout[column].dropdown"
+              @option_clicked="updateTextInputFilters()"
             >
               {{ search.filters[column as FilterKey] }}
             </ListSelect>
@@ -120,6 +118,7 @@ const NO_DATA_STRING = 'No Data Available'
 
 const search = useSearchStore()
 const showDateDialog = ref(false)
+const filter_inputs = ref<HTMLTableRowElement | null>(null)
 
 // User-selected columns in order
 const selectedColumns = computed(() =>
@@ -188,6 +187,25 @@ watch([search.filters], (state) => {
     showDateDialog.value = true
   }
 })
+
+/**
+ * Update all filters that use a text input.
+ * This is useful if you edit multiple text inputs and press enter on only one,
+ * but want the model values of all the other inputs updated as well.
+ */
+function updateTextInputFilters() {
+  const headCells = filter_inputs.value?.children
+  if (headCells == null) return
+
+  for (let headCell of headCells) {
+    const filterElement = headCell.children[0]
+    if (filterElement?.tagName.toLowerCase() == 'input') {
+      search.filters[filterElement.id as FilterKey] = (
+        filterElement as HTMLInputElement
+      ).value
+    }
+  }
+}
 
 function onDateDialogSubmit(startDate: string, endDate: string) {
   search.submittedStartDate = startDate
