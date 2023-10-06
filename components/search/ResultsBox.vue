@@ -48,7 +48,12 @@
               v-else-if="'dropdown' in layout[column]"
               v-model="search.filters[column as FilterKey]"
               :options="layout[column].dropdown"
-              @option_clicked="updateTextInputFilters()"
+              @option_clicked="
+                (option) => [
+                  updateTextInputFilters(),
+                  checkIfCustomSubmitDateChosen(option),
+                ]
+              "
             >
               {{ search.filters[column as FilterKey] }}
             </ListSelect>
@@ -89,8 +94,8 @@
 
     <DateDialog
       :isOpen="showDateDialog"
-      :initialStart="search.submittedStartDate"
-      :initialEnd="search.submittedEndDate"
+      :initialStart="search.customSubmittedStartDate"
+      :initialEnd="search.customSubmittedEndDate"
       @submit="onDateDialogSubmit"
       @cancel="onDateDialogCancel"
     />
@@ -182,12 +187,6 @@ const layout: ILayout = {
   [SearchColumns.LastComment]: {},
 }
 
-watch([search.filters], (state) => {
-  if (state[0].Submitted == Submitted.Custom) {
-    showDateDialog.value = true
-  }
-})
-
 /**
  * Update all filters that use a text input.
  * This is useful if you edit multiple text inputs and press enter on only one,
@@ -207,9 +206,19 @@ function updateTextInputFilters() {
   }
 }
 
+/**
+ * Check if the `Custom` option in the submitted date filter was chosen.
+ * If it is, then the date dialog should pop up.
+ */
+function checkIfCustomSubmitDateChosen(option: any) {
+  if (option == Submitted.Custom) {
+    showDateDialog.value = true
+  }
+}
+
 function onDateDialogSubmit(startDate: string, endDate: string) {
-  search.submittedStartDate = startDate
-  search.submittedEndDate = endDate
+  search.customSubmittedStartDate= startDate
+  search.customSubmittedEndDate = endDate
   showDateDialog.value = false
 }
 
@@ -218,7 +227,7 @@ function onDateDialogCancel() {
   showDateDialog.value = false
 }
 
-// When component is mounted, display initial values from the table
+// When the component is mounted, display initial values from the table
 onMounted(async () => {
   await search.updateRows()
 })

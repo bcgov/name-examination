@@ -53,8 +53,8 @@ export const useSearchStore = defineStore('search', () => {
     Math.max(1, Math.ceil(resultNum.value / selectedDisplay.value))
   )
   const submittedDateOrder: Ref<'asc' | 'desc'> = ref('asc')
-  const submittedStartDate = ref('')
-  const submittedEndDate = ref('')
+  const customSubmittedStartDate = ref('')
+  const customSubmittedEndDate = ref('')
   const lastSubmittedDateOption = ref(filters.Submitted)
   const isLoading = ref(false)
 
@@ -83,11 +83,11 @@ export const useSearchStore = defineStore('search', () => {
       firstName: filters[SearchColumns.ApplicantFirstName],
       lastName: filters[SearchColumns.ApplicantLastName],
       hour: DateTime.now().hour.toString(),
-      submittedStartDate: submittedStartDate.value,
-      submittedEndDate: submittedEndDate.value,
+      submittedStartDate: customSubmittedStartDate.value,
+      submittedEndDate: customSubmittedEndDate.value,
     }
 
-    // return the params object with all properties that have a defined value
+    // return the params object with all properties that have non-empty value
     return new URLSearchParams(
       Object.fromEntries(
         Object.entries(params).filter(([_, val]) => val !== '')
@@ -185,14 +185,14 @@ export const useSearchStore = defineStore('search', () => {
       filters,
       selectedDisplay,
       submittedDateOrder,
-      submittedStartDate,
-      submittedEndDate,
+      customSubmittedStartDate,
+      customSubmittedEndDate,
     ],
     async (_state) => {
       selectedPage.value = 1
       if (filters.Submitted != Submitted.Custom) {
-        submittedStartDate.value = ''
-        submittedEndDate.value = ''
+        customSubmittedStartDate.value = ''
+        customSubmittedEndDate.value = ''
         lastSubmittedDateOption.value = filters.Submitted
       }
       await updateRows()
@@ -218,8 +218,8 @@ export const useSearchStore = defineStore('search', () => {
     selectedPage,
     lastPageNumber,
     submittedDateOrder,
-    submittedStartDate,
-    submittedEndDate,
+    customSubmittedStartDate,
+    customSubmittedEndDate,
     lastSubmittedDateOption,
     isLoading,
     formattedUrl,
