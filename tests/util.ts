@@ -22,5 +22,9 @@ export async function clickDropdownOption(
  * Set the return value of the next call to `fetch`
  */
 export function setFetchResponse(data: any) {
-  global.fetch = vi.fn().mockResolvedValueOnce({ json: () => data })
+  global.fetch = vi
+    .fn()
+    .mockResolvedValueOnce({
+      json: () => new Promise((resolve) => resolve(data)),
+    })
 }
