@@ -22,7 +22,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   remoteConfig.settings.minimumFetchIntervalMillis = 3600000
 
   remoteConfig.defaultConfig = {
-    [FeatureFlags.NAMEX_BANNER]: ''
+    [FeatureFlags.NAMEX_BANNER]: 'rajan'
   }
 
   await fetchAndActivate(remoteConfig)
