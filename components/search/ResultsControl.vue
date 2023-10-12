@@ -25,9 +25,8 @@
       </ListSelect>
 
       <span>Page: </span>
-      <ListSelect v-model="search.selectedPage" :options="pageOptions">
-        {{ search.selectedPage }} of {{ search.lastPageNumber }}
-      </ListSelect>
+      <InputListSelect v-model="search.selectedPage" :options="pageOptions"/>
+      <span>of {{ search.lastPageNumber }}</span>
     </div>
 
     <div class="ml-4 space-x-2">
