@@ -19,7 +19,6 @@
             { "key" : "X-Content-Type-Options", "value" : "nosniff" },
             { "key" : "X-XSS-Protection", "value" : "1; mode=block" },
             { "key": "Cache-Control", "value": "no-store"},
-            { "key": "Pragma", "value": "no-cache"},
             { "key": "Referrer-Policy", "value": "no-referrer" },
             { "key": "Feature-Policy", "value": "microphone 'self'" },
             { "key": "Strict-Transport-Security", "value": "max-age=31536000;" }
