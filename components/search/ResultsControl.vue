@@ -25,12 +25,19 @@
       </ListSelect>
 
       <span>Page: </span>
-      <InputListSelect v-model="search.selectedPage" :options="pageOptions"/>
+      <InputListSelect
+        v-model="search.selectedPage"
+        :options="computed(() => pageOptions)"
+        class="w-24"
+      />
       <span>of {{ search.lastPageNumber }}</span>
     </div>
 
     <div class="ml-4 space-x-2">
-      <IconButton class="!py-[0.3125rem] px-5" @click="search.goToPreviousPage()">
+      <IconButton
+        class="!py-[0.3125rem] px-5"
+        @click="search.goToPreviousPage()"
+      >
         <ChevronLeftIcon class="h-6 stroke-2" />
       </IconButton>
       <IconButton class="!py-[0.3125rem] px-5" @click="search.goToNextPage()">

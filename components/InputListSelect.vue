@@ -4,42 +4,40 @@
       :model-value="modelValue"
       @update:model-value="(newValue) => $emit('update:modelValue', newValue)"
       :multiple="multiple"
+      :virtual="virtual"
     >
-      <div class="relative">
+      <div class="relative w-full">
         <div
-          class="relative w-20 cursor-default overflow-hidden bg-white text-left sm:text-sm"
+          class="relative cursor-default overflow-hidden bg-white text-left sm:text-sm"
         >
           <ComboboxInput
-            class="w-full rounded-md border border-gray-300 py-1.5 pl-2 text-sm leading-5 text-gray-900 focus:ring-0"
+            class="w-full rounded-md border border-gray-300 py-1.5 pl-2 pr-8 text-sm leading-5 text-gray-900 focus:ring-0"
             :displayValue="(_) => modelValue"
             @change="query = $event.target.value"
           />
           <ComboboxButton
-            class="absolute inset-y-0 right-0 flex items-center pr-2"
+            class="absolute inset-y-0 right-0 m-0.5 flex items-center rounded-md px-1 transition hover:bg-gray-100"
           >
             <ChevronUpDownIcon class="h-5 w-5" aria-hidden="true" />
           </ComboboxButton>
         </div>
         <TransitionRoot
-          leave="transition ease-in duration-100"
+          leave="transition duration-100 ease-in"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
+          enter="transition duration-50 ease-in"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
           @after-leave="query = ''"
         >
           <ComboboxOptions
-            class="absolute mt-1 max-h-[60vh] w-fit overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            v-if="filteredOptions.length > 0"
+            class="absolute mt-1 max-h-[60vh] w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            v-slot="{ option }"
           >
-            <div
-              v-if="filteredOptions.length === 0 && query !== ''"
-              class="relative select-none px-4 py-2"
-            >
-              Nothing found.
-            </div>
-
             <ComboboxOption
-              v-for="option in filteredOptions"
               as="template"
-              :key="option"
+              class="w-full"
               :value="option"
               v-slot="{ selected, active }"
             >
@@ -49,7 +47,7 @@
                   'relative cursor-default select-none py-2 pl-10 pr-4',
                 ]"
               >
-                <span class="block truncate">
+                <span class="block">
                   {{ option }}
                 </span>
                 <span
@@ -61,6 +59,12 @@
               </li>
             </ComboboxOption>
           </ComboboxOptions>
+          <div
+            v-else
+            class="absolute mt-1 max-h-[60vh] w-full overflow-auto rounded-md bg-white px-4 py-2 shadow-lg sm:text-sm"
+          >
+            Nothing found.
+          </div>
         </TransitionRoot>
       </div>
     </Combobox>
@@ -81,15 +85,15 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 
 const { options, multiple } = defineProps<{
   modelValue: any
-  options: any
+  options: ComputedRef<Array<any>>
   multiple?: boolean
 }>()
 
 const query = ref('')
 const filteredOptions = computed(() =>
   query.value === ''
-    ? options
-    : options.filter((option: any) =>
+    ? options.value
+    : options.value.filter((option: any) =>
         option
           .toString()
           .toLowerCase()
@@ -97,4 +101,6 @@ const filteredOptions = computed(() =>
           .includes(query.value.toLowerCase().replace(/\s+/g, ''))
       )
 )
+
+const virtual = ref({ options: filteredOptions })
 </script>
