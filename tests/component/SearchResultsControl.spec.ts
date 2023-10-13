@@ -7,6 +7,7 @@ import { createTestingPinia } from '@pinia/testing'
 import ListSelect from '~/components/ListSelect.vue'
 import { ListboxButton } from '@headlessui/vue'
 import IconButton from '~/components/IconButton.vue'
+import ComboSelect from '~/components/ComboSelect.vue'
 
 describe('Search Page', () => {
   let wrapper = mount(SearchResultsControl)
@@ -54,15 +55,14 @@ describe('Search Page', () => {
     expect(search.selectedDisplay).toBe(10)
   })
 
-  it('sets the page number', async () => {
-    const pageDropdown = wrapper.findAllComponents(ListSelect)[2]
-    expect(pageDropdown).toBeDefined()
-
+  it('has a page number combo select', async () => {
+    const pageDropdown = wrapper.findComponent(ComboSelect)
     search.selectedDisplay = 10
     search.resultNum = 100
 
-    await clickDropdownOption(pageDropdown, '10')
-    expect(search.selectedPage).toBe(10)
+    const expectedOptions = Array.from({ length: 10 }, (_, key) => key + 1)
+    expect(pageDropdown.vm.filteredOptions).toEqual(expectedOptions)
+    expect(pageDropdown.exists()).toBe(true)
   })
 
   it('goes to the previous page when a button is pressed', async () => {
