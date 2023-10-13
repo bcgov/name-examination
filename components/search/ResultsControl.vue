@@ -25,7 +25,7 @@
       </ListSelect>
 
       <span>Page: </span>
-      <InputListSelect
+      <ComboSelect
         v-model="search.selectedPage"
         :options="computed(() => pageOptions)"
         class="w-24"
