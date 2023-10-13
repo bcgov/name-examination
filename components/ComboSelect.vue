@@ -2,10 +2,9 @@
   <div>
     <Combobox
       :model-value="modelValue"
-      @update:model-value="(newValue) => $emit('update:modelValue', newValue)"
+      @update:model-value="(newValue: any) => $emit('update:modelValue', newValue)"
       :multiple="multiple"
       :virtual="virtual"
-      v-slot="{ open }"
     >
       <div class="relative w-full">
         <div
