@@ -5,20 +5,22 @@
       @update:model-value="(newValue) => $emit('update:modelValue', newValue)"
       :multiple="multiple"
       :virtual="virtual"
+      v-slot="{ open }"
     >
       <div class="relative w-full">
         <div
           class="relative cursor-default overflow-hidden bg-white text-left sm:text-sm"
         >
-          <ComboboxInput
-            class="w-full rounded-md border border-gray-300 py-1.5 pl-2 pr-8 text-sm leading-5 text-gray-900 focus:ring-0"
-            :displayValue="(_) => modelValue"
-            @change="query = $event.target.value"
-          />
-          <ComboboxButton
-            class="absolute inset-y-0 right-0 m-0.5 flex items-center rounded-md px-1 transition hover:bg-gray-100"
-          >
-            <ChevronUpDownIcon class="h-5 w-5" aria-hidden="true" />
+          <ComboboxButton class="m-0.5 flex items-center rounded-md" as="div">
+            <ComboboxInput
+              class="w-full rounded-md border border-gray-300 py-1.5 pl-2 pr-7 text-sm leading-5 text-gray-900 focus:ring-0"
+              :displayValue="(item: any) => item"
+              @change="query = $event.target.value"
+            />
+            <ChevronUpDownIcon
+              class="absolute right-2 h-5 w-5 cursor-pointer"
+              aria-hidden="true"
+            />
           </ComboboxButton>
         </div>
         <TransitionRoot
