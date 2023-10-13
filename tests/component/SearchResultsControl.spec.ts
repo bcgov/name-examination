@@ -61,7 +61,7 @@ describe('Search Page', () => {
     search.resultNum = 100
 
     const expectedOptions = Array.from({ length: 10 }, (_, key) => key + 1)
-    expect(pageDropdown.vm.filteredOptions).toEqual(expectedOptions)
+    expect((pageDropdown.vm as any).filteredOptions).toEqual(expectedOptions)
     expect(pageDropdown.exists()).toBe(true)
   })
 
