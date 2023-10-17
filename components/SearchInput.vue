@@ -1,18 +1,19 @@
 <template>
-  <form class="mx-3 flex items-center">
+  <form class="flex items-center">
     <label for="allowWordClassificationModal" class="sr-only"
       >{{ placeholder }}</label
     >
-    <div>
+    <div class="w-full">
       <input
         id="allowWordClassificationModal"
         type="text"
-        class="block w-40 rounded-l-md border border-gray-300 px-2 py-1.5 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-        placeholder="NR Number Lookup"
+        class="rounded-l-md w-full border border-gray-300 px-2 py-1.5 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+        :placeholder="placeholder"
+        :value="value.value"
         required
       />
     </div>
-    <IconButton class="rounded-none rounded-r-md border-bcgov-blue5 !px-2">
+    <IconButton class="rounded-none rounded-r-md border-bcgov-blue5 !px-2 !border">
       <MagnifyingGlassIcon class="h-5 stroke-2" />
     </IconButton>
   </form>
@@ -22,5 +23,6 @@
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 defineProps<{
   placeholder: string
+  value: Ref<string>
 }>()
 </script>

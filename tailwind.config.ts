@@ -3,6 +3,9 @@ module.exports = {
   content: [],
   theme: {
     extend: {
+      transitionProperty: {
+        'height': 'height'
+      },
       colors: {
         'bcgov-blue4': '#06527d',
         'bcgov-blue5': '#003366',

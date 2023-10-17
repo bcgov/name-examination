@@ -8,7 +8,7 @@
     >
       <div class="relative w-full">
         <div
-          class="relative cursor-default overflow-hidden bg-white text-left sm:text-sm"
+          class="relative cursor-default overflow-hidden text-left sm:text-sm"
         >
           <ComboboxButton class="m-0.5 flex items-center rounded-md" as="div">
             <ComboboxInput
