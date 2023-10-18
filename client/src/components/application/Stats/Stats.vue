@@ -103,7 +103,7 @@ export default {
   name: 'stats',
   data() {
     return {
-      timespan: 24, // number of hours back to look at
+      timespan: 24,
       requests: [],
       numRecords: 0,
       currentPage: 1,
@@ -141,8 +141,8 @@ export default {
     }
   },
   mounted() {
-    this.getPagedStats();
-    if (this.$refs.numberinput) this.$refs.numberinput.focus();
+    this.getPagedStats()
+    if (this.$refs.numberinput) this.$refs.numberinput.focus()
   },
   computed: {
     timespanHuman() {
