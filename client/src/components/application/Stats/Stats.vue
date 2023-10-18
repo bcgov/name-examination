@@ -3,6 +3,14 @@
 <v-container id="stats-viewer" style="min-width: 99.5%; max-width: 99.5%">
   <v-layout pt-3 px-3 align-center>
     <v-flex grow px-1><h1>Statistics</h1></v-flex>
+    <v-layout justify-end>
+      <div style="position: relative; top: 2px;">
+        <v-checkbox light v-model="myStats" />
+      </div>
+      <div style="position: relative; top: 10px;">My Stats</div>
+    </v-layout>
+    <v-flex shrink mx-4>Total Examined Names: {{ numRecords }}</v-flex>
+
     <v-flex shrink mx-2 fs-14>hours:</v-flex>
     <v-flex shrink>
       <v-form @submit.prevent="getPagedStats">
@@ -95,12 +103,14 @@ export default {
   name: 'stats',
   data() {
     return {
-      timespan: 1, // number of hours back to look at
+      timespan: 24, // number of hours back to look at
       requests: [],
-      numRecords: null,
+      numRecords: 0,
       currentPage: 1,
       perPage: 50,
       totalRows: null,
+      userId: this.userId,
+      myStats: true,
       fields: [
         {
           key: 'nrdetails',
@@ -131,7 +141,8 @@ export default {
     }
   },
   mounted() {
-    if (this.$refs.numberinput) this.$refs.numberinput.focus()
+    this.getPagedStats();
+    if (this.$refs.numberinput) this.$refs.numberinput.focus();
   },
   computed: {
     timespanHuman() {
@@ -183,6 +194,9 @@ export default {
       let currentPage = '&currentpage=' + this.currentPage
       let pageSize = '&perpage=' + this.perPage
       let url = '/api/v1/requests/stats' + params + currentPage + pageSize
+      if (this.myStats) {
+        url += '&myStats=True'
+      }
       axios.get(url, {headers:
         {Authorization: `Bearer ${sessionStorage.getItem('KEYCLOAK_TOKEN')}`}
       }).then(response => {

@@ -298,7 +298,7 @@ html {
 }
 
 #stats-viewer .v-table__overflow {
-  min-height: 400px !important;
+  min-height: 600px !important;
 }
 
 .v-input__slot:after, .v-input__slot:before {
