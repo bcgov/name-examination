@@ -1,10 +1,10 @@
 <template>
   <ExamineRequestHeader />
   <ExamineRequestInfo />
-  <ExamineNamesContainer/>
+  <ExamineNamesContainer />
 
-  <div class="flex bg-gray-100 space-x-2">
-    <ExamineRecipeContainer class="basis-1/2 m-4"/>
-    <ExamineDecision class="basis-1/2 !m-4"/>
+  <div class="flex space-x-2 bg-gray-100">
+    <ExamineRecipe class="m-4 basis-1/2" />
+    <ExamineDecision class="!m-4 basis-1/2" />
   </div>
 </template>

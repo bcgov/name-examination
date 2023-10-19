@@ -7,28 +7,16 @@
     </div>
 
     <div class="ml-auto flex h-9 space-x-2">
-      <IconButton
-        inverted
-        class="border-none bg-white hover:bg-sky-100 hover:!text-black"
-        text="Quick Approve"
-      >
+      <IconButton white class="border-none" text="Quick Approve">
         <CheckCircleIcon class="h-7 w-7 text-lime-600" />
       </IconButton>
 
-      <IconButton
-        inverted
-        class="border-none bg-white hover:bg-sky-100 hover:!text-black"
-        text="Reject Distinctive"
-      >
-        <XCircleIcon class="h-7 w-7 text-sky-400" />
+      <IconButton white class="border-none" text="Reject Distinctive">
+        <XCircleIcon class="h-7 w-7 text-bcgov-blue3" />
       </IconButton>
 
-      <IconButton
-        inverted
-        class="border-none bg-white hover:bg-sky-100 hover:!text-black"
-        text="Reject Descriptive"
-      >
-        <XCircleIcon class="h-7 w-7 text-sky-400" />
+      <IconButton white class="border-none" text="Reject Descriptive">
+        <XCircleIcon class="h-7 w-7 text-bcgov-blue3" />
       </IconButton>
     </div>
   </div>

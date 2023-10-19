@@ -2,7 +2,7 @@
   <div class="flex flex-col">
     <div class="flex w-full space-x-2">
       <SearchInput
-        :value="ref('WASD BLUEBERRY FARMERS COOP')"
+        :value="ref('NOT SO STEEP COOPERATIVE')"
         class="grow"
         placeholder="name"
       />

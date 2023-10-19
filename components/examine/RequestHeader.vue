@@ -8,12 +8,12 @@
     <p class="mx-3 font-bold">Cooperative - Incorporation</p>
 
     <div class="ml-auto inline-flex items-center space-x-2">
-      <IconButton inverted text="Edit Request" class="!py-1">
+      <IconButton light text="Edit Request" class="!py-1">
         <PencilSquareIcon class="h-5 w-5 stroke-2" />
       </IconButton>
 
       <IconButton
-        inverted
+        light
         :text="showDetails ? 'Hide Details (b)' : 'Show Details (b)'"
         class="!py-1"
         @click="showDetails = !showDetails"
@@ -23,17 +23,17 @@
       </IconButton>
 
       <div v-if="!inProgress" class="space-x-2">
-        <IconButton inverted text="Get Next" class="!py-1">
+        <IconButton light text="Get Next" class="!py-1">
           <ChevronDoubleRightIcon class="h-5 w-5 stroke-2" />
         </IconButton>
 
-        <IconButton inverted text="Cancel Request" class="!py-1">
+        <IconButton light text="Cancel Request" class="!py-1">
           <XMarkIcon class="h-5 w-5 stroke-2" />
         </IconButton>
       </div>
 
       <IconButton
-        inverted
+        light
         :text="inProgress ? 'Hold Request' : 'Examine'"
         class="!py-1"
         @click="inProgress = !inProgress"

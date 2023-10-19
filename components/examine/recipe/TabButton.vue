@@ -1,10 +1,12 @@
 <template>
   <Tab v-slot="{ selected }">
     <IconButton
-      inverted
+      white
       :class="[
-        'h-8 w-full !border bg-white hover:!bg-gray-100 hover:!text-black',
-        selected ? '!border-2 !bg-sky-100 hover:!bg-sky-100' : '',
+        'h-8 w-full border bg-white hover:!bg-gray-200',
+        selected
+          ? 'border-2 border-gray-700 !bg-sky-100 hover:!bg-sky-100'
+          : '',
       ]"
       :text="text"
     >

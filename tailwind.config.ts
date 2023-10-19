@@ -7,6 +7,7 @@ module.exports = {
         'height': 'height'
       },
       colors: {
+        'bcgov-blue3': '#1669bb',
         'bcgov-blue4': '#06527d',
         'bcgov-blue5': '#003366',
         'bcgov-blue8': '#002049',

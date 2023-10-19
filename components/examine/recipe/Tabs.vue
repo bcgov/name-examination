@@ -3,7 +3,7 @@
     <TabGroup>
       <TabList class="flex space-x-1 rounded-md bg-gray-100 p-1">
         <ExamineRecipeTabButton class="basis-1/6" text="Conflicts">
-          <CheckCircleIcon class="h-5 w-5 stroke-2 text-green-600" />
+          <CheckCircleIcon class="h-5 w-5 stroke-2 text-lime-600" />
         </ExamineRecipeTabButton>
 
         <ExamineRecipeTabButton class="basis-1/6" text="Conditions">
@@ -23,15 +23,37 @@
         </ExamineRecipeTabButton>
 
         <label class="flex items-center space-x-1" for="auto-add">
-          <input class="w-4 h-4" type="checkbox" id="auto-add" />
+          <input class="h-4 w-4" type="checkbox" id="auto-add" />
           <span>auto add</span>
         </label>
       </TabList>
 
-      <TabPanels class="mt-2 rounded-md bg-white border border-gray-300 overflow-auto h-[29rem]">
+      <TabPanels
+        class="mt-2 h-[29rem] overflow-auto rounded-md border border-gray-300 bg-white"
+      >
+        <!-- Conflicts tab -->
         <TabPanel>
-          <!-- Conflicts tab -->
-          <ExamineRecipeConflictsContainer />
+          <ExamineRecipeConflicts />
+        </TabPanel>
+
+        <!-- Conditions tab -->
+        <TabPanel>
+          <ExamineRecipeConditions />
+        </TabPanel>
+
+        <!-- Trademarks tab -->
+        <TabPanel>
+          <ExamineRecipeTrademarks />
+        </TabPanel>
+
+        <!-- History tab -->
+        <TabPanel>
+          <ExamineRecipeHistory />
+        </TabPanel>
+
+        <!-- Compare tab -->
+        <TabPanel>
+          <ExamineRecipeCompare />
         </TabPanel>
       </TabPanels>
     </TabGroup>

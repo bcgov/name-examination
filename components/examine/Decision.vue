@@ -1,5 +1,5 @@
 <template>
-  <div class="flex w-full flex-col space-y-2">
+  <div class="flex h-full w-full flex-col space-y-2">
     <div class="flex">
       <header class="text-2xl font-bold">Decision</header>
 
@@ -59,12 +59,16 @@
       <div class="flex basis-1/2 flex-col">
         <div class="flex justify-between">
           <header class="font-semibold">Message To Requestor</header>
-          <IconButton inverted class="ml-auto h-6 border-none bg-transparent" text="Edit">
+          <IconButton
+            white
+            class="ml-auto h-6 border-none !bg-transparent !text-bcgov-blue3"
+            text="Edit"
+          >
             <PencilSquareIcon class="h-5 w-5" />
           </IconButton>
         </div>
         <textarea
-          readonlydd
+          readonly
           class="mt-1 h-full w-full resize-none rounded-t-md border border-b-0 border-gray-300 p-2 text-sm outline-none"
         />
         <p
@@ -75,21 +79,28 @@
       </div>
     </div>
 
-    <div class="flex">
-      <IconButton inverted text="Approve Name" class="!bg-lime-300 text-black hover:!bg-lime-100 hover:!text-black">
-        <CheckIcon class="h-5 w-5 stroke-2"/>
+    <div class="!mt-20 flex">
+      <IconButton
+        light
+        text="Approve Name"
+        class="!bg-lime-600"
+      >
+        <CheckIcon class="h-5 w-5 stroke-2" />
       </IconButton>
 
-      <IconButton inverted text="Reject Name" class="ml-auto">
-        <XMarkIcon class="h-5 w-5 stroke-2"/>
+      <IconButton light text="Reject Name" class="ml-auto">
+        <XMarkIcon class="h-5 w-5 stroke-2" />
       </IconButton>
     </div>
-
   </div>
 </template>
 
 <script setup lang="ts">
-import { CheckIcon, PencilSquareIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import {
+  CheckIcon,
+  PencilSquareIcon,
+  XMarkIcon,
+} from '@heroicons/vue/24/outline'
 
 const selectedConditions = ref([])
 </script>

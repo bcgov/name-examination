@@ -1,10 +1,12 @@
 <template>
   <button
-    class="inline-flex items-center justify-center space-x-1 rounded-md border border-bcgov-blue5 p-2 font-semibold transition"
+    class="inline-flex items-center justify-center space-x-1 rounded-md border p-2 transition hover:opacity-90"
     :class="[
-      inverted
-        ? 'bg-sky-300 text-black hover:bg-sky-200'
-        : 'bg-bcgov-blue5 text-white hover:bg-bcgov-blue4',
+      light
+        ? 'bg-bcgov-blue3 text-white'
+        : white
+        ? 'bg-white text-gray-800 hover:bg-gray-200'
+        : 'bg-bcgov-blue5 text-white',
     ]"
   >
     <slot></slot>
@@ -18,6 +20,7 @@
  */
 defineProps<{
   text?: string
-  inverted?: boolean
+  light?: boolean
+  white?: boolean
 }>()
 </script>

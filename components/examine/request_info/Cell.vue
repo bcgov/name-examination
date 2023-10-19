@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="state === 'summarized'"
-    class="ml-10 h-36 w-48 overflow-clip bg-gray-100 p-2"
+    class="ml-10 h-full w-48 overflow-clip bg-gray-100 p-2"
   >
     <button @click="state = 'expanded'">expand</button>
     <p>Here's some content</p>
@@ -23,7 +23,6 @@
       </ul>
     </div>
   </div>
-  <p>Here's something outside</p>
 </template>
 
 <script setup lang="ts">
