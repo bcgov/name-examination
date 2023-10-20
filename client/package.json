@@ -1,6 +1,6 @@
 {
   "name": "namex",
-  "version": "2.1.20",
+  "version": "2.1.21",
   "description": "Webpack 5, Vue.js",
   "main": "main.js",
   "author": "Per Olsen",
