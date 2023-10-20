@@ -5,18 +5,16 @@
       <p>Priority</p>
     </div>
 
-    <div>
-      <b>Status: </b> INPROGRESS
-    </div>
+    <div><b>Status: </b> INPROGRESS</div>
 
-    <div>
-      <b>Examiner: </b> anonymous@idir
-    </div>
+    <div><b>Examiner: </b> anonymous@idir</div>
 
+    <ExamineRequestInfoCommentsPopup/>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ChatBubbleLeftIcon } from '@heroicons/vue/24/outline'
 import { StarIcon } from '@heroicons/vue/24/solid'
 
 const isPriority = ref(true)

@@ -12,8 +12,7 @@
         >
           <span class="block"><slot>Select</slot></span>
           <span class="absolute inset-y-0 right-0 flex items-center pr-3">
-            <ChevronDownIcon v-if="!open" class="mt-0.5 h-5" />
-            <ChevronUpIcon v-else class="mt-0.5 h-5" />
+            <ChevronDownIcon class="mt-0.5 h-5 transition" :class="open ? 'rotate-180' : ''" aria-hidden/>
           </span>
         </ListboxButton>
 
@@ -69,7 +68,6 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 import {
-  ChevronUpIcon,
   ChevronDownIcon,
   CheckIcon,
 } from '@heroicons/vue/24/outline'
