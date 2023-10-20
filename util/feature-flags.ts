@@ -1,5 +1,11 @@
 /* eslint-disable valid-jsdoc */
-import { initialize, LDClient, LDFlagSet, LDOptions, LDUser } from 'launchdarkly-js-client-sdk'
+import {
+  initialize,
+  type LDClient,
+  type LDFlagSet,
+  type LDOptions,
+  type LDUser,
+} from 'launchdarkly-js-client-sdk'
 
 // get rid of "element implicitly has an 'any' type..."
 declare const window: any
@@ -8,7 +14,7 @@ declare const window: any
  * Default flag values when LD is not available.
  */
 const defaultFlagSet: LDFlagSet = {
-  'banner-text': '' // by default, there is no banner text
+  'banner-text': '', // by default, there is no banner text
 }
 
 /**
@@ -19,13 +25,13 @@ let ldClient: LDClient
 /**
  * An async method that initializes the Launch Darkly client.
  */
-export async function initLdClient (): Promise<LDClient> {
+export async function initLdClient(): Promise<LDClient> {
   const envKey: string = window['ldClientId']
 
   if (envKey) {
     const user: LDUser = {
       // since we have no user data yet, use a shared key temporarily
-      key: 'anonymous'
+      key: 'anonymous',
     }
     const options: LDOptions = {
       // fetch flags using REPORT request (to see user data as JSON)
@@ -33,7 +39,7 @@ export async function initLdClient (): Promise<LDClient> {
       // opt out of sending diagnostics data
       diagnosticOptOut: true,
       // open streaming connection for live flag updates
-      streaming: true
+      streaming: true,
     }
 
     ldClient = initialize(envKey, user, options)
@@ -58,8 +64,12 @@ export async function initLdClient (): Promise<LDClient> {
  * @param lastName the user's last name
  * @param custom optional object of additional attributes associated with the user
  */
-export async function UpdateLdUser (
-  key: string, email: string, firstName: string, lastName: string, custom: any = null
+export async function UpdateLdUser(
+  key: string,
+  email: string,
+  firstName: string,
+  lastName: string,
+  custom: any = null
 ): Promise<void> {
   if (ldClient) {
     const user: LDUser = { key, email, firstName, lastName, custom }
@@ -76,6 +86,6 @@ export async function UpdateLdUser (
  * @param name the name of the feature flag
  * @return the flag value/variation, or undefined if the flag is not found
  */
-export function GetFeatureFlag (name: string): any {
+export function GetFeatureFlag(name: string): any {
   return ldClient ? ldClient.variation(name) : defaultFlagSet[name]
 }

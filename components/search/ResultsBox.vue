@@ -107,7 +107,7 @@
  * A component for showing the results of a name request search
  */
 import { computed, onMounted } from 'vue'
-import { FilterKey, useSearchStore } from '~/store/search'
+import { type FilterKey, useSearchStore } from '~/store/search'
 import {
   Status,
   ConsentRequired,
@@ -217,7 +217,7 @@ function checkIfCustomSubmitDateChosen(option: any) {
 }
 
 function onDateDialogSubmit(startDate: string, endDate: string) {
-  search.customSubmittedStartDate= startDate
+  search.customSubmittedStartDate = startDate
   search.customSubmittedEndDate = endDate
   showDateDialog.value = false
 }

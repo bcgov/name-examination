@@ -4,7 +4,11 @@ import { DOMWrapper, VueWrapper, mount } from '@vue/test-utils'
 import { createTestingPinia } from '@pinia/testing'
 import { useAuthStore } from '../../store/auth'
 import flushPromises from 'flush-promises'
-import { createRouter, createMemoryHistory, RouteRecordRaw } from 'vue-router'
+import {
+  createRouter,
+  createMemoryHistory,
+  type RouteRecordRaw,
+} from 'vue-router'
 import HomePage from '../pages/HomePage.vue'
 /* eslint-disable require-jsdoc */
 
