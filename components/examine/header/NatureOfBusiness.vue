@@ -1,8 +1,8 @@
 <template>
   <div class="text-sm">
-    <ExamineRequestInfoPopover
+    <ExamineHeaderPopover
       title="Nature of Business"
-      v-if="!examine.showDetails"
+      v-if="examine.headerState === 'minimized'"
     >
       <template #minimized>
         <p>
@@ -19,7 +19,7 @@
           more text. And some more.
         </p>
       </template>
-    </ExamineRequestInfoPopover>
+    </ExamineHeaderPopover>
     <div v-else>
       <span class="font-bold">Nature of Business</span>
       <p>

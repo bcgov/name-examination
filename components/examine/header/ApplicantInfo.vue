@@ -1,8 +1,8 @@
 <template>
   <div class="text-sm">
-    <ExamineRequestInfoPopover
+    <ExamineHeaderPopover
       title="Applicant Information"
-      v-if="!examine.showDetails"
+      v-if="examine.headerState === 'minimized'"
     >
       <template #minimized>
         <p>Jack Frost</p>
@@ -49,7 +49,7 @@
           </div>
         </div>
       </template>
-    </ExamineRequestInfoPopover>
+    </ExamineHeaderPopover>
     <div v-else class="overflow-auto">
       <span class="font-bold">Applicant Information</span>
       <div class="flex flex-col gap-y-2">

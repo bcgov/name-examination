@@ -13,7 +13,7 @@
         required
       />
     </div>
-    <IconButton class="rounded-none rounded-r-md border-bcgov-blue5 !px-2 !border">
+    <IconButton class="rounded-none rounded-r-md border-bcgov-blue5 !p-2 !border">
       <MagnifyingGlassIcon class="h-5 stroke-2" />
     </IconButton>
   </form>
@@ -26,3 +26,4 @@ defineProps<{
   value: Ref<string>
 }>()
 </script>
+

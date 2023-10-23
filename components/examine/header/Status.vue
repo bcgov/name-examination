@@ -9,7 +9,7 @@
 
     <div><b>Examiner: </b> anonymous@idir</div>
 
-    <ExamineRequestInfoCommentsPopup />
+    <ExamineHeaderCommentsPopup />
   </div>
 </template>
 

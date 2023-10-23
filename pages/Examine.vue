@@ -1,6 +1,6 @@
 <template>
   <ExamineRequestHeader />
-  <ExamineRequestInfo />
+  <ExamineHeader />
   <ExamineNamesContainer />
 
   <div class="flex space-x-2 bg-gray-100 flex-col xl:flex-row">

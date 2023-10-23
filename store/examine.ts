@@ -1,5 +1,5 @@
 export const useExamineStore = defineStore('examine', () => {
-  const showDetails = ref(false)
+  const headerState = ref<'minimized' | 'maximized' | 'editable'>('minimized')
 
-  return { showDetails }
+  return { headerState }
 })

@@ -3,10 +3,12 @@
     <Popover v-slot="{ open, close }" class="relative">
       <PopoverButton
         :class="open ? '' : 'text-opacity-90'"
-        class="group inline-flex items-center space-x-1 w-full rounded-md border border-gray-300 bg-white px-3 py-1 font-bold text-black transition hover:bg-gray-200"
+        class="group inline-flex w-full items-center space-x-1 rounded-md border border-gray-300 bg-white px-3 py-1 font-bold text-black transition hover:bg-gray-200"
       >
         <ChatBubbleLeftIcon class="h-5 w-5" />
-        <span class="grow text-left">{{ comments.length }} C<u>o</u>mments</span>
+        <span class="grow text-left"
+          >{{ comments.length }} C<u>o</u>mments</span
+        >
         <ChevronDownIcon
           :class="open ? 'rotate-180' : ''"
           class="h-5 w-5 transition duration-150 ease-in-out group-hover:text-opacity-80"
@@ -29,18 +31,12 @@
             class="h-full overflow-auto rounded-md border border-gray-400 shadow-xl"
           >
             <div class="flex h-full flex-col space-y-1 bg-gray-100 p-3">
-              <textarea
+              <EditableTextBox
+                class="basis-1/3"
                 placeholder="Create a new comment..."
-                class="w-full basis-1/3 resize-none rounded-md border border-gray-300 p-2 text-sm outline-none"
               />
-
-              <div class="flex justify-end space-x-1">
-                <IconButton white text="Cancel" class="h-7" @click="close()" />
-                <IconButton white text="Save" class="h-7" />
-              </div>
-
               <div class="flex basis-2/3 flex-col divide-y-2 overflow-auto">
-                <div class="py-2 flex flex-col" v-for="comment in comments">
+                <div class="flex flex-col py-2" v-for="comment in comments">
                   <span>{{ comment.content }}</span>
                   <span class="italic"
                     >{{ comment.author }} &ndash; {{ comment.time }}</span
