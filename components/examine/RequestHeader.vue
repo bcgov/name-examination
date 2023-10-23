@@ -6,57 +6,10 @@
     </a>
 
     <p class="mx-3 font-bold">Cooperative - Incorporation</p>
-
-    <div class="ml-auto inline-flex items-center space-x-2">
-      <IconButton light text="Edit Request" class="!py-1">
-        <PencilSquareIcon class="h-5 w-5 stroke-2" />
-      </IconButton>
-
-      <IconButton
-        light
-        :text="showDetails ? 'Hide Details (b)' : 'Show Details (b)'"
-        class="!py-1"
-        @click="showDetails = !showDetails"
-      >
-        <ArrowsPointingOutIcon v-if="!showDetails" class="h-5 w-5 stroke-2" />
-        <ArrowsPointingInIcon v-else class="h-5 w-5 stroke-2" />
-      </IconButton>
-
-      <div v-if="!inProgress" class="space-x-2">
-        <IconButton light text="Get Next" class="!py-1">
-          <ChevronDoubleRightIcon class="h-5 w-5 stroke-2" />
-        </IconButton>
-
-        <IconButton light text="Cancel Request" class="!py-1">
-          <XMarkIcon class="h-5 w-5 stroke-2" />
-        </IconButton>
-      </div>
-
-      <IconButton
-        light
-        :text="inProgress ? 'Hold Request' : 'Examine'"
-        class="!py-1"
-        @click="inProgress = !inProgress"
-      >
-        <PauseIcon v-if="inProgress" class="h-5 w-5 stroke-2" />
-        <DocumentCheckIcon v-else class="h-5 w-5 stroke-2" />
-      </IconButton>
-    </div>
+    <ExamineActionButtons class="ml-auto" />
   </div>
 </template>
 
 <script setup lang="ts">
-import {
-  ArrowTopRightOnSquareIcon,
-  ArrowsPointingInIcon,
-  ArrowsPointingOutIcon,
-  ChevronDoubleRightIcon,
-  DocumentCheckIcon,
-  PauseIcon,
-  PencilSquareIcon,
-  XMarkIcon,
-} from '@heroicons/vue/24/outline'
-
-const inProgress = ref(false)
-const showDetails = ref(false)
+import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col text-sm">
+  <div class="flex flex-col justify-start text-sm space-y-1">
     <div v-if="isPriority" class="flex items-center font-bold text-red-600">
       <StarIcon class="h-4 w-4" />
       <p>Priority</p>
@@ -9,12 +9,11 @@
 
     <div><b>Examiner: </b> anonymous@idir</div>
 
-    <ExamineRequestInfoCommentsPopup/>
+    <ExamineRequestInfoCommentsPopup />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ChatBubbleLeftIcon } from '@heroicons/vue/24/outline'
 import { StarIcon } from '@heroicons/vue/24/solid'
 
 const isPriority = ref(true)

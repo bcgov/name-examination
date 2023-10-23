@@ -15,24 +15,14 @@
     </div>
 
     <div class="!mt-4 flex space-x-2">
-      <div class="flex basis-1/2 flex-col space-y-8">
+      <!-- Layout the combo selects in reverse so they don't overlap each other https://stackoverflow.com/a/77210506 -->
+      <div class="flex basis-1/2 flex-col-reverse gap-y-8">
         <div>
-          <span class="font-semibold">Conditions</span>
+          <span class="font-semibold">Trademarks</span>
           <ComboSelect
             v-model="selectedConditions"
             :options="computed(() => [])"
             multiple
-            class="z-40"
-          />
-        </div>
-
-        <div>
-          <span class="font-semibold">Conflicts</span>
-          <ComboSelect
-            v-model="selectedConditions"
-            :options="computed(() => [])"
-            multiple
-            class="z-30"
           />
         </div>
 
@@ -42,12 +32,20 @@
             v-model="selectedConditions"
             :options="computed(() => [])"
             multiple
-            class="z-20"
           />
         </div>
 
         <div>
-          <span class="font-semibold">Trademarks</span>
+          <span class="font-semibold">Conflicts</span>
+          <ComboSelect
+            v-model="selectedConditions"
+            :options="computed(() => [])"
+            multiple
+          />
+        </div>
+
+        <div>
+          <span class="font-semibold">Conditions</span>
           <ComboSelect
             v-model="selectedConditions"
             :options="computed(() => [])"
@@ -80,16 +78,14 @@
     </div>
 
     <div class="!mt-20 flex">
-      <IconButton
-        light
-        text="Approve Name"
-        class="!bg-lime-600"
-      >
+      <IconButton light class="!bg-lime-600">
         <CheckIcon class="h-5 w-5 stroke-2" />
+        <template #text><u>A</u>pprove Name</template>
       </IconButton>
 
-      <IconButton light text="Reject Name" class="ml-auto">
+      <IconButton light class="ml-auto">
         <XMarkIcon class="h-5 w-5 stroke-2" />
+        <template #text><u>R</u>eject Name</template>
       </IconButton>
     </div>
   </div>
