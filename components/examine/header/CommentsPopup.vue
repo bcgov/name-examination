@@ -1,6 +1,6 @@
 <template>
   <div class="w-full max-w-sm">
-    <Popover v-slot="{ open, close }" class="relative">
+    <Popover v-slot="{ open }" class="relative">
       <PopoverButton
         :class="open ? '' : 'text-opacity-90'"
         class="group inline-flex w-full items-center space-x-1 rounded-md border border-gray-300 bg-white px-3 py-1 font-bold text-black transition hover:bg-gray-200"
