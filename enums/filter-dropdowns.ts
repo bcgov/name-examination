@@ -1,36 +1,34 @@
-// dropdownEnums.ts
-
 enum Status {
-  ALL = 'ALL',
-  HOLD = 'HOLD',
-  INPROGRESS = 'INPROGRESS',
-  DRAFT = 'DRAFT',
-  EXPIRED = 'EXPIRED',
-  CANCELLED = 'CANCELLED',
-  APPROVED = 'APPROVED',
-  CONDITIONAL = 'CONDITIONAL',
-  CONSUMED = 'CONSUMED',
-  REJECTED = 'REJECTED',
-  COMPLETED = 'COMPLETED'
+  All = 'ALL',
+  Hold = 'HOLD',
+  InProgress = 'INPROGRESS',
+  Draft = 'DRAFT',
+  Expired = 'EXPIRED',
+  Cancelled = 'CANCELLED',
+  Approved = 'APPROVED',
+  Conditional = 'CONDITIONAL',
+  Consumed = 'CONSUMED',
+  Rejected = 'REJECTED',
+  Completed = 'COMPLETED',
 }
 
 enum ConsentRequired {
   All = 'All',
   Yes = 'Yes',
   No = 'No',
-  Received = 'Received'
+  Received = 'Received',
 }
 
 enum Priority {
   All = 'All',
   Priority = 'Priority',
-  Standard = 'Standard'
+  Standard = 'Standard',
 }
 
 enum ClientNotification {
   All = 'All',
   Notified = 'Notified',
-  NotNotified = 'Not Notified'
+  NotNotified = 'Not Notified',
 }
 
 enum Submitted {
@@ -42,7 +40,7 @@ enum Submitted {
   Year1 = '1 year',
   Years3 = '3 years',
   Years5 = '5 years',
-  Custom = 'Custom'
+  Custom = 'Custom',
 }
 
 enum LastUpdate {
@@ -50,14 +48,7 @@ enum LastUpdate {
   Today = 'Today',
   Yesterday = 'Yesterday',
   Days2 = '2 days',
-  Days7 = '7 days'
-}
-
-enum NavbarLink {
-  Admin = 'admin',
-  Examine = 'examine',
-  Search = 'SearchPage',
-  Stats = 'stats'
+  Days7 = '7 days',
 }
 
 export {
@@ -67,5 +58,4 @@ export {
   ClientNotification,
   Submitted,
   LastUpdate,
-  NavbarLink
 }

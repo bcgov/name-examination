@@ -8,13 +8,11 @@
       <p>Your authorization is missing or has expired. Please login.</p>
     </div>
 
-    <HomePage
-      v-else
-    />
-    </div>
+    <HomePage v-else />
+  </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useAuthStore } from '../store/auth'
 import HomePage from './HomePage.vue'
 

@@ -1,7 +1,7 @@
 export enum Routes {
-    HOME = '/HomePage',
-    DASHBOARD = '/dashboard',
-    SIGNIN = '/signin',
-    SIGNOUT = '/signout',
-    LOGIN = '/login',
-  }
+  Home = 'HomePage',
+  Admin = 'admin',
+  Examine = 'examine',
+  Search = 'SearchPage',
+  Stats = 'stats',
+}

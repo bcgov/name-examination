@@ -4,7 +4,7 @@
       <div class="hidden h-full 2xl:block">
         <nuxt-link to="/HomePage">
           <img
-            src="../public/images/top-nav.png"
+            src="/images/top-nav.png"
             class="min-w-8 h-full"
             alt="Name Examination"
           />
@@ -15,24 +15,30 @@
         v-if="authModule.isAuthenticated"
         class="ml-3 flex gap-10 text-bcgov-blue5"
       >
-        <AppHeaderNavLink text="Admin" :route="NavbarLink.Admin" />
-        <AppHeaderNavLink text="Examine Names" :route="NavbarLink.Examine" />
-        <AppHeaderNavLink text="Search" :route="NavbarLink.Search" />
+        <AppHeaderNavLink text="Admin" :route="Routes.Admin" />
+        <AppHeaderNavLink text="Examine Names" :route="Routes.Examine" />
+        <AppHeaderNavLink text="Search" :route="Routes.Search" />
       </div>
 
       <div v-if="authModule.isAuthenticated" class="ml-auto flex items-center">
-        <SearchInput />
+        <SearchInput placeholder="NR Number Lookup"/>
 
         <nuxt-link to="/stats" class="mx-3 text-sm text-blue-800 underline">
           <a>Stats</a>
         </nuxt-link>
 
         <div class="flex space-x-2 px-3">
-          <ToggleSwitch label="Classify Words" storeFieldName="classifyWords" />
-          <ToggleSwitch label="Priority Queue" storeFieldName="priorityQueue" />
+          <ToggleSwitch
+            label="Classify Words"
+            v-model="examineOptions.classifyWords"
+          />
+          <ToggleSwitch
+            label="Priority Queue"
+            v-model="examineOptions.priorityQueue"
+          />
         </div>
 
-        <div class="flex flex-col px-3 border-l-2 border-gray-300">
+        <div class="flex flex-col border-l-2 border-gray-300 px-3">
           <span class="text-sm">{{
             KeycloakService.getUserInfo().fullName
           }}</span>
@@ -41,30 +47,27 @@
       </div>
 
       <div v-if="!authModule.isAuthenticated" class="mx-5">
-        <button
-          class="inline-flex w-full items-center justify-between rounded-md border-2 border-gray-300 px-1.5 py-1 font-medium hover:bg-gray-300 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-          @click="login"
-        >
+        <IconButton class="font-medium" @click="login">
+          <ArrowRightOnRectangleIcon class="h-6" />
           Login
-          <svg-icon type="mdi" viewBox="0 -2 24 24" :path="mdiLogin" />
-        </button>
+        </IconButton>
       </div>
     </div>
   </nav>
 </template>
 
-<script setup>
-import '@jamescoyle/vue-icon'
-import { ref } from 'vue'
-import { mdiLogin, mdiMagnify } from '@mdi/js'
-import { useAuthStore } from '../store/auth'
-import KeycloakService from '../public/keycloak/keycloak'
+<script setup lang="ts">
 import { useRuntimeConfig } from '#imports'
-import { NavbarLink } from '../enums/dropdownEnums'
+import { useAuthStore } from '~/store/auth'
+import KeycloakService from '~/public/keycloak/keycloak'
+import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/solid'
+import { useExamineOptionsStore } from '~/store/examine-options'
+import { Routes } from '~/enums/routes'
 /* eslint-disable require-jsdoc */
 
 const authModule = useAuthStore()
 const config = useRuntimeConfig()
+const examineOptions = useExamineOptionsStore()
 
 async function login() {
   // If the user is already authenticated, do nothing
@@ -81,7 +84,7 @@ async function login() {
     // Token should now be generated
     await KeycloakService.initSession()
   } catch (err) {
-    if (err?.message !== 'NOT_AUTHENTICATED') {
+    if ((err as any)?.message !== 'NOT_AUTHENTICATED') {
       console.error(err)
       // Handle the error appropriately, possibly by showing an error message to the user
     }
@@ -95,7 +98,7 @@ async function logout() {
   try {
     await KeycloakService.logout(config.app.baseURL)
   } catch (err) {
-    if (err?.message !== 'LOGOUT FAILED') {
+    if ((err as any)?.message !== 'LOGOUT FAILED') {
       console.error(err)
       // Handle the error appropriately, possibly by showing an error message to the user
     }

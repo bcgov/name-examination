@@ -4,7 +4,7 @@
       class="font-medium transition hover:border-b-2 hover:border-bcgov-blue5"
       :class="{
         'border-b-2 border-bcgov-blue5':
-          useRoute().name.toLowerCase() === route.toLowerCase(),
+          $route.name?.toString().toLowerCase() === route.toLowerCase(),
       }"
     >
       {{ text }}
@@ -12,11 +12,11 @@
   </nuxt-link>
 </template>
 
-<script setup>
-import { NavbarLink } from '~/enums/dropdownEnums'
+<script setup lang="ts">
+import { Routes } from '~/enums/routes';
 
-defineProps({
-  text: String,
-  route: NavbarLink,
-})
+defineProps<{
+  text: string
+  route: Routes
+}>()
 </script>
