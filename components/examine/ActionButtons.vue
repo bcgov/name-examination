@@ -1,6 +1,20 @@
 <template>
-  <div class="flex items-center space-x-2">
+  <div
+    v-if="examine.headerState === 'editable'"
+    class="flex items-center space-x-2 h-fit"
+  >
     <IconButton light>
+      <CheckIcon class="h-5 w-5 stroke-2" />
+      <template #text><u>S</u>ave Edits</template>
+    </IconButton>
+
+    <IconButton light text="Cancel" @click="examine.headerState = 'minimized'">
+      <XMarkIcon class="h-5 w-5 stroke-2" />
+    </IconButton>
+  </div>
+
+  <div v-else class="flex items-center space-x-2">
+    <IconButton light @click="examine.headerState = 'editable'">
       <PencilSquareIcon class="h-5 w-5 stroke-2" />
       <template #text>E<u>d</u>it Request</template>
     </IconButton>
@@ -47,6 +61,7 @@
 import {
   ArrowsPointingInIcon,
   ArrowsPointingOutIcon,
+  CheckIcon,
   ChevronDoubleRightIcon,
   DocumentCheckIcon,
   PauseIcon,

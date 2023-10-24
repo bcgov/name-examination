@@ -17,11 +17,11 @@
 
     <transition
       enter-active-class="transition duration-50 ease-out"
-      enter-from-class="translate-y-1 opacity-0"
-      enter-to-class="translate-y-0 opacity-100"
+      enter-from-class="translate-y-1 absolute opacity-0"
+      enter-to-class="translate-y-0 absolute opacity-100"
       leave-active-class="transition duration-10 ease-in"
-      leave-from-class="translate-y-0 opacity-100"
-      leave-to-class="translate-y-1 opacity-0"
+      leave-from-class="translate-y-0 absolute opacity-100"
+      leave-to-class="translate-y-1 absolute opacity-0"
     >
       <div class="line-clamp-3" v-if="!open">
         <slot name="minimized"></slot>
@@ -29,10 +29,10 @@
     </transition>
 
     <transition
-      enter-active-class="transition duration-50 ease-out"
+      enter-active-class="transition duration-150 ease-out"
       enter-from-class="translate-y-1 opacity-0"
       enter-to-class="translate-y-0 opacity-100"
-      leave-active-class="transition duration-10 ease-in"
+      leave-active-class="transition duration-50 ease-in"
       leave-from-class="translate-y-0 opacity-100"
       leave-to-class="translate-y-1 opacity-0"
     >

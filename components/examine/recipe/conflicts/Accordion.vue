@@ -1,7 +1,7 @@
 <template>
   <Disclosure default-open as="div" class="mt-2" v-slot="{ open }">
     <DisclosureButton
-      class="flex w-full justify-between rounded-md bg-gray-200 px-4 py-2 text-left text-sm font-medium text-gray-900 hover:bg-sky-100"
+      class="flex w-full justify-between rounded-md bg-gray-200 px-4 py-2 text-left text-sm font-medium text-gray-900 transition hover:bg-gray-300"
     >
       <span>{{ text }}</span>
       <ChevronDownIcon

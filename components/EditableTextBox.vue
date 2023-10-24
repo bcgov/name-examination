@@ -5,7 +5,7 @@
       class="w-full grow resize-none rounded-md border border-gray-300 p-2 text-sm outline-none"
       :value="initialValue"
     />
-    <div class="flex space-x-1">
+    <div v-if="!disableButtons" class="flex space-x-1">
       <IconButton white text="Save" class="h-7" />
       <IconButton white text="Cancel" class="h-7" />
     </div>
@@ -16,5 +16,6 @@
 defineProps<{
   initialValue?: string
   placeholder?: string
+  disableButtons?: boolean
 }>()
 </script>

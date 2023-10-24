@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-md text-sm">
+  <div class="rounded-md px-4 py-1 text-sm">
     <ExamineHeaderPopover
       :title="title"
       v-if="examine.headerState === 'minimized'"
@@ -8,13 +8,13 @@
       <template #expanded><slot name="popup"></slot></template>
     </ExamineHeaderPopover>
 
-    <div v-else-if="examine.headerState === 'maximized'">
+    <div class="space-y-1" v-else-if="examine.headerState === 'maximized'">
       <span class="font-bold">{{ title }}</span>
       <slot name="maximized"></slot>
     </div>
 
     <!-- Editable state -->
-    <div v-else>
+    <div class="space-y-1" v-else>
       <span class="font-bold">{{ title }}</span>
       <slot name="editable"></slot>
     </div>

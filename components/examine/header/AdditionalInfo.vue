@@ -16,6 +16,15 @@
       <template #maximized>
         <p>{{ INFO }}</p>
       </template>
+
+      <template #editable>
+        <EditableTextBox
+          placeholder="Additional Info..."
+          class="h-72"
+          :initial-value="INFO"
+          disable-buttons
+        />
+      </template>
     </ExamineHeaderItem>
   </div>
 </template>
