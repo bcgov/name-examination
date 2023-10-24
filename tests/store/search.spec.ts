@@ -23,7 +23,7 @@ describe('Search store tests', () => {
     search = useSearchStore()
   })
 
-  it('creates the correct api url', () => {
+  it('creates the correct api params', () => {
     const testName = 'test'
     search.filters[SearchColumns.ApplicantFirstName] = testName
 
@@ -40,11 +40,8 @@ describe('Search store tests', () => {
       firstName: testName,
       hour: DateTime.now().hour.toString(),
     })
-    let expectedUrl = `${import.meta.env.VITE_APP_NAMEX_API_URL}${
-      import.meta.env.VITE_APP_NAMEX_API_VERSION
-    }/requests?${expectedParams}`
 
-    expect(search.formattedUrl.toString()).toBe(expectedUrl)
+    expect(search.formattedSearchParams).toEqual(expectedParams)
   })
 
   it('computed the last page number correctly', () => {

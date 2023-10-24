@@ -222,6 +222,7 @@ export const useSearchStore = defineStore('search', () => {
     customSubmittedEndDate,
     lastSubmittedDateOption,
     isLoading,
+    formattedSearchParams,
     formattedUrl,
     updateRows,
     toggleSubmittedDateOrder,
