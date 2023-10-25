@@ -78,12 +78,12 @@
     </div>
 
     <div class="!mt-20 flex">
-      <IconButton light class="!bg-lime-600">
+      <IconButton light class="!bg-lime-600" mnemonic="a">
         <CheckIcon class="h-5 w-5 stroke-2" />
         <template #text><u>A</u>pprove Name</template>
       </IconButton>
 
-      <IconButton light class="ml-auto">
+      <IconButton light class="ml-auto" mnemonic="r">
         <XMarkIcon class="h-5 w-5 stroke-2" />
         <template #text><u>R</u>eject Name</template>
       </IconButton>

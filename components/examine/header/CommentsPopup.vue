@@ -2,6 +2,7 @@
   <div class="w-full max-w-sm">
     <Popover v-slot="{ open }" class="relative">
       <PopoverButton
+        ref="popoverButton"
         :class="open ? '' : 'text-opacity-90'"
         class="group inline-flex w-full items-center space-x-1 rounded-md border border-gray-300 bg-white px-3 py-1 font-bold text-black transition hover:bg-gray-200"
       >
@@ -55,6 +56,12 @@
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 import { ChatBubbleLeftIcon } from '@heroicons/vue/24/outline'
+
+const popoverButton = ref<HTMLButtonElement | null>(null)
+const buttonElem = computed(
+  () => (popoverButton.value as any).el as HTMLButtonElement
+)
+useMnemonic('o', () => console.log(buttonElem.value.click()))
 
 const comments = [
   {
