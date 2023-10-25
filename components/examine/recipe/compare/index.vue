@@ -1,6 +1,6 @@
 <template>
-  <div class="m-4 text-sm">
-
-    No conflicts have been added for comparison.
+  <div class="flex flex-col overflow-auto">
+    <ExamineRecipeCompareItem />
+    <ExamineRecipeCompareItem />
   </div>
 </template>
