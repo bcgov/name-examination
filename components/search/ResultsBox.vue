@@ -92,13 +92,14 @@
       <LoadingSpinner v-if="search.isLoading" />
     </table>
 
-    <DateDialog
-      :isOpen="showDateDialog"
-      :initialStart="search.customSubmittedStartDate"
-      :initialEnd="search.customSubmittedEndDate"
-      @submit="onDateDialogSubmit"
-      @cancel="onDateDialogCancel"
-    />
+    <PopupDialog title="Choose a Date Range" :show="showDateDialog">
+      <SearchDateForm
+        :initialStart="search.customSubmittedStartDate"
+        :initialEnd="search.customSubmittedEndDate"
+        @submit="onDateDialogSubmit"
+        @cancel="onDateDialogCancel"
+      />
+    </PopupDialog>
   </div>
 </template>
 
@@ -217,6 +218,7 @@ function checkIfCustomSubmitDateChosen(option: any) {
 }
 
 function onDateDialogSubmit(startDate: string, endDate: string) {
+  console.log(`submitted ${startDate} ${endDate}`)
   search.customSubmittedStartDate = startDate
   search.customSubmittedEndDate = endDate
   showDateDialog.value = false

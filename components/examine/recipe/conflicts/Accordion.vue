@@ -1,8 +1,7 @@
 <template>
-  <Disclosure as="div" v-slot="{ open }">
-    <DisclosureButton
-      :disabled="disabled"
-      class="flex w-full items-center justify-between rounded-md p-1 text-left text-sm font-medium transition"
+  <details id="details" :class="{ 'pointer-events-none': disabled }">
+    <summary
+      class="flex w-full cursor-pointer items-center justify-between rounded-md p-1 text-left text-sm font-medium transition"
       :class="buttonStyle"
     >
       <slot name="header"></slot>
@@ -11,25 +10,22 @@
         :class="open ? 'rotate-180 transform' : ''"
         class="ml-1 h-5 w-5 stroke-2 transition"
       />
-    </DisclosureButton>
-    <DisclosurePanel class="p-1">
+    </summary>
+    <div class="p-1">
       <slot></slot>
-    </DisclosurePanel>
-  </Disclosure>
+    </div>
+  </details>
 </template>
 
 <script setup lang="ts">
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/outline'
+
+const details = ref<HTMLDetailsElement | null>(null)
+const open = computed(() => details.value?.open)
 
 defineProps<{
   arrow?: boolean
   buttonStyle?: any
   disabled?: boolean
-  id?: number
-}>()
-
-const emit = defineEmits<{
-  accordionClicked: [id: number]
 }>()
 </script>

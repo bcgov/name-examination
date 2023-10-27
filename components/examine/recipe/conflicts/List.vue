@@ -1,11 +1,8 @@
 <template>
   <div class="flex flex-col">
     <ExamineRecipeConflictsAccordion
-      v-for="(item, i) in data"
-      :ref="(el) => (accordions[i] = el)"
-      class="rounded-md p-1"
-      :class="{ 'bg-sky-100': selected === i }"
-      @click="accordions[0].click()"
+      v-for="item in data"
+      class="conflict-details rounded-md p-1"
     >
       <template #header>
         <div class="flex w-full items-center gap-x-2">
@@ -33,10 +30,21 @@
 </template>
 
 <script setup lang="ts">
-const accordions = ref<any[]>([])
-const hideOther = (id: number) => {
-  accordions.value.filter((_, i) => i !== id).forEach((c) => c())
-}
+onMounted(() => {
+  // close all other accordions (which are <details> elements) when one is clicked
+  const details = document.getElementsByClassName('conflict-details')
+  for (const targetDetail of details) {
+    targetDetail.addEventListener('click', () => {
+      targetDetail.classList.add('bg-sky-100')
+      for (const detail of details) {
+        if (detail !== targetDetail) {
+          detail.removeAttribute('open')
+          detail.classList.remove('bg-sky-100')
+        }
+      }
+    })
+  }
+})
 
 const data = [
   {
@@ -52,5 +60,4 @@ const data = [
     date: '2006-09-25',
   },
 ]
-const selected = ref(0)
 </script>

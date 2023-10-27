@@ -44,7 +44,12 @@
       <template #text>Get&nbsp;<u>N</u>ext</template>
     </IconButton>
 
-    <IconButton v-if="!inProgress" light text="Cancel Request">
+    <IconButton
+      v-if="!inProgress"
+      light
+      text="Cancel Request"
+      @click="showCancelRequestDialog = true"
+    >
       <XMarkIcon class="h-5 w-5 stroke-2" />
     </IconButton>
 
@@ -62,6 +67,10 @@
       <DocumentCheckIcon class="h-5 w-5 stroke-2" />
       <template #text>E<u>x</u>amine</template>
     </IconButton>
+
+    <PopupDialog title="Cancel Name Request" :show="showCancelRequestDialog">
+      <ExamineCancelRequestForm @cancel="showCancelRequestDialog = false" />
+    </PopupDialog>
   </div>
 </template>
 
@@ -80,6 +89,7 @@ import { useExamineStore } from '~/store/examine'
 
 const examine = useExamineStore()
 const inProgress = ref(false)
+const showCancelRequestDialog = ref(false)
 </script>
 
 <style scoped>
