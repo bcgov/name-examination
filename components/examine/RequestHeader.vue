@@ -1,7 +1,12 @@
 <template>
   <div class="flex px-4 py-2 text-gray-700">
     <div class="flex h-fit">
-      <header class="text-3xl font-bold">NR 1234567</header>
+      <header
+        class="text-3xl font-bold"
+        :class="{ 'text-red-600': examine.isPriority }"
+      >
+        NR 1234567
+      </header>
 
       <a href="#" class="inline-flex items-center px-2 text-bcgov-blue5">
         <ArrowTopRightOnSquareIcon class="h-6 w-6" />

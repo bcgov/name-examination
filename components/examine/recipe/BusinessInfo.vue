@@ -1,5 +1,5 @@
 <template>
-  <div class="flex p-4 text-sm bg-sky-100">
+  <div class="flex p-2 text-sm">
     <div class="grid basis-1/2 grid-cols-2 gap-y-2">
       <b>Type</b>
       <p>BC Corporation</p>
