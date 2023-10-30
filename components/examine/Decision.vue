@@ -20,7 +20,7 @@
         <div>
           <span class="font-semibold">Trademarks</span>
           <ComboSelect
-            v-model="selectedConditions"
+            v-model="selectedTrademarks"
             :options="computed(() => [])"
             multiple
           />
@@ -29,7 +29,7 @@
         <div>
           <span class="font-semibold">Macros</span>
           <ComboSelect
-            v-model="selectedConditions"
+            v-model="selectedMacros"
             :options="computed(() => [])"
             multiple
           />
@@ -38,19 +38,20 @@
         <div>
           <span class="font-semibold">Conflicts</span>
           <ComboSelect
-            v-model="selectedConditions"
+            v-model="selectedConflicts"
             :options="computed(() => [])"
             multiple
           />
         </div>
 
-        <div>
+        <div class="flex flex-col space-y-1">
           <span class="font-semibold">Conditions</span>
           <ComboSelect
             v-model="selectedConditions"
             :options="computed(() => [])"
             multiple
           />
+          <Chips v-model="selectedConditions"/>
         </div>
       </div>
 
@@ -98,5 +99,8 @@ import {
   XMarkIcon,
 } from '@heroicons/vue/24/outline'
 
-const selectedConditions = ref([])
+const selectedConditions = ref(['Cooperative'])
+const selectedConflicts = ref([])
+const selectedMacros = ref([])
+const selectedTrademarks = ref([])
 </script>

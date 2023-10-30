@@ -21,7 +21,6 @@ const emit = defineEmits<{
 const showSubmitError = ref(false)
 
 const handleSubmit = (text: string) => {
-  console.log('im here')
   if (text === '') {
     showSubmitError.value = true
   } else {
