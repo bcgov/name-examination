@@ -16,42 +16,46 @@
 
     <div class="!mt-4 flex space-x-2">
       <!-- Layout the combo selects in reverse so they don't overlap each other https://stackoverflow.com/a/77210506 -->
-      <div class="flex basis-1/2 flex-col-reverse gap-y-8">
+      <div class="flex basis-1/2 flex-col-reverse gap-y-8 overflow-auto">
         <div>
           <span class="font-semibold">Trademarks</span>
-          <ComboSelect
-            v-model="selectedTrademarks"
-            :options="computed(() => [])"
-            multiple
-          />
+          <ListSelect v-model="selectedTrademarks" :options="[]" multiple>
+            <Chips
+              v-if="selectedTrademarks.length > 0"
+              v-model="selectedTrademarks"
+            />
+          </ListSelect>
         </div>
 
         <div>
           <span class="font-semibold">Macros</span>
-          <ComboSelect
-            v-model="selectedMacros"
-            :options="computed(() => [])"
-            multiple
-          />
+          <ListSelect v-model="selectedMacros" :options="[]" multiple>
+            <Chips v-if="selectedMacros.length > 0" v-model="selectedMacros" />
+          </ListSelect>
         </div>
 
         <div>
           <span class="font-semibold">Conflicts</span>
-          <ComboSelect
-            v-model="selectedConflicts"
-            :options="computed(() => [])"
-            multiple
-          />
+          <ListSelect v-model="selectedConflicts" :options="[]" multiple>
+            <Chips
+              v-if="selectedConflicts.length > 0"
+              v-model="selectedConflicts"
+            />
+          </ListSelect>
         </div>
 
-        <div class="flex flex-col space-y-1">
+        <div>
           <span class="font-semibold">Conditions</span>
-          <ComboSelect
+          <ListSelect
             v-model="selectedConditions"
-            :options="computed(() => [])"
+            :options="['Cooperative']"
             multiple
-          />
-          <Chips v-model="selectedConditions"/>
+          >
+            <Chips
+              v-if="selectedConditions.length > 0"
+              v-model="selectedConditions"
+            />
+          </ListSelect>
         </div>
       </div>
 

@@ -22,8 +22,8 @@
     />
 
     <div class="mt-6 space-x-2">
-      <IconButton type="submit">Ok</IconButton>
-      <IconButton @click="emit('cancel')">Cancel</IconButton>
+      <IconButton white type="submit" class="px-3">Ok</IconButton>
+      <IconButton white @click="emit('cancel')">Cancel</IconButton>
     </div>
   </form>
 </template>

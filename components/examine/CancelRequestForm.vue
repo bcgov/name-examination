@@ -1,11 +1,11 @@
 <template>
-  <div class="flex h-full flex-col">
+  <div class="flex h-full flex-col space-y-1">
     <p>Please provide comments to explain why the NR is being cancelled</p>
     <p v-if="showSubmitError" class="text-red-600">Please write a comment</p>
     <EditableTextBox
       class="grow"
       placeholder="Write comment..."
-      confirm-text="Submit Cancellation"
+      confirm-text="Submit"
       @submit="handleSubmit"
       @cancel="() => emit('cancel')"
     />
