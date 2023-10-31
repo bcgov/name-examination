@@ -35,7 +35,13 @@
               <EditableTextBox
                 class="basis-1/3"
                 placeholder="Create a new comment..."
-              />
+                confirm-mnemonic="v"
+                @submit="console.log('submitted comment')"
+              >
+                <template #confirmText>
+                  <span>Sa<u>v</u>e</span>
+                </template>
+              </EditableTextBox>
               <div class="flex basis-2/3 flex-col divide-y-2 overflow-auto">
                 <div class="flex flex-col py-2" v-for="comment in comments">
                   <span>{{ comment.content }}</span>
@@ -61,7 +67,7 @@ const popoverButton = ref<HTMLButtonElement | null>(null)
 const buttonElem = computed(
   () => (popoverButton.value as any).el as HTMLButtonElement
 )
-useMnemonic('o', () => console.log(buttonElem.value.click()))
+useMnemonic('o', () => buttonElem.value.click())
 
 const comments = [
   {

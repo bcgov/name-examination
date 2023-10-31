@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col space-y-2">
     <div class="flex w-full space-x-2">
       <SearchInput
         :value="ref('NOT SO STEEP COOPERATIVE')"

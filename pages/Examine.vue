@@ -5,14 +5,18 @@
   >
     <ExamineRequestHeader />
     <ExamineHeader />
-    <ExamineNamesContainer />
+
+    <div class="flex justify-between p-4">
+      <ExamineNameChoices />
+      <ExamineQuickActionButtons v-if="examine.headerState !== 'editable'" />
+    </div>
 
     <div
       v-if="examine.headerState !== 'editable'"
-      class="flex grow flex-col space-x-2 bg-gray-100 xl:flex-row"
+      class="flex grow flex-col space-x-3 bg-gray-100 p-4 xl:flex-row"
     >
-      <ExamineRecipe class="m-4 basis-1/2" />
-      <ExamineDecision class="!m-4 basis-1/2" />
+      <ExamineRecipe class="basis-1/2" />
+      <ExamineDecision v-if="examine.inProgress" class="basis-1/2" />
     </div>
   </div>
 </template>

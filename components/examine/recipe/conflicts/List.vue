@@ -8,6 +8,7 @@
         <div class="flex w-full items-center gap-x-2">
           <input
             type="checkbox"
+            :disabled="!examine.inProgress"
             class="h-4 w-4"
             @click="(e) => e.stopPropagation()"
           />
@@ -30,6 +31,10 @@
 </template>
 
 <script setup lang="ts">
+import { useExamineStore } from '~/store/examine'
+
+const examine = useExamineStore()
+
 onMounted(() => {
   // close all other accordions (which are <details> elements) when one is clicked
   const details = document.getElementsByClassName('conflict-details')

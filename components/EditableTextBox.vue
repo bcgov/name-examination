@@ -8,34 +8,36 @@
     <div v-if="!disableButtons" class="flex space-x-1">
       <IconButton
         white
-        :text="confirmText"
         class="h-7"
         @click="emit('submit', text)"
-      />
+        :mnemonic="confirmMnemonic"
+      >
+        <template #text>
+          <slot name="confirmText">Save</slot>
+        </template>
+      </IconButton>
       <IconButton
         white
-        :text="cancelText"
         class="h-7"
         @click="emit('cancel')"
-      />
+        :mnemonic="cancelMnemonic"
+      >
+        <template #text>
+          <slot name="cancelText">Cancel</slot>
+        </template>
+      </IconButton>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const props = withDefaults(
-  defineProps<{
-    initialValue?: string
-    placeholder?: string
-    disableButtons?: boolean
-    confirmText?: string
-    cancelText?: string
-  }>(),
-  {
-    confirmText: 'Save',
-    cancelText: 'Cancel',
-  }
-)
+const props = defineProps<{
+  initialValue?: string
+  placeholder?: string
+  disableButtons?: boolean
+  confirmMnemonic?: string
+  cancelMnemonic?: string
+}>()
 
 const text = ref(props.initialValue ? props.initialValue : '')
 

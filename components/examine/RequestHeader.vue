@@ -1,5 +1,5 @@
 <template>
-  <div class="flex px-4 py-2 text-gray-700">
+  <div class="flex px-4 py-2 text-gray-700 flex-wrap">
     <div class="flex h-fit">
       <header
         class="text-3xl font-bold"

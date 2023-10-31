@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-full w-full flex-col space-y-2">
+  <div class="flex flex-col space-y-2">
     <div class="flex">
       <header class="text-2xl font-bold">Decision</header>
 
@@ -16,7 +16,7 @@
 
     <div class="!mt-4 flex space-x-2">
       <!-- Layout the combo selects in reverse so they don't overlap each other https://stackoverflow.com/a/77210506 -->
-      <div class="flex basis-1/2 flex-col-reverse gap-y-8 overflow-auto">
+      <div class="flex basis-1/2 flex-col-reverse gap-y-8">
         <div>
           <span class="font-semibold">Trademarks</span>
           <ListSelect v-model="selectedTrademarks" :options="[]" multiple>
@@ -41,6 +41,11 @@
               v-if="selectedConflicts.length > 0"
               v-model="selectedConflicts"
             />
+            <template #no-data>{{
+              examine.autoAdd
+                ? 'No conflicts'
+                : 'No conflicts selected (and auto add is off)'
+            }}</template>
           </ListSelect>
         </div>
 
@@ -62,11 +67,7 @@
       <div class="flex basis-1/2 flex-col">
         <div class="flex justify-between">
           <header class="font-semibold">Message To Requestor</header>
-          <IconButton
-            white
-            class="ml-auto h-6 border-none !bg-transparent !text-bcgov-blue3"
-            text="Edit"
-          >
+          <IconButton white class="h-7" text="Edit">
             <PencilSquareIcon class="h-5 w-5" />
           </IconButton>
         </div>
@@ -82,13 +83,15 @@
       </div>
     </div>
 
-    <div class="!mt-20 flex">
-      <IconButton light class="!bg-lime-600" mnemonic="a">
+    <div class="grow"></div>
+
+    <div class="flex justify-between justify-self-end">
+      <IconButton light class="bg-lime-600" mnemonic="a">
         <CheckIcon class="h-5 w-5 stroke-2" />
         <template #text><u>A</u>pprove Name</template>
       </IconButton>
 
-      <IconButton light class="ml-auto" mnemonic="r">
+      <IconButton light mnemonic="r">
         <XMarkIcon class="h-5 w-5 stroke-2" />
         <template #text><u>R</u>eject Name</template>
       </IconButton>
@@ -102,9 +105,12 @@ import {
   PencilSquareIcon,
   XMarkIcon,
 } from '@heroicons/vue/24/outline'
+import { useExamineStore } from '~/store/examine'
 
 const selectedConditions = ref(['Cooperative'])
 const selectedConflicts = ref([])
 const selectedMacros = ref([])
 const selectedTrademarks = ref([])
+
+const examine = useExamineStore()
 </script>

@@ -5,10 +5,11 @@
     <EditableTextBox
       class="grow"
       placeholder="Write comment..."
-      confirm-text="Submit"
       @submit="handleSubmit"
       @cancel="() => emit('cancel')"
-    />
+    >
+      <template #confirmText>Submit</template>
+    </EditableTextBox>
   </div>
 </template>
 

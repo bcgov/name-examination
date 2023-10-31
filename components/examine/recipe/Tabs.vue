@@ -1,5 +1,5 @@
 <template>
-  <div class="my-2 w-full sm:px-0">
+  <div class="sm:px-0">
     <TabGroup>
       <TabList class="flex space-x-1 rounded-md bg-gray-100 p-1">
         <ExamineRecipeTabButton class="basis-1/6" text="Conflicts">
@@ -23,7 +23,13 @@
         </ExamineRecipeTabButton>
 
         <label class="flex items-center space-x-1" for="auto-add">
-          <input class="h-4 w-4" type="checkbox" id="auto-add" />
+          <input
+            class="h-4 w-4"
+            type="checkbox"
+            id="auto-add"
+            v-model="examine.autoAdd"
+            :disabled="!examine.inProgress"
+          />
           <span>auto add</span>
         </label>
       </TabList>
@@ -68,4 +74,7 @@ import {
   ExclamationCircleIcon,
   XCircleIcon,
 } from '@heroicons/vue/24/outline'
+import { useExamineStore } from '~/store/examine'
+
+const examine = useExamineStore()
 </script>

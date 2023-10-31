@@ -218,7 +218,6 @@ function checkIfCustomSubmitDateChosen(option: any) {
 }
 
 function onDateDialogSubmit(startDate: string, endDate: string) {
-  console.log(`submitted ${startDate} ${endDate}`)
   search.customSubmittedStartDate = startDate
   search.customSubmittedEndDate = endDate
   showDateDialog.value = false

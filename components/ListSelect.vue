@@ -12,7 +12,11 @@
         >
           <span class="block"><slot>Select</slot></span>
           <span class="absolute inset-y-0 right-0 flex items-center pr-3">
-            <ChevronDownIcon class="mt-0.5 h-5 transition" :class="open ? 'rotate-180' : ''" aria-hidden/>
+            <ChevronDownIcon
+              class="mt-0.5 h-5 transition"
+              :class="open ? 'rotate-180' : ''"
+              aria-hidden
+            />
           </span>
         </ListboxButton>
 
@@ -25,11 +29,12 @@
           enter-to-class="opacity-100"
         >
           <ListboxOptions
-            class="absolute mt-1 max-h-[30vh] w-fit overflow-auto rounded-md bg-white py-1 text-left text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            class="absolute mt-1 max-h-[50vh] w-fit overflow-auto rounded-md bg-white py-1 text-left text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
           >
             <ListboxOption
               v-slot="{ active, selected }"
               v-for="option in options"
+              v-if="options.length > 0"
               :key="option"
               :value="option"
               as="template"
@@ -50,6 +55,10 @@
                 </span>
               </li>
             </ListboxOption>
+
+            <div v-else class="px-2 py-1">
+              <slot name="no-data">Nothing found</slot>
+            </div>
           </ListboxOptions>
         </transition>
       </div>
@@ -67,10 +76,7 @@ import {
   ListboxOptions,
   ListboxOption,
 } from '@headlessui/vue'
-import {
-  ChevronDownIcon,
-  CheckIcon,
-} from '@heroicons/vue/24/outline'
+import { ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/outline'
 
 const { modelValue, options, multiple } = defineProps<{
   modelValue: Array<object> | any

@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="examine.headerState === 'editable'"
-    class="flex h-fit items-center space-x-2"
+    class="flex h-fit items-center space-x-1"
   >
     <IconButton light mnemonic="s">
       <CheckIcon class="h-5 w-5 stroke-2" />
@@ -13,7 +13,7 @@
     </IconButton>
   </div>
 
-  <div v-else class="flex items-center space-x-2">
+  <div v-else class="flex items-center space-x-1">
     <IconButton light @click="examine.headerState = 'editable'" mnemonic="d">
       <PencilSquareIcon class="h-5 w-5 stroke-2" />
       <template #text>E<u>d</u>it Request</template>
@@ -39,40 +39,37 @@
       <template #text v-else>Show Details (<u>b</u>)</template>
     </IconButton>
 
-    <IconButton v-if="!inProgress" light mnemonic="n">
-      <ChevronDoubleRightIcon class="h-5 w-5 stroke-2" />
-      <template #text>Get&nbsp;<u>N</u>ext</template>
-    </IconButton>
+    <div v-if="!examine.inProgress" class="space-x-1">
+      <IconButton light mnemonic="n">
+        <ChevronDoubleRightIcon class="h-5 w-5 stroke-2" />
+        <template #text>Get&nbsp;<u>N</u>ext</template>
+      </IconButton>
 
-    <IconButton
-      v-if="!inProgress"
-      light
-      text="Cancel Request"
-      @click="showCancelRequestDialog = true"
-    >
-      <XMarkIcon class="h-5 w-5 stroke-2" />
-    </IconButton>
+      <IconButton
+        light
+        text="Cancel Request"
+        @click="showCancelRequestDialog = true"
+      >
+        <XMarkIcon class="h-5 w-5 stroke-2" />
+      </IconButton>
 
-    <IconButton
-      light
-      v-if="inProgress"
-      @click="inProgress = false"
-      mnemonic="h"
-    >
+      <IconButton
+        light
+        @click="examine.inProgress = !examine.inProgress"
+        mnemonic="x"
+      >
+        <DocumentCheckIcon class="h-5 w-5 stroke-2" />
+        <template #text>E<u>x</u>amine</template>
+      </IconButton>
+    </div>
+
+    <IconButton v-else light @click="examine.inProgress = false" mnemonic="h">
       <PauseIcon class="h-5 w-5 stroke-2" />
       <template #text><u>H</u>old Request</template>
     </IconButton>
 
-    <IconButton light v-else @click="inProgress = !inProgress" mnemonic="x">
-      <DocumentCheckIcon class="h-5 w-5 stroke-2" />
-      <template #text>E<u>x</u>amine</template>
-    </IconButton>
-
     <PopupDialog title="Cancel Name Request" :show="showCancelRequestDialog">
-      <ExamineCancelRequestForm
-        @submit="examine.cancelNR"
-        @cancel="showCancelRequestDialog = false"
-      />
+      <ExamineCancelRequestForm @cancel="showCancelRequestDialog = false" />
     </PopupDialog>
   </div>
 </template>
@@ -91,7 +88,6 @@ import {
 import { useExamineStore } from '~/store/examine'
 
 const examine = useExamineStore()
-const inProgress = ref(false)
 const showCancelRequestDialog = ref(false)
 </script>
 
