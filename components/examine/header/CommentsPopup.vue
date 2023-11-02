@@ -34,6 +34,7 @@
             <div class="flex h-full flex-col space-y-1 bg-gray-100 p-3">
               <EditableTextBox
                 class="basis-1/3"
+                v-model="newCommentText"
                 placeholder="Create a new comment..."
                 confirm-mnemonic="v"
                 @submit="console.log('submitted comment')"
@@ -68,6 +69,8 @@ const buttonElem = computed(
   () => (popoverButton.value as any).el as HTMLButtonElement
 )
 useMnemonic('o', () => buttonElem.value.click())
+
+const newCommentText = ref('')
 
 const comments = [
   {

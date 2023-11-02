@@ -19,7 +19,12 @@
       <div class="flex basis-1/2 flex-col-reverse gap-y-8">
         <div>
           <span class="font-semibold">Trademarks</span>
-          <ListSelect v-model="selectedTrademarks" :options="[]" multiple>
+          <ListSelect
+            v-model="selectedTrademarks"
+            :options="[]"
+            multiple
+            :disabled="listSelectsDisabled"
+          >
             <Chips
               v-if="selectedTrademarks.length > 0"
               v-model="selectedTrademarks"
@@ -29,14 +34,24 @@
 
         <div>
           <span class="font-semibold">Macros</span>
-          <ListSelect v-model="selectedMacros" :options="[]" multiple>
+          <ListSelect
+            v-model="selectedMacros"
+            :options="[]"
+            multiple
+            :disabled="listSelectsDisabled"
+          >
             <Chips v-if="selectedMacros.length > 0" v-model="selectedMacros" />
           </ListSelect>
         </div>
 
         <div>
           <span class="font-semibold">Conflicts</span>
-          <ListSelect v-model="selectedConflicts" :options="[]" multiple>
+          <ListSelect
+            v-model="selectedConflicts"
+            :options="[]"
+            multiple
+            :disabled="listSelectsDisabled"
+          >
             <Chips
               v-if="selectedConflicts.length > 0"
               v-model="selectedConflicts"
@@ -54,6 +69,7 @@
           <ListSelect
             v-model="selectedConditions"
             :options="['Cooperative']"
+            :disabled="listSelectsDisabled"
             multiple
           >
             <Chips
@@ -64,26 +80,51 @@
         </div>
       </div>
 
-      <div class="flex basis-1/2 flex-col">
+      <div class="flex basis-1/2 flex-col space-y-2">
         <div class="flex justify-between">
-          <header class="font-semibold">Message To Requestor</header>
-          <IconButton white class="h-7" text="Edit">
-            <PencilSquareIcon class="h-5 w-5" />
-          </IconButton>
+          <header class="font-semibold">
+            Message To Requestor
+            <span
+              v-if="examine.requestMessageEdited"
+              class="font-bold text-red-600"
+            >
+              (Edited)
+            </span>
+          </header>
+          <div class="flex space-x-1">
+            <IconButton
+              v-if="examine.requestMessageEdited"
+              white
+              class="h-7"
+              text="Clear"
+              @click="clearEdits"
+            >
+              <BackspaceIcon class="h-5 w-5" />
+            </IconButton>
+            <IconButton
+              white
+              class="h-7"
+              text="Edit"
+              @click="showEditRequestorMessageDialog = true"
+            >
+              <PencilSquareIcon class="h-5 w-5" />
+            </IconButton>
+          </div>
         </div>
-        <textarea
+        <EditableTextBox
+          class="grow"
+          v-model="decisionMessage"
           readonly
-          class="mt-1 h-full w-full resize-none rounded-t-md border border-b-0 border-gray-300 p-2 text-sm outline-none"
+          disable-buttons
+          :character-limit="characterLimit"
         />
-        <p
-          class="block rounded-b-md border border-t-0 border-gray-300 bg-white p-2 text-sm text-gray-400"
-        >
-          Characters Remaining: 955
-        </p>
+        <!-- <span class="text-sm">
+          Characters Remaining: {{ characterLimit - decisionMessage.length }}
+        </span> -->
       </div>
     </div>
 
-    <div class="grow"></div>
+    <div class="grow" aria-hidden></div>
 
     <div class="flex justify-between justify-self-end">
       <IconButton light class="bg-lime-600" mnemonic="a">
@@ -96,11 +137,22 @@
         <template #text><u>R</u>eject Name</template>
       </IconButton>
     </div>
+
+    <PopupDialog title="Edit Message" :show="showEditRequestorMessageDialog">
+      <EditableTextBox
+        lazy-update
+        v-model="decisionMessage"
+        @submit="onRequestorMessageEdit"
+        @cancel="showEditRequestorMessageDialog = false"
+        :character-limit="characterLimit"
+      />
+    </PopupDialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import {
+  BackspaceIcon,
   CheckIcon,
   PencilSquareIcon,
   XMarkIcon,
@@ -113,4 +165,20 @@ const selectedMacros = ref([])
 const selectedTrademarks = ref([])
 
 const examine = useExamineStore()
+
+const decisionMessage = ref('COOPERATIVE - ')
+const characterLimit = 955
+
+const showEditRequestorMessageDialog = ref(false)
+const listSelectsDisabled = computed(() => examine.requestMessageEdited)
+
+function onRequestorMessageEdit(_text: string) {
+  showEditRequestorMessageDialog.value = false
+  examine.requestMessageEdited = true
+}
+
+function clearEdits() {
+  examine.requestMessageEdited = false
+  decisionMessage.value = ''
+}
 </script>

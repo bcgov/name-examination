@@ -7,9 +7,9 @@
 
       <template #popup>
         <EditableTextBox
-          placeholder="Additional Info..."
           class="h-72"
-          :initial-value="INFO"
+          placeholder="Additional Info..."
+          v-model="INFO"
         />
       </template>
 
@@ -19,9 +19,9 @@
 
       <template #editable>
         <EditableTextBox
-          placeholder="Additional Info..."
           class="h-72"
-          :initial-value="INFO"
+          v-model="INFO"
+          placeholder="Additional Info..."
           disable-buttons
         />
       </template>
@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-const INFO = `Here's some additional info.
+const INFO = ref(`Here's some additional info.
 This one is made long so we can see what it looks like when additional info is long.
-So here's some more text. And some more.`
+So here's some more text. And some more.`)
 </script>

@@ -4,7 +4,17 @@ export const useExamineStore = defineStore('examine', () => {
   const inProgress = ref(true)
   const autoAdd = ref(true)
 
-  return { headerState, isPriority, inProgress, autoAdd }
+  const requestorMessage = ref('')
+  const requestMessageEdited = ref(false)
+
+  return {
+    headerState,
+    isPriority,
+    inProgress,
+    autoAdd,
+    requestorMessage,
+    requestMessageEdited,
+  }
 })
 
 if (import.meta.hot) {

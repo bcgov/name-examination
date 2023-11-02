@@ -4,9 +4,10 @@
     <p v-if="showSubmitError" class="text-red-600">Please write a comment</p>
     <EditableTextBox
       class="grow"
+      v-model="comment"
       placeholder="Write comment..."
       @submit="handleSubmit"
-      @cancel="() => emit('cancel')"
+      @cancel="emit('cancel')"
     >
       <template #confirmText>Submit</template>
     </EditableTextBox>
@@ -19,6 +20,7 @@ const emit = defineEmits<{
   cancel: []
 }>()
 
+const comment = ref('')
 const showSubmitError = ref(false)
 
 const handleSubmit = (text: string) => {

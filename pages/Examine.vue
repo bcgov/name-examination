@@ -3,11 +3,22 @@
     class="flex flex-col"
     :class="{ 'bg-gray-100': examine.headerState === 'editable' }"
   >
+    <!-- <ExamineNoticeBanner type="warning">
+      <span>
+        Similar name previously <span class="font-bold">REJECTED</span>
+      </span>
+    </ExamineNoticeBanner>
+
+    <ExamineNoticeBanner type="lock">
+      <span>
+        This NR is being examined by <span class="font-bold">test@idir</span>
+      </span>
+    </ExamineNoticeBanner> -->
     <ExamineRequestHeader />
     <ExamineHeader />
 
     <div class="flex justify-between p-4">
-      <ExamineNameChoices />
+      <ExamineNameChoiceList />
       <ExamineQuickActionButtons v-if="examine.headerState !== 'editable'" />
     </div>
 

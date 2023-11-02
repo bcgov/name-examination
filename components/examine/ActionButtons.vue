@@ -69,7 +69,10 @@
     </IconButton>
 
     <PopupDialog title="Cancel Name Request" :show="showCancelRequestDialog">
-      <ExamineCancelRequestForm @cancel="showCancelRequestDialog = false" />
+      <ExamineCancelRequestForm
+        @submit="showCancelRequestDialog = false"
+        @cancel="showCancelRequestDialog = false"
+      />
     </PopupDialog>
   </div>
 </template>
