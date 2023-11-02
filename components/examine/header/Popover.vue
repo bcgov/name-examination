@@ -3,6 +3,7 @@
     <div class="flex">
       <span class="inline-flex items-center font-bold">{{ title }}</span>
       <PopoverButton
+        v-if="!hideButton"
         :class="open ? '' : 'text-opacity-90'"
         class="group ml-auto inline-flex rounded-md border border-gray-300 bg-white p-1 font-bold transition hover:bg-gray-200"
       >
@@ -55,5 +56,6 @@ import { PlusIcon } from '@heroicons/vue/24/outline'
 
 defineProps<{
   title: string
+  hideButton?: boolean
 }>()
 </script>
