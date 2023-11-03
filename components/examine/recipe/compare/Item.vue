@@ -5,5 +5,5 @@
     <span>BC</span>
     <span>2004-01-22</span>
   </div>
-  <ExamineRecipeNamesMatch class="bg-sky-100 px-4" />
+  <ExamineRecipeMatchCorp class="bg-sky-100 px-4" />
 </template>

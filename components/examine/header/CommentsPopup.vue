@@ -8,7 +8,7 @@
       >
         <ChatBubbleLeftIcon class="h-5 w-5" />
         <span class="grow text-left"
-          >{{ comments.length }} C<u>o</u>mments</span
+          >{{ examine.comments.length }} C<u>o</u>mments</span
         >
         <ChevronDownIcon
           :class="open ? 'rotate-180' : ''"
@@ -43,13 +43,14 @@
                   <span>Sa<u>v</u>e</span>
                 </template>
               </EditableTextBox>
+
               <div class="flex basis-2/3 flex-col divide-y-2 overflow-auto">
-                <div class="flex flex-col py-2" v-for="comment in comments">
-                  <span>{{ comment.content }}</span>
-                  <span class="italic"
-                    >{{ comment.author }} &ndash; {{ comment.time }}</span
-                  >
-                </div>
+                <ExamineComment
+                  v-for="comment in examine.comments"
+                  :content="comment.content"
+                  :author="comment.author"
+                  :date="comment.time"
+                />
               </div>
             </div>
           </div>
@@ -63,6 +64,9 @@
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 import { ChatBubbleLeftIcon } from '@heroicons/vue/24/outline'
+import { useExamineStore } from '~/store/examine'
+
+const examine = useExamineStore()
 
 const popoverButton = ref<HTMLButtonElement | null>(null)
 const buttonElem = computed(
@@ -71,31 +75,4 @@ const buttonElem = computed(
 useMnemonic('o', () => buttonElem.value.click())
 
 const newCommentText = ref('')
-
-const comments = [
-  {
-    content:
-      'Name choice 3 changed from BLACK HILL PERSONAL REAL ESTATE CORPORATION to BLACK HILL PERSONAL COOP COOPERATIVE',
-    author: 'anonymous@idir',
-    time: '2023-05-31, 10:00am',
-  },
-  {
-    content:
-      'Name choice 3 changed from BLACK HILL to BLACK HILL PERSONAL REAL ESTATE CORPORATION',
-    author: 'anonymous@idir',
-    time: '2023-05-31, 9:12am',
-  },
-  {
-    content:
-      'Name choice 3 changed from BLACK HILL to BLACK HILL PERSONAL REAL ESTATE CORPORATION',
-    author: 'anonymous@idir',
-    time: '2023-05-31, 9:12am',
-  },
-  {
-    content:
-      'Name choice 3 changed from BLACK HILL to BLACK HILL PERSONAL REAL ESTATE CORPORATION',
-    author: 'anonymous@idir',
-    time: '2023-05-31, 9:12am',
-  },
-]
 </script>

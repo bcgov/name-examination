@@ -1,10 +1,11 @@
 <template>
-  <div class="flex flex-col">
-    <ExamineRecipeConflictsAccordion
+  <div class="flex flex-col space-y-1">
+    <Accordion
       v-for="item in data"
-      class="conflict-details rounded-md p-1"
+      :key="item.number"
+      class="conflict-details rounded-md p-1 open:!bg-sky-100 hover:bg-gray-100"
     >
-      <template #header>
+      <template #title>
         <div class="flex w-full items-center gap-x-2">
           <input
             type="checkbox"
@@ -12,7 +13,7 @@
             class="h-4 w-4"
             @click="(e) => e.stopPropagation()"
           />
-          <ExamineHighlightedSubText
+          <HighlightedSubText
             class="grow"
             :text="item.name"
             :start="0"
@@ -25,8 +26,10 @@
           </div>
         </div>
       </template>
-      <ExamineRecipeBusinessInfo />
-    </ExamineRecipeConflictsAccordion>
+      <template #content>
+        <ExamineRecipeMatchCorp />
+      </template>
+    </Accordion>
   </div>
 </template>
 
@@ -40,11 +43,9 @@ onMounted(() => {
   const details = document.getElementsByClassName('conflict-details')
   for (const targetDetail of details) {
     targetDetail.addEventListener('click', () => {
-      targetDetail.classList.add('bg-sky-100')
       for (const detail of details) {
         if (detail !== targetDetail) {
           detail.removeAttribute('open')
-          detail.classList.remove('bg-sky-100')
         }
       }
     })

@@ -51,5 +51,5 @@ defineProps<{
   rows: ComputedRef<Array<Array<any>>>
 }>()
 
-const selectedRow = ref(0)
+const selectedRow = ref()
 </script>
