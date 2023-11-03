@@ -1,6 +1,5 @@
 <template>
-  <div class="flex flex-col text-sm">
-    <ExamineHeaderItem title="" hide-popover-button>
+  <div class="flex flex-col text-sm py-2">
       <div class="flex">
         <h2 class="font-bold">Submit:&nbsp;</h2>
         <span>{{ submittedDate }}</span>
@@ -20,7 +19,6 @@
         <h2 class="font-bold">Consumed By:&nbsp;</h2>
         <span>{{ consumedBy ? consumedBy : 'n/a' }}</span>
       </div>
-    </ExamineHeaderItem>
   </div>
 </template>
 

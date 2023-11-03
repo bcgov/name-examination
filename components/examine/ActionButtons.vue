@@ -8,8 +8,9 @@
       <template #text><u>S</u>ave Edits</template>
     </IconButton>
 
-    <IconButton light text="Cancel" @click="examine.headerState = 'minimized'">
+    <IconButton light @click="examine.headerState = 'minimized'" mnemonic="c">
       <XMarkIcon class="h-5 w-5 stroke-2" />
+      <template #text><u>C</u>ancel</template>
     </IconButton>
   </div>
 

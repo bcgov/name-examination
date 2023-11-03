@@ -35,4 +35,6 @@
 <script setup lang="ts">
 import { useExamineStore } from '~/store/examine'
 const examine = useExamineStore()
+
+useHead({ title: 'BC Registry: Name Examination - Examine Names' })
 </script>

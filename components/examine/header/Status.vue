@@ -1,21 +1,19 @@
 <template>
-  <ExamineHeaderItem title="" hide-popover-button>
-    <div class="space-y-1 text-sm">
-      <div
-        v-if="examine.isPriority"
-        class="flex items-center font-bold text-red-600"
-      >
-        <StarIcon class="h-4 w-4" />
-        <p>Priority</p>
-      </div>
-
-      <div><b>Status: </b> INPROGRESS</div>
-
-      <div><b>Examiner: </b> anonymous@idir</div>
-
-      <ExamineHeaderCommentsPopup />
+  <div class="space-y-1 py-2 text-sm">
+    <div
+      v-if="examine.isPriority"
+      class="flex items-center font-bold text-red-600"
+    >
+      <StarIcon class="h-4 w-4" />
+      <p>Priority</p>
     </div>
-  </ExamineHeaderItem>
+
+    <div><b>Status: </b> INPROGRESS</div>
+
+    <div><b>Examiner: </b> anonymous@idir</div>
+
+    <ExamineHeaderCommentsPopup />
+  </div>
 </template>
 
 <script setup lang="ts">

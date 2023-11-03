@@ -28,7 +28,7 @@
             type="checkbox"
             id="auto-add"
             v-model="examine.autoAdd"
-            :disabled="!examine.inProgress"
+            :disabled="!examine.inProgress || examine.requestMessageEdited"
           />
           <span>auto add</span>
         </label>

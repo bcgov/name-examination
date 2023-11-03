@@ -2,34 +2,25 @@
   <div class="rounded-md px-4 py-1 text-sm">
     <ExamineHeaderPopover
       :title="title"
-      :hide-button="hidePopoverButton"
       v-if="examine.headerState === 'minimized'"
     >
       <template #minimized>
-        <slot name="minimized">
-          <slot></slot>
-        </slot>
+        <slot name="minimized"> </slot>
       </template>
       <template #expanded>
-        <slot name="popup">
-          <slot></slot>
-        </slot>
+        <slot name="popup"> </slot>
       </template>
     </ExamineHeaderPopover>
 
     <div class="space-y-1" v-else-if="examine.headerState === 'maximized'">
       <header class="font-bold">{{ title }}</header>
-      <slot name="maximized">
-        <slot></slot>
-      </slot>
+      <slot name="maximized"> </slot>
     </div>
 
     <!-- Editable state -->
     <div class="space-y-1" v-else>
       <header class="font-bold">{{ title }}</header>
-      <slot name="editable">
-        <slot></slot>
-      </slot>
+      <slot name="editable"> </slot>
     </div>
   </div>
 </template>
@@ -40,6 +31,5 @@ const examine = useExamineStore()
 
 defineProps<{
   title: string
-  hidePopoverButton?: boolean
 }>()
 </script>

@@ -1,11 +1,11 @@
 <template>
   <div class="text-sm">
-    <ExamineHeaderItem title="Nature of Business">
+    <ExamineHeaderExpandable title="Nature of Business">
       <template #minimized>{{ NOB }} </template>
       <template #popup>{{ NOB }} </template>
       <template #maximized>{{ NOB }} </template>
       <template #editable>{{ NOB }} </template>
-    </ExamineHeaderItem>
+    </ExamineHeaderExpandable>
   </div>
 </template>
 

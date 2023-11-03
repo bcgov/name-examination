@@ -1,6 +1,6 @@
 <template>
   <div class="text-sm">
-    <ExamineHeaderItem title="Applicant Information">
+    <ExamineHeaderExpandable title="Applicant Information">
       <template #minimized>
         <p>Jack Frost</p>
         <p>3434 Main Street</p>
@@ -18,7 +18,7 @@
       <template #editable>
         <ExamineHeaderApplicantInfoEditable />
       </template>
-    </ExamineHeaderItem>
+    </ExamineHeaderExpandable>
   </div>
 </template>
 

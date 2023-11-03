@@ -7,6 +7,10 @@ export const useExamineStore = defineStore('examine', () => {
   const requestorMessage = ref('')
   const requestMessageEdited = ref(false)
 
+  const conflicts = ref([
+    
+  ])
+
   return {
     headerState,
     isPriority,
