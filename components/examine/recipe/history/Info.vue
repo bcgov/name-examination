@@ -1,7 +1,7 @@
 <template>
   <div class="flex gap-x-2 p-4 text-sm">
     <div class="flex basis-2/3 flex-col">
-      <div class="grid grid-cols-2 gap-y-1">
+      <div class="grid grid-cols-2 gap-y-1 overflow-x-auto">
         <header class="font-bold">Client</header>
         <p>Jane Frost</p>
 
@@ -25,19 +25,12 @@
       </div>
 
       <header class="font-bold">Comments</header>
-      <div
-        class="max-h-48 divide-y-2 divide-gray-400 overflow-auto rounded-md border border-black p-2"
-      >
-        <ExamineComment
-          v-for="comment in examine.comments"
-          :content="comment.content"
-          :author="comment.author"
-          :date="comment.time"
-        />
-      </div>
+      <ExamineCommentsBox
+        class="max-h-48 overflow-auto rounded-md border border-gray-400 p-2 children:bg-sky-50"
+      />
     </div>
 
-    <div class="grid basis-1/3 grid-cols-2 gap-y-1">
+    <div class="grid basis-1/3 grid-cols-2 gap-y-1 overflow-x-auto">
       <p class="font-bold">Name State</p>
       <p>REJECTED</p>
     </div>

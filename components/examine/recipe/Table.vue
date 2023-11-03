@@ -23,11 +23,11 @@
             'cursor-pointer transition hover:bg-gray-100',
             { 'bg-sky-100 hover:bg-sky-100': selectedRow === index },
           ]"
-          @click="selectedRow = index"
+          @click="onRowClick(index)"
         >
           <td v-for="cell in row" class="px-4 py-2">{{ cell }}</td>
         </tr>
-        <tr :hidden="selectedRow !== index">
+        <tr v-show="selectedRow === index && showSelectedRowHiddenContent">
           <td class="p-0" :colspan="columns.length">
             <div :class="{ 'border-0 bg-sky-100': selectedRow === index }">
               <slot :name="`hidden${index}`"></slot>
@@ -52,4 +52,14 @@ defineProps<{
 }>()
 
 const selectedRow = ref()
+const showSelectedRowHiddenContent = ref(false)
+
+function onRowClick(index: number) {
+  if (selectedRow.value === index) {
+    showSelectedRowHiddenContent.value = !showSelectedRowHiddenContent.value
+  } else {
+    selectedRow.value = index
+    showSelectedRowHiddenContent.value = true
+  }
+}
 </script>

@@ -27,7 +27,7 @@
         </div>
       </template>
       <template #content>
-        <ExamineRecipeMatchCorp />
+        <ExamineRecipeMatchNames />
       </template>
     </Accordion>
   </div>

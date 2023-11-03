@@ -1,6 +1,6 @@
 <template>
   <div class="flex p-2 text-sm">
-    <div class="grid basis-1/2 grid-cols-2 gap-y-2">
+    <div class="grid basis-1/2 grid-cols-2 gap-y-2 overflow-x-auto">
       <header class="font-bold">Type</header>
       <p>XPRO Corporation</p>
 
@@ -16,7 +16,7 @@
       <p>Not available</p>
     </div>
 
-    <div class="grid basis-1/2 grid-cols-2">
+    <div class="grid basis-1/2 grid-cols-2 overflow-x-auto">
       <header class="font-bold">Attorneys</header>
       <div class="flex flex-col">
         <p>ADA SO</p>

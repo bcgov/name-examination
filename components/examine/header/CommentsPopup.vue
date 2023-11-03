@@ -44,14 +44,7 @@
                 </template>
               </EditableTextBox>
 
-              <div class="flex basis-2/3 flex-col divide-y-2 overflow-auto">
-                <ExamineComment
-                  v-for="comment in examine.comments"
-                  :content="comment.content"
-                  :author="comment.author"
-                  :date="comment.time"
-                />
-              </div>
+              <ExamineCommentsBox class="basis-2/3" />
             </div>
           </div>
         </PopoverPanel>

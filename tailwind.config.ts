@@ -1,10 +1,12 @@
+import plugin from 'tailwindcss/plugin'
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [],
   theme: {
     extend: {
       transitionProperty: {
-        'height': 'height'
+        height: 'height',
       },
       colors: {
         'bcgov-blue3': '#1669bb',
@@ -15,5 +17,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [plugin(({ addVariant }) => addVariant('children', '& > *'))],
 }
