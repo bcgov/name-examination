@@ -18,12 +18,12 @@
     <ExamineHeader />
 
     <div class="flex justify-between p-4">
-      <ExamineNameChoiceList />
+      <ExamineNameChoiceList class="ml-4 basis-1/2"/>
       <ExamineQuickActionButtons v-if="examine.headerState !== 'editable'" />
     </div>
 
     <div
-      v-if="examine.headerState !== 'editable'"
+      v-if="examine.headerState !== 'editable' && !examine.isComplete"
       class="flex grow flex-col space-x-3 bg-gray-100 p-4 xl:flex-row"
     >
       <ExamineRecipe class="basis-1/2" />

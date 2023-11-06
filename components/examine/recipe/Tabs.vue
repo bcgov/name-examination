@@ -19,7 +19,7 @@
         </ExamineRecipeTabButton>
 
         <ExamineRecipeTabButton class="basis-1/6" text="Compare">
-          <Bars3Icon class="h-5 w-5 stroke-2 text-bcgov-blue5" />
+          <DocumentDuplicateIcon class="h-5 w-5 stroke-2 text-bcgov-blue5" />
         </ExamineRecipeTabButton>
 
         <label class="flex items-center space-x-1" for="auto-add">
@@ -69,8 +69,8 @@
 <script setup>
 import { TabGroup, TabList, TabPanels, TabPanel } from '@headlessui/vue'
 import {
-  Bars3Icon,
   CheckCircleIcon,
+  DocumentDuplicateIcon,
   ExclamationCircleIcon,
   XCircleIcon,
 } from '@heroicons/vue/24/outline'

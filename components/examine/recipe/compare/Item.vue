@@ -1,9 +1,19 @@
 <template>
-  <div class="flex items-center space-x-10 bg-sky-200 px-2 py-1 font-bold">
-    <span class="grow p-0.5">ADA SO LTD.</span>
-    <span>0685772</span>
-    <span>BC</span>
-    <span>2004-01-22</span>
-  </div>
-  <ExamineRecipeMatchCorp class="bg-sky-100 px-4" />
+  <Accordion open arrow button-style="bg-gray-200 p-2 hover:bg-gray-300">
+    <template #title>
+      <div
+        class="flex w-full items-center justify-between space-x-10 font-bold"
+      >
+        <span>ADA SO LTD.</span>
+        <div class="space-x-8">
+          <span>0685772</span>
+          <span>BC</span>
+          <span>2004-01-22</span>
+        </div>
+      </div>
+    </template>
+    <template #content>
+      <ExamineRecipeMatchCorp class="px-4" />
+    </template>
+  </Accordion>
 </template>

@@ -9,12 +9,7 @@
       ])
     "
   >
-    <!-- TODO: when pulling data from store, this should be a for loop with dynamic slot names i.e. #[`hidden${n}`] -->
-    <template #hidden0>
-      <ExamineRecipeHistoryInfo />
-    </template>
-
-    <template #hidden1>
+    <template v-slot="{ index, row }">
       <ExamineRecipeHistoryInfo />
     </template>
   </ExamineRecipeTable>

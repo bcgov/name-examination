@@ -30,7 +30,7 @@
         <tr v-show="selectedRow === index && showSelectedRowHiddenContent">
           <td class="p-0" :colspan="columns.length">
             <div :class="{ 'border-0 bg-sky-100': selectedRow === index }">
-              <slot :name="`hidden${index}`"></slot>
+              <slot :index="index" :row="row"></slot>
             </div>
           </td>
         </tr>

@@ -8,7 +8,7 @@
     "
   >
     <ExamineHeaderStatus class="basis-1/5 px-4" />
-    <ExamineHeaderDates class="basis-1/5 px-4" />
+    <ExamineHeaderDatesAndExpiry class="basis-1/5 px-4" />
     <ExamineHeaderAdditionalInfo class="basis-1/5" />
     <ExamineHeaderNatureOfBusiness class="basis-1/5 px-4" />
     <ExamineHeaderApplicantInfo class="basis-1/5 px-4" />

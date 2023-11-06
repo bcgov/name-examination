@@ -4,22 +4,10 @@
     class="flex w-fit flex-col"
   >
     <label for="start_date" class="font-medium">Start date: </label>
-    <input
-      v-model="startDate"
-      type="date"
-      id="start_date"
-      :max="endDate"
-      required
-    />
+    <DateInput v-model="startDate" id="start_date" :max="endDate" required />
 
     <label for="end_date" class="font-medium">End date: </label>
-    <input
-      v-model="endDate"
-      type="date"
-      id="end_date"
-      :min="startDate"
-      required
-    />
+    <DateInput v-model="endDate" id="end_date" :min="startDate" required />
 
     <div class="mt-6 space-x-2">
       <IconButton white type="submit" class="px-3">Ok</IconButton>

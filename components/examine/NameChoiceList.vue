@@ -1,7 +1,9 @@
 <template>
-  <ol v-if="examine.headerState !== 'editable'" class="ml-4 list-decimal">
+  <ol v-if="examine.headerState !== 'editable'" class="list-decimal">
     <li><ExamineNameChoice :name="firstName" state="REJECTED" undoable /></li>
-    <li><ExamineNameChoice :name="secondName" current /></li>
+    <li>
+      <ExamineNameChoice :name="secondName" current />
+    </li>
     <li><ExamineNameChoice :name="thirdName" /></li>
   </ol>
 

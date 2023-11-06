@@ -1,7 +1,14 @@
+import { Status } from '~/enums/filter-dropdowns'
+
 export const useExamineStore = defineStore('examine', () => {
   const headerState = ref<'minimized' | 'maximized' | 'editable'>('minimized')
+
   const isPriority = ref(true)
   const inProgress = ref(true)
+  const isComplete = ref(false)
+  const isFurnished = ref(true)
+  const nrStatus = ref(Status.Conditional)
+
   const autoAdd = ref(true)
 
   const requestorMessage = ref('')
@@ -40,6 +47,9 @@ export const useExamineStore = defineStore('examine', () => {
     headerState,
     isPriority,
     inProgress,
+    isComplete,
+    isFurnished,
+    nrStatus,
     autoAdd,
     conflicts,
     comments,
