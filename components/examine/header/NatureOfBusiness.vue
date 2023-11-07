@@ -1,10 +1,21 @@
 <template>
   <div class="text-sm">
     <ExamineHeaderExpandable title="Nature of Business">
-      <template #minimized>{{ NOB }} </template>
-      <template #popup>{{ NOB }} </template>
-      <template #maximized>{{ NOB }} </template>
-      <template #editable>{{ NOB }} </template>
+      <template #minimized>
+        <p>{{ NOB }}</p>
+      </template>
+
+      <template #popup>
+        <p>{{ NOB }}</p>
+      </template>
+
+      <template #maximized>
+        <p>{{ NOB }}</p>
+      </template>
+
+      <template #editable>
+        <p>{{ NOB }}</p>
+      </template>
     </ExamineHeaderExpandable>
   </div>
 </template>

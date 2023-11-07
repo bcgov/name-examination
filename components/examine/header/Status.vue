@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-1 py-2 text-sm">
+  <div class="space-y-1 py-1 text-sm">
     <div
       v-if="examine.isPriority"
       class="flex items-center font-bold text-red-600"
@@ -8,9 +8,9 @@
       <p>Priority</p>
     </div>
 
-    <div><b>Status: </b> INPROGRESS</div>
+    <div><b>Status: </b> {{ examine.nrStatus }}</div>
 
-    <div><b>Examiner: </b> anonymous@idir</div>
+    <div><b>Examiner: </b> {{ examine.examiner }}</div>
 
     <ExamineHeaderCommentsPopup />
   </div>

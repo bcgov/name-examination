@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col space-y-1">
     <Accordion
-      v-for="item in data"
+      v-for="item in examine.conflicts"
       :key="item.number"
       class="conflict-details rounded-md p-1 open:!bg-sky-100 hover:bg-gray-100"
     >
@@ -11,13 +11,13 @@
             type="checkbox"
             :disabled="!examine.inProgress"
             class="h-4 w-4"
-            @click="(e) => e.stopPropagation()"
+            @click="(e) => onItemCheckboxClick(e, item)"
           />
           <HighlightedSubText
             class="grow"
             :text="item.name"
-            :start="0"
-            :end="1"
+            :start="item.start"
+            :end="item.end"
           />
           <div class="space-x-8">
             <span>{{ item.number }}</span>
@@ -27,7 +27,9 @@
         </div>
       </template>
       <template #content>
-        <ExamineRecipeMatchNames />
+        <ExamineRecipeMatchNames v-if="item.type === 'nr'" />
+        <ExamineRecipeMatchCorp v-else-if="item.type === 'corp'" />
+        <ExamineRecipeMatchXproCorp v-else-if="item.type === 'xprocorp'" />
       </template>
     </Accordion>
   </div>
@@ -52,18 +54,7 @@ onMounted(() => {
   }
 })
 
-const data = [
-  {
-    name: 'ADA SO LTD.',
-    number: '0685772',
-    jurisdiction: 'BC',
-    date: '2004-01-22',
-  },
-  {
-    name: 'S&O TECHNOLOGIES INC.',
-    number: '0769877',
-    jurisdiction: 'BC',
-    date: '2006-09-25',
-  },
-]
+function onItemCheckboxClick(event: MouseEvent, item: any) {
+  event.stopPropagation()
+}
 </script>

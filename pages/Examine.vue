@@ -1,15 +1,15 @@
 <template>
   <div
-    class="flex flex-col"
+    class="flex flex-col h-full"
     :class="{ 'bg-gray-100': examine.headerState === 'editable' }"
   >
     <!-- <ExamineNoticeBanner type="warning">
       <span>
         Similar name previously <span class="font-bold">REJECTED</span>
       </span>
-    </ExamineNoticeBanner>
+    </ExamineNoticeBanner> -->
 
-    <ExamineNoticeBanner type="lock">
+    <!-- <ExamineNoticeBanner type="lock">
       <span>
         This NR is being examined by <span class="font-bold">test@idir</span>
       </span>

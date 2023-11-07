@@ -35,6 +35,7 @@
         >
           <ListboxOptions
             class="absolute mt-1 max-h-[50vh] w-fit overflow-auto rounded-md bg-white py-1 text-left text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            :class="optionsStyle"
           >
             <ListboxOption
               v-slot="{ active, selected }"
@@ -88,6 +89,7 @@ const { modelValue, options, multiple } = defineProps<{
   options: Array<any>
   multiple?: boolean
   disabled?: boolean
+  optionsStyle?: string
 }>()
 
 const emit = defineEmits<{

@@ -7,14 +7,13 @@ export const useExamineStore = defineStore('examine', () => {
   const inProgress = ref(true)
   const isComplete = ref(false)
   const isFurnished = ref(true)
-  const nrStatus = ref(Status.Conditional)
+  const nrStatus = ref(Status.InProgress)
+  const examiner = ref('someone@idir')
 
   const autoAdd = ref(true)
 
   const requestorMessage = ref('')
   const requestMessageEdited = ref(false)
-
-  const conflicts = ref([])
 
   const comments = [
     {
@@ -43,6 +42,51 @@ export const useExamineStore = defineStore('examine', () => {
     },
   ]
 
+  const conflicts = [
+    {
+      name: 'XYZ SO LTD.',
+      number: '0685772',
+      jurisdiction: 'BC',
+      date: '2004-01-22',
+      start: 4,
+      end: 6,
+      type: 'corp',
+    },
+    {
+      name: 'SO COOL INC.',
+      number: 'NR 0769877',
+      jurisdiction: 'BC',
+      date: '2006-09-25',
+      start: 0,
+      end: 3,
+      type: 'nr',
+    },
+    {
+      name: 'JOHNNY SO INC.',
+      number: 'A4312694',
+      jurisdiction: 'ON',
+      date: '2006-09-25',
+      start: 7,
+      end: 10,
+      type: 'xprocorp',
+    },
+  ]
+
+  const selectedConflicts = ref([])
+
+  const trademarks = [
+    [
+      'FARMERS',
+      '(1) Produits laitiers. (2) Jus de fruits. (3) T-shirts.',
+      'Registration published',
+    ],
+    [
+      "FARMER'S",
+      '(1) Alcoholic beverages, namely gin.',
+      'Registration published',
+    ],
+  ]
+
   return {
     headerState,
     isPriority,
@@ -53,6 +97,9 @@ export const useExamineStore = defineStore('examine', () => {
     autoAdd,
     conflicts,
     comments,
+    examiner,
+    trademarks,
+    selectedConflicts,
 
     requestorMessage,
     requestMessageEdited,

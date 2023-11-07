@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col overflow-hidden py-2 text-sm">
+  <div class="flex flex-col overflow-hidden py-1 text-sm">
     <div class="flex">
       <h2 class="font-bold">Submit:&nbsp;</h2>
       <span>{{ submittedDate }}</span>
@@ -68,6 +68,6 @@ const consumed = ref(null)
 const consumedBy = ref(null)
 
 const consent = ref('-')
-const consentOptions = ['Required', 'Received', 'Waived', '-']
 const consentDate = ref('2008-09-18')
+const consentOptions = ['Required', 'Received', 'Waived', '-']
 </script>

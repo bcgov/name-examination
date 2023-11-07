@@ -5,7 +5,7 @@
         <div class="flex w-full font-medium">
           <HighlightedSubText text="SO" :start="0" :end="3" />
           <span class="grow italic">&nbsp;- proximity search</span>
-          <span>2</span>
+          <span>{{ examine.conflicts.length }}</span>
         </div>
       </template>
       <template #content>
@@ -28,16 +28,6 @@
 /**
  * A conflicts bucket that holds a list of conflicts
  */
-const data = ref([
-  {
-    text: 'SO STEEP COOPERATIVE',
-    start: 0,
-    end: 15,
-  },
-  {
-    text: 'SO STEEP COOPERATIVE',
-    start: 0,
-    end: 15,
-  },
-])
+import { useExamineStore } from '~/store/examine'
+const examine = useExamineStore()
 </script>

@@ -1,13 +1,24 @@
 <template>
   <div class="flex flex-col gap-y-1">
-    <textarea
-      class="grow resize-none rounded-md border border-gray-300 p-2 text-sm outline-none"
-      :placeholder="placeholder"
-      :readonly="readonly"
-      :maxlength="characterLimit"
-      :value="modelValue"
-      @input="onTextAreaInput"
-    />
+    <div class="flex grow flex-col">
+      <textarea
+        class="grow resize-none rounded-t-md border border-gray-300 p-2 text-sm outline-none"
+        :class="{ 'border-b-0': characterLimit }"
+        :placeholder="placeholder"
+        :readonly="readonly"
+        :maxlength="characterLimit"
+        :value="modelValue"
+        @input="onTextAreaInput"
+      />
+
+      <span
+        v-if="characterLimit"
+        class="rounded-b-md border border-t-0 border-gray-300 bg-white p-2 text-sm text-gray-500"
+      >
+        {{ modelValue.length }} / {{ characterLimit }}
+      </span>
+    </div>
+
     <div v-if="!disableButtons" class="flex space-x-1">
       <IconButton
         white

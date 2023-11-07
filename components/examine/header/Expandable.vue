@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-md px-4 py-1 text-sm">
+  <div class="rounded-md text-sm">
     <ExamineHeaderPopover
       :title="title"
       v-if="examine.headerState === 'minimized'"

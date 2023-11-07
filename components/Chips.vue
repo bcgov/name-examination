@@ -1,11 +1,14 @@
 <template>
-  <div class="flex flex-wrap space-x-1 space-y-1">
+  <div class="flex flex-wrap items-center gap-1">
     <div
       v-for="item in modelValue"
-      class="flex w-fit items-center space-x-1 rounded-md border border-gray-700 bg-sky-100 p-0.5 px-1 text-sm"
+      class="flex h-fit w-fit flex-nowrap items-center space-x-1 rounded-md border border-gray-400 bg-sky-100 p-0.5 px-1 text-sm"
     >
       <span>{{ item }}</span>
-      <button @click="(event) => onRemove(event, item)" class="hover:bg-sky-200 rounded">
+      <button
+        @click="(event) => onRemove(event, item)"
+        class="rounded hover:bg-sky-200"
+      >
         <XMarkIcon class="h-4 w-4" />
       </button>
     </div>

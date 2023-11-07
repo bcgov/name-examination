@@ -15,9 +15,6 @@
 
       <header class="font-bold">Nature of Business</header>
       <p>Not available</p>
-
-      <header class="font-bold">Type</header>
-      <p>BC Corporation</p>
     </div>
 
     <div class="grid basis-1/2 grid-cols-2 overflow-x-auto">

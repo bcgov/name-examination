@@ -21,8 +21,9 @@
           <span class="font-semibold">Trademarks</span>
           <ListSelect
             v-model="selectedTrademarks"
-            :options="[]"
+            :options="examine.trademarks.map((t) => t[0])"
             multiple
+            options-style="!max-h-40"
             :disabled="listSelectsDisabled"
           >
             <Chips
@@ -37,8 +38,8 @@
           <ListSelect
             v-model="selectedMacros"
             :options="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]"
-            class="!max-h-10"
             multiple
+            options-style="!max-h-48"
             :disabled="listSelectsDisabled"
           >
             <Chips v-if="selectedMacros.length > 0" v-model="selectedMacros" />
@@ -49,8 +50,9 @@
           <span class="font-semibold">Conflicts</span>
           <ListSelect
             v-model="selectedConflicts"
-            :options="[]"
+            :options="examine.conflicts.map((c) => c.name)"
             multiple
+            options-style="!max-h-48"
             :disabled="listSelectsDisabled"
           >
             <Chips
@@ -72,6 +74,7 @@
             :options="['Cooperative']"
             :disabled="listSelectsDisabled"
             multiple
+            options-style="!max-h-48"
           >
             <Chips
               v-if="selectedConditions.length > 0"
@@ -119,8 +122,11 @@
           disable-buttons
           :character-limit="characterLimit"
         />
-        <span class="text-sm">
-          Characters Remaining: {{ characterLimit - decisionMessage.length }}
+        <span
+          v-if="decisionMessage.length > characterLimit"
+          class="text-sm font-bold text-red-600"
+        >
+          Message cut off at {{ characterLimit }} characters
         </span>
       </div>
     </div>
@@ -145,17 +151,22 @@
     </div>
 
     <PopupDialog title="Edit Message" :show="showEditRequestorMessageDialog">
-      <EditableTextBox
-        class="h-72"
-        v-model="decisionMessageForEdit"
-        @submit="onRequestorMessageEdit"
-        @cancel="showEditRequestorMessageDialog = false"
-        :character-limit="characterLimit"
-      />
-      <span class="text-sm">
-        Characters Remaining:
-        {{ characterLimit - decisionMessageForEdit.length }}
-      </span>
+      <div class="flex flex-col">
+        <EditableTextBox
+          class="h-72"
+          v-model="decisionMessageForEdit"
+          :character-limit="characterLimit"
+          @submit="onRequestorMessageEdit"
+          @cancel="showEditRequestorMessageDialog = false"
+        />
+
+        <span
+          v-if="decisionMessageForEdit.length > characterLimit"
+          class="text-sm font-bold text-red-600"
+        >
+          Message cut off at {{ characterLimit }} characters
+        </span>
+      </div>
     </PopupDialog>
   </div>
 </template>
@@ -169,12 +180,12 @@ import {
 } from '@heroicons/vue/24/outline'
 import { useExamineStore } from '~/store/examine'
 
+const examine = useExamineStore()
+
 const selectedConditions = ref(['Cooperative'])
-const selectedConflicts = ref([])
+const selectedConflicts = ref(examine.selectedConflicts)
 const selectedMacros = ref([])
 const selectedTrademarks = ref([])
-
-const examine = useExamineStore()
 
 const decisionMessage = ref('COOPERATIVE - ')
 const decisionMessageForEdit = ref(decisionMessage.value)
@@ -192,5 +203,6 @@ function onRequestorMessageEdit(_text: string) {
 function clearEdits() {
   examine.requestMessageEdited = false
   decisionMessage.value = ''
+  decisionMessageForEdit.value = ''
 }
 </script>

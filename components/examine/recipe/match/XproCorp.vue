@@ -26,7 +26,7 @@
       <header class="font-bold">Head Office</header>
       <div>
         <p>6407 CYPRESS STREET</p>
-        <p>VANCOUVER BC CA V6M 3S4</p>
+        <p>TORONTO ON CA L4S 3S4</p>
       </div>
     </div>
   </div>
