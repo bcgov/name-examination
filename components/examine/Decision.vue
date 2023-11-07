@@ -36,7 +36,8 @@
           <span class="font-semibold">Macros</span>
           <ListSelect
             v-model="selectedMacros"
-            :options="[]"
+            :options="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]"
+            class="!max-h-10"
             multiple
             :disabled="listSelectsDisabled"
           >
@@ -118,9 +119,9 @@
           disable-buttons
           :character-limit="characterLimit"
         />
-        <!-- <span class="text-sm">
+        <span class="text-sm">
           Characters Remaining: {{ characterLimit - decisionMessage.length }}
-        </span> -->
+        </span>
       </div>
     </div>
 
@@ -145,12 +146,16 @@
 
     <PopupDialog title="Edit Message" :show="showEditRequestorMessageDialog">
       <EditableTextBox
-        lazy-update
-        v-model="decisionMessage"
+        class="h-72"
+        v-model="decisionMessageForEdit"
         @submit="onRequestorMessageEdit"
         @cancel="showEditRequestorMessageDialog = false"
         :character-limit="characterLimit"
       />
+      <span class="text-sm">
+        Characters Remaining:
+        {{ characterLimit - decisionMessageForEdit.length }}
+      </span>
     </PopupDialog>
   </div>
 </template>
@@ -172,6 +177,7 @@ const selectedTrademarks = ref([])
 const examine = useExamineStore()
 
 const decisionMessage = ref('COOPERATIVE - ')
+const decisionMessageForEdit = ref(decisionMessage.value)
 const characterLimit = 955
 
 const showEditRequestorMessageDialog = ref(false)
@@ -180,6 +186,7 @@ const listSelectsDisabled = computed(() => examine.requestMessageEdited)
 function onRequestorMessageEdit(_text: string) {
   showEditRequestorMessageDialog.value = false
   examine.requestMessageEdited = true
+  decisionMessage.value = decisionMessageForEdit.value
 }
 
 function clearEdits() {

@@ -5,17 +5,14 @@
       :placeholder="placeholder"
       :readonly="readonly"
       :maxlength="characterLimit"
-      :value="lazyUpdate ? text : modelValue"
+      :value="modelValue"
       @input="onTextAreaInput"
     />
-    <span v-if="characterLimit != null" class="text-sm">
-      Characters Remaining: {{ charactersLeft }}
-    </span>
     <div v-if="!disableButtons" class="flex space-x-1">
       <IconButton
         white
         class="h-7"
-        @click="onSubmitButtonClick"
+        @click="emit('submit', modelValue)"
         :mnemonic="submitMnemonic"
       >
         <template #text>
@@ -37,27 +34,15 @@
 </template>
 
 <script setup lang="ts">
-const { modelValue, lazyUpdate, characterLimit } = defineProps<{
+const { modelValue, characterLimit } = defineProps<{
   modelValue: any
   placeholder?: string
   disableButtons?: boolean
   submitMnemonic?: string
   cancelMnemonic?: string
   readonly?: boolean
-  lazyUpdate?: boolean
   characterLimit?: number
 }>()
-
-const text = ref(modelValue)
-const charactersLeft = computed(() => {
-  if (characterLimit == null) {
-    return 0
-  } else if (lazyUpdate) {
-    return characterLimit - text.value.length
-  } else {
-    return characterLimit - modelValue.length
-  }
-})
 
 const emit = defineEmits<{
   (e: 'submit', text: string): void
@@ -65,18 +50,8 @@ const emit = defineEmits<{
   (e: 'update:modelValue', newValue: string): void
 }>()
 
-function onSubmitButtonClick() {
-  // emit two events, one to update the model value, and the other to indicate
-  // the submit button was pressed, in case the component user wants to do something else
-  // when the submit button is pressed
-  emit('update:modelValue', text.value)
-  emit('submit', text.value)
-}
-
 function onTextAreaInput(event: Event) {
-  text.value = (event.target as HTMLTextAreaElement).value
-  if (!lazyUpdate) {
-    emit('update:modelValue', text.value)
-  }
+  const text = (event.target as HTMLTextAreaElement).value
+  emit('update:modelValue', text)
 }
 </script>
