@@ -5,7 +5,7 @@
         <button
           class="relative inline-flex h-6 w-11 items-center rounded-full transition"
           :class="
-            modelValue ? 'bg-bcgov-blue5 hover:bg-bcgov-blue4' : 'bg-gray-200'
+            modelValue ? 'bg-bcgov-blue5 hover:opacity-90' : 'bg-gray-200'
           "
         >
           <span
