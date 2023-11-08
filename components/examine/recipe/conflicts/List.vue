@@ -10,8 +10,9 @@
           <input
             type="checkbox"
             :disabled="!examine.inProgress"
+            :checked="examine.selectedConflicts.includes(item.name)"
             class="h-4 w-4"
-            @click="(e) => onItemCheckboxClick(e, item)"
+            @change="(e) => onItemCheckboxChange(e, item)"
           />
           <HighlightedSubText
             class="grow"
@@ -54,7 +55,15 @@ onMounted(() => {
   }
 })
 
-function onItemCheckboxClick(event: MouseEvent, item: any) {
+function onItemCheckboxChange(event: Event, item: any) {
   event.stopPropagation()
+  const checked = (event.target as HTMLInputElement).checked
+  if (checked && !examine.selectedConflicts.includes(item.name)) {
+    examine.selectedConflicts.push(item.name)
+  } else if (!checked) {
+    examine.selectedConflicts = examine.selectedConflicts.filter(
+      (conflict) => conflict !== item.name
+    )
+  }
 }
 </script>

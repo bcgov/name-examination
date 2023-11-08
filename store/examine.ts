@@ -72,7 +72,7 @@ export const useExamineStore = defineStore('examine', () => {
     },
   ]
 
-  const selectedConflicts = ref([])
+  const selectedConflicts = ref<string[]>([])
 
   const trademarks = [
     [

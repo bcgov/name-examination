@@ -49,15 +49,15 @@
         <div>
           <span class="font-semibold">Conflicts</span>
           <ListSelect
-            v-model="selectedConflicts"
+            v-model="examine.selectedConflicts"
             :options="examine.conflicts.map((c) => c.name)"
             multiple
             options-style="!max-h-48"
             :disabled="listSelectsDisabled"
           >
             <Chips
-              v-if="selectedConflicts.length > 0"
-              v-model="selectedConflicts"
+              v-if="examine.selectedConflicts.length > 0"
+              v-model="examine.selectedConflicts"
             />
             <template #no-data>{{
               examine.autoAdd

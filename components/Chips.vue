@@ -6,7 +6,15 @@
     >
       <span>{{ item }}</span>
       <button
-        @click="(event) => onRemove(event, item)"
+        @click="
+          (event) => [
+            event.stopPropagation(),
+            $emit(
+              'update:modelValue',
+              modelValue.filter((c) => c !== item)
+            ),
+          ]
+        "
         class="rounded hover:bg-sky-200"
       >
         <XMarkIcon class="h-4 w-4" />
@@ -25,12 +33,4 @@ const { modelValue } = defineProps<{
 const emit = defineEmits<{
   (e: 'update:modelValue', newValue: any): void
 }>()
-
-function onRemove(event: MouseEvent, item: any) {
-  event.stopPropagation()
-  emit(
-    'update:modelValue',
-    modelValue.filter((c) => c !== item)
-  )
-}
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col h-full"
+    class="flex h-full flex-col"
     :class="{ 'bg-gray-100': examine.headerState === 'editable' }"
   >
     <!-- <ExamineNoticeBanner type="warning">
@@ -18,8 +18,10 @@
     <ExamineHeader />
 
     <div class="flex justify-between p-4">
-      <ExamineNameChoiceList class="ml-4 basis-1/2"/>
-      <ExamineQuickActionButtons v-if="examine.headerState !== 'editable'" />
+      <ExamineNameChoiceList class="ml-4 basis-1/2" />
+      <ExamineQuickActionButtons
+        v-if="examine.headerState !== 'editable' && !examine.isComplete"
+      />
     </div>
 
     <div
