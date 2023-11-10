@@ -12,7 +12,7 @@
 
     <div class="flex items-center" :class="{ 'text-gray-400': !expiry }">
       <h2 class="font-bold">Expiry:&nbsp;</h2>
-      <span v-if="examine.headerState !== 'editable'">
+      <span v-if="!examine.is_editing">
         {{ expiry ? expiry : 'n/a' }}
       </span>
       <DateInput v-else min-today :value="expiry" />
@@ -34,7 +34,7 @@
     >
       <div class="flex items-center">
         <h2 class="font-bold">Consent:&nbsp;</h2>
-        <span v-if="examine.headerState !== 'editable'">{{
+        <span v-if="!examine.is_editing">{{
           consent ? consent : 'n/a'
         }}</span>
         <ListSelect
@@ -47,7 +47,7 @@
         </ListSelect>
       </div>
 
-      <div v-if="examine.headerState === 'editable'" class="flex items-center">
+      <div v-if="examine.is_editing" class="flex items-center">
         <h2 class="font-bold">Consent Date:&nbsp;</h2>
         <DateInput :value="consentDate" />
       </div>

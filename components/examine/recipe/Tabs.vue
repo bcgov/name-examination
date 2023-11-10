@@ -2,23 +2,23 @@
   <div class="sm:px-0">
     <TabGroup>
       <TabList class="flex space-x-1 rounded-md bg-gray-100 p-1">
-        <ExamineRecipeTabButton class="basis-1/6" text="Conflicts">
-          <CheckCircleIcon class="h-5 w-5 stroke-2 text-lime-600" />
-        </ExamineRecipeTabButton>
+        <ExamineRecipeTabButton class="basis-1/6" text="Conflicts" type="ok" />
 
-        <ExamineRecipeTabButton class="basis-1/6" text="Conditions">
-          <ExclamationCircleIcon class="h-5 w-5 stroke-2 text-yellow-600" />
-        </ExamineRecipeTabButton>
+        <ExamineRecipeTabButton
+          class="basis-1/6"
+          text="Conditions"
+          type="warning"
+        />
 
-        <ExamineRecipeTabButton class="basis-1/6" text="Trademarks">
-          <XCircleIcon class="h-5 w-5 stroke-2 text-red-600" />
-        </ExamineRecipeTabButton>
+        <ExamineRecipeTabButton
+          class="basis-1/6"
+          text="Trademarks"
+          type="error"
+        />
 
-        <ExamineRecipeTabButton class="basis-1/6" text="History">
-          <CheckCircleIcon class="h-5 w-5 stroke-2 text-lime-600" />
-        </ExamineRecipeTabButton>
+        <ExamineRecipeTabButton class="basis-1/6" text="History" type="ok" />
 
-        <ExamineRecipeTabButton class="basis-1/6" text="Compare">
+        <ExamineRecipeTabButton class="basis-1/6" text="Compare" type="custom">
           <DocumentDuplicateIcon class="h-5 w-5 stroke-2 text-bcgov-blue5" />
         </ExamineRecipeTabButton>
 
@@ -68,12 +68,7 @@
 
 <script setup>
 import { TabGroup, TabList, TabPanels, TabPanel } from '@headlessui/vue'
-import {
-  CheckCircleIcon,
-  DocumentDuplicateIcon,
-  ExclamationCircleIcon,
-  XCircleIcon,
-} from '@heroicons/vue/24/outline'
+import { DocumentDuplicateIcon } from '@heroicons/vue/24/outline'
 import { useExamineStore } from '~/store/examine'
 
 const examine = useExamineStore()

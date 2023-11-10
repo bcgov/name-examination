@@ -2,7 +2,7 @@
   <div
     class="flex divide-x-2 bg-gray-100 px-4 py-2"
     :class="
-      examine.headerState === 'maximized' || examine.headerState === 'editable'
+      examine.headerState === 'maximized' || examine.is_editing
         ? 'h-full'
         : 'h-32'
     "

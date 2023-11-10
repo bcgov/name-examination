@@ -10,15 +10,33 @@
       ]"
       :text="text"
     >
-      <slot></slot>
+      <CheckCircleIcon
+        v-if="type === 'ok'"
+        class="h-5 w-5 stroke-2 text-lime-600"
+      />
+      <ExclamationCircleIcon
+        v-if="type === 'warning'"
+        class="h-5 w-5 stroke-2 text-yellow-600"
+      />
+      <XCircleIcon
+        v-if="type === 'error'"
+        class="h-5 w-5 stroke-2 text-red-600"
+      />
+      <slot v-if="type === 'custom'"></slot>
     </IconButton>
   </Tab>
 </template>
 
 <script setup lang="ts">
 import { Tab } from '@headlessui/vue'
+import {
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+  XCircleIcon,
+} from '@heroicons/vue/24/outline'
 
 defineProps<{
   text: string
+  type: 'ok' | 'warning' | 'error' | 'custom'
 }>()
 </script>

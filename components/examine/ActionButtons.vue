@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="examine.headerState === 'editable'"
-    class="flex h-fit items-center space-x-1"
-  >
+  <div v-if="examine.is_editing" class="flex h-fit items-center space-x-1">
     <IconButton light mnemonic="s">
       <CheckIcon class="h-5 w-5 stroke-2" />
       <template #text><u>S</u>ave Edits</template>
@@ -15,7 +12,7 @@
   </div>
 
   <div v-else class="flex items-center space-x-1">
-    <IconButton light @click="examine.headerState = 'editable'" mnemonic="d">
+    <IconButton light @click="examine.is_editing = true" mnemonic="d">
       <PencilSquareIcon class="h-5 w-5 stroke-2" />
       <template #text>E<u>d</u>it Request</template>
     </IconButton>
@@ -116,6 +113,10 @@ import { useExamineStore } from '~/store/examine'
 
 const examine = useExamineStore()
 const showCancelRequestDialog = ref(false)
+
+const showButtons = computed(
+  () => !['HISTORICAL', 'COND-RESERVE', 'RESERVED'].includes(examine.nr_status)
+)
 </script>
 
 <style scoped>

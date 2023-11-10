@@ -1,7 +1,7 @@
 <template>
   <div
     class="flex h-full flex-col"
-    :class="{ 'bg-gray-100': examine.headerState === 'editable' }"
+    :class="{ 'bg-gray-100': examine.is_editing }"
   >
     <!-- <ExamineNoticeBanner type="warning">
       <span>
@@ -20,12 +20,12 @@
     <div class="flex justify-between p-4">
       <ExamineNameChoiceList class="ml-4 basis-1/2" />
       <ExamineQuickActionButtons
-        v-if="examine.headerState !== 'editable' && !examine.isComplete"
+        v-if="!examine.is_editing && !examine.isComplete"
       />
     </div>
 
     <div
-      v-if="examine.headerState !== 'editable' && !examine.isComplete"
+      v-if="!examine.is_editing && !examine.isComplete"
       class="flex grow flex-col space-x-3 bg-gray-100 p-4 xl:flex-row"
     >
       <ExamineRecipe class="basis-1/2" />

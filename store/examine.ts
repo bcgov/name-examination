@@ -87,6 +87,23 @@ export const useExamineStore = defineStore('examine', () => {
     ],
   ]
 
+  const is_editing = ref(false)
+  const is_header_shown = ref(false)
+  const nrNumber = ref('NR 1234567')
+  const nr_status = ref('INPROGRESS')
+  const isClosed = computed(() =>
+    ['REJECTED', 'APPROVED', 'CONDITIONAL', 'CONSUMED'].includes(
+      nr_status.value
+    )
+  )
+  const requestType = ref('')
+  const listRequestTypes = ref<any[]>([])
+
+  const cobrsPhoneticConflicts = ref([])
+  const exactMatchesConflicts = ref([])
+  const synonymMatchesConflicts = ref([])
+  const phoneticConflicts = ref([])
+
   return {
     headerState,
     isPriority,
@@ -100,9 +117,21 @@ export const useExamineStore = defineStore('examine', () => {
     examiner,
     trademarks,
     selectedConflicts,
-
     requestorMessage,
     requestMessageEdited,
+
+    is_editing,
+    is_header_shown,
+    nrNumber,
+    nr_status,
+    listRequestTypes,
+    requestType,
+    cobrsPhoneticConflicts,
+    exactMatchesConflicts,
+    synonymMatchesConflicts,
+    phoneticConflicts,
+
+    isClosed,
   }
 })
 

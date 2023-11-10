@@ -1,5 +1,5 @@
 <template>
-  <ol v-if="examine.headerState !== 'editable'" class="list-decimal">
+  <ol v-if="!examine.is_editing" class="list-decimal">
     <li><ExamineNameChoice :name="firstName" state="REJECTED" undoable /></li>
     <li>
       <ExamineNameChoice :name="secondName" current />

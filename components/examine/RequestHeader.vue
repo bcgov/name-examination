@@ -1,11 +1,11 @@
 <template>
-  <div class="flex px-4 py-2 text-gray-700 flex-wrap">
+  <div class="flex flex-wrap px-4 py-2 text-gray-700">
     <div class="flex h-fit">
       <header
         class="text-3xl font-bold"
         :class="{ 'text-red-600': examine.isPriority }"
       >
-        NR 1234567
+        {{ examine.nrNumber }}
       </header>
 
       <a href="#" class="inline-flex items-center px-2 text-bcgov-blue5">
@@ -13,7 +13,7 @@
       </a>
     </div>
 
-    <p v-if="examine.headerState !== 'editable'" class="mx-3 font-bold">
+    <p v-if="!examine.is_editing || examine.isClosed" class="mx-3 font-bold">
       Cooperative - Incorporation
     </p>
 
@@ -34,9 +34,9 @@
         <div class="grow" v-if="nrType === 'Cooperative - Extraprovincial'">
           <span class="text-sm font-bold"
             >Jurisdiction
-            <span v-if="jurisdiction == null" class="text-red-600"
-              >(required)</span
-            >
+            <span v-if="jurisdiction == null" class="text-red-600">
+              (required)
+            </span>
           </span>
           <ComboSelect
             v-model="jurisdiction"
@@ -61,4 +61,21 @@ import { useExamineStore } from '~/store/examine'
 const examine = useExamineStore()
 const nrType = ref('Cooperative - Incorporation')
 const jurisdiction = ref(null)
+
+const isViewing = computed(() => examine.is_header_shown && !examine.is_editing)
+const isExpanded = computed(
+  () => examine.is_editing || isViewing || examine.is_header_shown
+)
+
+const requestType = ref('')
+
+const requestTypeDesc = computed(() => {
+  try {
+    return examine.listRequestTypes.filter(
+      (lrt: any) => requestType.value == lrt.value
+    )[0].text
+  } catch (_err) {
+    return 'ERROR'
+  }
+})
 </script>
