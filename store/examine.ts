@@ -104,6 +104,15 @@ export const useExamineStore = defineStore('examine', () => {
   const synonymMatchesConflicts = ref([])
   const phoneticConflicts = ref([])
 
+  const conditionsJSON = ref({
+    restricted_words_conditions: [
+      { cnd_info: [{ allow_use: 'N', consent_required: '' }] },
+    ],
+  })
+
+  const trademarkInfo = ref({ names: [] })
+  const historiesJSON = ref({ names: [{ name_state_type_cd: 'R' }] })
+
   return {
     headerState,
     isPriority,
@@ -130,6 +139,9 @@ export const useExamineStore = defineStore('examine', () => {
     exactMatchesConflicts,
     synonymMatchesConflicts,
     phoneticConflicts,
+    conditionsJSON,
+    trademarkInfo,
+    historiesJSON,
 
     isClosed,
   }
