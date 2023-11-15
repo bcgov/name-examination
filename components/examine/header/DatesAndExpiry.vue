@@ -15,7 +15,7 @@
       <span v-if="!examine.is_editing">
         {{ expiry ? expiry : 'n/a' }}
       </span>
-      <DateInput v-else min-today :value="expiry" />
+      <DateInput v-else min-today v-model="expiry" />
     </div>
 
     <div class="flex" :class="{ 'text-gray-400': !consumed }">
@@ -49,7 +49,7 @@
 
       <div v-if="examine.is_editing" class="flex items-center">
         <h2 class="font-bold">Consent Date:&nbsp;</h2>
-        <DateInput :value="consentDate" />
+        <DateInput v-model="consentDate" />
       </div>
     </div>
   </div>
