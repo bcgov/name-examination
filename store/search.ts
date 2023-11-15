@@ -202,11 +202,23 @@ export const useSearchStore = defineStore('search', () => {
     ],
     async (_state) => {
       selectedPage.value = 1
-      if (filters.Submitted != Submitted.Custom) {
+
+      // if the Submitted filter is set to custom but no custom dates are set yet, then that means
+      // the user selected the custom date option in the dropdown but is still inputting the dates in the dialog.
+      // the table should not update its rows in this scenario
+      if (
+        filters.Submitted === Submitted.Custom &&
+        (customSubmittedStartDate.value === '' ||
+          customSubmittedEndDate.value === '')
+      ) {
+        return
+      }
+      // clear custom date range if submitted date filter is not set to custom
+      if (filters.Submitted !== Submitted.Custom) {
         customSubmittedStartDate.value = ''
         customSubmittedEndDate.value = ''
-        lastSubmittedDateOption.value = filters.Submitted
       }
+      lastSubmittedDateOption.value = filters.Submitted
       await updateRows()
     },
     { deep: true }
