@@ -10,7 +10,23 @@ export const useExamineStore = defineStore('examine', () => {
   const nrStatus = ref(Status.InProgress)
   const examiner = ref('someone@idir')
 
-  const autoAdd = ref(true)
+  const selectedConflicts = ref<string[]>([])
+  const comparedConflicts = ref<string[]>([])
+
+  const cobrsPhoneticConflicts = ref([])
+  const exactMatchesConflicts = ref([])
+  const synonymMatchesConflicts = ref([])
+  const phoneticConflicts = ref([])
+
+  const decisionFunctionalityDisabled = ref(false)
+
+  const conflictsAutoAdd = ref(true)
+  const autoAddDisabled = computed(
+    () =>
+      decisionFunctionalityDisabled.value ||
+      selectedConflicts.value.length > 0 ||
+      comparedConflicts.value.length > 0
+  )
 
   const requestorMessage = ref('')
   const requestMessageEdited = ref(false)
@@ -72,8 +88,6 @@ export const useExamineStore = defineStore('examine', () => {
     },
   ]
 
-  const selectedConflicts = ref<string[]>([])
-
   const trademarks = [
     [
       'FARMERS',
@@ -99,16 +113,21 @@ export const useExamineStore = defineStore('examine', () => {
   const requestType = ref('')
   const listRequestTypes = ref<any[]>([])
 
-  const cobrsPhoneticConflicts = ref([])
-  const exactMatchesConflicts = ref([])
-  const synonymMatchesConflicts = ref([])
-  const phoneticConflicts = ref([])
-
   const conditionsJSON = ref({
     restricted_words_conditions: [
       { cnd_info: [{ allow_use: 'N', consent_required: '' }] },
     ],
   })
+
+  const parseConditions = ref([
+    {
+      phrase: 'COOP',
+      allow_use: 'Y',
+      consent_required: 'N',
+      text: 'Use Of This Term Is Restricted Under The Cooperative Association Act R.S.B.C. 1999 C. 28, and only given for a Cooperative.',
+      instructions: '',
+    },
+  ])
 
   const trademarkInfo = ref({ names: [] })
   const historiesJSON = ref({ names: [{ name_state_type_cd: 'R' }] })
@@ -120,7 +139,7 @@ export const useExamineStore = defineStore('examine', () => {
     isComplete,
     isFurnished,
     nrStatus,
-    autoAdd,
+    conflictsAutoAdd,
     conflicts,
     comments,
     examiner,
@@ -142,6 +161,9 @@ export const useExamineStore = defineStore('examine', () => {
     conditionsJSON,
     trademarkInfo,
     historiesJSON,
+    autoAddDisabled,
+    decisionFunctionalityDisabled,
+    parseConditions,
 
     isClosed,
   }

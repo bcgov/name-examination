@@ -60,7 +60,7 @@
               v-model="examine.selectedConflicts"
             />
             <template #no-data>{{
-              examine.autoAdd
+              examine.conflictsAutoAdd
                 ? 'No conflicts'
                 : 'No conflicts selected (and auto add is off)'
             }}</template>
