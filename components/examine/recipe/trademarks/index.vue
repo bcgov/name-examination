@@ -2,7 +2,7 @@
   <ExamineRecipeTable
     class="h-full w-full"
     :columns="['Name', 'Description', 'Status']"
-    :rows="computed(() => examine.trademarks)"
+    :rows="examine.trademarks"
   />
 </template>
 
