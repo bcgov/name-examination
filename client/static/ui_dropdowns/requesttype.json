@@ -800,7 +800,7 @@
     "LEGACY_CD": "BECV",
     "ADDITIONAL_INFO": "",
     "SOURCE_APPLICATION": "COLIN",
-    "ENTITY_TYPE_CD": "BECV",
+    "ENTITY_TYPE_CD": "BC",
     "REQUEST_ACTION_CD": "CNV"
   },
   {
@@ -811,7 +811,29 @@
     "LEGACY_CD": "BECR",
     "ADDITIONAL_INFO": "",
     "SOURCE_APPLICATION": "COLIN",
-    "ENTITY_TYPE_CD": "BECR",
+    "ENTITY_TYPE_CD": "CR",
+    "REQUEST_ACTION_CD": "CNV"
+  },
+  {
+    "value": "ULCB",
+    "SHORT_DESC": "B.C. Company",
+    "text": "B.C. Company - ULC to BC Conversion",
+    "CLASS_TYPE_CD": "CORP",
+    "LEGACY_CD": "ULCB", 
+    "ADDITIONAL_INFO": "",
+    "SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "CR",
+    "REQUEST_ACTION_CD": "CNV"
+  },
+  {
+    "value": "ULBE",
+    "SHORT_DESC": "BC Benefit Company",
+    "text": "BC Benefit Company - ULC to Benefit Conversion",
+    "CLASS_TYPE_CD": "CORP",
+    "LEGACY_CD": "ULBE",
+    "ADDITIONAL_INFO": "",
+    "SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "BC",
     "REQUEST_ACTION_CD": "CNV"
   }
 ]
