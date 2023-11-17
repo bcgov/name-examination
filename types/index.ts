@@ -38,16 +38,16 @@ export interface NameRequestConflict extends Conflict {
 
 export interface CorpConflict extends Conflict {
   'incorp #': string
-  directors: string[]
+  directors: string[] | 'Not Available'
   'nature of business': string
 }
 
 export interface BCCorpConflict extends CorpConflict {
-  'records office delivery address': string[]
+  'records office delivery address': string[] | 'Not Available'
   'registered office delivery address': string[]
 }
 
 export interface XproConflict extends CorpConflict {
-  'attorney names': string[]
-  'head office': string
+  'attorney names': string[] | 'Not Available'
+  'head office': string[]
 }

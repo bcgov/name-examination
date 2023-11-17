@@ -23,7 +23,10 @@
         <p v-if="isNotAvailable(conflict['records office delivery address'])">
           Not Available
         </p>
-        <p v-else v-for="addrLine in conflict['records office delivery address']">
+        <p
+          v-else
+          v-for="addrLine in conflict['records office delivery address']"
+        >
           {{ addrLine }}
         </p>
       </div>

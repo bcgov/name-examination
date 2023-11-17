@@ -44,7 +44,10 @@
                 </template>
               </EditableTextBox>
 
-              <ExamineCommentsBox class="basis-2/3" />
+              <ExamineCommentsBox
+                :comments="examine.comments"
+                class="basis-2/3"
+              />
             </div>
           </div>
         </PopoverPanel>

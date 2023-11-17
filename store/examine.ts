@@ -1,5 +1,11 @@
 import { Status } from '~/enums/filter-dropdowns'
-import type { BCCorpConflict, Conflict } from '~/types'
+import type {
+  BCCorpConflict,
+  Comment,
+  Conflict,
+  NameRequestConflict,
+  XproConflict,
+} from '~/types'
 
 export const useExamineStore = defineStore('examine', () => {
   const headerState = ref<'minimized' | 'maximized' | 'editable'>('minimized')
@@ -29,30 +35,30 @@ export const useExamineStore = defineStore('examine', () => {
   const requestorMessage = ref('')
   const requestMessageEdited = ref(false)
 
-  const comments = [
+  const comments: Array<Comment> = [
     {
-      content:
+      comment:
         'Name choice 3 changed from BLACK HILL PERSONAL REAL ESTATE CORPORATION to BLACK HILL PERSONAL COOP COOPERATIVE',
-      author: 'anonymous@idir',
-      date: '2023-05-31, 10:00am',
+      examiner: 'anonymous@idir',
+      timestamp: '2023-05-31, 10:00am',
     },
     {
-      content:
+      comment:
         'Name choice 3 changed from BLACK HILL to BLACK HILL PERSONAL REAL ESTATE CORPORATION',
-      author: 'anonymous@idir',
-      date: '2023-05-31, 9:12am',
+      examiner: 'anonymous@idir',
+      timestamp: '2023-05-31, 9:12am',
     },
     {
-      content:
+      comment:
         'Name choice 3 changed from BLACK HILL to BLACK HILL PERSONAL REAL ESTATE CORPORATION',
-      author: 'anonymous@idir',
-      date: '2023-05-31, 9:12am',
+      examiner: 'anonymous@idir',
+      timestamp: '2023-05-31, 9:12am',
     },
     {
-      content:
+      comment:
         'Name choice 3 changed from BLACK HILL to BLACK HILL PERSONAL REAL ESTATE CORPORATION',
-      author: 'anonymous@idir',
-      date: '2023-05-31, 9:12am',
+      examiner: 'anonymous@idir',
+      timestamp: '2023-05-31, 9:12am',
     },
   ]
 
@@ -77,21 +83,44 @@ export const useExamineStore = defineStore('examine', () => {
       ],
     } as BCCorpConflict,
     {
-      text: 'SO COOL INC.',
+      type: 'name',
+      startDate: '2006-09-25',
       nrNumber: 'NR 0769877',
       jurisdiction: 'BC',
-      startDate: '2006-09-25',
-      type: 'name',
+      text: 'SO COOL INC.',
       invalidRecordInd: false,
-    },
+      applicants: {
+        firstName: 'John',
+        lastName: 'Test',
+        addrLine1: '6407 CYPRESS STREET',
+        addrLine2: '',
+        addrLine3: '',
+        city: 'Vancouver',
+        stateProvinceCd: 'BC',
+        postalCd: 'V6M 3S4',
+        countryTypeCd: 'CA',
+        phoneNumber: '305-343-3434',
+        emailAddress: 'test@example.com',
+        clientFirstName: 'John',
+        clientLastName: 'Test',
+        contact: 'John Test',
+      },
+      state: 'APPROVED',
+      comments: comments,
+    } as NameRequestConflict,
     {
       type: 'corp',
-      text: 'JOHNNY SO INC.',
+      startDate: '2006-09-25',
       nrNumber: 'A4312694',
       jurisdiction: 'ON',
-      startDate: '2006-09-25',
+      text: 'JOHNNY SO INC.',
       invalidRecordInd: false,
-    },
+      'incorp #': 'A4312694',
+      'attorney names': 'Not Available',
+      'nature of business': 'Not available',
+      directors: ['ADA SO', 'Paul James'],
+      'head office': ['6407 CYPRESS STREET', 'TORONTO ON CA L4S 3S4'],
+    } as XproConflict,
   ])
 
   const selectedConflicts = ref<string[]>([])

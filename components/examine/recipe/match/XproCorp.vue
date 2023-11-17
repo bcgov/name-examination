@@ -9,7 +9,10 @@
 
       <header class="font-bold">Attorneys</header>
       <div class="flex flex-col">
-        <p v-for="attorney in conflict['attorney names']">{{ attorney }}</p>
+        <p v-if="isNotAvailable(conflict['attorney names'])">Not available</p>
+        <p v-else v-for="attorney in conflict['attorney names']">
+          {{ attorney }}
+        </p>
       </div>
 
       <b>Nature of Business</b>
@@ -19,13 +22,13 @@
     <div class="grid basis-1/2 grid-cols-2 overflow-x-auto">
       <header class="font-bold">Directors</header>
       <div class="flex flex-col">
-        <p v-for="director in conflict.directors">{{ director }}</p>
+        <p v-if="isNotAvailable(conflict.directors)">Not available</p>
+        <p v-else v-for="director in conflict.directors">{{ director }}</p>
       </div>
 
       <header class="font-bold">Head Office</header>
       <div>
-        <p>6407 CYPRESS STREET</p>
-        <p>TORONTO ON CA L4S 3S4</p>
+        <p v-for="addrLine in conflict['head office']">{{ addrLine }}</p>
       </div>
     </div>
   </div>

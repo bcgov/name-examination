@@ -26,6 +26,7 @@
 
       <header class="font-bold">Comments</header>
       <ExamineCommentsBox
+        :comments="examine.comments"
         class="max-h-48 overflow-auto rounded-md border border-gray-400 p-2 children:bg-sky-50"
       />
     </div>
@@ -37,4 +38,7 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useExamineStore } from '~/store/examine'
+const examine = useExamineStore()
+</script>
