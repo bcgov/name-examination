@@ -1,4 +1,5 @@
 import { Status } from '~/enums/filter-dropdowns'
+import type { BCCorpConflict, Conflict } from '~/types'
 
 export const useExamineStore = defineStore('examine', () => {
   const headerState = ref<'minimized' | 'maximized' | 'editable'>('minimized')
@@ -9,9 +10,6 @@ export const useExamineStore = defineStore('examine', () => {
   const isFurnished = ref(true)
   const nrStatus = ref(Status.InProgress)
   const examiner = ref('someone@idir')
-
-  const selectedConflicts = ref<string[]>([])
-  const comparedConflicts = ref<string[]>([])
 
   const cobrsPhoneticConflicts = ref([])
   const exactMatchesConflicts = ref([])
@@ -58,48 +56,65 @@ export const useExamineStore = defineStore('examine', () => {
     },
   ]
 
-  const conflicts = [
+  const conflicts = ref<Conflict[]>([
     {
-      name: 'XYZ SO LTD.',
-      number: '0685772',
-      jurisdiction: 'BC',
-      date: '2004-01-22',
-      start: 4,
-      end: 6,
       type: 'corp',
-    },
-    {
-      name: 'SO COOL INC.',
-      number: 'NR 0769877',
+      startDate: '2004-01-22',
+      nrNumber: '0685772',
       jurisdiction: 'BC',
-      date: '2006-09-25',
-      start: 0,
-      end: 3,
-      type: 'nr',
+      text: 'XYZ SO LTD.',
+      invalidRecordInd: false,
+      'incorp #': '0685772',
+      directors: ['ADA SO', 'Paul James'],
+      'nature of business': 'Not available',
+      'records office delivery address': [
+        '6407 CYPRESS STREET',
+        'VANCOUVER BC CA V6M 3S4',
+      ],
+      'registered office delivery address': [
+        '6407 CYPRESS STREET',
+        'VANCOUVER BC CA V6M 3S4',
+      ],
+    } as BCCorpConflict,
+    {
+      text: 'SO COOL INC.',
+      nrNumber: 'NR 0769877',
+      jurisdiction: 'BC',
+      startDate: '2006-09-25',
+      type: 'name',
+      invalidRecordInd: false,
     },
     {
-      name: 'JOHNNY SO INC.',
-      number: 'A4312694',
+      type: 'corp',
+      text: 'JOHNNY SO INC.',
+      nrNumber: 'A4312694',
       jurisdiction: 'ON',
-      date: '2006-09-25',
-      start: 7,
-      end: 10,
-      type: 'xprocorp',
+      startDate: '2006-09-25',
+      invalidRecordInd: false,
     },
-  ]
+  ])
 
-  const trademarks = [
-    [
-      'FARMERS',
-      '(1) Produits laitiers. (2) Jus de fruits. (3) T-shirts.',
-      'Registration published',
+  const selectedConflicts = ref<string[]>([])
+  const comparedConflicts = ref<Conflict[]>([conflicts.value[0]])
+
+  const trademarksJSON = ref({
+    names: [
+      {
+        name: 'FARMERS',
+        description: '(1) Produits laitiers. (2) Jus de fruits. (3) T-shirts.',
+        status: 'Registration published',
+        score: 9,
+        application_number: 0,
+      },
+      {
+        name: "FARMER'S",
+        description: '(1) Alcoholic beverages, namely gin.',
+        status: 'Registration published',
+        score: 7,
+        application_number: 1,
+      },
     ],
-    [
-      "FARMER'S",
-      '(1) Alcoholic beverages, namely gin.',
-      'Registration published',
-    ],
-  ]
+  })
 
   const is_editing = ref(false)
   const is_header_shown = ref(false)
@@ -143,7 +158,7 @@ export const useExamineStore = defineStore('examine', () => {
     conflicts,
     comments,
     examiner,
-    trademarks,
+    trademarksJSON,
     selectedConflicts,
     requestorMessage,
     requestMessageEdited,
@@ -164,6 +179,7 @@ export const useExamineStore = defineStore('examine', () => {
     autoAddDisabled,
     decisionFunctionalityDisabled,
     parseConditions,
+    comparedConflicts,
 
     isClosed,
   }

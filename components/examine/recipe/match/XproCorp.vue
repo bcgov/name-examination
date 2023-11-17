@@ -5,22 +5,21 @@
       <p>XPRO Corporation</p>
 
       <header class="font-bold">Corp Number</header>
-      <p>0685772</p>
+      <p>{{ conflict['incorp #'] }}</p>
 
       <header class="font-bold">Attorneys</header>
       <div class="flex flex-col">
-        <p>John Frost</p>
+        <p v-for="attorney in conflict['attorney names']">{{ attorney }}</p>
       </div>
 
       <b>Nature of Business</b>
-      <p>Not available</p>
+      <p>{{ conflict['nature of business'] }}</p>
     </div>
 
     <div class="grid basis-1/2 grid-cols-2 overflow-x-auto">
-      <header class="font-bold">Attorneys</header>
+      <header class="font-bold">Directors</header>
       <div class="flex flex-col">
-        <p>ADA SO</p>
-        <p>Paul James</p>
+        <p v-for="director in conflict.directors">{{ director }}</p>
       </div>
 
       <header class="font-bold">Head Office</header>
@@ -31,3 +30,13 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import type { XproConflict } from '~/types'
+
+defineProps<{
+  conflict: XproConflict
+}>()
+
+const isNotAvailable = (val: any) => val === 'Not Available'
+</script>

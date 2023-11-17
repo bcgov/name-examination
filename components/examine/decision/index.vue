@@ -21,7 +21,7 @@
           <span class="font-semibold">Trademarks</span>
           <ListSelect
             v-model="selectedTrademarks"
-            :options="examine.trademarks.map((t) => t[0])"
+            :options="examine.trademarksJSON.names.map((t) => t.name)"
             multiple
             options-style="!max-h-40"
             :disabled="listSelectsDisabled"
@@ -50,7 +50,7 @@
           <span class="font-semibold">Conflicts</span>
           <ListSelect
             v-model="examine.selectedConflicts"
-            :options="examine.conflicts.map((c) => c.name)"
+            :options="examine.conflicts.map((c) => c.text)"
             multiple
             options-style="!max-h-48"
             :disabled="listSelectsDisabled"

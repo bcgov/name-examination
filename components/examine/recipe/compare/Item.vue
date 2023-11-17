@@ -13,7 +13,15 @@
       </div>
     </template>
     <template #content>
-      <ExamineRecipeMatchCorp class="px-4" />
+      <ExamineRecipeMatch :conflict="conflict" class="px-2" />
     </template>
   </Accordion>
 </template>
+
+<script setup lang="ts">
+import type { Conflict } from '~/types'
+
+defineProps<{
+  conflict: Conflict
+}>()
+</script>

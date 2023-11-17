@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-col space-y-1">
     <Accordion
-      v-for="item in examine.conflicts"
-      :key="item.number"
+      v-for="conflict in examine.conflicts"
+      :key="conflict.nrNumber"
       class="conflict-details rounded-md p-1 open:!bg-sky-100 hover:bg-gray-100"
     >
       <template #title>
@@ -10,27 +10,25 @@
           <input
             type="checkbox"
             :disabled="!examine.inProgress"
-            :checked="examine.selectedConflicts.includes(item.name)"
+            :checked="examine.selectedConflicts.includes(conflict.text)"
             class="h-4 w-4"
-            @change="(e) => onItemCheckboxChange(e, item)"
+            @change="(e) => onItemCheckboxChange(e, conflict)"
           />
           <HighlightedSubText
             class="grow"
-            :text="item.name"
-            :start="item.start"
-            :end="item.end"
+            :text="conflict.text"
+            :start="0"
+            :end="1"
           />
           <div class="space-x-8">
-            <span>{{ item.number }}</span>
-            <span>{{ item.jurisdiction }}</span>
-            <span>{{ item.date }}</span>
+            <span>{{ conflict.nrNumber }}</span>
+            <span>{{ conflict.jurisdiction }}</span>
+            <span>{{ conflict.startDate }}</span>
           </div>
         </div>
       </template>
       <template #content>
-        <ExamineRecipeMatchNames v-if="item.type === 'nr'" />
-        <ExamineRecipeMatchCorp v-else-if="item.type === 'corp'" />
-        <ExamineRecipeMatchXproCorp v-else-if="item.type === 'xprocorp'" />
+        <ExamineRecipeMatch :conflict="conflict" />
       </template>
     </Accordion>
   </div>
