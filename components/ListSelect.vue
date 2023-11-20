@@ -84,8 +84,9 @@ import {
 } from '@headlessui/vue'
 import { ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/outline'
 
+type ModelValueTypes = object | string | number
 const { modelValue, options, multiple } = defineProps<{
-  modelValue: Array<object> | any
+  modelValue: ModelValueTypes | Array<ModelValueTypes>
   options: Array<any>
   multiple?: boolean
   disabled?: boolean

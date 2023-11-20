@@ -123,7 +123,7 @@ export const useExamineStore = defineStore('examine', () => {
     } as XproConflict,
   ])
 
-  const selectedConflicts = ref<string[]>([])
+  const selectedConflicts = ref<string[]>([]) // list of 'text' attributes from selected Conflict objects
   const comparedConflicts = ref<Conflict[]>([conflicts.value[0]])
 
   const trademarksJSON = ref({

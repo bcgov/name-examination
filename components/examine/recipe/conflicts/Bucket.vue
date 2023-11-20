@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 /**
- * A conflicts bucket that holds a list of conflicts
+ * A conflicts bucket that holds a list of conflict lists or just a list of conflicts
  */
 import { useExamineStore } from '~/store/examine'
 const examine = useExamineStore()
