@@ -38,7 +38,7 @@
       </div>
     </div>
 
-    <div>
+    <div v-if="conflict.comments && conflict.comments.length > 0">
       <header class="font-bold">Comments</header>
       <ExamineCommentsBox
         :comments="conflict.comments"

@@ -23,7 +23,7 @@
           <div class="space-x-8">
             <span>{{ conflict.nrNumber }}</span>
             <span>{{ conflict.jurisdiction }}</span>
-            <span>{{ conflict.startDate }}</span>
+            <span>{{ getFormattedDateFromString(conflict.startDate) }}</span>
           </div>
         </div>
       </template>
@@ -36,6 +36,7 @@
 
 <script setup lang="ts">
 import { useExamineStore } from '~/store/examine'
+import { getFormattedDateFromString } from '~/util/date'
 
 const examine = useExamineStore()
 

@@ -10,7 +10,7 @@ import {
   Status,
   Submitted,
 } from '~/enums/filter-dropdowns'
-import { getFormattedDateFromString } from '~/util/date'
+import { getFormattedTimestampFromString } from '~/util/date'
 import { callNamexApi, getNamexApiUrl } from '~/util/namex-api'
 
 type Row = { [column in SearchColumns]: string }
@@ -119,8 +119,8 @@ export const useSearchStore = defineStore('search', () => {
         obj.priorityCd === 'Y' ? 'Priority' : 'Standard',
       [SearchColumns.ClientNotification]:
         obj.furnished === 'Y' ? 'Notified' : 'Not Notified',
-      [SearchColumns.Submitted]: getFormattedDateFromString(obj.submittedDate),
-      [SearchColumns.LastUpdate]: getFormattedDateFromString(obj.lastUpdate),
+      [SearchColumns.Submitted]: getFormattedTimestampFromString(obj.submittedDate),
+      [SearchColumns.LastUpdate]: getFormattedTimestampFromString(obj.lastUpdate),
       [SearchColumns.LastComment]:
         obj.comments.length > 0
           ? obj.comments[obj.comments.length - 1].comment

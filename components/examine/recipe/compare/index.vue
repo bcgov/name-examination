@@ -4,6 +4,10 @@
       v-for="conflict in examine.comparedConflicts"
       :conflict="conflict"
     />
+
+    <p v-if="examine.comparedConflicts.length === 0">
+      No conflicts have been added for comparison.
+    </p>
   </div>
 </template>
 

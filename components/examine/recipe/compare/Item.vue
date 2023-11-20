@@ -4,11 +4,11 @@
       <div
         class="flex w-full items-center justify-between space-x-10 font-bold"
       >
-        <span>ADA SO LTD.</span>
+        <span>{{ conflict.text }}</span>
         <div class="space-x-8">
-          <span>0685772</span>
-          <span>BC</span>
-          <span>2004-01-22</span>
+          <span>{{ conflict.nrNumber }}</span>
+          <span>{{ formatJurisdiction(conflict.jurisdiction) }}</span>
+          <span>{{ getFormattedDateFromString(conflict.startDate) }}</span>
         </div>
       </div>
     </template>
@@ -20,8 +20,12 @@
 
 <script setup lang="ts">
 import type { Conflict } from '~/types'
+import { getFormattedDateFromString } from '~/util/date'
 
 defineProps<{
   conflict: Conflict
 }>()
+
+const formatJurisdiction = (text: string) =>
+  text.includes('-') ? text.split('-')[0].trim() : text
 </script>

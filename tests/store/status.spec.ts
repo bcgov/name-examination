@@ -2,7 +2,7 @@ import { DateTime } from 'luxon'
 import { createPinia } from 'pinia'
 import { beforeEach, describe, it, expect, vi } from 'vitest'
 import { useStatusStore } from '~/store/status'
-import { getFormattedDateFromDateTime } from '~/util/date'
+import { getFormattedTimestampFromDateTime } from '~/util/date'
 import { setApiHelperImpl } from '../util'
 
 describe('Status store tests', () => {
@@ -13,7 +13,7 @@ describe('Status store tests', () => {
   })
 
   it('computes the correct date string', () => {
-    expect(status.todayStr).toBe(getFormattedDateFromDateTime(DateTime.now()))
+    expect(status.todayStr).toBe(getFormattedTimestampFromDateTime(DateTime.now()))
   })
 
   it('updates the status data properly with a mock api response', async () => {

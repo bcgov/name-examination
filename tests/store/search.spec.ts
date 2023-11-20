@@ -13,7 +13,7 @@ import {
 import { DEFAULT_DISPLAY, defaultFilters, useSearchStore } from '~/store/search'
 import { mockNextApiHelperResponse } from '../util'
 import mockOneNameRequest from '../data/mockOneNameRequest.json'
-import { getFormattedDateFromString } from '~/util/date'
+import { getFormattedTimestampFromString } from '~/util/date'
 
 describe('Search store tests', () => {
   let search = useSearchStore()
@@ -91,7 +91,7 @@ describe('Search store tests', () => {
       ClientNotification.NotNotified
     )
     expect(actualRow[SearchColumns.Submitted]).toBe(
-      getFormattedDateFromString(expectedRow.submittedDate)
+      getFormattedTimestampFromString(expectedRow.submittedDate)
     )
     expect(actualRow[SearchColumns.LastComment]).toBe(
       expectedRow.comments[expectedRow.comments.length - 1].comment
