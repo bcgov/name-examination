@@ -108,7 +108,7 @@ export const useExamineStore = defineStore('examine', () => {
       },
       state: 'APPROVED',
       comments: comments,
-      names: [{ name: 'SO COOL INC.', decision_text: 'accepted' }],
+      names: [{ name: 'SO COOL INC.', decision_text: 'accepted', state: 'APPROVED', conflict1: 'ADA SO LTD.' }],
     } as NameRequestConflict,
     {
       type: 'corp',

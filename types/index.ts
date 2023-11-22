@@ -21,6 +21,7 @@ export interface NameChoice {
   conflict2: string
   conflict3: string
   decision_text: string
+  state: string
 }
 
 export interface Comment {

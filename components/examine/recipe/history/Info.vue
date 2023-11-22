@@ -42,7 +42,12 @@
       class="grid basis-1/3 auto-rows-min grid-cols-2 gap-y-1 overflow-x-auto"
     >
       <header class="font-bold">Name State</header>
-      <p>{{ conflict.state }}</p>
+      <p>{{ nameState }}</p>
+
+      <header v-if="conflicts.length > 0" class="font-bold">Conflicts</header>
+      <ol v-if="conflicts.length > 0" class="list-decimal list-inside">
+        <li v-for="c in conflicts">{{ c }}</li>
+      </ol>
 
       <header class="font-bold">Decision</header>
       <div class="flex flex-col">
@@ -61,11 +66,21 @@ const examine = useExamineStore()
 const conflict = computed(() => examine.historiesInfoJSON)
 const applicants = computed(() => conflict.value?.applicants)
 
+const nameState = computed(() => {
+  if (conflict.value == null) return null
+
+  for (const nameChoice of conflict.value.names)
+    if (nameChoice.name === conflict.value.text) return nameChoice.state
+
+  return null
+})
+
 const decisionText = computed(() => {
-  const selectedHistoryInfo = examine.historiesInfoJSON as any
-  for (const nameChoice of selectedHistoryInfo.names) {
+  if (conflict.value == null) return null
+
+  for (const nameChoice of conflict.value.names) {
     if (
-      nameChoice.name === selectedHistoryInfo.text &&
+      nameChoice.name === conflict.value.text &&
       nameChoice.decision_text != ''
     ) {
       return nameChoice.decision_text
@@ -74,5 +89,18 @@ const decisionText = computed(() => {
   return null
 })
 
-const conflicts = computed(() => {})
+const conflicts = computed(() => {
+  if (conflict.value == null) return []
+
+  for (const nameChoice of conflict.value.names)
+    if (nameChoice.name === conflict.value.text) {
+      return [
+        nameChoice.conflict1,
+        nameChoice.conflict2,
+        nameChoice.conflict3,
+      ].filter((choice) => choice != null && choice != '')
+    }
+
+  return []
+})
 </script>
