@@ -3,6 +3,7 @@ import type {
   BCCorpConflict,
   Comment,
   Conflict,
+  History,
   NameRequestConflict,
   XproConflict,
 } from '~/types'
@@ -107,6 +108,7 @@ export const useExamineStore = defineStore('examine', () => {
       },
       state: 'APPROVED',
       comments: comments,
+      names: [{ name: 'SO COOL INC.', decision_text: 'accepted' }],
     } as NameRequestConflict,
     {
       type: 'corp',
@@ -174,7 +176,30 @@ export const useExamineStore = defineStore('examine', () => {
   ])
 
   const trademarkInfo = ref({ names: [] })
-  const historiesJSON = ref({ names: [{ name_state_type_cd: 'R' }] })
+  const historiesJSON = ref<History>({
+    names: [
+      {
+        name: 'NOT SO STEEP COOPERATIVE',
+        jurisdiction: 'BC',
+        nr_num: 'NR 5979354',
+        start_date: '2008-09-16T16:41:29Z',
+        name_state_type_cd: 'R',
+      },
+      {
+        name: 'NOT SO STEEP COOPERATIVE',
+        jurisdiction: 'BC',
+        nr_num: 'NR 3252689',
+        start_date: '2008-09-16T16:41:29Z',
+        name_state_type_cd: 'A',
+      },
+    ],
+  })
+
+  const historiesInfoJSON = ref<NameRequestConflict>()
+
+  async function getHistoryInfo(nrNumber: string) {
+    historiesInfoJSON.value = conflicts.value[1] as NameRequestConflict
+  }
 
   return {
     headerState,
@@ -209,6 +234,8 @@ export const useExamineStore = defineStore('examine', () => {
     decisionFunctionalityDisabled,
     parseConditions,
     comparedConflicts,
+    historiesInfoJSON,
+    getHistoryInfo,
 
     isClosed,
   }

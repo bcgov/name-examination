@@ -15,6 +15,14 @@ export interface Applicants {
   contact: string
 }
 
+export interface NameChoice {
+  name: string
+  conflict1: string
+  conflict2: string
+  conflict3: string
+  decision_text: string
+}
+
 export interface Comment {
   comment: string
   examiner: string
@@ -33,7 +41,8 @@ export interface Conflict {
 export interface NameRequestConflict extends Conflict {
   applicants: Applicants
   state: string
-  comments: Comment[]
+  comments: Array<Comment>
+  names: Array<NameChoice>
 }
 
 export interface CorpConflict extends Conflict {
@@ -50,4 +59,16 @@ export interface BCCorpConflict extends CorpConflict {
 export interface XproConflict extends CorpConflict {
   'attorney names': string[] | 'Not Available'
   'head office': string[]
+}
+
+export interface HistoryEntry {
+  name: string
+  jurisdiction: string
+  nr_num: string
+  start_date: string
+  name_state_type_cd: string
+}
+
+export interface History {
+  names: Array<HistoryEntry>
 }

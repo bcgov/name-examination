@@ -21,7 +21,7 @@
             'cursor-pointer transition hover:bg-gray-100',
             { 'bg-sky-100 hover:bg-sky-100': selectedRow === index },
           ]"
-          @click="onRowClick(index)"
+          @click="onRowClick(index, row)"
         >
           <td v-for="cell in row" class="px-4 py-2">{{ cell }}</td>
         </tr>
@@ -49,15 +49,20 @@ defineProps<{
   rows: Array<Array<any>>
 }>()
 
+const emit = defineEmits<{
+  rowClick: [row: Array<any>]
+}>()
+
 const selectedRow = ref()
 const showSelectedRowHiddenContent = ref(false)
 
-function onRowClick(index: number) {
+function onRowClick(index: number, row: Array<any>) {
   if (selectedRow.value === index) {
     showSelectedRowHiddenContent.value = !showSelectedRowHiddenContent.value
   } else {
     selectedRow.value = index
     showSelectedRowHiddenContent.value = true
   }
+  emit('rowClick', row)
 }
 </script>

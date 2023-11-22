@@ -1,5 +1,5 @@
 <template>
-  <div class="flex gap-x-2 p-4 text-sm">
+  <div v-if="conflict && applicants" class="flex gap-x-2 p-4 text-sm">
     <div class="flex basis-2/3 flex-col">
       <div class="grid grid-cols-2 gap-y-1 overflow-x-auto">
         <header class="font-bold">Client</header>
@@ -38,26 +38,41 @@
       </div>
     </div>
 
-    <div class="grid basis-1/3 grid-cols-2 gap-y-1 overflow-x-auto">
+    <div
+      class="grid basis-1/3 auto-rows-min grid-cols-2 gap-y-1 overflow-x-auto"
+    >
       <header class="font-bold">Name State</header>
       <p>{{ conflict.state }}</p>
+
+      <header class="font-bold">Decision</header>
+      <div class="flex flex-col">
+        <p>{{ decisionText }}</p>
+      </div>
     </div>
   </div>
+  <div v-else class="p-4 font-bold text-red-600">Failed to retrieve info.</div>
 </template>
 
 <script setup lang="ts">
-import type { NameRequestConflict } from '~/types'
+import { useExamineStore } from '~/store/examine'
 
-const { conflict } = defineProps<{
-  conflict: NameRequestConflict
-}>()
+const examine = useExamineStore()
 
-const applicants = conflict.applicants
+const conflict = computed(() => examine.historiesInfoJSON)
+const applicants = computed(() => conflict.value?.applicants)
 
 const decisionText = computed(() => {
+  const selectedHistoryInfo = examine.historiesInfoJSON as any
+  for (const nameChoice of selectedHistoryInfo.names) {
+    if (
+      nameChoice.name === selectedHistoryInfo.text &&
+      nameChoice.decision_text != ''
+    ) {
+      return nameChoice.decision_text
+    }
+  }
+  return null
 })
 
-const conflicts = computed(() => {
-  
-})
+const conflicts = computed(() => {})
 </script>
