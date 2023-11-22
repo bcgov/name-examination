@@ -19,7 +19,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const remoteConfig = getRemoteConfig(app)
 
   remoteConfig.settings.fetchTimeoutMillis = 60000
-  remoteConfig.settings.minimumFetchIntervalMillis = 3600000
+  remoteConfig.settings.minimumFetchIntervalMillis = 60000
 
   remoteConfig.defaultConfig = {
     [FeatureFlags.NAMEX_BANNER]: ''
