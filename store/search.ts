@@ -56,7 +56,7 @@ export const useSearchStore = defineStore('search', () => {
   const customSubmittedStartDate = ref('')
   const customSubmittedEndDate = ref('')
   const lastSubmittedDateOption = ref(filters.Submitted)
-  const isLoading = ref(false)
+  const isLoading = ref(true)
 
   const formattedSearchParams = computed(() => {
     const params = {
@@ -150,7 +150,7 @@ export const useSearchStore = defineStore('search', () => {
     resultNum.value = numResults
     rows.value = responseRows
 
-    isLoading.value = false // end loading
+    // isLoading.value = false // end loading
   }
 
   function toggleSubmittedDateOrder() {

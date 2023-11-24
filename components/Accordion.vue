@@ -7,7 +7,7 @@
     <summary
       class="flex w-full cursor-pointer items-center justify-between rounded-md p-1 text-left text-sm font-medium transition"
       :class="buttonStyle"
-      @click="open = !open"
+      @click="onSummaryClick"
     >
       <slot name="title"></slot>
       <ChevronDownIcon
@@ -26,7 +26,7 @@
 import { ChevronDownIcon } from '@heroicons/vue/24/outline'
 
 const details = ref<HTMLDetailsElement | null>(null)
-const open = ref<boolean | undefined>()
+const open = ref<boolean>()
 
 onMounted(() => (open.value = details.value?.open))
 
@@ -35,4 +35,13 @@ defineProps<{
   buttonStyle?: any
   disabled?: boolean
 }>()
+
+const emit = defineEmits<{
+  toggled: [isOpen: boolean]
+}>()
+
+function onSummaryClick(_e: MouseEvent) {
+  open.value = !open.value
+  emit('toggled', open.value)
+}
 </script>

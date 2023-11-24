@@ -2,7 +2,7 @@
   <Accordion
     :key="conflict.nrNumber"
     class="conflict-details rounded-md p-1 open:!bg-sky-100 hover:bg-gray-100"
-    @click="(_) => examine.getConflictInfo(conflict)"
+    @toggled="onAccordionToggle"
   >
     <template #title>
       <div class="flex w-full items-center gap-x-2">
@@ -27,8 +27,14 @@
       </div>
     </template>
     <template #content>
-      <ExamineRecipeMatch v-if="conflictJSON" :conflict="conflictJSON" />
-      <LoadingSpinner v-else />
+      <div class="flex justify-center">
+        <ExamineRecipeMatch
+          v-if="conflictJSON"
+          :conflict="conflictJSON"
+          class="grow"
+        />
+        <LoadingSpinner v-else />
+      </div>
     </template>
   </Accordion>
 </template>
@@ -62,5 +68,9 @@ function onItemCheckboxChange(event: Event) {
       (c) => c !== conflict.text
     )
   }
+}
+
+function onAccordionToggle(isOpen: boolean) {
+  if (isOpen) examine.getConflictInfo(conflict)
 }
 </script>

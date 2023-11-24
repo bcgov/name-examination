@@ -180,16 +180,19 @@ export const useExamineStore = defineStore('examine', () => {
   const comparedConflicts = ref<Conflict[]>([conflicts.value[0]])
 
   async function getConflictInfo(item: ConflictListItem) {
+    console.log('clicked')
     corpConflictJSON.value = undefined
     namesConflictJSON.value = undefined
-    const conflict = conflicts.value.filter(
-      (conflict) => conflict.nrNumber === item.nrNumber
-    )[0]
-    if (item.source === 'CORP') {
-      corpConflictJSON.value = conflict as CorpConflict
-    } else {
-      namesConflictJSON.value = conflict as NameRequestConflict
-    }
+    setTimeout(() => {
+      const conflict = conflicts.value.filter(
+        (conflict) => conflict.nrNumber === item.nrNumber
+      )[0]
+      if (item.source === 'CORP') {
+        corpConflictJSON.value = conflict as CorpConflict
+      } else {
+        namesConflictJSON.value = conflict as NameRequestConflict
+      }
+    }, 1000)
   }
 
   const trademarksJSON = ref({

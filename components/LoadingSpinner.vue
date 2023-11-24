@@ -1,9 +1,5 @@
 <template>
   <div
-    class="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 transform"
-  >
-    <div
-      class="h-24 w-24 animate-spin rounded-full border-8 border-solid border-bcgov-blue5 border-t-transparent"
-    />
-  </div>
+    class="m-4 h-16 w-16 animate-spin rounded-full border-8 border-solid border-bcgov-blue5 border-t-transparent"
+  />
 </template>
