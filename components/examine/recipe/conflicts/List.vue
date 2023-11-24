@@ -1,15 +1,18 @@
 <template>
   <div class="flex flex-col space-y-1">
     <ExamineRecipeConflictsListItem
-      v-for="conflict in examine.conflicts"
-      :conflict="conflict"
+      v-for="item in conflictItems"
+      :conflict="item"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
-const examine = useExamineStore()
+import type { ConflictListItem } from '~/types'
+
+defineProps<{
+  conflictItems: Array<ConflictListItem>
+}>()
 
 onMounted(() => {
   // close all other list items (which are <details> elements) when one is clicked

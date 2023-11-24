@@ -73,3 +73,19 @@ export interface HistoryEntry {
 export interface History {
   names: Array<HistoryEntry>
 }
+
+export interface ConflictListItem {
+  text: string
+  highlightedText: string
+  jurisdiction: string
+  nrNumber: string
+  startDate: string
+  source: 'CORP' | 'NR'
+}
+
+export interface ConflictList {
+  text: string
+  highlightedText: string
+  meta: string
+  children: Array<ConflictListItem>
+}

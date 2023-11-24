@@ -2,6 +2,7 @@
   <Accordion
     :key="conflict.nrNumber"
     class="conflict-details rounded-md p-1 open:!bg-sky-100 hover:bg-gray-100"
+    @click="(_) => examine.getConflictInfo(conflict)"
   >
     <template #title>
       <div class="flex w-full items-center gap-x-2">
@@ -26,21 +27,30 @@
       </div>
     </template>
     <template #content>
-      <ExamineRecipeMatch :conflict="conflict" />
+      <ExamineRecipeMatch v-if="conflictJSON" :conflict="conflictJSON" />
+      <LoadingSpinner v-else />
     </template>
   </Accordion>
 </template>
 
 <script setup lang="ts">
 import { useExamineStore } from '~/store/examine'
-import type { Conflict } from '~/types'
+import type { Conflict, ConflictListItem } from '~/types'
 import { getFormattedDateFromString } from '~/util/date'
 
 const examine = useExamineStore()
 
 const { conflict } = defineProps<{
-  conflict: Conflict
+  conflict: ConflictListItem
 }>()
+
+const conflictJSON = computed<Conflict | undefined>(() =>
+  conflict.source === 'CORP'
+    ? examine.corpConflictJSON
+    : conflict.source === 'NR'
+    ? examine.namesConflictJSON
+    : undefined
+)
 
 function onItemCheckboxChange(event: Event) {
   event.stopPropagation()

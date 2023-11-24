@@ -49,10 +49,10 @@ const examine = useExamineStore()
 
 const conflictsIconType = computed(() =>
   [
-    examine.cobrsPhoneticConflicts,
+    examine.parsedCOBRSConflicts,
     examine.exactMatchesConflicts,
-    examine.synonymMatchesConflicts,
-    examine.phoneticConflicts,
+    examine.parsedSynonymConflicts,
+    examine.parsedPhoneticConflicts,
   ].some((arr) => arr.length > 0)
     ? 'error'
     : 'ok'

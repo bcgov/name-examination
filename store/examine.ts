@@ -3,6 +3,9 @@ import type {
   BCCorpConflict,
   Comment,
   Conflict,
+  ConflictList,
+  ConflictListItem,
+  CorpConflict,
   History,
   NameRequestConflict,
   XproConflict,
@@ -18,10 +21,48 @@ export const useExamineStore = defineStore('examine', () => {
   const nrStatus = ref(Status.InProgress)
   const examiner = ref('someone@idir')
 
-  const cobrsPhoneticConflicts = ref([])
-  const exactMatchesConflicts = ref([])
-  const synonymMatchesConflicts = ref([])
-  const phoneticConflicts = ref([])
+  const exactMatchesConflicts = ref<Array<ConflictListItem>>([])
+  const parsedSynonymConflicts = ref<Array<ConflictList>>([
+    {
+      text: 'SO',
+      highlightedText: 'SO',
+      meta: 'PROXIMITY SEARCH',
+      children: [
+        {
+          text: 'XYZ SO LTD.',
+          highlightedText: 'XYZ SO LTD.',
+          jurisdiction: 'BC',
+          nrNumber: '0685772',
+          startDate: '2004-01-22T00:00:00Z',
+          source: 'CORP',
+        },
+        {
+          text: 'SO COOL INC.',
+          highlightedText: 'SO COOL INC.',
+          jurisdiction: 'BC',
+          nrNumber: 'NR 0769877',
+          startDate: '2006-09-25T00:00:00Z',
+          source: 'NR',
+        },
+        {
+          text: 'JOHNNY SO INC.',
+          highlightedText: 'JOHNNY SO INC.',
+          jurisdiction: 'ON',
+          nrNumber: 'A4312694',
+          startDate: '2006-09-25T00:00:00Z',
+          source: 'CORP',
+        },
+      ],
+    },
+    {
+      text: 'SO*',
+      highlightedText: 'SO*',
+      meta: 'EXACT WORD ORDER',
+      children: [],
+    },
+  ])
+  const parsedCOBRSConflicts = ref<Array<ConflictList>>([])
+  const parsedPhoneticConflicts = ref<Array<ConflictList>>([])
 
   const decisionFunctionalityDisabled = ref(false)
 
@@ -108,7 +149,14 @@ export const useExamineStore = defineStore('examine', () => {
       },
       state: 'APPROVED',
       comments: comments,
-      names: [{ name: 'SO COOL INC.', decision_text: 'accepted', state: 'APPROVED', conflict1: 'ADA SO LTD.' }],
+      names: [
+        {
+          name: 'SO COOL INC.',
+          decision_text: 'accepted',
+          state: 'APPROVED',
+          conflict1: 'ADA SO LTD.',
+        },
+      ],
     } as NameRequestConflict,
     {
       type: 'corp',
@@ -125,8 +173,24 @@ export const useExamineStore = defineStore('examine', () => {
     } as XproConflict,
   ])
 
+  const corpConflictJSON = ref<CorpConflict>()
+  const namesConflictJSON = ref<NameRequestConflict>()
+
   const selectedConflicts = ref<string[]>([]) // list of 'text' attributes from selected Conflict objects
   const comparedConflicts = ref<Conflict[]>([conflicts.value[0]])
+
+  async function getConflictInfo(item: ConflictListItem) {
+    corpConflictJSON.value = undefined
+    namesConflictJSON.value = undefined
+    const conflict = conflicts.value.filter(
+      (conflict) => conflict.nrNumber === item.nrNumber
+    )[0]
+    if (item.source === 'CORP') {
+      corpConflictJSON.value = conflict as CorpConflict
+    } else {
+      namesConflictJSON.value = conflict as NameRequestConflict
+    }
+  }
 
   const trademarksJSON = ref({
     names: [
@@ -223,10 +287,12 @@ export const useExamineStore = defineStore('examine', () => {
     nr_status,
     listRequestTypes,
     requestType,
-    cobrsPhoneticConflicts,
+    parsedCOBRSConflicts,
     exactMatchesConflicts,
-    synonymMatchesConflicts,
-    phoneticConflicts,
+    parsedSynonymConflicts,
+    parsedPhoneticConflicts,
+    corpConflictJSON,
+    namesConflictJSON,
     conditionsJSON,
     trademarkInfo,
     historiesJSON,
@@ -236,6 +302,7 @@ export const useExamineStore = defineStore('examine', () => {
     comparedConflicts,
     historiesInfoJSON,
     getHistoryInfo,
+    getConflictInfo,
 
     isClosed,
   }
