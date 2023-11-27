@@ -25,12 +25,12 @@ export const useExamineStore = defineStore('examine', () => {
   const parsedSynonymConflicts = ref<Array<ConflictList>>([
     {
       text: 'SO',
-      highlightedText: 'SO',
+      highlightedText: '<span class="stem-highlight">SO</span>',
       meta: 'PROXIMITY SEARCH',
       children: [
         {
           text: 'XYZ SO LTD.',
-          highlightedText: 'XYZ SO LTD.',
+          highlightedText: 'XYZ <span class="stem-highlight">SO</span> LTD.',
           jurisdiction: 'BC',
           nrNumber: '0685772',
           startDate: '2004-01-22T00:00:00Z',
@@ -38,7 +38,7 @@ export const useExamineStore = defineStore('examine', () => {
         },
         {
           text: 'SO COOL INC.',
-          highlightedText: 'SO COOL INC.',
+          highlightedText: '<span class="stem-highlight">SO</span> COOL INC.',
           jurisdiction: 'BC',
           nrNumber: 'NR 0769877',
           startDate: '2006-09-25T00:00:00Z',
@@ -46,7 +46,7 @@ export const useExamineStore = defineStore('examine', () => {
         },
         {
           text: 'JOHNNY SO INC.',
-          highlightedText: 'JOHNNY SO INC.',
+          highlightedText: 'JOHNNY <span class="stem-highlight">SO</span> INC.',
           jurisdiction: 'ON',
           nrNumber: 'A4312694',
           startDate: '2006-09-25T00:00:00Z',
@@ -56,7 +56,7 @@ export const useExamineStore = defineStore('examine', () => {
     },
     {
       text: 'SO*',
-      highlightedText: 'SO*',
+      highlightedText: '<span class="stem-highlight">SO</span>*',
       meta: 'EXACT WORD ORDER',
       children: [],
     },
@@ -176,23 +176,20 @@ export const useExamineStore = defineStore('examine', () => {
   const corpConflictJSON = ref<CorpConflict>()
   const namesConflictJSON = ref<NameRequestConflict>()
 
-  const selectedConflicts = ref<string[]>([]) // list of 'text' attributes from selected Conflict objects
-  const comparedConflicts = ref<Conflict[]>([conflicts.value[0]])
+  const selectedConflicts = ref<Conflict[]>([])
+  const comparedConflicts = ref<Conflict[]>([])
 
   async function getConflictInfo(item: ConflictListItem) {
-    console.log('clicked')
     corpConflictJSON.value = undefined
     namesConflictJSON.value = undefined
-    setTimeout(() => {
-      const conflict = conflicts.value.filter(
-        (conflict) => conflict.nrNumber === item.nrNumber
-      )[0]
-      if (item.source === 'CORP') {
-        corpConflictJSON.value = conflict as CorpConflict
-      } else {
-        namesConflictJSON.value = conflict as NameRequestConflict
-      }
-    }, 1000)
+    const conflict = conflicts.value.filter(
+      (conflict) => conflict.nrNumber === item.nrNumber
+    )[0]
+    if (item.source === 'CORP') {
+      corpConflictJSON.value = conflict as CorpConflict
+    } else {
+      namesConflictJSON.value = conflict as NameRequestConflict
+    }
   }
 
   const trademarksJSON = ref({
@@ -268,6 +265,23 @@ export const useExamineStore = defineStore('examine', () => {
     historiesInfoJSON.value = conflicts.value[1] as NameRequestConflict
   }
 
+  function toggleConflictCheckbox(conflictItem: ConflictListItem) {
+    const conflict = conflicts.value.filter(
+      (c) => c.nrNumber === conflictItem.nrNumber
+    )[0]
+    if (selectedConflicts.value.includes(conflict)) {
+      selectedConflicts.value = selectedConflicts.value.filter(
+        (c) => c.text !== conflictItem.text
+      )
+    } else {
+      selectedConflicts.value.push(conflict)
+    }
+  }
+
+  function getShortJurisdiction(jurisdiction: string) {
+    return jurisdiction
+  }
+
   return {
     headerState,
     isPriority,
@@ -306,6 +320,8 @@ export const useExamineStore = defineStore('examine', () => {
     historiesInfoJSON,
     getHistoryInfo,
     getConflictInfo,
+    toggleConflictCheckbox,
+    getShortJurisdiction,
 
     isClosed,
   }

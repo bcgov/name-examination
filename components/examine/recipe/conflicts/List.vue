@@ -2,7 +2,7 @@
   <div class="flex flex-col space-y-1">
     <ExamineRecipeConflictsListItem
       v-for="item in conflictItems"
-      :conflict="item"
+      :conflict-item="item"
     />
   </div>
 </template>

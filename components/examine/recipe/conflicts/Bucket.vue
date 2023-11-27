@@ -7,7 +7,7 @@
     >
       <template #title>
         <div class="flex w-full font-medium">
-          <HighlightedSubText :text="list.text" :start="0" :end="3" />
+          <span v-html="list.highlightedText"></span>
           <span class="grow italic">&nbsp;- {{ list.meta.toLowerCase() }}</span>
           <span v-if="list.children.length > 0">
             {{ list.children.length }}
@@ -31,3 +31,15 @@ defineProps<{
   conflictLists: Array<ConflictList>
 }>()
 </script>
+
+<style>
+.stem-highlight {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.synonym-stem-highlight {
+  color: #e0a800;
+  font-weight: bold;
+}
+</style>

@@ -4,7 +4,7 @@
       v-for="item in modelValue"
       class="flex h-fit w-fit flex-nowrap items-center space-x-1 rounded-md border border-gray-400 bg-sky-100 p-0.5 px-1 text-sm"
     >
-      <span>{{ item }}</span>
+      <span>{{ display ? display(item) : item }}</span>
       <button
         @click="
           (event) => [
@@ -28,6 +28,7 @@ import { XMarkIcon } from '@heroicons/vue/24/outline'
 
 const { modelValue } = defineProps<{
   modelValue: Array<any>
+  display?: (input: any) => string
 }>()
 
 const emit = defineEmits<{

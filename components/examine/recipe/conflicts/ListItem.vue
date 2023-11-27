@@ -1,6 +1,6 @@
 <template>
   <Accordion
-    :key="conflict.nrNumber"
+    :key="conflictItem.nrNumber"
     class="conflict-details rounded-md p-1 open:!bg-sky-100 hover:bg-gray-100"
     @toggled="onAccordionToggle"
   >
@@ -8,29 +8,26 @@
       <div class="flex w-full items-center gap-x-2">
         <input
           type="checkbox"
-          :disabled="!examine.inProgress"
-          :checked="examine.selectedConflicts.includes(conflict.text)"
+          :disabled="examine.decisionFunctionalityDisabled"
           class="h-4 w-4"
-          @change.prevent.stop="onItemCheckboxChange"
+          :checked="isChecked"
+          @change.prevent.stop="examine.toggleConflictCheckbox(conflictItem)"
         />
-        <HighlightedSubText
-          class="grow"
-          :text="conflict.text"
-          :start="0"
-          :end="1"
-        />
+        <span class="grow" v-html="conflictItem.highlightedText"></span>
         <div class="space-x-8">
-          <span>{{ conflict.nrNumber }}</span>
-          <span>{{ conflict.jurisdiction }}</span>
-          <span>{{ getFormattedDateFromString(conflict.startDate) }}</span>
+          <span>{{ conflictItem.nrNumber }}</span>
+          <span>
+            {{ examine.getShortJurisdiction(conflictItem.jurisdiction) }}
+          </span>
+          <span>{{ getFormattedDateFromString(conflictItem.startDate) }}</span>
         </div>
       </div>
     </template>
     <template #content>
       <div class="flex justify-center">
         <ExamineRecipeMatch
-          v-if="conflictJSON"
-          :conflict="conflictJSON"
+          v-if="conflictData"
+          :conflict="conflictData"
           class="grow"
         />
         <LoadingSpinner v-else />
@@ -46,31 +43,37 @@ import { getFormattedDateFromString } from '~/util/date'
 
 const examine = useExamineStore()
 
-const { conflict } = defineProps<{
-  conflict: ConflictListItem
+const { conflictItem } = defineProps<{
+  conflictItem: ConflictListItem
 }>()
 
-const conflictJSON = computed<Conflict | undefined>(() =>
-  conflict.source === 'CORP'
+const isChecked = computed(() =>
+  examine.selectedConflicts
+    .map((c) => c.nrNumber)
+    .includes(conflictItem.nrNumber)
+)
+
+const conflictData = computed<Conflict | undefined>(() =>
+  conflictItem.source === 'CORP'
     ? examine.corpConflictJSON
-    : conflict.source === 'NR'
+    : conflictItem.source === 'NR'
     ? examine.namesConflictJSON
     : undefined
 )
 
-function onItemCheckboxChange(event: Event) {
-  event.stopPropagation()
-  const checked = (event.target as HTMLInputElement).checked
-  if (checked && !examine.selectedConflicts.includes(conflict.text)) {
-    examine.selectedConflicts.push(conflict.text)
-  } else if (!checked) {
-    examine.selectedConflicts = examine.selectedConflicts.filter(
-      (c) => c !== conflict.text
-    )
-  }
-}
-
 function onAccordionToggle(isOpen: boolean) {
-  if (isOpen) examine.getConflictInfo(conflict)
+  if (isOpen) examine.getConflictInfo(conflictItem)
 }
 </script>
+
+<style>
+.stem-highlight {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.synonym-stem-highlight {
+  color: #e0a800;
+  font-weight: bold;
+}
+</style>
