@@ -11,17 +11,18 @@
         </nuxt-link>
       </div>
 
-      <div
-        v-if="authModule.isAuthenticated"
-        class="ml-3 flex gap-10 text-bcgov-blue5"
-      >
+      <div class="ml-3 flex gap-10 text-bcgov-blue5">
         <AppHeaderNavLink text="Admin" :route="Routes.Admin" />
         <AppHeaderNavLink text="Examine Names" :route="Routes.Examine" />
         <AppHeaderNavLink text="Search" :route="Routes.Search" />
       </div>
 
-      <div v-if="authModule.isAuthenticated" class="ml-auto flex items-center">
-        <SearchInput :value="ref('')" class="mx-3" placeholder="NR Number Lookup"/>
+      <div class="ml-auto flex items-center">
+        <SearchInput
+          :value="ref('')"
+          class="mx-3"
+          placeholder="NR Number Lookup"
+        />
 
         <nuxt-link to="/stats" class="mx-3 text-sm text-blue-800 underline">
           <a>Stats</a>
@@ -39,69 +40,29 @@
         </div>
 
         <div class="flex flex-col border-l-2 border-gray-300 px-3">
-          <span class="text-sm">{{
-            KeycloakService.getUserInfo().fullName
-          }}</span>
-          <a class="text-sm text-blue-800" href="#" @click="logout">Log Out</a>
+          <span class="text-sm">username</span>
+          <a class="text-sm text-blue-800" href="#" >
+            Log Out
+          </a>
         </div>
       </div>
 
-      <div v-if="!authModule.isAuthenticated" class="mx-5">
+      <!-- <div class="mx-5">
         <IconButton class="font-medium" @click="login">
           <ArrowRightOnRectangleIcon class="h-6" />
           Login
         </IconButton>
-      </div>
+      </div> -->
     </div>
   </nav>
 </template>
 
 <script setup lang="ts">
-import { useRuntimeConfig } from '#imports'
-import { useAuthStore } from '~/store/auth'
-import KeycloakService from '~/public/keycloak/keycloak'
 import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/solid'
 import { useExamineOptionsStore } from '~/store/examine-options'
 import { Routes } from '~/enums/routes'
 /* eslint-disable require-jsdoc */
 
-const authModule = useAuthStore()
-const config = useRuntimeConfig()
 const examineOptions = useExamineOptionsStore()
 
-async function login() {
-  // If the user is already authenticated, do nothing
-  if (authModule.isAuthenticated) return
-
-  try {
-    // Start the token initialization process and wait for it to finish
-    await KeycloakService.initializeToken(
-      authModule,
-      true,
-      !authModule.isAuthenticated
-    )
-
-    // Token should now be generated
-    await KeycloakService.initSession()
-  } catch (err) {
-    if ((err as any)?.message !== 'NOT_AUTHENTICATED') {
-      console.error(err)
-      // Handle the error appropriately, possibly by showing an error message to the user
-    }
-  }
-}
-
-async function logout() {
-  // If the user is already logged out, do nothing
-  if (!authModule.isAuthenticated) return
-
-  try {
-    await KeycloakService.logout(config.app.baseURL)
-  } catch (err) {
-    if ((err as any)?.message !== 'LOGOUT FAILED') {
-      console.error(err)
-      // Handle the error appropriately, possibly by showing an error message to the user
-    }
-  }
-}
 </script>

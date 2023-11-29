@@ -2,7 +2,6 @@ import { beforeEach, describe, it, expect, vitest } from 'vitest'
 import LandingPage from '../pages/index.vue'
 import { DOMWrapper, VueWrapper, mount } from '@vue/test-utils'
 import { createTestingPinia } from '@pinia/testing'
-import { useAuthStore } from '../../store/auth'
 import flushPromises from 'flush-promises'
 import {
   createRouter,
@@ -41,11 +40,9 @@ describe('Home page tests', () => {
         plugins: [pinia, router],
       },
     })
-    authModule = useAuthStore()
   })
 
   it('shows an error when user not logged in', async () => {
-    authModule.isAuthenticated = false // simulate not being logged in
     await flushPromises() // wait for updates
     // At this point, the 'p' element should exist in the DOM.
     expect(
@@ -60,7 +57,6 @@ describe('Home page tests', () => {
   })
 
   it('shows welcome message when user is logged in', async () => {
-    authModule.isAuthenticated = true // simulate being logged in
     await flushPromises() // wait for updates
     // At this point, the 'header' element should exist in the DOM.
     expect(wrapper.find('header').text()).toBe('Welcome to Name X!')
