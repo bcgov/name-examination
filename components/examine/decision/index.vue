@@ -3,10 +3,17 @@
     <div class="flex flex-col space-y-2">
       <ExamineDecisionHeader />
 
-      <ExamineDecisionConditions :conditions="examine.parseConditions" />
+      <ExamineDecisionConditionsInfo :conditions="examine.parseConditions" />
 
       <div class="!mt-4 flex space-x-2">
-        <ExamineDecisionSelections />
+        <!-- Layout the combo selects in reverse so they don't overlap each other https://stackoverflow.com/a/77210506 -->
+        <div class="flex basis-1/2 flex-col-reverse gap-y-8">
+          <ExamineDecisionSelectConditions />
+          <ExamineDecisionSelectMacros />
+          <ExamineDecisionSelectConflicts />
+          <ExamineDecisionSelectTrademarks />
+        </div>
+
         <ExamineDecisionRequestorMessage />
       </div>
     </div>

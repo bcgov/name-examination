@@ -268,6 +268,8 @@ export const useExamineStore = defineStore('examine', () => {
 
   const consentRequiredByUser = ref(false)
 
+  const selectedConditions = ref([])
+
   async function getHistoryInfo(nrNumber: string) {
     historiesInfoJSON.value = conflicts.value[1] as NameRequestConflict
   }
@@ -327,6 +329,7 @@ export const useExamineStore = defineStore('examine', () => {
     comparedConflicts,
     historiesInfoJSON,
     consentRequiredByUser,
+    selectedConditions,
     getHistoryInfo,
     getConflictInfo,
     toggleConflictCheckbox,
