@@ -2,6 +2,7 @@ import { Status } from '~/enums/filter-dropdowns'
 import type {
   BCCorpConflict,
   Comment,
+  Condition,
   Conflict,
   ConflictList,
   ConflictListItem,
@@ -212,6 +213,7 @@ export const useExamineStore = defineStore('examine', () => {
   })
 
   const is_editing = ref(false)
+  const is_making_decision = ref(true)
   const is_header_shown = ref(false)
   const nrNumber = ref('NR 1234567')
   const nr_status = ref('INPROGRESS')
@@ -229,13 +231,16 @@ export const useExamineStore = defineStore('examine', () => {
     ],
   })
 
-  const parseConditions = ref([
+  const parseConditions = ref<Array<Condition>>([
     {
-      phrase: 'COOP',
       allow_use: 'Y',
       consent_required: 'N',
-      text: 'Use Of This Term Is Restricted Under The Cooperative Association Act R.S.B.C. 1999 C. 28, and only given for a Cooperative.',
-      instructions: '',
+      id: 4421,
+      instructions: ' ',
+      text: 'Use Of This Term Is Restricted Under The Cooperative Association Act R.S.B.C. 1999 C. 28, and only given for a Cooperative. ',
+      consent_required_tf: false,
+      allow_use_tf: true,
+      phrase: 'COOPERATIVE',
     },
   ])
 
@@ -260,6 +265,8 @@ export const useExamineStore = defineStore('examine', () => {
   })
 
   const historiesInfoJSON = ref<NameRequestConflict>()
+
+  const consentRequiredByUser = ref(false)
 
   async function getHistoryInfo(nrNumber: string) {
     historiesInfoJSON.value = conflicts.value[1] as NameRequestConflict
@@ -299,6 +306,7 @@ export const useExamineStore = defineStore('examine', () => {
     requestMessageEdited,
 
     is_editing,
+    is_making_decision,
     is_header_shown,
     nrNumber,
     nr_status,
@@ -318,6 +326,7 @@ export const useExamineStore = defineStore('examine', () => {
     parseConditions,
     comparedConflicts,
     historiesInfoJSON,
+    consentRequiredByUser,
     getHistoryInfo,
     getConflictInfo,
     toggleConflictCheckbox,

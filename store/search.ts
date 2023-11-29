@@ -150,7 +150,7 @@ export const useSearchStore = defineStore('search', () => {
     resultNum.value = numResults
     rows.value = responseRows
 
-    // isLoading.value = false // end loading
+    isLoading.value = false // end loading
   }
 
   function toggleSubmittedDateOrder() {

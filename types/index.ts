@@ -89,3 +89,14 @@ export interface ConflictList {
   meta: string
   children: Array<ConflictListItem>
 }
+
+export interface Condition {
+  allow_use: 'Y' | 'N'
+  consent_required: 'Y' | 'N'
+  id: number
+  instructions: string
+  text: string
+  consent_required_tf: boolean
+  allow_use_tf: boolean
+  phrase: string
+}
