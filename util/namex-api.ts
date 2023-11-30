@@ -16,8 +16,13 @@ export function getNamexApiUrl(endpoint: string): URL {
  * @returns The json response object
  */
 export async function callNamexApi(url: URL): Promise<any> {
-  const { data } = useAuth()
-  const token = (data.value?.user as any).accessToken
+  const { data, status } = useAuth()
+  const authenticated = status.value === 'authenticated'
+  if (!authenticated) {
+    console.warn('Making NameX API call without valid token')
+  }
+
+  const token = authenticated ? (data.value?.user as any).accessToken : ''
   const response = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
