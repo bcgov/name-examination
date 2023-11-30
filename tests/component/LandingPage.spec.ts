@@ -8,7 +8,8 @@ import {
   createMemoryHistory,
   type RouteRecordRaw,
 } from 'vue-router'
-import HomePage from '../pages/HomePage.vue'
+import Home from '../pages/index.vue'
+import { Routes } from '~/enums/routes'
 /* eslint-disable require-jsdoc */
 
 describe('Home page tests', () => {
@@ -23,8 +24,8 @@ describe('Home page tests', () => {
         component: LandingPage,
       },
       {
-        path: '/HomePage',
-        component: HomePage,
+        path: Routes.Home,
+        component: Home,
       },
     ]
     const router = createRouter({
@@ -52,8 +53,8 @@ describe('Home page tests', () => {
           node.text().match(/Please login/)
         ).length
     ).toBe(1)
-    // And the HomePage should not.
-    expect(wrapper.findComponent(HomePage).exists()).toBe(false)
+    // And the home page should not.
+    expect(wrapper.findComponent(Home).exists()).toBe(false)
   })
 
   it('shows welcome message when user is logged in', async () => {

@@ -16,7 +16,8 @@ export function getNamexApiUrl(endpoint: string): URL {
  * @returns The json response object
  */
 export async function callNamexApi(url: URL): Promise<any> {
-  const token = sessionStorage.getItem('KEYCLOAK_TOKEN')
+  const { data } = useAuth()
+  const token = (data.value?.user as any).accessToken
   const response = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
