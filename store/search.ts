@@ -131,10 +131,9 @@ export const useSearchStore = defineStore('search', () => {
   async function getRows(url: URL): Promise<[numResults: number, rows: Row[]]> {
     try {
       const data = await callNamexApi(url)
-      console.log('data:', data)
       return [data.response.numFound, data.nameRequests[0].map(parseRow)]
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return [0, []]
     }
   }

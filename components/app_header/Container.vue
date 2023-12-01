@@ -40,15 +40,15 @@
         </div>
 
         <div class="flex flex-col border-l-2 border-gray-300 px-3">
-          <span class="text-sm">{{ data?.user?.name }}</span>
-          <a class="text-sm text-blue-800" href="#" @click="signOut()">
+          <span class="text-sm">{{ $userProfile.username }}</span>
+          <a class="text-sm text-blue-800" href="#" @click="$auth.logout()">
             Log Out
           </a>
         </div>
       </div>
 
       <div v-else class="mx-5">
-        <IconButton class="font-medium" @click="signIn('keycloak')">
+        <IconButton class="font-medium">
           <ArrowRightOnRectangleIcon class="h-6" />
           Login
         </IconButton>
@@ -61,13 +61,10 @@
 import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/solid'
 import { useExamineOptionsStore } from '~/store/examine-options'
 import { Routes } from '~/enums/routes'
-import { useAuth } from '#imports'
 
-defineProps<{
-  authenticated: boolean
-}>()
+const { $auth, $userProfile } = useNuxtApp()
+
+const authenticated = computed(() => $auth.authenticated)
 
 const examineOptions = useExamineOptionsStore()
-
-const { data, signOut, signIn } = useAuth()
 </script>

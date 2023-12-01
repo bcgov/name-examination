@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AppHeaderContainer authenticated />
+    <AppHeaderContainer />
     <AppBanner />
     <slot />
   </div>

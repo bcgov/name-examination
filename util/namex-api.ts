@@ -16,16 +16,14 @@ export function getNamexApiUrl(endpoint: string): URL {
  * @returns The json response object
  */
 export async function callNamexApi(url: URL): Promise<any> {
-  const { data, status } = useAuth()
-  const authenticated = status.value === 'authenticated'
-  if (!authenticated) {
-    console.warn('Making NameX API call without valid token')
+  const { $auth } = useNuxtApp()
+  const refreshed = await $auth.updateToken(30)
+  if (refreshed) {
+    console.log('[Keycloak] Refreshed token')
   }
-
-  const token = authenticated ? (data.value?.user as any).accessToken : ''
   const response = await fetch(url, {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${$auth.token}`,
     },
   })
   return await response.json()

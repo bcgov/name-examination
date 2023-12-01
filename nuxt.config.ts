@@ -19,7 +19,6 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
     'nuxt-vitest',
-    '@sidebase/nuxt-auth',
   ],
   css: ['@/assets/css/main.scss'],
   typescript: {
@@ -39,12 +38,6 @@ export default defineNuxtConfig({
   nitro: {
     output: {
       publicDir: path.join(__dirname, 'dist'),
-    },
-  },
-  auth: {
-    globalAppMiddleware: true,
-    provider: {
-      type: 'authjs',
     },
   },
   runtimeConfig: {

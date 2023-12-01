@@ -6,14 +6,4 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { Routes } from '~/enums/routes'
-
-definePageMeta({
-  auth: {
-    unauthenticatedOnly: true,
-    navigateAuthenticatedTo: Routes.Home,
-  },
-  layout: 'login',
-})
-</script>
+<script setup lang="ts"></script>
