@@ -3,8 +3,7 @@
     <span
       class="font-medium transition hover:border-b-2 hover:border-bcgov-blue5"
       :class="{
-        'border-b-2 border-bcgov-blue5':
-          $route.name?.toString().toLowerCase() === route.toLowerCase(),
+        'border-b-2 border-bcgov-blue5': highlight,
       }"
     >
       {{ text }}
@@ -13,10 +12,14 @@
 </template>
 
 <script setup lang="ts">
-import { Routes } from '~/enums/routes';
+import { Route } from '~/enums/routes'
 
-defineProps<{
+const { route } = defineProps<{
   text: string
-  route: Routes
+  route: Route
 }>()
+
+const highlight = computed(
+  () => useRoute().path.toString().toLowerCase() === route.toLowerCase()
+)
 </script>

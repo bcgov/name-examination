@@ -2,7 +2,7 @@
   <nav class="h-16 border-b border-gray-300">
     <div class="flex h-full w-full items-center justify-between">
       <div class="hidden h-full min-[1558px]:block">
-        <nuxt-link :to="Routes.Home">
+        <nuxt-link :to="Route.Home">
           <img
             src="/images/top-nav.png"
             class="min-w-8 h-full"
@@ -12,9 +12,9 @@
       </div>
 
       <div v-if="authenticated" class="ml-3 flex gap-10 text-bcgov-blue5">
-        <AppHeaderNavLink text="Admin" :route="Routes.Admin" />
-        <AppHeaderNavLink text="Examine Names" :route="Routes.Examine" />
-        <AppHeaderNavLink text="Search" :route="Routes.Search" />
+        <AppHeaderNavLink text="Admin" :route="Route.Admin" />
+        <AppHeaderNavLink text="Examine Names" :route="Route.Examine" />
+        <AppHeaderNavLink text="Search" :route="Route.Search" />
       </div>
 
       <div v-if="authenticated" class="ml-auto flex items-center">
@@ -60,7 +60,7 @@
 <script setup lang="ts">
 import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/solid'
 import { useExamineOptionsStore } from '~/store/examine-options'
-import { Routes } from '~/enums/routes'
+import { Route } from '~/enums/routes'
 
 const { $auth, $userProfile } = useNuxtApp()
 
