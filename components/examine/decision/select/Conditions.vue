@@ -3,8 +3,8 @@
     <header class="font-semibold">Conditions</header>
     <ListSelect
       v-model="examine.selectedConditions"
-      :options="['Cooperative']"
-      :disabled="listSelectsDisabled"
+      :options="options"
+      :disabled="examine.decisionSelectionsDisabled"
       multiple
       options-style="!max-h-48"
     >
@@ -21,5 +21,7 @@ import { useExamineStore } from '~/store/examine'
 
 const examine = useExamineStore()
 
-const listSelectsDisabled = computed(() => examine.requestMessageEdited)
+const options = computed(() =>
+  examine.parseConditions.filter((c) => c.instructions).map((c) => c.phrase)
+)
 </script>

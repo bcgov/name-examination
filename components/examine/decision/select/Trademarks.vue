@@ -6,7 +6,7 @@
       :options="examine.trademarksJSON.names.map((t) => t.name)"
       multiple
       options-style="!max-h-40"
-      :disabled="listSelectsDisabled"
+      :disabled="examine.decisionSelectionsDisabled"
     >
       <Chips
         v-if="selectedTrademarks.length > 0"
@@ -22,6 +22,4 @@ import { useExamineStore } from '~/store/examine'
 const examine = useExamineStore()
 
 const selectedTrademarks = ref([])
-
-const listSelectsDisabled = computed(() => examine.requestMessageEdited)
 </script>

@@ -6,7 +6,7 @@
       :options="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]"
       multiple
       options-style="!max-h-48"
-      :disabled="listSelectsDisabled"
+      :disabled="examine.decisionSelectionsDisabled"
     >
       <Chips v-if="selectedMacros.length > 0" v-model="selectedMacros" />
     </ListSelect>
@@ -19,6 +19,4 @@ import { useExamineStore } from '~/store/examine'
 const examine = useExamineStore()
 
 const selectedMacros = ref([])
-
-const listSelectsDisabled = computed(() => examine.requestMessageEdited)
 </script>

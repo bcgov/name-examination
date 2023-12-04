@@ -8,10 +8,10 @@
       <div class="!mt-4 flex space-x-2">
         <!-- Layout the combo selects in reverse so they don't overlap each other https://stackoverflow.com/a/77210506 -->
         <div class="flex basis-1/2 flex-col-reverse gap-y-8">
-          <ExamineDecisionSelectConditions />
+          <ExamineDecisionSelectTrademarks />
           <ExamineDecisionSelectMacros />
           <ExamineDecisionSelectConflicts />
-          <ExamineDecisionSelectTrademarks />
+          <ExamineDecisionSelectConditions />
         </div>
 
         <ExamineDecisionRequestorMessage />
