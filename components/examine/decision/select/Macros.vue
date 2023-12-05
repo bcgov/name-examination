@@ -2,21 +2,25 @@
   <div>
     <header class="font-semibold">Macros</header>
     <ListSelect
-      v-model="selectedMacros"
-      :options="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]"
       multiple
-      options-style="!max-h-48"
+      v-model="examine.selectedReasons"
       :disabled="examine.decisionSelectionsDisabled"
+      :options="examine.listDecisionReasons"
+      :options-display="(option: Macro) => option.name"
+      options-style="!max-h-48"
     >
-      <Chips v-if="selectedMacros.length > 0" v-model="selectedMacros" />
+      <Chips
+        v-if="examine.selectedReasons.length > 0"
+        v-model="examine.selectedReasons"
+        :display="(macro: Macro) => macro.name"
+      />
     </ListSelect>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useExamineStore } from '~/store/examine'
+import type { Macro } from '~/types'
 
 const examine = useExamineStore()
-
-const selectedMacros = ref([])
 </script>

@@ -8,6 +8,7 @@ import type {
   ConflictListItem,
   CorpConflict,
   History,
+  Macro,
   NameRequestConflict,
   XproConflict,
 } from '~/types'
@@ -180,6 +181,31 @@ export const useExamineStore = defineStore('examine', () => {
   const selectedConflicts = ref<Conflict[]>([])
   const comparedConflicts = ref<Conflict[]>([])
 
+  const listDecisionReasons = ref<Array<Macro>>([
+    {
+      id: 4,
+      name: 'Amend ',
+      reason: '*** Name Amended To Allow Acceptance ***',
+    },
+    {
+      id: 3,
+      name: 'Amend Real Estate ',
+      reason: '***Name Amended To Allow Acceptance By Real Estate Council***',
+    },
+    {
+      id: 5,
+      name: 'Assumed Name',
+      reason:
+        'Assumed Name A Foreign Entity Whose Name Has Been Rejected For Use In Bc, May Register In Bc Under An Assumed Name.',
+    },
+    {
+      id: 6,
+      name: 'Assumed Yes ',
+      reason:
+        'A Foreign Entity That Is Registering In British Columbia As An Extraprovincial Company And Adopting An Assumed Name Must Provide The Registrar With A Covering Letter Attaching An Undertaking To Carry On Business Under The Assumed Name.  Sample Working For The Undertaking Can Be Found On Page 34 Of The Information For Registration Of An Extraprovincial Company In British Columbia   Information Package And Also In The Online Help Text At Www.Corporateonline.Gob Please Fax The Letter Containing The Undertaking To The Attention Of The Corporations Unit, Bc Registry Services (Fax Number:250 356-8923).',
+    },
+  ])
+
   async function getConflictInfo(item: ConflictListItem) {
     corpConflictJSON.value = undefined
     namesConflictJSON.value = undefined
@@ -276,6 +302,8 @@ export const useExamineStore = defineStore('examine', () => {
     () => customerMessageOverride.value != null
   )
 
+  const selectedReasons = ref<Array<Macro>>([])
+
   async function getHistoryInfo(nrNumber: string) {
     historiesInfoJSON.value = conflicts.value[1] as NameRequestConflict
   }
@@ -338,6 +366,8 @@ export const useExamineStore = defineStore('examine', () => {
     selectedConditions,
     customerMessageOverride,
     decisionSelectionsDisabled,
+    listDecisionReasons,
+    selectedReasons,
     getHistoryInfo,
     getConflictInfo,
     toggleConflictCheckbox,

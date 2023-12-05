@@ -100,3 +100,9 @@ export interface Condition {
   allow_use_tf: boolean
   phrase: string
 }
+
+export interface Macro {
+  id: number
+  name: string
+  reason: string
+}
