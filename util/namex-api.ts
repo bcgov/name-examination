@@ -17,14 +17,19 @@ export function getNamexApiUrl(endpoint: string): URL {
  */
 export async function callNamexApi(url: URL): Promise<any> {
   const { $auth } = useNuxtApp()
-  const refreshed = await $auth.updateToken(30)
-  if (refreshed) {
-    console.log('[Keycloak] Refreshed token')
-  }
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${$auth.token}`,
-    },
-  })
+  const response = await $auth
+    .updateToken(30)
+    .then(async (_refreshed) => {
+      return await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${$auth.token}`,
+        },
+      })
+    })
+    .catch(async (error) => {
+      console.error(`Failed to update Keycloak token: ${error}`)
+      return await fetch(url)
+    })
+
   return await response.json()
 }
