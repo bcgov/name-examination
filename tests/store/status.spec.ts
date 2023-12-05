@@ -3,6 +3,7 @@ import { createPinia } from 'pinia'
 import { beforeEach, describe, it, expect, vi } from 'vitest'
 import { useStatusStore } from '~/store/status'
 import { getFormattedDateFromDateTime } from '~/util/date'
+import { setApiHelperImpl } from '../util'
 
 describe('Status store tests', () => {
   let status = useStatusStore()
@@ -18,17 +19,18 @@ describe('Status store tests', () => {
   it('updates the status data properly with a mock api response', async () => {
     const expectedHold = 20
     const expectedNotExamined = 100
-    global.fetch = vi.fn().mockImplementation((url: URL, _) => {
+    setApiHelperImpl((url: URL) => {
       const expectedNumFound =
         url.searchParams.get('queue')?.toLowerCase() === 'hold'
           ? expectedHold
           : expectedNotExamined
-      let response = {
+
+      const response = {
         response: {
           numFound: expectedNumFound,
         },
       }
-      return { json: () => new Promise((resolve) => resolve(response)) }
+      return new Promise((resolve) => resolve(response))
     })
 
     await status.update()

@@ -8,7 +8,7 @@ import LoadingSpinner from '~/components/LoadingSpinner.vue'
 import { createPinia, setActivePinia } from 'pinia'
 import flushPromises from 'flush-promises'
 import { SearchColumns } from '~/enums/search-columns'
-import { clickDropdownOption, setFetchResponse } from '../util'
+import { clickDropdownOption, mockNextApiHelperResponse } from '../util'
 import {
   ConsentRequired,
   LastUpdate,
@@ -72,7 +72,7 @@ describe('Search Results Box Component', () => {
   })
 
   it('displays the correct rows in the table', async () => {
-    setFetchResponse(mockNameRequests)
+    mockNextApiHelperResponse(mockNameRequests)
     await search.updateRows()
 
     const tableRows = wrapper.findAll('tbody > tr')
@@ -88,7 +88,7 @@ describe('Search Results Box Component', () => {
   })
 
   it('displays no rows when there are no name requests to show', async () => {
-    setFetchResponse(mockZeroNameRequests)
+    mockNextApiHelperResponse(mockZeroNameRequests)
     await search.updateRows()
 
     expect(wrapper.findAll('tbody > tr')).toHaveLength(1)

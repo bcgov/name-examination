@@ -11,7 +11,7 @@ import {
   Submitted,
 } from '~/enums/filter-dropdowns'
 import { DEFAULT_DISPLAY, defaultFilters, useSearchStore } from '~/store/search'
-import { setFetchResponse } from '../util'
+import { mockNextApiHelperResponse } from '../util'
 import mockOneNameRequest from '../data/mockOneNameRequest.json'
 import { getFormattedDateFromString } from '~/util/date'
 
@@ -63,7 +63,7 @@ describe('Search store tests', () => {
   })
 
   it('parses and updates the rows given an api response', async () => {
-    setFetchResponse(mockOneNameRequest)
+    mockNextApiHelperResponse(mockOneNameRequest)
     await search.updateRows()
     const nameRequests = mockOneNameRequest.nameRequests[0]
 
