@@ -28,8 +28,7 @@ export async function callNamexApi(url: URL): Promise<any> {
     })
     .catch(async (error) => {
       console.error(`Failed to update Keycloak token: ${error}`)
-      return await fetch(url)
     })
 
-  return await response.json()
+  return await response?.json()
 }
