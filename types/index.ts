@@ -106,3 +106,15 @@ export interface Macro {
   name: string
   reason: string
 }
+
+export interface Trademark {
+  application_number: string
+  description: string
+  name: string
+  score: number
+  status: string
+}
+
+export interface TrademarkApiResponse {
+  names: Array<Trademark>
+}

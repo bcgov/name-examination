@@ -1,16 +1,18 @@
 import { Status } from '~/enums/filter-dropdowns'
-import type {
-  BCCorpConflict,
-  Comment,
-  Condition,
-  Conflict,
-  ConflictList,
-  ConflictListItem,
-  CorpConflict,
-  History,
-  Macro,
-  NameRequestConflict,
-  XproConflict,
+import {
+  type Trademark,
+  type BCCorpConflict,
+  type Comment,
+  type Condition,
+  type Conflict,
+  type ConflictList,
+  type ConflictListItem,
+  type CorpConflict,
+  type History,
+  type Macro,
+  type NameRequestConflict,
+  type TrademarkApiResponse,
+  type XproConflict,
 } from '~/types'
 
 export const useExamineStore = defineStore('examine', () => {
@@ -219,21 +221,30 @@ export const useExamineStore = defineStore('examine', () => {
     }
   }
 
-  const trademarksJSON = ref({
+  const trademarksJSON = ref<TrademarkApiResponse>({
     names: [
       {
-        name: 'FARMERS',
-        description: '(1) Produits laitiers. (2) Jus de fruits. (3) T-shirts.',
+        application_number: '300000102764600',
+        description: '(1) Fruit drinks and soft drinks containing fruit juices',
+        name: 'STEEP',
+        score: 82.06702,
         status: 'Registration published',
-        score: 9,
-        application_number: 0,
       },
       {
-        name: "FARMER'S",
-        description: '(1) Alcoholic beverages, namely gin.',
+        application_number: '300000167106400',
+        description:
+          '(1) Structural thermal energy efficient panels for residential, commercial and industrial construction as exterior/interior walls, floors, ceilings and roofs. (2) Energy efficient windows.',
+        name: 'STEEP',
+        score: 82.06702,
         status: 'Registration published',
-        score: 7,
-        application_number: 1,
+      },
+      {
+        application_number: '300000055451300',
+        description:
+          '(1) Games, namely board games, parlour games, puzzles, strategy games, card games.',
+        name: 'CO-OPERATIVE',
+        score: 78.5403,
+        status: 'Registration published',
       },
     ],
   })
@@ -304,6 +315,8 @@ export const useExamineStore = defineStore('examine', () => {
 
   const selectedReasons = ref<Array<Macro>>([])
 
+  const selectedTrademarks = ref<Array<Trademark>>([])
+
   async function getHistoryInfo(nrNumber: string) {
     historiesInfoJSON.value = conflicts.value[1] as NameRequestConflict
   }
@@ -368,6 +381,7 @@ export const useExamineStore = defineStore('examine', () => {
     decisionSelectionsDisabled,
     listDecisionReasons,
     selectedReasons,
+    selectedTrademarks,
     getHistoryInfo,
     getConflictInfo,
     toggleConflictCheckbox,
