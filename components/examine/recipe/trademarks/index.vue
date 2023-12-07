@@ -3,6 +3,7 @@
     class="h-full w-full"
     :columns="['Name', 'Description', 'Status']"
     :rows="rows"
+    :highlight-row="highlightRow"
   />
 </template>
 
@@ -10,7 +11,9 @@
 import { useExamineStore } from '~/store/examine'
 const examine = useExamineStore()
 
-const rows = computed(() => {
+type Row = [name: string, description: string, status: string]
+
+const rows = computed<Array<Row>>(() => {
   if (examine.trademarksJSON && examine.trademarksJSON.names) {
     return examine.trademarksJSON.names.map((tm) => [
       tm.name,
@@ -21,4 +24,16 @@ const rows = computed(() => {
     return []
   }
 })
+
+/** Return a unique string identifier for a trademark */
+function hashTrademark(trademarkName: string, trademarkDesc: string): string {
+  return trademarkName + trademarkDesc
+}
+
+const selectedTrademarkNames = computed(() =>
+  examine.selectedTrademarks.map((t) => hashTrademark(t.name, t.description))
+)
+
+const highlightRow = (row: Array<any>) =>
+  selectedTrademarkNames.value.includes(hashTrademark(row[0], row[1]))
 </script>

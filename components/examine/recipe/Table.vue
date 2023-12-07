@@ -20,6 +20,7 @@
           :class="[
             'cursor-pointer transition hover:bg-gray-100',
             { 'bg-sky-100 hover:bg-sky-100': selectedRow === index },
+            { '!bg-green-100': highlightRow ? highlightRow(row) : false },
           ]"
           @click="onRowClick(index, row)"
         >
@@ -44,9 +45,13 @@
 </template>
 
 <script setup lang="ts">
+type Row = Array<any>
+
 defineProps<{
   columns: Array<string>
-  rows: Array<Array<any>>
+  rows: Array<Row>
+  /** Function for determining whether a row should be permanently highlighted or not */
+  highlightRow?: (row: Row) => boolean
 }>()
 
 const emit = defineEmits<{
