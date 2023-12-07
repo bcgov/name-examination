@@ -9,7 +9,11 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
   })
 
   try {
-    const authenticated = await keycloak.init({ onLoad: 'login-required' })
+    const authenticated = await keycloak.init({
+      onLoad: 'login-required',
+      responseMode: 'query',
+      pkceMethod: 'S256',
+    })
     console.log(`[Keycloak] User authenticated?: ${authenticated}`)
   } catch (error) {
     console.error('Failed to initialize Keycloak adapter: ', error)
