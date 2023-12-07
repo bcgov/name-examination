@@ -25,7 +25,7 @@ jobs:
     permissions:
       contents: 'write'
       id-token: 'write'  
-    uses: bcgov/bcregistry-sre/.github/workflows/ui-cd.yaml@main
+    uses: bcgov/bcregistry-sre/.github/workflows/ui-cd-node20.yaml@main
     with:
       environment: ${{ inputs.environment }}
       tagname: ${{ inputs.tagname }}
