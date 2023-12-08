@@ -7,9 +7,9 @@ import {
   ConsentRequired,
   LastUpdate,
   Priority,
-  Status,
   Submitted,
 } from '~/enums/filter-dropdowns'
+import { Status } from "~/enums/nr-status"
 import { DEFAULT_DISPLAY, defaultFilters, useSearchStore } from '~/store/search'
 import { mockNextApiHelperResponse } from '../util'
 import mockOneNameRequest from '../data/mockOneNameRequest.json'

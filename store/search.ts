@@ -7,9 +7,9 @@ import {
   ConsentRequired,
   LastUpdate,
   Priority,
-  Status,
   Submitted,
 } from '~/enums/filter-dropdowns'
+import { Status } from "~/enums/nr-status"
 import { getFormattedTimestampFromString } from '~/util/date'
 import { callNamexApi, getNamexApiUrl } from '~/util/namex-api'
 

@@ -13,9 +13,9 @@ import {
   ConsentRequired,
   LastUpdate,
   Priority,
-  Status,
   Submitted,
 } from '~/enums/filter-dropdowns'
+import { Status } from "~/enums/nr-status"
 
 describe('Search Results Box Component', () => {
   let wrapper = mount(SearchResultsBox)

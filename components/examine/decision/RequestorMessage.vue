@@ -36,7 +36,7 @@
       v-if="requestorMessage.length > characterLimit"
       class="text-sm font-bold text-red-600"
     >
-      Message cut off at {{ characterLimit }} characters
+      {{ characterLimitDisplay }}
     </span>
   </div>
 
@@ -54,7 +54,7 @@
         v-if="customerMessageOverrideTemp!.length > characterLimit"
         class="text-sm font-bold text-red-600"
       >
-        Message cut off at {{ characterLimit }} characters
+        {{ characterLimitDisplay }}
       </span>
     </div>
   </PopupDialog>
@@ -75,6 +75,8 @@ const requestorMessage = computed(() => {
 })
 
 const characterLimit = 955
+const characterLimitDisplay = `Message cut off at ${characterLimit} characters`
+
 const showEditRequestorMessageDialog = ref(false)
 
 const customerMessageOverrideTemp = ref(examine.customerMessageOverride)

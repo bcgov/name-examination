@@ -115,7 +115,6 @@
 import { computed, onMounted } from 'vue'
 import { type FilterKey, useSearchStore } from '~/store/search'
 import {
-  Status,
   ConsentRequired,
   Priority,
   ClientNotification,
@@ -124,6 +123,7 @@ import {
 } from '~/enums/filter-dropdowns'
 import { SearchColumns } from '~/enums/search-columns'
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/vue/24/outline'
+import { Status } from '~/enums/nr-status'
 
 const NO_DATA_STRING = 'No Data Available'
 

@@ -1,4 +1,4 @@
-import { Status } from '~/enums/filter-dropdowns'
+import { Status } from "~/enums/nr-status"
 import {
   type Trademark,
   type Comment,
@@ -150,6 +150,12 @@ export const useExamineStore = defineStore('examine', () => {
     )
   )
 
+  const acceptanceWillBeConditional = computed(
+    () => consentRequiredByUser.value
+  )
+
+  const decision_made = ref<Status>()
+
   async function getHistoryInfo(nrNumber: string) {
     historiesInfoJSON.value = conflicts.value[1] as NameRequestConflict
   }
@@ -214,6 +220,8 @@ export const useExamineStore = defineStore('examine', () => {
     selectedReasons,
     selectedTrademarks,
     requestorMessageStrings,
+    acceptanceWillBeConditional,
+    decision_made,
     getHistoryInfo,
     getConflictInfo,
     toggleConflictCheckbox,

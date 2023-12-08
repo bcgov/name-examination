@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { Status } from '~/enums/filter-dropdowns'
+import { Status } from '~/enums/nr-status'
 import { useExamineStore } from '~/store/examine'
 
 const examine = useExamineStore()
