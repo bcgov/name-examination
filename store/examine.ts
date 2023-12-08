@@ -42,9 +42,6 @@ export const useExamineStore = defineStore('examine', () => {
       comparedConflicts.value.length > 0
   )
 
-  const requestorMessage = ref('')
-  const requestMessageEdited = ref(false)
-
   const comments = ref<Array<Comment>>(mock.comments)
 
   const conflicts = ref<Array<Conflict>>(mock.conflicts as Array<Conflict>)
@@ -114,6 +111,45 @@ export const useExamineStore = defineStore('examine', () => {
 
   const selectedTrademarks = ref<Array<Trademark>>([])
 
+  const conditionMessages = computed(() =>
+    selectedConditions.value.map((condition) =>
+      condition.phrase !== undefined && condition.phrase !== ''
+        ? `${condition.phrase} - ${condition.instructions}`
+        : condition.instructions
+    )
+  )
+
+  const conflictMessages = computed(() => {
+    if (selectedConflicts.value.length === 0 && consentRequiredByUser.value) {
+      return ['Consent Required \n']
+    } else {
+      return selectedConflicts.value.map((conflict) =>
+        consentRequiredByUser.value
+          ? `Consent required from ${conflict.text}`
+          : `Rejected due to conflict with ${conflict.text}`
+      )
+    }
+  })
+
+  const trademarkMessages = computed(() =>
+    selectedTrademarks.value.map(
+      (trademark) =>
+        `Registered Trademark: ${trademark.name} - Application #${trademark.application_number}`
+    )
+  )
+
+  const macroMessages = computed(() =>
+    selectedReasons.value.map((macro) => macro.reason)
+  )
+
+  const requestorMessageStrings = computed(() =>
+    conflictMessages.value.concat(
+      conditionMessages.value,
+      trademarkMessages.value,
+      macroMessages.value
+    )
+  )
+
   async function getHistoryInfo(nrNumber: string) {
     historiesInfoJSON.value = conflicts.value[1] as NameRequestConflict
   }
@@ -148,8 +184,6 @@ export const useExamineStore = defineStore('examine', () => {
     examiner,
     trademarksJSON,
     selectedConflicts,
-    requestorMessage,
-    requestMessageEdited,
 
     is_editing,
     is_making_decision,
@@ -179,6 +213,7 @@ export const useExamineStore = defineStore('examine', () => {
     listDecisionReasons,
     selectedReasons,
     selectedTrademarks,
+    requestorMessageStrings,
     getHistoryInfo,
     getConflictInfo,
     toggleConflictCheckbox,

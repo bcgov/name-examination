@@ -43,6 +43,7 @@
 
 <script setup lang="ts">
 import { DocumentDuplicateIcon } from '@heroicons/vue/24/outline'
+import { TabList } from '@headlessui/vue'
 import { useExamineStore } from '~/store/examine'
 
 const examine = useExamineStore()

@@ -2,11 +2,11 @@
   <div class="flex flex-col gap-y-1">
     <div class="flex grow flex-col">
       <textarea
-        class="grow resize-none rounded-t-md border border-gray-300 p-2 text-sm outline-none"
+        ref="textArea"
+        class="grow resize-none text-ellipsis rounded-t-md border border-gray-300 p-2 text-sm outline-none"
         :class="{ 'border-b-0': characterLimit }"
         :placeholder="placeholder"
         :readonly="readonly"
-        :maxlength="characterLimit"
         :value="modelValue"
         @input="onTextAreaInput"
       />
@@ -52,6 +52,7 @@ const { modelValue, characterLimit } = defineProps<{
   submitMnemonic?: string
   cancelMnemonic?: string
   readonly?: boolean
+  /** Display the number of characters in the text area and a character limit. Does not enforce the character limit. */
   characterLimit?: number
 }>()
 

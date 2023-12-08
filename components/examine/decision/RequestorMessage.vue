@@ -4,7 +4,7 @@
       <header class="font-semibold">
         Message To Requestor
         <span
-          v-if="examine.requestMessageEdited"
+          v-if="examine.customerMessageOverride"
           class="font-bold text-red-600"
         >
           (Edited)
@@ -12,7 +12,7 @@
       </header>
       <div class="flex space-x-1">
         <IconButton
-          v-if="examine.requestMessageEdited"
+          v-if="examine.customerMessageOverride"
           white
           class="h-7"
           text="Clear"
@@ -20,25 +20,20 @@
         >
           <BackspaceIcon class="h-5 w-5" />
         </IconButton>
-        <IconButton
-          white
-          class="h-7"
-          text="Edit"
-          @click="showEditRequestorMessageDialog = true"
-        >
+        <IconButton white class="h-7" text="Edit" @click="showEditDialog()">
           <PencilSquareIcon class="h-5 w-5" />
         </IconButton>
       </div>
     </div>
     <EditableTextBox
       class="grow"
-      v-model="decisionMessage"
+      v-model="requestorMessage"
       readonly
       disable-buttons
       :character-limit="characterLimit"
     />
     <span
-      v-if="decisionMessage.length > characterLimit"
+      v-if="requestorMessage.length > characterLimit"
       class="text-sm font-bold text-red-600"
     >
       Message cut off at {{ characterLimit }} characters
@@ -49,14 +44,14 @@
     <div class="flex flex-col">
       <EditableTextBox
         class="h-72"
-        v-model="decisionMessageForEdit"
+        v-model="customerMessageOverrideTemp"
         :character-limit="characterLimit"
-        @submit="onRequestorMessageEdit"
-        @cancel="showEditRequestorMessageDialog = false"
+        @submit="onRequestorMessageSubmit()"
+        @cancel="onRequestorMessageCancel()"
       />
 
       <span
-        v-if="decisionMessageForEdit.length > characterLimit"
+        v-if="customerMessageOverrideTemp!.length > characterLimit"
         class="text-sm font-bold text-red-600"
       >
         Message cut off at {{ characterLimit }} characters
@@ -71,20 +66,35 @@ import { BackspaceIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 
 const examine = useExamineStore()
 
-const decisionMessage = ref('COOPERATIVE - ')
-const decisionMessageForEdit = ref(decisionMessage.value)
+const requestorMessage = computed(() => {
+  if (examine.customerMessageOverride) {
+    return examine.customerMessageOverride
+  } else {
+    return examine.requestorMessageStrings.join('\n\n')
+  }
+})
+
 const characterLimit = 955
 const showEditRequestorMessageDialog = ref(false)
 
-function onRequestorMessageEdit(_text: string) {
+const customerMessageOverrideTemp = ref(examine.customerMessageOverride)
+
+function showEditDialog() {
+  showEditRequestorMessageDialog.value = true
+  customerMessageOverrideTemp.value = requestorMessage.value
+}
+
+function onRequestorMessageSubmit() {
   showEditRequestorMessageDialog.value = false
-  examine.requestMessageEdited = true
-  decisionMessage.value = decisionMessageForEdit.value
+  if (customerMessageOverrideTemp.value !== requestorMessage.value)
+    examine.customerMessageOverride = customerMessageOverrideTemp.value
+}
+
+function onRequestorMessageCancel() {
+  showEditRequestorMessageDialog.value = false
 }
 
 function clearEdits() {
-  examine.requestMessageEdited = false
-  decisionMessage.value = ''
-  decisionMessageForEdit.value = ''
+  examine.customerMessageOverride = undefined
 }
 </script>
