@@ -47,11 +47,12 @@ const { conflictItem } = defineProps<{
   conflictItem: ConflictListItem
 }>()
 
-const isChecked = computed(() =>
-  examine.selectedConflicts
-    .map((c) => c.nrNumber)
-    .includes(conflictItem.nrNumber)
-)
+const isChecked = computed(() => {
+  const conflictsList = examine.conflictsAutoAdd
+    ? examine.selectedConflicts
+    : examine.comparedConflicts
+  return conflictsList.map((c) => c.nrNumber).includes(conflictItem.nrNumber)
+})
 
 const conflictData = computed<Conflict | undefined>(() =>
   conflictItem.source === 'CORP'

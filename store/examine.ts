@@ -166,9 +166,14 @@ export const useExamineStore = defineStore('examine', () => {
         comparedConflicts.value = comparedConflicts.value.filter(
           (c) => c.nrNumber !== conflictItem.nrNumber
         )
+        selectedConflicts.value = selectedConflicts.value.filter(
+          (c) => c.nrNumber !== conflictItem.nrNumber
+        )
       } else {
         comparedConflicts.value.push(conflictItem)
       }
+      console.log(comparedConflicts.value)
+      console.log(selectedConflicts.value)
     } else {
       if (selectedConflicts.value.includes(conflictItem)) {
         selectedConflicts.value = selectedConflicts.value.filter(
