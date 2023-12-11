@@ -11,6 +11,7 @@ import {
   type Macro,
   type NameRequestConflict,
   type TrademarkApiResponse,
+  type NameChoice,
 } from '~/types'
 
 import mock from './examine.mock.json'
@@ -156,6 +157,17 @@ export const useExamineStore = defineStore('examine', () => {
 
   const decision_made = ref<Status>()
 
+  const compName1 = ref<NameChoice>(mock.compName1)
+  const compName2 = ref<NameChoice>(mock.compName2)
+  const compName3 = ref<NameChoice>(mock.compName3)
+
+  const currentChoice = ref(2)
+  let currentNameObj = compName2
+
+  const userHasApprovedRole = ref(true)
+  const is_my_current_nr = ref(true)
+  const furnished = ref('N')
+
   async function getHistoryInfo(nrNumber: string) {
     historiesInfoJSON.value = conflicts.value[1] as NameRequestConflict
   }
@@ -172,8 +184,6 @@ export const useExamineStore = defineStore('examine', () => {
       } else {
         comparedConflicts.value.push(conflictItem)
       }
-      console.log(comparedConflicts.value)
-      console.log(selectedConflicts.value)
     } else {
       if (selectedConflicts.value.includes(conflictItem)) {
         selectedConflicts.value = selectedConflicts.value.filter(
@@ -187,6 +197,46 @@ export const useExamineStore = defineStore('examine', () => {
 
   function getShortJurisdiction(jurisdiction: string) {
     return jurisdiction
+  }
+
+  function isUndoable(name: NameChoice): boolean {
+    if (
+      !userHasApprovedRole.value || // if the NR is closed in any way, a name is not undoable - the NR will have to be re-opened first
+      !is_my_current_nr.value ||
+      furnished.value === 'Y' || // if the NR is furnished, nothing is undoable
+      name.state == 'NE' || // if this name is complete (ie: anything other than NE) it's undoable
+      name.state == null
+    ) {
+      return false
+    }
+
+    if (name.choice === 1) {
+      // if name choices 2 and 3 have not been decided, then 1 is undoable
+      return (
+        (compName2.value.state == 'NE' || compName2.value.state == null) &&
+        (compName3.value.state == 'NE' || compName3.value.state == null)
+      )
+    } else if (name.choice === 2) {
+      // if name choice 3 has not been decided, then 2 is undoable
+      return compName3.value.state == 'NE' || compName3.value.state == null
+    } else {
+      return true
+    }
+  }
+
+  function undoDecision(name: NameChoice) {
+    // todo: replace this with just changing `currentNameObj`
+    let newChoice: Ref<NameChoice>
+    if (name.choice == 1) {
+      newChoice = compName1
+    } else if (name.choice == 2) {
+      newChoice = compName2
+    } else {
+      newChoice = compName3
+    }
+    currentNameObj = newChoice
+    currentChoice.value = newChoice.value.choice
+    currentNameObj.value.state = 'NE'
   }
 
   return {
@@ -234,10 +284,19 @@ export const useExamineStore = defineStore('examine', () => {
     requestorMessageStrings,
     acceptanceWillBeConditional,
     decision_made,
+    compName1,
+    compName2,
+    compName3,
+    currentChoice,
+    userHasApprovedRole,
+    is_my_current_nr,
+    furnished,
+    isUndoable,
     getHistoryInfo,
     getConflictInfo,
     toggleConflictCheckbox,
     getShortJurisdiction,
+    undoDecision,
 
     isClosed,
   }

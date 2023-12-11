@@ -16,12 +16,19 @@ export interface Applicants {
 }
 
 export interface NameChoice {
+  choice: number
   name: string
-  conflict1: string
-  conflict2: string
-  conflict3: string
-  decision_text: string
   state: string
+  decision_text: string | null
+  conflict1: string | null
+  conflict2: string | null
+  conflict3: string | null
+  consumptionDate: string | null
+  corpNum: string | null
+  conflict1_num: string | null
+  conflict2_num: string | null
+  conflict3_num: string | null
+  comment: string | null
 }
 
 export interface Comment {

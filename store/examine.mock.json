@@ -216,5 +216,50 @@
       "directors": ["ADA SO", "Paul James"],
       "head office": ["6407 CYPRESS STREET", "TORONTO ON CA L4S 3S4"]
     }
-  ]
+  ],
+  "compName1": {
+    "choice": 1,
+    "name": "STEEPHILL COOP",
+    "state": "REJECTED",
+    "decision_text": null,
+    "conflict1": null,
+    "conflict2": null,
+    "conflict3": null,
+    "consumptionDate": null,
+    "corpNum": null,
+    "conflict1_num": null,
+    "conflict2_num": null,
+    "conflict3_num": null,
+    "comment": null
+  },
+  "compName2": {
+    "choice": 2,
+    "name": "NOT SO STEEP COOPERATIVE",
+    "state": "NE",
+    "decision_text": null,
+    "conflict1": null,
+    "conflict2": null,
+    "conflict3": null,
+    "consumptionDate": null,
+    "corpNum": null,
+    "conflict1_num": null,
+    "conflict2_num": null,
+    "conflict3_num": null,
+    "comment": null
+  },
+  "compName3": {
+    "choice": 3,
+    "name": "BLACK HILL PERSONAL COOP COOPERATIVE",
+    "state": "NE",
+    "decision_text": null,
+    "conflict1": null,
+    "conflict2": null,
+    "conflict3": null,
+    "consumptionDate": null,
+    "corpNum": null,
+    "conflict1_num": null,
+    "conflict2_num": null,
+    "conflict3_num": null,
+    "comment": null
+  }
 }
