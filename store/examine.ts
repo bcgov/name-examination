@@ -1,4 +1,4 @@
-import { Status } from "~/enums/nr-status"
+import { Status } from '~/enums/nr-status'
 import {
   type Trademark,
   type Comment,
@@ -49,8 +49,8 @@ export const useExamineStore = defineStore('examine', () => {
   const corpConflictJSON = ref<CorpConflict>()
   const namesConflictJSON = ref<NameRequestConflict>()
 
-  const selectedConflicts = ref<Conflict[]>([])
-  const comparedConflicts = ref<Conflict[]>([])
+  const selectedConflicts = ref<Array<ConflictListItem>>([])
+  const comparedConflicts = ref<Array<ConflictListItem>>([])
 
   const listDecisionReasons = ref<Array<Macro>>(mock.macros)
 
@@ -161,15 +161,22 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   function toggleConflictCheckbox(conflictItem: ConflictListItem) {
-    const conflict = conflicts.value.filter(
-      (c) => c.nrNumber === conflictItem.nrNumber
-    )[0]
-    if (selectedConflicts.value.includes(conflict)) {
-      selectedConflicts.value = selectedConflicts.value.filter(
-        (c) => c.text !== conflictItem.text
-      )
+    if (!conflictsAutoAdd.value) {
+      if (comparedConflicts.value.includes(conflictItem)) {
+        comparedConflicts.value = comparedConflicts.value.filter(
+          (c) => c.nrNumber !== conflictItem.nrNumber
+        )
+      } else {
+        comparedConflicts.value.push(conflictItem)
+      }
     } else {
-      selectedConflicts.value.push(conflict)
+      if (selectedConflicts.value.includes(conflictItem)) {
+        selectedConflicts.value = selectedConflicts.value.filter(
+          (c) => c.nrNumber !== conflictItem.nrNumber
+        )
+      } else {
+        selectedConflicts.value.push(conflictItem)
+      }
     }
   }
 
