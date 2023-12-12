@@ -26,7 +26,8 @@ describe('Search Page', () => {
     await wrapper
       .findWithText((wrapper.vm as any).CLEAR_FILTERS_TEXT)
       .trigger('click')
-    expect(search.$reset).toHaveBeenCalledOnce()
+    expect(search.resetFilters).toHaveBeenCalledOnce()
+    expect(search.resetDisplayAndPage).toHaveBeenCalledOnce()
   })
 
   it('sets the selected columns correctly when they are changed', async () => {
