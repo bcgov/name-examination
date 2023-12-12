@@ -133,7 +133,7 @@ export const useSearchStore = defineStore('search', () => {
       const data = await callNamexApi(url)
       return [data.response.numFound, data.nameRequests[0].map(parseRow)]
     } catch (error) {
-      console.error(error)
+      console.log(error)
       return [0, []]
     }
   }
