@@ -12,13 +12,13 @@
         {{ choice.name }}
       </span>
 
-      <XMarkIcon
-        v-if="choice.state === 'REJECTED'"
-        class="h-5 w-5 text-red-600"
-      />
       <CheckIcon
-        v-else-if="choice.state === 'APPROVED' || choice.state === 'CONDITION'"
+        v-if="choice.state === 'APPROVED' || choice.state === 'CONDITION'"
         class="h-5 w-5 text-lime-600"
+      />
+      <XMarkIcon
+        v-else-if="choice.state === 'REJECTED'"
+        class="h-5 w-5 text-red-600"
       />
 
       <IconButton
@@ -30,10 +30,7 @@
       />
     </div>
 
-    <span
-      v-if="choice.state === 'CONDITION'"
-      class="max-w-12 text-sm text-cyan-500"
-    >
+    <span class="max-w-1/2 text-sm">
       {{ choice.decision_text }}
     </span>
   </div>
@@ -48,6 +45,7 @@ const examine = useExamineStore()
 
 defineProps<{
   choice: NameChoice
+  decisionText: string
   undoable?: boolean
   current?: boolean
 }>()
