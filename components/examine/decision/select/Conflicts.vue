@@ -30,7 +30,7 @@ import { useExamineStore } from '~/store/examine'
 import type { Conflict, ConflictListItem } from '~/types'
 const examine = useExamineStore()
 
-const options = computed<Array<ConflictListItem>>(() => {
+const options = computed<Array<Conflict | ConflictListItem>>(() => {
   if (!examine.conflictsAutoAdd) {
     return examine.comparedConflicts
   }

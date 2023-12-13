@@ -20,12 +20,12 @@
     <div class="flex justify-between p-4">
       <ExamineNameChoiceList class="ml-4 basis-1/2" />
       <ExamineQuickActionButtons
-        v-if="!examine.is_editing && !examine.isComplete"
+        v-if="!examine.is_editing && !examine.is_complete"
       />
     </div>
 
     <div
-      v-if="!examine.is_editing && !examine.isComplete"
+      v-if="!examine.is_editing && !examine.is_complete"
       class="flex grow flex-col space-x-3 bg-gray-100 p-4 xl:flex-row"
     >
       <ExamineRecipe class="basis-1/2" />

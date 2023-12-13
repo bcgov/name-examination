@@ -21,7 +21,7 @@ export const useExamineStore = defineStore('examine', () => {
 
   const isPriority = ref(true)
   const inProgress = ref(true)
-  const isComplete = ref(false)
+  const is_complete = ref(false)
   const isFurnished = ref(true)
   const nrStatus = ref(Status.InProgress)
   const examiner = ref('someone@idir')
@@ -51,7 +51,7 @@ export const useExamineStore = defineStore('examine', () => {
   const namesConflictJSON = ref<NameRequestConflict>()
 
   const selectedConflicts = ref<Array<ConflictListItem>>([])
-  const comparedConflicts = ref<Array<ConflictListItem>>([])
+  const comparedConflicts = ref<Array<Conflict>>([])
 
   const listDecisionReasons = ref<Array<Macro>>(mock.macros)
 
@@ -173,26 +173,24 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   function toggleConflictCheckbox(conflictItem: ConflictListItem) {
-    if (!conflictsAutoAdd.value) {
-      if (comparedConflicts.value.includes(conflictItem)) {
-        comparedConflicts.value = comparedConflicts.value.filter(
-          (c) => c.nrNumber !== conflictItem.nrNumber
-        )
-        selectedConflicts.value = selectedConflicts.value.filter(
-          (c) => c.nrNumber !== conflictItem.nrNumber
-        )
-      } else {
-        comparedConflicts.value.push(conflictItem)
-      }
+    const selectedNRs = comparedConflicts.value.map(c => c.nrNumber)
+    if (selectedNRs.includes(conflictItem.nrNumber)) {
+      selectedConflicts.value = selectedConflicts.value.filter(
+        (c) => c.nrNumber !== conflictItem.nrNumber
+      )
+      comparedConflicts.value = comparedConflicts.value.filter(
+        (c) => c.nrNumber !== conflictItem.nrNumber
+      )
     } else {
-      if (selectedConflicts.value.includes(conflictItem)) {
-        selectedConflicts.value = selectedConflicts.value.filter(
-          (c) => c.nrNumber !== conflictItem.nrNumber
-        )
-      } else {
+      const conflict = mock.conflicts.filter(
+        (c) => c.nrNumber === conflictItem.nrNumber
+      )[0]
+      comparedConflicts.value.push(conflict as Conflict)
+      if (conflictsAutoAdd.value) {
         selectedConflicts.value.push(conflictItem)
       }
     }
+    console.log(comparedConflicts.value)
   }
 
   function getShortJurisdiction(jurisdiction: string) {
@@ -239,11 +237,25 @@ export const useExamineStore = defineStore('examine', () => {
     currentNameObj.value.state = 'NE'
   }
 
+  watch(
+    () => [selectedConflicts],
+    async (_state) => {
+      // compared conflicts should be kept the same as selected conflicts when auto add is enabled
+      if (conflictsAutoAdd.value) {
+        const selectedNRs = selectedConflicts.value.map((c) => c.nrNumber)
+        comparedConflicts.value = comparedConflicts.value.filter((c) =>
+          selectedNRs.includes(c.nrNumber)
+        )
+      }
+    },
+    { deep: true }
+  )
+
   return {
     headerState,
     isPriority,
     inProgress,
-    isComplete,
+    is_complete,
     isFurnished,
     nrStatus,
     conflictsAutoAdd,

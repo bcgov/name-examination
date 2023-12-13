@@ -38,7 +38,7 @@
     </IconButton>
 
     <IconButton
-      v-if="!examine.inProgress || examine.isComplete"
+      v-if="!examine.inProgress || examine.is_complete"
       light
       mnemonic="n"
     >
@@ -47,7 +47,7 @@
     </IconButton>
 
     <IconButton
-      v-if="!examine.inProgress && !examine.isComplete"
+      v-if="!examine.inProgress && !examine.is_complete"
       light
       text="Cancel Request"
       @click="showCancelRequestDialog = true"
@@ -55,7 +55,7 @@
       <XMarkIcon class="h-5 w-5 stroke-2" />
     </IconButton>
 
-    <div v-if="!examine.isComplete" class="space-x-1">
+    <div v-if="!examine.is_complete" class="space-x-1">
       <IconButton
         v-if="!examine.inProgress"
         light
@@ -72,12 +72,12 @@
       </IconButton>
     </div>
 
-    <div v-if="examine.isComplete" class="space-x-1">
+    <div v-if="examine.is_complete" class="space-x-1">
       <IconButton
         v-if="examine.isFurnished"
         light
         text="Reopen"
-        @click="examine.isComplete = false"
+        @click="examine.is_complete = false"
       >
         <PowerIcon class="h-5 w-5 stroke-2" />
       </IconButton>
