@@ -54,9 +54,6 @@ async function rejectDescriptive() {
 }
 
 async function rejectDistinctive() {
-  // When this was written, the 16th index of listDecisionReasons was the string needed for a distinctive term missing
-  // it was decided to HARD CODE this value until another solution is found
-  // var distinctiveStr = this.listDecisionReasons[16].reason
   await examine.makeQuickDecision(
     Status.Rejected,
     "Require distinctive, nondescriptive first word or prefix * E.G. Person's name, initials, geographic location, etc."

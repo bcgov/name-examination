@@ -275,8 +275,7 @@ export const useExamineStore = defineStore('examine', () => {
     }
 
     if (selectedConflicts.value.length > 0) {
-      // Populate the currentNameObj[1, 2 and 3] with selected_conflicts[0, 1, and 2]
-      // as well as currentNameObj[1, 2, and 3]_num with selected_conflicts[0, 1 and 2].nrNumber
+      // Populate the current name object's conflicts
       for (const n of [0, 1, 2]) {
         const conflict = selectedConflicts.value[n]
         if (conflict == null) break
@@ -299,7 +298,6 @@ export const useExamineStore = defineStore('examine', () => {
     }
     currentName.value.name = currentName.value.name.trimEnd()
     currentName.value.decision_text = requestorMessage.value.substring(0, 955)
-    // send decision to API and reset flags
     await pushAcceptReject()
     decision_made.value = undefined
   }
@@ -312,7 +310,6 @@ export const useExamineStore = defineStore('examine', () => {
     } else {
       currentNameObj.value.value.state = 'REJECTED'
     }
-    // send decision to API and reset flags
     await pushAcceptReject()
     decision_made.value = undefined
   }
