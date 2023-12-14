@@ -151,6 +151,14 @@ export const useExamineStore = defineStore('examine', () => {
     )
   )
 
+  const requestorMessage = computed(() => {
+    if (customerMessageOverride.value) {
+      return customerMessageOverride.value
+    } else {
+      return requestorMessageStrings.value.join('\n\n')
+    }
+  })
+
   const acceptanceWillBeConditional = computed(
     () => consentRequiredByUser.value
   )
@@ -162,7 +170,16 @@ export const useExamineStore = defineStore('examine', () => {
   const compName3 = ref<NameChoice>(mock.compName3)
 
   const currentChoice = ref(2)
-  let currentNameObj = compName2
+
+  let _currentNameObj = compName2
+  const currentNameObj = computed({
+    get() {
+      return _currentNameObj
+    },
+    set(newValue) {
+      _currentNameObj = newValue
+    },
+  })
 
   const userHasApprovedRole = ref(true)
   const is_my_current_nr = ref(true)
@@ -173,7 +190,7 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   function toggleConflictCheckbox(conflictItem: ConflictListItem) {
-    const selectedNRs = comparedConflicts.value.map(c => c.nrNumber)
+    const selectedNRs = comparedConflicts.value.map((c) => c.nrNumber)
     if (selectedNRs.includes(conflictItem.nrNumber)) {
       selectedConflicts.value = selectedConflicts.value.filter(
         (c) => c.nrNumber !== conflictItem.nrNumber
@@ -232,10 +249,75 @@ export const useExamineStore = defineStore('examine', () => {
     } else {
       newChoice = compName3
     }
-    currentNameObj = newChoice
+    currentNameObj.value = newChoice
     currentChoice.value = newChoice.value.choice
-    currentNameObj.value.state = 'NE'
+    currentNameObj.value.value.state = 'NE'
+    currentNameObj.value.value.decision_text = ''
   }
+
+  const forceConditional = ref(false)
+
+  async function makeDecision(decision: Status) {
+    decision_made.value = decision
+    const currentName = currentNameObj.value
+    if (decision_made.value === Status.Approved) {
+      if (acceptanceWillBeConditional.value || forceConditional.value) {
+        currentName.value.state = 'CONDITION'
+        forceConditional.value = false
+      } else {
+        currentName.value.state = 'APPROVED'
+        // If there were conflicts selected but this is an approval, remove the selected conflicts.
+        // Do NOT clear the conflicts if the "Consent Required" condition is also set - then it's intentional.
+        selectedConflicts.value = []
+      }
+    } else {
+      currentName.value.state = 'REJECTED'
+    }
+
+    if (selectedConflicts.value.length > 0) {
+      // Populate the currentNameObj[1, 2 and 3] with selected_conflicts[0, 1, and 2]
+      // as well as currentNameObj[1, 2, and 3]_num with selected_conflicts[0, 1 and 2].nrNumber
+      for (const n of [0, 1, 2]) {
+        const conflict = selectedConflicts.value[n]
+        if (conflict == null) break
+
+        switch (n) {
+          case 0:
+            currentName.value.conflict1 = conflict.text
+            currentName.value.conflict1_num = conflict.nrNumber
+            break
+          case 1:
+            currentName.value.conflict2 = conflict.text
+            currentName.value.conflict2_num = conflict.nrNumber
+            break
+          case 2:
+            currentName.value.conflict3 = conflict.text
+            currentName.value.conflict3_num = conflict.nrNumber
+            break
+        }
+      }
+    }
+    currentName.value.name = currentName.value.name.trimEnd()
+    currentName.value.decision_text = requestorMessage.value.substring(0, 955)
+    // send decision to API and reset flags
+    await pushAcceptReject()
+    decision_made.value = undefined
+  }
+
+  async function makeQuickDecision(decision: Status, decisionText: string) {
+    currentNameObj.value.value.decision_text = decisionText
+    decision_made.value = decision
+    if (decision_made.value === Status.Approved) {
+      currentNameObj.value.value.state = 'APPROVED'
+    } else {
+      currentNameObj.value.value.state = 'REJECTED'
+    }
+    // send decision to API and reset flags
+    await pushAcceptReject()
+    decision_made.value = undefined
+  }
+
+  async function pushAcceptReject() {}
 
   watch(
     () => [selectedConflicts],
@@ -294,21 +376,26 @@ export const useExamineStore = defineStore('examine', () => {
     selectedReasons,
     selectedTrademarks,
     requestorMessageStrings,
+    requestorMessage,
     acceptanceWillBeConditional,
     decision_made,
     compName1,
     compName2,
     compName3,
+    currentNameObj,
     currentChoice,
     userHasApprovedRole,
     is_my_current_nr,
     furnished,
+    forceConditional,
     isUndoable,
     getHistoryInfo,
     getConflictInfo,
     toggleConflictCheckbox,
     getShortJurisdiction,
     undoDecision,
+    makeDecision,
+    makeQuickDecision,
 
     isClosed,
   }

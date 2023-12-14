@@ -27,13 +27,13 @@
     </div>
     <EditableTextBox
       class="grow"
-      v-model="requestorMessage"
+      v-model="examine.requestorMessage"
       readonly
       disable-buttons
       :character-limit="characterLimit"
     />
     <span
-      v-if="requestorMessage.length > characterLimit"
+      v-if="examine.requestorMessage.length > characterLimit"
       class="text-sm font-bold text-red-600"
     >
       {{ characterLimitDisplay }}
@@ -66,14 +66,6 @@ import { BackspaceIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 
 const examine = useExamineStore()
 
-const requestorMessage = computed(() => {
-  if (examine.customerMessageOverride) {
-    return examine.customerMessageOverride
-  } else {
-    return examine.requestorMessageStrings.join('\n\n')
-  }
-})
-
 const characterLimit = 955
 const characterLimitDisplay = `Message cut off at ${characterLimit} characters`
 
@@ -83,12 +75,12 @@ const customerMessageOverrideTemp = ref(examine.customerMessageOverride)
 
 function showEditDialog() {
   showEditRequestorMessageDialog.value = true
-  customerMessageOverrideTemp.value = requestorMessage.value
+  customerMessageOverrideTemp.value = examine.requestorMessage
 }
 
 function onRequestorMessageSubmit() {
   showEditRequestorMessageDialog.value = false
-  if (customerMessageOverrideTemp.value !== requestorMessage.value)
+  if (customerMessageOverrideTemp.value !== examine.requestorMessage)
     examine.customerMessageOverride = customerMessageOverrideTemp.value
 }
 
