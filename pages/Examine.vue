@@ -23,7 +23,7 @@
     </div>
 
     <div
-      v-if="!examine.is_editing && !examine.is_complete"
+      v-if="!examine.is_complete && !reservedOrCondReserved"
       class="flex grow flex-col space-x-3 bg-gray-100 p-4 xl:flex-row"
     >
       <ExamineRecipe class="basis-1/2" />
@@ -44,5 +44,9 @@ const showQuickActionButtons = computed(
     examine.is_making_decision &&
     examine.userHasApprovedRole &&
     examine.is_my_current_nr
+)
+
+const reservedOrCondReserved = computed(() =>
+  ['COND-RESERVE', 'RESERVED'].includes(examine.nr_status)
 )
 </script>
