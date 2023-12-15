@@ -19,9 +19,7 @@
 
     <div class="flex justify-between p-4">
       <ExamineNameChoiceList class="ml-4 basis-1/2" />
-      <ExamineQuickActionButtons
-        v-if="!examine.is_editing && !examine.is_complete"
-      />
+      <ExamineQuickActionButtons v-if="showQuickActionButtons" />
     </div>
 
     <div
@@ -39,4 +37,12 @@ import { useExamineStore } from '~/store/examine'
 const examine = useExamineStore()
 
 useHead({ title: 'BC Registry: Name Examination - Examine Names' })
+
+const showQuickActionButtons = computed(
+  () =>
+    !examine.is_complete &&
+    examine.is_making_decision &&
+    examine.userHasApprovedRole &&
+    examine.is_my_current_nr
+)
 </script>
