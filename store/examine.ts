@@ -171,15 +171,7 @@ export const useExamineStore = defineStore('examine', () => {
 
   const currentChoice = ref(2)
 
-  let _currentNameObj = compName2
-  const currentNameObj = computed({
-    get() {
-      return _currentNameObj
-    },
-    set(newValue) {
-      _currentNameObj = newValue
-    },
-  })
+  let currentNameObj = compName2
 
   const userHasApprovedRole = ref(true)
   const is_my_current_nr = ref(true)
@@ -249,17 +241,17 @@ export const useExamineStore = defineStore('examine', () => {
     } else {
       newChoice = compName3
     }
-    currentNameObj.value = newChoice
     currentChoice.value = newChoice.value.choice
-    currentNameObj.value.value.state = 'NE'
-    currentNameObj.value.value.decision_text = ''
+    currentNameObj = newChoice
+    currentNameObj.value.state = 'NE'
+    currentNameObj.value.decision_text = ''
   }
 
   const forceConditional = ref(false)
 
   async function makeDecision(decision: Status) {
     decision_made.value = decision
-    const currentName = currentNameObj.value
+    const currentName = currentNameObj
     if (decision_made.value === Status.Approved) {
       if (acceptanceWillBeConditional.value || forceConditional.value) {
         currentName.value.state = 'CONDITION'
@@ -303,12 +295,12 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   async function makeQuickDecision(decision: Status, decisionText: string) {
-    currentNameObj.value.value.decision_text = decisionText
+    currentNameObj.value.decision_text = decisionText
     decision_made.value = decision
     if (decision_made.value === Status.Approved) {
-      currentNameObj.value.value.state = 'APPROVED'
+      currentNameObj.value.state = 'APPROVED'
     } else {
-      currentNameObj.value.value.state = 'REJECTED'
+      currentNameObj.value.state = 'REJECTED'
     }
     await pushAcceptReject()
     decision_made.value = undefined
