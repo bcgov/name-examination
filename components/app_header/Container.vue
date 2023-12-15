@@ -19,7 +19,7 @@
 
       <div v-if="authenticated" class="ml-auto flex items-center">
         <SearchInput
-          :value="ref('')"
+          v-model="searchText"
           class="mx-3"
           placeholder="NR Number Lookup"
         />
@@ -67,4 +67,6 @@ const { $auth, $userProfile } = useNuxtApp()
 const authenticated = computed(() => $auth.authenticated)
 
 const examineOptions = useExamineOptionsStore()
+
+const searchText = ref('')
 </script>

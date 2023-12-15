@@ -169,9 +169,9 @@ export const useExamineStore = defineStore('examine', () => {
   const compName2 = ref<NameChoice>(mock.compName2)
   const compName3 = ref<NameChoice>(mock.compName3)
 
-  const currentChoice = ref(2)
-
   let currentNameObj = compName2
+  const currentName = computed(() => currentNameObj.value.name)
+  const currentChoice = computed(() => currentNameObj.value.choice)
 
   const userHasApprovedRole = ref(true)
   const is_my_current_nr = ref(true)
@@ -241,7 +241,6 @@ export const useExamineStore = defineStore('examine', () => {
     } else {
       newChoice = compName3
     }
-    currentChoice.value = newChoice.value.choice
     currentNameObj = newChoice
     currentNameObj.value.state = 'NE'
     currentNameObj.value.decision_text = ''
@@ -308,6 +307,13 @@ export const useExamineStore = defineStore('examine', () => {
 
   async function pushAcceptReject() {}
 
+  function runManualRecipe(searchObj: {
+    searchStr: string
+    exactPhrase: string
+  }) {}
+
+  function resetExaminationArea() {}
+
   watch(
     () => [selectedConflicts],
     async (_state) => {
@@ -373,6 +379,7 @@ export const useExamineStore = defineStore('examine', () => {
     compName3,
     currentNameObj,
     currentChoice,
+    currentName,
     userHasApprovedRole,
     is_my_current_nr,
     furnished,
@@ -385,6 +392,8 @@ export const useExamineStore = defineStore('examine', () => {
     undoDecision,
     makeDecision,
     makeQuickDecision,
+    runManualRecipe,
+    resetExaminationArea,
 
     isClosed,
   }
