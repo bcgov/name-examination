@@ -173,11 +173,23 @@ export const useSearchStore = defineStore('search', () => {
     }
   }
 
-  function $reset() {
+  function resetColumns() {
     selectedColumns.value = Object.values(SearchColumns)
+  }
+
+  function resetFilters() {
     Object.assign(filters, defaultFilters())
+  }
+
+  function resetDisplayAndPage() {
     selectedDisplay.value = DEFAULT_DISPLAY
     selectedPage.value = 1
+  }
+
+  function $reset() {
+    resetColumns()
+    resetFilters()
+    resetDisplayAndPage()
   }
 
   watch(
@@ -228,6 +240,9 @@ export const useSearchStore = defineStore('search', () => {
     toggleSubmittedDateOrder,
     goToPreviousPage,
     goToNextPage,
+    resetColumns,
+    resetFilters,
+    resetDisplayAndPage,
     $reset,
   }
 })

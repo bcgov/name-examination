@@ -3,7 +3,7 @@
     <a
       href="#"
       class="mr-4 font-semibold text-blue-800 transition duration-150 hover:text-blue-900"
-      @click="search.$reset()"
+      @click="reset"
       >{{ CLEAR_FILTERS_TEXT }}</a
     >
 
@@ -65,4 +65,9 @@ const DISPLAY_OPTIONS = [5, 10, 20, 50, 100]
 const pageOptions = computed(() =>
   Array.from({ length: search.lastPageNumber }, (_, key) => key + 1)
 )
+
+function reset() {
+  search.resetFilters()
+  search.resetDisplayAndPage()
+}
 </script>
