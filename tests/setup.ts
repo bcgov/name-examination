@@ -12,6 +12,7 @@ beforeAll(() => {
       getNamexApiUrl: vi.fn().mockImplementation((endpoint) => {
         return new URL('/api/v1' + endpoint, 'https://localhost:8080/')
       }),
+      callNamexApi: vi.fn(),
     }
   })
 })

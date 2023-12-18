@@ -2,6 +2,8 @@ import { DOMWrapper, VueWrapper } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import { vi } from 'vitest'
 
+const namexApiModule = await import('~/util/namex-api')
+
 /**
  * Click the given dropdown and choose a given option
  */
@@ -19,12 +21,13 @@ export async function clickDropdownOption(
 }
 
 /**
- * Set the return value of the next call to `fetch`
+ * Set the return value of the next call to backend api call helper.
+ * This can be used to simulate the return value from an api call.
  */
-export function setFetchResponse(data: any) {
-  global.fetch = vi
-    .fn()
-    .mockResolvedValueOnce({
-      json: () => new Promise((resolve) => resolve(data)),
-    })
+export function mockNextApiHelperResponse(data: any) {
+  namexApiModule.callNamexApi = vi.fn().mockResolvedValueOnce(data)
+}
+
+export function setApiHelperImpl(callback: (url: URL) => Promise<any>) {
+  namexApiModule.callNamexApi = vi.fn().mockImplementation(callback)
 }

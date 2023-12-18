@@ -1,7 +1,7 @@
-export enum Routes {
-  Home = 'HomePage',
-  Admin = 'admin',
-  Examine = 'examine',
-  Search = 'SearchPage',
-  Stats = 'stats',
+export enum Route {
+  Home = '/',
+  Admin = '/admin',
+  Examine = '/examine',
+  Search = '/search',
+  Stats = '/stats',
 }
