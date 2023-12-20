@@ -55,6 +55,17 @@
     "REQUEST_ACTION_CD": "REH"
   },
   {
+    "value": "ULCB",
+    "SHORT_DESC": "B.C. Company",
+    "text": "B.C. Company - ULC to BC Conversion",
+    "CLASS_TYPE_CD": "CORP",
+    "LEGACY_CD": "ULCB", 
+    "ADDITIONAL_INFO": "",
+    "SOURCE_APPLICATION": "COLIN",
+    "ENTITY_TYPE_CD": "CR",
+    "REQUEST_ACTION_CD": "CNV"
+  },
+  {
     "value": "XCR",
     "SHORT_DESC": "Extraprovincial Registration",
     "text": "Corporation (Foreign) - Extraprovincial Registration",
@@ -809,17 +820,6 @@
     "text": "BC Benefit Company - Benefit to BC Conversion",
     "CLASS_TYPE_CD": "CORP",
     "LEGACY_CD": "BECR",
-    "ADDITIONAL_INFO": "",
-    "SOURCE_APPLICATION": "COLIN",
-    "ENTITY_TYPE_CD": "CR",
-    "REQUEST_ACTION_CD": "CNV"
-  },
-  {
-    "value": "ULCB",
-    "SHORT_DESC": "B.C. Company",
-    "text": "B.C. Company - ULC to BC Conversion",
-    "CLASS_TYPE_CD": "CORP",
-    "LEGACY_CD": "ULCB", 
     "ADDITIONAL_INFO": "",
     "SOURCE_APPLICATION": "COLIN",
     "ENTITY_TYPE_CD": "CR",
