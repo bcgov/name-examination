@@ -27,8 +27,12 @@ export async function callNamexApi(url: URL): Promise<any> {
       })
     })
     .catch(async (error) => {
-      console.error(`Failed to update Keycloak token: ${error}`)
+      console.error(`Failed to complete request: ${error}`)
     })
 
   return await response?.json()
+}
+
+export async function getNameRequest(nrNumber: string): Promise<any> {
+  return callNamexApi(getNamexApiUrl(`/requests/${nrNumber}`))
 }

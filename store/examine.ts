@@ -1,20 +1,31 @@
 import { Status } from '~/enums/nr-status'
-import {
-  type Trademark,
-  type Comment,
-  type Condition,
-  type Conflict,
-  type ConflictList,
-  type ConflictListItem,
-  type CorpConflict,
-  type History,
-  type Macro,
-  type NameRequestConflict,
-  type TrademarkApiResponse,
-  type NameChoice,
+import type {
+  Trademark,
+  Comment,
+  Condition,
+  Conflict,
+  ConflictList,
+  ConflictListItem,
+  CorpConflict,
+  History,
+  Macro,
+  NameRequestConflict,
+  TrademarkApiResponse,
+  NameChoice,
+  RequestType,
+  RequestTypeRule,
+  Jurisdiction,
 } from '~/types'
 
 import mock from './examine.mock.json'
+import requestTypes from '~/data/request_types.json'
+import requestTypeRulesJSON from '~/data/request_type_rules.json'
+import jurisdictionsData from '~/data/jurisdictions.json'
+import {
+  EntityTypeCode,
+  RequestActionCode,
+  RequestTypeCode,
+} from '~/enums/codes'
 
 export const useExamineStore = defineStore('examine', () => {
   const headerState = ref<'minimized' | 'maximized' | 'editable'>('minimized')
@@ -74,14 +85,29 @@ export const useExamineStore = defineStore('examine', () => {
   const is_making_decision = ref(true)
   const is_header_shown = ref(false)
   const nrNumber = ref('NR 1234567')
-  const nr_status = ref('INPROGRESS')
+  const nr_status = computed(() => currentNameObj.value.state)
   const isClosed = computed(() =>
     ['REJECTED', 'APPROVED', 'CONDITIONAL', 'CONSUMED'].includes(
       nr_status.value
     )
   )
-  const requestType = ref('')
-  const listRequestTypes = ref<any[]>([])
+  const listRequestTypes = ref<Array<RequestType>>(
+    requestTypes as Array<RequestType>
+  )
+  const requestType = ref<RequestTypeCode>(RequestTypeCode.CP)
+  const requestTypeObject = computed(
+    () => listRequestTypes.value.find((r) => r.value == requestType.value)!
+  )
+  const requestTypeRules = ref<Array<RequestTypeRule>>(
+    requestTypeRulesJSON as Array<RequestTypeRule>
+  )
+
+  const requestActionCd = computed<RequestActionCode>(
+    () => requestTypeObject.value.request_action_cd
+  )
+  const entityTypeCd = computed<EntityTypeCode>(
+    () => requestTypeObject.value.entity_type_cd
+  )
 
   const conditionsJSON = ref({
     restricted_words_conditions: [
@@ -177,6 +203,12 @@ export const useExamineStore = defineStore('examine', () => {
   const is_my_current_nr = ref(true)
   const furnished = ref('N')
 
+  const listJurisdictions = ref<Array<Jurisdiction>>(jurisdictionsData)
+  const jurisdiction = ref<string>()
+  const jurisdictionNumber = ref<string>()
+
+  const prevNr = ref<string>()
+
   async function getHistoryInfo(nrNumber: string) {
     historiesInfoJSON.value = conflicts.value[1] as NameRequestConflict
   }
@@ -199,7 +231,6 @@ export const useExamineStore = defineStore('examine', () => {
         selectedConflicts.value.push(conflictItem)
       }
     }
-    console.log(comparedConflicts.value)
   }
 
   function getShortJurisdiction(jurisdiction: string) {
@@ -349,6 +380,10 @@ export const useExamineStore = defineStore('examine', () => {
     nr_status,
     listRequestTypes,
     requestType,
+    requestTypeObject,
+    requestTypeRules,
+    requestActionCd,
+    entityTypeCd,
     parsedCOBRSConflicts,
     exactMatchesConflicts,
     parsedSynonymConflicts,
@@ -384,6 +419,10 @@ export const useExamineStore = defineStore('examine', () => {
     is_my_current_nr,
     furnished,
     forceConditional,
+    listJurisdictions,
+    prevNr,
+    jurisdiction,
+    jurisdictionNumber,
     isUndoable,
     getHistoryInfo,
     getConflictInfo,

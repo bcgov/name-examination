@@ -1,3 +1,9 @@
+import type {
+  ClassTypeCode,
+  EntityTypeCode,
+  RequestActionCode,
+} from '~/enums/codes'
+
 export interface Applicants {
   firstName: string
   lastName: string
@@ -124,4 +130,33 @@ export interface Trademark {
 
 export interface TrademarkApiResponse {
   names: Array<Trademark>
+}
+
+export interface RequestType {
+  value: string
+  text: string
+  short_desc: string
+  class_type_cd: ClassTypeCode
+  legacy_cd: string
+  additional_info: string
+  source_application: 'COLIN' | ''
+  entity_type_cd: EntityTypeCode
+  request_action_cd: RequestActionCode
+}
+
+export interface RequestTypeRule {
+  request_type: string
+  jurisdiction_required: boolean
+  prev_nr_required: boolean
+  corp_num_required: boolean
+  additional_info_template: string
+  is_lp_nwpta_type: boolean
+  is_cp_nwpta_type: boolean
+}
+
+export interface Jurisdiction {
+  /** two letter code */
+  value: string
+  short_desc: string
+  text: string
 }

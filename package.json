@@ -57,7 +57,7 @@
     "vue-tsc": "^1.8.1"
   },
   "dependencies": {
-    "@headlessui/vue": "0.0.0-insiders.1469b85",
+    "@headlessui/vue": "0.0.0-insiders.01a34cb",
     "@heroicons/vue": "^2.0.18",
     "@nuxtjs/router": "^1.7.0",
     "@pinia/nuxt": "^0.4.11",
