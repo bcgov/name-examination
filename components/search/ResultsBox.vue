@@ -48,7 +48,7 @@
               v-else-if="'dropdown' in layout[column]"
               v-model="search.filters[column as FilterKey]"
               :options="layout[column].dropdown"
-              @option_clicked="
+              @option-clicked="
                 (option) => [
                   updateTextInputFilters(),
                   checkIfCustomSubmitDateChosen(option),

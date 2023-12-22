@@ -34,7 +34,7 @@
           enter-to-class="opacity-100"
         >
           <ListboxOptions
-            class="absolute mt-1 max-h-[50vh] w-fit overflow-auto rounded-md bg-white py-1 text-left text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            class="absolute mt-1 z-20 max-h-[50vh] w-fit overflow-auto rounded-md bg-white py-1 text-left text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
             :class="optionsStyle"
           >
             <ListboxOption
@@ -44,7 +44,7 @@
               :key="option"
               :value="option"
               as="template"
-              @click="emit('option_clicked', option)"
+              @click="emit('optionClicked', option)"
             >
               <li
                 :class="[
@@ -97,7 +97,7 @@ const { modelValue, options, multiple } = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'option_clicked', option: any): void
+  (e: 'optionClicked', option: any): void
   (e: 'update:modelValue', newValue: any): void
 }>()
 
