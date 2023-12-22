@@ -1,6 +1,6 @@
 <template>
   <div class="text-sm">
-    <ExamineHeaderExpandable title="Nature of Business">
+    <ExamineRequestInfoExpandable title="Nature of Business">
       <template #minimized>
         <p>{{ NOB }}</p>
       </template>
@@ -16,7 +16,7 @@
       <template #editable>
         <p>{{ NOB }}</p>
       </template>
-    </ExamineHeaderExpandable>
+    </ExamineRequestInfoExpandable>
   </div>
 </template>
 

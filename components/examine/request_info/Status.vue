@@ -12,7 +12,7 @@
 
     <div><b>Examiner: </b> {{ examine.examiner }}</div>
 
-    <ExamineHeaderCommentsPopup />
+    <ExamineRequestInfoCommentsPopup />
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <div class="text-sm">
-    <ExamineHeaderExpandable title="Additional Info">
+    <ExamineRequestInfoExpandable title="Additional Info">
       <template #minimized>
         <p>{{ INFO }}</p>
       </template>
@@ -27,7 +27,7 @@
           disable-buttons
         />
       </template>
-    </ExamineHeaderExpandable>
+    </ExamineRequestInfoExpandable>
   </div>
 </template>
 

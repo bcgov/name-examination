@@ -14,8 +14,8 @@
         This NR is being examined by <span class="font-bold">test@idir</span>
       </span>
     </ExamineNoticeBanner> -->
-    <ExamineRequestHeader />
     <ExamineHeader />
+    <ExamineRequestInfo />
 
     <div class="flex justify-between p-4">
       <ExamineNameChoiceList class="ml-4 basis-1/2" />

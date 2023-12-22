@@ -1,21 +1,43 @@
 <template>
-  <div
-    class="flex divide-x-2 bg-gray-100 px-4 py-2"
-    :class="
-      examine.headerState === 'maximized' || examine.is_editing
-        ? 'h-full'
-        : 'h-32'
-    "
-  >
-    <ExamineHeaderStatus class="basis-1/5 px-4" />
-    <ExamineHeaderDatesAndExpiry class="basis-1/5 px-4" />
-    <ExamineHeaderAdditionalInfo class="basis-1/5 px-4" />
-    <ExamineHeaderNatureOfBusiness class="basis-1/5 px-4" />
-    <ExamineHeaderApplicantInfo class="basis-1/5 px-4" />
+  <div class="flex flex-wrap px-4 py-2 text-gray-700">
+    <ExamineHeaderNRNumber
+      :nr-number="examine.nrNumber"
+      :priority="examine.isPriority"
+      show-transactions-link
+    />
+
+    <ExamineHeaderRequestTypeInfo
+      v-if="!examine.is_editing || examine.isClosed"
+      :jurisdiction="examine.jurisdiction"
+      :jurisdiction-number="examine.jurisdictionNumber"
+    />
+    <ExamineHeaderRequestEditInputs v-else class="flex basis-5/12 flex-col" />
+
+    <ExamineActionButtons class="ml-auto" />
   </div>
 </template>
 
 <script setup lang="ts">
+import {
+  EntityTypeCode,
+  RequestActionCode,
+  RequestTypeCode,
+} from '~/enums/codes'
 import { useExamineStore } from '~/store/examine'
+import { getMappedRequestType } from '~/util'
+
 const examine = useExamineStore()
+
+const isViewing = computed(() => examine.is_header_shown && !examine.is_editing)
+const isExpanded = computed(
+  () => examine.is_editing || isViewing || examine.is_header_shown
+)
+
+const requestType = computed(() =>
+  getMappedRequestType(
+    examine.requestType as RequestTypeCode,
+    examine.requestActionCd as RequestActionCode,
+    examine.entityTypeCd as EntityTypeCode
+  )
+)
 </script>

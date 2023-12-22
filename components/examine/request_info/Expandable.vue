@@ -1,6 +1,6 @@
 <template>
   <div class="rounded-md text-sm">
-    <ExamineHeaderPopover
+    <ExamineRequestInfoPopover
       :title="title"
       v-if="examine.headerState === 'minimized'"
     >
@@ -10,7 +10,7 @@
       <template #expanded>
         <slot name="popup"> </slot>
       </template>
-    </ExamineHeaderPopover>
+    </ExamineRequestInfoPopover>
 
     <div class="space-y-1" v-else-if="examine.headerState === 'maximized'">
       <header class="font-bold">{{ title }}</header>

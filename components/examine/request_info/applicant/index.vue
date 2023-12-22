@@ -1,6 +1,6 @@
 <template>
   <div class="text-sm">
-    <ExamineHeaderExpandable title="Applicant Information">
+    <ExamineRequestInfoExpandable title="Applicant Information">
       <template #minimized>
         <p>Jack Frost</p>
         <p>3434 Main Street</p>
@@ -8,17 +8,17 @@
       </template>
 
       <template #popup>
-        <ExamineHeaderApplicantInfoComplete />
+        <ExamineRequestInfoApplicantComplete />
       </template>
 
       <template #maximized>
-        <ExamineHeaderApplicantInfoComplete />
+        <ExamineRequestInfoApplicantComplete />
       </template>
 
       <template #editable>
-        <ExamineHeaderApplicantInfoEditable />
+        <ExamineRequestInfoApplicantEditable />
       </template>
-    </ExamineHeaderExpandable>
+    </ExamineRequestInfoExpandable>
   </div>
 </template>
 
