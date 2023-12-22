@@ -18,7 +18,7 @@
     <ExamineRequestInfo />
 
     <div class="flex justify-between p-4">
-      <ExamineNameChoiceList class="ml-4 basis-1/2" />
+      <ExamineNamesList class="ml-4 basis-1/2" />
       <ExamineQuickActionButtons v-if="showQuickActionButtons" />
     </div>
 

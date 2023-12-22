@@ -13,7 +13,7 @@
     />
     <ExamineHeaderRequestEditInputs v-else class="flex basis-5/12 flex-col" />
 
-    <ExamineActionButtons class="ml-auto" />
+    <ExamineHeaderActionButtons class="ml-auto" />
   </div>
 </template>
 

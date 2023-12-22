@@ -1,7 +1,7 @@
 <template>
   <ol v-if="!examine.is_editing" class="list-decimal">
     <li>
-      <ExamineNameChoice
+      <ExamineNamesListChoice
         :choice="examine.compName1"
         :decision-text="decisionReasonOrConflictList(examine.compName1)"
         :undoable="examine.isUndoable(examine.compName1)"
@@ -9,7 +9,7 @@
       />
     </li>
     <li>
-      <ExamineNameChoice
+      <ExamineNamesListChoice
         :choice="examine.compName2"
         :decision-text="decisionReasonOrConflictList(examine.compName2)"
         :undoable="examine.isUndoable(examine.compName2)"
@@ -17,7 +17,7 @@
       />
     </li>
     <li>
-      <ExamineNameChoice
+      <ExamineNamesListChoice
         :choice="examine.compName3"
         :decision-text="decisionReasonOrConflictList(examine.compName3)"
         :undoable="examine.isUndoable(examine.compName3)"
