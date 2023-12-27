@@ -31,8 +31,6 @@ import { getTransactions, patchNameRequest } from '~/util/namex-api'
 import { sortNameChoices } from '~/util'
 
 export const useExamineStore = defineStore('examine', () => {
-  const headerState = ref<'minimized' | 'maximized' | 'editable'>('minimized')
-
   const isPriority = ref(true)
   const inProgress = ref(true)
   const is_complete = ref(false)
@@ -426,7 +424,6 @@ export const useExamineStore = defineStore('examine', () => {
   )
 
   return {
-    headerState,
     isPriority,
     inProgress,
     is_complete,

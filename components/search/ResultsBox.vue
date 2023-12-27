@@ -205,6 +205,7 @@ function updateTextInputFilters() {
   for (let headCell of headCells) {
     const filterElement = headCell.children[0]
     if (filterElement?.tagName.toLowerCase() == 'input') {
+      // @ts-ignore
       search.filters[filterElement.id as FilterKey] = (
         filterElement as HTMLInputElement
       ).value

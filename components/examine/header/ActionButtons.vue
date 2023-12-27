@@ -5,38 +5,26 @@
       <template #text><u>S</u>ave Edits</template>
     </IconButton>
 
-    <IconButton light mnemonic="c">
+    <IconButton light mnemonic="c" @click="examine.is_editing = false">
       <XMarkIcon class="h-5 w-5 stroke-2" />
       <template #text><u>C</u>ancel</template>
     </IconButton>
   </div>
 
   <div v-else class="flex items-center space-x-1">
-    <IconButton
-      v-if="canEdit && showButtons"
-      light
-      @click="examine.is_editing = true"
-      mnemonic="d"
-    >
+    <IconButton v-if="canEdit && showButtons" light @click="edit" mnemonic="d">
       <PencilSquareIcon class="h-5 w-5 stroke-2" />
       <template #text>E<u>d</u>it Request</template>
     </IconButton>
 
-    <IconButton
-      light
-      @click="
-        examine.headerState =
-          examine.headerState === 'minimized' ? 'maximized' : 'minimized'
-      "
-      mnemonic="b"
-    >
+    <IconButton light @click="toggleDetails" mnemonic="b">
       <ArrowsPointingInIcon
-        v-if="examine.headerState === 'maximized'"
+        v-if="examine.is_header_shown"
         class="h-5 w-5 stroke-2"
       />
       <ArrowsPointingOutIcon v-else class="h-5 w-5 stroke-2" />
 
-      <template #text v-if="examine.headerState === 'maximized'"
+      <template #text v-if="examine.is_header_shown"
         >Hide Details (<u>b</u>)</template
       >
       <template #text v-else>Show Details (<u>b</u>)</template>
@@ -116,7 +104,6 @@ import {
 } from '@heroicons/vue/24/outline'
 import { Status } from '~/enums/nr-status'
 import { useExamineStore } from '~/store/examine'
-import { patchNameRequest } from '~/util/namex-api'
 
 const examine = useExamineStore()
 const showCancelRequestDialog = ref(false)
@@ -153,6 +140,10 @@ function edit() {
     }
   }
   examine.is_editing = true
+}
+
+function toggleDetails() {
+  examine.is_header_shown = !examine.is_header_shown
 }
 </script>
 

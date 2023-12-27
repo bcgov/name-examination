@@ -28,11 +28,6 @@ import { getMappedRequestType } from '~/util'
 
 const examine = useExamineStore()
 
-const isViewing = computed(() => examine.is_header_shown && !examine.is_editing)
-const isExpanded = computed(
-  () => examine.is_editing || isViewing || examine.is_header_shown
-)
-
 const requestType = computed(() =>
   getMappedRequestType(
     examine.requestType as RequestTypeCode,

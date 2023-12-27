@@ -23,7 +23,9 @@
     </div>
 
     <div
-      v-if="!examine.is_complete && !reservedOrCondReserved"
+      v-if="
+        !examine.is_complete && !reservedOrCondReserved && !examine.is_editing
+      "
       class="flex grow flex-col space-x-3 bg-gray-100 p-4 xl:flex-row"
     >
       <ExamineRecipe class="basis-1/2" />
@@ -43,7 +45,8 @@ const showQuickActionButtons = computed(
     !examine.is_complete &&
     examine.is_making_decision &&
     examine.userHasApproverRole &&
-    examine.is_my_current_nr
+    examine.is_my_current_nr &&
+    !examine.is_editing
 )
 
 const reservedOrCondReserved = computed(() =>
