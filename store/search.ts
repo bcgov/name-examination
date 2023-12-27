@@ -1,4 +1,3 @@
-/* eslint-disable require-jsdoc */
 import { DateTime } from 'luxon'
 import { defineStore } from 'pinia'
 import { SearchColumns } from '~/enums/search-columns'
@@ -9,23 +8,15 @@ import {
   Priority,
   Submitted,
 } from '~/enums/filter-dropdowns'
-import { Status } from "~/enums/nr-status"
 import { getFormattedTimestampFromString } from '~/util/date'
-import { callNamexApi, getNamexApiUrl } from '~/util/namex-api'
-
-type Row = { [column in SearchColumns]: string }
-// a filter key is any search column excluding those that can't be filtered (e.g. nature of business)
-export type FilterKey = Exclude<
-  SearchColumns,
-  SearchColumns.NatureOfBusiness | SearchColumns.LastComment
->
-export type Filters = {
-  [key in FilterKey]: any
-}
+import { getNamexObject, getNamexApiUrl } from '~/util/namex-api'
+import type { NameChoice } from '~/types'
+import { sortNameChoices } from '~/util'
+import { StatusSearchFilter, type Filters, type Row } from '~/types/search'
 
 export const defaultFilters = (): Filters => {
   return {
-    [SearchColumns.Status]: Status.Hold,
+    [SearchColumns.Status]: StatusSearchFilter.Hold,
     [SearchColumns.LastModifiedBy]: '',
     [SearchColumns.NameRequestNumber]: '',
     [SearchColumns.Names]: '',
@@ -62,7 +53,7 @@ export const useSearchStore = defineStore('search', () => {
     const params = {
       order: `priorityCd:desc,submittedDate:${submittedDateOrder.value}`,
       queue:
-        filters[SearchColumns.Status] === Status.All
+        filters[SearchColumns.Status] === StatusSearchFilter.All
           ? ''
           : filters[SearchColumns.Status],
       consentOption: filters[SearchColumns.ConsentRequired],
@@ -119,8 +110,12 @@ export const useSearchStore = defineStore('search', () => {
         obj.priorityCd === 'Y' ? 'Priority' : 'Standard',
       [SearchColumns.ClientNotification]:
         obj.furnished === 'Y' ? 'Notified' : 'Not Notified',
-      [SearchColumns.Submitted]: getFormattedTimestampFromString(obj.submittedDate),
-      [SearchColumns.LastUpdate]: getFormattedTimestampFromString(obj.lastUpdate),
+      [SearchColumns.Submitted]: getFormattedTimestampFromString(
+        obj.submittedDate
+      ),
+      [SearchColumns.LastUpdate]: getFormattedTimestampFromString(
+        obj.lastUpdate
+      ),
       [SearchColumns.LastComment]:
         obj.comments.length > 0
           ? obj.comments[obj.comments.length - 1].comment
@@ -130,7 +125,7 @@ export const useSearchStore = defineStore('search', () => {
 
   async function getRows(url: URL): Promise<[numResults: number, rows: Row[]]> {
     try {
-      const data = await callNamexApi(url)
+      const data = await getNamexObject(url)
       return [data.response.numFound, data.nameRequests[0].map(parseRow)]
     } catch (error) {
       console.log(error)
@@ -259,12 +254,8 @@ export const useSearchStore = defineStore('search', () => {
   }
 })
 
-interface NameObject {
-  choice: number
-  name: string
-}
-function formatNames(names: Array<NameObject>): string {
-  names.sort((n1, n2) => n1.choice - n2.choice)
+function formatNames(names: Array<NameChoice>): string {
+  sortNameChoices(names)
   let formatted = ''
   for (let name of names) {
     formatted += `${name.choice}. ${name.name}\n`

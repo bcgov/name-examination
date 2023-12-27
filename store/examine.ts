@@ -15,6 +15,7 @@ import type {
   RequestType,
   RequestTypeRule,
   Jurisdiction,
+  Transaction,
 } from '~/types'
 
 import mock from './examine.mock.json'
@@ -26,6 +27,8 @@ import {
   RequestActionCode,
   RequestTypeCode,
 } from '~/enums/codes'
+import { getTransactions, patchNameRequest } from '~/util/namex-api'
+import { sortNameChoices } from '~/util'
 
 export const useExamineStore = defineStore('examine', () => {
   const headerState = ref<'minimized' | 'maximized' | 'editable'>('minimized')
@@ -34,7 +37,6 @@ export const useExamineStore = defineStore('examine', () => {
   const inProgress = ref(true)
   const is_complete = ref(false)
   const isFurnished = ref(true)
-  const nrStatus = ref(Status.InProgress)
   const examiner = ref('someone@idir')
 
   const exactMatchesConflicts = ref<Array<ConflictListItem>>([])
@@ -87,9 +89,12 @@ export const useExamineStore = defineStore('examine', () => {
   const nrNumber = ref('NR 1234567')
   const nr_status = computed(() => currentNameObj.value.state)
   const isClosed = computed(() =>
-    ['REJECTED', 'APPROVED', 'CONDITIONAL', 'CONSUMED'].includes(
-      nr_status.value
-    )
+    [
+      Status.Rejected,
+      Status.Approved,
+      Status.Conditional,
+      Status.Consumed,
+    ].includes(nr_status.value)
   )
   const listRequestTypes = ref<Array<RequestType>>(
     requestTypes as Array<RequestType>
@@ -191,23 +196,29 @@ export const useExamineStore = defineStore('examine', () => {
 
   const decision_made = ref<Status>()
 
-  const compName1 = ref<NameChoice>(mock.compName1)
-  const compName2 = ref<NameChoice>(mock.compName2)
-  const compName3 = ref<NameChoice>(mock.compName3)
+  const compName1 = ref<NameChoice>(mock.compName1 as NameChoice)
+  const compName2 = ref<NameChoice>(mock.compName2 as NameChoice)
+  const compName3 = ref<NameChoice>(mock.compName3 as NameChoice)
 
   let currentNameObj = compName2
   const currentName = computed(() => currentNameObj.value.name)
   const currentChoice = computed(() => currentNameObj.value.choice)
 
-  const userHasApprovedRole = ref(true)
+  const userHasApproverRole = ref(true)
+  const userHasEditRole = ref(true)
   const is_my_current_nr = ref(true)
-  const furnished = ref('N')
+  const furnished = ref<'Y' | 'N'>('N')
 
   const listJurisdictions = ref<Array<Jurisdiction>>(jurisdictionsData)
   const jurisdiction = ref<string>()
   const jurisdictionNumber = ref<string>()
 
   const prevNr = ref<string>()
+
+  const consumptionDate = ref<string>()
+
+  const pendingTransactionRequest = ref(false)
+  const transactionsData = ref<Array<Transaction>>()
 
   async function getHistoryInfo(nrNumber: string) {
     historiesInfoJSON.value = conflicts.value[1] as NameRequestConflict
@@ -239,10 +250,10 @@ export const useExamineStore = defineStore('examine', () => {
 
   function isUndoable(name: NameChoice): boolean {
     if (
-      !userHasApprovedRole.value || // if the NR is closed in any way, a name is not undoable - the NR will have to be re-opened first
+      !userHasApproverRole.value || // if the NR is closed in any way, a name is not undoable - the NR will have to be re-opened first
       !is_my_current_nr.value ||
       furnished.value === 'Y' || // if the NR is furnished, nothing is undoable
-      name.state == 'NE' || // if this name is complete (ie: anything other than NE) it's undoable
+      name.state == Status.NotExamined || // if this name is complete (ie: anything other than NE) it's undoable
       name.state == null
     ) {
       return false
@@ -251,12 +262,17 @@ export const useExamineStore = defineStore('examine', () => {
     if (name.choice === 1) {
       // if name choices 2 and 3 have not been decided, then 1 is undoable
       return (
-        (compName2.value.state == 'NE' || compName2.value.state == null) &&
-        (compName3.value.state == 'NE' || compName3.value.state == null)
+        (compName2.value.state == Status.NotExamined ||
+          compName2.value.state == null) &&
+        (compName3.value.state == Status.NotExamined ||
+          compName3.value.state == null)
       )
     } else if (name.choice === 2) {
       // if name choice 3 has not been decided, then 2 is undoable
-      return compName3.value.state == 'NE' || compName3.value.state == null
+      return (
+        compName3.value.state == Status.NotExamined ||
+        compName3.value.state == null
+      )
     } else {
       return true
     }
@@ -273,7 +289,7 @@ export const useExamineStore = defineStore('examine', () => {
       newChoice = compName3
     }
     currentNameObj = newChoice
-    currentNameObj.value.state = 'NE'
+    currentNameObj.value.state = Status.NotExamined
     currentNameObj.value.decision_text = ''
   }
 
@@ -284,16 +300,16 @@ export const useExamineStore = defineStore('examine', () => {
     const currentName = currentNameObj
     if (decision_made.value === Status.Approved) {
       if (acceptanceWillBeConditional.value || forceConditional.value) {
-        currentName.value.state = 'CONDITION'
+        currentName.value.state = Status.Condition
         forceConditional.value = false
       } else {
-        currentName.value.state = 'APPROVED'
+        currentName.value.state = Status.Approved
         // If there were conflicts selected but this is an approval, remove the selected conflicts.
         // Do NOT clear the conflicts if the "Consent Required" condition is also set - then it's intentional.
         selectedConflicts.value = []
       }
     } else {
-      currentName.value.state = 'REJECTED'
+      currentName.value.state = Status.Rejected
     }
 
     if (selectedConflicts.value.length > 0) {
@@ -328,9 +344,9 @@ export const useExamineStore = defineStore('examine', () => {
     currentNameObj.value.decision_text = decisionText
     decision_made.value = decision
     if (decision_made.value === Status.Approved) {
-      currentNameObj.value.state = 'APPROVED'
+      currentNameObj.value.state = Status.Approved
     } else {
-      currentNameObj.value.state = 'REJECTED'
+      currentNameObj.value.state = Status.Rejected
     }
     await pushAcceptReject()
     decision_made.value = undefined
@@ -344,6 +360,56 @@ export const useExamineStore = defineStore('examine', () => {
   }) {}
 
   function resetExaminationArea() {}
+
+  async function getpostgrescompInfo(nrNumber: string) {
+    console.log(`getting ${nrNumber}`)
+  }
+
+  async function updateNRStatePreviousState(
+    nrState: Status,
+    previousState: Status
+  ) {
+    const patch = { previousStateCd: previousState, state: nrState }
+    await patchNameRequest(nrNumber.value, patch)
+
+    await getpostgrescompInfo(nrNumber.value)
+    setNewExaminer()
+  }
+
+  async function getTransactionsHistory(nrNumber: string) {
+    pendingTransactionRequest.value = true
+    try {
+      const transactions = await getTransactions(nrNumber)
+      transactions.forEach((t) => sortNameChoices(t.names))
+      transactionsData.value = transactions
+    } catch (error) {
+      console.error(`Error while retrieving transactions: ${error}`)
+      transactionsData.value = undefined
+    } finally {
+      pendingTransactionRequest.value = false
+    }
+  }
+
+  async function setNewExaminer() {
+    if (examiner.value.includes('account')) {
+      await getTransactionsHistory(nrNumber.value)
+      if (transactionsData.value == null) {
+        return
+      }
+
+      for (const transaction of transactionsData.value) {
+        if (
+          transaction.user_name.split('@').at(1)?.includes('idir') &&
+          transaction.user_action.includes('Decision')
+        ) {
+          examiner.value = transaction.user_name
+          break
+        }
+      }
+    }
+  }
+
+  function updateNRState(state: Status) {}
 
   watch(
     () => [selectedConflicts],
@@ -365,7 +431,6 @@ export const useExamineStore = defineStore('examine', () => {
     inProgress,
     is_complete,
     isFurnished,
-    nrStatus,
     conflictsAutoAdd,
     conflicts,
     comments,
@@ -415,7 +480,8 @@ export const useExamineStore = defineStore('examine', () => {
     currentNameObj,
     currentChoice,
     currentName,
-    userHasApprovedRole,
+    userHasApproverRole,
+    userHasEditRole,
     is_my_current_nr,
     furnished,
     forceConditional,
@@ -423,6 +489,8 @@ export const useExamineStore = defineStore('examine', () => {
     prevNr,
     jurisdiction,
     jurisdictionNumber,
+    consumptionDate,
+    transactionsData,
     isUndoable,
     getHistoryInfo,
     getConflictInfo,
@@ -433,6 +501,10 @@ export const useExamineStore = defineStore('examine', () => {
     makeQuickDecision,
     runManualRecipe,
     resetExaminationArea,
+    getpostgrescompInfo,
+    setNewExaminer,
+    updateNRState,
+    updateNRStatePreviousState,
 
     isClosed,
   }

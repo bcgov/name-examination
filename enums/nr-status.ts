@@ -1,5 +1,4 @@
 export enum Status {
-  All = 'ALL',
   Hold = 'HOLD',
   InProgress = 'INPROGRESS',
   Draft = 'DRAFT',
@@ -7,7 +6,9 @@ export enum Status {
   Cancelled = 'CANCELLED',
   Approved = 'APPROVED',
   Conditional = 'CONDITIONAL',
+  Condition = 'CONDITION',
   Consumed = 'CONSUMED',
   Rejected = 'REJECTED',
   Completed = 'COMPLETED',
+  NotExamined = 'NE',
 }

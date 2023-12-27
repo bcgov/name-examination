@@ -113,7 +113,7 @@
  * A component for showing the results of a name request search
  */
 import { computed, onMounted } from 'vue'
-import { type FilterKey, useSearchStore } from '~/store/search'
+import { useSearchStore } from '~/store/search'
 import {
   ConsentRequired,
   Priority,
@@ -123,7 +123,7 @@ import {
 } from '~/enums/filter-dropdowns'
 import { SearchColumns } from '~/enums/search-columns'
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/vue/24/outline'
-import { Status } from '~/enums/nr-status'
+import { StatusSearchFilter, type FilterKey } from '~/types/search'
 
 const NO_DATA_STRING = 'No Data Available'
 
@@ -149,7 +149,7 @@ type ILayout = {
 }
 const layout: ILayout = {
   [SearchColumns.Status]: {
-    dropdown: Object.values(Status),
+    dropdown: Object.values(StatusSearchFilter),
   },
   [SearchColumns.LastModifiedBy]: {
     text_input: 'Username',

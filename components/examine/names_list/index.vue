@@ -1,35 +1,17 @@
 <template>
   <ol v-if="!examine.is_editing" class="list-decimal">
-    <li>
+    <li v-for="choice in nameChoices">
       <ExamineNamesListChoice
-        :choice="examine.compName1"
-        :decision-text="decisionReasonOrConflictList(examine.compName1)"
-        :undoable="examine.isUndoable(examine.compName1)"
-        :current="isCurrent(1)"
-      />
-    </li>
-    <li>
-      <ExamineNamesListChoice
-        :choice="examine.compName2"
-        :decision-text="decisionReasonOrConflictList(examine.compName2)"
-        :undoable="examine.isUndoable(examine.compName2)"
-        :current="isCurrent(2)"
-      />
-    </li>
-    <li>
-      <ExamineNamesListChoice
-        :choice="examine.compName3"
-        :decision-text="decisionReasonOrConflictList(examine.compName3)"
-        :undoable="examine.isUndoable(examine.compName3)"
-        :current="isCurrent(3)"
+        :choice="choice"
+        :decision-text="decisionReasonOrConflictList(choice)"
+        :undoable="examine.isUndoable(choice)"
+        :current="isCurrent(choice.choice)"
       />
     </li>
   </ol>
 
   <ol v-else class="ml-4 basis-1/3 list-decimal space-y-2">
-    <li><TextInput :value="examine.compName1.name" /></li>
-    <li><TextInput :value="examine.compName2.name" /></li>
-    <li><TextInput :value="examine.compName3.name" /></li>
+    <li v-for="choice in nameChoices"><TextInput :value="choice.name" /></li>
   </ol>
 </template>
 
@@ -37,6 +19,8 @@
 import { useExamineStore } from '~/store/examine'
 import type { NameChoice } from '~/types'
 const examine = useExamineStore()
+
+const nameChoices = [examine.compName1, examine.compName2, examine.compName3]
 
 const isCurrent = (index: number) => examine.currentChoice === index
 

@@ -6,14 +6,16 @@
         :class="{
           'font-bold': current,
           'text-cyan-500':
-            choice.state === 'APPROVED' || choice.state === 'CONDITION',
+            choice.state === Status.Approved || choice.state === Status.Condition,
         }"
       >
         {{ choice.name }}
       </span>
 
       <CheckIcon
-        v-if="choice.state === 'APPROVED' || choice.state === 'CONDITION'"
+        v-if="
+          choice.state === Status.Approved || choice.state === Status.Condition
+        "
         class="h-5 w-5 text-lime-600"
       />
       <XMarkIcon
@@ -38,6 +40,7 @@
 
 <script setup lang="ts">
 import { CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { Status } from '~/enums/nr-status'
 import { useExamineStore } from '~/store/examine'
 import type { NameChoice } from '~/types'
 

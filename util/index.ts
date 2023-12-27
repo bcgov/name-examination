@@ -3,6 +3,7 @@ import {
   RequestActionCode,
   RequestTypeCode,
 } from '~/enums/codes'
+import type { NameChoice } from '~/types'
 
 export function getMappedRequestType(
   requestType: RequestTypeCode,
@@ -49,4 +50,8 @@ export function isValidNrFormat(
   return (
     withLetters.test(input) || (allowNumbersOnly && numbersOnly.test(input))
   )
+}
+
+export function sortNameChoices(choices: Array<NameChoice>) {
+  choices.sort((n1, n2) => n1.choice - n2.choice)
 }

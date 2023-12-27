@@ -2,7 +2,9 @@ import type {
   ClassTypeCode,
   EntityTypeCode,
   RequestActionCode,
+  RequestTypeCode,
 } from '~/enums/codes'
+import type { Status } from '~/enums/nr-status'
 
 export interface Applicants {
   firstName: string
@@ -24,7 +26,7 @@ export interface Applicants {
 export interface NameChoice {
   choice: number
   name: string
-  state: string
+  state: Status
   decision_text: string | null
   conflict1: string | null
   conflict2: string | null
@@ -159,4 +161,22 @@ export interface Jurisdiction {
   value: string
   short_desc: string
   text: string
+}
+
+export interface Transaction {
+  additionalInfo: string
+  consentFlag: 'Y' | 'N'
+  /** consent date */
+  consent_dt: string | null
+  corpNum: string | null
+  eventDate: string
+  expirationDate: string | null
+  furnished: 'Y' | 'N'
+  names: Array<NameChoice>
+  priorityCd: 'Y' | 'N'
+  requestTypeCd: RequestTypeCode
+  request_action_cd: RequestActionCode
+  stateCd: Status
+  user_action: string
+  user_name: string
 }

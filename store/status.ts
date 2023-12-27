@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import { defineStore } from 'pinia'
 import { getFormattedTimestampFromDateTime } from '~/util/date'
-import { callNamexApi, getNamexApiUrl } from '~/util/namex-api'
+import { getNamexObject, getNamexApiUrl } from '~/util/namex-api'
 
 export const useStatusStore = defineStore('status', () => {
   const holdNum = ref(0)
@@ -13,7 +13,7 @@ export const useStatusStore = defineStore('status', () => {
    */
   async function getNumFound(url: URL): Promise<number> {
     try {
-      const data = await callNamexApi(url)
+      const data = await getNamexObject(url)
       return data.response.numFound
     } catch (error) {
       console.error(error)

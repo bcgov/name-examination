@@ -8,7 +8,7 @@
       <p>Priority</p>
     </div>
 
-    <div><b>Status: </b> {{ examine.nrStatus }}</div>
+    <div><b>Status: </b> {{ examine.nr_status }}</div>
 
     <div><b>Examiner: </b> {{ examine.examiner }}</div>
 

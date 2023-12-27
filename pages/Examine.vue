@@ -42,7 +42,7 @@ const showQuickActionButtons = computed(
   () =>
     !examine.is_complete &&
     examine.is_making_decision &&
-    examine.userHasApprovedRole &&
+    examine.userHasApproverRole &&
     examine.is_my_current_nr
 )
 

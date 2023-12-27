@@ -5,14 +5,19 @@
       <template #text><u>S</u>ave Edits</template>
     </IconButton>
 
-    <IconButton light @click="examine.headerState = 'minimized'" mnemonic="c">
+    <IconButton light mnemonic="c">
       <XMarkIcon class="h-5 w-5 stroke-2" />
       <template #text><u>C</u>ancel</template>
     </IconButton>
   </div>
 
   <div v-else class="flex items-center space-x-1">
-    <IconButton light @click="examine.is_editing = true" mnemonic="d">
+    <IconButton
+      v-if="canEdit && showButtons"
+      light
+      @click="examine.is_editing = true"
+      mnemonic="d"
+    >
       <PencilSquareIcon class="h-5 w-5 stroke-2" />
       <template #text>E<u>d</u>it Request</template>
     </IconButton>
@@ -109,14 +114,46 @@ import {
   PowerIcon,
   XMarkIcon,
 } from '@heroicons/vue/24/outline'
+import { Status } from '~/enums/nr-status'
 import { useExamineStore } from '~/store/examine'
+import { patchNameRequest } from '~/util/namex-api'
 
 const examine = useExamineStore()
 const showCancelRequestDialog = ref(false)
 
 const showButtons = computed(
-  () => !['HISTORICAL', 'COND-RESERVE', 'RESERVED'].includes(examine.nr_status)
+  () =>
+    !['HISTORICAL', 'COND-RESERVE', 'RESERVED'].includes(examine.nr_status) &&
+    !examine.consumptionDate
 )
+
+const canEdit = computed(() => {
+  if (examine.consumptionDate) return false
+  if (examine.is_my_current_nr) return true
+  return (
+    examine.userHasEditRole &&
+    [
+      Status.Draft,
+      Status.Hold,
+      Status.Rejected,
+      Status.Approved,
+      Status.Conditional,
+    ].includes(examine.nr_status)
+  )
+})
+
+function edit() {
+  // if this isn't the user's INPROGRESS, make it that
+  if (!examine.is_my_current_nr && !examine.isClosed) {
+    // track the previous state if it's currently in DRAFT (otherwise do not)
+    if (examine.nr_status == Status.Draft) {
+      examine.updateNRStatePreviousState(Status.InProgress, Status.Draft)
+    } else {
+      examine.updateNRState(Status.InProgress)
+    }
+  }
+  examine.is_editing = true
+}
 </script>
 
 <style scoped>

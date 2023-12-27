@@ -29,7 +29,7 @@
     </div>
 
     <div
-      v-if="examine.nrStatus === Status.Conditional"
+      v-if="examine.nr_status === Status.Conditional"
       class="flex flex-col space-y-1"
     >
       <div class="flex items-center">
