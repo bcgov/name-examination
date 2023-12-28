@@ -22,7 +22,7 @@ const examine = useExamineStore()
 
 const nameChoices = [examine.compName1, examine.compName2, examine.compName3]
 
-const isCurrent = (index: number) => examine.currentChoice === index
+const isCurrent = (choice: number) => examine.currentChoice === choice
 
 /**
  * Gets the decision reason(s) whether or not there's anything in the decision text field.

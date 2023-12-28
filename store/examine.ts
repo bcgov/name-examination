@@ -85,7 +85,7 @@ export const useExamineStore = defineStore('examine', () => {
   const is_making_decision = ref(true)
   const is_header_shown = ref(false)
   const nrNumber = ref('NR 1234567')
-  const nr_status = computed(() => currentNameObj.value.state)
+  const nr_status = ref(Status.InProgress)
   const isClosed = computed(() =>
     [
       Status.Rejected,
@@ -200,7 +200,7 @@ export const useExamineStore = defineStore('examine', () => {
 
   let currentNameObj = compName2
   const currentName = computed(() => currentNameObj.value.name)
-  const currentChoice = computed(() => currentNameObj.value.choice)
+  const currentChoice = ref(2)
 
   const userHasApproverRole = ref(true)
   const userHasEditRole = ref(true)
@@ -277,18 +277,24 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   function undoDecision(name: NameChoice) {
-    // todo: replace this with just changing `currentNameObj`
-    let newChoice: Ref<NameChoice>
+    resetExaminationArea()
     if (name.choice == 1) {
-      newChoice = compName1
+      currentNameObj = compName1
     } else if (name.choice == 2) {
-      newChoice = compName2
+      currentNameObj = compName2
     } else {
-      newChoice = compName3
+      currentNameObj = compName3
     }
-    currentNameObj = newChoice
     currentNameObj.value.state = Status.NotExamined
-    currentNameObj.value.decision_text = ''
+    currentNameObj.value.conflict1 = null
+    currentNameObj.value.conflict2 = null
+    currentNameObj.value.conflict3 = null
+    currentNameObj.value.conflict1_num = null
+    currentNameObj.value.conflict2_num = null
+    currentNameObj.value.conflict3_num = null
+    currentNameObj.value.decision_text = null
+    currentNameObj.value.comment = null
+    currentChoice.value = currentNameObj.value.choice
   }
 
   const forceConditional = ref(false)

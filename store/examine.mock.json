@@ -235,7 +235,7 @@
   "compName2": {
     "choice": 2,
     "name": "NOT SO STEEP COOPERATIVE",
-    "state": "INPROGRESS",
+    "state": "NE",
     "decision_text": null,
     "conflict1": null,
     "conflict2": null,
