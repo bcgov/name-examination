@@ -16,13 +16,10 @@
 
 <script setup lang="ts">
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
-import { useExamineStore } from '~/store/examine'
 
 defineProps<{
   nrNumber: string
   priority?: boolean
   showTransactionsLink?: boolean
 }>()
-
-const examine = useExamineStore()
 </script>

@@ -24,6 +24,7 @@ import requestTypeRulesJSON from '~/data/request_type_rules.json'
 import jurisdictionsData from '~/data/jurisdictions.json'
 import {
   EntityTypeCode,
+  RefundState,
   RequestActionCode,
   RequestTypeCode,
 } from '~/enums/codes'
@@ -31,7 +32,7 @@ import { getTransactions, patchNameRequest } from '~/util/namex-api'
 import { sortNameChoices } from '~/util'
 
 export const useExamineStore = defineStore('examine', () => {
-  const isPriority = ref(true)
+  const priority = ref(true)
   const inProgress = ref(true)
   const is_complete = ref(false)
   const isFurnished = ref(true)
@@ -197,6 +198,7 @@ export const useExamineStore = defineStore('examine', () => {
   const compName1 = ref<NameChoice>(mock.compName1 as NameChoice)
   const compName2 = ref<NameChoice>(mock.compName2 as NameChoice)
   const compName3 = ref<NameChoice>(mock.compName3 as NameChoice)
+  const nameChoices = computed(() => [compName1, compName2, compName3])
 
   let currentNameObj = compName2
   const currentName = computed(() => currentNameObj.value.name)
@@ -217,6 +219,10 @@ export const useExamineStore = defineStore('examine', () => {
 
   const pendingTransactionRequest = ref(false)
   const transactionsData = ref<Array<Transaction>>()
+
+  const expiryDate = ref<string>()
+
+  const refundPaymentState = ref<RefundState>()
 
   async function getHistoryInfo(nrNumber: string) {
     historiesInfoJSON.value = conflicts.value[1] as NameRequestConflict
@@ -430,7 +436,7 @@ export const useExamineStore = defineStore('examine', () => {
   )
 
   return {
-    isPriority,
+    priority,
     inProgress,
     is_complete,
     isFurnished,
@@ -480,6 +486,7 @@ export const useExamineStore = defineStore('examine', () => {
     compName1,
     compName2,
     compName3,
+    nameChoices,
     currentNameObj,
     currentChoice,
     currentName,
@@ -494,6 +501,8 @@ export const useExamineStore = defineStore('examine', () => {
     jurisdictionNumber,
     consumptionDate,
     transactionsData,
+    expiryDate,
+    refundPaymentState,
     isUndoable,
     getHistoryInfo,
     getConflictInfo,

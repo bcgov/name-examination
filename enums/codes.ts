@@ -80,3 +80,12 @@ export enum ClassTypeCode {
   FIRM = 'FIRM',
   MISC = 'MISC',
 }
+
+export enum RefundState {
+  Requested = 'Refund has been requested',
+  NotProcessed = 'Refund not processed',
+  Processed = 'Refund request processed',
+  Cancelled = 'Payment cancelled',
+  Credited = 'Funds have been credited',
+  Completed = 'Refund process is completed',
+}

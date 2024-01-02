@@ -110,8 +110,9 @@ const showCancelRequestDialog = ref(false)
 
 const showButtons = computed(
   () =>
-    !['HISTORICAL', 'COND-RESERVE', 'RESERVED'].includes(examine.nr_status) &&
-    !examine.consumptionDate
+    ![Status.Historical, Status.ConditionalReserved, Status.Reserved].includes(
+      examine.nr_status
+    ) && !examine.consumptionDate
 )
 
 const canEdit = computed(() => {
