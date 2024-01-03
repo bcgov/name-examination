@@ -23,6 +23,7 @@ import requestTypes from '~/data/request_types.json'
 import requestTypeRulesJSON from '~/data/request_type_rules.json'
 import jurisdictionsData from '~/data/jurisdictions.json'
 import {
+  ConsentFlag,
   EntityTypeCode,
   RefundState,
   RequestActionCode,
@@ -86,7 +87,7 @@ export const useExamineStore = defineStore('examine', () => {
   const is_making_decision = ref(true)
   const is_header_shown = ref(false)
   const nrNumber = ref('NR 1234567')
-  const nr_status = ref(Status.InProgress)
+  const nr_status = ref(Status.Conditional)
   const isClosed = computed(() =>
     [
       Status.Rejected,
@@ -216,13 +217,18 @@ export const useExamineStore = defineStore('examine', () => {
   const prevNr = ref<string>()
 
   const consumptionDate = ref<string>()
+  const consumedBy = ref<string>()
+  const consentDateForEdit = ref<string>()
+  const consentFlag = ref<ConsentFlag>()
 
   const pendingTransactionRequest = ref(false)
   const transactionsData = ref<Array<Transaction>>()
 
-  const expiryDate = ref<string>()
-
   const refundPaymentState = ref<RefundState>()
+
+  const submittedDate = ref('2008-09-16, 4:44pm')
+  const corpNum = ref<string | null>('23132')
+  const expiryDate = ref('2008-09-18')
 
   async function getHistoryInfo(nrNumber: string) {
     historiesInfoJSON.value = conflicts.value[1] as NameRequestConflict
@@ -250,6 +256,10 @@ export const useExamineStore = defineStore('examine', () => {
 
   function getShortJurisdiction(jurisdiction: string) {
     return jurisdiction
+  }
+
+  function setConsentFlag(flag: ConsentFlag | undefined) {
+    consentFlag.value = flag
   }
 
   function isUndoable(name: NameChoice): boolean {
@@ -500,14 +510,20 @@ export const useExamineStore = defineStore('examine', () => {
     jurisdiction,
     jurisdictionNumber,
     consumptionDate,
+    consumedBy,
     transactionsData,
     expiryDate,
     refundPaymentState,
+    submittedDate,
+    corpNum,
+    consentDateForEdit,
+    consentFlag,
     isUndoable,
     getHistoryInfo,
     getConflictInfo,
     toggleConflictCheckbox,
     getShortJurisdiction,
+    setConsentFlag,
     undoDecision,
     makeDecision,
     makeQuickDecision,

@@ -89,3 +89,9 @@ export enum RefundState {
   Credited = 'Funds have been credited',
   Completed = 'Refund process is completed',
 }
+
+export enum ConsentFlag {
+  Received = 'R',
+  Required = 'Y',
+  Waived = 'N',
+}
