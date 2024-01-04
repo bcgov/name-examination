@@ -261,5 +261,7 @@
     "conflict2_num": null,
     "conflict3_num": null,
     "comment": null
-  }
+  },
+  "additionalInfo": "Here's some additional info. This one is made long so we can see what it looks like when additional info is long. So here's some more text. And some more.",
+  "natureOfBusiness": "Here's our nature of business. This one is made long so we can see what it looks like when nature of business is long. So here's some more text. And some more."
 }

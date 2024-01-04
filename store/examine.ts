@@ -230,6 +230,9 @@ export const useExamineStore = defineStore('examine', () => {
   const corpNum = ref<string | null>('23132')
   const expiryDate = ref('2008-09-18')
 
+  const additionalInfo = ref(mock.additionalInfo)
+  const natureOfBusiness = ref(mock.natureOfBusiness)
+
   async function getHistoryInfo(nrNumber: string) {
     historiesInfoJSON.value = conflicts.value[1] as NameRequestConflict
   }
@@ -518,6 +521,8 @@ export const useExamineStore = defineStore('examine', () => {
     corpNum,
     consentDateForEdit,
     consentFlag,
+    additionalInfo,
+    natureOfBusiness,
     isUndoable,
     getHistoryInfo,
     getConflictInfo,

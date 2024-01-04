@@ -19,8 +19,9 @@
       </span>
     </div>
 
-    <div v-if="!disableButtons" class="flex space-x-1">
+    <div class="flex space-x-1">
       <IconButton
+        v-if="!hideSubmit"
         white
         class="h-7"
         @click="emit('submit', modelValue)"
@@ -31,6 +32,7 @@
         </template>
       </IconButton>
       <IconButton
+        v-if="!hideCancel"
         white
         class="h-7"
         @click="emit('cancel')"
@@ -48,7 +50,8 @@
 const { modelValue, characterLimit } = defineProps<{
   modelValue: any
   placeholder?: string
-  disableButtons?: boolean
+  hideSubmit?: boolean
+  hideCancel?: boolean
   submitMnemonic?: string
   cancelMnemonic?: string
   readonly?: boolean

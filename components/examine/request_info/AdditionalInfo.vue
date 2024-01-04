@@ -2,29 +2,32 @@
   <div class="text-sm">
     <ExamineRequestInfoExpandable title="Additional Info">
       <template #minimized>
-        <p>{{ INFO }}</p>
+        <p>{{ examine.additionalInfo }}</p>
       </template>
 
       <template #popup>
         <EditableTextBox
           v-if="examine.inProgress"
+          v-model="info"
           class="h-72"
           placeholder="Additional Info..."
-          v-model="INFO"
+          @submit="saveEdits"
+          @cancel="cancelEdits"
         />
-        <p v-else>{{ INFO }}</p>
+        <p v-else>{{ examine.additionalInfo }}</p>
       </template>
 
       <template #maximized>
-        <p>{{ INFO }}</p>
+        <p>{{ examine.additionalInfo }}</p>
       </template>
 
       <template #editable>
         <EditableTextBox
           class="h-72"
-          v-model="INFO"
+          v-model="info"
           placeholder="Additional Info..."
-          disable-buttons
+          hide-submit
+          hide-cancel
         />
       </template>
     </ExamineRequestInfoExpandable>
@@ -35,7 +38,13 @@
 import { useExamineStore } from '~/store/examine'
 const examine = useExamineStore()
 
-const INFO = ref(`Here's some additional info.
-This one is made long so we can see what it looks like when additional info is long.
-So here's some more text. And some more.`)
+const info = ref(examine.additionalInfo)
+
+function saveEdits() {
+  examine.additionalInfo = info.value
+}
+
+function cancelEdits() {
+  info.value = examine.additionalInfo
+}
 </script>

@@ -29,7 +29,8 @@
       class="grow"
       v-model="examine.requestorMessage"
       readonly
-      disable-buttons
+      hide-submit
+      hide-cancel
       :character-limit="characterLimit"
     />
     <span
