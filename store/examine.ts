@@ -87,7 +87,7 @@ export const useExamineStore = defineStore('examine', () => {
   const is_making_decision = ref(true)
   const is_header_shown = ref(false)
   const nrNumber = ref('NR 1234567')
-  const nr_status = ref(Status.Conditional)
+  const nr_status = ref(Status.InProgress)
   const isClosed = computed(() =>
     [
       Status.Rejected,
@@ -214,7 +214,8 @@ export const useExamineStore = defineStore('examine', () => {
   const jurisdiction = ref<string>()
   const jurisdictionNumber = ref<string>()
 
-  const prevNr = ref<string>()
+  const previousNr = ref<string>('NR 7654321')
+  const prevNrRequired = ref(false)
 
   const consumptionDate = ref<string>()
   const consumedBy = ref<string>()
@@ -228,10 +229,28 @@ export const useExamineStore = defineStore('examine', () => {
 
   const submittedDate = ref('2008-09-16, 4:44pm')
   const corpNum = ref<string | null>('23132')
+  const corpNumRequired = ref(false)
   const expiryDate = ref('2008-09-18')
 
   const additionalInfo = ref(mock.additionalInfo)
   const natureOfBusiness = ref(mock.natureOfBusiness)
+
+  const clientFirstName = ref(mock.clientFirstName)
+  const clientLastName = ref(mock.clientLastName)
+  const firstName = ref(mock.firstName)
+  const middleName = ref(mock.middleName)
+  const lastName = ref(mock.lastName)
+  const addressLine1 = ref(mock.addressLine1)
+  const addressLine2 = ref(mock.addressLine2)
+  const addressLine3 = ref(mock.addressLine3)
+  const city = ref(mock.city)
+  const province = ref(mock.province)
+  const postalCode = ref(mock.postalCode)
+  const country = ref(mock.country)
+  const phone = ref(mock.phone)
+  const fax = ref(mock.fax)
+  const conEmail = ref(mock.conEmail)
+  const contactName = ref(mock.contactName)
 
   async function getHistoryInfo(nrNumber: string) {
     historiesInfoJSON.value = conflicts.value[1] as NameRequestConflict
@@ -509,7 +528,8 @@ export const useExamineStore = defineStore('examine', () => {
     furnished,
     forceConditional,
     listJurisdictions,
-    prevNr,
+    previousNr,
+    prevNrRequired,
     jurisdiction,
     jurisdictionNumber,
     consumptionDate,
@@ -519,10 +539,27 @@ export const useExamineStore = defineStore('examine', () => {
     refundPaymentState,
     submittedDate,
     corpNum,
+    corpNumRequired,
     consentDateForEdit,
     consentFlag,
     additionalInfo,
     natureOfBusiness,
+    clientFirstName,
+    clientLastName,
+    firstName,
+    middleName,
+    lastName,
+    addressLine1,
+    addressLine2,
+    addressLine3,
+    city,
+    province,
+    postalCode,
+    country,
+    phone,
+    fax,
+    conEmail,
+    contactName,
     isUndoable,
     getHistoryInfo,
     getConflictInfo,

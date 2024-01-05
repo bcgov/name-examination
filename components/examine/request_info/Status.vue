@@ -8,9 +8,15 @@
       <p>Priority</p>
     </div>
 
-    <div><b>Status: </b> {{ additionalStatus }}</div>
+    <div class="flex items-center">
+      <h2 class="font-bold">Status:&nbsp;</h2>
+      <p>{{ additionalStatus }}</p>
+    </div>
 
-    <div><b>Examiner: </b> {{ examine.examiner }}</div>
+    <div class="flex items-center">
+      <h2 class="font-bold">Examiner:&nbsp;</h2>
+      <p>{{ examine.examiner }}</p>
+    </div>
 
     <ExamineRequestInfoCommentsPopup />
   </div>

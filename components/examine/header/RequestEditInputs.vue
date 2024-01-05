@@ -22,22 +22,31 @@
           v-model="jurisdiction"
           :options="examine.listJurisdictions"
           :options-display="(j: Jurisdiction) => j.text"
-        />
+        >
+          {{ jurisdiction ? jurisdiction.text : 'Select' }}
+        </ListSelect>
       </div>
 
-      <div v-if="corpNumRequired">
+      <div v-if="examine.corpNumRequired">
         <label for="corpNum" class="text-sm font-bold">Related Corp #</label>
         <TextInput id="corpNum" v-model="corpNum" placeholder="Corp Number" />
       </div>
 
-      <div v-if="prevNrRequired">
+      <div v-if="examine.prevNrRequired">
         <label for="prevNr" class="text-sm font-bold">
           Previous NR
-          <span class="text-red-600" v-if="prevNr && !isValidNrFormat(prevNr)">
+          <span
+            class="text-red-600"
+            v-if="examine.previousNr && !isValidNrFormat(examine.previousNr)"
+          >
             (Format must be NR xxxxxxx)
           </span>
         </label>
-        <TextInput id="prevNr" v-model="prevNr" placeholder="NR Number" />
+        <TextInput
+          id="prevNr"
+          v-model="examine.previousNr"
+          placeholder="NR Number"
+        />
       </div>
     </div>
   </div>
@@ -52,19 +61,16 @@ const examine = useExamineStore()
 
 const selectedRequestType = ref(examine.requestTypeObject)
 const jurisdiction = ref()
-const prevNr = ref('')
 const corpNum = ref('')
 
-const prevNrRequired = ref(false)
-const corpNumRequired = ref(false)
 const jurisdictionRequired = ref(false)
 
 function updateRequestTypeRules(requestType: RequestType) {
   let rules = examine.requestTypeRules.find(
     (rule) => rule.request_type == requestType.value
   )
-  prevNrRequired.value = Boolean(rules?.prev_nr_required)
-  corpNumRequired.value = Boolean(rules?.corp_num_required)
+  examine.prevNrRequired = Boolean(rules?.prev_nr_required)
+  examine.corpNumRequired = Boolean(rules?.corp_num_required)
   jurisdictionRequired.value = Boolean(rules?.jurisdiction_required)
 }
 </script>

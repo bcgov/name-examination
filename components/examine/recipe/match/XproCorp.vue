@@ -1,13 +1,13 @@
 <template>
   <div class="flex p-2 text-sm">
     <div class="grid basis-1/2 grid-cols-2 gap-y-2 overflow-x-auto">
-      <header class="font-bold">Type</header>
+      <h3 class="font-bold">Type</h3>
       <p>XPRO Corporation</p>
 
-      <header class="font-bold">Corp Number</header>
+      <h3 class="font-bold">Corp Number</h3>
       <p>{{ conflict['incorp #'] }}</p>
 
-      <header class="font-bold">Attorneys</header>
+      <h3 class="font-bold">Attorneys</h3>
       <div class="flex flex-col">
         <p v-if="isNotAvailable(conflict['attorney names'])">Not available</p>
         <p v-else v-for="attorney in conflict['attorney names']">
@@ -20,13 +20,13 @@
     </div>
 
     <div class="grid basis-1/2 grid-cols-2 overflow-x-auto">
-      <header class="font-bold">Directors</header>
+      <h3 class="font-bold">Directors</h3>
       <div class="flex flex-col">
         <p v-if="isNotAvailable(conflict.directors)">Not available</p>
         <p v-else v-for="director in conflict.directors">{{ director }}</p>
       </div>
 
-      <header class="font-bold">Head Office</header>
+      <h3 class="font-bold">Head Office</h3>
       <div>
         <p v-for="addrLine in conflict['head office']">{{ addrLine }}</p>
       </div>

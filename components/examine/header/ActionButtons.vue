@@ -1,11 +1,11 @@
 <template>
   <div v-if="examine.is_editing" class="flex h-fit items-center space-x-1">
-    <IconButton light mnemonic="s">
+    <IconButton light mnemonic="s" @click="save">
       <CheckIcon class="h-5 w-5 stroke-2" />
       <template #text><u>S</u>ave Edits</template>
     </IconButton>
 
-    <IconButton light mnemonic="c" @click="examine.is_editing = false">
+    <IconButton light mnemonic="c" @click="cancelEdit">
       <XMarkIcon class="h-5 w-5 stroke-2" />
       <template #text><u>C</u>ancel</template>
     </IconButton>
@@ -145,6 +145,13 @@ function edit() {
 
 function toggleDetails() {
   examine.is_header_shown = !examine.is_header_shown
+}
+
+function save() {}
+
+function cancelEdit() {
+  examine.is_editing = false
+  examine.is_header_shown = false
 }
 </script>
 

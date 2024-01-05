@@ -1,39 +1,48 @@
 <template>
   <div class="flex flex-col gap-y-2">
     <div>
-      <b>Client</b>
-      <p>Jane Frost</p>
+      <h3 class="font-bold">Client</h3>
+      <p>{{ examine.clientFirstName }} {{ examine.clientLastName }}</p>
     </div>
 
     <div>
-      <b>Applicant</b>
-      <p>Jack Frost</p>
+      <h3 class="font-bold">Applicant</h3>
+      <p>{{ examine.firstName }} {{ examine.lastName }}</p>
     </div>
 
     <div>
-      <b>Address</b>
-      <p>3434 Main Street</p>
-      <p>Suite 303</p>
-      <p>Top Floor</p>
-      <p>Saywarn BC</p>
-      <p>v8v8v8</p>
-      <p>CA</p>
+      <h3 class="font-bold">Address</h3>
+      <p>{{ examine.addressLine1 }}</p>
+      <p>{{ examine.addressLine2 }}</p>
+      <p>{{ examine.addressLine3 }}</p>
+      <p>{{ examine.city }} {{ examine.province }}</p>
+      <p>{{ examine.postalCode }}</p>
+      <p>{{ examine.country }}</p>
     </div>
+
     <div>
-      <b>Phone</b>
-      <p>305-343-3434</p>
+      <h3 class="font-bold">Phone</h3>
+      <p>{{ examine.phone }}</p>
     </div>
+
     <div>
-      <b>Fax</b>
-      <p>306-343-3333</p>
+      <h3 class="font-bold">Fax</h3>
+      <p>{{ examine.fax }}</p>
     </div>
+
     <div>
-      <b>Email</b>
-      <p>test@gov.bc.ca</p>
+      <h3 class="font-bold">Email</h3>
+      <p>{{ examine.conEmail }}</p>
     </div>
+
     <div>
-      <b>Contact</b>
-      <p>Jack Frost</p>
+      <h3 class="font-bold">Contact</h3>
+      <p>{{ examine.conEmail }}</p>
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { useExamineStore } from '~/store/examine'
+const examine = useExamineStore()
+</script>

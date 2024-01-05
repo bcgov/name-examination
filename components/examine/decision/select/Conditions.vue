@@ -1,6 +1,6 @@
 <template>
   <div>
-    <header class="font-semibold">Conditions</header>
+    <h3 class="font-semibold">Conditions</h3>
     <ListSelect
       v-model="examine.selectedConditions"
       :options="options"

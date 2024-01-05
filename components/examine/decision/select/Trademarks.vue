@@ -1,6 +1,6 @@
 <template>
   <div>
-    <header class="font-semibold">Trademarks</header>
+    <h3 class="font-semibold">Trademarks</h3>
     <ListSelect
       v-model="examine.selectedTrademarks"
       multiple

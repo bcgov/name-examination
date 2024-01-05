@@ -4,6 +4,7 @@ import {
   RequestTypeCode,
 } from '~/enums/codes'
 import type { NameChoice } from '~/types'
+import { getBusinesses, getCorporations } from './namex-api'
 
 export function getMappedRequestType(
   requestType: RequestTypeCode,
@@ -50,6 +51,31 @@ export function isValidNrFormat(
   return (
     withLetters.test(input) || (allowNumbersOnly && numbersOnly.test(input))
   )
+}
+
+/** Return whether a given corp number is valid or not. */
+export async function isValidCorpNum(input: string) {
+  // valid corp numbers are between 7 and 10 characters long
+  if (input.length < 7 || input.length > 10) {
+    return false
+  }
+
+  // query entities for the corp num. if not found, query again from colin
+  try {
+    const businessResponse = await getBusinesses(input)
+    if (businessResponse.status === 200) return true
+
+    // ignore corp num prefix 'BC' if applicable to match colin BC corpNum format for the validation
+    const corpNum = input.replace(/^BC+/i, '')
+    const response = await (await getCorporations(corpNum)).json()
+    return !(
+      response.incorporated === 'Not Available' &&
+      response.directors === 'Not Available'
+    )
+  } catch (error) {
+    console.error(`Error while checking corp num: ${error}`)
+    return false
+  }
 }
 
 export function sortNameChoices(choices: Array<NameChoice>) {

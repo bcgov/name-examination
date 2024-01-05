@@ -1,7 +1,7 @@
 <template>
   <div class="flex basis-1/2 flex-col space-y-2">
     <div class="flex justify-between">
-      <header class="font-semibold">
+      <h3 class="font-semibold">
         Message To Requestor
         <span
           v-if="examine.customerMessageOverride"
@@ -9,7 +9,7 @@
         >
           (Edited)
         </span>
-      </header>
+      </h3>
       <div class="flex space-x-1">
         <IconButton
           v-if="examine.customerMessageOverride"

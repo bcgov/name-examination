@@ -1,8 +1,8 @@
 <template>
   <div class="flex h-fit">
-    <header class="text-3xl font-bold" :class="{ 'text-red-600': priority }">
+    <h1 class="text-3xl font-bold" :class="{ 'text-red-600': priority }">
       {{ nrNumber }}
-    </header>
+    </h1>
 
     <a
       v-if="showTransactionsLink"

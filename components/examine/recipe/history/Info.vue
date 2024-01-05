@@ -2,10 +2,10 @@
   <div v-if="conflict && applicants" class="flex gap-x-2 p-4 text-sm">
     <div class="flex basis-2/3 flex-col">
       <div class="grid grid-cols-2 gap-y-1 overflow-x-auto">
-        <header class="font-bold">Client</header>
+        <h3 class="font-bold">Client</h3>
         <p>{{ applicants.clientFirstName }} {{ applicants.clientLastName }}</p>
 
-        <header class="font-bold">Applicant</header>
+        <h3 class="font-bold">Applicant</h3>
         <div>
           <p>{{ applicants.firstName }} {{ applicants.lastName }}</p>
           <p>{{ applicants.addrLine1 }}</p>
@@ -19,18 +19,18 @@
           </p>
         </div>
 
-        <header class="font-bold">Phone</header>
+        <h3 class="font-bold">Phone</h3>
         <p>{{ applicants.phoneNumber }}</p>
 
-        <header class="font-bold">Email</header>
+        <h3 class="font-bold">Email</h3>
         <p>{{ applicants.emailAddress }}</p>
 
-        <header class="font-bold">Contact</header>
+        <h3 class="font-bold">Contact</h3>
         <p>{{ applicants.contact }}</p>
       </div>
 
       <div v-if="conflict.comments && conflict.comments.length > 0">
-        <header class="font-bold">Comments</header>
+        <h3 class="font-bold">Comments</h3>
         <ExamineCommentsBox
           :comments="conflict.comments"
           class="max-h-48 overflow-auto rounded-md border border-gray-400 p-2 children:bg-sky-50"
@@ -41,15 +41,15 @@
     <div
       class="grid basis-1/3 auto-rows-min grid-cols-2 gap-y-1 overflow-x-auto"
     >
-      <header class="font-bold">Name State</header>
+      <h3 class="font-bold">Name State</h3>
       <p>{{ nameState }}</p>
 
-      <header v-if="conflicts.length > 0" class="font-bold">Conflicts</header>
+      <h3 v-if="conflicts.length > 0" class="font-bold">Conflicts</h3>
       <ol v-if="conflicts.length > 0" class="list-decimal list-inside">
         <li v-for="c in conflicts">{{ c }}</li>
       </ol>
 
-      <header class="font-bold">Decision</header>
+      <h3 class="font-bold">Decision</h3>
       <div class="flex flex-col">
         <p>{{ decisionText }}</p>
       </div>

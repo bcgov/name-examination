@@ -1,6 +1,6 @@
 <template>
   <div class="flex">
-    <header class="text-2xl font-bold">Decision</header>
+    <h2 class="text-2xl font-bold">Decision</h2>
 
     <label class="ml-auto flex items-center space-x-1" for="consent">
       <input

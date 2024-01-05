@@ -3,7 +3,7 @@
     <div class="flex grow flex-col">
       <textarea
         ref="textArea"
-        class="grow resize-none text-ellipsis rounded-t-md border border-gray-300 p-2 text-sm outline-none"
+        class="grow resize-none text-ellipsis rounded-md border border-gray-300 p-2 text-sm outline-none"
         :class="{ 'border-b-0': characterLimit }"
         :placeholder="placeholder"
         :readonly="readonly"

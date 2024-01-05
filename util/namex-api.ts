@@ -12,7 +12,7 @@ async function getToken(): Promise<string | undefined> {
       return $auth.token
     })
     .catch(async (error) => {
-      console.error(`Failed to complete request: ${error}`)
+      console.error(`Failed to get session token: ${error}`)
       return undefined
     })
 }
@@ -22,13 +22,12 @@ async function getToken(): Promise<string | undefined> {
  */
 async function callNamexApi(url: URL, options?: object) {
   const token = await getToken()
-  const response = await fetch(url, {
+  return fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
     ...(options ? options : {}),
   })
-  return await response?.json()
 }
 
 /**
@@ -49,7 +48,7 @@ export function getNamexApiUrl(endpoint: string): URL {
  * @returns the json response object
  */
 export async function getNamexObject(url: URL): Promise<any> {
-  return callNamexApi(url)
+  return (await callNamexApi(url)).json()
 }
 
 /**
@@ -74,4 +73,12 @@ export async function getTransactions(
   nrNumber: string
 ): Promise<Array<Transaction>> {
   return getNamexObject(getNamexApiUrl(`/events/${nrNumber}`))
+}
+
+export async function getBusinesses(corpNum: string) {
+  return callNamexApi(getNamexApiUrl(`/businesses/${corpNum}`))
+}
+
+export async function getCorporations(corpNum: string) {
+  return callNamexApi(getNamexApiUrl(`/corporations/${corpNum}`))
 }

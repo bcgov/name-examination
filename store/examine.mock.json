@@ -263,5 +263,21 @@
     "comment": null
   },
   "additionalInfo": "Here's some additional info. This one is made long so we can see what it looks like when additional info is long. So here's some more text. And some more.",
-  "natureOfBusiness": "Here's our nature of business. This one is made long so we can see what it looks like when nature of business is long. So here's some more text. And some more."
+  "natureOfBusiness": "Here's our nature of business. This one is made long so we can see what it looks like when nature of business is long. So here's some more text. And some more.",
+  "clientFirstName": "Jane",
+  "clientLastName": "Frost",
+  "firstName": "Jack",
+  "middleName": "",
+  "lastName": "Frost",
+  "addressLine1": "3434 Main Street",
+  "addressLine2": "Suite 303",
+  "addressLine3": "Top Floor",
+  "city": "Saywarn",
+  "province": "BC",
+  "postalCode": "v8v8v8",
+  "country": "CA",
+  "phone": "305-343-3434",
+  "fax": "306-343-3333",
+  "conEmail": "test@gov.bc.ca",
+  "contactName": "Jack Frost"
 }
