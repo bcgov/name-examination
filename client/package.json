@@ -1,9 +1,9 @@
 {
   "name": "namex",
-  "version": "2.1.24",
+  "version": "2.1.25",
   "description": "Webpack 5, Vue.js",
   "main": "main.js",
-  "author": "Per Olsen",
+  "author": "BC Public Services",
   "license": "MIT",
   "scripts": {
     "start": "webpack serve --config build/webpack.dev.conf.js --progress",
@@ -77,7 +77,7 @@
     "whatwg-fetch": "^3.6.2"
   },
   "engines": {
-    "node": ">= 16.0.0",
+    "node": ">= 20.0.0",
     "npm": ">= 8.0.0"
   },
   "browserslist": [
