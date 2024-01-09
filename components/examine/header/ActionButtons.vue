@@ -1,7 +1,8 @@
 <template>
   <div v-if="examine.is_editing" class="flex h-fit items-center space-x-1">
-    <IconButton light mnemonic="s" @click="save">
-      <CheckIcon class="h-5 w-5 stroke-2" />
+    <IconButton light mnemonic="s" @click="saveEdits">
+      <CheckIcon v-if="!savingEdit" class="h-5 w-5 stroke-2" />
+      <ArrowPathIcon v-else class="h-5 w-5 stroke-2 animate-spin mr-0.5"/>
       <template #text><u>S</u>ave Edits</template>
     </IconButton>
 
@@ -25,8 +26,8 @@
       <ArrowsPointingOutIcon v-else class="h-5 w-5 stroke-2" />
 
       <template #text v-if="examine.is_header_shown"
-        >Hide Details (<u>b</u>)</template
-      >
+        >Hide Details (<u>b</u>)
+      </template>
       <template #text v-else>Show Details (<u>b</u>)</template>
     </IconButton>
 
@@ -91,6 +92,7 @@
 
 <script setup lang="ts">
 import {
+ArrowPathIcon,
   ArrowUturnLeftIcon,
   ArrowsPointingInIcon,
   ArrowsPointingOutIcon,
@@ -130,6 +132,12 @@ const canEdit = computed(() => {
   )
 })
 
+const savingEdit = ref(false)
+
+function toggleDetails() {
+  examine.is_header_shown = !examine.is_header_shown
+}
+
 function edit() {
   // if this isn't the user's INPROGRESS, make it that
   if (!examine.is_my_current_nr && !examine.isClosed) {
@@ -143,13 +151,18 @@ function edit() {
   examine.is_editing = true
 }
 
-function toggleDetails() {
-  examine.is_header_shown = !examine.is_header_shown
+async function saveEdits() {
+  savingEdit.value = true
+  await examine.saveEdits()
+  savingEdit.value = false
 }
 
-function save() {}
-
-function cancelEdit() {
+async function cancelEdit() {
+  if (examine.previousStateCd === Status.Draft) {
+    await examine.revertToPreviousState()
+  } else {
+    await examine.getpostgrescompInfo(examine.nrNumber)
+  }
   examine.is_editing = false
   examine.is_header_shown = false
 }

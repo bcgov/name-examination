@@ -18,7 +18,7 @@ import type {
   Transaction,
 } from '~/types'
 
-import mock from './examine.mock.json'
+import mockJson from './examine.mock.json'
 import requestTypes from '~/data/request_types.json'
 import requestTypeRulesJSON from '~/data/request_type_rules.json'
 import jurisdictionsData from '~/data/jurisdictions.json'
@@ -33,6 +33,8 @@ import { getTransactions, patchNameRequest } from '~/util/namex-api'
 import { sortNameChoices } from '~/util'
 
 export const useExamineStore = defineStore('examine', () => {
+  const mock = mockJson
+
   const priority = ref(true)
   const inProgress = ref(true)
   const is_complete = ref(false)
@@ -68,19 +70,6 @@ export const useExamineStore = defineStore('examine', () => {
 
   const listDecisionReasons = ref<Array<Macro>>(mock.macros)
 
-  async function getConflictInfo(item: ConflictListItem) {
-    corpConflictJSON.value = undefined
-    namesConflictJSON.value = undefined
-    const conflict = conflicts.value.filter(
-      (conflict) => conflict.nrNumber === item.nrNumber
-    )[0]
-    if (item.source === 'CORP') {
-      corpConflictJSON.value = conflict as CorpConflict
-    } else {
-      namesConflictJSON.value = conflict as NameRequestConflict
-    }
-  }
-
   const trademarksJSON = ref<TrademarkApiResponse>(mock.trademarkJSON)
 
   const is_editing = ref(false)
@@ -96,6 +85,7 @@ export const useExamineStore = defineStore('examine', () => {
       Status.Consumed,
     ].includes(nr_status.value)
   )
+  const previousStateCd = ref<Status>()
   const listRequestTypes = ref<Array<RequestType>>(
     requestTypes as Array<RequestType>
   )
@@ -214,7 +204,7 @@ export const useExamineStore = defineStore('examine', () => {
   const jurisdiction = ref<string>()
   const jurisdictionNumber = ref<string>()
 
-  const previousNr = ref<string>('NR 7654321')
+  const previousNr = ref<string>()
   const prevNrRequired = ref(false)
 
   const consumptionDate = ref<string>()
@@ -228,7 +218,7 @@ export const useExamineStore = defineStore('examine', () => {
   const refundPaymentState = ref<RefundState>()
 
   const submittedDate = ref('2008-09-16, 4:44pm')
-  const corpNum = ref<string | null>('23132')
+  const corpNum = ref<string>()
   const corpNumRequired = ref(false)
   const expiryDate = ref('2008-09-18')
 
@@ -252,8 +242,36 @@ export const useExamineStore = defineStore('examine', () => {
   const conEmail = ref(mock.conEmail)
   const contactName = ref(mock.contactName)
 
+  const forceConditional = ref(false)
+
+  interface EditAction {
+    /** Return whether an edit action's internal state is valid (e.g. a name field is not empty).
+     * This function is called before saving. A save will not occur if at least one edit action's validation fails.
+     */
+    validate: (() => boolean) | (() => Promise<boolean>)
+    /** Update the store's value with the new values. This function is called after all validations have succeeded */
+    update: () => void
+  }
+  const editActions: Array<EditAction> = []
+  function addEditAction(action: EditAction) {
+    editActions.push(action)
+  }
+
   async function getHistoryInfo(nrNumber: string) {
     historiesInfoJSON.value = conflicts.value[1] as NameRequestConflict
+  }
+
+  async function getConflictInfo(item: ConflictListItem) {
+    corpConflictJSON.value = undefined
+    namesConflictJSON.value = undefined
+    const conflict = conflicts.value.filter(
+      (conflict) => conflict.nrNumber === item.nrNumber
+    )[0]
+    if (item.source === 'CORP') {
+      corpConflictJSON.value = conflict as CorpConflict
+    } else {
+      namesConflictJSON.value = conflict as NameRequestConflict
+    }
   }
 
   function toggleConflictCheckbox(conflictItem: ConflictListItem) {
@@ -335,8 +353,6 @@ export const useExamineStore = defineStore('examine', () => {
     currentChoice.value = currentNameObj.value.choice
   }
 
-  const forceConditional = ref(false)
-
   async function makeDecision(decision: Status) {
     decision_made.value = decision
     const currentName = currentNameObj
@@ -415,7 +431,7 @@ export const useExamineStore = defineStore('examine', () => {
     await patchNameRequest(nrNumber.value, patch)
 
     await getpostgrescompInfo(nrNumber.value)
-    setNewExaminer()
+    await setNewExaminer()
   }
 
   async function getTransactionsHistory(nrNumber: string) {
@@ -453,6 +469,26 @@ export const useExamineStore = defineStore('examine', () => {
 
   function updateNRState(state: Status) {}
 
+  async function revertToPreviousState() {
+    await patchNameRequest(nrNumber.value, {
+      state: previousStateCd.value,
+      previousStateCd: null,
+    })
+    await getpostgrescompInfo(nrNumber.value)
+    await setNewExaminer()
+  }
+
+  async function saveEdits() {
+    for (const action of editActions) {
+      if (!(await action.validate())) {
+        return
+      }
+    }
+    editActions.forEach((ea) => ea.update())
+    is_editing.value = false
+    is_header_shown.value = true
+  }
+
   watch(
     () => [selectedConflicts],
     async (_state) => {
@@ -484,6 +520,7 @@ export const useExamineStore = defineStore('examine', () => {
     is_header_shown,
     nrNumber,
     nr_status,
+    previousStateCd,
     listRequestTypes,
     requestType,
     requestTypeObject,
@@ -560,6 +597,7 @@ export const useExamineStore = defineStore('examine', () => {
     fax,
     conEmail,
     contactName,
+    addEditAction,
     isUndoable,
     getHistoryInfo,
     getConflictInfo,
@@ -575,6 +613,8 @@ export const useExamineStore = defineStore('examine', () => {
     setNewExaminer,
     updateNRState,
     updateNRStatePreviousState,
+    revertToPreviousState,
+    saveEdits,
 
     isClosed,
   }

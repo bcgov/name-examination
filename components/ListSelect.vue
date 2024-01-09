@@ -13,6 +13,7 @@
           :class="{
             'hover:bg-gray-100': !disabled,
             'pointer-events-none text-gray-400': disabled,
+            'border-2 border-red-600 outline-red-600': errorStyle,
           }"
         >
           <span class="block"><slot>Select</slot></span>
@@ -94,6 +95,8 @@ const { modelValue, options, multiple, optionsModel } = withDefaults(
     multiple?: boolean
     disabled?: boolean
     optionsStyle?: string
+    /** Style this input as an error, useful to indicate invalid inputs */
+    errorStyle?: boolean
     /** Given an option from the options array, returns the display string that will be shown in the options dropdown */
     optionsDisplay?: (option: ModelValueType) => string
     /** Given an option from the options array, returns the value that will be emitted when updating the model value. */

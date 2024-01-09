@@ -10,9 +10,7 @@
     </li>
   </ol>
 
-  <ol v-else class="ml-4 basis-1/3 list-decimal space-y-2">
-    <li v-for="choice in nameChoices"><TextInput :value="choice.name" /></li>
-  </ol>
+  <ExamineNamesListEditable v-else :name-choices="nameChoices" />
 </template>
 
 <script setup lang="ts">
@@ -20,7 +18,11 @@ import { useExamineStore } from '~/store/examine'
 import type { NameChoice } from '~/types'
 const examine = useExamineStore()
 
-const nameChoices = [examine.compName1, examine.compName2, examine.compName3]
+const nameChoices = ref([
+  examine.compName1,
+  examine.compName2,
+  examine.compName3,
+])
 
 const isCurrent = (choice: number) => examine.currentChoice === choice
 
