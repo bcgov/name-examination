@@ -1,28 +1,22 @@
 <template>
   <ol v-if="!examine.is_editing" class="list-decimal">
-    <li v-for="choice in nameChoices">
+    <li v-for="choice in examine.nameChoices">
       <ExamineNamesListChoice
-        :choice="choice"
-        :decision-text="decisionReasonOrConflictList(choice)"
-        :undoable="examine.isUndoable(choice)"
-        :current="isCurrent(choice.choice)"
+        :choice="choice.value"
+        :decision-text="decisionReasonOrConflictList(choice.value)"
+        :undoable="examine.isUndoable(choice.value)"
+        :current="isCurrent(choice.value.choice)"
       />
     </li>
   </ol>
 
-  <ExamineNamesListEditable v-else :name-choices="nameChoices" />
+  <ExamineNamesListEditable v-else />
 </template>
 
 <script setup lang="ts">
 import { useExamineStore } from '~/store/examine'
 import type { NameChoice } from '~/types'
 const examine = useExamineStore()
-
-const nameChoices = ref([
-  examine.compName1,
-  examine.compName2,
-  examine.compName3,
-])
 
 const isCurrent = (choice: number) => examine.currentChoice === choice
 
