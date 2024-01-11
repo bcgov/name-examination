@@ -223,6 +223,7 @@ export const useExamineStore = defineStore('examine', () => {
   const expiryDate = ref<string | undefined>('2008-09-18')
 
   const additionalInfo = ref(mock.additionalInfo)
+  const additional_info_template = ref<string>()
   const natureOfBusiness = ref(mock.natureOfBusiness)
 
   const clientFirstName = ref(mock.clientFirstName)
@@ -243,6 +244,17 @@ export const useExamineStore = defineStore('examine', () => {
   const contactName = ref(mock.contactName)
 
   const forceConditional = ref(false)
+
+  const additionalInfoTransformedTemplate = computed(() => {
+    return additional_info_template.value
+      ?.split('||')
+      .map((template) =>
+        template
+          .replaceAll('<corp_num>', corpNum.value || '')
+          .replaceAll('<prev_nr>', previousNr.value || '')
+      )
+      .join(' ')
+  })
 
   interface EditAction {
     /** Return whether an edit action's internal state is valid (e.g. a name field is not empty).
@@ -301,7 +313,6 @@ export const useExamineStore = defineStore('examine', () => {
   function setConsentFlag(flag: ConsentFlag | undefined) {
     consentFlag.value = flag
     if (flag === ConsentFlag.Received) {
-
     }
   }
 
@@ -481,13 +492,30 @@ export const useExamineStore = defineStore('examine', () => {
     await setNewExaminer()
   }
 
-  async function saveEdits() {
+  async function updateRequest() {
+    console.log('updating request')
+  }
+
+  /** Runs all edit actions, ensuring all actions have valid internal state before updating the store state. */
+  async function runEditActions() {
     for (const action of editActions) {
       if (!(await action.validate())) {
         return
       }
     }
     editActions.forEach((ea) => ea.update())
+  }
+
+  async function saveEdits() {
+    await runEditActions()
+
+    if (previousStateCd.value === Status.Draft) {
+      nr_status.value = previousStateCd.value
+      previousStateCd.value = undefined
+    }
+
+    await updateRequest()
+
     is_editing.value = false
     is_header_shown.value = true
   }
@@ -583,6 +611,8 @@ export const useExamineStore = defineStore('examine', () => {
     consentDateForEdit,
     consentFlag,
     additionalInfo,
+    additionalInfoTransformedTemplate,
+    additional_info_template,
     natureOfBusiness,
     clientFirstName,
     clientLastName,

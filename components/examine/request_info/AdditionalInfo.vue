@@ -2,7 +2,7 @@
   <div class="text-sm">
     <ExamineRequestInfoExpandable title="Additional Info">
       <template #minimized>
-        <p>{{ examine.additionalInfo }}</p>
+        <p>{{ additionalInfoDisplay }}</p>
       </template>
 
       <template #popup>
@@ -14,11 +14,11 @@
           @submit="saveEdits"
           @cancel="cancelEdits"
         />
-        <p v-else>{{ examine.additionalInfo }}</p>
+        <p v-else>{{ additionalInfoDisplay }}</p>
       </template>
 
       <template #maximized>
-        <p>{{ examine.additionalInfo }}</p>
+        <p>{{ additionalInfoDisplay }}</p>
       </template>
 
       <template #editable>
@@ -40,6 +40,12 @@ const examine = useExamineStore()
 
 const info = ref(examine.additionalInfo)
 
+const additionalInfoDisplay = computed(() =>
+  [examine.additionalInfoTransformedTemplate, examine.additionalInfo]
+    .filter((s) => s != null)
+    .join('\n')
+)
+
 function saveEdits() {
   examine.additionalInfo = info.value
 }
@@ -47,4 +53,9 @@ function saveEdits() {
 function cancelEdits() {
   info.value = examine.additionalInfo
 }
+
+examine.addEditAction({
+  validate: () => true,
+  update: saveEdits,
+})
 </script>

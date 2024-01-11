@@ -94,6 +94,7 @@ function updateRequestTypeRules(requestType: RequestType) {
   )
   examine.prevNrRequired = Boolean(rules?.prev_nr_required)
   examine.corpNumRequired = Boolean(rules?.corp_num_required)
+  examine.additional_info_template = rules?.additional_info_template
   jurisdictionRequired.value = Boolean(rules?.jurisdiction_required)
   resetErrorTexts()
 }
