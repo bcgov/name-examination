@@ -1,16 +1,5 @@
 <template>
-  <div v-if="examine.is_editing" class="flex h-fit items-center space-x-1">
-    <IconButton light mnemonic="s" @click="saveEdits">
-      <CheckIcon v-if="!savingEdit" class="h-5 w-5 stroke-2" />
-      <ArrowPathIcon v-else class="h-5 w-5 stroke-2 animate-spin mr-0.5"/>
-      <template #text><u>S</u>ave Edits</template>
-    </IconButton>
-
-    <IconButton light mnemonic="c" @click="cancelEdit">
-      <XMarkIcon class="h-5 w-5 stroke-2" />
-      <template #text><u>C</u>ancel</template>
-    </IconButton>
-  </div>
+  <ExamineHeaderEditActionButtons v-if="examine.is_editing" />
 
   <div v-else class="flex items-center space-x-1">
     <IconButton v-if="canEdit && showButtons" light @click="edit" mnemonic="d">
@@ -92,11 +81,9 @@
 
 <script setup lang="ts">
 import {
-ArrowPathIcon,
   ArrowUturnLeftIcon,
   ArrowsPointingInIcon,
   ArrowsPointingOutIcon,
-  CheckIcon,
   ChevronDoubleRightIcon,
   DocumentCheckIcon,
   PauseIcon,
@@ -132,8 +119,6 @@ const canEdit = computed(() => {
   )
 })
 
-const savingEdit = ref(false)
-
 function toggleDetails() {
   examine.is_header_shown = !examine.is_header_shown
 }
@@ -149,22 +134,6 @@ function edit() {
     }
   }
   examine.is_editing = true
-}
-
-async function saveEdits() {
-  savingEdit.value = true
-  await examine.saveEdits()
-  savingEdit.value = false
-}
-
-async function cancelEdit() {
-  if (examine.previousStateCd === Status.Draft) {
-    await examine.revertToPreviousState()
-  } else {
-    await examine.getpostgrescompInfo(examine.nrNumber)
-  }
-  examine.is_editing = false
-  examine.is_header_shown = false
 }
 </script>
 
