@@ -76,7 +76,7 @@ export const useExamineStore = defineStore('examine', () => {
   const is_making_decision = ref(true)
   const is_header_shown = ref(false)
   const nrNumber = ref('NR 1234567')
-  const nr_status = ref(Status.InProgress)
+  const nr_status = ref(Status.Conditional)
   const isClosed = computed(() =>
     [
       Status.Rejected,
@@ -220,7 +220,7 @@ export const useExamineStore = defineStore('examine', () => {
   const submittedDate = ref('2008-09-16, 4:44pm')
   const corpNum = ref<string>()
   const corpNumRequired = ref(false)
-  const expiryDate = ref('2008-09-18')
+  const expiryDate = ref<string | undefined>('2008-09-18')
 
   const additionalInfo = ref(mock.additionalInfo)
   const natureOfBusiness = ref(mock.natureOfBusiness)
@@ -300,6 +300,9 @@ export const useExamineStore = defineStore('examine', () => {
 
   function setConsentFlag(flag: ConsentFlag | undefined) {
     consentFlag.value = flag
+    if (flag === ConsentFlag.Received) {
+
+    }
   }
 
   function isUndoable(name: NameChoice): boolean {
@@ -491,7 +494,7 @@ export const useExamineStore = defineStore('examine', () => {
 
   watch(
     () => [selectedConflicts],
-    async (_state) => {
+    (_state) => {
       // compared conflicts should be kept the same as selected conflicts when auto add is enabled
       if (conflictsAutoAdd.value) {
         const selectedNRs = selectedConflicts.value.map((c) => c.nrNumber)

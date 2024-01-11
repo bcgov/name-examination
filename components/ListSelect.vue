@@ -54,7 +54,7 @@
                 ]"
               >
                 <span>
-                  {{ optionsDisplay(option) }}
+                  {{ [optionsDisplay(option), console.log(option.text, option, selected)][0] }}
                 </span>
                 <span
                   v-if="selected"

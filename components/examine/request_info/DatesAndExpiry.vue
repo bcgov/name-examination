@@ -10,12 +10,26 @@
       <span>{{ examine.corpNum }}</span>
     </div>
 
-    <div class="flex items-center" :class="{ 'text-gray-400': !expiry }">
+    <div
+      class="flex items-center"
+      :class="{ 'text-gray-400': !examine.expiryDate }"
+    >
       <h2 class="font-bold">Expiry:&nbsp;</h2>
-      <span v-if="!examine.is_editing">
-        {{ expiry ? expiry : 'n/a' }}
+      <span v-if="!examine.expiryDate">n/a</span>
+      <span v-else-if="!examine.is_editing">
+        {{ examine.expiryDate }}
       </span>
-      <DateInput v-else min-today v-model="expiry" />
+      <div v-else class="flex flex-col">
+        <DateInput
+          min-today
+          v-model="expiry"
+          :error-style="expiryDateErrorText != ''"
+          @change="expiryDateErrorText = ''"
+        />
+        <span class="text-sm font-bold text-red-600">
+          {{ expiryDateErrorText }}
+        </span>
+      </div>
     </div>
 
     <div class="flex" :class="{ 'text-gray-400': !examine.consumptionDate }">
@@ -51,11 +65,20 @@
         </div>
 
         <div
-          v-if="examine.consentFlag === ConsentFlag.Received"
+          v-if="consentFlag === ConsentFlag.Received"
           class="flex items-center"
         >
           <h2 class="font-bold">Consent Date:&nbsp;</h2>
-          <DateInput v-model="consentDate" />
+          <div class="flex flex-col">
+            <DateInput
+              v-model="consentDate"
+              :error-style="consentDateErrorText != ''"
+              @change="consentDateErrorText = ''"
+            />
+            <span class="text-sm font-bold text-red-600">
+              {{ consentDateErrorText }}
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -63,14 +86,18 @@
 </template>
 
 <script setup lang="ts">
-import { DateTime } from 'luxon'
 import { ConsentFlag } from '~/enums/codes'
 import { Status } from '~/enums/nr-status'
 import { useExamineStore } from '~/store/examine'
 
 const examine = useExamineStore()
 
-const expiry = ref(examine.expiryDate)
+const expiry = ref(examine.expiryDate || '')
+const consentFlag = ref(examine.consentFlag)
+const consentDate = ref(examine.consentDateForEdit || '')
+
+const expiryDateErrorText = ref('')
+const consentDateErrorText = ref('')
 
 type ConsentOption = { text: string; value: ConsentFlag | undefined }
 const consentOptions: Array<ConsentOption> = [
@@ -79,18 +106,7 @@ const consentOptions: Array<ConsentOption> = [
   { text: 'Waived', value: ConsentFlag.Waived },
 ]
 const consentOptionText = computed(
-  () => consentOptions.find((o) => o.value === examine.consentFlag)?.text
-)
-
-const consentFlag = computed({
-  get: () => examine.consentFlag,
-  set: (flag) => examine.setConsentFlag(flag),
-})
-
-const consentDate = computed(() =>
-  examine.consentDateForEdit
-    ? examine.consentDateForEdit
-    : DateTime.now().toFormat('yyyy-MM-dd')
+  () => consentOptions.find((o) => o.value === consentFlag.value)?.text
 )
 
 const consentText = computed(() => {
@@ -104,5 +120,35 @@ const consentText = computed(() => {
     default:
       return '-'
   }
+})
+
+examine.addEditAction({
+  validate() {
+    let isValid = true
+    if (examine.expiryDate && !expiry.value) {
+      expiryDateErrorText.value = 'Expiry date is required'
+      isValid = false
+    }
+    if (consentFlag.value === ConsentFlag.Received && !consentDate.value) {
+      consentDateErrorText.value = 'Consent date is required'
+      isValid = false
+    }
+    return isValid
+  },
+  update() {
+    examine.expiryDate = expiry.value
+
+    if (examine.nr_status === Status.Conditional) {
+      examine.consentFlag = consentFlag.value
+    } else {
+      examine.consentFlag = undefined
+    }
+
+    if (examine.consentFlag === ConsentFlag.Received) {
+      examine.consentDateForEdit = consentDate.value
+    } else {
+      examine.consentDateForEdit = undefined
+    }
+  },
 })
 </script>

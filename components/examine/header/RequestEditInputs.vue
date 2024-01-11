@@ -64,7 +64,7 @@
 <script setup lang="ts">
 import type { RequestTypeCode } from '~/enums/codes'
 import { useExamineStore } from '~/store/examine'
-import type { Jurisdiction, RequestType } from '~/types'
+import type { RequestType } from '~/types'
 import { isValidCorpNum, isValidNrFormat } from '~/util'
 
 const examine = useExamineStore()
@@ -100,6 +100,9 @@ function updateRequestTypeRules(requestType: RequestType) {
 
 examine.addEditAction({
   async validate() {
+    if (examine.isClosed) {
+      return true
+    }
     let isValid = true
     if (jurisdictionRequired.value && jurisdiction.value == null) {
       jursidictionErrorText.value = 'Please select a jurisdiction'

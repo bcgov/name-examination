@@ -47,7 +47,7 @@ examine.addEditAction({
   },
   update() {
     for (const [i, choice] of examine.nameChoices.entries()) {
-      choice.value.name = nameInputs.value[i]
+      choice.value.name = nameInputs.value[i].trim()
     }
   },
 })
