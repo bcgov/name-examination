@@ -11,7 +11,7 @@
     </ListSelect>
 
     <div class="flex flex-col space-x-1">
-      <div v-if="jurisdictionRequired" class="flex flex-col">
+      <div v-if="examine.jurisdictionRequired" class="flex flex-col">
         <label for="jurisdiction" class="text-sm font-bold">
           Jurisdiction
         </label>
@@ -72,7 +72,6 @@ const examine = useExamineStore()
 const selectedRequestType = ref(examine.requestTypeObject)
 
 const jurisdiction = ref(examine.jurisdiction)
-const jurisdictionRequired = ref(false)
 const jursidictionErrorText = ref('')
 
 const corpNum = ref('')
@@ -89,13 +88,7 @@ function resetErrorTexts() {
 }
 
 function updateRequestTypeRules(requestType: RequestType) {
-  let rules = examine.requestTypeRules.find(
-    (rule) => rule.request_type == requestType.value
-  )
-  examine.prevNrRequired = Boolean(rules?.prev_nr_required)
-  examine.corpNumRequired = Boolean(rules?.corp_num_required)
-  examine.additional_info_template = rules?.additional_info_template
-  jurisdictionRequired.value = Boolean(rules?.jurisdiction_required)
+  examine.updateRequestTypeRules(requestType)
   resetErrorTexts()
 }
 
@@ -105,7 +98,7 @@ examine.addEditAction({
       return true
     }
     let isValid = true
-    if (jurisdictionRequired.value && jurisdiction.value == null) {
+    if (examine.jurisdictionRequired && jurisdiction.value == null) {
       jursidictionErrorText.value = 'Please select a jurisdiction'
       isValid = false
     }
@@ -126,7 +119,7 @@ examine.addEditAction({
   update() {
     resetErrorTexts()
     examine.requestType = selectedRequestType.value.value as RequestTypeCode
-    if (jurisdictionRequired.value) {
+    if (examine.jurisdictionRequired) {
       examine.jurisdiction = jurisdiction.value
     } else {
       examine.jurisdiction = undefined

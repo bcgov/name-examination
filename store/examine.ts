@@ -203,6 +203,7 @@ export const useExamineStore = defineStore('examine', () => {
   const listJurisdictions = ref<Array<Jurisdiction>>(jurisdictionsData)
   const jurisdiction = ref<string>()
   const jurisdictionNumber = ref<string>()
+  const jurisdictionRequired = ref(false)
 
   const previousNr = ref<string>()
   const prevNrRequired = ref(false)
@@ -520,6 +521,16 @@ export const useExamineStore = defineStore('examine', () => {
     is_header_shown.value = true
   }
 
+  function updateRequestTypeRules(requestType: RequestType) {
+    let rules = requestTypeRules.value.find(
+      (rule) => rule.request_type == requestType.value
+    )
+    prevNrRequired.value = Boolean(rules?.prev_nr_required)
+    corpNumRequired.value = Boolean(rules?.corp_num_required)
+    additional_info_template.value = rules?.additional_info_template
+    jurisdictionRequired.value = Boolean(rules?.jurisdiction_required)
+  }
+
   watch(
     () => [selectedConflicts],
     (_state) => {
@@ -530,6 +541,16 @@ export const useExamineStore = defineStore('examine', () => {
           selectedNRs.includes(c.nrNumber)
         )
       }
+    },
+    { deep: true }
+  )
+
+  watch(
+    () => [nrNumber],
+    async (_state) => {
+      await getpostgrescompInfo(nrNumber.value)
+      await setNewExaminer()
+      updateRequestTypeRules(requestTypeObject.value)
     },
     { deep: true }
   )
@@ -599,6 +620,7 @@ export const useExamineStore = defineStore('examine', () => {
     previousNr,
     prevNrRequired,
     jurisdiction,
+    jurisdictionRequired,
     jurisdictionNumber,
     consumptionDate,
     consumedBy,
@@ -648,6 +670,7 @@ export const useExamineStore = defineStore('examine', () => {
     updateNRStatePreviousState,
     revertToPreviousState,
     saveEdits,
+    updateRequestTypeRules,
 
     isClosed,
   }
