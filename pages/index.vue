@@ -50,3 +50,7 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+useHead({ title: 'BC Registry: Name Examination - Home' })
+</script>

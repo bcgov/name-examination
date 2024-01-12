@@ -40,10 +40,8 @@ export const useExamineStore = defineStore('examine', () => {
   const userId = ref('someone@idir')
 
   const priority = ref(true)
-  const inProgress = ref(true)
   const is_complete = ref(false)
   const examiner = ref('someone@idir')
-  console.log(examiner.value, userId.value)
 
   const exactMatchesConflicts = ref<Array<ConflictListItem>>([])
   const parsedSynonymConflicts = ref<Array<ConflictList>>(
@@ -205,7 +203,6 @@ export const useExamineStore = defineStore('examine', () => {
     () =>
       nr_status.value === Status.InProgress && userId.value === examiner.value
   )
-  console.log(is_my_current_nr.value)
   const furnished = ref<'Y' | 'N'>('N')
 
   const listJurisdictions = ref<Array<Jurisdiction>>(jurisdictionsData)
@@ -541,7 +538,9 @@ export const useExamineStore = defineStore('examine', () => {
     }
   }
 
-  async function updateNRState(state: Status) {}
+  async function updateNRState(state: Status) {
+    nr_status.value = state
+  }
 
   async function revertToPreviousState() {
     await patchNameRequest(nrNumber.value, {
@@ -692,7 +691,6 @@ export const useExamineStore = defineStore('examine', () => {
 
   return {
     priority,
-    inProgress,
     is_complete,
     conflictsAutoAdd,
     conflicts,

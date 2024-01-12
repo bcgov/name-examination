@@ -49,7 +49,12 @@
     </IconButton>
 
     <!-- Hold Button -->
-    <IconButton v-else light @click="examine.holdRequest" mnemonic="h">
+    <IconButton
+      v-if="examine.is_my_current_nr"
+      light
+      @click="examine.holdRequest"
+      mnemonic="h"
+    >
       <PauseIcon class="h-5 w-5 stroke-2" />
       <template #text><u>H</u>old Request</template>
     </IconButton>

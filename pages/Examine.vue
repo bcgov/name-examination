@@ -29,7 +29,7 @@
       class="flex grow flex-col space-x-3 bg-gray-100 p-4 xl:flex-row"
     >
       <ExamineRecipe class="basis-1/2" />
-      <ExamineDecision v-if="examine.inProgress" class="basis-1/2" />
+      <ExamineDecision v-if="examine.is_making_decision" class="basis-1/2" />
     </div>
   </div>
 </template>
@@ -38,7 +38,7 @@
 import { useExamineStore } from '~/store/examine'
 const examine = useExamineStore()
 
-useHead({ title: 'BC Registry: Name Examination - Examine Names' })
+useHead({ title: 'BC Registry: Name Examination - Examine Name Request' })
 
 const showQuickActionButtons = computed(
   () =>

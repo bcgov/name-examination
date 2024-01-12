@@ -7,7 +7,7 @@
 
       <template #popup>
         <EditableTextBox
-          v-if="examine.inProgress"
+          v-if="examine.is_my_current_nr"
           v-model="info"
           class="h-72"
           placeholder="Additional Info..."
