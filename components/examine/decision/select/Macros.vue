@@ -3,15 +3,15 @@
     <h3 class="font-semibold">Macros</h3>
     <ListSelect
       multiple
-      v-model="examine.selectedReasons"
+      v-model="examine.selectedMacros"
       :disabled="examine.decisionSelectionsDisabled"
       :options="examine.listDecisionReasons"
       :options-display="(option: Macro) => option.name"
       options-style="!max-h-48"
     >
       <Chips
-        v-if="examine.selectedReasons.length > 0"
-        v-model="examine.selectedReasons"
+        v-if="examine.selectedMacros.length > 0"
+        v-model="examine.selectedMacros"
         :display="(macro: Macro) => macro.name"
       />
     </ListSelect>

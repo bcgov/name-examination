@@ -28,12 +28,6 @@ import { Status } from '~/enums/nr-status'
 import { useExamineStore } from '~/store/examine'
 const examine = useExamineStore()
 
-const isApprovedAndExpired = computed(
-  // NR will move to 'EXPIRED' state once expiry date is reached for 'APPROVED', 'CONDITIONAL' state.
-  // If currentState is 'EXPIRED', then it was approved and expired.
-  () => examine.expiryDate && examine.nr_status === Status.Expired
-)
-
 const additionalStatus = computed(() => {
   const approvedName = examine.nameChoices.find((name) =>
     [Status.Approved, Status.Condition].includes(name.value.state)
@@ -45,7 +39,7 @@ const additionalStatus = computed(() => {
         : 'APPROVED'
     if (examine.nr_status == Status.Consumed) {
       return `${displayState} - CONSUMED`
-    } else if (isApprovedAndExpired.value) {
+    } else if (examine.isApprovedAndExpired) {
       return `${displayState} - EXPIRED`
     }
   }

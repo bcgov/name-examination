@@ -2,11 +2,18 @@
   <ExamineHeaderEditActionButtons v-if="examine.is_editing" />
 
   <div v-else class="flex items-center space-x-1">
-    <IconButton v-if="canEdit && showButtons" light @click="edit" mnemonic="d">
+    <!-- Edit Button -->
+    <IconButton
+      v-if="examine.canEdit && showButtons"
+      light
+      @click="examine.edit"
+      mnemonic="d"
+    >
       <PencilSquareIcon class="h-5 w-5 stroke-2" />
       <template #text>E<u>d</u>it Request</template>
     </IconButton>
 
+    <!-- Toggle Details Button -->
     <IconButton light @click="toggleDetails" mnemonic="b">
       <ArrowsPointingInIcon
         v-if="examine.is_header_shown"
@@ -20,8 +27,10 @@
       <template #text v-else>Show Details (<u>b</u>)</template>
     </IconButton>
 
+    <!-- Get Next Button -->
     <IconButton
-      v-if="!examine.inProgress || examine.is_complete"
+      v-if="examine.userHasApproverRole && !examine.is_my_current_nr"
+      @click="examine.getNextCompany"
       light
       mnemonic="n"
     >
@@ -29,46 +38,49 @@
       <template #text>Get&nbsp;<u>N</u>ext</template>
     </IconButton>
 
+    <!-- Cancel Request Button -->
     <IconButton
-      v-if="!examine.inProgress && !examine.is_complete"
+      v-if="examine.canCancel && showButtons"
       light
       text="Cancel Request"
-      @click="showCancelRequestDialog = true"
+      @click="showCancelDialog"
     >
       <XMarkIcon class="h-5 w-5 stroke-2" />
     </IconButton>
 
-    <div v-if="!examine.is_complete" class="space-x-1">
-      <IconButton
-        v-if="!examine.inProgress"
-        light
-        @click="examine.inProgress = true"
-        mnemonic="x"
-      >
-        <DocumentCheckIcon class="h-5 w-5 stroke-2" />
-        <template #text>E<u>x</u>amine</template>
-      </IconButton>
+    <!-- Hold Button -->
+    <IconButton v-else light @click="examine.holdRequest" mnemonic="h">
+      <PauseIcon class="h-5 w-5 stroke-2" />
+      <template #text><u>H</u>old Request</template>
+    </IconButton>
 
-      <IconButton v-else light @click="examine.inProgress = false" mnemonic="h">
-        <PauseIcon class="h-5 w-5 stroke-2" />
-        <template #text><u>H</u>old Request</template>
-      </IconButton>
-    </div>
-
-    <div v-if="examine.is_complete" class="space-x-1">
+    <div v-if="showReopenAndResetButtons && showButtons" class="space-x-1">
+      <!-- Reopen (unfurnished) Button -->
       <IconButton
-        v-if="examine.isFurnished"
+        v-if="examine.furnished === 'N'"
         light
         text="Reopen"
-        @click="examine.is_complete = false"
+        @click="examine.reOpen"
       >
         <PowerIcon class="h-5 w-5 stroke-2" />
       </IconButton>
 
-      <IconButton v-else light text="Reset">
+      <!-- Reset (from furnished) Button -->
+      <IconButton v-else @click="examine.resetNr" light text="Reset">
         <ArrowUturnLeftIcon class="h-5 w-5 stroke-2" />
       </IconButton>
     </div>
+
+    <!-- Examine Button -->
+    <IconButton
+      v-if="examine.canClaim && showButtons"
+      light
+      @click="examine.claimNr"
+      mnemonic="x"
+    >
+      <DocumentCheckIcon class="h-5 w-5 stroke-2" />
+      <template #text>E<u>x</u>amine</template>
+    </IconButton>
 
     <PopupDialog title="Cancel Name Request" :show="showCancelRequestDialog">
       <ExamineCancelRequestForm
@@ -104,36 +116,20 @@ const showButtons = computed(
     ) && !examine.consumptionDate
 )
 
-const canEdit = computed(() => {
-  if (examine.consumptionDate) return false
-  if (examine.is_my_current_nr) return true
-  return (
+const showReopenAndResetButtons = computed(
+  () =>
     examine.userHasEditRole &&
-    [
-      Status.Draft,
-      Status.Hold,
-      Status.Rejected,
-      Status.Approved,
-      Status.Conditional,
-    ].includes(examine.nr_status)
-  )
-})
+    examine.is_complete &&
+    examine.nr_status !== Status.Cancelled &&
+    !examine.isApprovedAndExpired
+)
 
 function toggleDetails() {
   examine.is_header_shown = !examine.is_header_shown
 }
 
-function edit() {
-  // if this isn't the user's INPROGRESS, make it that
-  if (!examine.is_my_current_nr && !examine.isClosed) {
-    // track the previous state if it's currently in DRAFT (otherwise do not)
-    if (examine.nr_status == Status.Draft) {
-      examine.updateNRStatePreviousState(Status.InProgress, Status.Draft)
-    } else {
-      examine.updateNRState(Status.InProgress)
-    }
-  }
-  examine.is_editing = true
+function showCancelDialog() {
+  showCancelRequestDialog.value = true
 }
 </script>
 

@@ -25,7 +25,7 @@
 
       <IconButton
         v-if="undoable"
-        @click="examine.undoDecision(choice)"
+        @click="examine.undoNameChoiceDecision(choice)"
         white
         text="Undo Decision"
         class="border-none text-sm text-blue-800"

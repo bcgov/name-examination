@@ -31,15 +31,19 @@ import {
 } from '~/enums/codes'
 import { getTransactions, patchNameRequest } from '~/util/namex-api'
 import { sortNameChoices } from '~/util'
+import { DateTime } from 'luxon'
 
 export const useExamineStore = defineStore('examine', () => {
   const mock = mockJson
 
+  /** Username of the current user */
+  const userId = ref('someone@idir')
+
   const priority = ref(true)
   const inProgress = ref(true)
   const is_complete = ref(false)
-  const isFurnished = ref(true)
   const examiner = ref('someone@idir')
+  console.log(examiner.value, userId.value)
 
   const exactMatchesConflicts = ref<Array<ConflictListItem>>([])
   const parsedSynonymConflicts = ref<Array<ConflictList>>(
@@ -76,7 +80,7 @@ export const useExamineStore = defineStore('examine', () => {
   const is_making_decision = ref(true)
   const is_header_shown = ref(false)
   const nrNumber = ref('NR 1234567')
-  const nr_status = ref(Status.Conditional)
+  const nr_status = ref(Status.InProgress)
   const isClosed = computed(() =>
     [
       Status.Rejected,
@@ -129,7 +133,7 @@ export const useExamineStore = defineStore('examine', () => {
     () => customerMessageOverride.value != null
   )
 
-  const selectedReasons = ref<Array<Macro>>([])
+  const selectedMacros = ref<Array<Macro>>([])
 
   const selectedTrademarks = ref<Array<Trademark>>([])
 
@@ -161,7 +165,7 @@ export const useExamineStore = defineStore('examine', () => {
   )
 
   const macroMessages = computed(() =>
-    selectedReasons.value.map((macro) => macro.reason)
+    selectedMacros.value.map((macro) => macro.reason)
   )
 
   const requestorMessageStrings = computed(() =>
@@ -197,7 +201,11 @@ export const useExamineStore = defineStore('examine', () => {
 
   const userHasApproverRole = ref(true)
   const userHasEditRole = ref(true)
-  const is_my_current_nr = ref(true)
+  const is_my_current_nr = computed(
+    () =>
+      nr_status.value === Status.InProgress && userId.value === examiner.value
+  )
+  console.log(is_my_current_nr.value)
   const furnished = ref<'Y' | 'N'>('N')
 
   const listJurisdictions = ref<Array<Jurisdiction>>(jurisdictionsData)
@@ -246,6 +254,8 @@ export const useExamineStore = defineStore('examine', () => {
 
   const forceConditional = ref(false)
 
+  const hasBeenReset = ref(false)
+
   const additionalInfoTransformedTemplate = computed(() => {
     return additional_info_template.value
       ?.split('||')
@@ -256,6 +266,55 @@ export const useExamineStore = defineStore('examine', () => {
       )
       .join(' ')
   })
+
+  const canEdit = computed(() => {
+    if (consumptionDate.value) return false
+    if (is_my_current_nr.value) return true
+    return (
+      userHasEditRole.value &&
+      [
+        Status.Draft,
+        Status.Hold,
+        Status.Rejected,
+        Status.Approved,
+        Status.Conditional,
+      ].includes(nr_status.value)
+    )
+  })
+
+  const otherExaminerInProgress = computed(
+    () =>
+      userId.value !== examiner.value && nr_status.value === Status.InProgress
+  )
+
+  const expired = computed(
+    () =>
+      expiryDate.value &&
+      DateTime.fromISO(expiryDate.value).endOf('day') < DateTime.now()
+  )
+
+  const isApprovedAndExpired = computed(
+    // NR will move to 'EXPIRED' state once expiry date is reached for 'APPROVED', 'CONDITIONAL' state.
+    // If currentState is 'EXPIRED', then it was approved and expired.
+    () => expiryDate.value && nr_status.value === Status.Expired
+  )
+
+  const canCancel = computed(
+    () =>
+      userHasEditRole.value &&
+      !otherExaminerInProgress.value &&
+      !expired.value &&
+      !is_making_decision.value &&
+      nr_status.value !== Status.Cancelled &&
+      !isApprovedAndExpired.value
+  )
+
+  /** Can the current user claim the current name request for examination? */
+  const canClaim = computed(
+    () =>
+      userHasApproverRole.value &&
+      [Status.Draft, Status.Hold].includes(nr_status.value)
+  )
 
   interface EditAction {
     /** Return whether an edit action's internal state is valid (e.g. a name field is not empty).
@@ -347,7 +406,7 @@ export const useExamineStore = defineStore('examine', () => {
     }
   }
 
-  function undoDecision(name: NameChoice) {
+  function undoNameChoiceDecision(name: NameChoice) {
     resetExaminationArea()
     if (name.choice == 1) {
       currentNameObj = compName1
@@ -482,7 +541,7 @@ export const useExamineStore = defineStore('examine', () => {
     }
   }
 
-  function updateNRState(state: Status) {}
+  async function updateNRState(state: Status) {}
 
   async function revertToPreviousState() {
     await patchNameRequest(nrNumber.value, {
@@ -531,6 +590,82 @@ export const useExamineStore = defineStore('examine', () => {
     jurisdictionRequired.value = Boolean(rules?.jurisdiction_required)
   }
 
+  async function getpostgrescompNo() {}
+
+  // TODO: should this be the $reset method for this store?
+  async function resetValues() {}
+
+  function resetConflictList() {}
+
+  async function getNextCompany() {
+    await resetValues()
+    await getpostgrescompNo()
+    resetConflictList()
+  }
+
+  async function edit() {
+    // if this isn't the user's INPROGRESS, make it that
+    if (!is_my_current_nr.value && !isClosed.value) {
+      // track the previous state if it's currently in DRAFT (otherwise do not)
+      if (nr_status.value == Status.Draft) {
+        await updateNRStatePreviousState(Status.InProgress, Status.Draft)
+      } else {
+        await updateNRState(Status.InProgress)
+      }
+    }
+    is_editing.value = true
+  }
+
+  async function holdRequest() {
+    is_making_decision.value = false
+    await updateNRState(Status.Hold)
+    resetConflictList()
+  }
+
+  function clearSelectedDecisionReasons() {
+    selectedConditions.value = []
+    selectedConflicts.value = []
+    selectedMacros.value = []
+    selectedTrademarks.value = []
+  }
+
+  function clearConsent() {
+    consentDateForEdit.value = undefined
+    consentFlag.value = undefined
+  }
+
+  function resetNrDecision() {
+    resetConflictList()
+    clearSelectedDecisionReasons()
+
+    nr_status.value = Status.InProgress
+    if (!userHasApproverRole.value) {
+      // initialize user in edit mode, with previous state set so NR gets set back to draft
+      // when user is done changing name, adding comment, etc.
+      previousStateCd.value = Status.Draft
+      is_editing.value = true
+    }
+  }
+
+  async function reOpen() {
+    resetNrDecision()
+    // set reset flag so name data is managed between Namex and NRO correctly
+    hasBeenReset.value = true
+    await updateRequest()
+  }
+
+  async function resetNr() {
+    resetNrDecision()
+    clearConsent()
+    furnished.value = 'N'
+    await updateRequest()
+  }
+
+  async function claimNr() {
+    await updateNRState(Status.InProgress)
+    is_making_decision.value = true
+  }
+
   watch(
     () => [selectedConflicts],
     (_state) => {
@@ -559,7 +694,6 @@ export const useExamineStore = defineStore('examine', () => {
     priority,
     inProgress,
     is_complete,
-    isFurnished,
     conflictsAutoAdd,
     conflicts,
     comments,
@@ -567,6 +701,7 @@ export const useExamineStore = defineStore('examine', () => {
     trademarksJSON,
     selectedConflicts,
 
+    isClosed,
     is_editing,
     is_making_decision,
     is_header_shown,
@@ -598,7 +733,7 @@ export const useExamineStore = defineStore('examine', () => {
     customerMessageOverride,
     decisionSelectionsDisabled,
     listDecisionReasons,
-    selectedReasons,
+    selectedMacros,
     selectedTrademarks,
     requestorMessageStrings,
     requestorMessage,
@@ -652,6 +787,11 @@ export const useExamineStore = defineStore('examine', () => {
     fax,
     conEmail,
     contactName,
+    canEdit,
+    expired,
+    isApprovedAndExpired,
+    canCancel,
+    canClaim,
     addEditAction,
     isUndoable,
     getHistoryInfo,
@@ -659,8 +799,8 @@ export const useExamineStore = defineStore('examine', () => {
     toggleConflictCheckbox,
     getShortJurisdiction,
     setConsentFlag,
-    undoDecision,
     makeDecision,
+    undoNameChoiceDecision,
     makeQuickDecision,
     runManualRecipe,
     resetExaminationArea,
@@ -671,8 +811,15 @@ export const useExamineStore = defineStore('examine', () => {
     revertToPreviousState,
     saveEdits,
     updateRequestTypeRules,
-
-    isClosed,
+    getpostgrescompNo,
+    resetValues,
+    resetConflictList,
+    getNextCompany,
+    edit,
+    holdRequest,
+    reOpen,
+    resetNr,
+    claimNr,
   }
 })
 
