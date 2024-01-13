@@ -40,7 +40,18 @@ export const useExamineStore = defineStore('examine', () => {
   const userId = ref('someone@idir')
 
   const priority = ref(true)
-  const is_complete = ref(false)
+  const is_complete = computed(() =>
+    [
+      Status.Approved,
+      Status.Rejected,
+      Status.Conditional,
+      Status.Consumed,
+      Status.Completed,
+      Status.Cancelled,
+      Status.Historical,
+      Status.Expired,
+    ].includes(nr_status.value)
+  )
   const examiner = ref('someone@idir')
 
   const exactMatchesConflicts = ref<Array<ConflictListItem>>([])
@@ -195,7 +206,7 @@ export const useExamineStore = defineStore('examine', () => {
 
   let currentNameObj = compName2
   const currentName = computed(() => currentNameObj.value.name)
-  const currentChoice = ref(2)
+  const currentChoice = computed(() => currentNameObj.value.choice)
 
   const userHasApproverRole = ref(true)
   const userHasEditRole = ref(true)
@@ -421,24 +432,22 @@ export const useExamineStore = defineStore('examine', () => {
     currentNameObj.value.conflict3_num = null
     currentNameObj.value.decision_text = null
     currentNameObj.value.comment = null
-    currentChoice.value = currentNameObj.value.choice
   }
 
   async function makeDecision(decision: Status) {
     decision_made.value = decision
-    const currentName = currentNameObj
     if (decision_made.value === Status.Approved) {
       if (acceptanceWillBeConditional.value || forceConditional.value) {
-        currentName.value.state = Status.Condition
+        currentNameObj.value.state = Status.Condition
         forceConditional.value = false
       } else {
-        currentName.value.state = Status.Approved
+        currentNameObj.value.state = Status.Approved
         // If there were conflicts selected but this is an approval, remove the selected conflicts.
         // Do NOT clear the conflicts if the "Consent Required" condition is also set - then it's intentional.
         selectedConflicts.value = []
       }
     } else {
-      currentName.value.state = Status.Rejected
+      currentNameObj.value.state = Status.Rejected
     }
 
     if (selectedConflicts.value.length > 0) {
@@ -449,23 +458,34 @@ export const useExamineStore = defineStore('examine', () => {
 
         switch (n) {
           case 0:
-            currentName.value.conflict1 = conflict.text
-            currentName.value.conflict1_num = conflict.nrNumber
+            currentNameObj.value.conflict1 = conflict.text
+            currentNameObj.value.conflict1_num = conflict.nrNumber
             break
           case 1:
-            currentName.value.conflict2 = conflict.text
-            currentName.value.conflict2_num = conflict.nrNumber
+            currentNameObj.value.conflict2 = conflict.text
+            currentNameObj.value.conflict2_num = conflict.nrNumber
             break
           case 2:
-            currentName.value.conflict3 = conflict.text
-            currentName.value.conflict3_num = conflict.nrNumber
+            currentNameObj.value.conflict3 = conflict.text
+            currentNameObj.value.conflict3_num = conflict.nrNumber
             break
         }
       }
     }
-    currentName.value.name = currentName.value.name.trimEnd()
-    currentName.value.decision_text = requestorMessage.value.substring(0, 955)
+    currentNameObj.value.name = currentNameObj.value.name.trimEnd()
+    currentNameObj.value.decision_text = requestorMessage.value.substring(
+      0,
+      955
+    )
     await pushAcceptReject()
+
+    if (currentNameObj.value.state === Status.Approved) {
+      await updateNRState(Status.Approved)
+    } else if (currentNameObj.value.state === Status.Condition) {
+      await updateNRState(Status.Conditional)
+    } else {
+      await examineNextNameChoice()
+    }
     decision_made.value = undefined
   }
 
@@ -481,7 +501,37 @@ export const useExamineStore = defineStore('examine', () => {
     decision_made.value = undefined
   }
 
-  async function pushAcceptReject() {}
+  /** Attempt to set the given name choice as the current one. Will throw an error if the choice cannot be examined. */
+  async function setCurrentNameChoice(choice: Ref<NameChoice>) {
+    if (!choice.value.state || choice.value.state !== 'NE') {
+      throw new Error(`Name choice ${choice.value.choice} cannot be examined`)
+    } else {
+      currentNameObj = choice
+    }
+  }
+
+  /** Attempts to examine the next name choice in the name request. */
+  async function examineNextNameChoice() {
+    const attempt = async (choice: Ref<NameChoice>) => {
+      try {
+        await setCurrentNameChoice(choice)
+      } catch (e) {
+        await updateNRState(Status.Rejected)
+      }
+    }
+    if (currentChoice.value === 1) {
+      await attempt(compName2)
+    } else if (currentChoice.value === 2) {
+      await attempt(compName3)
+    } else {
+      await updateNRState(Status.Rejected)
+    }
+  }
+
+  /** Send name request decision to API */
+  async function pushAcceptReject() {
+    // TODO: make a PUT call to api, then run the following:
+  }
 
   function runManualRecipe(searchObj: {
     searchStr: string
