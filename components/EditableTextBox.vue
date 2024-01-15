@@ -7,7 +7,7 @@
         :class="{ 'border-b-0': characterLimit }"
         :placeholder="placeholder"
         :readonly="readonly"
-        :value="modelValue"
+        v-model="text"
         @input="onTextAreaInput"
       />
 
@@ -24,7 +24,7 @@
         v-if="!hideSubmit"
         white
         class="h-7"
-        @click="emit('submit', modelValue)"
+        @click="onSubmit"
         :mnemonic="submitMnemonic"
       >
         <template #text>
@@ -43,12 +43,19 @@
         </template>
       </IconButton>
     </div>
+
+    <p
+      v-if="textRequired && showSubmitError"
+      class="text-sm font-bold text-red-600"
+    >
+      <slot name="errorText"></slot>
+    </p>
   </div>
 </template>
 
 <script setup lang="ts">
-const { modelValue, characterLimit } = defineProps<{
-  modelValue: any
+const { modelValue, characterLimit, textRequired } = defineProps<{
+  modelValue: string
   placeholder?: string
   hideSubmit?: boolean
   hideCancel?: boolean
@@ -57,16 +64,32 @@ const { modelValue, characterLimit } = defineProps<{
   readonly?: boolean
   /** Display the number of characters in the text area and a character limit. Does not enforce the character limit. */
   characterLimit?: number
+  /** Prevents the user from submitting if the text field is empty. */
+  textRequired?: boolean
 }>()
+
+const showSubmitError = ref(false)
+
+const text = ref(modelValue)
 
 const emit = defineEmits<{
   (e: 'submit', text: string): void
   (e: 'cancel'): void
+  (e: 'input', event: Event): void
   (e: 'update:modelValue', newValue: string): void
 }>()
 
+function onSubmit() {
+  if (textRequired && text.value == '') {
+    showSubmitError.value = true
+    return
+  }
+  emit('submit', text.value)
+}
+
 function onTextAreaInput(event: Event) {
-  const text = (event.target as HTMLTextAreaElement).value
-  emit('update:modelValue', text)
+  showSubmitError.value = false
+  emit('update:modelValue', text.value)
+  emit('input', event)
 }
 </script>

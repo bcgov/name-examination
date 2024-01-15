@@ -72,7 +72,7 @@ const characterLimitDisplay = `Message cut off at ${characterLimit} characters`
 
 const showEditRequestorMessageDialog = ref(false)
 
-const customerMessageOverrideTemp = ref(examine.customerMessageOverride)
+const customerMessageOverrideTemp = ref(examine.customerMessageOverride || '')
 
 function showEditDialog() {
   showEditRequestorMessageDialog.value = true

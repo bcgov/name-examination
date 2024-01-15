@@ -117,24 +117,28 @@
   ],
   "comments": [
     {
-      "comment": "Name choice 3 changed from BLACK HILL PERSONAL REAL ESTATE CORPORATION to BLACK HILL PERSONAL COOP COOPERATIVE",
-      "examiner": "anonymous@idir",
-      "timestamp": "2023-05-31, 10:00am"
+      "comment": "This NR was RESET.",
+      "examiner": "someone@idir",
+      "id": 136253,
+      "timestamp": "2023-05-29T22:02:56.288783+00:00"
     },
     {
-      "comment": "Name choice 3 changed from BLACK HILL to BLACK HILL PERSONAL REAL ESTATE CORPORATION",
-      "examiner": "anonymous@idir",
-      "timestamp": "2023-05-31, 9:12am"
+      "comment": "another comment",
+      "examiner": "someone@idir",
+      "id": 138311,
+      "timestamp": "2024-01-15T20:02:59.297305+00:00"
     },
     {
-      "comment": "Name choice 3 changed from BLACK HILL to BLACK HILL PERSONAL REAL ESTATE CORPORATION",
-      "examiner": "anonymous@idir",
-      "timestamp": "2023-05-31, 9:12am"
+      "comment": "new comment",
+      "examiner": "someone@idir",
+      "id": 138310,
+      "timestamp": "2024-01-15T20:02:47.354556+00:00"
     },
     {
-      "comment": "Name choice 3 changed from BLACK HILL to BLACK HILL PERSONAL REAL ESTATE CORPORATION",
-      "examiner": "anonymous@idir",
-      "timestamp": "2023-05-31, 9:12am"
+      "comment": "This NR was RESET.",
+      "examiner": "someone@idir",
+      "id": 137890,
+      "timestamp": "2023-11-06T22:26:27.902815+00:00"
     }
   ],
 
@@ -186,12 +190,12 @@
         {
           "comment": "here is a comment",
           "examiner": "anonymous@idir",
-          "timestamp": "2023-05-31, 9:12am"
+          "timestamp": "2024-01-15T20:02:59.297305+00:00"
         },
         {
           "comment": "here is another comment",
           "examiner": "anonymous@idir",
-          "timestamp": "2023-05-31, 9:15am"
+          "timestamp": "2023-11-06T22:26:27.902815+00:00"
         }
       ],
       "names": [

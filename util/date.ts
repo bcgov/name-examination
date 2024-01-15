@@ -1,29 +1,34 @@
 import { DateTime } from 'luxon'
 
-const TIMESTAMP_FORMAT = 'yyyy-MM-dd, hh:mm a'
-const DATE_FORMAT = 'yyyy-MM-dd'
+const TIMESTAMP_FORMAT = 'yyyy-MM-dd, h:mma'
 
 /**
  * @param input An ISO-formatted date string
- * @returns a formatted timestamp string
+ * @returns a formatted date string, ex: 2023-01-15
  */
-export function getFormattedTimestampFromString(input: string): string {
+export function getFormattedDate(input: string) {
+  return DateTime.fromISO(input).toISODate()
+}
+
+/**
+ * @param input An ISO-formatted date string
+ * @returns a formatted date with time, ex: 2023-01-15, 9:00am
+ */
+export function getFormattedDateWithTime(input: string): string {
   return DateTime.fromISO(input).toFormat(TIMESTAMP_FORMAT)
 }
 
 /**
- * @param input An ISO-formatted date string
- * @returns a formatted date string
+ * @param input A luxon `DateTime` object
+ * @returns a formatted date with time, ex: 2023-01-15, 9:00am
  */
-export function getFormattedDateFromString(input: string): string {
-  return DateTime.fromISO(input).toFormat(DATE_FORMAT)
+export function getDateWithTimeFromDateTime(input: DateTime): string {
+  return input.toFormat(TIMESTAMP_FORMAT)
 }
 
-/**
- *
- * @param input A luxon `DateTime` object
- * @returns a formatted timestamp string
+/** Parse a date string into a `luxon` `DateTime` object.
+ * @param input A date string from a NameX API object (ISO format).
  */
-export function getFormattedTimestampFromDateTime(input: DateTime) {
-  return input.toFormat(TIMESTAMP_FORMAT)
+export function parseDate(input: string) {
+  return DateTime.fromISO(input)
 }

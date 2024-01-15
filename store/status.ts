@@ -1,12 +1,12 @@
 import { DateTime } from 'luxon'
 import { defineStore } from 'pinia'
-import { getFormattedTimestampFromDateTime } from '~/util/date'
+import { getDateWithTimeFromDateTime } from '~/util/date'
 import { getNamexObject, getNamexApiUrl } from '~/util/namex-api'
 
 export const useStatusStore = defineStore('status', () => {
   const holdNum = ref(0)
   const notExaminedNum = ref(0)
-  const todayStr = computed(() => getFormattedTimestampFromDateTime(DateTime.now()))
+  const todayStr = computed(() => getDateWithTimeFromDateTime(DateTime.now()))
 
   /**
    * Return the number of name requests found from the given API call

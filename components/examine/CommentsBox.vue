@@ -5,8 +5,11 @@
       v-for="comment in comments"
     >
       <p>{{ comment.comment }}</p>
+      <span class="font-bold">
+        {{ comment.examiner }}
+      </span>
       <span class="italic">
-        {{ comment.examiner }} &ndash; {{ comment.timestamp }}
+        {{ getFormattedDateWithTime(comment.timestamp) }}
       </span>
     </div>
   </div>
@@ -14,6 +17,7 @@
 
 <script setup lang="ts">
 import type { Comment } from '~/types'
+import { getFormattedDateWithTime } from '~/util/date';
 defineProps<{
   comments: Array<Comment>
 }>()

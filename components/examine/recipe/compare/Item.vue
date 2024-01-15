@@ -8,7 +8,7 @@
         <div class="space-x-8">
           <span>{{ conflict.nrNumber }}</span>
           <span>{{ formatJurisdiction(conflict.jurisdiction) }}</span>
-          <span>{{ getFormattedDateFromString(conflict.startDate) }}</span>
+          <span>{{ getFormattedDate(conflict.startDate) }}</span>
         </div>
       </div>
     </template>
@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import type { Conflict } from '~/types'
-import { getFormattedDateFromString } from '~/util/date'
+import { getFormattedDate } from '~/util/date'
 
 defineProps<{
   conflict: Conflict

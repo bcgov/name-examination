@@ -19,7 +19,7 @@
           <span>
             {{ examine.getShortJurisdiction(conflictItem.jurisdiction) }}
           </span>
-          <span>{{ getFormattedDateFromString(conflictItem.startDate) }}</span>
+          <span>{{ getFormattedDate(conflictItem.startDate) }}</span>
         </div>
       </div>
     </template>
@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import { useExamineStore } from '~/store/examine'
 import type { Conflict, ConflictListItem } from '~/types'
-import { getFormattedDateFromString } from '~/util/date'
+import { getFormattedDate } from '~/util/date'
 
 const examine = useExamineStore()
 

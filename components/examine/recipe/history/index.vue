@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { useExamineStore } from '~/store/examine'
-import { getFormattedDateFromString } from '~/util/date'
+import { getFormattedDate } from '~/util/date'
 
 const examine = useExamineStore()
 
@@ -22,7 +22,7 @@ const rows = computed(() =>
     entry.name,
     entry.jurisdiction,
     entry.nr_num,
-    getFormattedDateFromString(entry.start_date),
+    getFormattedDate(entry.start_date),
     entry.name_state_type_cd,
   ])
 )

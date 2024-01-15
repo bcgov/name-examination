@@ -72,6 +72,7 @@ export const useExamineStore = defineStore('examine', () => {
   )
 
   const comments = ref<Array<Comment>>(mock.comments)
+  const internalComments = ref<Array<Comment>>(mock.comments)
 
   const conflicts = ref<Array<Conflict>>(mock.conflicts as Array<Conflict>)
 
@@ -710,6 +711,22 @@ export const useExamineStore = defineStore('examine', () => {
     is_making_decision.value = true
   }
 
+  async function postComment(text: string) {
+    // TODO: post to comments endpoint and add api response to internalComments
+    internalComments.value.push({
+      comment: text,
+      examiner: examiner.value,
+      timestamp: DateTime.now().toISO(),
+    })
+  }
+
+  async function cancelNr(commentText: string) {
+    await postComment(commentText)
+    is_making_decision.value = false
+    nr_status.value = Status.Cancelled
+    // TODO: push CANCELLED state to API
+  }
+
   watch(
     () => [selectedConflicts],
     (_state) => {
@@ -744,6 +761,7 @@ export const useExamineStore = defineStore('examine', () => {
     trademarksJSON,
     selectedConflicts,
 
+    internalComments,
     isClosed,
     is_editing,
     is_making_decision,
@@ -863,6 +881,8 @@ export const useExamineStore = defineStore('examine', () => {
     reOpen,
     resetNr,
     claimNr,
+    postComment,
+    cancelNr,
   }
 })
 
