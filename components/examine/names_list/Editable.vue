@@ -17,7 +17,7 @@ import { useExamineStore } from '~/store/examine'
 
 const examine = useExamineStore()
 
-const nameInputs = ref(examine.nameChoices.map((nc) => nc.value.name))
+const nameInputs = ref(examine.nameChoices.map((nc) => nc.name))
 
 const errorMessage = ref<{ choice: number; text: string }>()
 
@@ -47,7 +47,7 @@ examine.addEditAction({
   },
   update() {
     for (const [i, choice] of examine.nameChoices.entries()) {
-      choice.value.name = nameInputs.value[i].trim()
+      choice.name = nameInputs.value[i].trim()
     }
   },
 })

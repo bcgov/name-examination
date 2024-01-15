@@ -30,11 +30,11 @@ const examine = useExamineStore()
 
 const additionalStatus = computed(() => {
   const approvedName = examine.nameChoices.find((name) =>
-    [Status.Approved, Status.Condition].includes(name.value.state)
+    [Status.Approved, Status.Condition].includes(name.state)
   )
   if (approvedName) {
     const displayState =
-      approvedName.value.state === Status.Condition
+      approvedName.state === Status.Condition
         ? 'CONDITIONALLY APPROVED'
         : 'APPROVED'
     if (examine.nr_status == Status.Consumed) {

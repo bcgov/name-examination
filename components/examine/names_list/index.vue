@@ -2,10 +2,10 @@
   <ol v-if="!examine.is_editing" class="list-decimal">
     <li v-for="choice in examine.nameChoices">
       <ExamineNamesListChoice
-        :choice="choice.value"
-        :decision-text="decisionReasonOrConflictList(choice.value)"
-        :undoable="examine.isUndoable(choice.value)"
-        :current="isCurrent(choice.value.choice)"
+        :choice="choice"
+        :decision-text="decisionReasonOrConflictList(choice)"
+        :undoable="examine.isUndoable(choice)"
+        :current="isCurrent(choice.choice)"
       />
     </li>
   </ol>

@@ -199,12 +199,12 @@ export const useExamineStore = defineStore('examine', () => {
 
   const decision_made = ref<Status>()
 
-  const compName1 = ref<NameChoice>(mock.compName1 as NameChoice)
-  const compName2 = ref<NameChoice>(mock.compName2 as NameChoice)
-  const compName3 = ref<NameChoice>(mock.compName3 as NameChoice)
+  const compName1 = reactive<NameChoice>(mock.compName1 as NameChoice)
+  const compName2 = reactive<NameChoice>(mock.compName2 as NameChoice)
+  const compName3 = reactive<NameChoice>(mock.compName3 as NameChoice)
   const nameChoices = computed(() => [compName1, compName2, compName3])
 
-  let currentNameObj = compName2
+  const currentNameObj = ref(compName2)
   const currentName = computed(() => currentNameObj.value.name)
   const currentChoice = computed(() => currentNameObj.value.choice)
 
@@ -237,7 +237,7 @@ export const useExamineStore = defineStore('examine', () => {
   const submittedDate = ref('2008-09-16, 4:44pm')
   const corpNum = ref<string>()
   const corpNumRequired = ref(false)
-  const expiryDate = ref<string | undefined>('2008-09-18')
+  const expiryDate = ref<string>()
 
   const additionalInfo = ref(mock.additionalInfo)
   const additional_info_template = ref<string>()
@@ -398,17 +398,12 @@ export const useExamineStore = defineStore('examine', () => {
     if (name.choice === 1) {
       // if name choices 2 and 3 have not been decided, then 1 is undoable
       return (
-        (compName2.value.state == Status.NotExamined ||
-          compName2.value.state == null) &&
-        (compName3.value.state == Status.NotExamined ||
-          compName3.value.state == null)
+        (compName2.state == Status.NotExamined || compName2.state == null) &&
+        (compName3.state == Status.NotExamined || compName3.state == null)
       )
     } else if (name.choice === 2) {
       // if name choice 3 has not been decided, then 2 is undoable
-      return (
-        compName3.value.state == Status.NotExamined ||
-        compName3.value.state == null
-      )
+      return compName3.state == Status.NotExamined || compName3.state == null
     } else {
       return true
     }
@@ -417,11 +412,11 @@ export const useExamineStore = defineStore('examine', () => {
   function undoNameChoiceDecision(name: NameChoice) {
     resetExaminationArea()
     if (name.choice == 1) {
-      currentNameObj = compName1
+      currentNameObj.value = compName1
     } else if (name.choice == 2) {
-      currentNameObj = compName2
+      currentNameObj.value = compName2
     } else {
-      currentNameObj = compName3
+      currentNameObj.value = compName3
     }
     currentNameObj.value.state = Status.NotExamined
     currentNameObj.value.conflict1 = null
@@ -502,17 +497,17 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   /** Attempt to set the given name choice as the current one. Will throw an error if the choice cannot be examined. */
-  async function setCurrentNameChoice(choice: Ref<NameChoice>) {
-    if (!choice.value.state || choice.value.state !== 'NE') {
-      throw new Error(`Name choice ${choice.value.choice} cannot be examined`)
+  async function setCurrentNameChoice(choice: NameChoice) {
+    if (!choice.state || choice.state !== 'NE') {
+      throw new Error(`Name choice ${choice.choice} cannot be examined`)
     } else {
-      currentNameObj = choice
+      currentNameObj.value = choice
     }
   }
 
   /** Attempts to examine the next name choice in the name request. */
   async function examineNextNameChoice() {
-    const attempt = async (choice: Ref<NameChoice>) => {
+    const attempt = async (choice: NameChoice) => {
       try {
         await setCurrentNameChoice(choice)
       } catch (e) {
