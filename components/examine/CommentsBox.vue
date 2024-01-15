@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col space-y-2 overflow-auto">
     <div
-      class="flex flex-col rounded-md border border-gray-400 bg-white p-2 text-sm"
+      class="comments-box-child flex flex-col rounded-md border border-gray-400 bg-white p-2 text-sm"
       v-for="comment in comments"
     >
       <p>{{ comment.comment }}</p>
@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import type { Comment } from '~/types'
-import { getFormattedDateWithTime } from '~/util/date';
+import { getFormattedDateWithTime } from '~/util/date'
 defineProps<{
   comments: Array<Comment>
 }>()
