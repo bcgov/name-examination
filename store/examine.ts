@@ -529,10 +529,7 @@ export const useExamineStore = defineStore('examine', () => {
     // TODO: make a PUT call to api, then run the following:
   }
 
-  function runManualRecipe(searchObj: {
-    searchStr: string
-    exactPhrase: string
-  }) {}
+  function runManualRecipe(searchStr: string, exactPhrase: string) {}
 
   function resetExaminationArea() {}
 

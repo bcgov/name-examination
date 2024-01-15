@@ -22,19 +22,14 @@ const examine = useExamineStore()
 
 const searchString = ref(examine.currentNameObj.name)
 const exactSearchString = ref('')
-const runningManualSearch = ref(false)
 
 function onNormalSearchSubmit(_event: Event) {
-  if (searchString.value != examine.currentName) {
-    runningManualSearch.value = true
-  }
   runManualRecipe()
 }
 
 function onExactSearchSubmit(event: Event) {
   if (exactSearchString.value) {
     runManualRecipe()
-    runningManualSearch.value = true
   } else {
     event.preventDefault()
     event.stopImmediatePropagation()
@@ -43,9 +38,6 @@ function onExactSearchSubmit(event: Event) {
 
 function runManualRecipe() {
   examine.resetExaminationArea()
-  examine.runManualRecipe({
-    searchStr: searchString.value,
-    exactPhrase: exactSearchString.value,
-  })
+  examine.runManualRecipe(searchString.value, exactSearchString.value)
 }
 </script>

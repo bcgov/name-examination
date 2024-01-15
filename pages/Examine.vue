@@ -35,6 +35,7 @@
 </template>
 
 <script setup lang="ts">
+import { Status } from '~/enums/nr-status'
 import { useExamineStore } from '~/store/examine'
 const examine = useExamineStore()
 
@@ -50,6 +51,6 @@ const showQuickActionButtons = computed(
 )
 
 const reservedOrCondReserved = computed(() =>
-  ['COND-RESERVE', 'RESERVED'].includes(examine.nr_status)
+  [Status.ConditionalReserved, Status.Reserved].includes(examine.nr_status)
 )
 </script>
