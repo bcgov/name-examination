@@ -65,7 +65,7 @@
 import type { RequestTypeCode } from '~/enums/codes'
 import { useExamineStore } from '~/store/examine'
 import type { RequestType } from '~/types'
-import { isValidCorpNum, isValidNrFormat } from '~/util'
+import { isValidCorpNum, isValidNrFormat, nrExists } from '~/util'
 
 const examine = useExamineStore()
 
@@ -102,17 +102,22 @@ examine.addEditAction({
       jursidictionErrorText.value = 'Please select a jurisdiction'
       isValid = false
     }
-    if (examine.corpNumRequired && !(await isValidCorpNum(corpNum.value))) {
+    if (
+      examine.corpNumRequired &&
+      corpNum.value &&
+      !(await isValidCorpNum(corpNum.value))
+    ) {
       corpNumErrorText.value = 'Please enter a valid Incorporation Number'
       isValid = false
     }
-    if (
-      examine.prevNrRequired &&
-      previousNr.value &&
-      !isValidNrFormat(previousNr.value)
-    ) {
-      previousNrErrorText.value = '(Format must be NR xxxxxxx)'
-      isValid = false
+    if (examine.prevNrRequired && previousNr.value) {
+      if (!isValidNrFormat(previousNr.value)) {
+        previousNrErrorText.value = '(Format must be NR xxxxxxx)'
+        isValid = false
+      } else if (!(await nrExists(previousNr.value))) {
+        previousNrErrorText.value = 'Could not find NR in database'
+        isValid = false
+      }
     }
     return isValid
   },
@@ -124,12 +129,12 @@ examine.addEditAction({
     } else {
       examine.jurisdiction = undefined
     }
-    if (examine.corpNumRequired) {
+    if (examine.corpNumRequired && corpNum.value) {
       examine.corpNum = corpNum.value
     } else {
       examine.corpNum = undefined
     }
-    if (examine.prevNrRequired) {
+    if (examine.prevNrRequired && previousNr.value) {
       examine.previousNr = previousNr.value
     } else {
       examine.previousNr = undefined

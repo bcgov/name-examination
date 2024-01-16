@@ -52,7 +52,7 @@ export async function getNamexObject(url: URL): Promise<any> {
 }
 
 /**
- * Get a name request given its NR number.
+ * Get a name request object given its NR number.
  */
 export async function getNameRequest(nrNumber: string) {
   return getNamexObject(getNamexApiUrl(`/requests/${nrNumber}`))
@@ -79,6 +79,6 @@ export async function getBusinesses(corpNum: string) {
   return callNamexApi(getNamexApiUrl(`/businesses/${corpNum}`))
 }
 
-export async function getCorporations(corpNum: string) {
+export async function getCorporation(corpNum: string) {
   return callNamexApi(getNamexApiUrl(`/corporations/${corpNum}`))
 }
