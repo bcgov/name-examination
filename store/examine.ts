@@ -526,7 +526,7 @@ export const useExamineStore = defineStore('examine', () => {
 
   /** Send name request decision to API */
   async function pushAcceptReject() {
-    // TODO: make a PUT call to api, then run the following:
+    // TODO: make a PUT call to api
   }
 
   function runManualRecipe(searchStr: string, exactPhrase: string) {}
@@ -598,18 +598,23 @@ export const useExamineStore = defineStore('examine', () => {
     console.log('updating request')
   }
 
-  /** Runs all edit actions, ensuring all actions have valid internal state before updating the store state. */
-  async function runEditActions() {
+  /** Runs all edit actions, ensuring all actions have valid internal state before updating the store state.
+   * @returns whether all the actions ran successfully
+   */
+  async function runEditActions(): Promise<boolean> {
     for (const action of editActions) {
       if (!(await action.validate())) {
-        return
+        return false
       }
     }
     editActions.forEach((ea) => ea.update())
+    return true
   }
 
   async function saveEdits() {
-    await runEditActions()
+    if (!(await runEditActions())) {
+      return
+    }
 
     if (previousStateCd.value === Status.Draft) {
       nr_status.value = previousStateCd.value

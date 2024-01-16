@@ -4,7 +4,7 @@ import {
   RequestTypeCode,
 } from '~/enums/codes'
 import type { NameChoice } from '~/types'
-import { getBusinesses, getCorporation, getNameRequest } from './namex-api'
+import { getBusiness, getCorporation, getNameRequest } from './namex-api'
 
 export function getMappedRequestType(
   requestType: RequestTypeCode,
@@ -55,35 +55,41 @@ export function isValidNrFormat(
 
 export async function nrExists(nrNumber: string): Promise<boolean> {
   try {
-    await getNameRequest(nrNumber)
-    return true
+    const response = await getNameRequest(nrNumber)
+    return response.status === 200
   } catch (e) {
     return false
   }
 }
 
-/** Return whether a given corp number is valid or not. */
-export async function isValidCorpNum(input: string) {
+/** Return whether the given input is in the correct format for a corp number.
+ * @throws an error if the corp num check fails (e.g. the API request times out)
+ *
+ */
+export function isValidCorpNumFormat(input: string) {
   // valid corp numbers are between 7 and 10 characters long
-  if (input.length < 7 || input.length > 10) {
-    return false
-  }
+  return input.length >= 7 && input.length <= 10
+}
 
+/** Return whether the company with the given corp num exists. */
+export async function corpExists(input: string) {
   // query entities for the corp num. if not found, query again from colin
-  try {
-    const businessResponse = await getBusinesses(input)
-    if (businessResponse.status === 200) return true
+  const businessResponse = await getBusiness(input)
+  if (businessResponse.status === 200) return true
 
-    // ignore corp num prefix 'BC' if applicable to match colin BC corpNum format for the validation
-    const corpNum = input.replace(/^BC+/i, '')
-    const response = await (await getCorporation(corpNum)).json()
+  // ignore corp num prefix 'BC' if applicable to match colin BC corp num format for the validation
+  const corpNum = input.replace(/^BC+/i, '')
+  const corporationResponse = await getCorporation(corpNum)
+  if (corporationResponse.status === 200) {
+    const responseJson = await corporationResponse.json()
     return !(
-      response.incorporated === 'Not Available' &&
-      response.directors === 'Not Available'
+      responseJson.incorporated === 'Not Available' &&
+      responseJson.directors === 'Not Available'
     )
-  } catch (error) {
-    console.error(`Error while checking corp num: ${error}`)
+  } else if (corporationResponse.status === 404) {
     return false
+  } else {
+    throw new Error('Failed to get corporation')
   }
 }
 

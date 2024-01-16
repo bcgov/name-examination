@@ -9,7 +9,7 @@
 
       <div v-if="examine.corpNumRequired" class="flex items-center">
         <h2 class="font-bold">Related Corp #:&nbsp;</h2>
-        <span>{{ examine.previousNr }}</span>
+        <span>{{ examine.corpNum }}</span>
       </div>
     </ExamineRequestInfoExpandable>
   </div>

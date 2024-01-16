@@ -4,7 +4,7 @@
       v-model="selectedRequestType"
       :options="examine.listRequestTypes"
       :options-display="(rt: RequestType) => rt.text"
-      @option-clicked="(rt: RequestType) => updateRequestTypeRules(rt)"
+      @option-clicked="(rt: RequestType) => updateRequestType(rt)"
       aria-label="Name Request Type"
     >
       {{ selectedRequestType.text }}
@@ -65,7 +65,12 @@
 import type { RequestTypeCode } from '~/enums/codes'
 import { useExamineStore } from '~/store/examine'
 import type { RequestType } from '~/types'
-import { isValidCorpNum, isValidNrFormat, nrExists } from '~/util'
+import {
+  corpExists,
+  isValidCorpNumFormat,
+  isValidNrFormat,
+  nrExists,
+} from '~/util'
 
 const examine = useExamineStore()
 
@@ -74,7 +79,7 @@ const selectedRequestType = ref(examine.requestTypeObject)
 const jurisdiction = ref(examine.jurisdiction)
 const jursidictionErrorText = ref('')
 
-const corpNum = ref('')
+const corpNum = ref(examine.corpNum)
 const corpNumErrorText = ref('')
 const corpNumError = computed(() => corpNumErrorText.value != '')
 
@@ -87,42 +92,71 @@ function resetErrorTexts() {
   previousNrErrorText.value = ''
 }
 
-function updateRequestTypeRules(requestType: RequestType) {
+function trimInputs() {
+  corpNum.value = corpNum.value?.trim()
+  previousNr.value = previousNr.value?.trim()
+}
+
+function updateRequestType(requestType: RequestType) {
   examine.updateRequestTypeRules(requestType)
   resetErrorTexts()
 }
 
+async function validateCorpNum(corpNum: string) {
+  if (!isValidCorpNumFormat(corpNum)) {
+    corpNumErrorText.value = 'Invalid corp number format'
+    return false
+  }
+  try {
+    if (!(await corpExists(corpNum))) {
+      corpNumErrorText.value = 'Could not find corp in database'
+      return false
+    } else {
+      return true
+    }
+  } catch (e) {
+    corpNumErrorText.value = 'Failed to check corp number. Please try again.'
+    return false
+  }
+}
+
+async function validatePreviousNr(previousNr: string) {
+  if (!isValidNrFormat(previousNr)) {
+    previousNrErrorText.value = 'NR number format must be NR xxxxxxx'
+    return false
+  } else if (!(await nrExists(previousNr))) {
+    previousNrErrorText.value = 'Could not find NR in database'
+    return false
+  } else {
+    return true
+  }
+}
+
+async function validateInputs() {
+  const validationResults = []
+  if (examine.jurisdictionRequired && jurisdiction.value == null) {
+    jursidictionErrorText.value = 'Please select a jurisdiction'
+    validationResults.push(false)
+  }
+  if (examine.corpNumRequired && corpNum.value) {
+    validationResults.push(await validateCorpNum(corpNum.value))
+  }
+  if (examine.prevNrRequired && previousNr.value) {
+    validationResults.push(await validatePreviousNr(previousNr.value))
+  }
+  return validationResults.every((r) => r === true)
+}
+
 examine.addEditAction({
   async validate() {
+    resetErrorTexts()
     if (examine.isClosed) {
       return true
     }
-    let isValid = true
-    if (examine.jurisdictionRequired && jurisdiction.value == null) {
-      jursidictionErrorText.value = 'Please select a jurisdiction'
-      isValid = false
-    }
-    if (
-      examine.corpNumRequired &&
-      corpNum.value &&
-      !(await isValidCorpNum(corpNum.value))
-    ) {
-      corpNumErrorText.value = 'Please enter a valid Incorporation Number'
-      isValid = false
-    }
-    if (examine.prevNrRequired && previousNr.value) {
-      if (!isValidNrFormat(previousNr.value)) {
-        previousNrErrorText.value = '(Format must be NR xxxxxxx)'
-        isValid = false
-      } else if (!(await nrExists(previousNr.value))) {
-        previousNrErrorText.value = 'Could not find NR in database'
-        isValid = false
-      }
-    }
-    return isValid
+    trimInputs()
+    return await validateInputs()
   },
   update() {
-    resetErrorTexts()
     examine.requestType = selectedRequestType.value.value as RequestTypeCode
     if (examine.jurisdictionRequired) {
       examine.jurisdiction = jurisdiction.value
@@ -143,6 +177,6 @@ examine.addEditAction({
 })
 
 onMounted(() => {
-  updateRequestTypeRules(examine.requestTypeObject)
+  updateRequestType(examine.requestTypeObject)
 })
 </script>
