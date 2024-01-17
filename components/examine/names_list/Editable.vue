@@ -50,5 +50,6 @@ examine.addEditAction({
       choice.name = nameInputs.value[i].trim()
     }
   },
+  cancel() {},
 })
 </script>

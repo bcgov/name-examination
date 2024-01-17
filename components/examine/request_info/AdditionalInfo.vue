@@ -57,5 +57,6 @@ function cancelEdits() {
 examine.addEditAction({
   validate: () => true,
   update: saveEdits,
+  cancel: cancelEdits,
 })
 </script>
