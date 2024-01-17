@@ -330,8 +330,10 @@ export const useExamineStore = defineStore('examine', () => {
      * This function is called before saving. A save will not occur if at least one edit action's validation fails.
      */
     validate: (() => boolean) | (() => Promise<boolean>)
-    /** Update the store's value with the new values. This function is called after all validations have succeeded */
+    /** Update the store's value with the new values. This function is called after all validations have succeeded. */
     update: () => void
+    /** Called when the user cancels an edit. */
+    cancel: () => void
   }
   const editActions: Array<EditAction> = []
   function addEditAction(action: EditAction) {
@@ -729,6 +731,18 @@ export const useExamineStore = defineStore('examine', () => {
     // TODO: push CANCELLED state to API
   }
 
+  // ============ ADDED 2024-01-17, also see EditAction interface ============
+  async function cancelEdits() {
+    if (previousStateCd.value === Status.Draft) {
+      await revertToPreviousState()
+    } else {
+      await getpostgrescompInfo(nrNumber.value)
+    }
+    is_editing.value = false
+    is_header_shown.value = false
+    editActions.forEach((ea) => ea.cancel())
+  }
+
   watch(
     () => [selectedConflicts],
     (_state) => {
@@ -873,6 +887,7 @@ export const useExamineStore = defineStore('examine', () => {
     updateNRStatePreviousState,
     revertToPreviousState,
     saveEdits,
+    cancelEdits,
     updateRequestTypeRules,
     getpostgrescompNo,
     resetValues,

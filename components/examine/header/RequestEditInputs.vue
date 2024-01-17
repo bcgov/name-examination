@@ -4,7 +4,7 @@
       v-model="selectedRequestType"
       :options="examine.listRequestTypes"
       :options-display="(rt: RequestType) => rt.text"
-      @option-clicked="(rt: RequestType) => updateRequestType(rt)"
+      @option-clicked="onRequestTypeChanged"
       aria-label="Name Request Type"
     >
       {{ selectedRequestType.text }}
@@ -92,14 +92,27 @@ function resetErrorTexts() {
   previousNrErrorText.value = ''
 }
 
+function resetInputs() {
+  jurisdiction.value = undefined
+  corpNum.value = undefined
+  previousNr.value = undefined
+}
+
+function setDefaultInputValues() {
+  jurisdiction.value = examine.jurisdiction
+  corpNum.value = examine.corpNum
+  previousNr.value = examine.previousNr
+}
+
 function trimInputs() {
   corpNum.value = corpNum.value?.trim()
   previousNr.value = previousNr.value?.trim()
 }
 
-function updateRequestType(requestType: RequestType) {
-  examine.updateRequestTypeRules(requestType)
+function onRequestTypeChanged(newRequestType: RequestType) {
+  resetInputs()
   resetErrorTexts()
+  examine.updateRequestTypeRules(newRequestType)
 }
 
 async function validateCorpNum(corpNum: string) {
@@ -174,9 +187,10 @@ examine.addEditAction({
       examine.previousNr = undefined
     }
   },
+  cancel: setDefaultInputValues,
 })
 
 onMounted(() => {
-  updateRequestType(examine.requestTypeObject)
+  examine.updateRequestTypeRules(examine.requestTypeObject)
 })
 </script>

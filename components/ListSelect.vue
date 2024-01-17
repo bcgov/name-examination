@@ -13,7 +13,6 @@
           :class="{
             'hover:bg-gray-100': !disabled,
             'pointer-events-none text-gray-400': disabled,
-            'border-2 border-red-600 outline-red-600': errorStyle,
           }"
         >
           <span class="block"><slot>Select</slot></span>
@@ -35,7 +34,7 @@
           enter-to-class="opacity-100"
         >
           <ListboxOptions
-            class="absolute z-20 mt-1 max-h-[50vh] w-fit overflow-auto rounded-md bg-white py-1 text-left text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            class="absolute mt-1 z-20 max-h-[50vh] w-fit overflow-auto rounded-md bg-white py-1 text-left text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
             :class="optionsStyle"
           >
             <ListboxOption
@@ -54,7 +53,7 @@
                 ]"
               >
                 <span>
-                  {{ optionsDisplay(option) }}
+                  {{ optionsDisplay ? optionsDisplay(option) : option }}
                 </span>
                 <span
                   v-if="selected"
@@ -88,25 +87,14 @@ import {
 import { ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/outline'
 
 type ModelValueType = any
-const { modelValue, options, multiple, optionsModel } = withDefaults(
-  defineProps<{
-    modelValue: ModelValueType | Array<ModelValueType>
-    options: Array<any>
-    multiple?: boolean
-    disabled?: boolean
-    optionsStyle?: string
-    /** Style this input as an error, useful to indicate invalid inputs */
-    errorStyle?: boolean
-    /** Given an option from the options array, returns the display string that will be shown in the options dropdown */
-    optionsDisplay?: (option: ModelValueType) => string
-    /** Given an option from the options array, returns the value that will be emitted when updating the model value. */
-    optionsModel?: (option: ModelValueType) => ModelValueType
-  }>(),
-  {
-    optionsDisplay: (option: ModelValueType) => option,
-    optionsModel: (option: ModelValueType) => option,
-  }
-)
+const { modelValue, options, multiple } = defineProps<{
+  modelValue: ModelValueType | Array<ModelValueType>
+  options: Array<any>
+  multiple?: boolean
+  disabled?: boolean
+  optionsStyle?: string
+  optionsDisplay?: (option: ModelValueType) => string
+}>()
 
 const emit = defineEmits<{
   (e: 'optionClicked', option: any): void
@@ -114,6 +102,6 @@ const emit = defineEmits<{
 }>()
 
 const updateModelValue = (newValue: any) => {
-  emit('update:modelValue', optionsModel(newValue))
+  emit('update:modelValue', newValue)
 }
 </script>

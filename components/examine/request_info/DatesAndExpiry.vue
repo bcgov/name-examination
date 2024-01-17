@@ -22,7 +22,7 @@
       <div v-else class="flex flex-col">
         <DateInput
           min-today
-          v-model="expiry"
+          v-model="(expiry as string)"
           :error-style="expiryDateErrorText != ''"
           @change="expiryDateErrorText = ''"
         />
@@ -57,10 +57,11 @@
             class="w-1/2"
             v-model="consentFlag"
             :options="consentOptions"
-            :options-display="(option: ConsentOption) => option.text"
-            :options-model="(option: ConsentOption) => option.value"
+            :options-display="(option: ConsentFlag) => consentDisplayStrings[option]"
           >
-            {{ consentOptionText ? consentOptionText : 'Select' }}
+            {{
+              selectedConsentOptionText ? selectedConsentOptionText : 'Select'
+            }}
           </ListSelect>
         </div>
 
@@ -71,7 +72,7 @@
           <h2 class="font-bold">Consent Date:&nbsp;</h2>
           <div class="flex flex-col">
             <DateInput
-              v-model="consentDate"
+              v-model="(consentDate as string)"
               :error-style="consentDateErrorText != ''"
               @change="consentDateErrorText = ''"
             />
@@ -92,22 +93,22 @@ import { useExamineStore } from '~/store/examine'
 
 const examine = useExamineStore()
 
-const expiry = ref(examine.expiryDate || '')
-const consentFlag = ref(examine.consentFlag)
-const consentDate = ref(examine.consentDateForEdit || '')
+const expiry = ref<string>()
+const consentFlag = ref<ConsentFlag>()
+const consentDate = ref<string>()
+
+setDefaultInputValues()
 
 const expiryDateErrorText = ref('')
 const consentDateErrorText = ref('')
 
-type ConsentOption = { text: string; value: ConsentFlag | undefined }
-const consentOptions: Array<ConsentOption> = [
-  { text: 'Required', value: ConsentFlag.Required },
-  { text: 'Received', value: ConsentFlag.Received },
-  { text: 'Waived', value: ConsentFlag.Waived },
-]
-const consentOptionText = computed(
-  () => consentOptions.find((o) => o.value === consentFlag.value)?.text
-)
+const consentOptions = computed(() => Object.values(ConsentFlag))
+
+const consentDisplayStrings = {
+  [ConsentFlag.Required]: 'Required',
+  [ConsentFlag.Received]: 'Received',
+  [ConsentFlag.Waived]: 'Waived',
+}
 
 const consentText = computed(() => {
   switch (examine.consentFlag) {
@@ -121,6 +122,16 @@ const consentText = computed(() => {
       return '-'
   }
 })
+
+const selectedConsentOptionText = computed(() =>
+  consentFlag.value ? consentDisplayStrings[consentFlag.value] : undefined
+)
+
+function setDefaultInputValues() {
+  expiry.value = examine.expiryDate
+  consentFlag.value = examine.consentFlag
+  consentDate.value = examine.consentDateForEdit
+}
 
 examine.addEditAction({
   validate() {
@@ -150,5 +161,6 @@ examine.addEditAction({
       examine.consentDateForEdit = undefined
     }
   },
+  cancel: setDefaultInputValues,
 })
 </script>

@@ -120,5 +120,6 @@ examine.addEditAction({
     examine.conEmail = conEmail.value
     examine.contactName = contactName.value
   },
+  cancel() {},
 })
 </script>
