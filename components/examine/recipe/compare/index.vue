@@ -2,7 +2,7 @@
   <div class="flex flex-col space-y-2 overflow-auto p-2">
     <ExamineRecipeCompareItem
       v-for="conflict in examine.comparedConflicts"
-      :conflict="conflict"
+      :conflict="(examine.getConflictData(conflict) as Conflict)"
     />
 
     <p v-if="examine.comparedConflicts.length === 0">
@@ -13,5 +13,6 @@
 
 <script setup lang="ts">
 import { useExamineStore } from '~/store/examine'
+import type { Conflict } from '~/types'
 const examine = useExamineStore()
 </script>

@@ -80,7 +80,7 @@ export const useExamineStore = defineStore('examine', () => {
   const namesConflictJSON = ref<NameRequestConflict>()
 
   const selectedConflicts = ref<Array<ConflictListItem>>([])
-  const comparedConflicts = ref<Array<Conflict>>([])
+  const comparedConflicts = ref<Array<ConflictListItem>>([])
 
   const listDecisionReasons = ref<Array<Macro>>(mock.macros)
 
@@ -354,26 +354,6 @@ export const useExamineStore = defineStore('examine', () => {
       corpConflictJSON.value = conflict as CorpConflict
     } else {
       namesConflictJSON.value = conflict as NameRequestConflict
-    }
-  }
-
-  function toggleConflictCheckbox(conflictItem: ConflictListItem) {
-    const selectedNRs = comparedConflicts.value.map((c) => c.nrNumber)
-    if (selectedNRs.includes(conflictItem.nrNumber)) {
-      selectedConflicts.value = selectedConflicts.value.filter(
-        (c) => c.nrNumber !== conflictItem.nrNumber
-      )
-      comparedConflicts.value = comparedConflicts.value.filter(
-        (c) => c.nrNumber !== conflictItem.nrNumber
-      )
-    } else {
-      const conflict = mock.conflicts.filter(
-        (c) => c.nrNumber === conflictItem.nrNumber
-      )[0]
-      comparedConflicts.value.push(conflict as Conflict)
-      if (conflictsAutoAdd.value) {
-        selectedConflicts.value.push(conflictItem)
-      }
     }
   }
 
@@ -743,19 +723,53 @@ export const useExamineStore = defineStore('examine', () => {
     editActions.forEach((ea) => ea.cancel())
   }
 
-  watch(
-    () => [selectedConflicts],
-    (_state) => {
-      // compared conflicts should be kept the same as selected conflicts when auto add is enabled
-      if (conflictsAutoAdd.value) {
-        const selectedNRs = selectedConflicts.value.map((c) => c.nrNumber)
-        comparedConflicts.value = comparedConflicts.value.filter((c) =>
-          selectedNRs.includes(c.nrNumber)
-        )
-      }
-    },
-    { deep: true }
-  )
+  // ============ ADDED 2024-01-18 ============
+  function getCorpConflict(nrNumber: string) {
+    return mock.conflicts.find((c) => c.nrNumber === nrNumber)
+  }
+
+  function getNamesConflict(nrNumber: string) {
+    return mock.conflicts.find((c) => c.nrNumber === nrNumber)
+  }
+
+  function getConflictData(item: ConflictListItem) {
+    switch (item.source) {
+      case 'CORP':
+        return getCorpConflict(item.nrNumber)
+      case 'NR':
+        return getNamesConflict(item.nrNumber)
+    }
+  }
+
+  function selectConflict(conflict: ConflictListItem) {
+    if (conflictsAutoAdd.value) {
+      selectedConflicts.value.push(conflict)
+      comparedConflicts.value.push(conflict)
+    } else {
+      comparedConflicts.value.push(conflict)
+    }
+  }
+
+  function deselectConflict(conflict: ConflictListItem) {
+    if (conflictsAutoAdd.value) {
+      selectedConflicts.value = selectedConflicts.value.filter(
+        (c) => c !== conflict
+      )
+      comparedConflicts.value = selectedConflicts.value.slice()
+    } else {
+      comparedConflicts.value = comparedConflicts.value.filter(
+        (c) => c !== conflict
+      )
+    }
+  }
+
+  /** Keep compared conflicts synchronized with selected conflicts when auto add is enabled. */
+  function syncSelectedAndComparedConflicts() {
+    console.log(selectedConflicts.value)
+    if (conflictsAutoAdd.value) {
+      comparedConflicts.value = selectedConflicts.value.slice()
+    }
+  }
 
   watch(
     () => [nrNumber],
@@ -873,7 +887,6 @@ export const useExamineStore = defineStore('examine', () => {
     isUndoable,
     getHistoryInfo,
     getConflictInfo,
-    toggleConflictCheckbox,
     getShortJurisdiction,
     setConsentFlag,
     makeDecision,
@@ -900,6 +913,10 @@ export const useExamineStore = defineStore('examine', () => {
     claimNr,
     postComment,
     cancelNr,
+    getConflictData,
+    selectConflict,
+    deselectConflict,
+    syncSelectedAndComparedConflicts,
   }
 })
 

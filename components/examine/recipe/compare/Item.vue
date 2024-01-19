@@ -13,7 +13,10 @@
       </div>
     </template>
     <template #content>
-      <ExamineRecipeMatch :conflict="conflict" class="px-2 [&_.comments-box-child]:bg-white" />
+      <ExamineRecipeMatch
+        :conflict="conflict"
+        class="px-2 [&_.comments-box-child]:bg-white"
+      />
     </template>
   </Accordion>
 </template>

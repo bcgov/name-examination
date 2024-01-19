@@ -11,7 +11,7 @@
           :disabled="examine.decisionFunctionalityDisabled"
           class="h-4 w-4"
           :checked="isChecked"
-          @change.prevent.stop="examine.toggleConflictCheckbox(conflictItem)"
+          @change="e => toggleConflictCheckbox((e.target as HTMLInputElement).checked)"
         />
         <span class="grow" v-html="conflictItem.highlightedText"></span>
         <div class="space-x-8">
@@ -64,6 +64,14 @@ const conflictData = computed<Conflict | undefined>(() =>
 
 function onAccordionToggle(isOpen: boolean) {
   if (isOpen) examine.getConflictInfo(conflictItem)
+}
+
+function toggleConflictCheckbox(checked: boolean) {
+  if (checked) {
+    examine.selectConflict(conflictItem)
+  } else {
+    examine.deselectConflict(conflictItem)
+  }
 }
 </script>
 
