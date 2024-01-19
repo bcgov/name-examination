@@ -742,25 +742,16 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   function selectConflict(conflict: ConflictListItem) {
+    comparedConflicts.value.push(conflict)
     if (conflictsAutoAdd.value) {
       selectedConflicts.value.push(conflict)
-      comparedConflicts.value.push(conflict)
-    } else {
-      comparedConflicts.value.push(conflict)
     }
   }
 
   function deselectConflict(conflict: ConflictListItem) {
-    if (conflictsAutoAdd.value) {
-      selectedConflicts.value = selectedConflicts.value.filter(
-        (c) => c !== conflict
-      )
-      comparedConflicts.value = selectedConflicts.value.slice()
-    } else {
-      comparedConflicts.value = comparedConflicts.value.filter(
-        (c) => c !== conflict
-      )
-    }
+    const notConflict = (c: ConflictListItem) => c !== conflict
+    selectedConflicts.value = selectedConflicts.value.filter(notConflict)
+    comparedConflicts.value = comparedConflicts.value.filter(notConflict)
   }
 
   /** Keep compared conflicts synchronized with selected conflicts when auto add is enabled. */
