@@ -6,7 +6,7 @@
     >
       <span>{{ display ? display(item) : item }}</span>
       <button
-        @click="(event) => onChipRemove(event, item)"
+        @click="(event) => onChipRemove(event, modelValue, item)"
         class="rounded hover:bg-sky-200"
       >
         <XMarkIcon class="h-4 w-4" />
@@ -18,25 +18,23 @@
 <script setup lang="ts">
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 
-const { modelValue } = defineProps<{
+defineProps<{
   modelValue: Array<any>
   display?: (input: any) => string
 }>()
-
-// setInterval(() => console.log(modelValue), 1000)
 
 const emit = defineEmits<{
   (e: 'update:modelValue', newValue: any): void
   (e: 'chipRemoved', item: any): void
 }>()
 
-function onChipRemove(event: MouseEvent, item: any) {
-  console.log(modelValue)
-  console.log('removed chip ', item)
+// NOTE: The `modelValue` variable from the `defineProps` call above doesn't update properly for some reason.
+// The workaround is to pass the modelValue as a parameter when calling this function from the template.
+function onChipRemove(event: MouseEvent, items: Array<any>, item: any) {
   event.stopPropagation()
   emit(
     'update:modelValue',
-    modelValue.filter((c) => c !== item)
+    items.filter((c) => c !== item)
   )
   emit('chipRemoved', item)
 }

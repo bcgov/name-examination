@@ -765,7 +765,6 @@ export const useExamineStore = defineStore('examine', () => {
 
   /** Keep compared conflicts synchronized with selected conflicts when auto add is enabled. */
   function syncSelectedAndComparedConflicts() {
-    console.log(selectedConflicts.value)
     if (conflictsAutoAdd.value) {
       comparedConflicts.value = selectedConflicts.value.slice()
     }
