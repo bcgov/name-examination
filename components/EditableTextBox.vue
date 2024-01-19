@@ -7,7 +7,7 @@
         :class="{ 'border-b-0': characterLimit }"
         :placeholder="placeholder"
         :readonly="readonly"
-        v-model="text"
+        :value="modelValue"
         @input="onTextAreaInput"
       />
 
@@ -69,8 +69,7 @@ const { modelValue, characterLimit, textRequired } = defineProps<{
 }>()
 
 const showSubmitError = ref(false)
-
-const text = ref(modelValue)
+const textArea = ref<HTMLTextAreaElement>()
 
 const emit = defineEmits<{
   (e: 'submit', text: string): void
@@ -80,16 +79,18 @@ const emit = defineEmits<{
 }>()
 
 function onSubmit() {
-  if (textRequired && text.value == '') {
+  if (!textArea.value) return
+  if (textRequired && textArea.value.value === '') {
     showSubmitError.value = true
     return
   }
-  emit('submit', text.value)
+  emit('submit', textArea.value.value)
 }
 
 function onTextAreaInput(event: Event) {
+  const text = (event.target as HTMLTextAreaElement).value
   showSubmitError.value = false
-  emit('update:modelValue', text.value)
+  emit('update:modelValue', text)
   emit('input', event)
 }
 </script>
