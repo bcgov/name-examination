@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "nuxt generate",
+    "clean": "nuxt cleanup",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
@@ -63,8 +64,8 @@
     "@pinia/nuxt": "^0.4.11",
     "dotenv": "^16.3.1",
     "firebase": "^9.22.2",
+    "firebaseui": "^6.1.0",
     "flush-promises": "^1.0.2",
-    "keycloak-js": "^21.1.2",
     "launchdarkly-js-client-sdk": "^3.1.3",
     "luxon": "^3.3.0",
     "pinia": "^2.1.3",

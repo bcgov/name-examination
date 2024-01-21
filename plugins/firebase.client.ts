@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app'
 import { getRemoteConfig, fetchAndActivate } from 'firebase/remote-config'
 import { getAnalytics } from 'firebase/analytics'
+import { getAuth, type Auth } from 'firebase/auth'
 import { FeatureFlags } from '@/util/constants'
 
 export default defineNuxtPlugin(async (nuxtApp) => {
@@ -17,6 +18,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   const analytics = getAnalytics(app)
   const remoteConfig = getRemoteConfig(app)
+  const auth: Auth = getAuth(app)
 
   remoteConfig.settings.fetchTimeoutMillis = 60000
   remoteConfig.settings.minimumFetchIntervalMillis = 60000
@@ -34,4 +36,10 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   nuxtApp.provide('remoteConfig', remoteConfig)
 
   console.info(remoteConfig)
+
+  return {
+    provide: {
+      auth: auth
+    }
+  }
 })

@@ -51,10 +51,7 @@ export default defineNuxtConfig({
       firebaseProjectId: process.env.NUXT_PROJECT_ID,
       firebaseAppId: process.env.NUXT_APP_ID,
       namexAPIURL: process.env.NUXT_NAMEX_API_URL,
-      namexAPIVersion: process.env.NUXT_NAMEX_API_VERSION,
-      keycloakAuthUrl: process.env.NUXT_KEYCLOAK_AUTH_URL,
-      keycloakRealm: process.env.NUXT_KEYCLOAK_REALM,
-      keycloakClientId: process.env.NUXT_KEYCLOAK_CLIENTID,
+      namexAPIVersion: process.env.NUXT_NAMEX_API_VERSION
     },
   },
 })
