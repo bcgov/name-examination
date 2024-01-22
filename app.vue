@@ -7,6 +7,6 @@
 import { useUserStore } from '~/store/user-cache'
 
 const userStore = useUserStore()
-await userStore.setUser()
+userStore.setUser()
 
 </script>

@@ -19,7 +19,6 @@ export const useUserStore = defineStore('user-cache', () => {
           const credentials = OAuthProvider.credentialFromResult(userCredential)
           token.value = credentials?.accessToken ? credentials.accessToken : ''
         }
-        // examine()
       } else {
         userName.value = ''
         authenticated.value = false
@@ -29,5 +28,4 @@ export const useUserStore = defineStore('user-cache', () => {
   }
   return { authenticated, userName, token, setUser }
 }
-// , { persist: true }
 )

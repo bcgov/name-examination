@@ -131,6 +131,7 @@ import {
 } from '~/enums/filter-dropdowns'
 import { SearchColumns } from '~/enums/search-columns'
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/vue/24/outline'
+import { useUserStore } from '~/store/user-cache'
 
 const NO_DATA_STRING = 'No Data Available'
 
@@ -246,4 +247,11 @@ onMounted(async () => {
   search.resetDisplayAndPage()
   await search.updateRows()
 })
+
+const userStore = useUserStore()
+
+watch(userStore, async () => {
+  await search.updateRows()
+})
+
 </script>

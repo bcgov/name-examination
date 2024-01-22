@@ -22,12 +22,13 @@
 
 <script setup lang="ts">
 import { useStatusStore } from '~/store/status'
+import { useUserStore } from '~/store/user-cache'
 
+const userStore = useUserStore()
 const status = useStatusStore()
-status.update()
 
 const notExaminedNum = computed(() => status.notExaminedNum)
 const holdNum = computed(() => status.holdNum)
 
-// onMounted(async () => await status.update())
+watch(userStore, async () => await status.update())
 </script>
