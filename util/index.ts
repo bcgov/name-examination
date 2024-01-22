@@ -1,41 +1,5 @@
-import {
-  EntityTypeCode,
-  RequestActionCode,
-  RequestTypeCode,
-} from '~/enums/codes'
 import type { NameChoice } from '~/types'
 import { getBusiness, getCorporation, getNameRequest } from './namex-api'
-
-export function getMappedRequestType(
-  requestType: RequestTypeCode,
-  action: RequestActionCode,
-  entityType: EntityTypeCode
-) {
-  // Map amalgamation split requests
-  if (action === RequestActionCode.AML) {
-    switch (requestType) {
-      case RequestTypeCode.CR:
-        return RequestTypeCode.ACR
-      case RequestTypeCode.XCR:
-        return RequestTypeCode.XACR
-      case RequestTypeCode.CP:
-        return RequestTypeCode.ACP
-      case RequestTypeCode.CC:
-        return RequestTypeCode.ACC
-    }
-  }
-
-  // Map sole general partnership split requests
-  if (entityType === EntityTypeCode.GP) {
-    switch (requestType) {
-      case RequestTypeCode.FR:
-        return RequestTypeCode.GP
-      case RequestTypeCode.CFR:
-        return RequestTypeCode.CGP
-    }
-  }
-  return requestType
-}
 
 /**
  * Return whether a given string is in a valid NR number format, i.e. NR xxxxxxx

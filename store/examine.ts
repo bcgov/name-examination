@@ -32,6 +32,7 @@ import {
 import { getTransactions, patchNameRequest } from '~/util/namex-api'
 import { sortNameChoices } from '~/util'
 import { DateTime } from 'luxon'
+import { fromMappedRequestType } from '~/util/request-type'
 
 export const useExamineStore = defineStore('examine', () => {
   const mock = mockJson
@@ -616,14 +617,19 @@ export const useExamineStore = defineStore('examine', () => {
     is_header_shown.value = true
   }
 
-  function updateRequestTypeRules(requestType: RequestType) {
+  function updateRequestType(requestTypeObject: RequestType) {
     let rules = requestTypeRules.value.find(
-      (rule) => rule.request_type == requestType.value
+      (rule) => rule.request_type == requestTypeObject.value
     )
     prevNrRequired.value = Boolean(rules?.prev_nr_required)
     corpNumRequired.value = Boolean(rules?.corp_num_required)
     additional_info_template.value = rules?.additional_info_template
     jurisdictionRequired.value = Boolean(rules?.jurisdiction_required)
+
+    requestType.value = fromMappedRequestType(
+      requestType.value,
+      requestActionCd.value
+    )
   }
 
   async function getpostgrescompNo() {}
@@ -773,7 +779,7 @@ export const useExamineStore = defineStore('examine', () => {
     async (_state) => {
       await getpostgrescompInfo(nrNumber.value)
       await setNewExaminer()
-      updateRequestTypeRules(requestTypeObject.value)
+      updateRequestType(requestTypeObject.value)
     },
     { deep: true }
   )
@@ -898,7 +904,7 @@ export const useExamineStore = defineStore('examine', () => {
     revertToPreviousState,
     saveEdits,
     cancelEdits,
-    updateRequestTypeRules,
+    updateRequestType,
     getpostgrescompNo,
     resetValues,
     resetConflictList,

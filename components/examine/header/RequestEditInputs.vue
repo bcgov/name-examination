@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import type { RequestTypeCode } from '~/enums/codes'
+import { type RequestTypeCode } from '~/enums/codes'
 import { useExamineStore } from '~/store/examine'
 import type { RequestType } from '~/types'
 import {
@@ -112,7 +112,7 @@ function trimInputs() {
 function onRequestTypeChanged(newRequestType: RequestType) {
   resetInputs()
   resetErrorTexts()
-  examine.updateRequestTypeRules(newRequestType)
+  examine.updateRequestType(newRequestType)
 }
 
 async function validateCorpNum(corpNum: string) {
@@ -191,6 +191,6 @@ examine.addEditAction({
 })
 
 onMounted(() => {
-  examine.updateRequestTypeRules(examine.requestTypeObject)
+  examine.updateRequestType(examine.requestTypeObject)
 })
 </script>

@@ -18,21 +18,6 @@
 </template>
 
 <script setup lang="ts">
-import {
-  EntityTypeCode,
-  RequestActionCode,
-  RequestTypeCode,
-} from '~/enums/codes'
 import { useExamineStore } from '~/store/examine'
-import { getMappedRequestType } from '~/util'
-
 const examine = useExamineStore()
-
-const requestType = computed(() =>
-  getMappedRequestType(
-    examine.requestType as RequestTypeCode,
-    examine.requestActionCd as RequestActionCode,
-    examine.entityTypeCd as EntityTypeCode
-  )
-)
 </script>
