@@ -225,7 +225,6 @@ export const useExamineStore = defineStore('examine', () => {
   const previousNr = ref<string>()
   const prevNrRequired = ref(false)
 
-  const consumptionDate = ref<string>()
   const consumedBy = ref<string>()
   const consentDateForEdit = ref<string>()
   const consentFlag = ref<ConsentFlag>()
@@ -323,6 +322,14 @@ export const useExamineStore = defineStore('examine', () => {
     () =>
       userHasApproverRole.value &&
       [Status.Draft, Status.Hold].includes(nr_status.value)
+  )
+
+  // ============ EDITED consumptionDate 2024-01-22 ============
+  const consumptionDate = computed(() =>
+    nameChoices.value
+      .map((d) => d.consumptionDate)
+      .filter((d) => d != null)
+      .at(0)
   )
 
   interface EditAction {

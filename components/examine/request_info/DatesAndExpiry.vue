@@ -32,10 +32,10 @@
       </div>
     </div>
 
-    <div class="flex" :class="{ 'text-gray-400': !examine.consumptionDate }">
+    <div class="flex" :class="{ 'text-gray-400': !consumptionDateDisplay }">
       <h2 class="font-bold">Consumed:&nbsp;</h2>
       <span>
-        {{ examine.consumptionDate ? examine.consumptionDate : 'n/a' }}
+        {{ consumptionDateDisplay ? consumptionDateDisplay : 'n/a' }}
       </span>
     </div>
 
@@ -90,6 +90,7 @@
 import { ConsentFlag } from '~/enums/codes'
 import { Status } from '~/enums/nr-status'
 import { useExamineStore } from '~/store/examine'
+import { getFormattedDate, parseDate } from '~/util/date'
 
 const examine = useExamineStore()
 
@@ -126,6 +127,12 @@ const consentText = computed(() => {
 const selectedConsentOptionText = computed(() =>
   consentFlag.value ? consentDisplayStrings[consentFlag.value] : undefined
 )
+
+const consumptionDateDisplay = computed(() => {
+  if (examine.consumptionDate && parseDate(examine.consumptionDate).isValid) {
+    return getFormattedDate(examine.consumptionDate)
+  }
+})
 
 function setDefaultInputValues() {
   expiry.value = examine.expiryDate
