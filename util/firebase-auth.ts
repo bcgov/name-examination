@@ -6,6 +6,7 @@ import { signOut, OAuthProvider, signInWithRedirect } from 'firebase/auth'
 export async function logout () {
   const { $auth } = useNuxtApp()
   signOut($auth)
+  window.location.assign('/')
 }
 
 /**
