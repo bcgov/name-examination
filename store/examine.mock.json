@@ -25,22 +25,34 @@
     ]
   },
   "historiesJSON": {
+    "highlighting": "",
     "names": [
       {
-        "name": "NOT SO STEEP COOPERATIVE",
         "jurisdiction": "BC",
+        "name": "NOT SO STEEP COOPERATIVE",
+        "name_state_type_cd": "R",
         "nr_num": "NR 5979354",
-        "start_date": "2008-09-16T16:41:29Z",
-        "name_state_type_cd": "R"
+        "score": 11.4911,
+        "start_date": "2008-09-16T16:43:17Z",
+        "submit_count": 1
       },
       {
-        "name": "NOT SO STEEP COOPERATIVE",
         "jurisdiction": "BC",
+        "name": "NOT SO STEEP COOPERATIVE",
+        "name_state_type_cd": "A",
         "nr_num": "NR 3252689",
+        "score": 11.4911,
         "start_date": "2008-09-16T16:41:29Z",
-        "name_state_type_cd": "A"
+        "submit_count": 1
       }
-    ]
+    ],
+    "response": {
+      "maxScore": 11.4911,
+      "name": "not so steep cooperative",
+      "numFound": 2,
+      "rows": "50",
+      "start": 0
+    }
   },
   "parseConditions": [
     {

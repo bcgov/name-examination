@@ -337,6 +337,29 @@ export const useExamineStore = defineStore('examine', () => {
       .at(0)
   )
 
+  /** Status of an exact matches in history for alerting about previous submissions */
+  const exactHistoryMatch = computed<Status | undefined>(() => {
+    if (!historiesJSON.value) return
+
+    let exactMatches = historiesJSON.value.names.filter(
+      (entry) => currentName.value.toUpperCase() === entry.name.toUpperCase()
+    )
+
+    for (const match of exactMatches) {
+      if (
+        match.name_state_type_cd === 'R' ||
+        match.name_state_type_cd === 'REJECTED' ||
+        match.submit_count > 3
+      ) {
+        return Status.Rejected
+      }
+    }
+
+    if (exactMatches.length > 0) {
+      return Status.Approved
+    }
+  })
+
   interface EditAction {
     /** Return whether an edit action's internal state is valid (e.g. a name field is not empty).
      * This function is called before saving. A save will not occur if at least one edit action's validation fails.
@@ -897,6 +920,7 @@ export const useExamineStore = defineStore('examine', () => {
     isApprovedAndExpired,
     canCancel,
     canClaim,
+    exactHistoryMatch,
     addEditAction,
     isUndoable,
     getHistoryInfo,

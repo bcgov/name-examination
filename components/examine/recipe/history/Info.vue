@@ -1,5 +1,5 @@
 <template>
-  <div v-if="conflict && applicants" class="flex-col p-4">
+  <div v-if="histories && applicants" class="flex-col p-4">
     <div class="flex gap-x-2 text-sm">
       <div class="flex basis-2/3 flex-col">
         <div class="grid grid-cols-2 gap-y-1 overflow-x-auto">
@@ -52,12 +52,12 @@
     </div>
 
     <div
-      v-if="conflict.comments && conflict.comments.length > 0"
+      v-if="histories.comments && histories.comments.length > 0"
       class="mt-2 w-full"
     >
       <h3 class="font-bold">Comments</h3>
       <ExamineCommentsBox
-        :comments="conflict.comments"
+        :comments="histories.comments"
         class="max-h-48 w-full overflow-auto rounded-md border border-gray-400 p-2 children:bg-sky-50"
       />
     </div>
@@ -70,24 +70,24 @@ import { useExamineStore } from '~/store/examine'
 
 const examine = useExamineStore()
 
-const conflict = computed(() => examine.historiesInfoJSON)
-const applicants = computed(() => conflict.value?.applicants)
+const histories = computed(() => examine.historiesInfoJSON)
+const applicants = computed(() => histories.value?.applicants)
 
 const nameState = computed(() => {
-  if (conflict.value == null) return null
+  if (histories.value == null) return null
 
-  for (const nameChoice of conflict.value.names)
-    if (nameChoice.name === conflict.value.text) return nameChoice.state
+  for (const nameChoice of histories.value.names)
+    if (nameChoice.name === histories.value.text) return nameChoice.state
 
   return null
 })
 
 const decisionText = computed(() => {
-  if (conflict.value == null) return null
+  if (histories.value == null) return null
 
-  for (const nameChoice of conflict.value.names) {
+  for (const nameChoice of histories.value.names) {
     if (
-      nameChoice.name === conflict.value.text &&
+      nameChoice.name === histories.value.text &&
       nameChoice.decision_text != ''
     ) {
       return nameChoice.decision_text
@@ -97,10 +97,10 @@ const decisionText = computed(() => {
 })
 
 const conflicts = computed(() => {
-  if (conflict.value == null) return []
+  if (histories.value == null) return []
 
-  for (const nameChoice of conflict.value.names)
-    if (nameChoice.name === conflict.value.text) {
+  for (const nameChoice of histories.value.names)
+    if (nameChoice.name === histories.value.text) {
       return [
         nameChoice.conflict1,
         nameChoice.conflict2,

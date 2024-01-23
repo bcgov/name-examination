@@ -10,9 +10,10 @@
       </span>
     </ExamineNoticeBanner>
 
-    <ExamineNoticeBanner type="warning">
+    <ExamineNoticeBanner v-if="examine.exactHistoryMatch" type="warning">
       <span>
-        Similar name previously <span class="font-bold">REJECTED</span>
+        Similar name previously
+        <span class="font-bold">{{ examine.exactHistoryMatch }}</span>
       </span>
     </ExamineNoticeBanner>
 

@@ -83,10 +83,21 @@ export interface HistoryEntry {
   nr_num: string
   start_date: string
   name_state_type_cd: string
+  score: number
+  submit_count: number
 }
 
 export interface History {
   names: Array<HistoryEntry>
+  highlighting: string
+  response: {
+    maxScore: number
+    name: string
+    numFound: number
+    /** string representing number of rows */
+    rows: string
+    start: number
+  }
 }
 
 export interface ConflictListItem {
@@ -135,7 +146,7 @@ export interface TrademarkApiResponse {
 }
 
 export interface RequestType {
-  value: RequestTypeCode,
+  value: RequestTypeCode
   text: string
   short_desc: string
   class_type_cd: ClassTypeCode
