@@ -733,7 +733,7 @@
       async setNewExaminer() {
         console.log('Calling the set new examiner function-->setNewExaminer')
         this.examinerDisplay = this.$store.getters.examiner
-        if (this.examinerDisplay.includes('account')) { 
+        if (this.examinerDisplay && this.examinerDisplay.includes('account')) { 
           // fetch transactions
           this.$store.commit('setPendingTransactionsRequest', true)
           await this.$store.dispatch('getTransactionsHistory', this.nrNumber)

@@ -3,6 +3,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Vuex from 'vuex'
 import store from '@/store'
+import { formatNrNum } from '@/utils/utils.js'
 
 const LandingPage = () => import(/* webpackChunkName: "home" */'@/components/LandingPage')
 const Signin = () => import(/* webpackChunkName: "signin" */'@/components/auth/Signin')
@@ -85,9 +86,7 @@ router.beforeResolve((to, from, next) => {
     let auth = sessionStorage.getItem('AUTHORIZED')
     if (auth == 'true') {
       if (to.name == 'nameexamination' && from.name == 'Signin' && to.params.param) {
-        let match = /(?:\s+|\s|)(\D|\D+|)(?:\s+|\s|)(\d+)(?:\s+|\s|)/
-        let rtnNR = () => ( 'NR ' )
-        const search = to.params.param.replace(match, rtnNR('$1') + '$2')
+        const search = formatNrNum(to.params.param)
         let payload = {
           search,
           router: to,
@@ -99,10 +98,10 @@ router.beforeResolve((to, from, next) => {
       }
       next()
     } else {
-        store.dispatch("checkError",{"message": "Not Authorized please login."});
-        next({
-          path: '/'
-        })
+      store.dispatch("checkError",{"message": "Not Authorized please login."});
+      next({
+        path: '/'
+      })
     }
   } else {
     next() // make sure to always call next()!
