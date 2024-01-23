@@ -40,4 +40,13 @@ function runManualRecipe() {
   examine.resetExaminationArea()
   examine.runManualRecipe(searchString.value, exactSearchString.value)
 }
+
+watch(
+  () => [examine.currentName],
+  async (_state) => {
+    searchString.value = examine.currentName
+    exactSearchString.value = ''
+  },
+  { deep: true }
+)
 </script>
