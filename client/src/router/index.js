@@ -35,9 +35,18 @@ let router = new Router({
     {
       name: 'nameexamination',
       component: NameExamination,
-      path: '/nameExamination',
+      path: '/nameExamination/:param',
       meta: {
         requiresAuth: true
+      },
+      beforeEnter: (to, from, next) => {
+        if (from.path == '/') {  // reload the page
+          next({
+            path: '/signin',
+            query: { redirect: to.fullPath},
+          })
+        }
+        next()
       }
     },
     {
@@ -75,14 +84,25 @@ router.beforeResolve((to, from, next) => {
     // if not Authenticated, redirect to login page.
     let auth = sessionStorage.getItem('AUTHORIZED')
     if (auth == 'true') {
-
+      if (to.name == 'nameexamination' && from.name == 'Signin' && to.params.param) {
+        let match = /(?:\s+|\s|)(\D|\D+|)(?:\s+|\s|)(\d+)(?:\s+|\s|)/
+        let rtnNR = () => ( 'NR ' )
+        const search = to.params.param.replace(match, rtnNR('$1') + '$2')
+        let payload = {
+          search,
+          router: to,
+          refresh: false
+        }
+        store.commit('nrNumber', search)
+        store.dispatch('getpostgrescompInfo', search)
+        store.dispatch('newNrNumber', payload)
+      }
       next()
     } else {
-
-      store.dispatch("checkError",{"message": "Not Authorized please login."});
-      next({
-        path: '/'
-      })
+        store.dispatch("checkError",{"message": "Not Authorized please login."});
+        next({
+          path: '/'
+        })
     }
   } else {
     next() // make sure to always call next()!

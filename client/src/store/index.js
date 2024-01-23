@@ -341,8 +341,10 @@ export const actions = {
                   if (refresh) {
                     commit( 'showExaminationArea', false )
                   }
-                  if ( router && router.currentRoute.path !== '/nameExamination' ) {
-                    router.push( '/nameExamination' )
+                  if ( router && router.currentRoute.name != 'nameexamination') {
+                    router.push( {name: 'nameexamination',
+                                  params: {param: search.replace(/\s/g, "")}
+                    } )
                   }
                   dispatch( 'resetValues' ).then( () => {
                     commit( 'nrNumber', search )
