@@ -54,6 +54,7 @@ export const useExamineStore = defineStore('examine', () => {
     ].includes(nr_status.value)
   )
   const examiner = ref('someone@idir')
+  const isCurrentExaminer = computed(() => examiner.value === userId.value)
 
   const exactMatchesConflicts = ref<Array<ConflictListItem>>([])
   const parsedSynonymConflicts = ref<Array<ConflictList>>(
@@ -62,7 +63,12 @@ export const useExamineStore = defineStore('examine', () => {
   const parsedCOBRSConflicts = ref<Array<ConflictList>>([])
   const parsedPhoneticConflicts = ref<Array<ConflictList>>([])
 
-  const decisionFunctionalityDisabled = ref(false)
+  const decisionFunctionalityDisabled = computed(
+    () =>
+      customerMessageOverride.value ||
+      !isCurrentExaminer.value ||
+      !is_making_decision.value
+  )
 
   const conflictsAutoAdd = ref(true)
   const autoAddDisabled = computed(
@@ -213,8 +219,7 @@ export const useExamineStore = defineStore('examine', () => {
   const userHasApproverRole = ref(true)
   const userHasEditRole = ref(true)
   const is_my_current_nr = computed(
-    () =>
-      nr_status.value === Status.InProgress && userId.value === examiner.value
+    () => nr_status.value === Status.InProgress && isCurrentExaminer.value
   )
   const furnished = ref<'Y' | 'N'>('N')
 
@@ -292,8 +297,7 @@ export const useExamineStore = defineStore('examine', () => {
   })
 
   const otherExaminerInProgress = computed(
-    () =>
-      userId.value !== examiner.value && nr_status.value === Status.InProgress
+    () => !isCurrentExaminer.value && nr_status.value === Status.InProgress
   )
 
   const expired = computed(
@@ -796,6 +800,7 @@ export const useExamineStore = defineStore('examine', () => {
     conflicts,
     comments,
     examiner,
+    isCurrentExaminer,
     trademarksJSON,
     selectedConflicts,
 
@@ -887,6 +892,7 @@ export const useExamineStore = defineStore('examine', () => {
     conEmail,
     contactName,
     canEdit,
+    otherExaminerInProgress,
     expired,
     isApprovedAndExpired,
     canCancel,

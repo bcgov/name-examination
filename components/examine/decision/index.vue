@@ -1,5 +1,5 @@
 <template>
-  <div v-if="examine.is_making_decision" class="flex flex-col justify-between">
+  <div class="flex flex-col justify-between">
     <div class="flex flex-col space-y-2">
       <ExamineDecisionHeader />
 
