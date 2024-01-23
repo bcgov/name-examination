@@ -24,7 +24,6 @@
       if (!authorized) {
         keycloak = Keycloak('static/keycloak/keycloak.json');
         this.$store.commit('saveKeyCloak', keycloak);
-        console.log('not authorized')
         var token
         const vm = this
 
@@ -51,7 +50,6 @@
 
               });
               // everthing is good, re-direct to home page
-              console.log('Current Route:', vm.$router.currentRoute);
               const redirect = vm.$router.currentRoute.query.redirect || '/home'
               vm.$router.push(redirect)
             }
