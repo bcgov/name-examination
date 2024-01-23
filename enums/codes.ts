@@ -48,6 +48,136 @@ export enum RequestTypeCode {
   GP = 'GP',
   /** change of name request for a general partnership */
   CGP = 'CGP',
+  /** B.C. Company - Change of Name */
+  CCR = 'CCR',
+  /** B.C. Company - Continuation In */
+  CT = 'CT',
+  /** B.C. Company - Restore */
+  RCR = 'RCR',
+  /** Corporation (Foreign) - Extraprovincial Change of Name */
+  XCCR = 'XCCR',
+  /** Corporation (Foreign) - Extraprovincial Reinstatement */
+  XRCR = 'XRCR',
+  /** Corporation (Foreign) - Extraprovincial Assumed Name */
+  AS = 'AS',
+  /** LLC - Extraprovincial Registration */
+  LC = 'LC',
+  /** LLC - Extraprovincial Change of Name */
+  CLC = 'CLC',
+  /** LLC - Extraprovincial Reinstatement */
+  RLC = 'RLC',
+  /** LLC - Extraprovincial Assumed Name */
+  AL = 'AL',
+  /** Limited Liability Partnership - Registration */
+  LL = 'LL',
+  /** Limited Liability Partnership - Change of Name */
+  CLL = 'CLL',
+  /** Limited Liability Partnership - Extraprovincial Registration */
+  XLL = 'XLL',
+  /** Limited Liability Partnership - Extraprovincial Change of Name */
+  XCLL = 'XCLL',
+  /** Limited Partnership - Registration */
+  LP = 'LP',
+  /** Limited Partnership - Change of Name */
+  CLP = 'CLP',
+  /** Extraprovincial Limited Partnership */
+  XLP = 'XLP',
+  /** Limited Partnership - Extraprovincial Change of Name */
+  XCLP = 'XCLP',
+  /** Society - Incorporation */
+  SO = 'SO',
+  /** Society - Amalgamation */
+  ASO = 'ASO',
+  /** Society - Change of Name */
+  CSO = 'CSO',
+  /** Society - Restore */
+  RSO = 'RSO',
+  /** Society - Continuation In */
+  CTSO = 'CTSO',
+  /** Society - Extraprovincial */
+  XSO = 'XSO',
+  /** Society - Extraprovincial Change of Name */
+  XCSO = 'XCSO',
+  /** Society - Extraprovincial Restoration */
+  XRSO = 'XRSO',
+  /** Society - Extraprovincial Non-Share Corporation Assumed Name */
+  XASO = 'XASO',
+  /** Society - Extraprovincial Non-Share Corporation Change Assumed Name */
+  XCASO = 'XCASO',
+  /** Society - Conversion of a Special Act */
+  CSSO = 'CSSO',
+  /** Cooperative - Change of Name */
+  CCP = 'CCP',
+  /** Cooperative - Continuation In */
+  CTC = 'CTC',
+  /** Cooperative - Restore */
+  RCP = 'RCP',
+  /** Cooperative - Extraprovincial */
+  XCP = 'XCP',
+  /** Cooperative - Extraprovincial Change of Name */
+  XCCP = 'XCCP',
+  /** Cooperative - Extraprovincial Restoration */
+  XRCP = 'XRCP',
+  /** CCC - BC to CCC Conversion */
+  CCV = 'CCV',
+  /** CCC - Change of Name */
+  CCC = 'CCC',
+  /** CCC - Continuation In */
+  CCCT = 'CCCT',
+  /** CCC - Restore */
+  RCC = 'RCC',
+  /** Unlimited Liability Company */
+  UL = 'UL',
+  /** BC to Unlimited Liability Company Conversion */
+  UC = 'UC',
+  /** Change of Name of Unlimited Liability Company */
+  CUL = 'CUL',
+  /** ULC - Continuation In */
+  ULCT = 'ULCT',
+  /** ULC - Restore */
+  RUL = 'RUL',
+  /** ULC - Extraprovincial Assumed Name */
+  UA = 'UA',
+  /** ULC - Extraprovincial Registration */
+  XUL = 'XUL',
+  /** Change of Name of Extrapro Unlimited Liability Company */
+  XCUL = 'XCUL',
+  /** ULC - Extraprovincial Reinstatement */
+  XRUL = 'XRUL',
+  /** Financial Institution (BC) - Incorporation */
+  FI = 'FI',
+  /** Financial Institution (BC) - Change of Name */
+  CFI = 'CFI',
+  /** Financial Institution (BC) - Restore */
+  RFI = 'RFI',
+  /** Private Act */
+  PA = 'PA',
+  /** Cemetery */
+  CEM = 'CEM',
+  /** Library */
+  LIB = 'LIB',
+  /** NON */
+  NON = 'NON',
+  /** Parish */
+  PAR = 'PAR',
+  /** Railway */
+  RLY = 'RLY',
+  /** Tramway */
+  TMY = 'TMY',
+  /** BC Benefit Company - Incorporation */
+  BC = 'BC',
+  /** BC Benefit Company - Amalgamation */
+  BEAM = 'BEAM',
+  /** BC Benefit Company - Change of Name */
+  BEC = 'BEC',
+  /** BC Benefit Company - Continuation In */
+  BECT = 'BECT',
+  /** BC Benefit Company - Restoration */
+  BERE = 'BERE',
+  /** BC Benefit Company - BC to Benefit Conversion */
+  BECV = 'BECV',
+  /** BC Benefit Company - Benefit to BC Conversion */
+  BECR = 'BECR',
 }
 
 export enum EntityTypeCode {

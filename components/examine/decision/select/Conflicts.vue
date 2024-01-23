@@ -8,7 +8,7 @@
       options-style="!max-h-48"
       :options-display="(option: Conflict | ConflictListItem) => option.text"
       :disabled="examine.decisionSelectionsDisabled"
-      @option-clicked="(_) => examine.syncSelectedAndComparedConflicts()"
+      @change="(_) => examine.syncSelectedAndComparedConflicts()"
     >
       <Chips
         v-if="examine.selectedConflicts.length > 0"

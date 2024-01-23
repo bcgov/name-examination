@@ -4,7 +4,7 @@
       v-model="selectedRequestType"
       :options="examine.listRequestTypes"
       :options-display="(rt: RequestType) => rt.text"
-      @option-clicked="onRequestTypeChanged"
+      @change="onRequestTypeChanged"
       aria-label="Name Request Type"
     >
       {{ selectedRequestType.text }}
@@ -19,7 +19,7 @@
           id="jurisdiction"
           v-model="jurisdiction"
           :options="examine.listJurisdictions.map((j) => j.text)"
-          @option-clicked="jursidictionErrorText = ''"
+          @change="jursidictionErrorText = ''"
           :error-style="jursidictionErrorText != ''"
         >
           {{ jurisdiction ? jurisdiction : 'Select' }}
@@ -62,7 +62,6 @@
 </template>
 
 <script setup lang="ts">
-import { type RequestTypeCode } from '~/enums/codes'
 import { useExamineStore } from '~/store/examine'
 import type { RequestType } from '~/types'
 import {
@@ -102,6 +101,7 @@ function setDefaultInputValues() {
   jurisdiction.value = examine.jurisdiction
   corpNum.value = examine.corpNum
   previousNr.value = examine.previousNr
+  selectedRequestType.value = examine.requestTypeObject
 }
 
 function trimInputs() {
@@ -112,7 +112,7 @@ function trimInputs() {
 function onRequestTypeChanged(newRequestType: RequestType) {
   resetInputs()
   resetErrorTexts()
-  examine.updateRequestType(newRequestType)
+  examine.updateRequestTypeRules(newRequestType)
 }
 
 async function validateCorpNum(corpNum: string) {
@@ -170,7 +170,7 @@ examine.addEditAction({
     return await validateInputs()
   },
   update() {
-    examine.requestType = selectedRequestType.value.value as RequestTypeCode
+    examine.setRequestType(selectedRequestType.value)
     if (examine.jurisdictionRequired) {
       examine.jurisdiction = jurisdiction.value
     } else {
@@ -191,6 +191,6 @@ examine.addEditAction({
 })
 
 onMounted(() => {
-  examine.updateRequestType(examine.requestTypeObject)
+  examine.updateRequestTypeRules(examine.requestTypeObject)
 })
 </script>

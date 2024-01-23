@@ -49,7 +49,10 @@ export function fromMappedRequestType(
   // Map amalgamation split requests
   if (action === RequestActionCode.AML) {
     const newType = NORMAL_TO_AMALGAMATED_MAP[requestType]
-    if (newType) return newType
+    if (newType) {
+      console.log('hit2')
+      return newType
+    }
   }
   // Map sole general partnership split requests
   const newType = SOLE_PROP_TO_GP_MAP[requestType]

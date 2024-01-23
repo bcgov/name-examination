@@ -135,7 +135,7 @@ export interface TrademarkApiResponse {
 }
 
 export interface RequestType {
-  value: string
+  value: RequestTypeCode,
   text: string
   short_desc: string
   class_type_cd: ClassTypeCode

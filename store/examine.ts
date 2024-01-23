@@ -617,7 +617,7 @@ export const useExamineStore = defineStore('examine', () => {
     is_header_shown.value = true
   }
 
-  function updateRequestType(requestTypeObject: RequestType) {
+  function updateRequestTypeRules(requestTypeObject: RequestType) {
     let rules = requestTypeRules.value.find(
       (rule) => rule.request_type == requestTypeObject.value
     )
@@ -625,10 +625,12 @@ export const useExamineStore = defineStore('examine', () => {
     corpNumRequired.value = Boolean(rules?.corp_num_required)
     additional_info_template.value = rules?.additional_info_template
     jurisdictionRequired.value = Boolean(rules?.jurisdiction_required)
+  }
 
+  function setRequestType(requestTypeObject: RequestType) {
     requestType.value = fromMappedRequestType(
-      requestType.value,
-      requestActionCd.value
+      requestTypeObject.value,
+      requestTypeObject.request_action_cd
     )
   }
 
@@ -779,7 +781,7 @@ export const useExamineStore = defineStore('examine', () => {
     async (_state) => {
       await getpostgrescompInfo(nrNumber.value)
       await setNewExaminer()
-      updateRequestType(requestTypeObject.value)
+      updateRequestTypeRules(requestTypeObject.value)
     },
     { deep: true }
   )
@@ -904,7 +906,8 @@ export const useExamineStore = defineStore('examine', () => {
     revertToPreviousState,
     saveEdits,
     cancelEdits,
-    updateRequestType,
+    updateRequestTypeRules,
+    setRequestType,
     getpostgrescompNo,
     resetValues,
     resetConflictList,
