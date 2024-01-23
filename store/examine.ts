@@ -572,6 +572,9 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   async function updateNRState(state: Status) {
+    if (state === Status.Draft && nr_status.value === Status.InProgress) {
+      is_making_decision.value = false
+    }
     nr_status.value = state
   }
 
