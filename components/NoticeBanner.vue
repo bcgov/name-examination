@@ -9,9 +9,9 @@
   >
     <ExclamationTriangleIcon
       v-if="type === 'warning'"
-      class="h-5 w-5 stroke-2"
+      class="mt-0.5 h-6 w-6 stroke-2"
     />
-    <LockClosedIcon v-if="type === 'lock'" class="h-5 w-5 stroke-2" />
+    <LockClosedIcon v-if="type === 'lock'" class="mt-0.5 h-6 w-6 stroke-2" />
     <slot></slot>
   </div>
 </template>
