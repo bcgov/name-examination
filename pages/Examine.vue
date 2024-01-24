@@ -3,19 +3,19 @@
     class="flex h-full flex-col"
     :class="{ 'bg-gray-100': examine.is_editing }"
   >
-    <ExamineNoticeBanner v-if="examine.otherExaminerInProgress" type="lock">
+    <NoticeBanner v-if="examine.otherExaminerInProgress" type="lock">
       <span>
         This NR is being examined by
         <span class="font-bold">{{ examine.examiner }}</span>
       </span>
-    </ExamineNoticeBanner>
+    </NoticeBanner>
 
-    <ExamineNoticeBanner v-if="examine.exactHistoryMatch" type="warning">
+    <NoticeBanner v-if="examine.exactHistoryMatch" type="warning">
       <span>
         Similar name previously
         <span class="font-bold">{{ examine.exactHistoryMatch }}</span>
       </span>
-    </ExamineNoticeBanner>
+    </NoticeBanner>
 
     <ExamineHeader />
     <ExamineRequestInfo />
