@@ -97,7 +97,8 @@
       </div>
     </table>
 
-    <PopupDialog title="Choose a Date Range" :show="showDateDialog">
+    <PopupDialog :show="showDateDialog">
+      <template #title>Choose a Date Range</template>
       <SearchDateForm
         :initialStart="search.customSubmittedStartDate"
         :initialEnd="search.customSubmittedEndDate"

@@ -87,7 +87,8 @@
       <template #text>E<u>x</u>amine</template>
     </IconButton>
 
-    <PopupDialog title="Cancel Name Request" :show="showCancelRequestDialog">
+    <PopupDialog :show="showCancelRequestDialog">
+      <template #title>Cancel Name Request</template>
       <ExamineCancelRequestForm
         @submit="showCancelRequestDialog = false"
         @cancel="showCancelRequestDialog = false"

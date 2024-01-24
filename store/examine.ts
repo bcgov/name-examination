@@ -33,6 +33,7 @@ import { getTransactions, patchNameRequest } from '~/util/namex-api'
 import { sortNameChoices } from '~/util'
 import { DateTime } from 'luxon'
 import { fromMappedRequestType } from '~/util/request-type'
+import { emitter } from '~/util/emitter'
 
 export const useExamineStore = defineStore('examine', () => {
   const mock = mockJson
@@ -65,7 +66,8 @@ export const useExamineStore = defineStore('examine', () => {
 
   const decisionFunctionalityDisabled = computed(
     () =>
-      customerMessageOverride.value ||
+      customerMessageOverride.value != null ||
+      customerMessageOverride.value != '' ||
       !isCurrentExaminer.value ||
       !is_making_decision.value
   )

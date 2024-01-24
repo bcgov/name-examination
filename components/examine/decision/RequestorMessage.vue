@@ -41,7 +41,8 @@
     </span>
   </div>
 
-  <PopupDialog title="Edit Message" :show="showEditRequestorMessageDialog">
+  <PopupDialog :show="showEditRequestorMessageDialog">
+    <template #title>Edit Message</template>
     <div class="flex flex-col">
       <EditableTextBox
         class="h-72"
