@@ -341,7 +341,7 @@ export const actions = {
                   if (refresh) {
                     commit( 'showExaminationArea', false )
                   }
-                  if ( router && router.currentRoute.name != 'nameexamination') {
+                  if ( router && router.currentRoute.name !== 'nameexamination') {
                     router.push( {name: 'nameexamination',
                                   params: {param: search.replace(/\s/g, "")}
                     } )

@@ -90,9 +90,9 @@
 <script>
 /* eslint-disable */
 
-import { formatNrNum } from '@/utils/utils.js'
+  import { formatNrNum } from '@/utils/utils.js'
 
-export default {
+  export default {
     name: "std-header",
     data () {
       return {
