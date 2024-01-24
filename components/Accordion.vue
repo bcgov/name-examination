@@ -1,13 +1,8 @@
 <template>
-  <details
-    id="details"
-    :class="{ 'pointer-events-none': disabled }"
-    ref="details"
-  >
+  <details :class="{ 'pointer-events-none': disabled }" ref="details">
     <summary
       class="flex w-full cursor-pointer items-center justify-between rounded-md p-1 text-left text-sm font-medium transition"
       :class="buttonStyle"
-      @click="onSummaryClick"
     >
       <slot name="title"></slot>
       <ChevronDownIcon
@@ -25,10 +20,16 @@
 <script setup lang="ts">
 import { ChevronDownIcon } from '@heroicons/vue/24/outline'
 
-const details = ref<HTMLDetailsElement | null>(null)
-const open = ref<boolean>()
+const details = ref<HTMLDetailsElement>()
+const open = ref(false)
 
-onMounted(() => (open.value = details.value?.open))
+onMounted(() => {
+  open.value = Boolean(details.value?.open)
+  details.value?.addEventListener('toggle', () => {
+    open.value = Boolean(details.value?.open)
+    emit('toggled', open.value)
+  })
+})
 
 defineProps<{
   arrow?: boolean
@@ -39,9 +40,4 @@ defineProps<{
 const emit = defineEmits<{
   toggled: [isOpen: boolean]
 }>()
-
-function onSummaryClick(_e: MouseEvent) {
-  open.value = !open.value
-  emit('toggled', open.value)
-}
 </script>

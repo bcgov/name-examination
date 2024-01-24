@@ -25,12 +25,12 @@
     </template>
     <template #content>
       <div class="flex justify-center">
+        <LoadingSpinner v-if="isLoading" />
         <ExamineRecipeMatch
-          v-if="conflictData"
+          v-else-if="conflictData"
           :conflict="conflictData"
           class="grow"
         />
-        <LoadingSpinner v-else />
       </div>
     </template>
   </Accordion>
@@ -42,6 +42,8 @@ import type { Conflict, ConflictListItem } from '~/types'
 import { getFormattedDate } from '~/util/date'
 
 const examine = useExamineStore()
+
+const isLoading = ref(false)
 
 const { conflictItem } = defineProps<{
   conflictItem: ConflictListItem
@@ -62,8 +64,12 @@ const conflictData = computed<Conflict | undefined>(() =>
     : undefined
 )
 
-function onAccordionToggle(isOpen: boolean) {
-  if (isOpen) examine.getConflictInfo(conflictItem)
+async function onAccordionToggle(isOpen: boolean) {
+  if (isOpen) {
+    isLoading.value = true
+    await examine.getConflictInfo(conflictItem)
+    isLoading.value = false
+  }
 }
 
 function toggleConflictCheckbox(checked: boolean) {
