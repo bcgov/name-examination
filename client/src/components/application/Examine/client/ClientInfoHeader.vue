@@ -127,7 +127,7 @@
                      class="ma-0 pa-0"
                      @click="clickCancel"
                      flat>
-                <img src="static/images/buttons/cancel.png"
+                <img src="/static/images/buttons/cancel.png"
                      alt="Cancel Button" />
               </v-btn>
             </v-flex>
@@ -139,7 +139,7 @@
                      :disabled="errorText.length !== 0"
                      class="ma-0 pa-0"
                      flat>
-                <img src="static/images/buttons/save-edits.png"
+                <img src="/static/images/buttons/save-edits.png"
                      :style="errorText ? {opacity: .50} : null"
                      alt="Save Button" />
               </v-btn>
