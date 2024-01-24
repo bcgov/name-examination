@@ -123,11 +123,6 @@
           $("#exact-history-match-banner").addClass("alert alert-danger");
         else if (val == 'APPROVED')
           $("#exact-history-match-banner").addClass("alert alert-warning");
-      },
-      auth: {
-        handler(selection) {
-          if (auth != true) { this.$router.push("/Signin") }
-        }
       }
     }
   }

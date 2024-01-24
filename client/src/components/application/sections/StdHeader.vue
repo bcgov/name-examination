@@ -89,6 +89,9 @@
 
 <script>
 /* eslint-disable */
+
+  import { formatNrNum } from '@/utils/utils.js'
+
   export default {
     name: "std-header",
     data () {
@@ -151,10 +154,7 @@
       },
       submit() {
         if (this.nrNum) {
-          let match = /(?:\s+|\s|)(\D|\D+|)(?:\s+|\s|)(\d+)(?:\s+|\s|)/
-          let rtnNR = () => ( 'NR ' )
-
-          let search = this.nrNum.replace(match, rtnNR('$1') + '$2')
+          let search = formatNrNum(this.nrNum)
           if (search) {
             let payload = {
               search,

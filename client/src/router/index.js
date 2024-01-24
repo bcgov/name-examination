@@ -3,6 +3,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Vuex from 'vuex'
 import store from '@/store'
+import { formatNrNum } from '@/utils/utils.js'
 
 const LandingPage = () => import(/* webpackChunkName: "home" */'@/components/LandingPage')
 const Signin = () => import(/* webpackChunkName: "signin" */'@/components/auth/Signin')
@@ -35,9 +36,18 @@ let router = new Router({
     {
       name: 'nameexamination',
       component: NameExamination,
-      path: '/nameExamination',
+      path: '/nameExamination/:param',
       meta: {
         requiresAuth: true
+      },
+      beforeEnter: (to, from, next) => {
+        if (from.path == '/') {  // reload the page
+          next({
+            path: '/signin',
+            query: { redirect: to.fullPath},
+          })
+        }
+        next()
       }
     },
     {
@@ -75,10 +85,19 @@ router.beforeResolve((to, from, next) => {
     // if not Authenticated, redirect to login page.
     let auth = sessionStorage.getItem('AUTHORIZED')
     if (auth == 'true') {
-
+      if (to.name == 'nameexamination' && from.name == 'Signin' && to.params.param) {
+        const search = formatNrNum(to.params.param)
+        let payload = {
+          search,
+          router: to,
+          refresh: false
+        }
+        store.commit('nrNumber', search)
+        store.dispatch('getpostgrescompInfo', search)
+        store.dispatch('newNrNumber', payload)
+      }
       next()
     } else {
-
       store.dispatch("checkError",{"message": "Not Authorized please login."});
       next({
         path: '/'

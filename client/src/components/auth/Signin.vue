@@ -22,16 +22,13 @@
       const ALLOWED_ROLES = [EXAMINER, STAFF, VIEWER]
 
       if (!authorized) {
-        //keycloak = Keycloak('static/keycloak/sbcKey.json');
         keycloak = Keycloak('static/keycloak/keycloak.json');
         this.$store.commit('saveKeyCloak', keycloak);
-
         var token
         const vm = this
 
         keycloak.init({token: token, onLoad: 'login-required'}).success(function (authenticated) {
           if (authenticated) {
-
             sessionStorage.setItem('KEYCLOAK_TOKEN', keycloak.token);
             sessionStorage.setItem('KEYCLOAK_REFRESH', keycloak.refreshToken);
             sessionStorage.setItem('KEYCLOAK_EXPIRES', keycloak.tokenParsed.exp * 1000);
@@ -53,7 +50,8 @@
 
               });
               // everthing is good, re-direct to home page
-                vm.$router.push('/home')
+              const redirect = vm.$router.currentRoute.query.redirect || '/home'
+              vm.$router.push(redirect)
             }
 
           } else {
