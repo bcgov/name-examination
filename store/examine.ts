@@ -65,8 +65,8 @@ export const useExamineStore = defineStore('examine', () => {
 
   const decisionFunctionalityDisabled = computed(
     () =>
-      customerMessageOverride.value != null ||
-      customerMessageOverride.value != '' ||
+      (customerMessageOverride.value != null &&
+        customerMessageOverride.value != '') ||
       !isCurrentExaminer.value ||
       !is_making_decision.value
   )
