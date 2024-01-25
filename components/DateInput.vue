@@ -13,7 +13,7 @@
 import { DateTime } from 'luxon'
 
 defineProps<{
-  modelValue: string
+  modelValue: any
   minToday?: boolean
   /** Style this input to show an error */
   errorStyle?: boolean

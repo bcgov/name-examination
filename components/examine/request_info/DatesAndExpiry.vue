@@ -22,7 +22,7 @@
       <div v-else class="flex flex-col">
         <DateInput
           min-today
-          v-model="(expiry as string)"
+          v-model="expiry"
           :error-style="expiryDateErrorText != ''"
           @change="expiryDateErrorText = ''"
         />
@@ -72,7 +72,7 @@
           <h2 class="font-bold">Consent Date:&nbsp;</h2>
           <div class="flex flex-col">
             <DateInput
-              v-model="(consentDate as string)"
+              v-model="consentDate"
               :error-style="consentDateErrorText != ''"
               @change="consentDateErrorText = ''"
             />
