@@ -80,7 +80,7 @@ const emit = defineEmits<{
 
 function onSubmit() {
   if (!textArea.value) return
-  if (textRequired && textArea.value.value === '') {
+  if (textRequired && textArea.value.value.trim() === '') {
     showSubmitError.value = true
     return
   }
