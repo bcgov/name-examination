@@ -93,6 +93,7 @@ const comments = computed(() =>
 
 async function onSubmit(text: string) {
   await examine.postComment(text)
+  commentText.value = ''
 }
 
 function onCancel(closeFunction: () => void) {
