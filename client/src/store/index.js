@@ -347,7 +347,6 @@ export const actions = {
                     if (refresh) {
                       commit( 'showExaminationArea', true )
                     }
-                    dispatch( 'setNewExaminer' )
                   } )
 
                   const url_param = search.replace(/\s/g, "")
@@ -872,28 +871,6 @@ export const actions = {
           resolve()
         })
     })
-  },
-
-  async setNewExaminer({commit, state, getters}) {
-    commit('examinerDisplay', getters.examiner)
-    if (getters.examinerDisplay && getters.examinerDisplay.includes('account')) { 
-      // fetch transactions
-      commit('setPendingTransactionsRequest', true)
-      await dispatch('getTransactionsHistory', getters.nrNumber)
-      commit('setPendingTransactionsRequest', false)
-      console.log('##REQUESTINFOHEADER-->this.transactionsData',state.transactionsData)
-      if ( state.transactionsData == null ) {
-        return
-      }
-        
-      for (let i = 0; i < state.transactionsData.length; i++) {
-        const transactionList = state.transactionsData[i]
-        if (transactionList.user_name.includes('idir') && transactionList.user_action.includes('Decision')) {
-              state.is.examinerDisplay = transactionList.user_name
-              return
-        }
-      }
-    }
   },
 
   postWordForClassification(context, payload) {

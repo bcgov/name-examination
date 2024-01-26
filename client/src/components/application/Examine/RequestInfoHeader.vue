@@ -358,7 +358,6 @@
           'name_request_service_account'
         ],
         corp_num_required: false,
-        examinerDisplay: null,
         is_cp_nwpta_type: null,
         is_lp_nwpta_type: null,
         jurisdiction_required: false,
