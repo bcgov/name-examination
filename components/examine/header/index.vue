@@ -2,7 +2,7 @@
   <div class="flex flex-wrap px-4 py-2 text-gray-700">
     <ExamineHeaderNRNumber
       :nr-number="examine.nrNumber"
-      :priority="examine.priority"
+      :priority="examine.priority === 'Y'"
       show-transactions-link
     />
 

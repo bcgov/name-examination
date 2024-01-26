@@ -34,7 +34,7 @@ import { sortNameChoices } from '~/util'
 import { DateTime } from 'luxon'
 import { fromMappedRequestType } from '~/util/request-type'
 
-export const useExamineStore = defineStore('mock-examine', () => {
+export const useExamineStore = defineStore('examine', () => {
   const mock = mockJson
 
   /** Username of the current user */
@@ -375,6 +375,8 @@ export const useExamineStore = defineStore('mock-examine', () => {
   function addEditAction(action: EditAction) {
     editActions.push(action)
   }
+
+  function loadCompanyInfo(info: any) {}
 
   async function getHistoryInfo(nrNumber: string) {
     historiesInfoJSON.value = conflicts.value[1] as NameRequestConflict
