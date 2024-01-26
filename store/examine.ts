@@ -18,7 +18,7 @@ import type {
   Transaction,
 } from '~/types'
 
-import mockJson from './examine.mock.json'
+import mockJson from '~/data/examine.mock.json'
 import requestTypes from '~/data/request_types.json'
 import requestTypeRulesJSON from '~/data/request_type_rules.json'
 import jurisdictionsData from '~/data/jurisdictions.json'
