@@ -343,8 +343,6 @@
     mounted() {
       this.$root.$on('saveEdits', this.save)
       this.$root.$on('cancelSave', this.cancelSave)
-      console.log('***MOUNTED****')
-      this.setNewExaminer()
     },
     data() {
       return {
@@ -499,8 +497,7 @@
         },
       },
       examiner() {
-        console.log('examiner computed - LAST CONSOLE LOG- this.examinerDisplay',this.examinerDisplay)
-        return this.examinerDisplay
+        return this.$store.getters.examiner
       },
       expiryDate: {
         get() {
@@ -719,10 +716,12 @@
     },
     watch: {
       nrNumber(val) {
-        this.$store.dispatch('getpostgrescompInfo', this.nrNumber)
-        console.log('WATCH nrNumber **** set new examiner')
-        this.setNewExaminer()
-        this.checkReqTypeRules(this.requestType)
+        const payload = {
+          search: val,
+          route: this.$router.currentRoute,
+          refresh: false
+        }
+        this.$store.dispatch('newNrNumber', payload)
       },
       requestType(val) {
         /* Show/hide elements of NR Details based on request type (display and edit).  */
@@ -730,31 +729,6 @@
       },
     },
     methods: {
-      async setNewExaminer() {
-        console.log('Calling the set new examiner function-->setNewExaminer')
-        this.examinerDisplay = this.$store.getters.examiner
-        if (this.examinerDisplay && this.examinerDisplay.includes('account')) { 
-          // fetch transactions
-          this.$store.commit('setPendingTransactionsRequest', true)
-          await this.$store.dispatch('getTransactionsHistory', this.nrNumber)
-          this.$store.commit('setPendingTransactionsRequest', false)
-          console.log('REQUESTINFOHEADER-->this.transactionsData',this.transactionsData)
-          if ( this.transactionsData == null ) {
-            return
-          }
-            
-          for (let i = 0; i < this.transactionsData.length; i++) {
-            const transactionList = this.transactionsData[i]
-            /* console.log('INSIDE LOOP -->i',i)
-            console.log('INSIDE LOOP -->user_name',transactionList.user_name)
-            console.log('INSIDE LOOP -->user_action',transactionList.user_action) */
-            if (transactionList.user_name.includes('idir') && transactionList.user_action.includes('Decision')) {
-                  this.examinerDisplay = transactionList.user_name
-                  return
-                }
-          }
-        }
-      },
       buildAdditionalInfo() {
         let newAddInfo = ""
         // create new additional info from template if relevant; add to top of additional info
@@ -886,8 +860,6 @@
         }, { headers: { Authorization: `Bearer ${ myToken }` } })
           .then(response => {
             this.$store.dispatch('getpostgrescompInfo', this.nrNumber)
-            console.log('revertToPreviousState nrNumber **** set new examiner')
-            this.setNewExaminer()
           })
           .catch(error => { console.log('ERROR: ' + error) })
       },
@@ -960,8 +932,6 @@
         }, { headers: { Authorization: `Bearer ${ myToken }` } })
           .then(response => {
             this.$store.dispatch('getpostgrescompInfo', this.nrNumber)
-            console.log('revertToPreviousState nrNumber **** set new examiner')
-            this.setNewExaminer()
           })
           .catch(error => {
             console.log('ERROR: ' + error)

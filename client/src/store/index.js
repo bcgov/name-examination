@@ -3,6 +3,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from '../axios-auth'
 import moment from 'moment'
+import router from '../router/index.js'
 
 Vue.use(Vuex)
 
@@ -117,9 +118,7 @@ export const actions = {
     dispatch( 'checkToken' )
     return axios.get( url, { headers: { Authorization: `Bearer ${ myToken }` } } )
                 .then( response => {
-                  // response.data.nameRequest = 'NR 8270105';
-                  //response.data.nameRequest = 'NR 0000021';
-                  commit( 'loadpostgresNo', response.data )
+                  commit( 'nrNumber', response.data.nameRequest )
                 } )
   },
   getpostgrescompInfo({ dispatch, commit }, nrNumber) {
@@ -328,7 +327,7 @@ export const actions = {
     }
   },
   newNrNumber({ commit, dispatch }, payload) {
-    let { search, router, refresh } = payload
+    let { search, route, refresh } = payload
     const myToken = sessionStorage.getItem( 'KEYCLOAK_TOKEN' )
     const url = '/api/v1/requests/' + search
     dispatch( 'checkToken' )
@@ -341,11 +340,6 @@ export const actions = {
                   if (refresh) {
                     commit( 'showExaminationArea', false )
                   }
-                  if ( router && router.currentRoute.name !== 'nameexamination') {
-                    router.push( {name: 'nameexamination',
-                                  params: {param: search.replace(/\s/g, "")}
-                    } )
-                  }
                   dispatch( 'resetValues' ).then( () => {
                     commit( 'nrNumber', search )
                     commit( 'loadCompanyInfo', response.data )
@@ -353,7 +347,16 @@ export const actions = {
                     if (refresh) {
                       commit( 'showExaminationArea', true )
                     }
+                    dispatch( 'setNewExaminer' )
                   } )
+
+                  const url_param = search.replace(/\s/g, "")
+                  const route_path = route?route.fullPath : null
+                  if ( !route_path || route_path !== '/nameExamination/' + url_param) {
+                    router.push( {name: 'nameexamination',
+                                  params: {param: url_param}
+                    } )
+                  }
                 } )
                 .catch( error => {
                   console.log( 'ERROR: ' + error )
@@ -869,6 +872,28 @@ export const actions = {
           resolve()
         })
     })
+  },
+
+  async setNewExaminer({commit, state, getters}) {
+    commit('examinerDisplay', getters.examiner)
+    if (getters.examinerDisplay && getters.examinerDisplay.includes('account')) { 
+      // fetch transactions
+      commit('setPendingTransactionsRequest', true)
+      await dispatch('getTransactionsHistory', getters.nrNumber)
+      commit('setPendingTransactionsRequest', false)
+      console.log('##REQUESTINFOHEADER-->this.transactionsData',state.transactionsData)
+      if ( state.transactionsData == null ) {
+        return
+      }
+        
+      for (let i = 0; i < state.transactionsData.length; i++) {
+        const transactionList = state.transactionsData[i]
+        if (transactionList.user_name.includes('idir') && transactionList.user_action.includes('Decision')) {
+              state.is.examinerDisplay = transactionList.user_name
+              return
+        }
+      }
+    }
   },
 
   postWordForClassification(context, payload) {
@@ -1613,6 +1638,9 @@ export const mutations = {
   corpNum(state, value) {
     state.corpNum = value
   },
+  setExaminer(state, examiner) {
+    state.examiner = examiner
+  },
   searchQuery(state, value) {
     state.searchQuery = value
   },
@@ -1676,9 +1704,6 @@ export const mutations = {
   clearAuthData(state) {
     state.userId = null
     state.authorized = null
-  },
-  loadpostgresNo(state, postgresData) {
-    state.compInfo.nrNumber = postgresData.nameRequest
   },
   loadCompanyInfo(state, dbcompanyInfo) {
     if (state.nrData && state.nrData.consent_dt) {
