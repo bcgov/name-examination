@@ -343,7 +343,8 @@ export const actions = {
                   dispatch( 'resetValues' ).then( () => {
                     commit( 'nrNumber', search )
                     commit( 'loadCompanyInfo', response.data )
-                    commit( 'is_making_decision', false )
+                    // I'm not sure why the following code was added. Let's comment it out for now.
+                    // commit( 'is_making_decision', false )
                     if (refresh) {
                       commit( 'showExaminationArea', true )
                     }
