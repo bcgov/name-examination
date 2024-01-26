@@ -89,7 +89,7 @@
 <script setup lang="ts">
 import { ConsentFlag } from '~/enums/codes'
 import { Status } from '~/enums/nr-status'
-import { useExamineStore } from '~/store/examine'
+import { useExamineStore } from '~/store/examine.mock'
 import { getFormattedDate, parseDate } from '~/util/date'
 
 const examine = useExamineStore()

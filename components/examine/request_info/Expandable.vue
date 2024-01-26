@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
+import { useExamineStore } from '~/store/examine.mock'
 const examine = useExamineStore()
 
 defineProps<{

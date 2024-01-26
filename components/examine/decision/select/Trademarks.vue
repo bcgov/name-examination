@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
+import { useExamineStore } from '~/store/examine.mock'
 import type { Trademark } from '~/types'
 
 const examine = useExamineStore()
