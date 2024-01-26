@@ -14,7 +14,7 @@
           <ComboboxButton class="flex items-center rounded-md" as="div">
             <ComboboxInput
               class="w-full rounded-md border border-gray-300 py-1.5 pl-2 pr-7 text-sm leading-5 text-gray-900 focus:ring-0"
-              :displayValue="(item: any) => multiple ? open ? '' : `${modelValue.length} selected` : item"
+              :displayValue="(item: any) => multiple ? open ? '' : `${modelValue.length} selected` : optionsDisplay(item)"
               @change="query = $event.target.value"
             />
             <ChevronUpDownIcon
@@ -34,7 +34,7 @@
         >
           <ComboboxOptions
             v-if="filteredOptions.length > 0"
-            class="absolute mt-1 max-h-[60vh] w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            class="absolute mt-1 max-h-[60vh] w-full z-30 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
             v-slot="{ option }"
           >
             <ComboboxOption
@@ -50,7 +50,7 @@
                 ]"
               >
                 <span class="block">
-                  {{ option }}
+                  {{ optionsDisplay(option) }}
                 </span>
                 <span
                   v-if="selected"
@@ -85,11 +85,17 @@ import {
 } from '@headlessui/vue'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 
-const { options, multiple } = defineProps<{
-  modelValue: any
-  options: ComputedRef<Array<any>>
-  multiple?: boolean
-}>()
+const { options, multiple } = withDefaults(
+  defineProps<{
+    modelValue: any
+    options: ComputedRef<Array<any>>
+    multiple?: boolean
+    optionsDisplay?: (option: any) => string
+  }>(),
+  {
+    optionsDisplay: (option: any) => option,
+  }
+)
 
 const query = ref('')
 const filteredOptions = computed(() =>

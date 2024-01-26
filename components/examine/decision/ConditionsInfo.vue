@@ -1,0 +1,16 @@
+<template>
+  <div class="rounded border border-gray-400 bg-sky-100 p-2 text-xs">
+    <p v-for="condition in conditions">
+      <b>{{ condition.phrase }} &ndash;</b>
+      {{ condition.text }}
+    </p>
+  </div>
+</template>
+
+<script setup lang="ts">
+import type { Condition } from '~/types'
+
+defineProps<{
+  conditions: Array<Condition>
+}>()
+</script>

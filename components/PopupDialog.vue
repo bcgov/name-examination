@@ -27,10 +27,11 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="h-full w-full max-w-xl transform space-y-4 overflow-hidden rounded-md bg-white p-6 text-left align-middle shadow-xl transition-all"
+              class="h-full w-full max-w-xl transform space-y-0 overflow-hidden rounded-md bg-white p-6 text-left align-middle shadow-xl transition-all"
+              :class="panelStyle"
             >
               <DialogTitle as="h3" class="text-lg font-bold text-gray-900">
-                {{ title }}
+                <slot name="title"></slot>
               </DialogTitle>
               <!-- User passed content goes here -->
               <slot></slot>
@@ -52,6 +53,6 @@ import {
 } from '@headlessui/vue'
 
 defineProps<{
-  title: string
+  panelStyle?: string
 }>()
 </script>

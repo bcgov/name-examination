@@ -1,0 +1,55 @@
+<template>
+  <ol class="ml-4 basis-1/3 list-decimal space-y-2">
+    <li v-for="(_input, i) in nameInputs">
+      <TextInput v-model="nameInputs[i]" @input="clearErrorOnInput(i)" />
+      <span
+        v-if="errorMessage && errorMessage.choice === i"
+        class="text-sm font-bold text-red-600"
+      >
+        {{ errorMessage.text }}
+      </span>
+    </li>
+  </ol>
+</template>
+
+<script setup lang="ts">
+import { useExamineStore } from '~/store/examine'
+
+const examine = useExamineStore()
+
+const nameInputs = ref(examine.nameChoices.map((nc) => nc.name))
+
+const errorMessage = ref<{ choice: number; text: string }>()
+
+function clearErrorOnInput(inputChoice: number) {
+  if (errorMessage.value?.choice === inputChoice) {
+    errorMessage.value = undefined
+  }
+}
+
+examine.addEditAction({
+  validate() {
+    if (!nameInputs.value[0]) {
+      errorMessage.value = {
+        choice: 0,
+        text: 'The first name choice is required',
+      }
+      return false
+    }
+    if (nameInputs.value[2] && !nameInputs.value[1]) {
+      errorMessage.value = {
+        choice: 1,
+        text: 'To include a 3rd name choice the 2nd name choice is first required',
+      }
+      return false
+    }
+    return true
+  },
+  update() {
+    for (const [i, choice] of examine.nameChoices.entries()) {
+      choice.name = nameInputs.value[i].trim()
+    }
+  },
+  cancel() {},
+})
+</script>

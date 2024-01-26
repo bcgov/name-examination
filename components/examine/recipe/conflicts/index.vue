@@ -4,20 +4,34 @@
       <Accordion open arrow button-style="bg-gray-200 p-2 hover:bg-gray-300">
         <template #title>Exact match</template>
         <template #content>
-          <span class="p-2 text-gray-400">No exact match</span>
+          <ExamineRecipeConflictsList
+            v-if="examine.exactMatchesConflicts.length > 0"
+            :conflict-items="examine.exactMatchesConflicts"
+          />
+          <span v-else class="p-1">No exact match</span>
         </template>
       </Accordion>
 
       <Accordion open arrow button-style="bg-gray-200 p-2 hover:bg-gray-300">
         <template #title>Exact Word Order + Synonym Match</template>
-        <template #content><ExamineRecipeConflictsBucket /></template>
+        <template #content>
+          <ExamineRecipeConflictsBucket
+            v-if="examine.parsedSynonymConflicts.length > 0"
+            :conflict-lists="examine.parsedSynonymConflicts"
+          />
+          <span v-else class="p-1">No results</span>
+        </template>
       </Accordion>
 
       <Accordion open arrow button-style="bg-gray-200 p-2 hover:bg-gray-300">
         <template #title>Character Swap Match</template>
 
         <template #content>
-          <span class="p-2 text-gray-400">No results</span>
+          <ExamineRecipeConflictsBucket
+            v-if="examine.parsedCOBRSConflicts.length > 0"
+            :conflict-lists="examine.parsedCOBRSConflicts"
+          />
+          <span v-else class="p-1">No results</span>
         </template>
       </Accordion>
 
@@ -25,9 +39,18 @@
         <template #title>Phonetic Match (experimental)</template>
 
         <template #content>
-          <span class="p-2 text-gray-400">No results</span>
+          <ExamineRecipeConflictsBucket
+            v-if="examine.parsedPhoneticConflicts.length > 0"
+            :conflict-lists="examine.parsedPhoneticConflicts"
+          />
+          <span v-else class="p-1">No results</span>
         </template>
       </Accordion>
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { useExamineStore } from '~/store/examine'
+const examine = useExamineStore()
+</script>

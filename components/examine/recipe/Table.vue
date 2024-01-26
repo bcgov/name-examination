@@ -14,16 +14,15 @@
         One contains the actual row data corresponding to the columns
         The second is optional content that is displayed when the row is expanded (i.e. clicked)
         The content is passed in by the user of this component with slots, so it can be any element
-        The passed in slot must have a dynamic name that references the row it's associated to,
-        written in the format `hidden#` e.g. hidden0, hidden1...
        -->
-      <template v-if="rows.value.length > 0" v-for="(row, index) in rows.value">
+      <template v-if="rows.length > 0" v-for="(row, index) in rows">
         <tr
           :class="[
             'cursor-pointer transition hover:bg-gray-100',
             { 'bg-sky-100 hover:bg-sky-100': selectedRow === index },
+            { '!bg-green-100': highlightRow ? highlightRow(row) : false },
           ]"
-          @click="onRowClick(index)"
+          @click="onRowClick(index, row)"
         >
           <td v-for="cell in row" class="px-4 py-2">{{ cell }}</td>
         </tr>
@@ -46,20 +45,29 @@
 </template>
 
 <script setup lang="ts">
+type Row = Array<any>
+
 defineProps<{
   columns: Array<string>
-  rows: ComputedRef<Array<Array<any>>>
+  rows: Array<Row>
+  /** Function for determining whether a row should be permanently highlighted or not */
+  highlightRow?: (row: Row) => boolean
+}>()
+
+const emit = defineEmits<{
+  rowClick: [row: Array<any>]
 }>()
 
 const selectedRow = ref()
 const showSelectedRowHiddenContent = ref(false)
 
-function onRowClick(index: number) {
+function onRowClick(index: number, row: Array<any>) {
   if (selectedRow.value === index) {
     showSelectedRowHiddenContent.value = !showSelectedRowHiddenContent.value
   } else {
     selectedRow.value = index
     showSelectedRowHiddenContent.value = true
   }
+  emit('rowClick', row)
 }
 </script>

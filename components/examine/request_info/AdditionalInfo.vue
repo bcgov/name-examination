@@ -1,0 +1,62 @@
+<template>
+  <div class="text-sm">
+    <ExamineRequestInfoExpandable title="Additional Info">
+      <template #minimized>
+        <p>{{ additionalInfoDisplay }}</p>
+      </template>
+
+      <template #popup>
+        <EditableTextBox
+          v-if="examine.is_my_current_nr"
+          v-model="info"
+          class="h-72"
+          placeholder="Additional Info..."
+          @submit="saveEdits"
+          @cancel="cancelEdits"
+        />
+        <p v-else>{{ additionalInfoDisplay }}</p>
+      </template>
+
+      <template #maximized>
+        <p>{{ additionalInfoDisplay }}</p>
+      </template>
+
+      <template #editable>
+        <EditableTextBox
+          class="h-72"
+          v-model="info"
+          placeholder="Additional Info..."
+          hide-submit
+          hide-cancel
+        />
+      </template>
+    </ExamineRequestInfoExpandable>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useExamineStore } from '~/store/examine'
+const examine = useExamineStore()
+
+const info = ref(examine.additionalInfo)
+
+const additionalInfoDisplay = computed(() =>
+  [examine.additionalInfoTransformedTemplate, examine.additionalInfo]
+    .filter((s) => s != null)
+    .join('\n')
+)
+
+function saveEdits() {
+  examine.additionalInfo = info.value
+}
+
+function cancelEdits() {
+  info.value = examine.additionalInfo
+}
+
+examine.addEditAction({
+  validate: () => true,
+  update: saveEdits,
+  cancel: cancelEdits,
+})
+</script>

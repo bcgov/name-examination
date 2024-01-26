@@ -3,7 +3,8 @@ import { mount } from '@vue/test-utils'
 import SearchResultsBox from '~/components/search/ResultsBox.vue'
 import mockNameRequests from '../data/mockNameRequests.json'
 import mockZeroNameRequests from '../data/mockZeroNameRequests.json'
-import { type FilterKey, useSearchStore } from '~/store/search'
+import { useSearchStore } from '~/store/search'
+import { StatusSearchFilter, type FilterKey } from '~/types/search'
 import LoadingSpinner from '~/components/LoadingSpinner.vue'
 import { createPinia, setActivePinia } from 'pinia'
 import flushPromises from 'flush-promises'
@@ -13,7 +14,6 @@ import {
   ConsentRequired,
   LastUpdate,
   Priority,
-  Status,
   Submitted,
 } from '~/enums/filter-dropdowns'
 
@@ -127,7 +127,7 @@ describe('Search Results Box Component', () => {
   })
 
   it('updates the status filter', async () => {
-    await testDropdownFilter(SearchColumns.Status, Object.values(Status))
+    await testDropdownFilter(SearchColumns.Status, Object.values(StatusSearchFilter))
   })
 
   it('updates the modified by filter', async () => {

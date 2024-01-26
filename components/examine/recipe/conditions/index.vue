@@ -8,16 +8,20 @@
       'Examiner Information',
       'Instructions',
     ]"
-    :rows="
-      computed(() => [
-        [
-          'COOP',
-          'Y',
-          'N',
-          'Use Of This Term Is Restricted Under The Cooperative Association Act R.S.B.C. 1999 C. 28, and only given for a Cooperative.',
-          '',
-        ],
-      ])
-    "
+    :rows="rows"
   />
 </template>
+
+<script setup lang="ts">
+import { useExamineStore } from '~/store/examine'
+const examine = useExamineStore()
+const rows = computed(() =>
+  examine.parseConditions.map((item) => [
+    item.phrase,
+    item.allow_use,
+    item.consent_required,
+    item.text,
+    item.instructions,
+  ])
+)
+</script>
