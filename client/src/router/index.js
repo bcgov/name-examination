@@ -87,13 +87,12 @@ router.beforeResolve((to, from, next) => {
     if (auth == 'true') {
       if (to.name == 'nameexamination' && from.name == 'Signin' && to.params.param) {
         const search = formatNrNum(to.params.param)
-        let payload = {
+        const payload = {
           search,
-          router: to,
+          route: to,
           refresh: false
         }
         store.commit('nrNumber', search)
-        store.dispatch('getpostgrescompInfo', search)
         store.dispatch('newNrNumber', payload)
       }
       next()

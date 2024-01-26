@@ -3,6 +3,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from '../axios-auth'
 import moment from 'moment'
+import router from '../router/index.js'
 
 Vue.use(Vuex)
 
@@ -117,9 +118,7 @@ export const actions = {
     dispatch( 'checkToken' )
     return axios.get( url, { headers: { Authorization: `Bearer ${ myToken }` } } )
                 .then( response => {
-                  // response.data.nameRequest = 'NR 8270105';
-                  //response.data.nameRequest = 'NR 0000021';
-                  commit( 'loadpostgresNo', response.data )
+                  commit( 'nrNumber', response.data.nameRequest )
                 } )
   },
   getpostgrescompInfo({ dispatch, commit }, nrNumber) {
@@ -328,7 +327,7 @@ export const actions = {
     }
   },
   newNrNumber({ commit, dispatch }, payload) {
-    let { search, router, refresh } = payload
+    let { search, route, refresh } = payload
     const myToken = sessionStorage.getItem( 'KEYCLOAK_TOKEN' )
     const url = '/api/v1/requests/' + search
     dispatch( 'checkToken' )
@@ -341,11 +340,6 @@ export const actions = {
                   if (refresh) {
                     commit( 'showExaminationArea', false )
                   }
-                  if ( router && router.currentRoute.name !== 'nameexamination') {
-                    router.push( {name: 'nameexamination',
-                                  params: {param: search.replace(/\s/g, "")}
-                    } )
-                  }
                   dispatch( 'resetValues' ).then( () => {
                     commit( 'nrNumber', search )
                     commit( 'loadCompanyInfo', response.data )
@@ -354,6 +348,14 @@ export const actions = {
                       commit( 'showExaminationArea', true )
                     }
                   } )
+
+                  const url_param = search.replace(/\s/g, "")
+                  const route_path = route?route.fullPath : null
+                  if ( !route_path || route_path !== '/nameExamination/' + url_param) {
+                    router.push( {name: 'nameexamination',
+                                  params: {param: url_param}
+                    } )
+                  }
                 } )
                 .catch( error => {
                   console.log( 'ERROR: ' + error )
@@ -1613,6 +1615,9 @@ export const mutations = {
   corpNum(state, value) {
     state.corpNum = value
   },
+  setExaminer(state, examiner) {
+    state.examiner = examiner
+  },
   searchQuery(state, value) {
     state.searchQuery = value
   },
@@ -1676,9 +1681,6 @@ export const mutations = {
   clearAuthData(state) {
     state.userId = null
     state.authorized = null
-  },
-  loadpostgresNo(state, postgresData) {
-    state.compInfo.nrNumber = postgresData.nameRequest
   },
   loadCompanyInfo(state, dbcompanyInfo) {
     if (state.nrData && state.nrData.consent_dt) {

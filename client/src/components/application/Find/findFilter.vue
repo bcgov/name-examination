@@ -613,7 +613,7 @@ export default {
       if (nr != '') {
         let payload = {
           search: nr,
-          router: this.$router,
+          route: this.$router.currentRoute,
         }
         this.$store.dispatch('newNrNumber', payload)
       }

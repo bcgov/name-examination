@@ -261,9 +261,7 @@ export default {
     },
     getNextCompany() {
       this.$store.commit('toggleWordClassificationModal', false)
-      this.$store.dispatch('resetValues');
       this.$store.dispatch('getpostgrescompNo');
-      this.$store.dispatch('resetConflictList')
     },
     holdRequest() {
       this.is_making_decision = false

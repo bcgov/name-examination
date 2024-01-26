@@ -158,7 +158,7 @@
           if (search) {
             let payload = {
               search,
-              router: this.$router,
+              route: this.$router.currentRoute,
               refresh: false
             }
             if (search === this.nrNumber) {
