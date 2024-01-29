@@ -458,15 +458,6 @@ export const useExamineStore = defineStore('examine', () => {
     await getPayments()
   }
 
-  async function getPayments() {
-    // TODO
-  }
-
-  async function getHistoryInfo(nrNumber: string) {
-    // TODO: implement
-    historiesInfoJSON.value = conflicts.value[1] as NameRequestConflict
-  }
-
   async function getConflictInfo(item: ConflictListItem) {
     corpConflictJSON.value = undefined
     namesConflictJSON.value = undefined
@@ -477,16 +468,6 @@ export const useExamineStore = defineStore('examine', () => {
       corpConflictJSON.value = conflict as CorpConflict
     } else {
       namesConflictJSON.value = conflict as NameRequestConflict
-    }
-  }
-
-  function getShortJurisdiction(jurisdiction: string) {
-    return jurisdiction
-  }
-
-  function setConsentFlag(flag: ConsentFlag | undefined) {
-    consentFlag.value = flag
-    if (flag === ConsentFlag.Received) {
     }
   }
 
@@ -643,24 +624,6 @@ export const useExamineStore = defineStore('examine', () => {
     }
   }
 
-  /** Send name request decision to API */
-  async function pushAcceptReject() {
-    // TODO: make a PUT call to api
-  }
-
-  function runManualRecipe(searchStr: string, exactPhrase: string) {
-    // TODO
-  }
-
-  function resetExaminationArea() {
-    // TODO
-  }
-
-  async function getpostgrescompInfo(nrNumber: string) {
-    // TODO: implement
-    console.log(`getting ${nrNumber}`)
-  }
-
   async function updateNRStatePreviousState(
     nrState: Status,
     previousState: Status
@@ -705,14 +668,6 @@ export const useExamineStore = defineStore('examine', () => {
     }
   }
 
-  async function updateNRState(state: Status) {
-    // TODO: push to api
-    if (state === Status.Draft && nr_status.value === Status.InProgress) {
-      is_making_decision.value = false
-    }
-    nr_status.value = state
-  }
-
   async function revertToPreviousState() {
     await patchNameRequest(nrNumber.value, {
       state: previousStateCd.value,
@@ -720,11 +675,6 @@ export const useExamineStore = defineStore('examine', () => {
     })
     await getpostgrescompInfo(nrNumber.value)
     await setNewExaminer()
-  }
-
-  async function updateRequest() {
-    // TODO: implement
-    console.log('updating request')
   }
 
   /** Runs all edit actions, ensuring all actions have valid internal state before updating the store state.
@@ -771,17 +721,6 @@ export const useExamineStore = defineStore('examine', () => {
       requestTypeObject.value,
       requestTypeObject.request_action_cd
     )
-  }
-
-  async function getpostgrescompNo() {
-    // TODO
-  }
-
-  // TODO: should this be the $reset method for this store?
-  async function resetValues() {}
-
-  function resetConflictList() {
-    // TODO
   }
 
   async function getNextCompany() {
@@ -853,23 +792,6 @@ export const useExamineStore = defineStore('examine', () => {
     is_making_decision.value = true
   }
 
-  async function postComment(text: string) {
-    // TODO: post to comments endpoint and add api response to internalComments
-    internalComments.value.push({
-      comment: text,
-      examiner: examiner.value!,
-      timestamp: DateTime.now().toISO(),
-    })
-  }
-
-  async function cancelNr(commentText: string) {
-    await postComment(commentText)
-    is_making_decision.value = false
-    nr_status.value = Status.Cancelled
-    // TODO: push CANCELLED state to API
-  }
-
-  // ============ ADDED 2024-01-17, also see EditAction interface ============
   async function cancelEdits() {
     if (previousStateCd.value === Status.Draft) {
       await revertToPreviousState()
@@ -879,14 +801,6 @@ export const useExamineStore = defineStore('examine', () => {
     is_editing.value = false
     is_header_shown.value = false
     editActions.forEach((ea) => ea.cancel())
-  }
-
-  function getCorpConflict(nrNumber: string) {
-    return conflicts.value.find((c) => c.nrNumber === nrNumber)
-  }
-
-  function getNamesConflict(nrNumber: string) {
-    return conflicts.value.find((c) => c.nrNumber === nrNumber)
   }
 
   function getConflictData(item: ConflictListItem) {
@@ -917,6 +831,100 @@ export const useExamineStore = defineStore('examine', () => {
       comparedConflicts.value = selectedConflicts.value.slice()
     }
   }
+
+  // ======================== start of todo functions ========================
+
+  async function updateNRState(state: Status) {
+    // TODO: push to api
+    if (state === Status.Draft && nr_status.value === Status.InProgress) {
+      is_making_decision.value = false
+    }
+    nr_status.value = state
+  }
+
+  async function cancelNr(commentText: string) {
+    await postComment(commentText)
+    is_making_decision.value = false
+    nr_status.value = Status.Cancelled
+    // TODO: push CANCELLED state to API
+  }
+
+  /** Send name request decision to API */
+  async function pushAcceptReject() {
+    // TODO: make a PUT call to api
+  }
+
+  async function updateRequest() {
+    // TODO: implement
+    console.log('updating request')
+  }
+
+  async function postComment(text: string) {
+    // TODO: post to comments endpoint and add api response to internalComments
+    internalComments.value.push({
+      comment: text,
+      examiner: examiner.value!,
+      timestamp: DateTime.now().toISO(),
+    })
+  }
+
+  // TODO: should this be the $reset method for this store?
+  async function resetValues() {
+    // TODO
+  }
+
+  function resetConflictList() {
+    // TODO
+  }
+
+  async function getpostgrescompInfo(nrNumber: string) {
+    // TODO: implement
+    console.log(`getting ${nrNumber}`)
+  }
+  // ============================ END OF FIRST HALF ===========================
+
+  // ============================ START OF STUBBED HELPERS ===========================
+
+  // ============================= END OF STUBBED HELPERS ============================
+
+  // ========================== START OF SECOND HALF ==========================
+
+  async function getpostgrescompNo() {
+    // TODO
+  }
+
+  function getShortJurisdiction(jurisdiction: string): string {
+    // TODO
+    throw 'unimplemented'
+  }
+
+  function runManualRecipe(searchStr: string, exactPhrase: string) {
+    // TODO
+  }
+
+  function resetExaminationArea() {
+    // TODO
+  }
+
+  async function getHistoryInfo(nrNumber: string) {
+    // TODO
+  }
+
+  function getCorpConflict(nrNumber: string): CorpConflict {
+    // TODO
+    throw 'unimplemented'
+  }
+
+  function getNamesConflict(nrNumber: string): NameRequestConflict {
+    // TODO
+    throw 'unimplemented'
+  }
+
+  async function getPayments() {
+    // TODO
+  }
+
+  // ======================== end of todo functions ========================
 
   watch(
     () => [nrNumber],
@@ -1035,7 +1043,6 @@ export const useExamineStore = defineStore('examine', () => {
     getHistoryInfo,
     getConflictInfo,
     getShortJurisdiction,
-    setConsentFlag,
     makeDecision,
     undoNameChoiceDecision,
     makeQuickDecision,
