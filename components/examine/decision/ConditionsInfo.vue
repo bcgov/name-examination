@@ -1,5 +1,8 @@
 <template>
-  <div class="rounded border border-gray-400 bg-sky-100 p-2 text-xs">
+  <div
+    v-if="conditions.length > 0"
+    class="rounded border border-gray-400 bg-sky-100 p-2 text-xs"
+  >
     <p v-for="condition in conditions">
       <b>{{ condition.phrase }} &ndash;</b>
       {{ condition.text }}

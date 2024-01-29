@@ -22,7 +22,11 @@ import requestTypes from '~/data/request_types.json'
 import requestTypeRulesJSON from '~/data/request_type_rules.json'
 import jurisdictionsData from '~/data/jurisdictions.json'
 import { ConsentFlag, RefundState, RequestTypeCode } from '~/enums/codes'
-import { getTransactions, patchNameRequest } from '~/util/namex-api'
+import {
+  getNameRequest,
+  getTransactions,
+  patchNameRequest,
+} from '~/util/namex-api'
 import { getEmptyNameChoice, sortNameChoices } from '~/util'
 import { DateTime } from 'luxon'
 import { fromMappedRequestType } from '~/util/request-type'
@@ -31,6 +35,7 @@ import { getDateFromDateTime, parseDate } from '~/util/date'
 export const useExamineStore = defineStore('examine', () => {
   /** Username of the current user */
   const userId = ref(useNuxtApp().$userProfile.username)
+  const userRoles = ref(useNuxtApp().$auth.realmAccess?.roles ?? [])
 
   const priority = ref<'Y' | 'N'>('N')
   const is_complete = computed(() =>
@@ -61,7 +66,7 @@ export const useExamineStore = defineStore('examine', () => {
       !is_making_decision.value
   )
 
-  const conflictsAutoAdd = ref<boolean>()
+  const conflictsAutoAdd = ref<boolean>(true)
   const autoAddDisabled = computed(
     () =>
       decisionFunctionalityDisabled.value ||
@@ -195,8 +200,12 @@ export const useExamineStore = defineStore('examine', () => {
   const currentName = computed(() => currentNameObj.value?.name)
   const currentChoice = computed(() => currentNameObj.value?.choice)
 
-  const userHasApproverRole = ref<boolean>()
-  const userHasEditRole = ref<boolean>()
+  const userHasApproverRole = computed(() =>
+    userRoles.value.includes('names_approver')
+  )
+  const userHasEditRole = computed(
+    () => userHasApproverRole.value || userRoles.value.includes('names_editor')
+  )
   const is_my_current_nr = computed(
     () => nr_status.value === Status.InProgress && isCurrentExaminer.value
   )
@@ -371,21 +380,17 @@ export const useExamineStore = defineStore('examine', () => {
 
   // TODO: give type to `info` param
   async function loadCompanyInfo(info: any) {
+    if (!info || !info.names || info.names.length === 0) return
+
     consentFlag.value = undefined
     consentDateForEdit.value = undefined
-
-    if (!info || !info.names) return
-
-    if (info.names.length == 0) {
-      return
-    }
 
     resetNameChoice(compName1)
     resetNameChoice(compName2)
     resetNameChoice(compName3)
 
     info.names.forEach((nameChoice: NameChoice) =>
-      parseIntoNameChoice(nameChoice, nameChoices.value[nameChoice.choice])
+      parseIntoNameChoice(nameChoice, nameChoices.value[nameChoice.choice - 1])
     )
 
     const newCurrentNameChoice =
@@ -878,8 +883,8 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   async function getpostgrescompInfo(nrNumber: string) {
-    // TODO: implement
-    console.log(`getting ${nrNumber}`)
+    const response = await getNameRequest(nrNumber)
+    await loadCompanyInfo(await response.json())
   }
   // ============================ END OF FIRST HALF ===========================
 
