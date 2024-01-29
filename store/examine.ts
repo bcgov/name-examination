@@ -18,29 +18,20 @@ import type {
   Transaction,
 } from '~/types'
 
-import mockJson from '~/data/examine.mock.json'
 import requestTypes from '~/data/request_types.json'
 import requestTypeRulesJSON from '~/data/request_type_rules.json'
 import jurisdictionsData from '~/data/jurisdictions.json'
-import {
-  ConsentFlag,
-  EntityTypeCode,
-  RefundState,
-  RequestActionCode,
-  RequestTypeCode,
-} from '~/enums/codes'
+import { ConsentFlag, RefundState, RequestTypeCode } from '~/enums/codes'
 import { getTransactions, patchNameRequest } from '~/util/namex-api'
-import { sortNameChoices } from '~/util'
+import { getEmptyNameChoice, sortNameChoices } from '~/util'
 import { DateTime } from 'luxon'
 import { fromMappedRequestType } from '~/util/request-type'
 
 export const useExamineStore = defineStore('examine', () => {
-  const mock = mockJson
-
   /** Username of the current user */
   const userId = ref('someone@idir')
 
-  const priority = ref<'Y' | 'N'>('Y')
+  const priority = ref<'Y' | 'N'>('N')
   const is_complete = computed(() =>
     [
       Status.Approved,
@@ -53,13 +44,11 @@ export const useExamineStore = defineStore('examine', () => {
       Status.Expired,
     ].includes(nr_status.value)
   )
-  const examiner = ref('someone@idir')
+  const examiner = ref<string>()
   const isCurrentExaminer = computed(() => examiner.value === userId.value)
 
   const exactMatchesConflicts = ref<Array<ConflictListItem>>([])
-  const parsedSynonymConflicts = ref<Array<ConflictList>>(
-    mock.parsedSynonymConflicts as Array<ConflictList>
-  )
+  const parsedSynonymConflicts = ref<Array<ConflictList>>([])
   const parsedCOBRSConflicts = ref<Array<ConflictList>>([])
   const parsedPhoneticConflicts = ref<Array<ConflictList>>([])
 
@@ -71,7 +60,7 @@ export const useExamineStore = defineStore('examine', () => {
       !is_making_decision.value
   )
 
-  const conflictsAutoAdd = ref(true)
+  const conflictsAutoAdd = ref<boolean>()
   const autoAddDisabled = computed(
     () =>
       decisionFunctionalityDisabled.value ||
@@ -79,10 +68,9 @@ export const useExamineStore = defineStore('examine', () => {
       comparedConflicts.value.length > 0
   )
 
-  const comments = ref<Array<Comment>>(mock.comments)
-  const internalComments = ref<Array<Comment>>(mock.comments)
+  const internalComments = ref<Array<Comment>>([])
 
-  const conflicts = ref<Array<Conflict>>(mock.conflicts as Array<Conflict>)
+  const conflicts = ref<Array<Conflict>>([])
 
   const corpConflictJSON = ref<CorpConflict>()
   const namesConflictJSON = ref<NameRequestConflict>()
@@ -90,15 +78,15 @@ export const useExamineStore = defineStore('examine', () => {
   const selectedConflicts = ref<Array<ConflictListItem>>([])
   const comparedConflicts = ref<Array<ConflictListItem>>([])
 
-  const listDecisionReasons = ref<Array<Macro>>(mock.macros)
+  const listDecisionReasons = ref<Array<Macro>>([])
 
-  const trademarksJSON = ref<TrademarkApiResponse>(mock.trademarkJSON)
+  const trademarksJSON = ref<TrademarkApiResponse>()
 
-  const is_editing = ref(false)
-  const is_making_decision = ref(true)
-  const is_header_shown = ref(false)
-  const nrNumber = ref('NR 1234567')
-  const nr_status = ref(Status.InProgress)
+  const is_editing = ref<boolean>()
+  const is_making_decision = ref<boolean>()
+  const is_header_shown = ref<boolean>()
+  const nrNumber = ref<string>('')
+  const nr_status = ref(Status.Draft)
   const isClosed = computed(() =>
     [
       Status.Rejected,
@@ -111,7 +99,7 @@ export const useExamineStore = defineStore('examine', () => {
   const listRequestTypes = ref<Array<RequestType>>(
     requestTypes as Array<RequestType>
   )
-  const requestType = ref<RequestTypeCode>(RequestTypeCode.CP)
+  const requestType = ref<RequestTypeCode>(listRequestTypes.value[0].value)
   const requestTypeObject = computed(
     () => listRequestTypes.value.find((r) => r.value == requestType.value)!
   )
@@ -119,29 +107,18 @@ export const useExamineStore = defineStore('examine', () => {
     requestTypeRulesJSON as Array<RequestTypeRule>
   )
 
-  const requestActionCd = computed<RequestActionCode>(
+  const requestActionCd = computed(
     () => requestTypeObject.value.request_action_cd
   )
-  const entityTypeCd = computed<EntityTypeCode>(
-    () => requestTypeObject.value.entity_type_cd
-  )
+  const entityTypeCd = computed(() => requestTypeObject.value.entity_type_cd)
 
-  const conditionsJSON = ref({
-    restricted_words_conditions: [
-      { cnd_info: [{ allow_use: 'N', consent_required: '' }] },
-    ],
-  })
+  const parseConditions = ref<Array<Condition>>([])
 
-  const parseConditions = ref<Array<Condition>>(
-    mock.parseConditions as Array<Condition>
-  )
-
-  const trademarkInfo = ref({ names: [] })
-  const historiesJSON = ref<History>(mock.historiesJSON)
+  const historiesJSON = ref<History>()
 
   const historiesInfoJSON = ref<NameRequestConflict>()
 
-  const consentRequiredByUser = ref(false)
+  const consentRequiredByUser = ref()
 
   const selectedConditions = ref<Array<Condition>>([])
 
@@ -208,17 +185,17 @@ export const useExamineStore = defineStore('examine', () => {
 
   const decision_made = ref<Status>()
 
-  const compName1 = reactive<NameChoice>(mock.compName1 as NameChoice)
-  const compName2 = reactive<NameChoice>(mock.compName2 as NameChoice)
-  const compName3 = reactive<NameChoice>(mock.compName3 as NameChoice)
+  const compName1 = reactive<NameChoice>(getEmptyNameChoice())
+  const compName2 = reactive<NameChoice>(getEmptyNameChoice())
+  const compName3 = reactive<NameChoice>(getEmptyNameChoice())
   const nameChoices = computed(() => [compName1, compName2, compName3])
 
   const currentNameObj = ref(compName2)
   const currentName = computed(() => currentNameObj.value.name)
   const currentChoice = computed(() => currentNameObj.value.choice)
 
-  const userHasApproverRole = ref(true)
-  const userHasEditRole = ref(true)
+  const userHasApproverRole = ref()
+  const userHasEditRole = ref()
   const is_my_current_nr = computed(
     () => nr_status.value === Status.InProgress && isCurrentExaminer.value
   )
@@ -227,49 +204,49 @@ export const useExamineStore = defineStore('examine', () => {
   const listJurisdictions = ref<Array<Jurisdiction>>(jurisdictionsData)
   const jurisdiction = ref<string>()
   const jurisdictionNumber = ref<string>()
-  const jurisdictionRequired = ref(false)
+  const jurisdictionRequired = ref()
 
   const previousNr = ref<string>()
-  const prevNrRequired = ref(false)
+  const prevNrRequired = ref()
 
   const consumedBy = ref<string>()
   const consentDateForEdit = ref<string>()
   const consentFlag = ref<ConsentFlag>()
 
-  const pendingTransactionRequest = ref(false)
+  const pendingTransactionRequest = ref()
   const transactionsData = ref<Array<Transaction>>()
 
   const refundPaymentState = ref<RefundState>()
 
-  const submittedDate = ref('2008-09-16, 4:44pm')
+  const submittedDate = ref()
   const corpNum = ref<string>()
-  const corpNumRequired = ref(false)
+  const corpNumRequired = ref()
   const expiryDate = ref<string>()
 
-  const additionalInfo = ref(mock.additionalInfo)
+  const additionalInfo = ref()
   const additional_info_template = ref<string>()
-  const natureOfBusiness = ref(mock.natureOfBusiness)
+  const natureOfBusiness = ref()
 
-  const clientFirstName = ref(mock.clientFirstName)
-  const clientLastName = ref(mock.clientLastName)
-  const firstName = ref(mock.firstName)
-  const middleName = ref(mock.middleName)
-  const lastName = ref(mock.lastName)
-  const addressLine1 = ref(mock.addressLine1)
-  const addressLine2 = ref(mock.addressLine2)
-  const addressLine3 = ref(mock.addressLine3)
-  const city = ref(mock.city)
-  const province = ref(mock.province)
-  const postalCode = ref(mock.postalCode)
-  const country = ref(mock.country)
-  const phone = ref(mock.phone)
-  const fax = ref(mock.fax)
-  const conEmail = ref(mock.conEmail)
-  const contactName = ref(mock.contactName)
+  const clientFirstName = ref<string>()
+  const clientLastName = ref<string>()
+  const firstName = ref<string>()
+  const middleName = ref<string>()
+  const lastName = ref<string>()
+  const addressLine1 = ref<string>()
+  const addressLine2 = ref<string>()
+  const addressLine3 = ref<string>()
+  const city = ref<string>()
+  const province = ref<string>()
+  const postalCode = ref<string>()
+  const country = ref<string>()
+  const phone = ref<string>()
+  const fax = ref<string>()
+  const conEmail = ref<string>()
+  const contactName = ref<string>()
 
-  const forceConditional = ref(false)
+  const forceConditional = ref()
 
-  const hasBeenReset = ref(false)
+  const hasBeenReset = ref()
 
   const additionalInfoTransformedTemplate = computed(() => {
     return additional_info_template.value
@@ -330,7 +307,6 @@ export const useExamineStore = defineStore('examine', () => {
       [Status.Draft, Status.Hold].includes(nr_status.value)
   )
 
-  // ============ EDITED consumptionDate 2024-01-22 ============
   const consumptionDate = computed(() =>
     nameChoices.value
       .map((d) => d.consumptionDate)
@@ -376,9 +352,12 @@ export const useExamineStore = defineStore('examine', () => {
     editActions.push(action)
   }
 
-  function loadCompanyInfo(info: any) {}
+  function loadCompanyInfo(info: any) {
+    // TODO: implement
+  }
 
   async function getHistoryInfo(nrNumber: string) {
+    // TODO: implement
     historiesInfoJSON.value = conflicts.value[1] as NameRequestConflict
   }
 
@@ -430,6 +409,20 @@ export const useExamineStore = defineStore('examine', () => {
     }
   }
 
+  function resetNameChoice(choice: NameChoice) {
+    choice.state = Status.NotExamined
+    choice.decision_text = null
+    choice.conflict1 = null
+    choice.conflict2 = null
+    choice.conflict3 = null
+    choice.consumptionDate = null
+    choice.corpNum = null
+    choice.conflict1_num = null
+    choice.conflict2_num = null
+    choice.conflict3_num = null
+    choice.comment = null
+  }
+
   function undoNameChoiceDecision(name: NameChoice) {
     resetExaminationArea()
     if (name.choice == 1) {
@@ -439,15 +432,7 @@ export const useExamineStore = defineStore('examine', () => {
     } else {
       currentNameObj.value = compName3
     }
-    currentNameObj.value.state = Status.NotExamined
-    currentNameObj.value.conflict1 = null
-    currentNameObj.value.conflict2 = null
-    currentNameObj.value.conflict3 = null
-    currentNameObj.value.conflict1_num = null
-    currentNameObj.value.conflict2_num = null
-    currentNameObj.value.conflict3_num = null
-    currentNameObj.value.decision_text = null
-    currentNameObj.value.comment = null
+    resetNameChoice(currentNameObj.value)
   }
 
   async function makeDecision(decision: Status) {
@@ -549,11 +534,16 @@ export const useExamineStore = defineStore('examine', () => {
     // TODO: make a PUT call to api
   }
 
-  function runManualRecipe(searchStr: string, exactPhrase: string) {}
+  function runManualRecipe(searchStr: string, exactPhrase: string) {
+    // TODO
+  }
 
-  function resetExaminationArea() {}
+  function resetExaminationArea() {
+    // TDOO
+  }
 
   async function getpostgrescompInfo(nrNumber: string) {
+    // TODO: implement
     console.log(`getting ${nrNumber}`)
   }
 
@@ -583,7 +573,7 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   async function setNewExaminer() {
-    if (examiner.value.includes('account')) {
+    if (examiner.value?.includes('account')) {
       await getTransactionsHistory(nrNumber.value)
       if (transactionsData.value == null) {
         return
@@ -602,6 +592,7 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   async function updateNRState(state: Status) {
+    // TODO: push to api
     if (state === Status.Draft && nr_status.value === Status.InProgress) {
       is_making_decision.value = false
     }
@@ -618,6 +609,7 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   async function updateRequest() {
+    // TODO: implement
     console.log('updating request')
   }
 
@@ -667,12 +659,16 @@ export const useExamineStore = defineStore('examine', () => {
     )
   }
 
-  async function getpostgrescompNo() {}
+  async function getpostgrescompNo() {
+    // TODO
+  }
 
   // TODO: should this be the $reset method for this store?
   async function resetValues() {}
 
-  function resetConflictList() {}
+  function resetConflictList() {
+    // TODO
+  }
 
   async function getNextCompany() {
     await resetValues()
@@ -747,7 +743,7 @@ export const useExamineStore = defineStore('examine', () => {
     // TODO: post to comments endpoint and add api response to internalComments
     internalComments.value.push({
       comment: text,
-      examiner: examiner.value,
+      examiner: examiner.value!,
       timestamp: DateTime.now().toISO(),
     })
   }
@@ -771,13 +767,12 @@ export const useExamineStore = defineStore('examine', () => {
     editActions.forEach((ea) => ea.cancel())
   }
 
-  // ============ ADDED 2024-01-18 ============
   function getCorpConflict(nrNumber: string) {
-    return mock.conflicts.find((c) => c.nrNumber === nrNumber)
+    return conflicts.value.find((c) => c.nrNumber === nrNumber)
   }
 
   function getNamesConflict(nrNumber: string) {
-    return mock.conflicts.find((c) => c.nrNumber === nrNumber)
+    return conflicts.value.find((c) => c.nrNumber === nrNumber)
   }
 
   function getConflictData(item: ConflictListItem) {
@@ -824,7 +819,6 @@ export const useExamineStore = defineStore('examine', () => {
     is_complete,
     conflictsAutoAdd,
     conflicts,
-    comments,
     examiner,
     isCurrentExaminer,
     trademarksJSON,
@@ -850,8 +844,6 @@ export const useExamineStore = defineStore('examine', () => {
     parsedPhoneticConflicts,
     corpConflictJSON,
     namesConflictJSON,
-    conditionsJSON,
-    trademarkInfo,
     historiesJSON,
     autoAddDisabled,
     decisionFunctionalityDisabled,

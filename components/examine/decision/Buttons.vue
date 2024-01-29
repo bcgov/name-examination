@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine.mock'
+import { useExamineStore } from '~/store/examine'
 import { CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { Status } from '~/enums/nr-status'
 const examine = useExamineStore()

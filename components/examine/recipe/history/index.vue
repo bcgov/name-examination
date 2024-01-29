@@ -12,19 +12,20 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine.mock'
+import { useExamineStore } from '~/store/examine'
 import { getFormattedDate } from '~/util/date'
 
 const examine = useExamineStore()
 
-const rows = computed(() =>
-  examine.historiesJSON.names.map((entry) => [
-    entry.name,
-    entry.jurisdiction,
-    entry.nr_num,
-    getFormattedDate(entry.start_date),
-    entry.name_state_type_cd,
-  ])
+const rows = computed(
+  () =>
+    examine.historiesJSON?.names.map((entry) => [
+      entry.name,
+      entry.jurisdiction,
+      entry.nr_num,
+      getFormattedDate(entry.start_date),
+      entry.name_state_type_cd,
+    ]) ?? []
 )
 
 async function onRowClick(row: Array<string>) {

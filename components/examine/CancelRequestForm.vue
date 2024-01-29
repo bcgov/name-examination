@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine.mock'
+import { useExamineStore } from '~/store/examine'
 
 const emit = defineEmits<{
   submit: [text: string]

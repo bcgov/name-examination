@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine.mock'
+import { useExamineStore } from '~/store/examine'
 
 const { jurisdiction, jurisdictionNumber } = defineProps<{
   jurisdiction?: string

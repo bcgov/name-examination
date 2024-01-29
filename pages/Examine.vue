@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 import { Status } from '~/enums/nr-status'
-import { useExamineStore } from '~/store/examine.mock'
+import { useExamineStore } from '~/store/examine'
 const examine = useExamineStore()
 
 useHead({ title: 'BC Registry: Name Examination - Examine Name Request' })

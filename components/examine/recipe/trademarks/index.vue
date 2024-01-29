@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine.mock'
+import { useExamineStore } from '~/store/examine'
 const examine = useExamineStore()
 
 type Row = [name: string, description: string, status: string]

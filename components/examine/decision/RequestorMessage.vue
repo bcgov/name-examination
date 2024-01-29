@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine.mock'
+import { useExamineStore } from '~/store/examine'
 import { BackspaceIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 
 const examine = useExamineStore()

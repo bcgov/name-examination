@@ -1,5 +1,6 @@
 import type { NameChoice } from '~/types'
 import { getBusiness, getCorporation, getNameRequest } from './namex-api'
+import { Status } from '~/enums/nr-status'
 
 /**
  * Return whether a given string is in a valid NR number format, i.e. NR xxxxxxx
@@ -59,4 +60,23 @@ export async function corpExists(input: string) {
 
 export function sortNameChoices(choices: Array<NameChoice>) {
   choices.sort((n1, n2) => n1.choice - n2.choice)
+}
+
+/** Get a default empty `NameChoice` object. The `choice` and `name` properties will be invalid. */
+export function getEmptyNameChoice(): NameChoice {
+  return {
+    choice: 0,
+    name: '',
+    state: Status.NotExamined,
+    decision_text: null,
+    conflict1: null,
+    conflict2: null,
+    conflict3: null,
+    consumptionDate: null,
+    corpNum: null,
+    conflict1_num: null,
+    conflict2_num: null,
+    conflict3_num: null,
+    comment: null,
+  }
 }

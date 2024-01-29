@@ -40,7 +40,7 @@ export const useExamineStore = defineStore('mock-examine', () => {
   /** Username of the current user */
   const userId = ref('someone@idir')
 
-  const priority = ref<'Y' | 'N'>('Y')
+  const priority = ref<'Y' | 'N'>('N')
   const is_complete = computed(() =>
     [
       Status.Approved,
@@ -126,17 +126,10 @@ export const useExamineStore = defineStore('mock-examine', () => {
     () => requestTypeObject.value.entity_type_cd
   )
 
-  const conditionsJSON = ref({
-    restricted_words_conditions: [
-      { cnd_info: [{ allow_use: 'N', consent_required: '' }] },
-    ],
-  })
-
   const parseConditions = ref<Array<Condition>>(
     mock.parseConditions as Array<Condition>
   )
 
-  const trademarkInfo = ref({ names: [] })
   const historiesJSON = ref<History>(mock.historiesJSON)
 
   const historiesInfoJSON = ref<NameRequestConflict>()
@@ -848,8 +841,6 @@ export const useExamineStore = defineStore('mock-examine', () => {
     parsedPhoneticConflicts,
     corpConflictJSON,
     namesConflictJSON,
-    conditionsJSON,
-    trademarkInfo,
     historiesJSON,
     autoAddDisabled,
     decisionFunctionalityDisabled,

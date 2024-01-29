@@ -41,7 +41,7 @@
 <script setup lang="ts">
 import { CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { Status } from '~/enums/nr-status'
-import { useExamineStore } from '~/store/examine.mock'
+import { useExamineStore } from '~/store/examine'
 import type { NameChoice } from '~/types'
 
 const examine = useExamineStore()

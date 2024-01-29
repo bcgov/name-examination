@@ -44,7 +44,7 @@
 <script setup lang="ts">
 import { DocumentDuplicateIcon } from '@heroicons/vue/24/outline'
 import { TabList } from '@headlessui/vue'
-import { useExamineStore } from '~/store/examine.mock'
+import { useExamineStore } from '~/store/examine'
 
 const examine = useExamineStore()
 
@@ -60,24 +60,20 @@ const conflictsIconType = computed(() =>
 )
 
 const conditionsIconType = computed(() => {
-  if (examine.conditionsJSON) {
-    let { restricted_words_conditions } = examine.conditionsJSON
-    if (restricted_words_conditions.length > 0) {
-      for (let resWord of restricted_words_conditions) {
-        if (
-          resWord.cnd_info.every((con) => con.allow_use === 'N') ||
-          resWord.cnd_info.every((con) => con.consent_required === 'Y')
-        )
-          return 'error'
-      }
-      return 'warning'
-    }
+  if (
+    examine.parseConditions.every((c) => c.allow_use === 'N') ||
+    examine.parseConditions.every((c) => c.consent_required === 'Y')
+  ) {
+    return 'error'
+  }
+  if (examine.parseConditions.length > 0) {
+    return 'warning'
   }
   return 'ok'
 })
 
 const trademarksIconType = computed(() => {
-  return !examine.trademarkInfo || examine.trademarkInfo.names.length === 0
+  return !examine.trademarksJSON || examine.trademarksJSON.names.length === 0
     ? 'ok'
     : 'error'
 })

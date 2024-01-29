@@ -116,6 +116,27 @@ export interface ConflictList {
   children: Array<ConflictListItem>
 }
 
+export interface ConditionsList {
+  restricted_words_conditions: [
+    {
+      cnd_info: [
+        {
+          allow_use: 'Y' | 'N'
+          consent_required: 'Y' | 'N'
+          consenting_body: string | null
+          id: number
+          instructions: string
+          text: string
+        }
+      ]
+      word_info: {
+        id: number
+        phrase: string
+      }
+    }
+  ]
+}
+
 export interface Condition {
   allow_use: 'Y' | 'N'
   consent_required: 'Y' | 'N'

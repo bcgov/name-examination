@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine.mock'
+import { useExamineStore } from '~/store/examine'
 const examine = useExamineStore()
 
 const clientFirstName = ref(examine.clientFirstName)
@@ -92,8 +92,8 @@ const conEmail = ref(examine.conEmail)
 const contactName = ref(examine.contactName)
 
 const lastNameErrorText = ref('')
+const lastNameEmpty = computed(() => lastName.value?.trim().length ?? 0 === 0)
 
-const lastNameEmpty = computed(() => lastName.value.trim().length === 0)
 examine.addEditAction({
   validate: () => {
     if (lastNameEmpty.value) {
