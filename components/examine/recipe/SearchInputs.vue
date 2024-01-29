@@ -20,7 +20,7 @@ import { useExamineStore } from '~/store/examine'
 
 const examine = useExamineStore()
 
-const searchString = ref(examine.currentNameObj.name)
+const searchString = ref(examine.currentNameObj?.name ?? '')
 const exactSearchString = ref('')
 
 function onNormalSearchSubmit(_event: Event) {
@@ -44,7 +44,7 @@ function runManualRecipe() {
 watch(
   () => [examine.currentName],
   async (_state) => {
-    searchString.value = examine.currentName
+    searchString.value = examine.currentName ?? ''
     exactSearchString.value = ''
   },
   { deep: true }

@@ -30,7 +30,7 @@ import { getDateFromDateTime, parseDate } from '~/util/date'
 
 export const useExamineStore = defineStore('examine', () => {
   /** Username of the current user */
-  const userId = ref('someone@idir')
+  const userId = ref(useNuxtApp().$userProfile.username)
 
   const priority = ref<'Y' | 'N'>('N')
   const is_complete = computed(() =>
@@ -191,9 +191,9 @@ export const useExamineStore = defineStore('examine', () => {
   const compName3 = reactive<NameChoice>(getEmptyNameChoice(3))
   const nameChoices = computed(() => [compName1, compName2, compName3])
 
-  const currentNameObj = ref(compName2)
-  const currentName = computed(() => currentNameObj.value.name)
-  const currentChoice = computed(() => currentNameObj.value.choice)
+  const currentNameObj = ref<NameChoice>()
+  const currentName = computed(() => currentNameObj.value?.name)
+  const currentChoice = computed(() => currentNameObj.value?.choice)
 
   const userHasApproverRole = ref<boolean>()
   const userHasEditRole = ref<boolean>()
@@ -320,7 +320,7 @@ export const useExamineStore = defineStore('examine', () => {
     if (!historiesJSON.value) return
 
     let exactMatches = historiesJSON.value.names.filter(
-      (entry) => currentName.value.toUpperCase() === entry.name.toUpperCase()
+      (entry) => currentName.value?.toUpperCase() === entry.name.toUpperCase()
     )
 
     for (const match of exactMatches) {
@@ -410,13 +410,13 @@ export const useExamineStore = defineStore('examine', () => {
     if (
       ![Status.InProgress, Status.Hold, Status.Draft].includes(nr_status.value)
     ) {
-      // TODO: let currentName be undefined and implement this
+      await setCurrentNameChoice(undefined)
     }
 
     // we keep the original data so that if fields exist that we do not use, we don't lose that
     // data when we put new data
-    firstName.value = info.applicants.clientFirstName
-    lastName.value = info.applicants.clientLastName
+    clientFirstName.value = info.applicants.clientFirstName
+    clientLastName.value = info.applicants.clientLastName
     firstName.value = info.applicants.firstName
     middleName.value = info.applicants.middleName
     lastName.value = info.applicants.lastName
@@ -542,6 +542,8 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   async function makeDecision(decision: Status) {
+    if (!currentNameObj.value) return
+
     decision_made.value = decision
     if (decision_made.value === Status.Approved) {
       if (acceptanceWillBeConditional.value || forceConditional.value) {
@@ -597,6 +599,8 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   async function makeQuickDecision(decision: Status, decisionText: string) {
+    if (!currentNameObj.value) return
+
     currentNameObj.value.decision_text = decisionText
     decision_made.value = decision
     if (decision_made.value === Status.Approved) {
@@ -609,7 +613,11 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   /** Attempt to set the given name choice as the current one. Will throw an error if the choice cannot be examined. */
-  async function setCurrentNameChoice(choice: NameChoice) {
+  async function setCurrentNameChoice(choice: NameChoice | undefined) {
+    if (!choice) {
+      currentNameObj.value = undefined
+      return
+    }
     if (!choice.state || choice.state !== Status.NotExamined) {
       throw new Error(`Name choice ${choice.choice} cannot be examined`)
     } else {
@@ -645,7 +653,7 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   function resetExaminationArea() {
-    // TDOO
+    // TODO
   }
 
   async function getpostgrescompInfo(nrNumber: string) {
