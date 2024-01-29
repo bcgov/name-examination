@@ -38,7 +38,7 @@
 import { useExamineStore } from '~/store/examine'
 const examine = useExamineStore()
 
-const info = ref(examine.additionalInfo)
+const info = ref(examine.additionalInfo ?? '')
 
 const additionalInfoDisplay = computed(() =>
   [examine.additionalInfoTransformedTemplate, examine.additionalInfo]
@@ -51,7 +51,7 @@ function saveEdits() {
 }
 
 function cancelEdits() {
-  info.value = examine.additionalInfo
+  info.value = examine.additionalInfo ?? ''
 }
 
 examine.addEditAction({

@@ -26,6 +26,7 @@ import { getTransactions, patchNameRequest } from '~/util/namex-api'
 import { getEmptyNameChoice, sortNameChoices } from '~/util'
 import { DateTime } from 'luxon'
 import { fromMappedRequestType } from '~/util/request-type'
+import { getDateFromDateTime, parseDate } from '~/util/date'
 
 export const useExamineStore = defineStore('examine', () => {
   /** Username of the current user */
@@ -118,7 +119,7 @@ export const useExamineStore = defineStore('examine', () => {
 
   const historiesInfoJSON = ref<NameRequestConflict>()
 
-  const consentRequiredByUser = ref()
+  const consentRequiredByUser = ref<boolean>()
 
   const selectedConditions = ref<Array<Condition>>([])
 
@@ -185,17 +186,17 @@ export const useExamineStore = defineStore('examine', () => {
 
   const decision_made = ref<Status>()
 
-  const compName1 = reactive<NameChoice>(getEmptyNameChoice())
-  const compName2 = reactive<NameChoice>(getEmptyNameChoice())
-  const compName3 = reactive<NameChoice>(getEmptyNameChoice())
+  const compName1 = reactive<NameChoice>(getEmptyNameChoice(1))
+  const compName2 = reactive<NameChoice>(getEmptyNameChoice(2))
+  const compName3 = reactive<NameChoice>(getEmptyNameChoice(3))
   const nameChoices = computed(() => [compName1, compName2, compName3])
 
   const currentNameObj = ref(compName2)
   const currentName = computed(() => currentNameObj.value.name)
   const currentChoice = computed(() => currentNameObj.value.choice)
 
-  const userHasApproverRole = ref()
-  const userHasEditRole = ref()
+  const userHasApproverRole = ref<boolean>()
+  const userHasEditRole = ref<boolean>()
   const is_my_current_nr = computed(
     () => nr_status.value === Status.InProgress && isCurrentExaminer.value
   )
@@ -204,28 +205,28 @@ export const useExamineStore = defineStore('examine', () => {
   const listJurisdictions = ref<Array<Jurisdiction>>(jurisdictionsData)
   const jurisdiction = ref<string>()
   const jurisdictionNumber = ref<string>()
-  const jurisdictionRequired = ref()
+  const jurisdictionRequired = ref<boolean>()
 
   const previousNr = ref<string>()
-  const prevNrRequired = ref()
+  const prevNrRequired = ref<boolean>()
 
   const consumedBy = ref<string>()
   const consentDateForEdit = ref<string>()
   const consentFlag = ref<ConsentFlag>()
 
-  const pendingTransactionRequest = ref()
+  const pendingTransactionRequest = ref<boolean>()
   const transactionsData = ref<Array<Transaction>>()
 
   const refundPaymentState = ref<RefundState>()
 
-  const submittedDate = ref()
+  const submittedDate = ref<string>()
   const corpNum = ref<string>()
-  const corpNumRequired = ref()
+  const corpNumRequired = ref<boolean>()
   const expiryDate = ref<string>()
 
-  const additionalInfo = ref()
+  const additionalInfo = ref<string>()
   const additional_info_template = ref<string>()
-  const natureOfBusiness = ref()
+  const natureOfBusiness = ref<string>()
 
   const clientFirstName = ref<string>()
   const clientLastName = ref<string>()
@@ -244,9 +245,9 @@ export const useExamineStore = defineStore('examine', () => {
   const conEmail = ref<string>()
   const contactName = ref<string>()
 
-  const forceConditional = ref()
+  const forceConditional = ref<boolean>()
 
-  const hasBeenReset = ref()
+  const hasBeenReset = ref<boolean>()
 
   const additionalInfoTransformedTemplate = computed(() => {
     return additional_info_template.value
@@ -352,8 +353,113 @@ export const useExamineStore = defineStore('examine', () => {
     editActions.push(action)
   }
 
-  function loadCompanyInfo(info: any) {
-    // TODO: implement
+  function parseIntoNameChoice(data: any, choice: NameChoice) {
+    choice.choice = data.choice
+    choice.name = data.name
+    choice.state = data.state
+    choice.consumptionDate = data.consumptionDate
+    choice.corpNum = data.corpNum
+    choice.conflict1 = data.conflict1
+    choice.conflict2 = data.conflict2
+    choice.conflict3 = data.conflict3
+    choice.conflict1_num = data.conflict1_num
+    choice.conflict2_num = data.conflict2_num
+    choice.conflict3_num = data.conflict3_num
+    choice.decision_text = data.decision_text
+    choice.comment = data.comment
+  }
+
+  // TODO: give type to `info` param
+  async function loadCompanyInfo(info: any) {
+    consentFlag.value = undefined
+    consentDateForEdit.value = undefined
+
+    if (!info || !info.names) return
+
+    if (info.names.length == 0) {
+      return
+    }
+
+    resetNameChoice(compName1)
+    resetNameChoice(compName2)
+    resetNameChoice(compName3)
+
+    info.names.forEach((nameChoice: NameChoice) =>
+      parseIntoNameChoice(nameChoice, nameChoices.value[nameChoice.choice])
+    )
+
+    const newCurrentNameChoice =
+      nameChoices.value
+        .filter((choice) =>
+          [Status.NotExamined, Status.Approved, Status.Condition].includes(
+            choice.state
+          )
+        )
+        .at(0) ?? compName1
+    await setCurrentNameChoice(newCurrentNameChoice)
+
+    nr_status.value = info.state
+    previousStateCd.value = info.previousStateCd
+    requestType.value = info.requestTypeCd
+
+    const parsedConsentDate = parseDate(info.consent_dt)
+    consentDateForEdit.value =
+      getDateFromDateTime(parsedConsentDate) ?? undefined
+
+    // if the current state is not INPROGRESS, HOLD, or DRAFT clear any existing name record in currentNameObj
+    if (
+      ![Status.InProgress, Status.Hold, Status.Draft].includes(nr_status.value)
+    ) {
+      // TODO: let currentName be undefined and implement this
+    }
+
+    // we keep the original data so that if fields exist that we do not use, we don't lose that
+    // data when we put new data
+    firstName.value = info.applicants.clientFirstName
+    lastName.value = info.applicants.clientLastName
+    firstName.value = info.applicants.firstName
+    middleName.value = info.applicants.middleName
+    lastName.value = info.applicants.lastName
+    addressLine1.value = info.applicants.addrLine1
+    addressLine2.value = info.applicants.addrLine2
+    addressLine3.value = info.applicants.addrLine3
+    city.value = info.applicants.city
+    province.value = info.applicants.stateProvinceCd
+    postalCode.value = info.applicants.postalCd
+    country.value = info.applicants.countryTypeCd
+    contactName.value = info.applicants.contact
+    phone.value = info.applicants.phoneNumber
+    conEmail.value = info.applicants.emailAddress
+    fax.value = info.applicants.faxNumber
+
+    jurisdiction.value = info.xproJurisdiction
+    natureOfBusiness.value = info.natureBusinessInfo
+    additionalInfo.value = info.additionalInfo
+    internalComments.value = info.comments
+
+    examiner.value = info.userId
+    priority.value = info.priorityCd
+
+    const parsedExpirationDate = parseDate(info.expirationDate)
+    expiryDate.value = getDateFromDateTime(parsedExpirationDate) ?? undefined
+
+    const parsedSubmittedDate = parseDate(info.submittedDate)
+    submittedDate.value = getDateFromDateTime(parsedSubmittedDate) ?? undefined
+
+    previousNr.value = info.previousNr
+    corpNum.value = info.corpNum
+    furnished.value = info.furnished
+    hasBeenReset.value = info.hasBeenReset
+
+    if (nr_status.value === Status.InProgress) {
+      is_making_decision.value = true
+    }
+
+    await getPayments()
+  }
+
+  async function getPayments() {
+    // TODO
   }
 
   async function getHistoryInfo(nrNumber: string) {
@@ -504,7 +610,7 @@ export const useExamineStore = defineStore('examine', () => {
 
   /** Attempt to set the given name choice as the current one. Will throw an error if the choice cannot be examined. */
   async function setCurrentNameChoice(choice: NameChoice) {
-    if (!choice.state || choice.state !== 'NE') {
+    if (!choice.state || choice.state !== Status.NotExamined) {
       throw new Error(`Name choice ${choice.choice} cannot be examined`)
     } else {
       currentNameObj.value = choice

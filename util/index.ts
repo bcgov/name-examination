@@ -62,11 +62,14 @@ export function sortNameChoices(choices: Array<NameChoice>) {
   choices.sort((n1, n2) => n1.choice - n2.choice)
 }
 
-/** Get a default empty `NameChoice` object. The `choice` and `name` properties will be invalid. */
-export function getEmptyNameChoice(): NameChoice {
+/** Get a default empty `NameChoice` object. */
+export function getEmptyNameChoice(
+  choiceIndex: number,
+  nameString = ''
+): NameChoice {
   return {
-    choice: 0,
-    name: '',
+    choice: choiceIndex,
+    name: nameString,
     state: Status.NotExamined,
     decision_text: null,
     conflict1: null,
