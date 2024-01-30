@@ -1,5 +1,6 @@
 import type {
   ClassTypeCode,
+  ConsentFlag,
   EntityTypeCode,
   RequestActionCode,
   RequestTypeCode,
@@ -211,4 +212,74 @@ export interface Transaction {
   stateCd: Status
   user_action: string
   user_name: string
+}
+
+export interface Action {
+  URL: string
+  entitiesFilingName: string
+  filingName: string
+  learTemplate?: string
+}
+
+export interface Applicant {
+  addrLine1: string
+  addrLine2: string
+  addrLine3: string
+  city: string
+  clientFirstName: string
+  clientLastName: string
+  contact: string
+  countryTypeCd: string
+  declineNotificationInd: any
+  emailAddress: string
+  faxNumber: string
+  firstName: string
+  lastName: string
+  middleName: string
+  partyId: number
+  phoneNumber: string
+  postalCd: string
+  stateProvinceCd: string
+}
+
+export interface NameRequestResponse {
+  actions: Array<Action>
+  additionalInfo: string
+  applicants: Applicant
+  checkedOutBy: string
+  checkedOutDt: string
+  comments: Array<Comment>
+  consentFlag: ConsentFlag
+  consent_dt: string
+  corpNum: string
+  entity_type_cd: EntityTypeCode
+  expirationDate: string
+  furnished: 'Y' | 'N'
+  hasBeenReset: boolean
+  homeJurisNum: string
+  id: number
+  lastUpdate: string
+  legalType: string
+  names: Array<NameChoice>
+  natureBusinessInfo: string
+  notifiedBeforeExpiry: boolean
+  notifiedExpiry: boolean
+  nrNum: string
+  previousNr: string
+  previousRequestId: string
+  previousStateCd: Status
+  priorityCd: 'Y' | 'N'
+  priorityDate: string
+  requestTypeCd: RequestTypeCode
+  request_action_cd: RequestActionCode
+  source: string
+  state: Status
+  stateCd: string
+  submitCount: number
+  submittedDate: string
+  submitter_userid: string
+  target: string
+  tradeMark: string
+  userId: string
+  xproJurisdiction: string
 }
