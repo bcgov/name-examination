@@ -51,6 +51,18 @@ let router = new Router({
       }
     },
     {
+      name: 'nameexamination-without-nrnumber',
+      component: NameExamination,
+      path: '/nameExamination',
+      meta: {
+        requiresAuth: true
+      },
+      beforeEnter: (to, from, next) => {
+        store.dispatch('getpostgrescompNo')
+        next()
+      }
+    },
+    {
       name: 'transactions',
       component: Transactions,
       path: '/transactions',
