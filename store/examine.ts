@@ -26,6 +26,8 @@ import {
   getNameRequest,
   getTransactions,
   patchNameRequest,
+  postNewComment,
+  putNameChoice,
 } from '~/util/namex-api'
 import { getEmptyNameChoice, sortNameChoices } from '~/util'
 import { DateTime } from 'luxon'
@@ -527,6 +529,34 @@ export const useExamineStore = defineStore('examine', () => {
     resetNameChoice(currentNameObj.value)
   }
 
+  /** Populate the currently examining name choice with selected conflicts and decision text. */
+  function populateNameChoice(choice: NameChoice) {
+    if (selectedConflicts.value.length > 0) {
+      // Populate the current name object's conflicts
+      for (const n of [0, 1, 2]) {
+        const conflict = selectedConflicts.value[n]
+        if (conflict == null) break
+
+        switch (n) {
+          case 0:
+            choice.conflict1 = conflict.text
+            choice.conflict1_num = conflict.nrNumber
+            break
+          case 1:
+            choice.conflict2 = conflict.text
+            choice.conflict2_num = conflict.nrNumber
+            break
+          case 2:
+            choice.conflict3 = conflict.text
+            choice.conflict3_num = conflict.nrNumber
+            break
+        }
+      }
+    }
+    choice.name = choice.name.trimEnd()
+    choice.decision_text = requestorMessage.value.substring(0, 955)
+  }
+
   async function makeDecision(decision: Status) {
     if (!currentNameObj.value) return
 
@@ -545,41 +575,20 @@ export const useExamineStore = defineStore('examine', () => {
       currentNameObj.value.state = Status.Rejected
     }
 
-    if (selectedConflicts.value.length > 0) {
-      // Populate the current name object's conflicts
-      for (const n of [0, 1, 2]) {
-        const conflict = selectedConflicts.value[n]
-        if (conflict == null) break
+    populateNameChoice(currentNameObj.value)
 
-        switch (n) {
-          case 0:
-            currentNameObj.value.conflict1 = conflict.text
-            currentNameObj.value.conflict1_num = conflict.nrNumber
-            break
-          case 1:
-            currentNameObj.value.conflict2 = conflict.text
-            currentNameObj.value.conflict2_num = conflict.nrNumber
-            break
-          case 2:
-            currentNameObj.value.conflict3 = conflict.text
-            currentNameObj.value.conflict3_num = conflict.nrNumber
-            break
-        }
-      }
-    }
-    currentNameObj.value.name = currentNameObj.value.name.trimEnd()
-    currentNameObj.value.decision_text = requestorMessage.value.substring(
-      0,
-      955
-    )
-    await pushAcceptReject()
+    await pushCurrentNameChoice()
 
     if (currentNameObj.value.state === Status.Approved) {
       await updateNRState(Status.Approved)
     } else if (currentNameObj.value.state === Status.Condition) {
       await updateNRState(Status.Conditional)
     } else {
-      await examineNextNameChoice()
+      try {
+        await examineNextNameChoice()
+      } catch (e) {
+        updateNRState(Status.Rejected)
+      }
     }
     decision_made.value = undefined
   }
@@ -594,7 +603,7 @@ export const useExamineStore = defineStore('examine', () => {
     } else {
       currentNameObj.value.state = Status.Rejected
     }
-    await pushAcceptReject()
+    await pushCurrentNameChoice()
     decision_made.value = undefined
   }
 
@@ -617,7 +626,7 @@ export const useExamineStore = defineStore('examine', () => {
       try {
         await setCurrentNameChoice(choice)
       } catch (e) {
-        await updateNRState(Status.Rejected)
+        throw e
       }
     }
     if (currentChoice.value === 1) {
@@ -626,6 +635,7 @@ export const useExamineStore = defineStore('examine', () => {
       await attempt(compName3)
     } else {
       await updateNRState(Status.Rejected)
+      throw new Error('Cannot examine next name choice')
     }
   }
 
@@ -840,23 +850,25 @@ export const useExamineStore = defineStore('examine', () => {
   // ======================== start of todo functions ========================
 
   async function updateNRState(state: Status) {
-    // TODO: push to api
     if (state === Status.Draft && nr_status.value === Status.InProgress) {
       is_making_decision.value = false
     }
     nr_status.value = state
+    await patchNameRequest(nrNumber.value, { state: state })
+    await getpostgrescompInfo(nrNumber.value)
   }
 
   async function cancelNr(commentText: string) {
     await postComment(commentText)
+    resetExaminationArea()
     is_making_decision.value = false
-    nr_status.value = Status.Cancelled
-    // TODO: push CANCELLED state to API
+    updateNRState(Status.Cancelled)
   }
 
-  /** Send name request decision to API */
-  async function pushAcceptReject() {
-    // TODO: make a PUT call to api
+  /** Send name choice data to API */
+  async function pushCurrentNameChoice() {
+    if (currentNameObj.value)
+      await putNameChoice(nrNumber.value, currentNameObj.value)
   }
 
   async function updateRequest() {
@@ -865,12 +877,10 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   async function postComment(text: string) {
-    // TODO: post to comments endpoint and add api response to internalComments
-    internalComments.value.push({
-      comment: text,
-      examiner: examiner.value!,
-      timestamp: DateTime.now().toISO(),
-    })
+    const response = await postNewComment(nrNumber.value, text)
+    if (response.status === 200) {
+      internalComments.value.push(await response.json())
+    }
   }
 
   // TODO: should this be the $reset method for this store?

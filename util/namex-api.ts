@@ -1,4 +1,4 @@
-import type { Transaction } from '~/types'
+import type { NameChoice, Transaction } from '~/types'
 
 /**
  * Retrieve the Keycloak session token, refreshing to make it valid if necessary.
@@ -19,12 +19,15 @@ async function getToken(): Promise<string | undefined> {
 
 /**
  * Make an HTTP request to a given Namex API URL.
+ * @param options extra options to pass to the `fetch` call, should not include headers
+ * @param headers header options to pass to the request
  */
-async function callNamexApi(url: URL, options?: object) {
+async function callNamexApi(url: URL, options?: object, headers?: object) {
   const token = await getToken()
   return fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
+      ...headers,
     },
     ...(options ? options : {}),
   })
@@ -63,10 +66,38 @@ export async function getNameRequest(nrNumber: string) {
  */
 export async function patchNameRequest(nrNumber: string, patch: object) {
   const url = getNamexApiUrl(`/requests/${nrNumber}`)
-  return await callNamexApi(url, {
-    method: 'PATCH',
-    body: JSON.stringify(patch),
-  })
+  return callNamexApi(
+    url,
+    {
+      method: 'PATCH',
+      body: JSON.stringify(patch),
+    },
+    { 'content-type': 'application/json' }
+  )
+}
+
+export async function postNewComment(nrNumber: string, comment: string) {
+  const url = getNamexApiUrl(`/requests/${nrNumber}/comments`)
+  return callNamexApi(
+    url,
+    {
+      method: 'POST',
+      body: JSON.stringify({ comment }),
+    },
+    { 'content-type': 'application/json' }
+  )
+}
+
+export async function putNameChoice(nrNumber: string, choice: NameChoice) {
+  const url = getNamexApiUrl(`/requests/${nrNumber}/names/${choice.choice}`)
+  return callNamexApi(
+    url,
+    {
+      method: 'PUT',
+      body: JSON.stringify(choice),
+    },
+    { 'content-type': 'application/json' }
+  )
 }
 
 export async function getTransactions(
