@@ -223,16 +223,16 @@ export interface Action {
 
 export interface Applicant {
   addrLine1: string
-  addrLine2: string
-  addrLine3: string
+  addrLine2: string | null
+  addrLine3: string | null
   city: string
-  clientFirstName: string
-  clientLastName: string
+  clientFirstName: string | null
+  clientLastName: string | null
   contact: string
   countryTypeCd: string
   declineNotificationInd: any
   emailAddress: string
-  faxNumber: string
+  faxNumber: string | null
   firstName: string
   lastName: string
   middleName: string | null

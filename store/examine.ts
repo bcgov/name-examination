@@ -357,38 +357,42 @@ export const useExamineStore = defineStore('examine', () => {
       await getNameRequest(nrNumber.value)
     ).json()) as NameRequest
 
+    // NOTE: at this point, all store variables should be defined, but we will fallback to the API value just in case
+    const applicant = data.applicants
+    applicant.clientFirstName = clientFirstName.value || null
+    applicant.clientLastName = clientLastName.value || null
+    applicant.firstName = firstName.value || applicant.firstName
+    applicant.lastName = lastName.value || applicant.lastName
+    applicant.middleName = middleName.value || null
+    applicant.addrLine1 = addressLine1.value || applicant.addrLine1
+    applicant.addrLine2 = addressLine2.value || null
+    applicant.addrLine3 = addressLine3.value || null
+    applicant.city = city.value || applicant.city
+    applicant.stateProvinceCd = province.value || applicant.stateProvinceCd
+    applicant.postalCd = postalCode.value || applicant.postalCd
+    applicant.countryTypeCd = country.value || applicant.countryTypeCd
+    applicant.contact = contactName.value || ''
+    applicant.phoneNumber = phone.value || applicant.phoneNumber
+    applicant.emailAddress = conEmail.value || applicant.emailAddress
+    applicant.faxNumber = fax.value || null
+
     data.names = nameChoices.value.filter((n) => n.name)
     data.requestTypeCd = requestType.value
     data.entity_type_cd = entityTypeCd.value
     data.request_action_cd = requestActionCd.value
-    data.applicants.clientFirstName = clientFirstName.value ?? ''
-    data.applicants.clientLastName = clientLastName.value ?? ''
-    data.applicants.firstName = firstName.value ?? ''
-    data.applicants.lastName = lastName.value ?? ''
-    data.applicants.middleName = middleName.value ?? ''
-    data.applicants.addrLine1 = addressLine1.value ?? ''
-    data.applicants.addrLine2 = addressLine2.value ?? ''
-    data.applicants.addrLine3 = addressLine3.value ?? ''
-    data.applicants.city = city.value ?? ''
-    data.applicants.stateProvinceCd = province.value ?? ''
-    data.applicants.postalCd = postalCode.value ?? ''
-    data.applicants.countryTypeCd = country.value ?? ''
-    data.applicants.contact = contactName.value ?? ''
-    data.applicants.phoneNumber = phone.value ?? ''
-    data.applicants.emailAddress = conEmail.value ?? ''
-    data.applicants.faxNumber = fax.value ?? ''
-    data.xproJurisdiction = jurisdiction.value ?? ''
-    data.natureBusinessInfo = natureOfBusiness.value || null
-    data.additionalInfo = additionalInfo.value ?? ''
+    data.xproJurisdiction = jurisdiction.value || ''
+    data.natureBusinessInfo = natureOfBusiness.value || data.natureBusinessInfo
+    data.additionalInfo = additionalInfo.value || ''
     data.comments = internalComments.value
     data.state = nr_status.value
-    data.previousStateCd = previousStateCd.value ?? null
-    data.previousNr = previousNr.value ?? null
-    data.corpNum = corpNum.value ?? null
+    data.previousStateCd = previousStateCd.value || null
+    data.previousNr = previousNr.value || null
+    data.corpNum = corpNum.value || ''
     data.furnished = furnished.value
-    data.hasBeenReset = Boolean(hasBeenReset.value)
+    data.hasBeenReset = hasBeenReset.value || false
 
-    const toFormattedDate = (dt: DateTime) => dt.toUTC().toFormat('EEE, d MMM yyyy TTT')
+    const toFormattedDate = (dt: DateTime) =>
+      dt.toUTC().toFormat('EEE, d MMM yyyy TTT')
     if (consentDateForEdit.value) {
       data.consent_dt = toFormattedDate(
         parseDate(consentDateForEdit.value).startOf('day')
@@ -439,6 +443,7 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   async function loadCompanyInfo(info: NameRequest) {
+    console.log(info)
     if (!info || !info.names || info.names.length === 0) return
 
     consentFlag.value = undefined
@@ -481,14 +486,14 @@ export const useExamineStore = defineStore('examine', () => {
 
     // we keep the original data so that if fields exist that we do not use, we don't lose that
     // data when we put new data
-    clientFirstName.value = info.applicants.clientFirstName
-    clientLastName.value = info.applicants.clientLastName
+    clientFirstName.value = info.applicants.clientFirstName ?? undefined
+    clientLastName.value = info.applicants.clientLastName ?? undefined
     firstName.value = info.applicants.firstName
     middleName.value = info.applicants.middleName ?? undefined
     lastName.value = info.applicants.lastName
     addressLine1.value = info.applicants.addrLine1
-    addressLine2.value = info.applicants.addrLine2
-    addressLine3.value = info.applicants.addrLine3
+    addressLine2.value = info.applicants.addrLine2 ?? undefined
+    addressLine3.value = info.applicants.addrLine3 ?? undefined
     city.value = info.applicants.city
     province.value = info.applicants.stateProvinceCd
     postalCode.value = info.applicants.postalCd
@@ -496,7 +501,7 @@ export const useExamineStore = defineStore('examine', () => {
     contactName.value = info.applicants.contact
     phone.value = info.applicants.phoneNumber
     conEmail.value = info.applicants.emailAddress
-    fax.value = info.applicants.faxNumber
+    fax.value = info.applicants.faxNumber ?? undefined
 
     jurisdiction.value = info.xproJurisdiction
     jurisdictionNumber.value = info.homeJurisNum ?? undefined
