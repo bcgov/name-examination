@@ -34,7 +34,7 @@ import {
 import { getEmptyNameChoice, sortNameChoices } from '~/util'
 import { DateTime } from 'luxon'
 import { fromMappedRequestType } from '~/util/request-type'
-import { getDateFromDateTime, getUTCTimestamp, parseDate } from '~/util/date'
+import { getDateFromDateTime, parseDate } from '~/util/date'
 
 export const useExamineStore = defineStore('examine', () => {
   /** Username of the current user */
@@ -378,7 +378,7 @@ export const useExamineStore = defineStore('examine', () => {
     data.applicants.emailAddress = conEmail.value ?? ''
     data.applicants.faxNumber = fax.value ?? ''
     data.xproJurisdiction = jurisdiction.value ?? ''
-    data.natureBusinessInfo = natureOfBusiness.value ?? null
+    data.natureBusinessInfo = natureOfBusiness.value || null
     data.additionalInfo = additionalInfo.value ?? ''
     data.comments = internalComments.value
     data.state = nr_status.value
@@ -388,18 +388,19 @@ export const useExamineStore = defineStore('examine', () => {
     data.furnished = furnished.value
     data.hasBeenReset = Boolean(hasBeenReset.value)
 
+    const toFormattedDate = (dt: DateTime) => dt.toUTC().toFormat('EEE, d MMM yyyy TTT')
     if (consentDateForEdit.value) {
-      data.consent_dt = getUTCTimestamp(
+      data.consent_dt = toFormattedDate(
         parseDate(consentDateForEdit.value).startOf('day')
       )
     }
     if (expiryDate.value) {
-      data.expirationDate = getUTCTimestamp(
+      data.expirationDate = toFormattedDate(
         parseDate(expiryDate.value).endOf('day')
       )
     }
     if (submittedDate.value) {
-      const submitDate = getUTCTimestamp(submittedDate.value)
+      const submitDate = toFormattedDate(submittedDate.value)
       if (submitDate) data.submittedDate = submitDate
     }
 
@@ -483,7 +484,7 @@ export const useExamineStore = defineStore('examine', () => {
     clientFirstName.value = info.applicants.clientFirstName
     clientLastName.value = info.applicants.clientLastName
     firstName.value = info.applicants.firstName
-    middleName.value = info.applicants.middleName
+    middleName.value = info.applicants.middleName ?? undefined
     lastName.value = info.applicants.lastName
     addressLine1.value = info.applicants.addrLine1
     addressLine2.value = info.applicants.addrLine2
@@ -498,6 +499,7 @@ export const useExamineStore = defineStore('examine', () => {
     fax.value = info.applicants.faxNumber
 
     jurisdiction.value = info.xproJurisdiction
+    jurisdictionNumber.value = info.homeJurisNum ?? undefined
     natureOfBusiness.value = info.natureBusinessInfo ?? undefined
     additionalInfo.value = info.additionalInfo
     internalComments.value = info.comments
@@ -564,6 +566,7 @@ export const useExamineStore = defineStore('examine', () => {
 
   function resetNameChoice(choice: NameChoice) {
     choice.state = Status.NotExamined
+    choice.name = null
     choice.decision_text = null
     choice.conflict1 = null
     choice.conflict2 = null
@@ -612,7 +615,7 @@ export const useExamineStore = defineStore('examine', () => {
         }
       }
     }
-    choice.name = choice.name.trimEnd()
+    choice.name = choice.name?.trimEnd() ?? null
     choice.decision_text = requestorMessage.value.substring(0, 955)
   }
 

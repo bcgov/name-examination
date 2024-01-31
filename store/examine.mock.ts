@@ -336,7 +336,7 @@ export const useExamineStore = defineStore('mock-examine', () => {
     if (!historiesJSON.value) return
 
     let exactMatches = historiesJSON.value.names.filter(
-      (entry) => currentName.value.toUpperCase() === entry.name.toUpperCase()
+      (entry) => currentName.value?.toUpperCase() === entry.name.toUpperCase()
     )
 
     for (const match of exactMatches) {
@@ -479,7 +479,7 @@ export const useExamineStore = defineStore('mock-examine', () => {
         }
       }
     }
-    currentNameObj.value.name = currentNameObj.value.name.trimEnd()
+    currentNameObj.value.name = currentNameObj.value.name?.trimEnd() ?? null
     currentNameObj.value.decision_text = requestorMessage.value.substring(
       0,
       955

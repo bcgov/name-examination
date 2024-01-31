@@ -26,7 +26,7 @@ export interface Applicants {
 
 export interface NameChoice {
   choice: number
-  name: string
+  name: string | null
   state: Status
   decision_text: string | null
   conflict1: string | null
@@ -235,7 +235,7 @@ export interface Applicant {
   faxNumber: string
   firstName: string
   lastName: string
-  middleName: string
+  middleName: string | null
   partyId: number
   phoneNumber: string
   postalCd: string
