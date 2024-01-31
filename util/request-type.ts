@@ -50,7 +50,6 @@ export function fromMappedRequestType(
   if (action === RequestActionCode.AML) {
     const newType = NORMAL_TO_AMALGAMATED_MAP[requestType]
     if (newType) {
-      console.log('hit2')
       return newType
     }
   }

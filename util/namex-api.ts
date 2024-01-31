@@ -1,4 +1,4 @@
-import type { NameChoice, Transaction } from '~/types'
+import type { NameChoice, NameRequest, Transaction } from '~/types'
 
 /**
  * Retrieve the Keycloak session token, refreshing to make it valid if necessary.
@@ -83,6 +83,19 @@ export async function postNewComment(nrNumber: string, comment: string) {
     {
       method: 'POST',
       body: JSON.stringify({ comment }),
+    },
+    { 'content-type': 'application/json' }
+  )
+}
+
+/** Update a name request's data with the given name request object. */
+export async function putNameRequest(nrNumber: string, nrObject: NameRequest) {
+  const url = getNamexApiUrl(`/requests/${nrNumber}`)
+  return callNamexApi(
+    url,
+    {
+      method: 'PUT',
+      body: JSON.stringify(nrObject),
     },
     { 'content-type': 'application/json' }
   )

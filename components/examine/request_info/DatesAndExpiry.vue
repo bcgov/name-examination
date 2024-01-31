@@ -2,7 +2,13 @@
   <div class="flex flex-col overflow-auto py-1 text-sm">
     <div class="flex">
       <h2 class="font-bold">Submit:&nbsp;</h2>
-      <span>{{ examine.submittedDate }}</span>
+      <span>
+        {{
+          examine.submittedDate
+            ? getDateFromDateTime(examine.submittedDate)
+            : '-'
+        }}
+      </span>
     </div>
 
     <div v-if="examine.corpNum" class="flex">
@@ -90,7 +96,7 @@
 import { ConsentFlag } from '~/enums/codes'
 import { Status } from '~/enums/nr-status'
 import { useExamineStore } from '~/store/examine'
-import { getFormattedDate, parseDate } from '~/util/date'
+import { getDateFromDateTime, getFormattedDate, parseDate } from '~/util/date'
 
 const examine = useExamineStore()
 

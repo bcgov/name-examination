@@ -242,44 +242,44 @@ export interface Applicant {
   stateProvinceCd: string
 }
 
-export interface NameRequestResponse {
+export interface NameRequest {
   actions: Array<Action>
   additionalInfo: string
   applicants: Applicant
-  checkedOutBy: string
-  checkedOutDt: string
+  checkedOutBy: string | null
+  checkedOutDt: string | null
   comments: Array<Comment>
-  consentFlag: ConsentFlag
-  consent_dt: string
-  corpNum: string
+  consentFlag: ConsentFlag | null
+  consent_dt: string | null
+  corpNum: string | null
   entity_type_cd: EntityTypeCode
-  expirationDate: string
+  expirationDate: string | null
   furnished: 'Y' | 'N'
   hasBeenReset: boolean
-  homeJurisNum: string
+  homeJurisNum: string | null
   id: number
   lastUpdate: string
   legalType: string
   names: Array<NameChoice>
-  natureBusinessInfo: string
+  natureBusinessInfo: string | null
   notifiedBeforeExpiry: boolean
   notifiedExpiry: boolean
   nrNum: string
-  previousNr: string
-  previousRequestId: string
-  previousStateCd: Status
+  previousNr: string | null
+  previousRequestId: string | null
+  previousStateCd: Status | null
   priorityCd: 'Y' | 'N'
   priorityDate: string
   requestTypeCd: RequestTypeCode
   request_action_cd: RequestActionCode
-  source: string
+  source: string | null
   state: Status
   stateCd: string
   submitCount: number
   submittedDate: string
   submitter_userid: string
   target: string
-  tradeMark: string
+  tradeMark: string | null
   userId: string
   xproJurisdiction: string
 }

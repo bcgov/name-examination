@@ -34,6 +34,14 @@ export function getDateWithTimeFromDateTime(input: DateTime): string {
   return input.toFormat(TIMESTAMP_FORMAT)
 }
 
+/**
+ * Return an ISO-formatted timestamp in the UTC timezone
+ * @param input A luxon `DateTime` object
+ */
+export function getUTCTimestamp(input: DateTime) {
+  return input.toUTC().toISO({ suppressMilliseconds: true })
+}
+
 /** Parse a date string into a `luxon` `DateTime` object.
  * @param input A date string from a NameX API object (ISO format).
  */

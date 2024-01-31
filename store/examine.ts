@@ -16,6 +16,7 @@ import type {
   RequestTypeRule,
   Jurisdiction,
   Transaction,
+  NameRequest,
 } from '~/types'
 
 import requestTypes from '~/data/request_types.json'
@@ -28,11 +29,12 @@ import {
   patchNameRequest,
   postNewComment,
   putNameChoice,
+  putNameRequest,
 } from '~/util/namex-api'
 import { getEmptyNameChoice, sortNameChoices } from '~/util'
 import { DateTime } from 'luxon'
 import { fromMappedRequestType } from '~/util/request-type'
-import { getDateFromDateTime, parseDate } from '~/util/date'
+import { getDateFromDateTime, getUTCTimestamp, parseDate } from '~/util/date'
 
 export const useExamineStore = defineStore('examine', () => {
   /** Username of the current user */
@@ -230,7 +232,7 @@ export const useExamineStore = defineStore('examine', () => {
 
   const refundPaymentState = ref<RefundState>()
 
-  const submittedDate = ref<string>()
+  const submittedDate = ref<DateTime>()
   const corpNum = ref<string>()
   const corpNumRequired = ref<boolean>()
   const expiryDate = ref<string>()
@@ -349,6 +351,61 @@ export const useExamineStore = defineStore('examine', () => {
     }
   })
 
+  /** Get the state of this store formatted as a name request object from the NameX API */
+  async function getNrData(): Promise<NameRequest> {
+    const data = (await (
+      await getNameRequest(nrNumber.value)
+    ).json()) as NameRequest
+
+    data.names = nameChoices.value.filter((n) => n.name)
+    data.requestTypeCd = requestType.value
+    data.entity_type_cd = entityTypeCd.value
+    data.request_action_cd = requestActionCd.value
+    data.applicants.clientFirstName = clientFirstName.value ?? ''
+    data.applicants.clientLastName = clientLastName.value ?? ''
+    data.applicants.firstName = firstName.value ?? ''
+    data.applicants.lastName = lastName.value ?? ''
+    data.applicants.middleName = middleName.value ?? ''
+    data.applicants.addrLine1 = addressLine1.value ?? ''
+    data.applicants.addrLine2 = addressLine2.value ?? ''
+    data.applicants.addrLine3 = addressLine3.value ?? ''
+    data.applicants.city = city.value ?? ''
+    data.applicants.stateProvinceCd = province.value ?? ''
+    data.applicants.postalCd = postalCode.value ?? ''
+    data.applicants.countryTypeCd = country.value ?? ''
+    data.applicants.contact = contactName.value ?? ''
+    data.applicants.phoneNumber = phone.value ?? ''
+    data.applicants.emailAddress = conEmail.value ?? ''
+    data.applicants.faxNumber = fax.value ?? ''
+    data.xproJurisdiction = jurisdiction.value ?? ''
+    data.natureBusinessInfo = natureOfBusiness.value ?? null
+    data.additionalInfo = additionalInfo.value ?? ''
+    data.comments = internalComments.value
+    data.state = nr_status.value
+    data.previousStateCd = previousStateCd.value ?? null
+    data.previousNr = previousNr.value ?? null
+    data.corpNum = corpNum.value ?? null
+    data.furnished = furnished.value
+    data.hasBeenReset = Boolean(hasBeenReset.value)
+
+    if (consentDateForEdit.value) {
+      data.consent_dt = getUTCTimestamp(
+        parseDate(consentDateForEdit.value).startOf('day')
+      )
+    }
+    if (expiryDate.value) {
+      data.expirationDate = getUTCTimestamp(
+        parseDate(expiryDate.value).endOf('day')
+      )
+    }
+    if (submittedDate.value) {
+      const submitDate = getUTCTimestamp(submittedDate.value)
+      if (submitDate) data.submittedDate = submitDate
+    }
+
+    return data
+  }
+
   interface EditAction {
     /** Return whether an edit action's internal state is valid (e.g. a name field is not empty).
      * This function is called before saving. A save will not occur if at least one edit action's validation fails.
@@ -380,8 +437,7 @@ export const useExamineStore = defineStore('examine', () => {
     choice.comment = data.comment
   }
 
-  // TODO: give type to `info` param
-  async function loadCompanyInfo(info: any) {
+  async function loadCompanyInfo(info: NameRequest) {
     if (!info || !info.names || info.names.length === 0) return
 
     consentFlag.value = undefined
@@ -406,12 +462,14 @@ export const useExamineStore = defineStore('examine', () => {
     await setCurrentNameChoice(newCurrentNameChoice)
 
     nr_status.value = info.state
-    previousStateCd.value = info.previousStateCd
+    previousStateCd.value = info.previousStateCd ?? undefined
     requestType.value = info.requestTypeCd
 
-    const parsedConsentDate = parseDate(info.consent_dt)
-    consentDateForEdit.value =
-      getDateFromDateTime(parsedConsentDate) ?? undefined
+    if (info.consent_dt) {
+      const parsedConsentDate = parseDate(info.consent_dt)
+      consentDateForEdit.value =
+        getDateFromDateTime(parsedConsentDate) ?? undefined
+    }
 
     // if the current state is not INPROGRESS, HOLD, or DRAFT clear any existing name record in currentNameObj
     if (
@@ -440,21 +498,22 @@ export const useExamineStore = defineStore('examine', () => {
     fax.value = info.applicants.faxNumber
 
     jurisdiction.value = info.xproJurisdiction
-    natureOfBusiness.value = info.natureBusinessInfo
+    natureOfBusiness.value = info.natureBusinessInfo ?? undefined
     additionalInfo.value = info.additionalInfo
     internalComments.value = info.comments
 
     examiner.value = info.userId
     priority.value = info.priorityCd
 
-    const parsedExpirationDate = parseDate(info.expirationDate)
-    expiryDate.value = getDateFromDateTime(parsedExpirationDate) ?? undefined
+    if (info.expirationDate) {
+      const parsedExpirationDate = parseDate(info.expirationDate)
+      expiryDate.value = getDateFromDateTime(parsedExpirationDate) ?? undefined
+    }
 
-    const parsedSubmittedDate = parseDate(info.submittedDate)
-    submittedDate.value = getDateFromDateTime(parsedSubmittedDate) ?? undefined
+    submittedDate.value = parseDate(info.submittedDate)
 
-    previousNr.value = info.previousNr
-    corpNum.value = info.corpNum
+    previousNr.value = info.previousNr ?? undefined
+    corpNum.value = info.corpNum ?? undefined
     furnished.value = info.furnished
     hasBeenReset.value = info.hasBeenReset
 
@@ -872,8 +931,11 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   async function updateRequest() {
-    // TODO: implement
-    console.log('updating request')
+    const data = await getNrData()
+    const response = await putNameRequest(nrNumber.value, data)
+    if (response.status === 200) {
+      await loadCompanyInfo(await response.json())
+    }
   }
 
   async function postComment(text: string) {
@@ -883,13 +945,27 @@ export const useExamineStore = defineStore('examine', () => {
     }
   }
 
-  // TODO: should this be the $reset method for this store?
   async function resetValues() {
-    // TODO
+    resetExaminationArea()
+    exactMatchesConflicts.value = []
+    parsedSynonymConflicts.value = []
+    parsedCOBRSConflicts.value = []
+    parsedPhoneticConflicts.value = []
+    corpConflictJSON.value = undefined
+    namesConflictJSON.value = undefined
+    parseConditions.value = []
+    historiesJSON.value = undefined
+    historiesInfoJSON.value = undefined
+    trademarksJSON.value = undefined
+    is_editing.value = false
+    is_making_decision.value = false
+    decision_made.value = undefined
+    is_header_shown.value = false
   }
 
   function resetConflictList() {
-    // TODO
+    selectedConflicts.value = []
+    comparedConflicts.value = []
   }
 
   async function getpostgrescompInfo(nrNumber: string) {

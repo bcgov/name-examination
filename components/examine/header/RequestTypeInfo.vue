@@ -20,8 +20,6 @@ const { jurisdiction, jurisdictionNumber } = defineProps<{
 const examine = useExamineStore()
 
 const jurisdictionDisplay = computed(() => {
-  if (!jurisdiction) return ''
-
   let text = jurisdiction
   if (jurisdiction?.length === 2) {
     // if the jurisdiction name is two letters, it's likely a code for a province, so get the full name

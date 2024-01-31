@@ -92,7 +92,7 @@ const conEmail = ref(examine.conEmail)
 const contactName = ref(examine.contactName)
 
 const lastNameErrorText = ref('')
-const lastNameEmpty = computed(() => lastName.value?.trim().length ?? 0 === 0)
+const lastNameEmpty = computed(() => lastName.value?.trim().length === 0)
 
 examine.addEditAction({
   validate: () => {
