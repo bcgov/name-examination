@@ -15,7 +15,7 @@ import type {
   RequestType,
   RequestTypeRule,
   Jurisdiction,
-  Transaction,
+  TransactionItem,
   NameRequest,
 } from '~/types'
 
@@ -228,7 +228,7 @@ export const useExamineStore = defineStore('examine', () => {
   const consentFlag = ref<ConsentFlag>()
 
   const pendingTransactionRequest = ref<boolean>()
-  const transactionsData = ref<Array<Transaction>>()
+  const transactionsData = ref<Array<TransactionItem>>()
 
   const refundPaymentState = ref<RefundState>()
 
@@ -443,7 +443,6 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   async function loadCompanyInfo(info: NameRequest) {
-    console.log(info)
     if (!info || !info.names || info.names.length === 0) return
 
     consentFlag.value = undefined
@@ -721,8 +720,8 @@ export const useExamineStore = defineStore('examine', () => {
     pendingTransactionRequest.value = true
     try {
       const transactions = await getTransactions(nrNumber)
-      transactions.forEach((t) => sortNameChoices(t.names))
-      transactionsData.value = transactions
+      transactions.transactions.forEach((t) => sortNameChoices(t.names))
+      transactionsData.value = transactions.transactions
     } catch (error) {
       console.error(`Error while retrieving transactions: ${error}`)
       transactionsData.value = undefined

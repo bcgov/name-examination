@@ -15,7 +15,7 @@ import type {
   RequestType,
   RequestTypeRule,
   Jurisdiction,
-  Transaction,
+  TransactionItem,
 } from '~/types'
 
 import mockJson from '~/data/examine.mock.json'
@@ -230,7 +230,7 @@ export const useExamineStore = defineStore('mock-examine', () => {
   const consentFlag = ref<ConsentFlag>()
 
   const pendingTransactionRequest = ref(false)
-  const transactionsData = ref<Array<Transaction>>()
+  const transactionsData = ref<Array<TransactionItem>>()
 
   const refundPaymentState = ref<RefundState>()
 
@@ -563,8 +563,8 @@ export const useExamineStore = defineStore('mock-examine', () => {
     pendingTransactionRequest.value = true
     try {
       const transactions = await getTransactions(nrNumber)
-      transactions.forEach((t) => sortNameChoices(t.names))
-      transactionsData.value = transactions
+      transactions.transactions.forEach((t) => sortNameChoices(t.names))
+      transactionsData.value = transactions.transactions
     } catch (error) {
       console.error(`Error while retrieving transactions: ${error}`)
       transactionsData.value = undefined

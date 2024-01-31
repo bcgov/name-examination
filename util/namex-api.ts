@@ -1,4 +1,4 @@
-import type { NameChoice, NameRequest, Transaction } from '~/types'
+import type { NameChoice, NameRequest, Transactions } from '~/types'
 
 /**
  * Retrieve the Keycloak session token, refreshing to make it valid if necessary.
@@ -115,7 +115,7 @@ export async function putNameChoice(nrNumber: string, choice: NameChoice) {
 
 export async function getTransactions(
   nrNumber: string
-): Promise<Array<Transaction>> {
+): Promise<Transactions> {
   return getNamexObject(getNamexApiUrl(`/events/${nrNumber}`))
 }
 

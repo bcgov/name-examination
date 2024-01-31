@@ -196,7 +196,14 @@ export interface Jurisdiction {
   text: string
 }
 
-export interface Transaction {
+export interface Transactions {
+  response: {
+    count: number
+  }
+  transactions: Array<TransactionItem>
+}
+
+export interface TransactionItem {
   additionalInfo: string
   consentFlag: 'Y' | 'N'
   /** consent date */
