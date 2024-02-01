@@ -5,7 +5,7 @@
       <span>
         {{
           examine.submittedDate
-            ? getDateFromDateTime(examine.submittedDate)
+            ? getDateWithTimeFromDateTime(examine.submittedDate)
             : '-'
         }}
       </span>
@@ -96,7 +96,7 @@
 import { ConsentFlag } from '~/enums/codes'
 import { Status } from '~/enums/nr-status'
 import { useExamineStore } from '~/store/examine'
-import { getDateFromDateTime, getFormattedDate, parseDate } from '~/util/date'
+import { getDateFromDateTime, getDateWithTimeFromDateTime, getFormattedDate, parseDate } from '~/util/date'
 
 const examine = useExamineStore()
 
