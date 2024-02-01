@@ -596,7 +596,7 @@ export const useExamineStore = defineStore('examine', () => {
       currentNameObj.value = compName3
     }
     resetNameChoice(currentNameObj.value, true)
-    await putNameChoice(nrNumber.value, currentNameObj.value)
+    await pushCurrentNameChoice()
     await getpostgrescompInfo(nrNumber.value)
   }
 
@@ -628,6 +628,24 @@ export const useExamineStore = defineStore('examine', () => {
     choice.decision_text = requestorMessage.value.substring(0, 955)
   }
 
+  /** Attempts to examine the next name choice. If that is not possible, rejects the entire NR. */
+  async function attemptNextNameChoice() {
+    try {
+      await examineNextNameChoice()
+    } catch (e) {
+      updateNRState(Status.Rejected)
+    }
+  }
+
+  async function pushDecision(choice: NameChoice) {
+    await pushCurrentNameChoice()
+    if (choice.state === Status.Approved) {
+      await updateNRState(Status.Approved)
+    } else if (choice.state === Status.Condition) {
+      await updateNRState(Status.Conditional)
+    }
+  }
+
   async function makeDecision(decision: Status) {
     if (!currentNameObj.value) return
 
@@ -645,36 +663,26 @@ export const useExamineStore = defineStore('examine', () => {
     } else {
       currentNameObj.value.state = Status.Rejected
     }
-
     populateNameChoice(currentNameObj.value)
 
-    await pushCurrentNameChoice()
-
-    if (currentNameObj.value.state === Status.Approved) {
-      await updateNRState(Status.Approved)
-    } else if (currentNameObj.value.state === Status.Condition) {
-      await updateNRState(Status.Conditional)
-    } else {
-      try {
-        await examineNextNameChoice()
-      } catch (e) {
-        updateNRState(Status.Rejected)
-      }
-    }
+    await pushDecision(currentNameObj.value)
+    await attemptNextNameChoice()
     decision_made.value = undefined
   }
 
   async function makeQuickDecision(decision: Status, decisionText: string) {
     if (!currentNameObj.value) return
 
-    currentNameObj.value.decision_text = decisionText
+    currentNameObj.value.decision_text = decisionText || null
     decision_made.value = decision
     if (decision_made.value === Status.Approved) {
       currentNameObj.value.state = Status.Approved
     } else {
       currentNameObj.value.state = Status.Rejected
     }
-    await pushCurrentNameChoice()
+
+    await pushDecision(currentNameObj.value)
+    await attemptNextNameChoice()
     decision_made.value = undefined
   }
 
@@ -696,7 +704,7 @@ export const useExamineStore = defineStore('examine', () => {
     }
   }
 
-  /** Attempts to examine the next name choice in the name request. */
+  /** Examine the next name choice in the name request. Throws an error if no name choice can be examined. */
   async function examineNextNameChoice() {
     const attempt = async (choice: NameChoice) => {
       try {
