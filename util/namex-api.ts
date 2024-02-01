@@ -22,7 +22,7 @@ export async function callNamexApi (url: URL, options?: object): Promise<any> {
       ...(options || {})
     })
   }
-  return response?.json()
+  return response
 }
 
 /**
