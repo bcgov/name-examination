@@ -1,5 +1,7 @@
 <template>
-  <div class="h-full overflow-x-auto rounded-md border">
+  <div
+    class="h-full overflow-x-auto rounded-md border"
+  >
     <table class="min-h-fit min-w-full table-auto">
       <thead class="sticky top-0">
         <tr class="h-12 bg-bcgov-blue5 text-left text-sm text-white">
@@ -11,8 +13,8 @@
             <a
               v-if="layout[column].clickable"
               href="#"
-              @click="layout[column].clickable.onClick"
               class="flex items-center"
+              @click="layout[column].clickable.onClick"
             >
               {{ column }}
               <component
@@ -36,13 +38,13 @@
           >
             <input
               v-if="'text_input' in layout[column]"
-              type="text"
               :id="column"
+              type="text"
               :placeholder="layout[column].text_input"
               class="w-full rounded-md border p-1.5"
               :value="search.filters[column as FilterKey]"
               @keyup.enter="updateTextInputFilters()"
-            />
+            >
 
             <ListSelect
               v-else-if="'dropdown' in layout[column]"
@@ -66,13 +68,20 @@
         :class="{ 'opacity-10': search.isLoading }"
       >
         <tr>
-          <td colspan="13" class="border-b border-gray-200 py-4 text-center">
+          <td
+            colspan="13"
+            class="border-b border-gray-200 py-4 text-center"
+          >
             {{ NO_DATA_STRING }}
           </td>
         </tr>
       </tbody>
 
-      <tbody v-else class="text-sm" :class="{ 'opacity-10': search.isLoading }">
+      <tbody
+        v-else
+        class="text-sm"
+        :class="{ 'opacity-10': search.isLoading }"
+      >
         <tr
           v-for="row in search.rows"
           :key="row[SearchColumns.NameRequestNumber]"
@@ -120,11 +129,14 @@ import {
   Priority,
   ClientNotification,
   Submitted,
-  LastUpdate,
+  LastUpdate
 } from '~/enums/filter-dropdowns'
 import { SearchColumns } from '~/enums/search-columns'
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/vue/24/outline'
+
+import { useUserStore } from '~/store/user-cache'
 import { StatusSearchFilter, type FilterKey } from '~/types/search'
+
 
 const NO_DATA_STRING = 'No Data Available'
 
@@ -153,31 +165,31 @@ const layout: ILayout = {
     dropdown: Object.values(StatusSearchFilter),
   },
   [SearchColumns.LastModifiedBy]: {
-    text_input: 'Username',
+    text_input: 'Username'
   },
   [SearchColumns.NameRequestNumber]: {
     text_input: 'NR Number',
-    width: 'w-28',
+    width: 'w-28'
   },
   [SearchColumns.Names]: {
     text_input: 'Name',
-    width: 'w-80',
+    width: 'w-80'
   },
   [SearchColumns.ApplicantFirstName]: {
-    text_input: 'First Name',
+    text_input: 'First Name'
   },
   [SearchColumns.ApplicantLastName]: {
-    text_input: 'Last Name',
+    text_input: 'Last Name'
   },
   [SearchColumns.NatureOfBusiness]: {},
   [SearchColumns.ConsentRequired]: {
-    dropdown: Object.values(ConsentRequired),
+    dropdown: Object.values(ConsentRequired)
   },
   [SearchColumns.Priority]: {
-    dropdown: Object.values(Priority),
+    dropdown: Object.values(Priority)
   },
   [SearchColumns.ClientNotification]: {
-    dropdown: Object.values(ClientNotification),
+    dropdown: Object.values(ClientNotification)
   },
   [SearchColumns.Submitted]: {
     dropdown: Object.values(Submitted),
@@ -185,13 +197,13 @@ const layout: ILayout = {
       icon: computed(() =>
         search.submittedDateOrder === 'asc' ? ArrowDownIcon : ArrowUpIcon
       ),
-      onClick: search.toggleSubmittedDateOrder,
-    },
+      onClick: search.toggleSubmittedDateOrder
+    }
   },
   [SearchColumns.LastUpdate]: {
-    dropdown: Object.values(LastUpdate),
+    dropdown: Object.values(LastUpdate)
   },
-  [SearchColumns.LastComment]: {},
+  [SearchColumns.LastComment]: {}
 }
 
 /**
@@ -199,11 +211,11 @@ const layout: ILayout = {
  * This is useful if you edit multiple text inputs and press enter on only one,
  * but want the model values of all the other inputs updated as well.
  */
-function updateTextInputFilters() {
+function updateTextInputFilters () {
   const headCells = filter_inputs.value?.children
   if (headCells == null) return
 
-  for (let headCell of headCells) {
+  for (const headCell of headCells) {
     const filterElement = headCell.children[0]
     if (filterElement?.tagName.toLowerCase() == 'input') {
       // @ts-ignore
@@ -218,19 +230,19 @@ function updateTextInputFilters() {
  * Check if the `Custom` option in the submitted date filter was chosen.
  * If it is, then the date dialog should pop up.
  */
-function checkIfCustomSubmitDateChosen(option: any) {
+function checkIfCustomSubmitDateChosen (option: any) {
   if (option == Submitted.Custom) {
     showDateDialog.value = true
   }
 }
 
-function onDateDialogSubmit(startDate: string, endDate: string) {
+function onDateDialogSubmit (startDate: string, endDate: string) {
   search.customSubmittedStartDate = startDate
   search.customSubmittedEndDate = endDate
   showDateDialog.value = false
 }
 
-function onDateDialogCancel() {
+function onDateDialogCancel () {
   search.filters.Submitted = search.lastSubmittedDateOption
   showDateDialog.value = false
 }
@@ -241,4 +253,11 @@ onMounted(async () => {
   search.resetDisplayAndPage()
   await search.updateRows()
 })
+
+const userStore = useUserStore()
+
+watch(userStore, async () => {
+  await search.updateRows()
+})
+
 </script>

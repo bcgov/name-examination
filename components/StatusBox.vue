@@ -6,20 +6,29 @@
     </div>
     <div class="my-6 ml-2">
       Not Examined:
-      <span id="notExamined" class="font-bold">{{
-        status.notExaminedNum
-      }}</span>
+      <span
+        id="notExamined"
+        class="font-bold"
+      >{{ notExaminedNum }}</span>
     </div>
     <div class="mb-2 ml-2 mt-6">
-      Hold: <span id="hold" class="font-bold">{{ status.holdNum }}</span>
+      Hold: <span
+        id="hold"
+        class="font-bold"
+      >{{ holdNum }}</span>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useStatusStore } from '~/store/status'
+import { useUserStore } from '~/store/user-cache'
 
+const userStore = useUserStore()
 const status = useStatusStore()
 
-onMounted(async () => await status.update())
+const notExaminedNum = computed(() => status.notExaminedNum)
+const holdNum = computed(() => status.holdNum)
+
+watch(userStore, async () => await status.update())
 </script>

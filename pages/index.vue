@@ -1,5 +1,8 @@
 <template>
-  <div class="container mx-auto mt-5 px-6 lg:px-48">
+  <div
+    v-if="isAuthenticated"
+    class="container mx-auto mt-5 px-6 lg:px-48"
+  >
     <div class="text-gray-800">
       <h2 class="mb-3 text-3xl font-bold">Welcome to Name X!</h2>
       <span
@@ -52,5 +55,10 @@
 </template>
 
 <script setup lang="ts">
+import { useUserStore } from '~/store/user-cache'
+import { computed } from 'vue'
+
+const userStore = useUserStore()
+const isAuthenticated = computed(() => userStore.authenticated)
 useHead({ title: 'BC Registry: Name Examination - Home' })
 </script>

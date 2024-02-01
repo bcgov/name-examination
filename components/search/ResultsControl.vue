@@ -4,12 +4,11 @@
       href="#"
       class="mr-4 font-semibold text-blue-800 transition duration-150 hover:text-blue-900"
       @click="reset"
-      >{{ CLEAR_FILTERS_TEXT }}</a
-    >
+    >{{ CLEAR_FILTERS_TEXT }}</a>
 
     <ListSelect
-      class="z-10 w-48"
       v-model="search.selectedColumns"
+      class="z-10 w-48"
       :options="search.fixedColumns"
       multiple
     >
@@ -20,7 +19,10 @@
       <span class="mr-4 font-semibold">Results: {{ search.resultNum }}</span>
 
       <span>Display: </span>
-      <ListSelect v-model="search.selectedDisplay" :options="DISPLAY_OPTIONS">
+      <ListSelect
+        v-model="search.selectedDisplay"
+        :options="DISPLAY_OPTIONS"
+      >
         {{ search.selectedDisplay }}
       </ListSelect>
 
@@ -40,7 +42,10 @@
       >
         <ChevronLeftIcon class="h-6 stroke-2" />
       </IconButton>
-      <IconButton class="!py-[0.3125rem] px-5" @click="search.goToNextPage()">
+      <IconButton
+        class="!py-[0.3125rem] px-5"
+        @click="search.goToNextPage()"
+      >
         <ChevronRightIcon class="h-6 stroke-2" />
       </IconButton>
     </div>
@@ -66,7 +71,7 @@ const pageOptions = computed(() =>
   Array.from({ length: search.lastPageNumber }, (_, key) => key + 1)
 )
 
-function reset() {
+function reset () {
   search.resetFilters()
   search.resetDisplayAndPage()
 }

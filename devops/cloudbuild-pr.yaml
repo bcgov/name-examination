@@ -20,6 +20,7 @@ steps:
       - 'NUXT_AUTH_DOMAIN=$_NUXT_AUTH_DOMAIN'
       - 'NUXT_PROJECT_ID=$_NUXT_PROJECT_ID'
       - 'NUXT_APP_ID=$_NUXT_APP_ID'
+      - 'GCP_IDP=$_GCP_IDP'
     args: ['run', 'build']
 
   #

@@ -1,40 +1,35 @@
+import { useUserStore } from '~/store/user-cache'
 import type { Transaction } from '~/types'
 
 /**
- * Retrieve the Keycloak session token, refreshing to make it valid if necessary.
- * @returns the session token
+ * Make a call to the NameX API and return the response json
+ * @param url The url to fetch
+ * @param options call options
+ * @return The json response object
  */
-async function getToken(): Promise<string | undefined> {
-  const { $auth } = useNuxtApp()
-  return await $auth
-    .updateToken(30)
-    .then((_refreshed) => {
-      return $auth.token
-    })
-    .catch(async (error) => {
-      console.error(`Failed to get session token: ${error}`)
-      return undefined
-    })
-}
+export async function callNamexApi (url: URL, options?: object): Promise<any> {
+  const userStore = useUserStore()
+  let response: Response = new Response()
+  const token = userStore.token
 
-/**
- * Make an HTTP request to a given Namex API URL.
- */
-async function callNamexApi(url: URL, options?: object) {
-  const token = await getToken()
-  return fetch(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    ...(options ? options : {}),
-  })
+  if (token.length > 0) {
+    const token = userStore.token
+
+    response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      ...(options || {})
+    })
+  }
+  return response
 }
 
 /**
  * Returns the full NameX API url given an endpoint
  * @param endpoint The API endpoint (including the starting slash '/')
  */
-export function getNamexApiUrl(endpoint: string): URL {
+export function getNamexApiUrl (endpoint: string): URL {
   const config = useRuntimeConfig().public
   return new URL(
     config.namexAPIVersion + endpoint,
@@ -45,40 +40,40 @@ export function getNamexApiUrl(endpoint: string): URL {
 /**
  * Make a GET request to the given NameX API URL and return the response json.
  * @param url the url to fetch
- * @returns the json response object
+ * @return the json response object
  */
-export async function getNamexObject(url: URL): Promise<any> {
+export async function getNamexObject (url: URL): Promise<any> {
   return (await callNamexApi(url)).json()
 }
 
 /**
  * Get a name request object given its NR number.
  */
-export async function getNameRequest(nrNumber: string) {
+export async function getNameRequest (nrNumber: string) {
   return callNamexApi(getNamexApiUrl(`/requests/${nrNumber}`))
 }
 
 /**
  * Patch the name request with the given NR number with a patch object.
  */
-export async function patchNameRequest(nrNumber: string, patch: object) {
+export async function patchNameRequest (nrNumber: string, patch: object) {
   const url = getNamexApiUrl(`/requests/${nrNumber}`)
   return await callNamexApi(url, {
     method: 'PATCH',
-    body: JSON.stringify(patch),
+    body: JSON.stringify(patch)
   })
 }
 
-export async function getTransactions(
+export async function getTransactions (
   nrNumber: string
 ): Promise<Array<Transaction>> {
   return getNamexObject(getNamexApiUrl(`/events/${nrNumber}`))
 }
 
-export async function getBusiness(corpNum: string) {
+export async function getBusiness (corpNum: string) {
   return callNamexApi(getNamexApiUrl(`/businesses/${corpNum}`))
 }
 
-export async function getCorporation(corpNum: string) {
+export async function getCorporation (corpNum: string) {
   return callNamexApi(getNamexApiUrl(`/corporations/${corpNum}`))
 }
