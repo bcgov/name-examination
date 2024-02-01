@@ -7,10 +7,10 @@ import type {
   ConflictList,
   ConflictListItem,
   CorpConflict,
-  History,
+  Histories,
   Macro,
   NameRequestConflict,
-  TrademarkApiResponse,
+  TrademarksObject,
   NameChoice,
   RequestType,
   RequestTypeRule,
@@ -92,7 +92,7 @@ export const useExamineStore = defineStore('mock-examine', () => {
 
   const listDecisionReasons = ref<Array<Macro>>(mock.macros)
 
-  const trademarksJSON = ref<TrademarkApiResponse>(mock.trademarkJSON)
+  const trademarksJSON = ref<TrademarksObject>(mock.trademarkJSON)
 
   const is_editing = ref(false)
   const is_making_decision = ref(true)
@@ -130,7 +130,7 @@ export const useExamineStore = defineStore('mock-examine', () => {
     mock.parseConditions as Array<Condition>
   )
 
-  const historiesJSON = ref<History>(mock.historiesJSON)
+  const historiesJSON = ref<Histories>(mock.historiesJSON)
 
   const historiesInfoJSON = ref<NameRequestConflict>()
 

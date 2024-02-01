@@ -25,6 +25,6 @@ import type { Condition } from '~/types'
 const examine = useExamineStore()
 
 const options = computed(() =>
-  examine.parseConditions.filter((c) => c.instructions !== '')
+  examine.conditions.filter((c) => c.instructions !== '')
 )
 </script>

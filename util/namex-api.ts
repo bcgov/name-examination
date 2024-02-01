@@ -125,8 +125,8 @@ export async function getCorporation(corpNum: string) {
   return callNamexApi(getNamexApiUrl(`/corporations/${corpNum}`))
 }
 
-export async function postTrademarks(query: string) {
-  const url = getNamexApiUrl(`/documents:trademarks`)
+async function postDocuments(resource: string, query: string) {
+  const url = getNamexApiUrl(`/documents:${resource}`)
   return callNamexApi(
     url,
     {
@@ -135,4 +135,16 @@ export async function postTrademarks(query: string) {
     },
     { 'content-type': 'application/json' }
   )
+}
+
+export async function postTrademarks(query: string) {
+  return postDocuments('trademarks', query)
+}
+
+export async function postConditions(query: string) {
+  return postDocuments('restricted_words', query)
+}
+
+export async function postHistories(query: string) {
+  return postDocuments('histories', query)
 }

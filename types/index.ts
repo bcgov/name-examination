@@ -88,7 +88,7 @@ export interface HistoryEntry {
   submit_count: number
 }
 
-export interface History {
+export interface Histories {
   names: Array<HistoryEntry>
   highlighting: string
   response: {
@@ -117,36 +117,25 @@ export interface ConflictList {
   children: Array<ConflictListItem>
 }
 
-export interface ConditionsList {
-  restricted_words_conditions: [
-    {
-      cnd_info: [
-        {
-          allow_use: 'Y' | 'N'
-          consent_required: 'Y' | 'N'
-          consenting_body: string | null
-          id: number
-          instructions: string
-          text: string
-        }
-      ]
-      word_info: {
-        id: number
-        phrase: string
-      }
-    }
-  ]
-}
-
 export interface Condition {
   allow_use: 'Y' | 'N'
   consent_required: 'Y' | 'N'
   id: number
   instructions: string
   text: string
-  consent_required_tf: boolean
-  allow_use_tf: boolean
   phrase: string
+}
+
+export interface ConditionsList {
+  restricted_words_conditions: [
+    {
+      cnd_info: Array<Condition>
+      word_info: {
+        id: number
+        phrase: string
+      }
+    }
+  ]
 }
 
 export interface Macro {
@@ -163,8 +152,21 @@ export interface Trademark {
   status: string
 }
 
-export interface TrademarkApiResponse {
+export interface TrademarksObject {
   names: Array<Trademark>
+  highlighting: {
+    [key: string]: {
+      name?: Array<string>
+    }
+  }
+  response: {
+    maxScore: number
+    name: string
+    numFound: number
+    /** string representing number of rows */
+    rows: string
+    start: number
+  }
 }
 
 export interface RequestType {

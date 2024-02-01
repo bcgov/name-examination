@@ -4,7 +4,7 @@
     <ListSelect
       v-model="examine.selectedTrademarks"
       multiple
-      :options="examine.trademarksJSON?.names ?? []"
+      :options="examine.trademarks"
       options-style="!max-h-40"
       :options-display="displayTrademark"
       :disabled="examine.decisionSelectionsDisabled"
@@ -26,7 +26,7 @@ const examine = useExamineStore()
 
 const trademarkCounts = computed(() => {
   const counts: { [trademarkName: string]: number } = {}
-  for (const trademark of examine.trademarksJSON?.names ?? []) {
+  for (const trademark of examine.trademarks) {
     if (trademark.name in counts) {
       counts[trademark.name] += 1
     } else {

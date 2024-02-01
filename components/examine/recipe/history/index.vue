@@ -19,7 +19,7 @@ const examine = useExamineStore()
 
 const rows = computed(
   () =>
-    examine.historiesJSON?.names.map((entry) => [
+    examine.histories.map((entry) => [
       entry.name,
       entry.jurisdiction,
       entry.nr_num,

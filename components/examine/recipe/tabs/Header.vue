@@ -60,30 +60,30 @@ const conflictsIconType = computed(() =>
 )
 
 const conditionsIconType = computed(() => {
-  if (examine.parseConditions.length === 0) return 'ok'
+  if (examine.conditions.length === 0) return 'ok'
   if (
-    examine.parseConditions.every((c) => c.allow_use === 'N') ||
-    examine.parseConditions.every((c) => c.consent_required === 'Y')
+    examine.conditions.every((c) => c.allow_use === 'N') ||
+    examine.conditions.every((c) => c.consent_required === 'Y')
   ) {
     return 'error'
   }
-  if (examine.parseConditions.length > 0) {
+  if (examine.conditions.length > 0) {
     return 'warning'
   }
   return 'ok'
 })
 
 const trademarksIconType = computed(() => {
-  return !examine.trademarksJSON || examine.trademarksJSON.names.length === 0
+  return !examine.trademarks || examine.trademarks.length === 0
     ? 'ok'
     : 'error'
 })
 
 const historyIconType = computed(() => {
-  if (!examine.historiesJSON || examine.historiesJSON.names.length === 0) {
+  if (!examine.histories || examine.histories.length === 0) {
     return 'ok'
   }
-  for (let historyItem of examine.historiesJSON.names) {
+  for (let historyItem of examine.histories) {
     if (
       historyItem.name_state_type_cd === 'R' ||
       historyItem.name_state_type_cd === 'REJECTED'

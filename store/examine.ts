@@ -6,16 +6,18 @@ import type {
   ConflictList,
   ConflictListItem,
   CorpConflict,
-  History,
+  Histories,
   Macro,
   NameRequestConflict,
-  TrademarkApiResponse,
+  TrademarksObject,
   NameChoice,
   RequestType,
   RequestTypeRule,
   Jurisdiction,
   TransactionItem,
   NameRequest,
+  HistoryEntry,
+  ConditionsList,
 } from '~/types'
 
 import requestTypes from '~/data/request_types.json'
@@ -26,6 +28,8 @@ import {
   getNameRequest,
   getTransactions,
   patchNameRequest,
+  postConditions,
+  postHistories,
   postNewComment,
   postTrademarks,
   putNameChoice,
@@ -35,7 +39,7 @@ import { getEmptyNameChoice, sortNameChoices } from '~/util'
 import { DateTime } from 'luxon'
 import { fromMappedRequestType } from '~/util/request-type'
 import { getDateFromDateTime, parseDate } from '~/util/date'
-import { useConflicts } from './conflicts'
+import { useConflicts } from './examine/conflicts'
 
 export const useExamineStore = defineStore('examine', () => {
   const conflicts = useConflicts()
@@ -91,7 +95,7 @@ export const useExamineStore = defineStore('examine', () => {
 
   const listDecisionReasons = ref<Array<Macro>>([])
 
-  const trademarksJSON = ref<TrademarkApiResponse>()
+  const trademarks = ref<Array<Trademark>>([])
 
   const is_editing = ref<boolean>()
   const is_making_decision = ref<boolean>()
@@ -123,9 +127,9 @@ export const useExamineStore = defineStore('examine', () => {
   )
   const entityTypeCd = computed(() => requestTypeObject.value.entity_type_cd)
 
-  const parseConditions = ref<Array<Condition>>([])
+  const conditions = ref<Array<Condition>>([])
 
-  const historiesJSON = ref<History>()
+  const histories = ref<Array<HistoryEntry>>([])
 
   const historiesInfoJSON = ref<NameRequestConflict>()
 
@@ -331,9 +335,9 @@ export const useExamineStore = defineStore('examine', () => {
 
   /** Status of an exact matches in history for alerting about previous submissions */
   const exactHistoryMatch = computed<Status | undefined>(() => {
-    if (!historiesJSON.value) return
+    if (!histories.value) return
 
-    let exactMatches = historiesJSON.value.names.filter(
+    let exactMatches = histories.value.filter(
       (entry) => currentName.value?.toUpperCase() === entry.name.toUpperCase()
     )
 
@@ -934,14 +938,27 @@ export const useExamineStore = defineStore('examine', () => {
 
   async function getTrademarks(query: string) {
     const response = await postTrademarks(query)
-    trademarksJSON.value = await response.json()
+    const json = (await response.json()) as TrademarksObject
+    return json.names
   }
 
   async function getConditions(query: string) {
-    
+    const response = await postConditions(query)
+    const json = (await response.json()) as ConditionsList
+    // TODO: update type for ConditionsList
+    console.log(json)
+    return json
   }
 
-  async function getHistories(query: string) {}
+  async function getHistories(query: string) {
+    const response = await postHistories(query)
+    const json = (await response.json()) as Histories
+    return json.names
+  }
+
+  function parseConditions(data: any): Array<Condition> {
+    return []
+  }
 
   // ======================== start of todo functions ========================
 
@@ -990,10 +1007,10 @@ export const useExamineStore = defineStore('examine', () => {
     parsedPhoneticConflicts.value = []
     corpConflictJSON.value = undefined
     namesConflictJSON.value = undefined
-    parseConditions.value = []
-    historiesJSON.value = undefined
+    conditions.value = []
+    histories.value = []
     historiesInfoJSON.value = undefined
-    trademarksJSON.value = undefined
+    trademarks.value = []
     is_editing.value = false
     is_making_decision.value = false
     decision_made.value = undefined
@@ -1016,9 +1033,11 @@ export const useExamineStore = defineStore('examine', () => {
     resetExaminationArea()
 
     await conflicts.getAllConflicts(searchQuery, exactPhrase)
-    await getTrademarks(searchQuery)
-    await getConditions(searchQuery)
-    await getHistories(searchQuery)
+    trademarks.value = await getTrademarks(searchQuery)
+    histories.value = await getHistories(searchQuery)
+    const conditionsJson = await getConditions(searchQuery)
+    conditions.value = parseConditions(conditionsJson)
+    // populateConditions(await conditionsJson.json())
   }
   // ============================ END OF FIRST HALF ===========================
 
@@ -1077,7 +1096,7 @@ export const useExamineStore = defineStore('examine', () => {
     conflictsAutoAdd,
     examiner,
     isCurrentExaminer,
-    trademarksJSON,
+    trademarks,
     selectedConflicts,
 
     internalComments,
@@ -1100,10 +1119,10 @@ export const useExamineStore = defineStore('examine', () => {
     parsedPhoneticConflicts,
     corpConflictJSON,
     namesConflictJSON,
-    historiesJSON,
+    histories,
     autoAddDisabled,
     decisionFunctionalityDisabled,
-    parseConditions,
+    conditions,
     comparedConflicts,
     historiesInfoJSON,
     consentRequiredByUser,
