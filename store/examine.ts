@@ -237,7 +237,7 @@ export const useExamineStore = defineStore('examine', () => {
   const corpNumRequired = ref<boolean>()
   const expiryDate = ref<string>()
 
-  const additionalInfo = ref<string>()
+  const additionalInfo = ref<string>('')
   const additional_info_template = ref<string>()
   const natureOfBusiness = ref<string>()
 
@@ -568,9 +568,12 @@ export const useExamineStore = defineStore('examine', () => {
     }
   }
 
-  function resetNameChoice(choice: NameChoice) {
+  /** Reset the given `NameChoice`.
+   * @param keepName choose to preserve the name property instead of setting it to `null`.
+   */
+  function resetNameChoice(choice: NameChoice, keepName = false) {
     choice.state = Status.NotExamined
-    choice.name = null
+    choice.name = keepName ? choice.name : null
     choice.decision_text = null
     choice.conflict1 = null
     choice.conflict2 = null
@@ -583,7 +586,7 @@ export const useExamineStore = defineStore('examine', () => {
     choice.comment = null
   }
 
-  function undoNameChoiceDecision(name: NameChoice) {
+  async function undoNameChoiceDecision(name: NameChoice) {
     resetExaminationArea()
     if (name.choice == 1) {
       currentNameObj.value = compName1
@@ -592,7 +595,9 @@ export const useExamineStore = defineStore('examine', () => {
     } else {
       currentNameObj.value = compName3
     }
-    resetNameChoice(currentNameObj.value)
+    resetNameChoice(currentNameObj.value, true)
+    await putNameChoice(nrNumber.value, currentNameObj.value)
+    await getpostgrescompInfo(nrNumber.value)
   }
 
   /** Populate the currently examining name choice with selected conflicts and decision text. */
@@ -673,16 +678,21 @@ export const useExamineStore = defineStore('examine', () => {
     decision_made.value = undefined
   }
 
-  /** Attempt to set the given name choice as the current one. Will throw an error if the choice cannot be examined. */
+  /** Attempt to set the given name choice as the current one. Will throw an error if the choice cannot be set. */
   async function setCurrentNameChoice(choice: NameChoice | undefined) {
     if (!choice) {
       currentNameObj.value = undefined
       return
     }
-    if (!choice.state || choice.state !== Status.NotExamined) {
-      throw new Error(`Name choice ${choice.choice} cannot be examined`)
-    } else {
+    const choiceHasAcceptableStatus = [
+      Status.NotExamined,
+      Status.Approved,
+      Status.Condition,
+    ].includes(choice.state)
+    if (choiceHasAcceptableStatus) {
       currentNameObj.value = choice
+    } else {
+      throw new Error(`Name choice ${choice.choice} cannot be examined`)
     }
   }
 
