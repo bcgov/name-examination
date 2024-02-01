@@ -3,7 +3,7 @@
     <p>
       {{ examine.requestTypeObject.text }}
     </p>
-    <p class="text-sm">
+    <p v-if="jurisdiction" class="text-sm">
       {{ jurisdictionDisplay }}
     </p>
   </div>
@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { useExamineStore } from '~/store/examine'
 
-const { jurisdiction, jurisdictionNumber } = defineProps<{
+const props = defineProps<{
   jurisdiction?: string
   jurisdictionNumber?: string
 }>()
@@ -20,18 +20,18 @@ const { jurisdiction, jurisdictionNumber } = defineProps<{
 const examine = useExamineStore()
 
 const jurisdictionDisplay = computed(() => {
-  let text = jurisdiction
-  if (jurisdiction?.length === 2) {
+  let text = props.jurisdiction
+  if (props.jurisdiction?.length === 2) {
     // if the jurisdiction name is two letters, it's likely a code for a province, so get the full name
     const province = examine.listJurisdictions.find(
-      (j) => j.value === jurisdiction
+      (j) => j.value === props.jurisdiction
     )
     if (province) {
       text = province.text
     }
   }
-  if (jurisdictionNumber) {
-    text = `${text} (${jurisdictionNumber})`
+  if (props.jurisdictionNumber) {
+    text = `${text} (${props.jurisdictionNumber})`
   }
   return text
 })
