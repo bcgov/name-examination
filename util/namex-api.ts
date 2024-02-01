@@ -113,9 +113,7 @@ export async function putNameChoice(nrNumber: string, choice: NameChoice) {
   )
 }
 
-export async function getTransactions(
-  nrNumber: string
-): Promise<Transactions> {
+export async function getTransactions(nrNumber: string): Promise<Transactions> {
   return getNamexObject(getNamexApiUrl(`/events/${nrNumber}`))
 }
 
@@ -125,4 +123,16 @@ export async function getBusiness(corpNum: string) {
 
 export async function getCorporation(corpNum: string) {
   return callNamexApi(getNamexApiUrl(`/corporations/${corpNum}`))
+}
+
+export async function postTrademarks(query: string) {
+  const url = getNamexApiUrl(`/documents:trademarks`)
+  return callNamexApi(
+    url,
+    {
+      method: 'POST',
+      body: JSON.stringify({ type: 'plain_text', content: query }),
+    },
+    { 'content-type': 'application/json' }
+  )
 }

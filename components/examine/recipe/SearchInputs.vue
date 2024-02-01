@@ -20,25 +20,20 @@ import { useExamineStore } from '~/store/examine'
 
 const examine = useExamineStore()
 
-const searchString = ref(examine.currentNameObj?.name ?? '')
+const searchString = ref(examine.currentName ?? '')
 const exactSearchString = ref('')
 
 function onNormalSearchSubmit(_event: Event) {
-  runManualRecipe()
+  examine.runManualRecipe(searchString.value, exactSearchString.value)
 }
 
 function onExactSearchSubmit(event: Event) {
   if (exactSearchString.value) {
-    runManualRecipe()
+    examine.runManualRecipe(searchString.value, exactSearchString.value)
   } else {
     event.preventDefault()
     event.stopImmediatePropagation()
   }
-}
-
-function runManualRecipe() {
-  examine.resetExaminationArea()
-  examine.runManualRecipe(searchString.value, exactSearchString.value)
 }
 
 watch(
@@ -46,6 +41,7 @@ watch(
   async (_state) => {
     searchString.value = examine.currentName ?? ''
     exactSearchString.value = ''
+    examine.runManualRecipe(searchString.value, exactSearchString.value)
   },
   { deep: true }
 )

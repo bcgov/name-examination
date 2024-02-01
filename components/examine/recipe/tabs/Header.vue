@@ -60,6 +60,7 @@ const conflictsIconType = computed(() =>
 )
 
 const conditionsIconType = computed(() => {
+  if (examine.parseConditions.length === 0) return 'ok'
   if (
     examine.parseConditions.every((c) => c.allow_use === 'N') ||
     examine.parseConditions.every((c) => c.consent_required === 'Y')

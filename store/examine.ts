@@ -3,7 +3,6 @@ import type {
   Trademark,
   Comment,
   Condition,
-  Conflict,
   ConflictList,
   ConflictListItem,
   CorpConflict,
@@ -28,6 +27,7 @@ import {
   getTransactions,
   patchNameRequest,
   postNewComment,
+  postTrademarks,
   putNameChoice,
   putNameRequest,
 } from '~/util/namex-api'
@@ -35,8 +35,11 @@ import { getEmptyNameChoice, sortNameChoices } from '~/util'
 import { DateTime } from 'luxon'
 import { fromMappedRequestType } from '~/util/request-type'
 import { getDateFromDateTime, parseDate } from '~/util/date'
+import { useConflicts } from './conflicts'
 
 export const useExamineStore = defineStore('examine', () => {
+  const conflicts = useConflicts()
+
   /** Username of the current user */
   const userId = ref(useNuxtApp().$userProfile.username)
   const userRoles = ref(useNuxtApp().$auth.realmAccess?.roles ?? [])
@@ -79,8 +82,6 @@ export const useExamineStore = defineStore('examine', () => {
   )
 
   const internalComments = ref<Array<Comment>>([])
-
-  const conflicts = ref<Array<Conflict>>([])
 
   const corpConflictJSON = ref<CorpConflict>()
   const namesConflictJSON = ref<NameRequestConflict>()
@@ -201,7 +202,7 @@ export const useExamineStore = defineStore('examine', () => {
   const nameChoices = computed(() => [compName1, compName2, compName3])
 
   const currentNameObj = ref<NameChoice>()
-  const currentName = computed(() => currentNameObj.value?.name)
+  const currentName = computed(() => currentNameObj.value?.name || null)
   const currentChoice = computed(() => currentNameObj.value?.choice)
 
   const userHasApproverRole = computed(() =>
@@ -533,14 +534,14 @@ export const useExamineStore = defineStore('examine', () => {
   async function getConflictInfo(item: ConflictListItem) {
     corpConflictJSON.value = undefined
     namesConflictJSON.value = undefined
-    const conflict = conflicts.value.filter(
-      (conflict) => conflict.nrNumber === item.nrNumber
-    )[0]
-    if (item.source === 'CORP') {
-      corpConflictJSON.value = conflict as CorpConflict
-    } else {
-      namesConflictJSON.value = conflict as NameRequestConflict
-    }
+    // const conflict = conflicts.value.filter(
+    //   (conflict) => conflict.nrNumber === item.nrNumber
+    // )[0]
+    // if (item.source === 'CORP') {
+    //   corpConflictJSON.value = conflict as CorpConflict
+    // } else {
+    //   namesConflictJSON.value = conflict as NameRequestConflict
+    // }
   }
 
   function isUndoable(name: NameChoice): boolean {
@@ -931,6 +932,17 @@ export const useExamineStore = defineStore('examine', () => {
     }
   }
 
+  async function getTrademarks(query: string) {
+    const response = await postTrademarks(query)
+    trademarksJSON.value = await response.json()
+  }
+
+  async function getConditions(query: string) {
+    
+  }
+
+  async function getHistories(query: string) {}
+
   // ======================== start of todo functions ========================
 
   async function updateNRState(state: Status) {
@@ -997,6 +1009,17 @@ export const useExamineStore = defineStore('examine', () => {
     const response = await getNameRequest(nrNumber)
     await loadCompanyInfo(await response.json())
   }
+
+  async function runManualRecipe(searchQuery: string, exactPhrase: string) {
+    if (!currentNameObj.value) return
+
+    resetExaminationArea()
+
+    await conflicts.getAllConflicts(searchQuery, exactPhrase)
+    await getTrademarks(searchQuery)
+    await getConditions(searchQuery)
+    await getHistories(searchQuery)
+  }
   // ============================ END OF FIRST HALF ===========================
 
   // ============================ START OF STUBBED HELPERS ===========================
@@ -1012,10 +1035,6 @@ export const useExamineStore = defineStore('examine', () => {
   function getShortJurisdiction(jurisdiction: string): string {
     // TODO
     throw 'unimplemented'
-  }
-
-  function runManualRecipe(searchStr: string, exactPhrase: string) {
-    // TODO
   }
 
   function resetExaminationArea() {
@@ -1056,7 +1075,6 @@ export const useExamineStore = defineStore('examine', () => {
     priority,
     is_complete,
     conflictsAutoAdd,
-    conflicts,
     examiner,
     isCurrentExaminer,
     trademarksJSON,
