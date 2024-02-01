@@ -50,7 +50,7 @@ const examine = useExamineStore()
 const characterLimit = 150
 const characterLimitDisplay = `Message cut off at ${characterLimit} characters`
 
-const info = ref(examine.additionalInfo ?? '')
+const info = ref(examine.additionalInfo)
 
 const additionalInfoDisplay = computed(() =>
   [examine.additionalInfoTransformedTemplate, examine.additionalInfo]
@@ -64,6 +64,10 @@ function saveEdits() {
 }
 
 function cancelEdits() {
+  syncAdditionalInfo()
+}
+
+function syncAdditionalInfo() {
   info.value = examine.additionalInfo ?? ''
 }
 
@@ -72,4 +76,12 @@ examine.addEditAction({
   update: saveEdits,
   cancel: cancelEdits,
 })
+
+watch(
+  () => [examine.additionalInfo],
+  (_state) => {
+    syncAdditionalInfo()
+  },
+  { deep: true }
+)
 </script>
