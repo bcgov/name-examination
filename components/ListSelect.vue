@@ -34,7 +34,7 @@
           enter-to-class="opacity-100"
         >
           <ListboxOptions
-            class="absolute mt-1 max-h-[50vh] w-fit overflow-auto rounded-md bg-white py-1 text-left text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            class="absolute z-20 mt-1 max-h-[50vh] w-fit overflow-auto rounded-md bg-white py-1 text-left text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
             :class="optionsStyle"
           >
             <ListboxOption
@@ -44,7 +44,6 @@
               :key="option"
               :value="option"
               as="template"
-              @click="emit('option_clicked', option)"
             >
               <li
                 :class="[
@@ -52,7 +51,9 @@
                   'relative cursor-default select-none py-2 pl-10 pr-4',
                 ]"
               >
-                <span>{{ option }}</span>
+                <span>
+                  {{ optionsDisplay ? optionsDisplay(option) : option }}
+                </span>
                 <span
                   v-if="selected"
                   class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
@@ -84,20 +85,23 @@ import {
 } from '@headlessui/vue'
 import { ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/outline'
 
+type ModelValueType = any
 const { modelValue, options, multiple } = defineProps<{
-  modelValue: Array<object> | any
+  modelValue: ModelValueType | Array<ModelValueType>
   options: Array<any>
   multiple?: boolean
   disabled?: boolean
   optionsStyle?: string
+  optionsDisplay?: (option: ModelValueType) => string
 }>()
 
 const emit = defineEmits<{
-  (e: 'option_clicked', option: any): void
+  (e: 'change', option: any): void
   (e: 'update:modelValue', newValue: any): void
 }>()
 
 const updateModelValue = (newValue: any) => {
   emit('update:modelValue', newValue)
+  emit('change', newValue)
 }
 </script>

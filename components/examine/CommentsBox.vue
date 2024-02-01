@@ -1,18 +1,24 @@
 <template>
   <div class="flex flex-col space-y-2 overflow-auto">
     <div
-      class="flex flex-col rounded-md border border-gray-400 bg-white p-2 text-sm"
-      v-for="comment in examine.comments"
+      class="comments-box-child flex flex-col rounded-md border border-gray-400 bg-white p-2 text-sm"
+      v-for="comment in comments"
     >
-      <p>{{ comment.content }}</p>
+      <p>{{ comment.comment }}</p>
+      <span class="font-bold">
+        {{ comment.examiner }}
+      </span>
       <span class="italic">
-        {{ comment.author }} &ndash; {{ comment.date }}
+        {{ getFormattedDateWithTime(comment.timestamp) }}
       </span>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
-const examine = useExamineStore()
+import type { Comment } from '~/types'
+import { getFormattedDateWithTime } from '~/util/date'
+defineProps<{
+  comments: Array<Comment>
+}>()
 </script>

@@ -2,11 +2,11 @@
   <div class="flex flex-col gap-y-1">
     <div class="flex grow flex-col">
       <textarea
-        class="grow resize-none rounded-t-md border border-gray-300 p-2 text-sm outline-none"
+        ref="textArea"
+        class="grow resize-none text-ellipsis rounded-md border border-gray-300 p-2 text-sm outline-none"
         :class="{ 'border-b-0': characterLimit }"
         :placeholder="placeholder"
         :readonly="readonly"
-        :maxlength="characterLimit"
         :value="modelValue"
         @input="onTextAreaInput"
       />
@@ -19,11 +19,12 @@
       </span>
     </div>
 
-    <div v-if="!disableButtons" class="flex space-x-1">
+    <div class="flex space-x-1">
       <IconButton
+        v-if="!hideSubmit"
         white
         class="h-7"
-        @click="emit('submit', modelValue)"
+        @click="onSubmit"
         :mnemonic="submitMnemonic"
       >
         <template #text>
@@ -31,6 +32,7 @@
         </template>
       </IconButton>
       <IconButton
+        v-if="!hideCancel"
         white
         class="h-7"
         @click="emit('cancel')"
@@ -41,28 +43,54 @@
         </template>
       </IconButton>
     </div>
+
+    <p
+      v-if="textRequired && showSubmitError"
+      class="text-sm font-bold text-red-600"
+    >
+      <slot name="errorText"></slot>
+    </p>
   </div>
 </template>
 
 <script setup lang="ts">
-const { modelValue, characterLimit } = defineProps<{
-  modelValue: any
+const { modelValue, characterLimit, textRequired } = defineProps<{
+  modelValue: string
   placeholder?: string
-  disableButtons?: boolean
+  hideSubmit?: boolean
+  hideCancel?: boolean
   submitMnemonic?: string
   cancelMnemonic?: string
   readonly?: boolean
+  /** Display the number of characters in the text area and a character limit. Does not enforce the character limit. */
   characterLimit?: number
+  /** Prevents the user from submitting if the text field is empty. */
+  textRequired?: boolean
 }>()
+
+const showSubmitError = ref(false)
+const textArea = ref<HTMLTextAreaElement>()
 
 const emit = defineEmits<{
   (e: 'submit', text: string): void
   (e: 'cancel'): void
+  (e: 'input', event: Event): void
   (e: 'update:modelValue', newValue: string): void
 }>()
 
+function onSubmit() {
+  if (!textArea.value) return
+  if (textRequired && textArea.value.value.trim() === '') {
+    showSubmitError.value = true
+    return
+  }
+  emit('submit', textArea.value.value)
+}
+
 function onTextAreaInput(event: Event) {
   const text = (event.target as HTMLTextAreaElement).value
+  showSubmitError.value = false
   emit('update:modelValue', text)
+  emit('input', event)
 }
 </script>

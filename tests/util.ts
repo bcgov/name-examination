@@ -25,9 +25,9 @@ export async function clickDropdownOption(
  * This can be used to simulate the return value from an api call.
  */
 export function mockNextApiHelperResponse(data: any) {
-  namexApiModule.callNamexApi = vi.fn().mockResolvedValueOnce(data)
+  namexApiModule.getNamexObject = vi.fn().mockResolvedValueOnce(data)
 }
 
 export function setApiHelperImpl(callback: (url: URL) => Promise<any>) {
-  namexApiModule.callNamexApi = vi.fn().mockImplementation(callback)
+  namexApiModule.getNamexObject = vi.fn().mockImplementation(callback)
 }

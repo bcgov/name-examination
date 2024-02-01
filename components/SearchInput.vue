@@ -1,14 +1,16 @@
 <template>
-  <form class="flex items-center">
-    <label for="textInput" class="sr-only">{{ placeholder }}</label>
+  <form class="flex items-center" role="search">
     <div class="w-full">
       <input
-        id="textInput"
-        type="text"
+        ref="searchTextField"
+        type="search"
         class="w-full rounded-l-md border border-gray-300 px-2 py-1 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
         :placeholder="placeholder"
-        :value="value.value"
+        :value="modelValue"
+        @change="(e) => $emit('update:modelValue', (e.target as HTMLInputElement).value)"
+        autocorrect="off"
         required
+        aria-label="Search"
       />
     </div>
     <IconButton
@@ -21,8 +23,16 @@
 
 <script setup lang="ts">
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
-defineProps<{
+const { focusMnemonic } = defineProps<{
+  modelValue: string
   placeholder: string
-  value: Ref<string>
+  /** Mnemonic letter for focusing the search's input field. */
+  focusMnemonic?: string
 }>()
+
+const searchTextField = ref<HTMLInputElement | null>(null)
+
+if (focusMnemonic) {
+  useMnemonic(focusMnemonic, () => searchTextField.value?.focus())
+}
 </script>

@@ -1,6 +1,6 @@
 <template>
   <button
-    class="inline-flex items-center justify-center space-x-1 rounded-md border px-2 py-1 transition hover:text-opacity-100 hover:opacity-90"
+    class="inline-flex items-center justify-center space-x-1 rounded-md border px-2 py-1 transition hover:text-opacity-100 hover:opacity-90 disabled:pointer-events-none disabled:opacity-70"
     ref="button"
     :class="[
       light

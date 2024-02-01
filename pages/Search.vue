@@ -10,11 +10,12 @@
     <SearchResultsBox class="my-4" />
   </div>
 </template>
-<script setup lang="ts">
 
+<script setup lang="ts">
 import { useUserStore } from '~/store/user-cache'
 
 const userStore = useUserStore()
 const isAuthenticated = computed(() => userStore.authenticated)
 
+useHead({ title: 'BC Registry: Name Examination - Search Name Requests' })
 </script>

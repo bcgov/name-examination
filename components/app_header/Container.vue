@@ -34,7 +34,7 @@
         class="ml-auto flex items-center"
       >
         <SearchInput
-          :value="ref('')"
+          v-model="searchText"
           class="mx-3"
           placeholder="NR Number Lookup"
         />
@@ -96,8 +96,10 @@ import { logout, login } from '~/util/firebase-auth'
 import { computed } from 'vue'
 
 const examineOptions = useExamineOptionsStore()
+
 const userStore = useUserStore()
 const isAuthenticated = computed(() => userStore.authenticated)
 const userName = computed(() => userStore.userName)
 
+const searchText = ref('')
 </script>

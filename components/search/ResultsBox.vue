@@ -50,7 +50,7 @@
               v-else-if="'dropdown' in layout[column]"
               v-model="search.filters[column as FilterKey]"
               :options="layout[column].dropdown"
-              @option_clicked="
+              @change="
                 (option) => [
                   updateTextInputFilters(),
                   checkIfCustomSubmitDateChosen(option),
@@ -98,13 +98,16 @@
           </td>
         </tr>
       </tbody>
-      <LoadingSpinner v-if="search.isLoading" />
+
+      <div
+        class="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 transform"
+      >
+        <LoadingSpinner v-if="search.isLoading" />
+      </div>
     </table>
 
-    <PopupDialog
-      title="Choose a Date Range"
-      :show="showDateDialog"
-    >
+    <PopupDialog :show="showDateDialog">
+      <template #title>Choose a Date Range</template>
       <SearchDateForm
         :initialStart="search.customSubmittedStartDate"
         :initialEnd="search.customSubmittedEndDate"
@@ -120,9 +123,8 @@
  * A component for showing the results of a name request search
  */
 import { computed, onMounted } from 'vue'
-import { type FilterKey, useSearchStore } from '~/store/search'
+import { useSearchStore } from '~/store/search'
 import {
-  Status,
   ConsentRequired,
   Priority,
   ClientNotification,
@@ -131,7 +133,10 @@ import {
 } from '~/enums/filter-dropdowns'
 import { SearchColumns } from '~/enums/search-columns'
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/vue/24/outline'
+
 import { useUserStore } from '~/store/user-cache'
+import { StatusSearchFilter, type FilterKey } from '~/types/search'
+
 
 const NO_DATA_STRING = 'No Data Available'
 
@@ -157,7 +162,7 @@ type ILayout = {
 }
 const layout: ILayout = {
   [SearchColumns.Status]: {
-    dropdown: Object.values(Status)
+    dropdown: Object.values(StatusSearchFilter),
   },
   [SearchColumns.LastModifiedBy]: {
     text_input: 'Username'
@@ -213,6 +218,7 @@ function updateTextInputFilters () {
   for (const headCell of headCells) {
     const filterElement = headCell.children[0]
     if (filterElement?.tagName.toLowerCase() == 'input') {
+      // @ts-ignore
       search.filters[filterElement.id as FilterKey] = (
         filterElement as HTMLInputElement
       ).value

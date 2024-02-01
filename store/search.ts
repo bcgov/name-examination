@@ -1,4 +1,3 @@
-/* eslint-disable require-jsdoc */
 import { DateTime } from 'luxon'
 import { defineStore } from 'pinia'
 import { SearchColumns } from '~/enums/search-columns'
@@ -7,25 +6,17 @@ import {
   ConsentRequired,
   LastUpdate,
   Priority,
-  Status,
   Submitted,
 } from '~/enums/filter-dropdowns'
-import { getFormattedDateFromString } from '~/util/date'
-import { callNamexApi, getNamexApiUrl } from '~/util/namex-api'
-
-type Row = { [column in SearchColumns]: string }
-// a filter key is any search column excluding those that can't be filtered (e.g. nature of business)
-export type FilterKey = Exclude<
-  SearchColumns,
-  SearchColumns.NatureOfBusiness | SearchColumns.LastComment
->
-export type Filters = {
-  [key in FilterKey]: any
-}
+import { getFormattedDateWithTime } from '~/util/date'
+import { getNamexObject, getNamexApiUrl } from '~/util/namex-api'
+import type { NameChoice } from '~/types'
+import { sortNameChoices } from '~/util'
+import { StatusSearchFilter, type Filters, type Row } from '~/types/search'
 
 export const defaultFilters = (): Filters => {
   return {
-    [SearchColumns.Status]: Status.Hold,
+    [SearchColumns.Status]: StatusSearchFilter.Hold,
     [SearchColumns.LastModifiedBy]: '',
     [SearchColumns.NameRequestNumber]: '',
     [SearchColumns.Names]: '',
@@ -56,13 +47,13 @@ export const useSearchStore = defineStore('search', () => {
   const customSubmittedStartDate = ref('')
   const customSubmittedEndDate = ref('')
   const lastSubmittedDateOption = ref(filters.Submitted)
-  const isLoading = ref(false)
+  const isLoading = ref(true)
 
   const formattedSearchParams = computed(() => {
     const params = {
       order: `priorityCd:desc,submittedDate:${submittedDateOrder.value}`,
       queue:
-        filters[SearchColumns.Status] === Status.All
+        filters[SearchColumns.Status] === StatusSearchFilter.All
           ? ''
           : filters[SearchColumns.Status],
       consentOption: filters[SearchColumns.ConsentRequired],
@@ -119,8 +110,12 @@ export const useSearchStore = defineStore('search', () => {
         obj.priorityCd === 'Y' ? 'Priority' : 'Standard',
       [SearchColumns.ClientNotification]:
         obj.furnished === 'Y' ? 'Notified' : 'Not Notified',
-      [SearchColumns.Submitted]: getFormattedDateFromString(obj.submittedDate),
-      [SearchColumns.LastUpdate]: getFormattedDateFromString(obj.lastUpdate),
+      [SearchColumns.Submitted]: getFormattedDateWithTime(
+        obj.submittedDate
+      ),
+      [SearchColumns.LastUpdate]: getFormattedDateWithTime(
+        obj.lastUpdate
+      ),
       [SearchColumns.LastComment]:
         obj.comments.length > 0
           ? obj.comments[obj.comments.length - 1].comment
@@ -130,7 +125,7 @@ export const useSearchStore = defineStore('search', () => {
 
   async function getRows(url: URL): Promise<[numResults: number, rows: Row[]]> {
     try {
-      const data = await callNamexApi(url)
+      const data = await getNamexObject(url)
       return [data.response.numFound, data.nameRequests[0].map(parseRow)]
     } catch (error) {
       console.log(error)
@@ -202,11 +197,23 @@ export const useSearchStore = defineStore('search', () => {
     ],
     async (_state) => {
       selectedPage.value = 1
-      if (filters.Submitted != Submitted.Custom) {
+
+      // if the Submitted filter is set to custom but no custom dates are set yet, then that means
+      // the user selected the custom date option in the dropdown but is still inputting the dates in the dialog.
+      // the table should not update its rows in this scenario
+      if (
+        filters.Submitted === Submitted.Custom &&
+        (customSubmittedStartDate.value === '' ||
+          customSubmittedEndDate.value === '')
+      ) {
+        return
+      }
+      // clear custom date range if submitted date filter is not set to custom
+      if (filters.Submitted !== Submitted.Custom) {
         customSubmittedStartDate.value = ''
         customSubmittedEndDate.value = ''
-        lastSubmittedDateOption.value = filters.Submitted
       }
+      lastSubmittedDateOption.value = filters.Submitted
       await updateRows()
     },
     { deep: true }
@@ -247,12 +254,8 @@ export const useSearchStore = defineStore('search', () => {
   }
 })
 
-interface NameObject {
-  choice: number
-  name: string
-}
-function formatNames(names: Array<NameObject>): string {
-  names.sort((n1, n2) => n1.choice - n2.choice)
+function formatNames(names: Array<NameChoice>): string {
+  sortNameChoices(names)
   let formatted = ''
   for (let name of names) {
     formatted += `${name.choice}. ${name.name}\n`
