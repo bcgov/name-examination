@@ -1,5 +1,6 @@
 {
   "trademarkJSON": {
+    "highlighting": {},
     "names": [
       {
         "application_number": "300000102764600",
@@ -22,7 +23,14 @@
         "score": 78.5403,
         "status": "Registration published"
       }
-    ]
+    ],
+    "response": {
+      "maxScore": 82.06702,
+      "name": "notsosteepcooperative OR not so steep cooperative",
+      "numFound": 3,
+      "rows": "3",
+      "start": 0
+    }
   },
   "historiesJSON": {
     "highlighting": "",
