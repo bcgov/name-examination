@@ -101,13 +101,18 @@ export interface Histories {
   }
 }
 
+export enum ConflictSource {
+  Corp = 'CORP',
+  NameRequest = 'NR',
+}
+
 export interface ConflictListItem {
   text: string
   highlightedText: string
   jurisdiction: string
   nrNumber: string
   startDate: string
-  source: 'CORP' | 'NR'
+  source: ConflictSource
 }
 
 export interface ConflictList {
@@ -296,4 +301,25 @@ export interface NameRequest {
   tradeMark: string | null
   userId: string
   xproJurisdiction: string
+}
+
+export interface SynonymMatchInfo {
+  name_info: {
+    name: string
+    id?: string
+    jurisdiction?: string
+    score?: number
+    source?: ConflictSource
+    start_date?: string
+  }
+  stems: Array<string>
+}
+
+export interface SynonymMatches {
+  names: Array<SynonymMatchInfo>
+  response: {
+    maxScore: number
+    name: string
+    numFound: number
+  }
 }

@@ -83,3 +83,22 @@ export function getEmptyNameChoice(
     comment: null,
   }
 }
+
+/** Sanitize the given query string to remove special characters. */
+export function sanitizeQuery(query: string, exactMatch = false) {
+  const baseSanitized = query
+    .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+    .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+    .replace(/\$/g, 'S')
+    .replace(/¢/g, 'C')
+    .replace(/[\\\/]/g, ' ')
+    .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
+  if (exactMatch) {
+    return baseSanitized
+      .replace(' /', '/')
+      .replace(/[\+\-]{2,}/g, '')
+      .replace(/\s[\+\-]$/, '')
+  } else {
+    return baseSanitized.replace(/[&+\-]/, ' ').replace(/,/g, '')
+  }
+}

@@ -940,7 +940,6 @@ export const useExamineStore = defineStore('examine', () => {
   async function getTrademarks(query: string) {
     const response = await postTrademarks(query)
     const json = (await response.json()) as TrademarksObject
-    console.log(json)
     return json.names
   }
 
@@ -1046,12 +1045,18 @@ export const useExamineStore = defineStore('examine', () => {
 
     resetExaminationArea()
 
-    await conflicts.getAllConflicts(searchQuery, exactPhrase)
     trademarks.value = await getTrademarks(searchQuery)
     histories.value = await getHistories(searchQuery)
     macros.value = await getMacros()
     const conditionsJson = await getConditions(searchQuery)
     conditions.value = parseConditions(conditionsJson)
+
+    await conflicts.initialize(searchQuery, exactPhrase)
+    exactMatchesConflicts.value = conflicts.exactMatches
+    parsedSynonymConflicts.value = conflicts.synonymMatches
+    console.log(parsedSynonymConflicts.value)
+    parsedCOBRSConflicts.value = conflicts.cobrsPhoneticMatches
+    parsedPhoneticConflicts.value = conflicts.phoneticMatches
   }
   // ============================ END OF FIRST HALF ===========================
 
@@ -1067,7 +1072,7 @@ export const useExamineStore = defineStore('examine', () => {
 
   function getShortJurisdiction(jurisdiction: string): string {
     // TODO
-    throw 'unimplemented'
+    return jurisdiction
   }
 
   function resetExaminationArea() {

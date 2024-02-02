@@ -152,3 +152,14 @@ export async function postHistories(query: string) {
 export async function getDecisionReasons() {
   return callNamexApi(getNamexApiUrl(`/requests/decisionreasons`))
 }
+
+export async function getExactMatches(query: string) {
+  const url = getNamexApiUrl('/exact-match')
+  url.searchParams.set('query', query)
+  return callNamexApi(url)
+}
+
+export async function getSynonymMatches(query: string, exactPhrase: string) {
+  const url = getNamexApiUrl(`/requests/synonymbucket/${query}/${exactPhrase}`)
+  return callNamexApi(url)
+}
