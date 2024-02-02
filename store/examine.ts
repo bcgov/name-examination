@@ -945,8 +945,6 @@ export const useExamineStore = defineStore('examine', () => {
   async function getConditions(query: string) {
     const response = await postConditions(query)
     const json = (await response.json()) as ConditionsList
-    // TODO: update type for ConditionsList
-    console.log(json)
     return json
   }
 
@@ -956,8 +954,17 @@ export const useExamineStore = defineStore('examine', () => {
     return json.names
   }
 
-  function parseConditions(data: any): Array<Condition> {
-    return []
+  function parseConditions(data: ConditionsList): Array<Condition> {
+    const conditions = []
+    for (const word of data.restricted_words_conditions) {
+      for (const cond of word.cnd_info) {
+        conditions.push({
+          ...cond,
+          phrase: word.word_info.phrase,
+        })
+      }
+    }
+    return conditions
   }
 
   // ======================== start of todo functions ========================
@@ -1037,7 +1044,6 @@ export const useExamineStore = defineStore('examine', () => {
     histories.value = await getHistories(searchQuery)
     const conditionsJson = await getConditions(searchQuery)
     conditions.value = parseConditions(conditionsJson)
-    // populateConditions(await conditionsJson.json())
   }
   // ============================ END OF FIRST HALF ===========================
 

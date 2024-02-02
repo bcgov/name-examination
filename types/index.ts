@@ -118,24 +118,29 @@ export interface ConflictList {
 }
 
 export interface Condition {
+  id: number
+  phrase: string
+  text: string
   allow_use: 'Y' | 'N'
   consent_required: 'Y' | 'N'
-  id: number
   instructions: string
-  text: string
-  phrase: string
 }
 
 export interface ConditionsList {
-  restricted_words_conditions: [
-    {
-      cnd_info: Array<Condition>
-      word_info: {
-        id: number
-        phrase: string
-      }
+  restricted_words_conditions: Array<{
+    cnd_info: Array<{
+      allow_use: 'Y' | 'N'
+      consent_required: 'Y' | 'N'
+      consenting_body: string
+      id: number
+      instructions: string
+      text: string
+    }>
+    word_info: {
+      id: number
+      phrase: string
     }
-  ]
+  }>
 }
 
 export interface Macro {
