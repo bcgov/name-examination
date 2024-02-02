@@ -1054,8 +1054,8 @@ export const useExamineStore = defineStore('examine', () => {
     await conflicts.initialize(searchQuery, exactPhrase)
     exactMatchesConflicts.value = conflicts.exactMatches
     parsedSynonymConflicts.value = conflicts.synonymMatches
-    console.log(parsedSynonymConflicts.value)
     parsedCOBRSConflicts.value = conflicts.cobrsPhoneticMatches
+    console.log(parsedCOBRSConflicts.value)
     parsedPhoneticConflicts.value = conflicts.phoneticMatches
   }
   // ============================ END OF FIRST HALF ===========================

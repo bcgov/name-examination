@@ -163,3 +163,13 @@ export async function getSynonymMatches(query: string, exactPhrase: string) {
   const url = getNamexApiUrl(`/requests/synonymbucket/${query}/${exactPhrase}`)
   return callNamexApi(url)
 }
+
+export async function getCobrsPhoneticMatches(query: string) {
+  const url = getNamexApiUrl(`/requests/cobrsphonetics/${query}/*`)
+  return callNamexApi(url)
+}
+
+export async function getPhoneticMatches(query: string) {
+  const url = getNamexApiUrl(`/requests/phonetics/${query}/*`)
+  return callNamexApi(url)
+}

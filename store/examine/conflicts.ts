@@ -5,7 +5,12 @@ import type {
   SynonymMatches,
 } from '~/types'
 import { sanitizeQuery } from '~/util'
-import { getExactMatches, getSynonymMatches } from '~/util/namex-api'
+import {
+  getCobrsPhoneticMatches,
+  getExactMatches,
+  getPhoneticMatches,
+  getSynonymMatches,
+} from '~/util/namex-api'
 
 export const useConflicts = defineStore('conflicts', () => {
   const exactMatches = ref<Array<ConflictListItem>>([])
@@ -38,6 +43,7 @@ export const useConflicts = defineStore('conflicts', () => {
 
   async function retrieveSynonymMatches(query: string, exactPhrase: string) {
     // TODO
+    query = query || '*'
     query = sanitizeQuery(query)
     exactPhrase = exactPhrase || '*'
 
@@ -199,21 +205,143 @@ export const useConflicts = defineStore('conflicts', () => {
   }
 
   async function retrieveCobrsPhoneticMatches(
-    query: string,
-    exactPhrase: string
+    query: string
   ): Promise<Array<ConflictList>> {
-    // TODO
+    query = query || '*'
     query = sanitizeQuery(query)
-    return []
+    const response = await getCobrsPhoneticMatches(query)
+    if (response.status !== 200)
+      throw new Error('Unable to retrieve cobrs phonetic matches')
+
+    return parseCobrsPhoneticMatches(await response.json())
+  }
+
+  function parseCobrsPhoneticMatches(json: any): Array<ConflictList> {
+    let cobrsPhoneticConflicts: any[] = []
+    let { names } = json
+    let i = 0
+
+    for (let name of names) {
+      let entry = name.name_info
+      let output
+
+      if (!entry.source) {
+        entry.name = entry.name.replace('----', '')
+        entry.name = entry.name.replace('synonyms:', '')
+        entry.class = 'conflict-cobrs-phonetic-title'
+        output = {
+          class: entry.class,
+          meta: entry.meta,
+          highlightedText: entry.name,
+          text: entry.name,
+          id: `${i}-cobrs`,
+        }
+      } else {
+        entry.class = 'conflict-result'
+        output = {
+          text: entry.name,
+          highlightedText: entry.name,
+          meta: entry.meta,
+          nrNumber: entry.id,
+          source: entry.source,
+          class: entry.class,
+          startDate: entry.start_date,
+          jurisdiction: entry.jurisdiction,
+          id: `${i}-cobrs`,
+        }
+      }
+      cobrsPhoneticConflicts.push(output)
+      i++
+    }
+
+    let output = []
+    let conflictsOnly = []
+    let prevIndex: any
+
+    for (let i = 0; i < cobrsPhoneticConflicts.length; i++) {
+      let match = cobrsPhoneticConflicts[i]
+      if (match.class === 'conflict-cobrs-phonetic-title') {
+        match.children = []
+        match.count = 0
+        output.push(match)
+        prevIndex = output.length - 1
+      } else {
+        conflictsOnly.push(match)
+        output[prevIndex].children.push(match)
+        output[prevIndex].count = output[prevIndex].children.length
+      }
+    }
+    return output
   }
 
   async function retrievePhoneticMatches(
-    query: string,
-    exactPhrase: string
+    query: string
   ): Promise<Array<ConflictList>> {
-    // TODO
+    query = query || '*'
     query = sanitizeQuery(query)
-    return []
+    const response = await getPhoneticMatches(query)
+    if (response.status !== 200)
+      throw new Error('Unable to retrieve phonetic matches')
+
+    return parsePhoneticMatches(await response.json())
+  }
+
+  function parsePhoneticMatches(json: any): Array<ConflictList> {
+    let phoneticConflicts: any[] = []
+    let { names } = json
+    let i = 0
+
+    for (let name of names) {
+      let entry = name.name_info
+      let output
+
+      if (!entry.source) {
+        entry.name = entry.name.replace('----', '')
+        entry.name = entry.name.replace('synonyms:', '')
+        entry.class = 'conflict-phonetic-title'
+        output = {
+          text: entry.name,
+          highlightedText: entry.name,
+          meta: entry.meta,
+          class: entry.class,
+          id: `${i}-phonetic`,
+        }
+      } else {
+        entry.class = 'conflict-result'
+        output = {
+          startDate: entry.start_date,
+          jurisdiction: entry.jurisdiction,
+          text: entry.name,
+          highlightedText: entry.name,
+          meta: entry.meta,
+          nrNumber: entry.id,
+          source: entry.source,
+          class: entry.class,
+          id: `${i}-phonetic`,
+        }
+      }
+      phoneticConflicts.push(output)
+      i++
+    }
+
+    let output = []
+    let conflictsOnly = []
+    let prevIndex: any
+
+    for (let n = 0; n < phoneticConflicts.length; n++) {
+      let match = phoneticConflicts[n]
+      if (match.class === 'conflict-phonetic-title') {
+        match.children = []
+        match.count = 0
+        output.push(match)
+        prevIndex = output.length - 1
+      } else {
+        conflictsOnly.push(match)
+        output[prevIndex].children.push(match)
+        output[prevIndex].count = output[prevIndex].children.length
+      }
+    }
+    return output
   }
 
   async function initialize(searchQuery: string, exactPhrase: string) {
@@ -222,14 +350,8 @@ export const useConflicts = defineStore('conflicts', () => {
       searchQuery,
       exactPhrase
     )
-    cobrsPhoneticMatches.value = await retrieveCobrsPhoneticMatches(
-      searchQuery,
-      exactPhrase
-    )
-    phoneticMatches.value = await retrievePhoneticMatches(
-      searchQuery,
-      exactPhrase
-    )
+    cobrsPhoneticMatches.value = await retrieveCobrsPhoneticMatches(searchQuery)
+    phoneticMatches.value = await retrievePhoneticMatches(searchQuery)
   }
 
   return {

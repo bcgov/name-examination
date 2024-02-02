@@ -118,7 +118,7 @@ export interface ConflictListItem {
 export interface ConflictList {
   text: string
   highlightedText: string
-  meta: string
+  meta: string | undefined
   children: Array<ConflictListItem>
 }
 

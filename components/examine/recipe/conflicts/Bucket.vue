@@ -6,9 +6,13 @@
       :disabled="list.children.length === 0"
     >
       <template #title>
-        <div class="flex w-full font-medium">
-          <span v-html="list.highlightedText"></span>
-          <span class="grow italic">&nbsp;- {{ list.meta.toLowerCase() }}</span>
+        <div class="flex w-full font-medium justify-between">
+          <div>
+            <span v-html="list.highlightedText"></span>
+            <span v-if="list.meta" class="italic">
+              &nbsp;- {{ list.meta.toLowerCase() }}
+            </span>
+          </div>
           <span v-if="list.children.length > 0">
             {{ list.children.length }}
           </span>
