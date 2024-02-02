@@ -302,24 +302,3 @@ export interface NameRequest {
   userId: string
   xproJurisdiction: string
 }
-
-export interface SynonymMatchInfo {
-  name_info: {
-    name: string
-    id?: string
-    jurisdiction?: string
-    score?: number
-    source?: ConflictSource
-    start_date?: string
-  }
-  stems: Array<string>
-}
-
-export interface SynonymMatches {
-  names: Array<SynonymMatchInfo>
-  response: {
-    maxScore: number
-    name: string
-    numFound: number
-  }
-}

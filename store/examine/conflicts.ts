@@ -1,9 +1,5 @@
-import type {
-  ConflictList,
-  ConflictListItem,
-  SynonymMatchInfo,
-  SynonymMatches,
-} from '~/types'
+import type { ConflictList, ConflictListItem } from '~/types'
+import type { ConflictMatchCategory } from '~/types/conflict-match'
 import { sanitizeQuery } from '~/util'
 import {
   getCobrsPhoneticMatches,
@@ -42,7 +38,6 @@ export const useConflicts = defineStore('conflicts', () => {
   }
 
   async function retrieveSynonymMatches(query: string, exactPhrase: string) {
-    // TODO
     query = query || '*'
     query = sanitizeQuery(query)
     exactPhrase = exactPhrase || '*'
@@ -54,7 +49,9 @@ export const useConflicts = defineStore('conflicts', () => {
     return parseSynonymMatches(await response.json())
   }
 
-  function parseSynonymMatches(json: SynonymMatches): Array<ConflictList> {
+  function parseSynonymMatches(
+    json: ConflictMatchCategory
+  ): Array<ConflictList> {
     let entry: any = null
     let name_stems: any[] = []
     let synonym_stems: any = null
@@ -345,7 +342,7 @@ export const useConflicts = defineStore('conflicts', () => {
   }
 
   async function initialize(searchQuery: string, exactPhrase: string) {
-    exactMatches.value = await retrieveExactMatches(searchQuery)
+    exactMatches.value = await retrieveExactMatches('ADA SO')
     synonymMatches.value = await retrieveSynonymMatches(
       searchQuery,
       exactPhrase
