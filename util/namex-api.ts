@@ -148,3 +148,7 @@ export async function postConditions(query: string) {
 export async function postHistories(query: string) {
   return postDocuments('histories', query)
 }
+
+export async function getDecisionReasons() {
+  return callNamexApi(getNamexApiUrl(`/requests/decisionreasons`))
+}

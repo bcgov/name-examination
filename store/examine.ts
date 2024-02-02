@@ -25,6 +25,7 @@ import requestTypeRulesJSON from '~/data/request_type_rules.json'
 import jurisdictionsData from '~/data/jurisdictions.json'
 import { ConsentFlag, RefundState, RequestTypeCode } from '~/enums/codes'
 import {
+  getDecisionReasons,
   getNameRequest,
   getTransactions,
   patchNameRequest,
@@ -93,7 +94,7 @@ export const useExamineStore = defineStore('examine', () => {
   const selectedConflicts = ref<Array<ConflictListItem>>([])
   const comparedConflicts = ref<Array<ConflictListItem>>([])
 
-  const listDecisionReasons = ref<Array<Macro>>([])
+  const macros = ref<Array<Macro>>([])
 
   const trademarks = ref<Array<Trademark>>([])
 
@@ -939,6 +940,7 @@ export const useExamineStore = defineStore('examine', () => {
   async function getTrademarks(query: string) {
     const response = await postTrademarks(query)
     const json = (await response.json()) as TrademarksObject
+    console.log(json)
     return json.names
   }
 
@@ -952,6 +954,11 @@ export const useExamineStore = defineStore('examine', () => {
     const response = await postHistories(query)
     const json = (await response.json()) as Histories
     return json.names
+  }
+
+  async function getMacros(): Promise<Array<Macro>> {
+    const response = await getDecisionReasons()
+    return response.status === 200 ? await response.json() : []
   }
 
   function parseConditions(data: ConditionsList): Array<Condition> {
@@ -1042,6 +1049,7 @@ export const useExamineStore = defineStore('examine', () => {
     await conflicts.getAllConflicts(searchQuery, exactPhrase)
     trademarks.value = await getTrademarks(searchQuery)
     histories.value = await getHistories(searchQuery)
+    macros.value = await getMacros()
     const conditionsJson = await getConditions(searchQuery)
     conditions.value = parseConditions(conditionsJson)
   }
@@ -1135,7 +1143,7 @@ export const useExamineStore = defineStore('examine', () => {
     selectedConditions,
     customerMessageOverride,
     decisionSelectionsDisabled,
-    listDecisionReasons,
+    macros,
     selectedMacros,
     selectedTrademarks,
     requestorMessageStrings,

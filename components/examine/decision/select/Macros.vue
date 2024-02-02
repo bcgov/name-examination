@@ -5,7 +5,7 @@
       multiple
       v-model="examine.selectedMacros"
       :disabled="examine.decisionSelectionsDisabled"
-      :options="examine.listDecisionReasons"
+      :options="examine.macros"
       :options-display="(option: Macro) => option.name"
       options-style="!max-h-48"
     >
