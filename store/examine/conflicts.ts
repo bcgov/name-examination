@@ -213,61 +213,34 @@ export const useConflicts = defineStore('conflicts', () => {
     return parseCobrsPhoneticMatches(await response.json())
   }
 
-  function parseCobrsPhoneticMatches(json: any): Array<ConflictList> {
-    let cobrsPhoneticConflicts: any[] = []
-    let { names } = json
-    let i = 0
-
-    for (let name of names) {
-      let entry = name.name_info
-      let output
-
-      if (!entry.source) {
-        entry.name = entry.name.replace('----', '')
-        entry.name = entry.name.replace('synonyms:', '')
-        entry.class = 'conflict-cobrs-phonetic-title'
-        output = {
-          class: entry.class,
-          meta: entry.meta,
-          highlightedText: entry.name,
-          text: entry.name,
-          id: `${i}-cobrs`,
+  function parseCobrsPhoneticMatches(
+    data: ConflictMatchCategory
+  ): Array<ConflictList> {
+    const output: Array<ConflictList> = []
+    data.names.forEach(({ name_info }) => {
+      if (name_info.source) {
+        const conflict = {
+          text: name_info.name,
+          highlightedText: name_info.name,
+          jurisdiction: name_info.jurisdiction!,
+          nrNumber: name_info.id!,
+          startDate: name_info.start_date!,
+          source: name_info.source,
         }
+        output.at(-1)?.children.push(conflict)
       } else {
-        entry.class = 'conflict-result'
-        output = {
-          text: entry.name,
-          highlightedText: entry.name,
-          meta: entry.meta,
-          nrNumber: entry.id,
-          source: entry.source,
-          class: entry.class,
-          startDate: entry.start_date,
-          jurisdiction: entry.jurisdiction,
-          id: `${i}-cobrs`,
+        name_info.name = name_info.name
+          .replace('----', '')
+          .replace('synonyms:', '')
+        const conflictGroup = {
+          text: name_info.name,
+          highlightedText: name_info.name,
+          meta: undefined,
+          children: <Array<ConflictListItem>>[],
         }
+        output.push(conflictGroup)
       }
-      cobrsPhoneticConflicts.push(output)
-      i++
-    }
-
-    let output = []
-    let conflictsOnly = []
-    let prevIndex: any
-
-    for (let i = 0; i < cobrsPhoneticConflicts.length; i++) {
-      let match = cobrsPhoneticConflicts[i]
-      if (match.class === 'conflict-cobrs-phonetic-title') {
-        match.children = []
-        match.count = 0
-        output.push(match)
-        prevIndex = output.length - 1
-      } else {
-        conflictsOnly.push(match)
-        output[prevIndex].children.push(match)
-        output[prevIndex].count = output[prevIndex].children.length
-      }
-    }
+    })
     return output
   }
 
@@ -342,7 +315,7 @@ export const useConflicts = defineStore('conflicts', () => {
   }
 
   async function initialize(searchQuery: string, exactPhrase: string) {
-    exactMatches.value = await retrieveExactMatches('ADA SO')
+    exactMatches.value = await retrieveExactMatches(searchQuery)
     synonymMatches.value = await retrieveSynonymMatches(
       searchQuery,
       exactPhrase
