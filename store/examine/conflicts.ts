@@ -1,5 +1,9 @@
 import type { ConflictList, ConflictListItem } from '~/types'
-import type { ConflictBucket, ExactMatches } from '~/types/conflict-match'
+import type {
+  ConflictBucket,
+  ConflictBucketItem,
+  ExactMatches,
+} from '~/types/conflict-match'
 import { sanitizeQuery } from '~/util'
 import {
   getCobrsPhoneticMatches,
@@ -27,8 +31,8 @@ export const useConflicts = defineStore('conflicts', () => {
     return parseExactMatches(await response.json())
   }
 
-  function parseExactMatches(data: ExactMatches): Array<ConflictListItem> {
-    return data.names.map((entry) => {
+  function parseExactMatches(bucket: ExactMatches): Array<ConflictListItem> {
+    return bucket.names.map((entry) => {
       return {
         text: entry.name,
         highlightedText: entry.name,
@@ -52,59 +56,45 @@ export const useConflicts = defineStore('conflicts', () => {
     return parseSynonymMatches(await response.json())
   }
 
-  function parseSynonymMatches(json: ConflictBucket): Array<ConflictList> {
-    let entry: any = null
-    let name_stems: any[] = []
+  function parseSynonymMatches(bucket: ConflictBucket): Array<ConflictList> {
     let synonym_stems: any = null
-    let synonymMatchesConflicts: any[] = []
-    let wildcard_stack = false
-    let { names } = json
+    const output: Array<ConflictList> = []
 
-    for (const name of names) {
+    for (const name of bucket.names) {
       // remove any empty string stem values - they are not valid
       name.stems = name.stems.filter((n) => n)
+      const entry = name.name_info
+      const entryMeta = entry.name
+        .substring(entry.name.lastIndexOf('-') + 1)
+        .trim()
+      const wildcardStack = entry.name.lastIndexOf('*') > 0
 
       if (name.name_info.source) {
         //stack conflict
-        entry = name.name_info
         synonym_stems = name.stems
-        entry.class = 'conflict-result'
       } else {
         // stack title
-        name_stems = name.stems
-        entry = name.name_info
 
-        wildcard_stack = entry.name.lastIndexOf('*') > 0
-
-        entry.meta = entry.name
-          .substring(entry.name.lastIndexOf('-') + 1)
-          .trim()
-        entry.class = 'conflict-synonym-title'
         entry.name = entry.name.replace('----', '').toUpperCase()
-        let syn_index = entry.name.indexOf('SYNONYMS:')
+        const syn_index = entry.name.indexOf('SYNONYMS:')
         if (syn_index !== -1) {
-          let last_bracket_indx = entry.name.lastIndexOf(')')
-          let synonym_clause = entry.name.substring(
+          const last_bracket_indx = entry.name.lastIndexOf(')')
+          const synonym_clause = entry.name.substring(
             syn_index + 10,
             last_bracket_indx
           )
-          let synonym_list = synonym_clause.split(',')
+          const synonym_list = synonym_clause.split(',')
 
-          for (let syn = 0; syn < synonym_list.length; syn++) {
-            for (let wrd = 0; wrd < name_stems.length; wrd++) {
-              if (
-                synonym_list[syn]
-                  .toUpperCase()
-                  .includes(name_stems[wrd].toUpperCase())
-              ) {
-                name_stems.splice(wrd, 1)
-                wrd--
+          for (const synonym of synonym_list) {
+            for (const stem of name.stems) {
+              if (synonym.toUpperCase().includes(stem.toUpperCase())) {
+                name.stems.filter((s) => s !== stem)
               }
             }
             entry.name = entry.name.replace(
-              synonym_list[syn].toUpperCase(),
+              synonym.toUpperCase(),
               '<span class="synonym-stem-highlight">' +
-                synonym_list[syn].toUpperCase() +
+                synonym.toUpperCase() +
                 '</span>'
             )
           }
@@ -113,86 +103,57 @@ export const useConflicts = defineStore('conflicts', () => {
         entry.name = entry.name.substring(0, entry.name.lastIndexOf('-')).trim()
       }
       entry.name = ' ' + entry.name
-      let k = 0
-      for (k = 0; k < name_stems.length; k++) {
-        if (!wildcard_stack) {
+
+      for (const name_stem of name.stems) {
+        if (!wildcardStack) {
           entry.name = entry.name.replace(
-            ' ' + name_stems[k].toUpperCase(),
+            ' ' + name_stem.toUpperCase(),
             '<span class="stem-highlight">' +
               ' ' +
-              name_stems[k].toUpperCase() +
+              name_stem.toUpperCase() +
               '</span>'
           )
         }
-        if (
-          synonym_stems != undefined &&
-          synonym_stems.indexOf(name_stems[k].toUpperCase()) != -1
-        ) {
-          synonym_stems.splice(
-            synonym_stems.indexOf(name_stems[k].toUpperCase()),
-            1
-          )
-        }
-      }
-      if (synonym_stems != undefined) {
-        for (let k = 0; k < synonym_stems.length; k++) {
-          entry.name = entry.name.replace(
-            ' ' + synonym_stems[k].toUpperCase(),
-            '<span class="synonym-stem-highlight">' +
-              ' ' +
-              synonym_stems[k].toUpperCase() +
-              '</span>'
-          )
-        }
-      }
-      let output
-      if (entry.class === 'conflict-result') {
-        output = {
-          text: entry.name
-            .replace(
-              /<SPAN CLASS="SYNONYM\-STEM\-HIGHLIGHT">|<SPAN CLASS="STEM\-HIGHLIGHT">|<\/SPAN>/gi,
-              ''
+        if (synonym_stems) {
+          if (synonym_stems.indexOf(name_stem.toUpperCase()) != -1) {
+            synonym_stems.splice(
+              synonym_stems.indexOf(name_stem.toUpperCase()),
+              1
             )
-            .trim(),
+          }
+
+          for (const synonym_stem of synonym_stems) {
+            entry.name = entry.name.replace(
+              ' ' + synonym_stem.toUpperCase(),
+              '<span class="synonym-stem-highlight">' +
+                ' ' +
+                synonym_stem.toUpperCase() +
+                '</span>'
+            )
+          }
+        }
+      }
+
+      const htmlRegex =
+        /<SPAN CLASS="SYNONYM\-STEM\-HIGHLIGHT">|<SPAN CLASS="STEM\-HIGHLIGHT">|<\/SPAN>/gi
+      if (entry.source) {
+        const match = {
+          text: entry.name.replace(htmlRegex, '').trim(),
           highlightedText: entry.name.trim(),
-          meta: entry.meta,
-          nrNumber: entry.id,
-          startDate: entry.start_date,
-          jurisdiction: entry.jurisdiction,
+          jurisdiction: entry.jurisdiction!,
+          nrNumber: entry.id!,
+          startDate: entry.start_date!,
           source: entry.source,
-          class: entry.class,
         }
+        output.at(-1)?.children.push(match)
       } else {
-        output = {
-          text: entry.name
-            .replace(
-              /<SPAN CLASS="SYNONYM\-STEM\-HIGHLIGHT">|<SPAN CLASS="STEM\-HIGHLIGHT">|<\/SPAN>/gi,
-              ''
-            )
-            .trim(),
+        const match = {
+          text: entry.name.replace(htmlRegex, '').trim(),
           highlightedText: entry.name.trim(),
-          meta: entry.meta,
-          class: entry.class,
+          meta: entryMeta,
+          children: [],
         }
-      }
-      synonymMatchesConflicts.push(output)
-    }
-
-    let output = []
-    let conflictsOnly = []
-    let prevIndex: any
-
-    for (let i = 0; i < synonymMatchesConflicts.length; i++) {
-      let match = synonymMatchesConflicts[i]
-      if (match.class === 'conflict-synonym-title') {
-        match.children = []
-        match.count = 0
         output.push(match)
-        prevIndex = output.length - 1
-      } else {
-        conflictsOnly.push(match)
-        output[prevIndex].children.push(match)
-        output[prevIndex].count = output[prevIndex].children.length
       }
     }
     return output
@@ -222,9 +183,9 @@ export const useConflicts = defineStore('conflicts', () => {
     return parsePhoneticMatches(await response.json())
   }
 
-  function parsePhoneticMatches(data: ConflictBucket): Array<ConflictList> {
+  function parsePhoneticMatches(bucket: ConflictBucket): Array<ConflictList> {
     const output: Array<ConflictList> = []
-    data.names.forEach(({ name_info }) => {
+    bucket.names.forEach(({ name_info }) => {
       if (name_info.source) {
         const conflict = {
           text: name_info.name,
@@ -252,7 +213,7 @@ export const useConflicts = defineStore('conflicts', () => {
   }
 
   async function initialize(searchQuery: string, exactPhrase: string) {
-    exactMatches.value = await retrieveExactMatches('ADA SO')
+    exactMatches.value = await retrieveExactMatches(searchQuery)
     synonymMatches.value = await retrieveSynonymMatches(
       searchQuery,
       exactPhrase
