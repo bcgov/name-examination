@@ -3,7 +3,6 @@ import type {
   Trademark,
   Comment,
   Condition,
-  ConflictList,
   ConflictListItem,
   CorpConflict,
   Histories,
@@ -64,11 +63,6 @@ export const useExamineStore = defineStore('examine', () => {
   )
   const examiner = ref<string>()
   const isCurrentExaminer = computed(() => examiner.value === userId.value)
-
-  const exactMatchesConflicts = ref<Array<ConflictListItem>>([])
-  const parsedSynonymConflicts = ref<Array<ConflictList>>([])
-  const parsedCOBRSConflicts = ref<Array<ConflictList>>([])
-  const parsedPhoneticConflicts = ref<Array<ConflictList>>([])
 
   const decisionFunctionalityDisabled = computed(
     () =>
@@ -1014,10 +1008,7 @@ export const useExamineStore = defineStore('examine', () => {
 
   async function resetValues() {
     resetExaminationArea()
-    exactMatchesConflicts.value = []
-    parsedSynonymConflicts.value = []
-    parsedCOBRSConflicts.value = []
-    parsedPhoneticConflicts.value = []
+    conflicts.$reset()
     corpConflictJSON.value = undefined
     namesConflictJSON.value = undefined
     conditions.value = []
@@ -1052,10 +1043,6 @@ export const useExamineStore = defineStore('examine', () => {
     conditions.value = parseConditions(conditionsJson)
 
     await conflicts.initialize(searchQuery, exactPhrase)
-    exactMatchesConflicts.value = conflicts.exactMatches
-    parsedSynonymConflicts.value = conflicts.synonymMatches
-    parsedCOBRSConflicts.value = conflicts.cobrsPhoneticMatches
-    parsedPhoneticConflicts.value = conflicts.phoneticMatches
   }
   // ============================ END OF FIRST HALF ===========================
 
@@ -1131,10 +1118,6 @@ export const useExamineStore = defineStore('examine', () => {
     requestTypeRules,
     requestActionCd,
     entityTypeCd,
-    parsedCOBRSConflicts,
-    exactMatchesConflicts,
-    parsedSynonymConflicts,
-    parsedPhoneticConflicts,
     corpConflictJSON,
     namesConflictJSON,
     histories,

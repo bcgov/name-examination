@@ -45,15 +45,17 @@
 import { DocumentDuplicateIcon } from '@heroicons/vue/24/outline'
 import { TabList } from '@headlessui/vue'
 import { useExamineStore } from '~/store/examine'
+import { useConflicts } from '~/store/examine/conflicts'
 
 const examine = useExamineStore()
+const conflicts = useConflicts()
 
 const conflictsIconType = computed(() =>
   [
-    examine.parsedCOBRSConflicts,
-    examine.exactMatchesConflicts,
-    examine.parsedSynonymConflicts,
-    examine.parsedPhoneticConflicts,
+    conflicts.cobrsPhoneticMatches,
+    conflicts.exactMatches,
+    conflicts.synonymMatches,
+    conflicts.phoneticMatches,
   ].some((arr) => arr.length > 0)
     ? 'error'
     : 'ok'
@@ -74,9 +76,7 @@ const conditionsIconType = computed(() => {
 })
 
 const trademarksIconType = computed(() => {
-  return !examine.trademarks || examine.trademarks.length === 0
-    ? 'ok'
-    : 'error'
+  return !examine.trademarks || examine.trademarks.length === 0 ? 'ok' : 'error'
 })
 
 const historyIconType = computed(() => {

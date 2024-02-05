@@ -29,8 +29,11 @@
 
 <script setup lang="ts">
 import { useExamineStore } from '~/store/examine'
+import { useConflicts } from '~/store/examine/conflicts';
 import type { Conflict, ConflictListItem } from '~/types'
+
 const examine = useExamineStore()
+const conflicts = useConflicts()
 
 const options = computed<Array<Conflict | ConflictListItem>>(() => {
   if (!examine.conflictsAutoAdd) {
@@ -38,10 +41,10 @@ const options = computed<Array<Conflict | ConflictListItem>>(() => {
   }
 
   const allConflicts = [
-    ...examine.exactMatchesConflicts,
-    ...examine.parsedSynonymConflicts.map((c) => c.children).flat(),
-    ...examine.parsedCOBRSConflicts.map((c) => c.children).flat(),
-    ...examine.parsedPhoneticConflicts.map((c) => c.children).flat(),
+    ...conflicts.exactMatches,
+    ...conflicts.synonymMatches.map((c) => c.children).flat(),
+    ...conflicts.cobrsPhoneticMatches.map((c) => c.children).flat(),
+    ...conflicts.phoneticMatches.map((c) => c.children).flat(),
   ]
 
   const seenNRs: Array<string> = []

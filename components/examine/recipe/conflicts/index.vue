@@ -11,8 +11,8 @@
         <template #title>Exact match</template>
         <template #content>
           <ExamineRecipeConflictsList
-            v-if="examine.exactMatchesConflicts.length > 0"
-            :conflict-items="examine.exactMatchesConflicts"
+            v-if="conflicts.exactMatches.length > 0"
+            :conflict-items="conflicts.exactMatches"
           />
           <span v-else class="p-1">No exact match</span>
         </template>
@@ -23,7 +23,7 @@
         <template #content>
           <ExamineRecipeConflictsBucket
             v-if="conflicts.synonymMatches.length > 0"
-            :conflict-lists="examine.parsedSynonymConflicts"
+            :conflict-lists="conflicts.synonymMatches"
           />
           <span v-else class="p-1">No results</span>
         </template>
@@ -34,8 +34,8 @@
 
         <template #content>
           <ExamineRecipeConflictsBucket
-            v-if="examine.parsedCOBRSConflicts.length > 0"
-            :conflict-lists="examine.parsedCOBRSConflicts"
+            v-if="conflicts.cobrsPhoneticMatches.length > 0"
+            :conflict-lists="conflicts.cobrsPhoneticMatches"
           />
           <span v-else class="p-1">No results</span>
         </template>
@@ -46,8 +46,8 @@
 
         <template #content>
           <ExamineRecipeConflictsBucket
-            v-if="examine.parsedPhoneticConflicts.length > 0"
-            :conflict-lists="examine.parsedPhoneticConflicts"
+            v-if="conflicts.phoneticMatches.length > 0"
+            :conflict-lists="conflicts.phoneticMatches"
           />
           <span v-else class="p-1">No results</span>
         </template>
@@ -57,8 +57,6 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
 import { useConflicts } from '~/store/examine/conflicts'
-const examine = useExamineStore()
 const conflicts = useConflicts()
 </script>

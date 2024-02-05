@@ -222,6 +222,14 @@ export const useConflicts = defineStore('conflicts', () => {
     loading.value = false
   }
 
+  function $reset() {
+    exactMatches.value = []
+    synonymMatches.value = []
+    cobrsPhoneticMatches.value = []
+    phoneticMatches.value = []
+    loading.value = false
+  }
+
   return {
     initialize,
     exactMatches,
@@ -229,5 +237,6 @@ export const useConflicts = defineStore('conflicts', () => {
     cobrsPhoneticMatches,
     phoneticMatches,
     loading,
+    $reset,
   }
 })
