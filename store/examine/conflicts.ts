@@ -1,9 +1,5 @@
 import type { ConflictList, ConflictListItem } from '~/types'
-import type {
-  ConflictBucket,
-  ConflictBucketItem,
-  ExactMatches,
-} from '~/types/conflict-match'
+import type { ConflictBucket, ExactMatches } from '~/types/conflict-match'
 import { sanitizeQuery } from '~/util'
 import {
   getCobrsPhoneticMatches,
@@ -17,6 +13,8 @@ export const useConflicts = defineStore('conflicts', () => {
   const synonymMatches = ref<Array<ConflictList>>([])
   const cobrsPhoneticMatches = ref<Array<ConflictList>>([])
   const phoneticMatches = ref<Array<ConflictList>>([])
+
+  const loading = ref(false)
 
   async function retrieveExactMatches(
     query: string
@@ -213,6 +211,7 @@ export const useConflicts = defineStore('conflicts', () => {
   }
 
   async function initialize(searchQuery: string, exactPhrase: string) {
+    loading.value = true
     exactMatches.value = await retrieveExactMatches(searchQuery)
     synonymMatches.value = await retrieveSynonymMatches(
       searchQuery,
@@ -220,6 +219,7 @@ export const useConflicts = defineStore('conflicts', () => {
     )
     cobrsPhoneticMatches.value = await retrieveCobrsPhoneticMatches(searchQuery)
     phoneticMatches.value = await retrievePhoneticMatches(searchQuery)
+    loading.value = false
   }
 
   return {
@@ -228,5 +228,6 @@ export const useConflicts = defineStore('conflicts', () => {
     synonymMatches,
     cobrsPhoneticMatches,
     phoneticMatches,
+    loading,
   }
 })

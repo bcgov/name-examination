@@ -8,7 +8,7 @@
         class="mt-2 h-[29rem] overflow-auto rounded-md border border-gray-300 bg-white"
       >
         <!-- Conflicts tab -->
-        <TabPanel ref="conflicts" :unmount="false">
+        <TabPanel class="h-full" ref="conflicts" :unmount="false">
           <ExamineRecipeConflicts />
         </TabPanel>
 

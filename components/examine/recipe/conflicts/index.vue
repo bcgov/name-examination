@@ -1,6 +1,12 @@
 <template>
-  <div class="w-full">
-    <div class="flex w-full flex-col space-y-2 rounded-md bg-white p-2">
+  <div class="h-full w-full">
+    <div
+      v-if="conflicts.loading"
+      class="flex h-full items-center justify-center"
+    >
+      <LoadingSpinner />
+    </div>
+    <div v-else class="flex w-full flex-col space-y-2 rounded-md bg-white p-2">
       <Accordion open arrow button-style="bg-gray-200 p-2 hover:bg-gray-300">
         <template #title>Exact match</template>
         <template #content>
@@ -16,7 +22,7 @@
         <template #title>Exact Word Order + Synonym Match</template>
         <template #content>
           <ExamineRecipeConflictsBucket
-            v-if="examine.parsedSynonymConflicts.length > 0"
+            v-if="conflicts.synonymMatches.length > 0"
             :conflict-lists="examine.parsedSynonymConflicts"
           />
           <span v-else class="p-1">No results</span>
@@ -52,5 +58,7 @@
 
 <script setup lang="ts">
 import { useExamineStore } from '~/store/examine'
+import { useConflicts } from '~/store/examine/conflicts'
 const examine = useExamineStore()
+const conflicts = useConflicts()
 </script>
