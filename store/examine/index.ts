@@ -39,7 +39,7 @@ import { getEmptyNameChoice, sortNameChoices } from '~/util'
 import { DateTime } from 'luxon'
 import { fromMappedRequestType } from '~/util/request-type'
 import { getDateFromDateTime, parseDate } from '~/util/date'
-import { useConflicts } from './examine/conflicts'
+import { useConflicts } from './conflicts'
 
 export const useExamineStore = defineStore('examine', () => {
   const conflicts = useConflicts()

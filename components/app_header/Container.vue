@@ -11,13 +11,13 @@
         </nuxt-link>
       </div>
 
-      <div v-if="authenticated" class="ml-3 flex gap-10 text-bcgov-blue5">
+      <div class="ml-3 flex gap-10 text-bcgov-blue5">
         <AppHeaderNavLink text="Admin" :route="Route.Admin" />
         <AppHeaderNavLink text="Examine Names" :route="Route.Examine" />
         <AppHeaderNavLink text="Search" :route="Route.Search" />
       </div>
 
-      <div v-if="authenticated" class="ml-auto flex items-center">
+      <div class="ml-auto flex items-center">
         <SearchInput
           v-model="searchText"
           class="mx-3"
@@ -46,25 +46,15 @@
           </a>
         </div>
       </div>
-
-      <div v-else class="mx-5">
-        <IconButton class="font-medium">
-          <ArrowRightOnRectangleIcon class="h-6" />
-          Login
-        </IconButton>
-      </div>
     </div>
   </nav>
 </template>
 
 <script setup lang="ts">
-import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/solid'
-import { useExamineOptionsStore } from '~/store/examine-options'
+import { useExamineOptionsStore } from '~/store/examine/options'
 import { Route } from '~/enums/routes'
 
 const { $auth, $userProfile } = useNuxtApp()
-
-const authenticated = computed(() => $auth.authenticated)
 
 const examineOptions = useExamineOptionsStore()
 
