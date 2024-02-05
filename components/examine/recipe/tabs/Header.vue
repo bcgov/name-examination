@@ -33,7 +33,7 @@
         class="h-4 w-4"
         type="checkbox"
         id="auto-add"
-        v-model="examine.conflictsAutoAdd"
+        v-model="conflicts.autoAdd"
         :disabled="examine.autoAddDisabled"
       />
       <span>auto add</span>

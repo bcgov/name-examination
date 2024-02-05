@@ -71,22 +71,17 @@ export const useExamineStore = defineStore('examine', () => {
       !isCurrentExaminer.value ||
       !is_making_decision.value
   )
-
-  const conflictsAutoAdd = ref<boolean>(true)
   const autoAddDisabled = computed(
     () =>
       decisionFunctionalityDisabled.value ||
-      selectedConflicts.value.length > 0 ||
-      comparedConflicts.value.length > 0
+      conflicts.selectedConflicts.length > 0 ||
+      conflicts.comparedConflicts.length > 0
   )
 
   const internalComments = ref<Array<Comment>>([])
 
   const corpConflictJSON = ref<CorpConflict>()
   const namesConflictJSON = ref<NameRequestConflict>()
-
-  const selectedConflicts = ref<Array<ConflictListItem>>([])
-  const comparedConflicts = ref<Array<ConflictListItem>>([])
 
   const macros = ref<Array<Macro>>([])
 
@@ -151,10 +146,13 @@ export const useExamineStore = defineStore('examine', () => {
   )
 
   const conflictMessages = computed(() => {
-    if (selectedConflicts.value.length === 0 && consentRequiredByUser.value) {
+    if (
+      conflicts.selectedConflicts.length === 0 &&
+      consentRequiredByUser.value
+    ) {
       return ['Consent Required \n']
     } else {
-      return selectedConflicts.value.map((conflict) =>
+      return conflicts.selectedConflicts.map((conflict) =>
         consentRequiredByUser.value
           ? `Consent required from ${conflict.text}`
           : `Rejected due to conflict with ${conflict.text}`
@@ -602,10 +600,10 @@ export const useExamineStore = defineStore('examine', () => {
 
   /** Populate the currently examining name choice with selected conflicts and decision text. */
   function populateNameChoice(choice: NameChoice) {
-    if (selectedConflicts.value.length > 0) {
+    if (conflicts.selectedConflicts.length > 0) {
       // Populate the current name object's conflicts
       for (const n of [0, 1, 2]) {
-        const conflict = selectedConflicts.value[n]
+        const conflict = conflicts.selectedConflicts[n]
         if (conflict == null) break
 
         switch (n) {
@@ -658,7 +656,7 @@ export const useExamineStore = defineStore('examine', () => {
         currentNameObj.value.state = Status.Approved
         // If there were conflicts selected but this is an approval, remove the selected conflicts.
         // Do NOT clear the conflicts if the "Consent Required" condition is also set - then it's intentional.
-        selectedConflicts.value = []
+        conflicts.clearSelectedConflicts()
       }
     } else {
       currentNameObj.value.state = Status.Rejected
@@ -825,7 +823,7 @@ export const useExamineStore = defineStore('examine', () => {
   async function getNextCompany() {
     await resetValues()
     await getpostgrescompNo()
-    resetConflictList()
+    conflicts.resetConflictList()
   }
 
   async function edit() {
@@ -844,12 +842,12 @@ export const useExamineStore = defineStore('examine', () => {
   async function holdRequest() {
     is_making_decision.value = false
     await updateNRState(Status.Hold)
-    resetConflictList()
+    conflicts.resetConflictList()
   }
 
   function clearSelectedDecisionReasons() {
+    conflicts.clearSelectedConflicts()
     selectedConditions.value = []
-    selectedConflicts.value = []
     selectedMacros.value = []
     selectedTrademarks.value = []
   }
@@ -860,7 +858,7 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   function resetNrDecision() {
-    resetConflictList()
+    conflicts.resetConflictList()
     clearSelectedDecisionReasons()
 
     nr_status.value = Status.InProgress
@@ -908,26 +906,6 @@ export const useExamineStore = defineStore('examine', () => {
         return getCorpConflict(item.nrNumber)
       case 'NR':
         return getNamesConflict(item.nrNumber)
-    }
-  }
-
-  function selectConflict(conflict: ConflictListItem) {
-    comparedConflicts.value.push(conflict)
-    if (conflictsAutoAdd.value) {
-      selectedConflicts.value.push(conflict)
-    }
-  }
-
-  function deselectConflict(conflict: ConflictListItem) {
-    const notConflict = (c: ConflictListItem) => c !== conflict
-    selectedConflicts.value = selectedConflicts.value.filter(notConflict)
-    comparedConflicts.value = comparedConflicts.value.filter(notConflict)
-  }
-
-  /** Keep compared conflicts synchronized with selected conflicts when auto add is enabled. */
-  function syncSelectedAndComparedConflicts() {
-    if (conflictsAutoAdd.value) {
-      comparedConflicts.value = selectedConflicts.value.slice()
     }
   }
 
@@ -1021,11 +999,6 @@ export const useExamineStore = defineStore('examine', () => {
     is_header_shown.value = false
   }
 
-  function resetConflictList() {
-    selectedConflicts.value = []
-    comparedConflicts.value = []
-  }
-
   async function getpostgrescompInfo(nrNumber: string) {
     const response = await getNameRequest(nrNumber)
     await loadCompanyInfo(await response.json())
@@ -1098,11 +1071,9 @@ export const useExamineStore = defineStore('examine', () => {
   return {
     priority,
     is_complete,
-    conflictsAutoAdd,
     examiner,
     isCurrentExaminer,
     trademarks,
-    selectedConflicts,
 
     internalComments,
     isClosed,
@@ -1124,7 +1095,6 @@ export const useExamineStore = defineStore('examine', () => {
     autoAddDisabled,
     decisionFunctionalityDisabled,
     conditions,
-    comparedConflicts,
     historiesInfoJSON,
     consentRequiredByUser,
     selectedConditions,
@@ -1213,7 +1183,6 @@ export const useExamineStore = defineStore('examine', () => {
     setRequestType,
     getpostgrescompNo,
     resetValues,
-    resetConflictList,
     getNextCompany,
     edit,
     holdRequest,
@@ -1223,9 +1192,6 @@ export const useExamineStore = defineStore('examine', () => {
     postComment,
     cancelNr,
     getConflictData,
-    selectConflict,
-    deselectConflict,
-    syncSelectedAndComparedConflicts,
   }
 })
 

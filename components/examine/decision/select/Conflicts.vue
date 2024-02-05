@@ -2,23 +2,23 @@
   <div>
     <h3 class="font-semibold">Conflicts</h3>
     <ListSelect
-      v-model="examine.selectedConflicts"
+      v-model="conflicts.selectedConflicts"
       :options="options"
       multiple
       options-style="!max-h-48"
       :options-display="(option: Conflict | ConflictListItem) => option.text"
       :disabled="examine.decisionSelectionsDisabled"
-      @change="(_) => examine.syncSelectedAndComparedConflicts()"
+      @change="(_) => conflicts.syncSelectedAndComparedConflicts()"
     >
       <Chips
-        v-if="examine.selectedConflicts.length > 0"
-        v-model="examine.selectedConflicts"
+        v-if="conflicts.selectedConflicts.length > 0"
+        v-model="conflicts.selectedConflicts"
         :display="(conflict: Conflict) => conflict.text"
-        @chip-removed="examine.syncSelectedAndComparedConflicts()"
+        @chip-removed="conflicts.syncSelectedAndComparedConflicts()"
       />
       <template #no-data>
         {{
-          examine.conflictsAutoAdd
+          conflicts.autoAdd
             ? 'No conflicts'
             : 'No conflicts selected (and auto add is off)'
         }}
@@ -36,8 +36,8 @@ const examine = useExamineStore()
 const conflicts = useConflicts()
 
 const options = computed<Array<Conflict | ConflictListItem>>(() => {
-  if (!examine.conflictsAutoAdd) {
-    return examine.comparedConflicts
+  if (!conflicts.autoAdd) {
+    return conflicts.comparedConflicts
   }
 
   const allConflicts = [

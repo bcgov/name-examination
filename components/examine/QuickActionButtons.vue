@@ -31,14 +31,17 @@
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/vue/24/solid'
 import { Status } from '~/enums/nr-status'
 import { useExamineStore } from '~/store/examine'
+import { useConflicts } from '~/store/examine/conflicts';
+
 const examine = useExamineStore()
+const conflicts = useConflicts()
 
 async function quickApprove() {
   if (examine.consentRequiredByUser) {
     examine.forceConditional = true
     await examine.makeDecision(Status.Approved)
   } else {
-    examine.selectedConflicts = []
+    conflicts.clearSelectedConflicts()
     await examine.makeQuickDecision(Status.Approved, '')
   }
 }

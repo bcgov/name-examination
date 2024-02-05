@@ -16,6 +16,10 @@ export const useConflicts = defineStore('conflicts', () => {
 
   const loading = ref(false)
 
+  const selectedConflicts = ref<Array<ConflictListItem>>([])
+  const comparedConflicts = ref<Array<ConflictListItem>>([])
+  const autoAdd = ref(true)
+
   async function retrieveExactMatches(
     query: string
   ): Promise<Array<ConflictListItem>> {
@@ -222,12 +226,41 @@ export const useConflicts = defineStore('conflicts', () => {
     loading.value = false
   }
 
-  function $reset() {
+  function clearSelectedConflicts() {
+    selectedConflicts.value = []
+  }
+
+  function resetMatches() {
     exactMatches.value = []
     synonymMatches.value = []
     cobrsPhoneticMatches.value = []
     phoneticMatches.value = []
     loading.value = false
+  }
+
+  function resetConflictList() {
+    selectedConflicts.value = []
+    comparedConflicts.value = []
+  }
+
+  function selectConflict(conflict: ConflictListItem) {
+    comparedConflicts.value.push(conflict)
+    if (autoAdd.value) {
+      selectedConflicts.value.push(conflict)
+    }
+  }
+
+  function deselectConflict(conflict: ConflictListItem) {
+    const notConflict = (c: ConflictListItem) => c !== conflict
+    selectedConflicts.value = selectedConflicts.value.filter(notConflict)
+    comparedConflicts.value = comparedConflicts.value.filter(notConflict)
+  }
+
+  /** Keep compared conflicts synchronized with selected conflicts when auto add is enabled. */
+  function syncSelectedAndComparedConflicts() {
+    if (autoAdd.value) {
+      comparedConflicts.value = selectedConflicts.value.slice()
+    }
   }
 
   return {
@@ -236,7 +269,15 @@ export const useConflicts = defineStore('conflicts', () => {
     synonymMatches,
     cobrsPhoneticMatches,
     phoneticMatches,
+    selectedConflicts,
+    comparedConflicts,
     loading,
-    $reset,
+    resetMatches,
+    clearSelectedConflicts,
+    resetConflictList,
+    selectConflict,
+    deselectConflict,
+    autoAdd,
+    syncSelectedAndComparedConflicts,
   }
 })

@@ -38,10 +38,12 @@
 
 <script setup lang="ts">
 import { useExamineStore } from '~/store/examine'
+import { useConflicts } from '~/store/examine/conflicts';
 import type { Conflict, ConflictListItem } from '~/types'
 import { getFormattedDate } from '~/util/date'
 
 const examine = useExamineStore()
+const conflicts = useConflicts()
 
 const isLoading = ref(false)
 
@@ -50,9 +52,9 @@ const { conflictItem } = defineProps<{
 }>()
 
 const isChecked = computed(() => {
-  const conflictsList = examine.conflictsAutoAdd
-    ? examine.selectedConflicts
-    : examine.comparedConflicts
+  const conflictsList = conflicts.autoAdd
+    ? conflicts.selectedConflicts
+    : conflicts.comparedConflicts
   return conflictsList.map((c) => c.nrNumber).includes(conflictItem.nrNumber)
 })
 
@@ -74,9 +76,9 @@ async function onAccordionToggle(isOpen: boolean) {
 
 function toggleConflictCheckbox(checked: boolean) {
   if (checked) {
-    examine.selectConflict(conflictItem)
+    conflicts.selectConflict(conflictItem)
   } else {
-    examine.deselectConflict(conflictItem)
+    conflicts.deselectConflict(conflictItem)
   }
 }
 </script>
