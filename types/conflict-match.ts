@@ -1,8 +1,8 @@
 import type { ConflictSource } from '.'
 
-export interface ConflictMatchCategory {
+export interface ConflictBucket {
   highlighting: Array<unknown>
-  names: Array<ConflictName>
+  names: Array<ConflictBucketItem>
   response: {
     maxScore: number
     name: string
@@ -10,7 +10,7 @@ export interface ConflictMatchCategory {
   }
 }
 
-export interface ConflictName {
+export interface ConflictBucketItem {
   name_info: {
     name: string
     id?: string
@@ -20,4 +20,16 @@ export interface ConflictName {
     start_date?: string
   }
   stems: Array<string>
+}
+
+export interface ExactMatches {
+  names: Array<ExactMatchName>
+}
+
+export interface ExactMatchName {
+  id: string
+  jurisdiction: string
+  name: string
+  source: ConflictSource
+  start_date: string
 }

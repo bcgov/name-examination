@@ -1,5 +1,5 @@
 import type { ConflictList, ConflictListItem } from '~/types'
-import type { ConflictMatchCategory } from '~/types/conflict-match'
+import type { ConflictBucket, ExactMatches } from '~/types/conflict-match'
 import { sanitizeQuery } from '~/util'
 import {
   getCobrsPhoneticMatches,
@@ -27,9 +27,8 @@ export const useConflicts = defineStore('conflicts', () => {
     return parseExactMatches(await response.json())
   }
 
-  function parseExactMatches(data: any): Array<ConflictListItem> {
-    const names = data.names as Array<any>
-    return names.map((entry) => {
+  function parseExactMatches(data: ExactMatches): Array<ConflictListItem> {
+    return data.names.map((entry) => {
       return {
         text: entry.name,
         highlightedText: entry.name,
@@ -53,9 +52,7 @@ export const useConflicts = defineStore('conflicts', () => {
     return parseSynonymMatches(await response.json())
   }
 
-  function parseSynonymMatches(
-    json: ConflictMatchCategory
-  ): Array<ConflictList> {
+  function parseSynonymMatches(json: ConflictBucket): Array<ConflictList> {
     let entry: any = null
     let name_stems: any[] = []
     let synonym_stems: any = null
@@ -63,21 +60,19 @@ export const useConflicts = defineStore('conflicts', () => {
     let wildcard_stack = false
     let { names } = json
 
-    for (let i = 0; i < names.length; i++) {
+    for (const name of names) {
       // remove any empty string stem values - they are not valid
-      names[i].stems = names[i].stems.filter(function (elem) {
-        return elem != ''
-      })
+      name.stems = name.stems.filter((n) => n)
 
-      if (names[i].name_info.source) {
+      if (name.name_info.source) {
         //stack conflict
-        entry = names[i].name_info
-        synonym_stems = names[i].stems
+        entry = name.name_info
+        synonym_stems = name.stems
         entry.class = 'conflict-result'
       } else {
         // stack title
-        name_stems = names[i].stems
-        entry = names[i].name_info
+        name_stems = name.stems
+        entry = name.name_info
 
         wildcard_stack = entry.name.lastIndexOf('*') > 0
 
@@ -166,7 +161,6 @@ export const useConflicts = defineStore('conflicts', () => {
           jurisdiction: entry.jurisdiction,
           source: entry.source,
           class: entry.class,
-          id: `${i}-synonym`,
         }
       } else {
         output = {
@@ -179,7 +173,6 @@ export const useConflicts = defineStore('conflicts', () => {
           highlightedText: entry.name.trim(),
           meta: entry.meta,
           class: entry.class,
-          id: `${i}-synonym`,
         }
       }
       synonymMatchesConflicts.push(output)
@@ -229,9 +222,7 @@ export const useConflicts = defineStore('conflicts', () => {
     return parsePhoneticMatches(await response.json())
   }
 
-  function parsePhoneticMatches(
-    data: ConflictMatchCategory
-  ): Array<ConflictList> {
+  function parsePhoneticMatches(data: ConflictBucket): Array<ConflictList> {
     const output: Array<ConflictList> = []
     data.names.forEach(({ name_info }) => {
       if (name_info.source) {
@@ -261,7 +252,7 @@ export const useConflicts = defineStore('conflicts', () => {
   }
 
   async function initialize(searchQuery: string, exactPhrase: string) {
-    exactMatches.value = await retrieveExactMatches(searchQuery)
+    exactMatches.value = await retrieveExactMatches('ADA SO')
     synonymMatches.value = await retrieveSynonymMatches(
       searchQuery,
       exactPhrase
