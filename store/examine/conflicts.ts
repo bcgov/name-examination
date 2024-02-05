@@ -24,7 +24,11 @@ export const useConflicts = defineStore('conflicts', () => {
     if (response.status !== 200)
       throw new Error('Unable to retrieve exact matches')
 
-    const names = (await response.json()).names as Array<any>
+    return parseExactMatches(await response.json())
+  }
+
+  function parseExactMatches(data: any): Array<ConflictListItem> {
+    const names = data.names as Array<any>
     return names.map((entry) => {
       return {
         text: entry.name,
@@ -210,10 +214,22 @@ export const useConflicts = defineStore('conflicts', () => {
     if (response.status !== 200)
       throw new Error('Unable to retrieve cobrs phonetic matches')
 
-    return parseCobrsPhoneticMatches(await response.json())
+    return parsePhoneticMatches(await response.json())
   }
 
-  function parseCobrsPhoneticMatches(
+  async function retrievePhoneticMatches(
+    query: string
+  ): Promise<Array<ConflictList>> {
+    query = query || '*'
+    query = sanitizeQuery(query)
+    const response = await getPhoneticMatches(query)
+    if (response.status !== 200)
+      throw new Error('Unable to retrieve phonetic matches')
+
+    return parsePhoneticMatches(await response.json())
+  }
+
+  function parsePhoneticMatches(
     data: ConflictMatchCategory
   ): Array<ConflictList> {
     const output: Array<ConflictList> = []
@@ -241,76 +257,6 @@ export const useConflicts = defineStore('conflicts', () => {
         output.push(conflictGroup)
       }
     })
-    return output
-  }
-
-  async function retrievePhoneticMatches(
-    query: string
-  ): Promise<Array<ConflictList>> {
-    query = query || '*'
-    query = sanitizeQuery(query)
-    const response = await getPhoneticMatches(query)
-    if (response.status !== 200)
-      throw new Error('Unable to retrieve phonetic matches')
-
-    return parsePhoneticMatches(await response.json())
-  }
-
-  function parsePhoneticMatches(json: any): Array<ConflictList> {
-    let phoneticConflicts: any[] = []
-    let { names } = json
-    let i = 0
-
-    for (let name of names) {
-      let entry = name.name_info
-      let output
-
-      if (!entry.source) {
-        entry.name = entry.name.replace('----', '')
-        entry.name = entry.name.replace('synonyms:', '')
-        entry.class = 'conflict-phonetic-title'
-        output = {
-          text: entry.name,
-          highlightedText: entry.name,
-          meta: entry.meta,
-          class: entry.class,
-          id: `${i}-phonetic`,
-        }
-      } else {
-        entry.class = 'conflict-result'
-        output = {
-          startDate: entry.start_date,
-          jurisdiction: entry.jurisdiction,
-          text: entry.name,
-          highlightedText: entry.name,
-          meta: entry.meta,
-          nrNumber: entry.id,
-          source: entry.source,
-          class: entry.class,
-          id: `${i}-phonetic`,
-        }
-      }
-      phoneticConflicts.push(output)
-      i++
-    }
-
-    let output = []
-    let conflictsOnly = []
-    let prevIndex: any
-
-    for (let n = 0; n < phoneticConflicts.length; n++) {
-      let match = phoneticConflicts[n]
-      if (match.class === 'conflict-phonetic-title') {
-        match.children = []
-        match.count = 0
-        output.push(match)
-        prevIndex = output.length - 1
-      } else {
-        conflictsOnly.push(match)
-        output[prevIndex].children.push(match)
-        output[prevIndex].count = output[prevIndex].children.length
-      }
-    }
     return output
   }
 
