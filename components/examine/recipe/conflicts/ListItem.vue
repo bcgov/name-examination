@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import { useExamineStore } from '~/store/examine'
-import { useConflicts } from '~/store/examine/conflicts';
+import { useConflicts } from '~/store/examine/conflicts'
 import type { Conflict, ConflictListItem } from '~/types'
 import { getFormattedDate } from '~/util/date'
 
@@ -69,7 +69,7 @@ const conflictData = computed<Conflict | undefined>(() =>
 async function onAccordionToggle(isOpen: boolean) {
   if (isOpen) {
     isLoading.value = true
-    await examine.getConflictInfo(conflictItem)
+    await examine.updateConflictInfo(conflictItem)
     isLoading.value = false
   }
 }

@@ -121,10 +121,6 @@ export async function getBusiness(corpNum: string) {
   return callNamexApi(getNamexApiUrl(`/businesses/${corpNum}`))
 }
 
-export async function getCorporation(corpNum: string) {
-  return callNamexApi(getNamexApiUrl(`/corporations/${corpNum}`))
-}
-
 async function postDocuments(resource: string, query: string) {
   const url = getNamexApiUrl(`/documents:${resource}`)
   return callNamexApi(
@@ -172,4 +168,18 @@ export async function getCobrsPhoneticMatches(query: string) {
 export async function getPhoneticMatches(query: string) {
   const url = getNamexApiUrl(`/requests/phonetics/${query}/*`)
   return callNamexApi(url)
+}
+
+export async function getNextNrNumber(isPriority: boolean) {
+  return callNamexApi(
+    getNamexApiUrl(`/queues/@me/oldest?priorityQueue=${isPriority}`)
+  )
+}
+
+export async function getCorporation(corpNum: string) {
+  return callNamexApi(getNamexApiUrl(`/corporations/${corpNum}`))
+}
+
+export async function getPaymentsData(paymentId: string) {
+  return callNamexApi(getNamexApiUrl(`/payments/${paymentId}`))
 }

@@ -1,22 +1,23 @@
 import { Status } from '~/enums/nr-status'
-import type {
-  Trademark,
-  Comment,
-  Condition,
-  ConflictListItem,
-  CorpConflict,
-  Histories,
-  Macro,
-  NameRequestConflict,
-  TrademarksObject,
-  NameChoice,
-  RequestType,
-  RequestTypeRule,
-  Jurisdiction,
-  TransactionItem,
-  NameRequest,
-  HistoryEntry,
-  ConditionsList,
+import {
+  type Trademark,
+  type Comment,
+  type Condition,
+  type ConflictListItem,
+  type CorpConflict,
+  type Histories,
+  type Macro,
+  type NameRequestConflict,
+  type TrademarksObject,
+  type NameChoice,
+  type RequestType,
+  type RequestTypeRule,
+  type Jurisdiction,
+  type TransactionItem,
+  type NameRequest,
+  type HistoryEntry,
+  type ConditionsList,
+  ConflictSource,
 } from '~/types'
 
 import requestTypes from '~/data/request_types.json'
@@ -24,8 +25,11 @@ import requestTypeRulesJSON from '~/data/request_type_rules.json'
 import jurisdictionsData from '~/data/jurisdictions.json'
 import { ConsentFlag, RefundState, RequestTypeCode } from '~/enums/codes'
 import {
+  getCorporation,
   getDecisionReasons,
   getNameRequest,
+  getNextNrNumber,
+  getPaymentsData,
   getTransactions,
   patchNameRequest,
   postConditions,
@@ -48,7 +52,7 @@ export const useExamineStore = defineStore('examine', () => {
   const userId = ref(useNuxtApp().$userProfile.username)
   const userRoles = ref(useNuxtApp().$auth.realmAccess?.roles ?? [])
 
-  const priority = ref<'Y' | 'N'>('N')
+  const priority = ref<boolean>(false)
   const is_complete = computed(() =>
     [
       Status.Approved,
@@ -507,7 +511,7 @@ export const useExamineStore = defineStore('examine', () => {
     internalComments.value = info.comments
 
     examiner.value = info.userId
-    priority.value = info.priorityCd
+    priority.value = info.priorityCd === 'Y'
 
     if (info.expirationDate) {
       const parsedExpirationDate = parseDate(info.expirationDate)
@@ -528,17 +532,15 @@ export const useExamineStore = defineStore('examine', () => {
     await getPayments()
   }
 
-  async function getConflictInfo(item: ConflictListItem) {
+  async function updateConflictInfo(conflict: ConflictListItem) {
     corpConflictJSON.value = undefined
     namesConflictJSON.value = undefined
-    // const conflict = conflicts.value.filter(
-    //   (conflict) => conflict.nrNumber === item.nrNumber
-    // )[0]
-    // if (item.source === 'CORP') {
-    //   corpConflictJSON.value = conflict as CorpConflict
-    // } else {
-    //   namesConflictJSON.value = conflict as NameRequestConflict
-    // }
+    const data = await getConflictData(conflict)
+    if (conflict.source === ConflictSource.Corp) {
+      corpConflictJSON.value = data as CorpConflict
+    } else {
+      namesConflictJSON.value = data as NameRequestConflict
+    }
   }
 
   function isUndoable(name: NameChoice): boolean {
@@ -900,7 +902,7 @@ export const useExamineStore = defineStore('examine', () => {
     editActions.forEach((ea) => ea.cancel())
   }
 
-  function getConflictData(item: ConflictListItem) {
+  async function getConflictData(item: ConflictListItem) {
     switch (item.source) {
       case 'CORP':
         return getCorpConflict(item.nrNumber)
@@ -1025,35 +1027,61 @@ export const useExamineStore = defineStore('examine', () => {
 
   // ========================== START OF SECOND HALF ==========================
 
-  async function getpostgrescompNo() {
-    // TODO
+  async function getpostgrescompNo(): Promise<string> {
+    const response = await getNextNrNumber(priority.value)
+    const json = await response.json()
+    return json.nameRequest
   }
 
   function getShortJurisdiction(jurisdiction: string): string {
-    // TODO
-    return jurisdiction
+    jurisdiction = jurisdiction.toUpperCase()
+    if (jurisdiction.length === 2) return jurisdiction
+
+    let index
+    const textIndex = listJurisdictions.value.findIndex(
+      (opt) => opt.text === jurisdiction
+    )
+    if (textIndex >= 0) index = textIndex
+    const shortIndex = listJurisdictions.value.findIndex(
+      (opt) => opt.short_desc === jurisdiction
+    )
+    if (shortIndex >= 0) index = shortIndex
+
+    if (typeof index === 'number') {
+      return listJurisdictions.value[index].value
+    }
+
+    return '?'
   }
 
   function resetExaminationArea() {
-    // TODO
+    conflicts.resetConflictList()
+    conflicts.autoAdd = true
+    consentRequiredByUser.value = false
+    customerMessageOverride.value = undefined
+    // resetDecision()
   }
 
-  async function getHistoryInfo(nrNumber: string) {
-    // TODO
+  async function getHistoryInfo(nrNumber: string): Promise<Histories> {
+    const response = await getNameRequest(nrNumber)
+    return response.json()
   }
 
-  function getCorpConflict(nrNumber: string): CorpConflict {
-    // TODO
-    throw 'unimplemented'
+  async function getCorpConflict(corpNum: string): Promise<CorpConflict> {
+    const response = await getCorporation(corpNum)
+    return response.json()
   }
 
-  function getNamesConflict(nrNumber: string): NameRequestConflict {
-    // TODO
-    throw 'unimplemented'
+  async function getNamesConflict(
+    nrNumber: string
+  ): Promise<NameRequestConflict> {
+    const response = await getNameRequest(nrNumber)
+    return response.json()
   }
 
   async function getPayments() {
-    // TODO
+    // const response = await getPaymentsData('0')
+    // return response.json()
   }
 
   // ======================== end of todo functions ========================
@@ -1165,7 +1193,7 @@ export const useExamineStore = defineStore('examine', () => {
     addEditAction,
     isUndoable,
     getHistoryInfo,
-    getConflictInfo,
+    updateConflictInfo,
     getShortJurisdiction,
     makeDecision,
     undoNameChoiceDecision,

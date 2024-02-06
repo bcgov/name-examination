@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-1 py-1 text-sm">
     <div
-      v-if="examine.priority === 'Y'"
+      v-if="examine.priority"
       class="flex items-center font-bold text-red-600"
     >
       <StarIcon class="h-4 w-4" />
