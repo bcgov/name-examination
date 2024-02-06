@@ -25,7 +25,7 @@ import jurisdictionsData from '~/data/jurisdictions.json'
 import {
   ConsentFlag,
   EntityTypeCode,
-  RefundState,
+  RefundMessage,
   RequestActionCode,
   RequestTypeCode,
 } from '~/enums/codes'
@@ -232,7 +232,7 @@ export const useExamineStore = defineStore('mock-examine', () => {
   const pendingTransactionRequest = ref(false)
   const transactionsData = ref<Array<TransactionItem>>()
 
-  const refundPaymentState = ref<RefundState>()
+  const refundPaymentState = ref<RefundMessage>()
 
   const submittedDate = ref('2008-09-16, 4:44pm')
   const corpNum = ref<string>()

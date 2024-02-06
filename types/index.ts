@@ -2,6 +2,8 @@ import type {
   ClassTypeCode,
   ConsentFlag,
   EntityTypeCode,
+  PaymentMethod,
+  RefundStatus,
   RequestActionCode,
   RequestTypeCode,
 } from '~/enums/codes'
@@ -301,4 +303,14 @@ export interface NameRequest {
   tradeMark: string | null
   userId: string
   xproJurisdiction: string
+}
+
+export interface Payment {
+  sbcPayment: {
+    paid: number
+    refund: number
+    statusCode: RefundStatus
+    paymentMethod: PaymentMethod
+  }
+  refund: number
 }

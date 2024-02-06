@@ -23,13 +23,12 @@ import {
 import requestTypes from '~/data/request_types.json'
 import requestTypeRulesJSON from '~/data/request_type_rules.json'
 import jurisdictionsData from '~/data/jurisdictions.json'
-import { ConsentFlag, RefundState, RequestTypeCode } from '~/enums/codes'
+import { ConsentFlag, RefundMessage, RequestTypeCode } from '~/enums/codes'
 import {
   getCorporation,
   getDecisionReasons,
   getNameRequest,
   getNextNrNumber,
-  getPaymentsData,
   getTransactions,
   patchNameRequest,
   postConditions,
@@ -44,9 +43,11 @@ import { DateTime } from 'luxon'
 import { fromMappedRequestType } from '~/util/request-type'
 import { getDateFromDateTime, parseDate } from '~/util/date'
 import { useConflicts } from './conflicts'
+import { usePayments } from './payments'
 
 export const useExamineStore = defineStore('examine', () => {
   const conflicts = useConflicts()
+  const payments = usePayments()
 
   /** Username of the current user */
   const userId = ref(useNuxtApp().$userProfile.username)
@@ -231,8 +232,6 @@ export const useExamineStore = defineStore('examine', () => {
 
   const pendingTransactionRequest = ref<boolean>()
   const transactionsData = ref<Array<TransactionItem>>()
-
-  const refundPaymentState = ref<RefundState>()
 
   const submittedDate = ref<DateTime>()
   const corpNum = ref<string>()
@@ -529,7 +528,7 @@ export const useExamineStore = defineStore('examine', () => {
       is_making_decision.value = true
     }
 
-    await getPayments()
+    payments.initialize(info.id)
   }
 
   async function updateConflictInfo(conflict: ConflictListItem) {
@@ -947,8 +946,6 @@ export const useExamineStore = defineStore('examine', () => {
     return conditions
   }
 
-  // ======================== start of todo functions ========================
-
   async function updateNRState(state: Status) {
     if (state === Status.Draft && nr_status.value === Status.InProgress) {
       is_making_decision.value = false
@@ -1019,13 +1016,6 @@ export const useExamineStore = defineStore('examine', () => {
 
     await conflicts.initialize(searchQuery, exactPhrase)
   }
-  // ============================ END OF FIRST HALF ===========================
-
-  // ============================ START OF STUBBED HELPERS ===========================
-
-  // ============================= END OF STUBBED HELPERS ============================
-
-  // ========================== START OF SECOND HALF ==========================
 
   async function getpostgrescompNo(): Promise<string> {
     const response = await getNextNrNumber(priority.value)
@@ -1056,10 +1046,10 @@ export const useExamineStore = defineStore('examine', () => {
 
   function resetExaminationArea() {
     conflicts.resetConflictList()
+    clearSelectedDecisionReasons()
     conflicts.autoAdd = true
     consentRequiredByUser.value = false
     customerMessageOverride.value = undefined
-    // resetDecision()
   }
 
   async function getHistoryInfo(nrNumber: string): Promise<Histories> {
@@ -1078,13 +1068,6 @@ export const useExamineStore = defineStore('examine', () => {
     const response = await getNameRequest(nrNumber)
     return response.json()
   }
-
-  async function getPayments() {
-    // const response = await getPaymentsData('0')
-    // return response.json()
-  }
-
-  // ======================== end of todo functions ========================
 
   watch(
     () => [nrNumber],
@@ -1157,7 +1140,6 @@ export const useExamineStore = defineStore('examine', () => {
     consumedBy,
     transactionsData,
     expiryDate,
-    refundPaymentState,
     submittedDate,
     corpNum,
     corpNumRequired,

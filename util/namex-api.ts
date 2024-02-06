@@ -180,6 +180,6 @@ export async function getCorporation(corpNum: string) {
   return callNamexApi(getNamexApiUrl(`/corporations/${corpNum}`))
 }
 
-export async function getPaymentsData(paymentId: string) {
-  return callNamexApi(getNamexApiUrl(`/payments/${paymentId}`))
+export async function getPayments(id: number) {
+  return callNamexApi(getNamexApiUrl(`/payments/${id}`))
 }

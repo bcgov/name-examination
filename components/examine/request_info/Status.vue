@@ -26,7 +26,10 @@
 import { StarIcon } from '@heroicons/vue/24/solid'
 import { Status } from '~/enums/nr-status'
 import { useExamineStore } from '~/store/examine'
+import { usePayments } from '~/store/examine/payments'
+
 const examine = useExamineStore()
+const payments = usePayments()
 
 const additionalStatus = computed(() => {
   const approvedName = examine.nameChoices.find((name) =>
@@ -45,7 +48,7 @@ const additionalStatus = computed(() => {
   }
 
   if (examine.nr_status == Status.RefundRequested) {
-    return `CANCELLED - ${examine.refundPaymentState}`
+    return `CANCELLED - ${payments.refundPaymentState}`
   }
 
   return examine.nr_status
