@@ -80,10 +80,17 @@
         >
           <td
             v-for="column in selectedColumns"
-            :key="column"
             class="whitespace-pre-line border-b border-gray-300 px-2 py-2"
           >
-            <p class="line-clamp-4">
+            <!-- For the NR number column, show a link -->
+            <NuxtLink
+              class="text-blue-800 hover:text-blue-500"
+              v-if="column === SearchColumns.NameRequestNumber"
+              :to="`${Route.Examine}/${row[column].replaceAll(' ', '')}`"
+            >
+              {{ row[column] }}
+            </NuxtLink>
+            <p v-else class="line-clamp-4">
               {{ row[column] }}
             </p>
           </td>
@@ -125,6 +132,7 @@ import {
 import { SearchColumns } from '~/enums/search-columns'
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/vue/24/outline'
 import { StatusSearchFilter, type FilterKey } from '~/types/search'
+import { Route } from '~/enums/routes'
 
 const NO_DATA_STRING = 'No Data Available'
 

@@ -8,10 +8,9 @@ import { useExamineStore } from '~/store/examine'
 useHead({ title: 'BC Registry: Name Examination - Examine Name Request' })
 
 const examine = useExamineStore()
+
 onMounted(async () => {
-  const route = useRoute()
-  const nrParam = route.params.nr as string
-  const nrNumber = `${nrParam.substring(0, 2)} ${nrParam.substring(2)}`
+  const nrNumber = await examine.getpostgrescompNo()
   await examine.initialize(nrNumber)
 })
 </script>
