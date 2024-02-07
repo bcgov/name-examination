@@ -86,7 +86,7 @@
             <NuxtLink
               class="text-blue-800 hover:text-blue-500"
               v-if="column === SearchColumns.NameRequestNumber"
-              :to="`${Route.Examine}/${row[column].replaceAll(' ', '')}`"
+              :to="`${Route.Examine}?nr=${row[column].split(' ')[1]}`"
             >
               {{ row[column] }}
             </NuxtLink>

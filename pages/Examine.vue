@@ -39,6 +39,7 @@
 
 <script setup lang="ts">
 import { Status } from '~/enums/nr-status'
+import { Route } from '~/enums/routes'
 import { useExamineStore } from '~/store/examine'
 const examine = useExamineStore()
 
@@ -58,4 +59,22 @@ const showDecisionPanel = computed(
 const reservedOrCondReserved = computed(() =>
   [Status.ConditionalReserved, Status.Reserved].includes(examine.nr_status)
 )
+
+onMounted(async () => {
+  const route = useRoute()
+  const nrParam = route.query.nr
+  if (nrParam) {
+    const nrNumber = `NR ${nrParam}`
+    await examine.initialize(nrNumber)
+  } else {
+    if (!examine.nrNumber) {
+      const nrNumber = await examine.getpostgrescompNo()
+      await examine.initialize(nrNumber)
+    }
+    navigateTo({
+      path: Route.Examine,
+      query: { nr: examine.nrNumber.split(' ')[1] },
+    })
+  }
+})
 </script>
