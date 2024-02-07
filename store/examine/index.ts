@@ -1069,23 +1069,20 @@ export const useExamineStore = defineStore('examine', () => {
     return response.json()
   }
 
-  watch(
-    () => [nrNumber],
-    async (_state) => {
-      await getpostgrescompInfo(nrNumber.value)
-      await setNewExaminer()
-      updateRequestTypeRules(requestTypeObject.value)
-    },
-    { deep: true }
-  )
+  async function initialize(newNrNumber: string) {
+    nrNumber.value = newNrNumber
+    await getpostgrescompInfo(newNrNumber)
+    await setNewExaminer()
+    updateRequestTypeRules(requestTypeObject.value)
+  }
 
   return {
+    initialize,
     priority,
     is_complete,
     examiner,
     isCurrentExaminer,
     trademarks,
-
     internalComments,
     isClosed,
     is_editing,

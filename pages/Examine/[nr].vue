@@ -60,4 +60,11 @@ const showDecisionPanel = computed(
 const reservedOrCondReserved = computed(() =>
   [Status.ConditionalReserved, Status.Reserved].includes(examine.nr_status)
 )
+
+onMounted(() => {
+  const route = useRoute()
+  const nrParam = route.params.nr as string
+  const nrNumber = `${nrParam.substring(0, 2)} ${nrParam.substring(2)}`
+  examine.initialize(nrNumber)
+})
 </script>

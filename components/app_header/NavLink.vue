@@ -19,7 +19,7 @@ const { route } = defineProps<{
   route: Route
 }>()
 
-const highlight = computed(
-  () => useRoute().path.toString().toLowerCase() === route.toLowerCase()
+const highlight = computed(() =>
+  useRoute().path.toString().toLowerCase().startsWith(route.toLowerCase())
 )
 </script>
