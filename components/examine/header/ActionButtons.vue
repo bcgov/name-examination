@@ -110,9 +110,9 @@ import {
   XMarkIcon,
 } from '@heroicons/vue/24/outline'
 import { Status } from '~/enums/nr-status'
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
 
-const examine = useExamineStore()
+const examine = useExamination()
 const showCancelRequestDialog = ref(false)
 
 const showButtons = computed(

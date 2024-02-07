@@ -19,8 +19,8 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
 import type { Macro } from '~/types'
 
-const examine = useExamineStore()
+const examine = useExamination()
 </script>

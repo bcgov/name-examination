@@ -44,10 +44,10 @@
 <script setup lang="ts">
 import { DocumentDuplicateIcon } from '@heroicons/vue/24/outline'
 import { TabList } from '@headlessui/vue'
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
 import { useConflicts } from '~/store/examine/conflicts'
 
-const examine = useExamineStore()
+const examine = useExamination()
 const conflicts = useConflicts()
 
 const conflictsIconType = computed(() =>

@@ -30,10 +30,10 @@
 <script setup lang="ts">
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/vue/24/solid'
 import { Status } from '~/enums/nr-status'
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
 import { useConflicts } from '~/store/examine/conflicts';
 
-const examine = useExamineStore()
+const examine = useExamination()
 const conflicts = useConflicts()
 
 async function quickApprove() {

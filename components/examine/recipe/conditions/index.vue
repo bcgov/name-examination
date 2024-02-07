@@ -13,8 +13,8 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
-const examine = useExamineStore()
+import { useExamination } from '~/store/examine'
+const examine = useExamination()
 const rows = computed(() =>
   examine.conditions.map((item) => [
     item.phrase,

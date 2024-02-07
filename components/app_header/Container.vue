@@ -51,12 +51,12 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineOptionsStore } from '~/store/examine/options'
+import { useExaminationOptions } from '~/store/examine/options'
 import { Route } from '~/enums/routes'
 
 const { $auth, $userProfile } = useNuxtApp()
 
-const examineOptions = useExamineOptionsStore()
+const examineOptions = useExaminationOptions()
 
 const searchText = ref('')
 </script>

@@ -71,8 +71,8 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
-const examine = useExamineStore()
+import { useExamination } from '~/store/examine'
+const examine = useExamination()
 
 const clientFirstName = ref(examine.clientFirstName)
 const clientLastName = ref(examine.clientLastName)

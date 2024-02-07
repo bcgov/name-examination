@@ -34,7 +34,7 @@ import { sortNameChoices } from '~/util'
 import { DateTime } from 'luxon'
 import { fromMappedRequestType } from '~/util/request-type'
 
-export const useExamineStore = defineStore('mock-examine', () => {
+export const useMockExamination = defineStore('mock-examine', () => {
   const mock = mockJson
 
   /** Username of the current user */
@@ -952,5 +952,5 @@ export const useExamineStore = defineStore('mock-examine', () => {
 })
 
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useExamineStore, import.meta.hot))
+  import.meta.hot.accept(acceptHMRUpdate(useMockExamination, import.meta.hot))
 }

@@ -23,7 +23,7 @@ import {
 import requestTypes from '~/data/request_types.json'
 import requestTypeRulesJSON from '~/data/request_type_rules.json'
 import jurisdictionsData from '~/data/jurisdictions.json'
-import { ConsentFlag, RefundMessage, RequestTypeCode } from '~/enums/codes'
+import { ConsentFlag, RequestTypeCode } from '~/enums/codes'
 import {
   getCorporation,
   getDecisionReasons,
@@ -44,9 +44,9 @@ import { fromMappedRequestType } from '~/util/request-type'
 import { getDateFromDateTime, parseDate } from '~/util/date'
 import { useConflicts } from './conflicts'
 import { usePayments } from './payments'
-import { useExamineOptionsStore } from './options'
+import { useExaminationOptions } from './options'
 
-export const useExamineStore = defineStore('examine', () => {
+export const useExamination = defineStore('examine', () => {
   const conflicts = useConflicts()
   const payments = usePayments()
 
@@ -1019,7 +1019,7 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   async function getpostgrescompNo(): Promise<string> {
-    const priorityQueue = useExamineOptionsStore().priorityQueue
+    const priorityQueue = useExaminationOptions().priorityQueue
     const response = await getNextNrNumber(priorityQueue)
     const json = await response.json()
     return json.nameRequest
@@ -1205,5 +1205,5 @@ export const useExamineStore = defineStore('examine', () => {
 })
 
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useExamineStore, import.meta.hot))
+  import.meta.hot.accept(acceptHMRUpdate(useExamination, import.meta.hot))
 }

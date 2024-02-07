@@ -71,10 +71,10 @@
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 import { ChatBubbleLeftIcon } from '@heroicons/vue/24/outline'
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
 import { parseDate } from '~/util/date'
 
-const examine = useExamineStore()
+const examine = useExamination()
 
 const popoverButton = ref<HTMLButtonElement | null>(null)
 const buttonElem = computed(

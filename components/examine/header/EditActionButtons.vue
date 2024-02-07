@@ -19,10 +19,10 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
 import { ArrowPathIcon, CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 
-const examine = useExamineStore()
+const examine = useExamination()
 
 const savingEdit = ref(false)
 

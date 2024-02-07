@@ -12,10 +12,10 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
 import { useConflicts } from '~/store/examine/conflicts'
 import type { Conflict } from '~/types'
-const examine = useExamineStore()
+const examine = useExamination()
 const conflicts = useConflicts()
 
 const comparedConflictsData = ref<Array<Conflict>>([])

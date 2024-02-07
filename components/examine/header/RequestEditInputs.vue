@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
 import type { RequestType } from '~/types'
 import {
   corpExists,
@@ -71,7 +71,7 @@ import {
   nrExists,
 } from '~/util'
 
-const examine = useExamineStore()
+const examine = useExamination()
 
 const selectedRequestType = ref(examine.requestTypeObject)
 

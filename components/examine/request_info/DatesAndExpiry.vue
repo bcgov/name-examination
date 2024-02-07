@@ -95,10 +95,10 @@
 <script setup lang="ts">
 import { ConsentFlag } from '~/enums/codes'
 import { Status } from '~/enums/nr-status'
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
 import { getDateFromDateTime, getDateWithTimeFromDateTime, getFormattedDate, parseDate } from '~/util/date'
 
-const examine = useExamineStore()
+const examine = useExamination()
 
 const expiry = ref<string>()
 const consentFlag = ref<ConsentFlag>()

@@ -14,9 +14,9 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
 import type { NameChoice } from '~/types'
-const examine = useExamineStore()
+const examine = useExamination()
 
 const isCurrent = (choice: number) => examine.currentChoice === choice
 

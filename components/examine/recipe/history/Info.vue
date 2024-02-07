@@ -66,9 +66,9 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
 
-const examine = useExamineStore()
+const examine = useExamination()
 
 const histories = computed(() => examine.historiesInfoJSON)
 const applicants = computed(() => histories.value?.applicants)

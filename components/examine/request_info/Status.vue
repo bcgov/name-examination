@@ -25,10 +25,10 @@
 <script setup lang="ts">
 import { StarIcon } from '@heroicons/vue/24/solid'
 import { Status } from '~/enums/nr-status'
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
 import { usePayments } from '~/store/examine/payments'
 
-const examine = useExamineStore()
+const examine = useExamination()
 const payments = usePayments()
 
 const additionalStatus = computed(() => {

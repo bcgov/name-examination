@@ -10,14 +10,14 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
 
 const props = defineProps<{
   jurisdiction?: string
   jurisdictionNumber?: string
 }>()
 
-const examine = useExamineStore()
+const examine = useExamination()
 
 const jurisdictionDisplay = computed(() => {
   let text = props.jurisdiction
