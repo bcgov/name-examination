@@ -44,6 +44,7 @@ import { fromMappedRequestType } from '~/util/request-type'
 import { getDateFromDateTime, parseDate } from '~/util/date'
 import { useConflicts } from './conflicts'
 import { usePayments } from './payments'
+import { useExamineOptionsStore } from './options'
 
 export const useExamineStore = defineStore('examine', () => {
   const conflicts = useConflicts()
@@ -1018,7 +1019,8 @@ export const useExamineStore = defineStore('examine', () => {
   }
 
   async function getpostgrescompNo(): Promise<string> {
-    const response = await getNextNrNumber(priority.value)
+    const priorityQueue = useExamineOptionsStore().priorityQueue
+    const response = await getNextNrNumber(priorityQueue)
     const json = await response.json()
     return json.nameRequest
   }
