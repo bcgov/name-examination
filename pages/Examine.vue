@@ -70,11 +70,9 @@ onMounted(async () => {
     if (!examine.nrNumber) {
       const nrNumber = await examine.getpostgrescompNo()
       await examine.initialize(nrNumber)
+    } else {
+      await examine.updateRoute()
     }
-    navigateTo({
-      path: Route.Examine,
-      query: { nr: examine.nrNumber.split(' ')[1] },
-    })
   }
 })
 </script>

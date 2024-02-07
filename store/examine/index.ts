@@ -45,6 +45,7 @@ import { getDateFromDateTime, parseDate } from '~/util/date'
 import { useConflicts } from './conflicts'
 import { usePayments } from './payments'
 import { useExaminationOptions } from './options'
+import { Route } from '~/enums/routes'
 
 export const useExamination = defineStore('examine', () => {
   const conflicts = useConflicts()
@@ -823,9 +824,10 @@ export const useExamination = defineStore('examine', () => {
   }
 
   async function getNextCompany() {
-    await resetValues()
-    await getpostgrescompNo()
+    resetValues()
     conflicts.resetConflictList()
+    const nextNr = await getpostgrescompNo()
+    await initialize(nextNr)
   }
 
   async function edit() {
@@ -984,9 +986,9 @@ export const useExamination = defineStore('examine', () => {
     }
   }
 
-  async function resetValues() {
+  function resetValues() {
     resetExaminationArea()
-    conflicts.$reset()
+    conflicts.resetMatches()
     corpConflictJSON.value = undefined
     namesConflictJSON.value = undefined
     conditions.value = []
@@ -1071,8 +1073,16 @@ export const useExamination = defineStore('examine', () => {
     return response.json()
   }
 
+  async function updateRoute() {
+    await navigateTo({
+      path: Route.Examine,
+      query: { nr: nrNumber.value.split(' ')[1] },
+    })
+  }
+
   async function initialize(newNrNumber: string) {
     nrNumber.value = newNrNumber
+    await updateRoute()
     await getpostgrescompInfo(newNrNumber)
     await setNewExaminer()
     updateRequestTypeRules(requestTypeObject.value)
@@ -1080,6 +1090,7 @@ export const useExamination = defineStore('examine', () => {
 
   return {
     initialize,
+    updateRoute,
     priority,
     is_complete,
     examiner,
