@@ -172,7 +172,7 @@ export async function getPhoneticMatches(query: string) {
 
 export async function getNextNrNumber(isPriority: boolean) {
   return callNamexApi(
-    getNamexApiUrl(`/queues/@me/oldest?priorityQueue=${isPriority}`)
+    getNamexApiUrl(`/requests/queues/@me/oldest?priorityQueue=${isPriority}`)
   )
 }
 
