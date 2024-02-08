@@ -6,7 +6,7 @@
     @row-click="onRowClick"
   >
     <template v-slot="{ index, row }">
-      <ExamineRecipeHistoryInfo />
+      <ExamineRecipeHistoryInfo :history-entry="examine.histories[index]" />
     </template>
   </ExamineRecipeTable>
 </template>

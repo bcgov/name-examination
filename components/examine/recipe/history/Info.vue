@@ -1,8 +1,8 @@
 <template>
-  <div v-if="histories && applicants" class="flex-col p-4">
+  <div v-if="historiesInfo" class="flex-col p-4">
     <div class="flex gap-x-2 text-sm">
       <div class="flex basis-2/3 flex-col">
-        <div class="grid grid-cols-2 gap-y-1 overflow-x-auto">
+        <div v-if="applicants" class="grid grid-cols-2 gap-y-1 overflow-x-auto">
           <h3 class="font-bold">Client</h3>
           <p>
             {{ applicants.clientFirstName }} {{ applicants.clientLastName }}
@@ -52,12 +52,12 @@
     </div>
 
     <div
-      v-if="histories.comments && histories.comments.length > 0"
+      v-if="historiesInfo.comments && historiesInfo.comments.length > 0"
       class="mt-2 w-full"
     >
       <h3 class="font-bold">Comments</h3>
       <ExamineCommentsBox
-        :comments="histories.comments"
+        :comments="historiesInfo.comments"
         class="max-h-48 w-full overflow-auto rounded-md border border-gray-400 p-2 children:bg-sky-50"
       />
     </div>
@@ -67,27 +67,32 @@
 
 <script setup lang="ts">
 import { useExamination } from '~/store/examine'
+import type { HistoryEntry } from '~/types'
+
+const props = defineProps<{
+  historyEntry: HistoryEntry
+}>()
 
 const examine = useExamination()
 
-const histories = computed(() => examine.historiesInfoJSON)
-const applicants = computed(() => histories.value?.applicants)
+const historiesInfo = computed(() => examine.historiesInfoJSON)
+const applicants = computed(() => historiesInfo.value?.applicants)
 
 const nameState = computed(() => {
-  if (histories.value == null) return null
+  if (historiesInfo.value == null) return null
 
-  for (const nameChoice of histories.value.names)
-    if (nameChoice.name === histories.value.text) return nameChoice.state
+  for (const nameChoice of historiesInfo.value.names)
+    if (nameChoice.name === props.historyEntry.name) return nameChoice.state
 
   return null
 })
 
 const decisionText = computed(() => {
-  if (histories.value == null) return null
+  if (historiesInfo.value == null) return null
 
-  for (const nameChoice of histories.value.names) {
+  for (const nameChoice of historiesInfo.value.names) {
     if (
-      nameChoice.name === histories.value.text &&
+      nameChoice.name === props.historyEntry.name &&
       nameChoice.decision_text != ''
     ) {
       return nameChoice.decision_text
@@ -97,10 +102,10 @@ const decisionText = computed(() => {
 })
 
 const conflicts = computed(() => {
-  if (histories.value == null) return []
+  if (historiesInfo.value == null) return []
 
-  for (const nameChoice of histories.value.names)
-    if (nameChoice.name === histories.value.text) {
+  for (const nameChoice of historiesInfo.value.names)
+    if (nameChoice.name === props.historyEntry.name) {
       return [
         nameChoice.conflict1,
         nameChoice.conflict2,

@@ -22,11 +22,11 @@
 </template>
 
 <script setup lang="ts">
-import type { Conflict } from '~/types'
+import type { ConflictListItem } from '~/types'
 import { getFormattedDate } from '~/util/date'
 
 defineProps<{
-  conflict: Conflict
+  conflict: ConflictListItem
 }>()
 
 const formatJurisdiction = (text: string) =>

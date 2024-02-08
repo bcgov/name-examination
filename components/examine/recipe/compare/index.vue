@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col space-y-2 overflow-auto p-2">
     <ExamineRecipeCompareItem
-      v-for="conflict in comparedConflictsData"
+      v-for="conflict in conflicts.comparedConflicts"
       :conflict="conflict"
     />
 
@@ -12,23 +12,6 @@
 </template>
 
 <script setup lang="ts">
-import { useExamination } from '~/store/examine'
 import { useConflicts } from '~/store/examine/conflicts'
-import type { Conflict } from '~/types'
-const examine = useExamination()
 const conflicts = useConflicts()
-
-const comparedConflictsData = ref<Array<Conflict>>([])
-
-watch(
-  () => [conflicts.comparedConflicts],
-  async (_state) => {
-    comparedConflictsData.value = []
-    for (const conflict of conflicts.comparedConflicts) {
-      const data = (await examine.getConflictData(conflict)) as Conflict
-      comparedConflictsData.value.push(data)
-    }
-  },
-  { deep: true }
-)
 </script>

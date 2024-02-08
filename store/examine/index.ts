@@ -4,10 +4,9 @@ import {
   type Comment,
   type Condition,
   type ConflictListItem,
-  type CorpConflict,
+  type Corporation,
   type Histories,
   type Macro,
-  type NameRequestConflict,
   type TrademarksObject,
   type NameChoice,
   type RequestType,
@@ -87,8 +86,8 @@ export const useExamination = defineStore('examine', () => {
 
   const internalComments = ref<Array<Comment>>([])
 
-  const corpConflictJSON = ref<CorpConflict>()
-  const namesConflictJSON = ref<NameRequestConflict>()
+  const corpConflictJSON = ref<Corporation>()
+  const namesConflictJSON = ref<NameRequest>()
 
   const macros = ref<Array<Macro>>([])
 
@@ -128,7 +127,7 @@ export const useExamination = defineStore('examine', () => {
 
   const histories = ref<Array<HistoryEntry>>([])
 
-  const historiesInfoJSON = ref<NameRequestConflict>()
+  const historiesInfoJSON = ref<NameRequest>()
 
   const consentRequiredByUser = ref<boolean>()
 
@@ -531,17 +530,6 @@ export const useExamination = defineStore('examine', () => {
     }
 
     payments.initialize(info.id)
-  }
-
-  async function updateConflictInfo(conflict: ConflictListItem) {
-    corpConflictJSON.value = undefined
-    namesConflictJSON.value = undefined
-    const data = await getConflictData(conflict)
-    if (conflict.source === ConflictSource.Corp) {
-      corpConflictJSON.value = data as CorpConflict
-    } else {
-      namesConflictJSON.value = data as NameRequestConflict
-    }
   }
 
   function isUndoable(name: NameChoice): boolean {
@@ -1058,17 +1046,17 @@ export const useExamination = defineStore('examine', () => {
 
   async function getHistoryInfo(nrNumber: string): Promise<Histories> {
     const response = await getNameRequest(nrNumber)
-    return response.json()
+    const json = await response.json()
+    historiesInfoJSON.value = json
+    return json
   }
 
-  async function getCorpConflict(corpNum: string): Promise<CorpConflict> {
+  async function getCorpConflict(corpNum: string): Promise<Corporation> {
     const response = await getCorporation(corpNum)
     return response.json()
   }
 
-  async function getNamesConflict(
-    nrNumber: string
-  ): Promise<NameRequestConflict> {
+  async function getNamesConflict(nrNumber: string): Promise<NameRequest> {
     const response = await getNameRequest(nrNumber)
     return response.json()
   }
@@ -1186,7 +1174,6 @@ export const useExamination = defineStore('examine', () => {
     addEditAction,
     isUndoable,
     getHistoryInfo,
-    updateConflictInfo,
     getShortJurisdiction,
     makeDecision,
     undoNameChoiceDecision,

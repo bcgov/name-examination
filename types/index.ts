@@ -9,23 +9,6 @@ import type {
 } from '~/enums/codes'
 import type { Status } from '~/enums/nr-status'
 
-export interface Applicants {
-  firstName: string
-  lastName: string
-  addrLine1: string
-  addrLine2: string
-  addrLine3: string
-  city: string
-  stateProvinceCd: string
-  postalCd: string
-  countryTypeCd: string
-  phoneNumber: string
-  emailAddress: string
-  clientFirstName: string
-  clientLastName: string
-  contact: string
-}
-
 export interface NameChoice {
   choice: number
   name: string | null
@@ -48,34 +31,20 @@ export interface Comment {
   timestamp: string
 }
 
-export interface Conflict {
-  type: 'corp' | 'name'
-  startDate: string
-  nrNumber: string
-  jurisdiction: string
-  text: string
-  invalidRecordInd: boolean
-}
+export type ConflictData = NameRequest | Corporation
 
-export interface NameRequestConflict extends Conflict {
-  applicants: Applicants
-  state: string
-  comments: Array<Comment>
-  names: Array<NameChoice>
-}
-
-export interface CorpConflict extends Conflict {
+export interface Corporation {
   'incorp #': string
   directors: string[] | 'Not Available'
   'nature of business': string
 }
 
-export interface BCCorpConflict extends CorpConflict {
+export interface BCCorporation extends Corporation {
   'records office delivery address': string[] | 'Not Available'
   'registered office delivery address': string[]
 }
 
-export interface XproConflict extends CorpConflict {
+export interface XproCorporation extends Corporation {
   'attorney names': string[] | 'Not Available'
   'head office': string[]
 }

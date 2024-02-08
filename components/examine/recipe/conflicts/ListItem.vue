@@ -2,7 +2,6 @@
   <Accordion
     :key="conflictItem.nrNumber"
     class="conflict-details rounded-md p-1 open:!bg-sky-100 hover:bg-gray-100"
-    @toggled="onAccordionToggle"
   >
     <template #title>
       <div class="flex w-full items-center gap-x-2">
@@ -27,12 +26,7 @@
     </template>
     <template #content>
       <div class="flex justify-center">
-        <LoadingSpinner v-if="isLoading" />
-        <ExamineRecipeMatch
-          v-else-if="conflictData"
-          :conflict="conflictData"
-          class="grow"
-        />
+        <ExamineRecipeMatch :conflict="conflictItem" class="grow" />
       </div>
     </template>
   </Accordion>
@@ -41,13 +35,11 @@
 <script setup lang="ts">
 import { useExamination } from '~/store/examine'
 import { useConflicts } from '~/store/examine/conflicts'
-import type { Conflict, ConflictListItem } from '~/types'
+import type { ConflictListItem } from '~/types'
 import { getFormattedDate } from '~/util/date'
 
 const examine = useExamination()
 const conflicts = useConflicts()
-
-const isLoading = ref(false)
 
 const { conflictItem } = defineProps<{
   conflictItem: ConflictListItem
@@ -59,22 +51,6 @@ const isChecked = computed(() => {
     : conflicts.comparedConflicts
   return conflictsList.map((c) => c.nrNumber).includes(conflictItem.nrNumber)
 })
-
-const conflictData = computed<Conflict | undefined>(() =>
-  conflictItem.source === 'CORP'
-    ? examine.corpConflictJSON
-    : conflictItem.source === 'NR'
-    ? examine.namesConflictJSON
-    : undefined
-)
-
-async function onAccordionToggle(isOpen: boolean) {
-  if (isOpen) {
-    isLoading.value = true
-    await examine.updateConflictInfo(conflictItem)
-    isLoading.value = false
-  }
-}
 
 function toggleConflictCheckbox(checked: boolean) {
   if (checked) {

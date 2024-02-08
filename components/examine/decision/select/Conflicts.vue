@@ -6,14 +6,14 @@
       :options="options"
       multiple
       options-style="!max-h-48"
-      :options-display="(option: Conflict | ConflictListItem) => option.text"
+      :options-display="(option: ConflictListItem) => option.text"
       :disabled="examine.decisionSelectionsDisabled"
       @change="(_) => conflicts.syncSelectedAndComparedConflicts()"
     >
       <Chips
         v-if="conflicts.selectedConflicts.length > 0"
         v-model="conflicts.selectedConflicts"
-        :display="(conflict: Conflict) => conflict.text"
+        :display="(conflict: ConflictListItem) => conflict.text"
         @chip-removed="conflicts.syncSelectedAndComparedConflicts()"
       />
       <template #no-data>
@@ -29,13 +29,13 @@
 
 <script setup lang="ts">
 import { useExamination } from '~/store/examine'
-import { useConflicts } from '~/store/examine/conflicts';
-import type { Conflict, ConflictListItem } from '~/types'
+import { useConflicts } from '~/store/examine/conflicts'
+import type { ConflictListItem } from '~/types'
 
 const examine = useExamination()
 const conflicts = useConflicts()
 
-const options = computed<Array<Conflict | ConflictListItem>>(() => {
+const options = computed<Array<ConflictListItem>>(() => {
   if (!conflicts.autoAdd) {
     return conflicts.comparedConflicts
   }

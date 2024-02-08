@@ -49,10 +49,10 @@
 </template>
 
 <script setup lang="ts">
-import type { NameRequestConflict } from '~/types'
+import type { NameRequest } from '~/types'
 
 const { conflict } = defineProps<{
-  conflict: NameRequestConflict
+  conflict: NameRequest
 }>()
 
 const applicants = conflict.applicants

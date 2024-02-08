@@ -35,10 +35,10 @@
 </template>
 
 <script setup lang="ts">
-import type { XproConflict } from '~/types'
+import type { XproCorporation } from '~/types'
 
 defineProps<{
-  conflict: XproConflict
+  conflict: XproCorporation
 }>()
 
 const isNotAvailable = (val: any) => val === 'Not Available'
