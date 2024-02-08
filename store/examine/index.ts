@@ -634,7 +634,7 @@ export const useExamination = defineStore('examine', () => {
     try {
       await examineNextNameChoice()
     } catch (e) {
-      updateNRState(Status.Rejected)
+      await updateNRState(Status.Rejected)
     }
   }
 
@@ -1081,6 +1081,7 @@ export const useExamination = defineStore('examine', () => {
   }
 
   async function initialize(newNrNumber: string) {
+    resetValues()
     nrNumber.value = newNrNumber
     await updateRoute()
     await getpostgrescompInfo(newNrNumber)

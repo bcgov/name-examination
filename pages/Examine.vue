@@ -39,7 +39,6 @@
 
 <script setup lang="ts">
 import { Status } from '~/enums/nr-status'
-import { Route } from '~/enums/routes'
 import { useExamination } from '~/store/examine'
 const examine = useExamination()
 
