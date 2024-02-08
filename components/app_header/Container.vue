@@ -30,10 +30,6 @@
 
         <div class="flex space-x-2 px-3">
           <ToggleSwitch
-            label="Classify Words"
-            v-model="examineOptions.classifyWords"
-          />
-          <ToggleSwitch
             label="Priority Queue"
             v-model="examineOptions.priorityQueue"
           />
