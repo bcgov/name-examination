@@ -14,12 +14,14 @@
           @change="e => toggleConflictCheckbox((e.target as HTMLInputElement).checked)"
         />
         <span class="grow" v-html="conflictItem.highlightedText"></span>
-        <div class="space-x-8">
-          <span>{{ conflictItem.nrNumber }}</span>
-          <span>
+        <div class="flex w-52 gap-4">
+          <span class="w-24">{{ conflictItem.nrNumber }}</span>
+          <span class="w-4">
             {{ examine.getShortJurisdiction(conflictItem.jurisdiction) }}
           </span>
-          <span>{{ getFormattedDate(conflictItem.startDate) }}</span>
+          <span class="w-24">
+            {{ getFormattedDate(conflictItem.startDate) }}
+          </span>
         </div>
       </div>
     </template>
