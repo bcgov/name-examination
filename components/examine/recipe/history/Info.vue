@@ -1,5 +1,8 @@
 <template>
-  <div v-if="historiesInfo" class="flex-col p-4">
+  <div v-if="isLoading" class="flex items-center justify-center">
+    <LoadingSpinner />
+  </div>
+  <div v-else-if="historiesInfo" class="flex-col p-4">
     <div class="flex gap-x-2 text-sm">
       <div class="flex basis-2/3 flex-col">
         <div v-if="applicants" class="grid grid-cols-2 gap-y-1 overflow-x-auto">
@@ -44,7 +47,7 @@
           <li v-for="c in conflicts">{{ c }}</li>
         </ol>
 
-        <h3 class="font-bold">Decision</h3>
+        <h3 v-if="decisionText" class="font-bold">Decision</h3>
         <div class="flex flex-col">
           <p>{{ decisionText }}</p>
         </div>
@@ -75,11 +78,13 @@ const props = defineProps<{
 
 const examine = useExamination()
 
-const historiesInfo = computed(() => examine.historiesInfoJSON)
+const isLoading = ref(false)
+
+const historiesInfo = ref()
 const applicants = computed(() => historiesInfo.value?.applicants)
 
 const nameState = computed(() => {
-  if (historiesInfo.value == null) return null
+  if (!historiesInfo.value) return null
 
   for (const nameChoice of historiesInfo.value.names)
     if (nameChoice.name === props.historyEntry.name) return nameChoice.state
@@ -88,7 +93,7 @@ const nameState = computed(() => {
 })
 
 const decisionText = computed(() => {
-  if (historiesInfo.value == null) return null
+  if (!historiesInfo.value) return null
 
   for (const nameChoice of historiesInfo.value.names) {
     if (
@@ -102,7 +107,7 @@ const decisionText = computed(() => {
 })
 
 const conflicts = computed(() => {
-  if (historiesInfo.value == null) return []
+  if (!historiesInfo.value) return []
 
   for (const nameChoice of historiesInfo.value.names)
     if (nameChoice.name === props.historyEntry.name) {
@@ -114,5 +119,15 @@ const conflicts = computed(() => {
     }
 
   return []
+})
+
+onMounted(async () => {
+  isLoading.value = true
+  historiesInfo.value = await examine.getHistoryInfo(props.historyEntry.nr_num)
+  isLoading.value = false
+})
+
+onUnmounted(() => {
+  historiesInfo.value = undefined
 })
 </script>

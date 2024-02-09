@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { useExamination } from '~/store/examine'
+import { useConflictData } from '~/store/examine/conflict-data'
 import type {
   BCCorporation,
   ConflictListItem,
@@ -31,19 +31,17 @@ import type {
   XproCorporation,
 } from '~/types'
 
-const examine = useExamination()
-
 const props = defineProps<{
   conflict: ConflictListItem
 }>()
 
+const { getConflictData } = useConflictData()
 const conflictData = ref<ConflictData>()
-
 const isLoading = ref(false)
 
 onMounted(async () => {
   isLoading.value = true
-  conflictData.value = await examine.getConflictData(props.conflict)
+  conflictData.value = await getConflictData(props.conflict)
   isLoading.value = false
 })
 

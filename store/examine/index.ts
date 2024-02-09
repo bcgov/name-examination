@@ -3,7 +3,6 @@ import {
   type Trademark,
   type Comment,
   type Condition,
-  type ConflictListItem,
   type Corporation,
   type Histories,
   type Macro,
@@ -16,7 +15,6 @@ import {
   type NameRequest,
   type HistoryEntry,
   type ConditionsList,
-  ConflictSource,
 } from '~/types'
 
 import requestTypes from '~/data/request_types.json'
@@ -24,7 +22,6 @@ import requestTypeRulesJSON from '~/data/request_type_rules.json'
 import jurisdictionsData from '~/data/jurisdictions.json'
 import { ConsentFlag, RequestTypeCode } from '~/enums/codes'
 import {
-  getCorporation,
   getDecisionReasons,
   getNameRequest,
   getNextNrNumber,
@@ -86,9 +83,6 @@ export const useExamination = defineStore('examine', () => {
 
   const internalComments = ref<Array<Comment>>([])
 
-  const corpConflictJSON = ref<Corporation>()
-  const namesConflictJSON = ref<NameRequest>()
-
   const macros = ref<Array<Macro>>([])
 
   const trademarks = ref<Array<Trademark>>([])
@@ -126,8 +120,6 @@ export const useExamination = defineStore('examine', () => {
   const conditions = ref<Array<Condition>>([])
 
   const histories = ref<Array<HistoryEntry>>([])
-
-  const historiesInfoJSON = ref<NameRequest>()
 
   const consentRequiredByUser = ref<boolean>()
 
@@ -892,15 +884,6 @@ export const useExamination = defineStore('examine', () => {
     editActions.forEach((ea) => ea.cancel())
   }
 
-  async function getConflictData(item: ConflictListItem) {
-    switch (item.source) {
-      case 'CORP':
-        return getCorpConflict(item.nrNumber)
-      case 'NR':
-        return getNamesConflict(item.nrNumber)
-    }
-  }
-
   async function getTrademarks(query: string) {
     const response = await postTrademarks(query)
     const json = (await response.json()) as TrademarksObject
@@ -977,11 +960,8 @@ export const useExamination = defineStore('examine', () => {
   function resetValues() {
     resetExaminationArea()
     conflicts.resetMatches()
-    corpConflictJSON.value = undefined
-    namesConflictJSON.value = undefined
     conditions.value = []
     histories.value = []
-    historiesInfoJSON.value = undefined
     trademarks.value = []
     is_editing.value = false
     is_making_decision.value = false
@@ -1046,18 +1026,6 @@ export const useExamination = defineStore('examine', () => {
 
   async function getHistoryInfo(nrNumber: string): Promise<Histories> {
     const response = await getNameRequest(nrNumber)
-    const json = await response.json()
-    historiesInfoJSON.value = json
-    return json
-  }
-
-  async function getCorpConflict(corpNum: string): Promise<Corporation> {
-    const response = await getCorporation(corpNum)
-    return response.json()
-  }
-
-  async function getNamesConflict(nrNumber: string): Promise<NameRequest> {
-    const response = await getNameRequest(nrNumber)
     return response.json()
   }
 
@@ -1099,13 +1067,10 @@ export const useExamination = defineStore('examine', () => {
     requestTypeRules,
     requestActionCd,
     entityTypeCd,
-    corpConflictJSON,
-    namesConflictJSON,
     histories,
     autoAddDisabled,
     decisionFunctionalityDisabled,
     conditions,
-    historiesInfoJSON,
     consentRequiredByUser,
     selectedConditions,
     customerMessageOverride,
@@ -1199,7 +1164,6 @@ export const useExamination = defineStore('examine', () => {
     claimNr,
     postComment,
     cancelNr,
-    getConflictData,
   }
 })
 

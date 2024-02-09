@@ -3,9 +3,8 @@
     class="h-full w-full"
     :columns="['Name', 'Jurisdiction', 'NR', 'Submitted', 'Status']"
     :rows="rows"
-    @row-click="onRowClick"
   >
-    <template v-slot="{ index, row }">
+    <template v-slot="{ index }">
       <ExamineRecipeHistoryInfo :history-entry="examine.histories[index]" />
     </template>
   </ExamineRecipeTable>
@@ -27,9 +26,4 @@ const rows = computed(
       entry.name_state_type_cd,
     ]) ?? []
 )
-
-async function onRowClick(row: Array<string>) {
-  const nrNumber = row[2]
-  await examine.getHistoryInfo(nrNumber)
-}
 </script>
