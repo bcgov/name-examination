@@ -8,16 +8,22 @@
       :conflict="(conflictData as NameRequest)"
     />
     <ExamineRecipeMatchBCCorp
-      v-else-if="conflict.source === 'CORP' && conflict.jurisdiction === 'BC'"
+      v-else-if="conflict.source === 'CORP' && (conflictData as Corporation).jurisdiction === 'BC'"
       :data="(conflictData as BCCorporation)"
     />
     <ExamineRecipeMatchXproCorp
-      v-else-if="conflict.source === 'CORP' && conflict.jurisdiction !== 'BC'"
+      v-else
       :conflict="(conflictData as XproCorporation)"
     />
   </div>
   <div v-else>
-    <p class="text-red-600">Failed to retrieve conflict info</p>
+    <p>Failed to retrieve conflict data</p>
+    <a
+      class="cursor-pointer text-blue-800 underline"
+      @click="tryToGetConflictData"
+    >
+      Try again
+    </a>
   </div>
 </template>
 
@@ -29,6 +35,7 @@ import type {
   ConflictData,
   NameRequest,
   XproCorporation,
+  Corporation,
 } from '~/types'
 
 const props = defineProps<{
@@ -39,10 +46,19 @@ const { getConflictData } = useConflictData()
 const conflictData = ref<ConflictData>()
 const isLoading = ref(false)
 
-onMounted(async () => {
+async function tryToGetConflictData() {
   isLoading.value = true
-  conflictData.value = await getConflictData(props.conflict)
-  isLoading.value = false
+  try {
+    conflictData.value = await getConflictData(props.conflict)
+  } catch (e) {
+    conflictData.value = undefined
+  } finally {
+    isLoading.value = false
+  }
+}
+
+onMounted(async () => {
+  await tryToGetConflictData()
 })
 
 onUnmounted(() => {

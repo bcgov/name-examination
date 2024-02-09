@@ -28,7 +28,7 @@
         </TabPanel>
 
         <!-- Compare tab -->
-        <TabPanel ref="compare" :unmount="false">
+        <TabPanel class="h-full" ref="compare" :unmount="false">
           <ExamineRecipeCompare />
         </TabPanel>
       </TabPanels>

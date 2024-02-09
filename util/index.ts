@@ -102,3 +102,18 @@ export function sanitizeQuery(query: string, exactMatch = false) {
     return baseSanitized.replace(/[&+\-]/, ' ').replace(/,/g, '')
   }
 }
+
+/** Parse an array of address strings returned from the NameX API into 2-3 lines of addresses. */
+export function parseAddress(lines: Array<string>): Array<string> {
+  const firstTwoLines = lines.slice(0, lines.length - 4)
+  const lastFourLines = lines.slice(lines.length - 4).join(' ')
+  const output = [...firstTwoLines, lastFourLines]
+  if (
+    output[0].toUpperCase() === 'N' &&
+    output[1].toUpperCase() === 'O' &&
+    output[2].toUpperCase() === 'T'
+  ) {
+    return ['Address not', 'available']
+  }
+  return output
+}

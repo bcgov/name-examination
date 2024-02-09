@@ -21,10 +21,14 @@ export const useConflictData = defineStore('conflict-data', () => {
   async function getConflictData(
     item: ConflictListItem
   ): Promise<ConflictData> {
-    if (item.source === ConflictSource.Corp) {
-      return getCorpConflict(item.nrNumber)
-    } else {
-      return getNamesConflict(item.nrNumber)
+    try {
+      if (item.source === ConflictSource.Corp) {
+        return getCorpConflict(item.nrNumber)
+      } else {
+        return getNamesConflict(item.nrNumber)
+      }
+    } catch {
+      throw new Error(`Failed to retrieve conflict data for ${item.text}`)
     }
   }
 

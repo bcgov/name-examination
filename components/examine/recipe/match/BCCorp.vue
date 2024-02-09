@@ -49,22 +49,9 @@
 
 <script setup lang="ts">
 import type { BCCorporation } from '~/types'
+import { parseAddress } from '~/util'
 
 defineProps<{
   data: BCCorporation
 }>()
-
-function parseAddress(lines: Array<string>) {
-  const firstTwoLines = lines.slice(0, lines.length - 4)
-  const lastFourLines = lines.slice(lines.length - 4).join(' ')
-  const output = [...firstTwoLines, lastFourLines]
-  if (
-    output[0].toUpperCase() === 'N' &&
-    output[1].toUpperCase() === 'O' &&
-    output[2].toUpperCase() === 'T'
-  ) {
-    return ['Address not', 'available']
-  }
-  return output
-}
 </script>

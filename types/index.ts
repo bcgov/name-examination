@@ -37,6 +37,7 @@ export interface Corporation {
   'incorp #': string
   directors: string[] | 'Not Available'
   'nature of business': string
+  jurisdiction: string
 }
 
 export interface BCCorporation extends Corporation {

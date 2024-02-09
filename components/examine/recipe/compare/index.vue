@@ -1,13 +1,18 @@
 <template>
-  <div class="flex flex-col space-y-2 overflow-auto p-2">
+  <div class="flex h-full flex-col space-y-2 overflow-auto p-2">
     <ExamineRecipeCompareItem
       v-for="conflict in conflicts.comparedConflicts"
       :conflict="conflict"
     />
 
-    <p v-if="conflicts.comparedConflicts.length === 0">
-      No conflicts have been added for comparison.
-    </p>
+    <div
+      v-if="conflicts.comparedConflicts.length === 0"
+      class="flex h-full items-center justify-center"
+    >
+      <p class="text-xl">
+        Add conflicts to compare in the <b>Conflicts</b> tab
+      </p>
+    </div>
   </div>
 </template>
 

@@ -3,7 +3,6 @@ import {
   type Trademark,
   type Comment,
   type Condition,
-  type Corporation,
   type Histories,
   type Macro,
   type TrademarksObject,
