@@ -5,7 +5,7 @@
         <nuxt-link :to="Route.Home">
           <img
             src="/images/top-nav.png"
-            class="min-w-8 h-full"
+            class="h-full min-w-8"
             alt="Name Examination"
           />
         </nuxt-link>
@@ -21,7 +21,8 @@
         <SearchInput
           v-model="searchText"
           class="mx-3"
-          placeholder="NR Number Lookup"
+          placeholder="Search NR Number"
+          @submit.prevent="onSearchSubmit"
         />
 
         <nuxt-link to="/stats" class="mx-3 text-sm text-blue-800 underline">
@@ -49,10 +50,35 @@
 <script setup lang="ts">
 import { useExaminationOptions } from '~/store/examine/options'
 import { Route } from '~/enums/routes'
+import { isValidNrFormat, nrExists } from '~/util'
+import { emitter } from '~/util/emitter'
+import { useExamination } from '~/store/examine'
 
 const { $auth, $userProfile } = useNuxtApp()
 
+const examine = useExamination()
 const examineOptions = useExaminationOptions()
 
 const searchText = ref('')
+
+async function onSearchSubmit(_: Event) {
+  let nrNumber = searchText.value.trim()
+  if (!nrNumber.startsWith('NR')) {
+    nrNumber = `NR ${nrNumber}`
+  }
+  if (!isValidNrFormat(nrNumber, true)) {
+    emitter.emit('error', {
+      title: 'Invalid Search Term',
+      message: 'Incorrect NR number format',
+    })
+  } else if (!(await nrExists(nrNumber))) {
+    emitter.emit('error', {
+      title: 'NR Not Found',
+      message: 'The requested NR could not be found',
+    })
+  } else {
+    searchText.value = ''
+    await examine.initialize(nrNumber)
+  }
+}
 </script>
