@@ -70,7 +70,7 @@
 
 <script setup lang="ts">
 import { useExamination } from '~/store/examine'
-import type { HistoryEntry } from '~/types'
+import { type NameRequest, type HistoryEntry } from '~/types'
 
 const props = defineProps<{
   historyEntry: HistoryEntry
@@ -80,7 +80,7 @@ const examine = useExamination()
 
 const isLoading = ref(false)
 
-const historiesInfo = ref()
+const historiesInfo = ref<NameRequest>()
 const applicants = computed(() => historiesInfo.value?.applicants)
 
 const nameState = computed(() => {

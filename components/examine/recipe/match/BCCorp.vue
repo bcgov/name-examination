@@ -9,7 +9,7 @@
 
       <h3 class="font-bold">Directors</h3>
       <div class="flex flex-col">
-        <p v-if="isNotAvailable(data.directors)">Not Available</p>
+        <p v-if="data.directors === 'Not Available'">Not Available</p>
         <p v-else v-for="director in data.directors">{{ director }}</p>
       </div>
 
@@ -20,12 +20,14 @@
     <div class="grid basis-1/2 grid-cols-2 overflow-x-auto">
       <h3 class="font-bold">Records Office Delivery Address</h3>
       <div>
-        <p v-if="isNotAvailable(data['records office delivery address'])">
+        <p v-if="data['records office delivery address'] === 'Not Available'">
           Not Available
         </p>
         <p
           v-else
-          v-for="addrLine in data['records office delivery address']"
+          v-for="addrLine in parseAddress(
+            data['records office delivery address']
+          )"
         >
           {{ addrLine }}
         </p>
@@ -33,7 +35,11 @@
 
       <h3 class="font-bold">Registered Office Delivery Address</h3>
       <div>
-        <p v-for="addrLine in data['registered office delivery address']">
+        <p
+          v-for="addrLine in parseAddress(
+            data['registered office delivery address']
+          )"
+        >
           {{ addrLine }}
         </p>
       </div>
@@ -48,5 +54,17 @@ defineProps<{
   data: BCCorporation
 }>()
 
-const isNotAvailable = (val: any) => val === 'Not Available'
+function parseAddress(lines: Array<string>) {
+  const firstTwoLines = lines.slice(0, lines.length - 4)
+  const lastFourLines = lines.slice(lines.length - 4).join(' ')
+  const output = [...firstTwoLines, lastFourLines]
+  if (
+    output[0].toUpperCase() === 'N' &&
+    output[1].toUpperCase() === 'O' &&
+    output[2].toUpperCase() === 'T'
+  ) {
+    return ['Address not', 'available']
+  }
+  return output
+}
 </script>

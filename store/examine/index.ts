@@ -1024,7 +1024,7 @@ export const useExamination = defineStore('examine', () => {
     customerMessageOverride.value = undefined
   }
 
-  async function getHistoryInfo(nrNumber: string): Promise<Histories> {
+  async function getHistoryInfo(nrNumber: string): Promise<NameRequest> {
     const response = await getNameRequest(nrNumber)
     return response.json()
   }
