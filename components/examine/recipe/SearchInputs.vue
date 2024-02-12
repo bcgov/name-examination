@@ -4,13 +4,16 @@
       v-model="searchString"
       class="grow"
       placeholder="name"
-      @submit.prevent="onNormalSearchSubmit"
+      @submit.prevent="onSearchSubmit"
       focus-mnemonic="s"
+      :clear="examine.currentName ?? undefined"
+      input-required
     />
     <SearchInput
       v-model="exactSearchString"
       placeholder="exact phrase"
-      @submit.prevent="onExactSearchSubmit"
+      @submit.prevent="onSearchSubmit"
+      clear=""
     />
   </div>
 </template>
@@ -23,17 +26,8 @@ const examine = useExamination()
 const searchString = ref(examine.currentName ?? '')
 const exactSearchString = ref('')
 
-function onNormalSearchSubmit(_event: Event) {
+function onSearchSubmit(_event: Event) {
   examine.runManualRecipe(searchString.value, exactSearchString.value)
-}
-
-function onExactSearchSubmit(event: Event) {
-  if (exactSearchString.value) {
-    examine.runManualRecipe(searchString.value, exactSearchString.value)
-  } else {
-    event.preventDefault()
-    event.stopImmediatePropagation()
-  }
 }
 
 watch(

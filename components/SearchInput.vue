@@ -1,17 +1,26 @@
 <template>
-  <form class="flex items-center" role="search">
-    <div class="w-full">
+  <form ref="searchForm" class="flex items-center" role="search">
+    <div class="relative flex w-full">
       <input
         ref="searchTextField"
-        type="search"
+        type="text"
         class="w-full rounded-l-md border border-gray-300 px-2 py-1 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
         :placeholder="placeholder"
         :value="modelValue"
-        @change="(e) => $emit('update:modelValue', (e.target as HTMLInputElement).value)"
+        @input="onInput"
         autocorrect="off"
-        required
+        :required="inputRequired"
         aria-label="Search"
       />
+      <IconButton
+        v-if="showClear"
+        type="button"
+        @click="onClear"
+        white
+        class="absolute right-[2.5px] top-[2.5px] border-0 !px-1"
+      >
+        <XMarkIcon class="h-5 w-5 text-gray-800" />
+      </IconButton>
     </div>
     <IconButton
       class="rounded-none rounded-r-md !border border-bcgov-blue5 !p-1.5"
@@ -22,17 +31,41 @@
 </template>
 
 <script setup lang="ts">
-import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
-const { focusMnemonic } = defineProps<{
+import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+
+const props = defineProps<{
   modelValue: string
-  placeholder: string
+  placeholder?: string
   /** Mnemonic letter for focusing the search's input field. */
   focusMnemonic?: string
+  /** Show clear buttons in the search input if the input text does not match the given string. */
+  clear?: string
+  /** Whether the search input is required (non-empty) for submitting. */
+  inputRequired?: boolean
+}>()
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', newValue: any): void
 }>()
 
 const searchTextField = ref<HTMLInputElement | null>(null)
+const searchForm = ref<HTMLFormElement | null>(null)
 
-if (focusMnemonic) {
-  useMnemonic(focusMnemonic, () => searchTextField.value?.focus())
+const showClear = ref(false)
+
+if (props.focusMnemonic) {
+  useMnemonic(props.focusMnemonic, () => searchTextField.value?.focus())
+}
+
+function onInput(event: Event) {
+  const text = (event.target as HTMLInputElement).value
+  emit('update:modelValue', text)
+  showClear.value = props.clear !== undefined && text !== props.clear
+}
+
+function onClear() {
+  emit('update:modelValue', props.clear)
+  searchForm.value?.requestSubmit()
+  showClear.value = false
 }
 </script>

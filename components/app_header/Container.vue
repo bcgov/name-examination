@@ -22,6 +22,7 @@
           v-model="searchText"
           class="mx-3"
           placeholder="Search NR Number"
+          input-required
           @submit.prevent="onSearchSubmit"
         />
 
