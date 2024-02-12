@@ -1,12 +1,13 @@
 <template>
   <div class="flex flex-col">
     <Accordion
-      v-for="list in conflictLists"
+      v-for="(list, i) in conflictLists"
+      :open="i === initiallyOpen"
       :arrow="list.children.length > 0"
       :disabled="list.children.length === 0"
     >
       <template #title>
-        <div class="flex w-full font-medium justify-between">
+        <div class="flex w-full justify-between font-medium">
           <div>
             <span v-html="list.highlightedText"></span>
             <span v-if="list.meta" class="italic">
@@ -33,6 +34,8 @@ import type { ConflictList } from '~/types'
 
 defineProps<{
   conflictLists: Array<ConflictList>
+  /** Index of the `ConflictList` that should be open initially. */
+  initiallyOpen?: number
 }>()
 </script>
 
