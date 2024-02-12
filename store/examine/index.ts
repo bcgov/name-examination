@@ -1150,6 +1150,7 @@ export const useExamination = defineStore('examine', () => {
     updateNRStatePreviousState,
     revertToPreviousState,
     saveEdits,
+    updateRequest,
     cancelEdits,
     updateRequestTypeRules,
     setRequestType,

@@ -18,12 +18,14 @@
         @click="onClear"
         white
         class="absolute right-1 top-[2.5px] border-0 !px-1"
+        aria-label="Reset search input"
       >
         <ArrowUturnLeftIcon class="h-5 w-5" />
       </IconButton>
     </div>
     <IconButton
       class="rounded-none rounded-r-md !border border-bcgov-blue5 !p-1.5"
+      aria-label="Submit search"
     >
       <MagnifyingGlassIcon class="h-5 w-5 stroke-2" />
     </IconButton>

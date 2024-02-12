@@ -12,7 +12,8 @@
             class="h-72"
             placeholder="Additional Info..."
             :character-limit="characterLimit"
-            @submit="saveEdits"
+            use-popover-buttons
+            @submit="saveAndUpdateEdits"
             @cancel="cancelEdits"
           />
           <p v-if="info.length > characterLimit" class="font-bold text-red-600">
@@ -61,6 +62,11 @@ const additionalInfoDisplay = computed(() =>
 function saveEdits() {
   examine.additionalInfo = info.value.substring(0, characterLimit)
   info.value = examine.additionalInfo
+}
+
+async function saveAndUpdateEdits() {
+  saveEdits()
+  await examine.updateRequest()
 }
 
 function cancelEdits() {
