@@ -568,13 +568,7 @@ export const useExamination = defineStore('examine', () => {
 
   async function undoNameChoiceDecision(name: NameChoice) {
     resetExaminationArea()
-    if (name.choice == 1) {
-      currentNameObj.value = compName1
-    } else if (name.choice == 2) {
-      currentNameObj.value = compName2
-    } else {
-      currentNameObj.value = compName3
-    }
+    currentNameObj.value = nameChoices.value[name.choice - 1]
     resetNameChoice(currentNameObj.value, true)
     await pushCurrentNameChoice()
     await getpostgrescompInfo(nrNumber.value)
