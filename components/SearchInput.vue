@@ -17,9 +17,9 @@
         type="button"
         @click="onClear"
         white
-        class="absolute right-[2.5px] top-[2.5px] border-0 !px-1"
+        class="absolute right-1 top-[2.5px] border-0 !px-1"
       >
-        <XMarkIcon class="h-5 w-5 text-gray-800" />
+        <ArrowUturnLeftIcon class="h-5 w-5" />
       </IconButton>
     </div>
     <IconButton
@@ -31,7 +31,10 @@
 </template>
 
 <script setup lang="ts">
-import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import {
+  ArrowUturnLeftIcon,
+  MagnifyingGlassIcon,
+} from '@heroicons/vue/24/outline'
 
 const props = defineProps<{
   modelValue: string
