@@ -4,7 +4,7 @@
   <div v-else class="flex items-center space-x-1">
     <!-- Edit Button -->
     <IconButton
-      v-if="examine.canEdit && showButtons"
+      v-if="examine.canEdit && notHistoricalReservedConsumed"
       light
       @click="examine.edit"
       mnemonic="d"
@@ -40,7 +40,7 @@
 
     <!-- Cancel Request Button -->
     <IconButton
-      v-if="examine.canCancel && showButtons"
+      v-if="examine.canCancel && notHistoricalReservedConsumed"
       light
       text="Cancel Request"
       @click="showCancelDialog"
@@ -59,7 +59,10 @@
       <template #text><u>H</u>old Request</template>
     </IconButton>
 
-    <div v-if="showReopenAndResetButtons && showButtons" class="space-x-1">
+    <div
+      v-if="showReopenAndResetButtons && notHistoricalReservedConsumed"
+      class="space-x-1"
+    >
       <!-- Reopen (unfurnished) Button -->
       <IconButton
         v-if="examine.furnished === 'N'"
@@ -78,7 +81,7 @@
 
     <!-- Examine Button -->
     <IconButton
-      v-if="examine.canClaim && showButtons"
+      v-if="examine.canClaim && notHistoricalReservedConsumed"
       light
       @click="examine.claimNr"
       mnemonic="x"
@@ -115,7 +118,8 @@ import { useExamination } from '~/store/examine'
 const examine = useExamination()
 const showCancelRequestDialog = ref(false)
 
-const showButtons = computed(
+/** Returns true if the NR is not historical, reserved, or consumed. */
+const notHistoricalReservedConsumed = computed(
   () =>
     ![Status.Historical, Status.ConditionalReserved, Status.Reserved].includes(
       examine.nrStatus
