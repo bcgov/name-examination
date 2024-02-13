@@ -3,8 +3,10 @@
     <div class="flex grow flex-col">
       <textarea
         ref="textArea"
-        class="grow resize-none text-ellipsis rounded-md border border-gray-300 p-2 text-sm outline-none"
-        :class="{ 'border-b-0': characterLimit }"
+        class="grow resize-none text-ellipsis rounded-md border border-gray-300 p-2 text-sm"
+        :class="{
+          'rounded-b-none border-b-0 outline-none': characterLimit,
+        }"
         :placeholder="placeholder"
         :readonly="readonly"
         :value="modelValue"
@@ -102,4 +104,8 @@ function onTextAreaInput(event: Event) {
   emit('update:modelValue', text)
   emit('input', event)
 }
+
+onMounted(() => {
+  textArea.value?.focus()
+})
 </script>

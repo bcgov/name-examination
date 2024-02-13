@@ -42,7 +42,7 @@
                   class="h-48"
                   v-model="commentText"
                   placeholder="Create a new comment..."
-                  confirm-mnemonic="v"
+                  submit-mnemonic="v"
                   text-required
                   @submit="onSubmit"
                   @cancel="onCancel(close)"
