@@ -521,7 +521,7 @@ export const useExamination = defineStore('examine', () => {
       isMakingDecision.value = true
     }
 
-    payments.initialize(info.id)
+    await payments.initialize(info.id)
   }
 
   function isUndoable(name: NameChoice): boolean {
@@ -923,7 +923,7 @@ export const useExamination = defineStore('examine', () => {
     await postComment(commentText)
     resetExaminationArea()
     isMakingDecision.value = false
-    updateNRState(Status.Cancelled)
+    await updateNRState(Status.Cancelled)
   }
 
   /** Send name choice data to API */
