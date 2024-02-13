@@ -13,6 +13,7 @@
           :class="{
             'hover:bg-gray-100': !disabled,
             'pointer-events-none text-gray-400': disabled,
+            'border-red-600 border-2': errorStyle,
           }"
         >
           <span class="block"><slot>Select</slot></span>
@@ -93,6 +94,8 @@ const { modelValue, options, multiple } = defineProps<{
   disabled?: boolean
   optionsStyle?: string
   optionsDisplay?: (option: ModelValueType) => string
+  /** Style this input to indicate an error, useful to indicate invalid inputs */
+  errorStyle?: boolean
 }>()
 
 const emit = defineEmits<{

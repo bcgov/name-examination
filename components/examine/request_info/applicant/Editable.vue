@@ -15,7 +15,13 @@
     <h3 class="font-bold">Applicant</h3>
     <TextInput v-model="firstName" placeholder="First Name" maxlength="200" />
     <TextInput v-model="middleName" placeholder="Middle Name" maxlength="200" />
-    <TextInput v-model="lastName" placeholder="Last Name" maxlength="200" />
+    <TextInput
+      v-model="lastName"
+      placeholder="Last Name"
+      maxlength="200"
+      :error-style="lastNameErrorText != ''"
+      @input="lastNameErrorText = ''"
+    />
     <p class="font-bold text-red-600">{{ lastNameErrorText }}</p>
 
     <h3 class="font-bold">Address</h3>

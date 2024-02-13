@@ -1,7 +1,11 @@
 <template>
   <ol class="ml-4 basis-1/3 list-decimal space-y-2">
     <li v-for="(_input, i) in nameInputs">
-      <TextInput v-model="nameInputs[i]" @input="clearErrorOnInput(i)" />
+      <TextInput
+        v-model="nameInputs[i]"
+        @input="clearErrorOnInput(i)"
+        :error-style="errorMessage?.choice === i"
+      />
       <span
         v-if="errorMessage && errorMessage.choice === i"
         class="text-sm font-bold text-red-600"
