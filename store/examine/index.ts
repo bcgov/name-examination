@@ -367,7 +367,11 @@ export const useExamination = defineStore('examine', () => {
     applicant.emailAddress = conEmail.value || applicant.emailAddress
     applicant.faxNumber = fax.value || null
 
-    data.names = nameChoices.value.filter((n) => n.name)
+    nameChoices.value.forEach((choice) => {
+      if (!choice.name) resetNameChoice(choice)
+    })
+    data.names = nameChoices.value
+
     data.requestTypeCd = requestType.value
     data.entity_type_cd = entityTypeCd.value
     data.request_action_cd = requestActionCd.value
@@ -463,8 +467,7 @@ export const useExamination = defineStore('examine', () => {
 
     if (info.consent_dt) {
       const parsedConsentDate = parseDate(info.consent_dt)
-      consentDate.value =
-        getDateFromDateTime(parsedConsentDate) ?? undefined
+      consentDate.value = getDateFromDateTime(parsedConsentDate) ?? undefined
     }
 
     // if the current state is not INPROGRESS, HOLD, or DRAFT clear any existing name record in currentNameObj
@@ -551,16 +554,16 @@ export const useExamination = defineStore('examine', () => {
    */
   function resetNameChoice(choice: NameChoice, keepName = false) {
     choice.state = Status.NotExamined
-    choice.name = keepName ? choice.name : null
-    choice.decision_text = null
-    choice.conflict1 = null
-    choice.conflict2 = null
-    choice.conflict3 = null
+    choice.name = keepName ? choice.name : ''
+    choice.decision_text = ''
+    choice.conflict1 = ''
+    choice.conflict2 = ''
+    choice.conflict3 = ''
+    choice.conflict1_num = ''
+    choice.conflict2_num = ''
+    choice.conflict3_num = ''
     choice.consumptionDate = null
     choice.corpNum = null
-    choice.conflict1_num = null
-    choice.conflict2_num = null
-    choice.conflict3_num = null
     choice.comment = null
   }
 
