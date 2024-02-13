@@ -188,8 +188,6 @@ export const useExamination = defineStore('examine', () => {
     () => consentRequiredByUser.value
   )
 
-  const decision_made = ref<Status>()
-
   const compName1 = reactive<NameChoice>(getEmptyNameChoice(1))
   const compName2 = reactive<NameChoice>(getEmptyNameChoice(2))
   const compName3 = reactive<NameChoice>(getEmptyNameChoice(3))
@@ -623,8 +621,7 @@ export const useExamination = defineStore('examine', () => {
   async function makeDecision(decision: Status) {
     if (!currentNameObj.value) return
 
-    decision_made.value = decision
-    if (decision_made.value === Status.Approved) {
+    if (decision === Status.Approved) {
       if (acceptanceWillBeConditional.value || forceConditional.value) {
         currentNameObj.value.state = Status.Condition
         forceConditional.value = false
@@ -641,15 +638,13 @@ export const useExamination = defineStore('examine', () => {
 
     await pushDecision(currentNameObj.value)
     await attemptNextNameChoice()
-    decision_made.value = undefined
   }
 
   async function makeQuickDecision(decision: Status, decisionText: string) {
     if (!currentNameObj.value) return
 
     currentNameObj.value.decision_text = decisionText || null
-    decision_made.value = decision
-    if (decision_made.value === Status.Approved) {
+    if (decision === Status.Approved) {
       currentNameObj.value.state = Status.Approved
     } else {
       currentNameObj.value.state = Status.Rejected
@@ -657,7 +652,6 @@ export const useExamination = defineStore('examine', () => {
 
     await pushDecision(currentNameObj.value)
     await attemptNextNameChoice()
-    decision_made.value = undefined
   }
 
   /** Attempt to set the given name choice as the current one. Will throw an error if the choice cannot be set. */
@@ -958,7 +952,6 @@ export const useExamination = defineStore('examine', () => {
     trademarks.value = []
     is_editing.value = false
     is_making_decision.value = false
-    decision_made.value = undefined
     is_header_shown.value = false
   }
 
@@ -1074,7 +1067,6 @@ export const useExamination = defineStore('examine', () => {
     requestorMessageStrings,
     requestorMessage,
     acceptanceWillBeConditional,
-    decision_made,
     compName1,
     compName2,
     compName3,
