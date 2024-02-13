@@ -43,11 +43,21 @@ examine.addEditAction({
       }
       return false
     }
+    if (
+      examine.currentChoice &&
+      !nameInputs.value[examine.currentChoice - 1].trim()
+    ) {
+      errorMessage.value = {
+        choice: examine.currentChoice - 1,
+        text: 'Cannot clear currently examining name',
+      }
+      return false
+    }
     return true
   },
   update() {
     for (const [i, choice] of examine.nameChoices.entries()) {
-      choice.name = nameInputs.value[i]?.trim() || null
+      choice.name = nameInputs.value[i].trim()
     }
   },
   cancel() {},
