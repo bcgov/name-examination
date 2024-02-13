@@ -1,7 +1,7 @@
 <template>
   <div
     class="flex h-full flex-col"
-    :class="{ 'bg-gray-100': examine.is_editing }"
+    :class="{ 'bg-gray-100': examine.isEditing }"
   >
     <NoticeBanner v-if="examine.otherExaminerInProgress" type="lock">
       <span>
@@ -27,7 +27,7 @@
 
     <div
       v-if="
-        !examine.is_complete && !reservedOrCondReserved && !examine.is_editing
+        !examine.isComplete && !reservedOrCondReserved && !examine.isEditing
       "
       class="flex grow flex-col space-x-3 bg-gray-100 p-4 xl:flex-row"
     >
@@ -44,19 +44,19 @@ const examine = useExamination()
 
 const showQuickActionButtons = computed(
   () =>
-    !examine.is_complete &&
-    examine.is_making_decision &&
+    !examine.isComplete &&
+    examine.isMakingDecision &&
     examine.userHasApproverRole &&
-    examine.is_my_current_nr &&
-    !examine.is_editing
+    examine.isMyCurrentNr &&
+    !examine.isEditing
 )
 
 const showDecisionPanel = computed(
-  () => examine.isCurrentExaminer && examine.is_making_decision
+  () => examine.isCurrentExaminer && examine.isMakingDecision
 )
 
 const reservedOrCondReserved = computed(() =>
-  [Status.ConditionalReserved, Status.Reserved].includes(examine.nr_status)
+  [Status.ConditionalReserved, Status.Reserved].includes(examine.nrStatus)
 )
 
 onMounted(async () => {

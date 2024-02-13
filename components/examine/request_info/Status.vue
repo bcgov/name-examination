@@ -40,17 +40,17 @@ const additionalStatus = computed(() => {
       approvedName.state === Status.Condition
         ? 'CONDITIONALLY APPROVED'
         : 'APPROVED'
-    if (examine.nr_status == Status.Consumed) {
+    if (examine.nrStatus == Status.Consumed) {
       return `${displayState} - CONSUMED`
     } else if (examine.isApprovedAndExpired) {
       return `${displayState} - EXPIRED`
     }
   }
 
-  if (examine.nr_status == Status.RefundRequested) {
+  if (examine.nrStatus == Status.RefundRequested) {
     return `CANCELLED - ${payments.refundPaymentState}`
   }
 
-  return examine.nr_status
+  return examine.nrStatus
 })
 </script>

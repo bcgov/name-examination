@@ -1,5 +1,5 @@
 <template>
-  <ExamineHeaderEditActionButtons v-if="examine.is_editing" />
+  <ExamineHeaderEditActionButtons v-if="examine.isEditing" />
 
   <div v-else class="flex items-center space-x-1">
     <!-- Edit Button -->
@@ -16,12 +16,12 @@
     <!-- Toggle Details Button -->
     <IconButton light @click="toggleDetails" mnemonic="b">
       <ArrowsPointingInIcon
-        v-if="examine.is_header_shown"
+        v-if="examine.isHeaderShown"
         class="h-5 w-5 stroke-2"
       />
       <ArrowsPointingOutIcon v-else class="h-5 w-5 stroke-2" />
 
-      <template #text v-if="examine.is_header_shown"
+      <template #text v-if="examine.isHeaderShown"
         >Hide Details (<u>b</u>)
       </template>
       <template #text v-else>Show Details (<u>b</u>)</template>
@@ -29,7 +29,7 @@
 
     <!-- Get Next Button -->
     <IconButton
-      v-if="examine.userHasApproverRole && !examine.is_my_current_nr"
+      v-if="examine.userHasApproverRole && !examine.isMyCurrentNr"
       @click="examine.getNextCompany"
       light
       mnemonic="n"
@@ -50,7 +50,7 @@
 
     <!-- Hold Button -->
     <IconButton
-      v-if="examine.is_my_current_nr"
+      v-if="examine.isMyCurrentNr"
       light
       @click="examine.holdRequest"
       mnemonic="h"
@@ -118,20 +118,20 @@ const showCancelRequestDialog = ref(false)
 const showButtons = computed(
   () =>
     ![Status.Historical, Status.ConditionalReserved, Status.Reserved].includes(
-      examine.nr_status
+      examine.nrStatus
     ) && !examine.consumptionDate
 )
 
 const showReopenAndResetButtons = computed(
   () =>
     examine.userHasEditRole &&
-    examine.is_complete &&
-    examine.nr_status !== Status.Cancelled &&
+    examine.isComplete &&
+    examine.nrStatus !== Status.Cancelled &&
     !examine.isApprovedAndExpired
 )
 
 function toggleDetails() {
-  examine.is_header_shown = !examine.is_header_shown
+  examine.isHeaderShown = !examine.isHeaderShown
 }
 
 function showCancelDialog() {

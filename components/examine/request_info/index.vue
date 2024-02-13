@@ -15,5 +15,5 @@
 import { useExamination } from '~/store/examine'
 const examine = useExamination()
 
-const isExpanded = computed(() => examine.is_editing || examine.is_header_shown)
+const isExpanded = computed(() => examine.isEditing || examine.isHeaderShown)
 </script>

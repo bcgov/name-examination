@@ -51,7 +51,7 @@ export const useExamination = defineStore('examine', () => {
   const userRoles = ref(useNuxtApp().$auth.realmAccess?.roles ?? [])
 
   const priority = ref<boolean>(false)
-  const is_complete = computed(() =>
+  const isComplete = computed(() =>
     [
       Status.Approved,
       Status.Rejected,
@@ -61,43 +61,43 @@ export const useExamination = defineStore('examine', () => {
       Status.Cancelled,
       Status.Historical,
       Status.Expired,
-    ].includes(nr_status.value)
+    ].includes(nrStatus.value)
   )
   const examiner = ref<string>()
   const isCurrentExaminer = computed(() => examiner.value === userId.value)
 
-  const decisionFunctionalityDisabled = computed(
+  const conflictSelectionDisabled = computed(
     () =>
       (customerMessageOverride.value != null &&
         customerMessageOverride.value != '') ||
       !isCurrentExaminer.value ||
-      !is_making_decision.value
+      !isMakingDecision.value
   )
   const autoAddDisabled = computed(
     () =>
-      decisionFunctionalityDisabled.value ||
+      conflictSelectionDisabled.value ||
       conflicts.selectedConflicts.length > 0 ||
       conflicts.comparedConflicts.length > 0
   )
 
-  const internalComments = ref<Array<Comment>>([])
+  const comments = ref<Array<Comment>>([])
 
   const macros = ref<Array<Macro>>([])
 
   const trademarks = ref<Array<Trademark>>([])
 
-  const is_editing = ref<boolean>()
-  const is_making_decision = ref<boolean>()
-  const is_header_shown = ref<boolean>()
+  const isEditing = ref<boolean>()
+  const isMakingDecision = ref<boolean>()
+  const isHeaderShown = ref<boolean>()
   const nrNumber = ref<string>('')
-  const nr_status = ref(Status.Draft)
+  const nrStatus = ref(Status.Draft)
   const isClosed = computed(() =>
     [
       Status.Rejected,
       Status.Approved,
       Status.Conditional,
       Status.Consumed,
-    ].includes(nr_status.value)
+    ].includes(nrStatus.value)
   )
   const previousStateCd = ref<Status>()
   const listRequestTypes = ref<Array<RequestType>>(
@@ -203,8 +203,8 @@ export const useExamination = defineStore('examine', () => {
   const userHasEditRole = computed(
     () => userHasApproverRole.value || userRoles.value.includes('names_editor')
   )
-  const is_my_current_nr = computed(
-    () => nr_status.value === Status.InProgress && isCurrentExaminer.value
+  const isMyCurrentNr = computed(
+    () => nrStatus.value === Status.InProgress && isCurrentExaminer.value
   )
   const furnished = ref<'Y' | 'N'>('N')
 
@@ -217,7 +217,7 @@ export const useExamination = defineStore('examine', () => {
   const prevNrRequired = ref<boolean>()
 
   const consumedBy = ref<string>()
-  const consentDateForEdit = ref<string>()
+  const consentDate = ref<string>()
   const consentFlag = ref<ConsentFlag>()
 
   const pendingTransactionRequest = ref<boolean>()
@@ -266,7 +266,7 @@ export const useExamination = defineStore('examine', () => {
 
   const canEdit = computed(() => {
     if (consumptionDate.value) return false
-    if (is_my_current_nr.value) return true
+    if (isMyCurrentNr.value) return true
     return (
       userHasEditRole.value &&
       [
@@ -275,12 +275,12 @@ export const useExamination = defineStore('examine', () => {
         Status.Rejected,
         Status.Approved,
         Status.Conditional,
-      ].includes(nr_status.value)
+      ].includes(nrStatus.value)
     )
   })
 
   const otherExaminerInProgress = computed(
-    () => !isCurrentExaminer.value && nr_status.value === Status.InProgress
+    () => !isCurrentExaminer.value && nrStatus.value === Status.InProgress
   )
 
   const expired = computed(
@@ -292,7 +292,7 @@ export const useExamination = defineStore('examine', () => {
   const isApprovedAndExpired = computed(
     // NR will move to 'EXPIRED' state once expiry date is reached for 'APPROVED', 'CONDITIONAL' state.
     // If currentState is 'EXPIRED', then it was approved and expired.
-    () => expiryDate.value && nr_status.value === Status.Expired
+    () => expiryDate.value && nrStatus.value === Status.Expired
   )
 
   const canCancel = computed(
@@ -300,8 +300,8 @@ export const useExamination = defineStore('examine', () => {
       userHasEditRole.value &&
       !otherExaminerInProgress.value &&
       !expired.value &&
-      !is_making_decision.value &&
-      nr_status.value !== Status.Cancelled &&
+      !isMakingDecision.value &&
+      nrStatus.value !== Status.Cancelled &&
       !isApprovedAndExpired.value
   )
 
@@ -309,7 +309,7 @@ export const useExamination = defineStore('examine', () => {
   const canClaim = computed(
     () =>
       userHasApproverRole.value &&
-      [Status.Draft, Status.Hold].includes(nr_status.value)
+      [Status.Draft, Status.Hold].includes(nrStatus.value)
   )
 
   const consumptionDate = computed(() =>
@@ -374,8 +374,8 @@ export const useExamination = defineStore('examine', () => {
     data.xproJurisdiction = jurisdiction.value || ''
     data.natureBusinessInfo = natureOfBusiness.value || data.natureBusinessInfo
     data.additionalInfo = additionalInfo.value || ''
-    data.comments = internalComments.value
-    data.state = nr_status.value
+    data.comments = comments.value
+    data.state = nrStatus.value
     data.previousStateCd = previousStateCd.value || null
     data.previousNr = previousNr.value || null
     data.corpNum = corpNum.value || ''
@@ -384,9 +384,9 @@ export const useExamination = defineStore('examine', () => {
 
     const toFormattedDate = (dt: DateTime) =>
       dt.toUTC().toFormat('EEE, d MMM yyyy TTT')
-    if (consentDateForEdit.value) {
+    if (consentDate.value) {
       data.consent_dt = toFormattedDate(
-        parseDate(consentDateForEdit.value).startOf('day')
+        parseDate(consentDate.value).startOf('day')
       )
     }
     if (expiryDate.value) {
@@ -437,7 +437,7 @@ export const useExamination = defineStore('examine', () => {
     if (!info || !info.names || info.names.length === 0) return
 
     consentFlag.value = undefined
-    consentDateForEdit.value = undefined
+    consentDate.value = undefined
 
     resetNameChoice(compName1)
     resetNameChoice(compName2)
@@ -457,19 +457,19 @@ export const useExamination = defineStore('examine', () => {
         .at(0) ?? compName1
     await setCurrentNameChoice(newCurrentNameChoice)
 
-    nr_status.value = info.state
+    nrStatus.value = info.state
     previousStateCd.value = info.previousStateCd ?? undefined
     requestType.value = info.requestTypeCd
 
     if (info.consent_dt) {
       const parsedConsentDate = parseDate(info.consent_dt)
-      consentDateForEdit.value =
+      consentDate.value =
         getDateFromDateTime(parsedConsentDate) ?? undefined
     }
 
     // if the current state is not INPROGRESS, HOLD, or DRAFT clear any existing name record in currentNameObj
     if (
-      ![Status.InProgress, Status.Hold, Status.Draft].includes(nr_status.value)
+      ![Status.InProgress, Status.Hold, Status.Draft].includes(nrStatus.value)
     ) {
       await setCurrentNameChoice(undefined)
     }
@@ -497,7 +497,7 @@ export const useExamination = defineStore('examine', () => {
     jurisdictionNumber.value = info.homeJurisNum ?? undefined
     natureOfBusiness.value = info.natureBusinessInfo ?? undefined
     additionalInfo.value = info.additionalInfo
-    internalComments.value = info.comments
+    comments.value = info.comments
 
     examiner.value = info.userId
     priority.value = info.priorityCd === 'Y'
@@ -514,8 +514,8 @@ export const useExamination = defineStore('examine', () => {
     furnished.value = info.furnished
     hasBeenReset.value = info.hasBeenReset
 
-    if (nr_status.value === Status.InProgress) {
-      is_making_decision.value = true
+    if (nrStatus.value === Status.InProgress) {
+      isMakingDecision.value = true
     }
 
     payments.initialize(info.id)
@@ -524,7 +524,7 @@ export const useExamination = defineStore('examine', () => {
   function isUndoable(name: NameChoice): boolean {
     if (
       !userHasApproverRole.value || // if the NR is closed in any way, a name is not undoable - the NR will have to be re-opened first
-      !is_my_current_nr.value ||
+      !isMyCurrentNr.value ||
       furnished.value === 'Y' || // if the NR is furnished, nothing is undoable
       name.state == Status.NotExamined || // if this name is complete (ie: anything other than NE) it's undoable
       name.state == null
@@ -763,14 +763,14 @@ export const useExamination = defineStore('examine', () => {
     }
 
     if (previousStateCd.value === Status.Draft) {
-      nr_status.value = previousStateCd.value
+      nrStatus.value = previousStateCd.value
       previousStateCd.value = undefined
     }
 
     await updateRequest()
 
-    is_editing.value = false
-    is_header_shown.value = true
+    isEditing.value = false
+    isHeaderShown.value = true
   }
 
   function updateRequestTypeRules(requestTypeObject: RequestType) {
@@ -799,19 +799,19 @@ export const useExamination = defineStore('examine', () => {
 
   async function edit() {
     // if this isn't the user's INPROGRESS, make it that
-    if (!is_my_current_nr.value && !isClosed.value) {
+    if (!isMyCurrentNr.value && !isClosed.value) {
       // track the previous state if it's currently in DRAFT (otherwise do not)
-      if (nr_status.value == Status.Draft) {
+      if (nrStatus.value == Status.Draft) {
         await updateNRStatePreviousState(Status.InProgress, Status.Draft)
       } else {
         await updateNRState(Status.InProgress)
       }
     }
-    is_editing.value = true
+    isEditing.value = true
   }
 
   async function holdRequest() {
-    is_making_decision.value = false
+    isMakingDecision.value = false
     await updateNRState(Status.Hold)
     conflicts.resetConflictList()
   }
@@ -824,7 +824,7 @@ export const useExamination = defineStore('examine', () => {
   }
 
   function clearConsent() {
-    consentDateForEdit.value = undefined
+    consentDate.value = undefined
     consentFlag.value = undefined
   }
 
@@ -832,12 +832,12 @@ export const useExamination = defineStore('examine', () => {
     conflicts.resetConflictList()
     clearSelectedDecisionReasons()
 
-    nr_status.value = Status.InProgress
+    nrStatus.value = Status.InProgress
     if (!userHasApproverRole.value) {
       // initialize user in edit mode, with previous state set so NR gets set back to draft
       // when user is done changing name, adding comment, etc.
       previousStateCd.value = Status.Draft
-      is_editing.value = true
+      isEditing.value = true
     }
   }
 
@@ -857,7 +857,7 @@ export const useExamination = defineStore('examine', () => {
 
   async function claimNr() {
     await updateNRState(Status.InProgress)
-    is_making_decision.value = true
+    isMakingDecision.value = true
   }
 
   async function cancelEdits() {
@@ -866,8 +866,8 @@ export const useExamination = defineStore('examine', () => {
     } else {
       await getpostgrescompInfo(nrNumber.value)
     }
-    is_editing.value = false
-    is_header_shown.value = false
+    isEditing.value = false
+    isHeaderShown.value = false
     editActions.forEach((ea) => ea.cancel())
   }
 
@@ -908,10 +908,10 @@ export const useExamination = defineStore('examine', () => {
   }
 
   async function updateNRState(state: Status) {
-    if (state === Status.Draft && nr_status.value === Status.InProgress) {
-      is_making_decision.value = false
+    if (state === Status.Draft && nrStatus.value === Status.InProgress) {
+      isMakingDecision.value = false
     }
-    nr_status.value = state
+    nrStatus.value = state
     await patchNameRequest(nrNumber.value, { state: state })
     await getpostgrescompInfo(nrNumber.value)
   }
@@ -919,7 +919,7 @@ export const useExamination = defineStore('examine', () => {
   async function cancelNr(commentText: string) {
     await postComment(commentText)
     resetExaminationArea()
-    is_making_decision.value = false
+    isMakingDecision.value = false
     updateNRState(Status.Cancelled)
   }
 
@@ -940,7 +940,7 @@ export const useExamination = defineStore('examine', () => {
   async function postComment(text: string) {
     const response = await postNewComment(nrNumber.value, text)
     if (response.status === 200) {
-      internalComments.value.push(await response.json())
+      comments.value.push(await response.json())
     }
   }
 
@@ -950,9 +950,9 @@ export const useExamination = defineStore('examine', () => {
     conditions.value = []
     histories.value = []
     trademarks.value = []
-    is_editing.value = false
-    is_making_decision.value = false
-    is_header_shown.value = false
+    isEditing.value = false
+    isMakingDecision.value = false
+    isHeaderShown.value = false
   }
 
   async function getpostgrescompInfo(nrNumber: string) {
@@ -1035,17 +1035,17 @@ export const useExamination = defineStore('examine', () => {
     initialize,
     updateRoute,
     priority,
-    is_complete,
+    isComplete,
     examiner,
     isCurrentExaminer,
     trademarks,
-    internalComments,
+    comments,
     isClosed,
-    is_editing,
-    is_making_decision,
-    is_header_shown,
+    isEditing,
+    isMakingDecision,
+    isHeaderShown,
     nrNumber,
-    nr_status,
+    nrStatus,
     previousStateCd,
     listRequestTypes,
     requestType,
@@ -1055,7 +1055,7 @@ export const useExamination = defineStore('examine', () => {
     entityTypeCd,
     histories,
     autoAddDisabled,
-    decisionFunctionalityDisabled,
+    conflictSelectionDisabled,
     conditions,
     consentRequiredByUser,
     selectedConditions,
@@ -1076,7 +1076,7 @@ export const useExamination = defineStore('examine', () => {
     currentName,
     userHasApproverRole,
     userHasEditRole,
-    is_my_current_nr,
+    isMyCurrentNr,
     furnished,
     forceConditional,
     listJurisdictions,
@@ -1092,7 +1092,7 @@ export const useExamination = defineStore('examine', () => {
     submittedDate,
     corpNum,
     corpNumRequired,
-    consentDateForEdit,
+    consentDate,
     consentFlag,
     additionalInfo,
     additionalInfoTransformedTemplate,

@@ -7,7 +7,7 @@
       <div class="flex w-full items-center gap-x-2">
         <input
           type="checkbox"
-          :disabled="examine.decisionFunctionalityDisabled"
+          :disabled="examine.conflictSelectionDisabled"
           class="h-4 w-4"
           :checked="isChecked"
           @change="e => toggleConflictCheckbox((e.target as HTMLInputElement).checked)"

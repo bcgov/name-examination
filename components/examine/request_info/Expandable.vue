@@ -1,12 +1,12 @@
 <template>
   <div class="rounded-md text-sm">
     <!-- Editable state -->
-    <div class="space-y-1" v-if="examine.is_editing">
+    <div class="space-y-1" v-if="examine.isEditing">
       <h2 class="font-bold">{{ title }}</h2>
       <slot name="editable"><slot></slot></slot>
     </div>
 
-    <div class="space-y-1" v-else-if="examine.is_header_shown">
+    <div class="space-y-1" v-else-if="examine.isHeaderShown">
       <h2 class="font-bold">{{ title }}</h2>
       <slot name="maximized"><slot></slot></slot>
     </div>

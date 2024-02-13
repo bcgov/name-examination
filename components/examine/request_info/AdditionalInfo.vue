@@ -6,7 +6,7 @@
       </template>
 
       <template #popup>
-        <div v-if="examine.is_my_current_nr">
+        <div v-if="examine.isMyCurrentNr">
           <EditableTextBox
             v-model="info"
             class="h-72"

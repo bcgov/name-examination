@@ -7,7 +7,7 @@
     />
 
     <ExamineHeaderRequestTypeInfo
-      v-if="!examine.is_editing || examine.isClosed"
+      v-if="!examine.isEditing || examine.isClosed"
       :jurisdiction="examine.jurisdiction"
       :jurisdiction-number="examine.jurisdictionNumber"
     />

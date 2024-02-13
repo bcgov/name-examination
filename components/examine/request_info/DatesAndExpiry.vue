@@ -22,7 +22,7 @@
     >
       <h2 class="font-bold">Expiry:&nbsp;</h2>
       <span v-if="!examine.expiryDate">n/a</span>
-      <span v-else-if="!examine.is_editing">
+      <span v-else-if="!examine.isEditing">
         {{ examine.expiryDate }}
       </span>
       <div v-else class="flex flex-col">
@@ -50,8 +50,8 @@
       <span>{{ examine.consumedBy ? examine.consumedBy : 'n/a' }}</span>
     </div>
 
-    <div v-if="examine.nr_status === Status.Conditional">
-      <div v-if="!examine.is_editing" class="flex items-center">
+    <div v-if="examine.nrStatus === Status.Conditional">
+      <div v-if="!examine.isEditing" class="flex items-center">
         <h2 class="font-bold">Consent:&nbsp;</h2>
         <span>{{ consentText }}</span>
       </div>
@@ -143,7 +143,7 @@ const consumptionDateDisplay = computed(() => {
 function setDefaultInputValues() {
   expiry.value = examine.expiryDate
   consentFlag.value = examine.consentFlag
-  consentDate.value = examine.consentDateForEdit
+  consentDate.value = examine.consentDate
 }
 
 examine.addEditAction({
@@ -162,16 +162,16 @@ examine.addEditAction({
   update() {
     examine.expiryDate = expiry.value
 
-    if (examine.nr_status === Status.Conditional) {
+    if (examine.nrStatus === Status.Conditional) {
       examine.consentFlag = consentFlag.value
     } else {
       examine.consentFlag = undefined
     }
 
     if (examine.consentFlag === ConsentFlag.Received) {
-      examine.consentDateForEdit = consentDate.value
+      examine.consentDate = consentDate.value
     } else {
-      examine.consentDateForEdit = undefined
+      examine.consentDate = undefined
     }
   },
   cancel: setDefaultInputValues,
