@@ -6,7 +6,7 @@
       <input
         class="h-4 w-4"
         type="checkbox"
-        v-model="examine.consentRequiredByUser"
+        v-model="examine.consentRequired"
       />
       <span>Consent</span>
     </label>

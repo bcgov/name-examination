@@ -37,8 +37,7 @@ const examine = useExamination()
 const conflicts = useConflicts()
 
 async function quickApprove() {
-  if (examine.consentRequiredByUser) {
-    examine.forceConditional = true
+  if (examine.consentRequired) {
     await examine.makeDecision(Status.Approved)
   } else {
     conflicts.clearSelectedConflicts()

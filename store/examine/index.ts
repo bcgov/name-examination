@@ -120,7 +120,7 @@ export const useExamination = defineStore('examine', () => {
 
   const histories = ref<Array<HistoryEntry>>([])
 
-  const consentRequiredByUser = ref<boolean>()
+  const consentRequired = ref<boolean>()
 
   const selectedConditions = ref<Array<Condition>>([])
 
@@ -143,14 +143,11 @@ export const useExamination = defineStore('examine', () => {
   )
 
   const conflictMessages = computed(() => {
-    if (
-      conflicts.selectedConflicts.length === 0 &&
-      consentRequiredByUser.value
-    ) {
+    if (conflicts.selectedConflicts.length === 0 && consentRequired.value) {
       return ['Consent Required \n']
     } else {
       return conflicts.selectedConflicts.map((conflict) =>
-        consentRequiredByUser.value
+        consentRequired.value
           ? `Consent required from ${conflict.text}`
           : `Rejected due to conflict with ${conflict.text}`
       )
@@ -183,10 +180,6 @@ export const useExamination = defineStore('examine', () => {
       return requestorMessageStrings.value.join('\n\n')
     }
   })
-
-  const acceptanceWillBeConditional = computed(
-    () => consentRequiredByUser.value
-  )
 
   const compName1 = reactive<NameChoice>(getEmptyNameChoice(1))
   const compName2 = reactive<NameChoice>(getEmptyNameChoice(2))
@@ -248,8 +241,6 @@ export const useExamination = defineStore('examine', () => {
   const fax = ref<string>()
   const conEmail = ref<string>()
   const contactName = ref<string>()
-
-  const forceConditional = ref<boolean>()
 
   const hasBeenReset = ref<boolean>()
 
@@ -625,9 +616,8 @@ export const useExamination = defineStore('examine', () => {
     if (!currentNameObj.value) return
 
     if (decision === Status.Approved) {
-      if (acceptanceWillBeConditional.value || forceConditional.value) {
+      if (consentRequired.value) {
         currentNameObj.value.state = Status.Condition
-        forceConditional.value = false
       } else {
         currentNameObj.value.state = Status.Approved
         // If there were conflicts selected but this is an approval, remove the selected conflicts.
@@ -1009,7 +999,7 @@ export const useExamination = defineStore('examine', () => {
     conflicts.resetConflictList()
     clearSelectedDecisionReasons()
     conflicts.autoAdd = true
-    consentRequiredByUser.value = false
+    consentRequired.value = false
     customerMessageOverride.value = undefined
   }
 
@@ -1060,7 +1050,7 @@ export const useExamination = defineStore('examine', () => {
     autoAddDisabled,
     conflictSelectionDisabled,
     conditions,
-    consentRequiredByUser,
+    consentRequired,
     selectedConditions,
     customerMessageOverride,
     decisionSelectionsDisabled,
@@ -1069,7 +1059,6 @@ export const useExamination = defineStore('examine', () => {
     selectedTrademarks,
     requestorMessageStrings,
     requestorMessage,
-    acceptanceWillBeConditional,
     compName1,
     compName2,
     compName3,
@@ -1081,7 +1070,6 @@ export const useExamination = defineStore('examine', () => {
     userHasEditRole,
     isMyCurrentNr,
     furnished,
-    forceConditional,
     listJurisdictions,
     previousNr,
     prevNrRequired,
