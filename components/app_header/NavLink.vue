@@ -1,7 +1,7 @@
 <template>
   <nuxt-link :to="route">
     <span
-      class="font-medium transition hover:border-b-2 hover:border-bcgov-blue5"
+      class="font-medium transition hover:border-b-2 hover:border-bcgov-blue5 whitespace-nowrap"
       :class="{
         'border-b-2 border-bcgov-blue5': highlight,
       }"
