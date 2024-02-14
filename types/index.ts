@@ -248,6 +248,7 @@ export interface NameRequest {
   furnished: 'Y' | 'N'
   hasBeenReset: boolean
   homeJurisNum: string | null
+  details: unknown | null
   id: number
   lastUpdate: string
   legalType: string

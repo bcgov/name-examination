@@ -373,9 +373,10 @@ export const useExamination = defineStore('examine', () => {
     data.state = nrStatus.value
     data.previousStateCd = previousStateCd.value || null
     data.previousNr = previousNr.value || null
-    data.corpNum = corpNum.value || ''
+    data.corpNum = corpNum.value || null
     data.furnished = furnished.value
     data.hasBeenReset = hasBeenReset.value || false
+    data.details = null
 
     const toFormattedDate = (dt: DateTime) =>
       dt.toUTC().toFormat('EEE, d MMM yyyy TTT')
@@ -456,6 +457,7 @@ export const useExamination = defineStore('examine', () => {
     previousStateCd.value = info.previousStateCd ?? undefined
     requestType.value = info.requestTypeCd
 
+    consentFlag.value = info.consentFlag ?? undefined
     if (info.consent_dt) {
       const parsedConsentDate = parseDate(info.consent_dt)
       consentDate.value = getDateFromDateTime(parsedConsentDate) ?? undefined
