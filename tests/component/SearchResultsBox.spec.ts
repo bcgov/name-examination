@@ -81,6 +81,10 @@ describe('Search Results Box Component', () => {
     tableRows.forEach((row, i) => {
       const expectedRow = search.rows[i] // actual row in the search store that the tr element is modeling
       row.findAll('td').forEach((cell, j) => {
+        // can't test for NR number cell as it uses nuxt link
+        if (search.selectedColumns[j] === SearchColumns.NameRequestNumber) {
+          return
+        }
         const expectedValue = expectedRow[search.selectedColumns[j]]
         expect(cell.text()).contains(expectedValue.trim())
       })
@@ -127,7 +131,10 @@ describe('Search Results Box Component', () => {
   })
 
   it('updates the status filter', async () => {
-    await testDropdownFilter(SearchColumns.Status, Object.values(StatusSearchFilter))
+    await testDropdownFilter(
+      SearchColumns.Status,
+      Object.values(StatusSearchFilter)
+    )
   })
 
   it('updates the modified by filter', async () => {
