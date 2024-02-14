@@ -376,6 +376,8 @@ export const useExamination = defineStore('examine', () => {
     data.corpNum = corpNum.value || null
     data.furnished = furnished.value
     data.hasBeenReset = hasBeenReset.value || false
+    data.consentFlag = consentFlag.value || null
+    data.consent_dt = consentDate.value || null
     data.details = null
 
     const toFormattedDate = (dt: DateTime) =>
