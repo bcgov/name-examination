@@ -15,7 +15,13 @@
     <h3 class="font-bold">Applicant</h3>
     <TextInput v-model="firstName" placeholder="First Name" maxlength="200" />
     <TextInput v-model="middleName" placeholder="Middle Name" maxlength="200" />
-    <TextInput v-model="lastName" placeholder="Last Name" maxlength="200" />
+    <TextInput
+      v-model="lastName"
+      placeholder="Last Name"
+      maxlength="200"
+      :error-style="lastNameErrorText != ''"
+      @input="lastNameErrorText = ''"
+    />
     <p class="font-bold text-red-600">{{ lastNameErrorText }}</p>
 
     <h3 class="font-bold">Address</h3>
@@ -71,8 +77,8 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
-const examine = useExamineStore()
+import { useExamination } from '~/store/examine'
+const examine = useExamination()
 
 const clientFirstName = ref(examine.clientFirstName)
 const clientLastName = ref(examine.clientLastName)
@@ -92,8 +98,8 @@ const conEmail = ref(examine.conEmail)
 const contactName = ref(examine.contactName)
 
 const lastNameErrorText = ref('')
+const lastNameEmpty = computed(() => lastName.value?.trim().length === 0)
 
-const lastNameEmpty = computed(() => lastName.value.trim().length === 0)
 examine.addEditAction({
   validate: () => {
     if (lastNameEmpty.value) {

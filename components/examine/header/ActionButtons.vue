@@ -1,10 +1,10 @@
 <template>
-  <ExamineHeaderEditActionButtons v-if="examine.is_editing" />
+  <ExamineHeaderEditActionButtons v-if="examine.isEditing" />
 
   <div v-else class="flex items-center space-x-1">
     <!-- Edit Button -->
     <IconButton
-      v-if="examine.canEdit && showButtons"
+      v-if="examine.canEdit && notHistoricalReservedConsumed"
       light
       @click="examine.edit"
       mnemonic="d"
@@ -16,12 +16,12 @@
     <!-- Toggle Details Button -->
     <IconButton light @click="toggleDetails" mnemonic="b">
       <ArrowsPointingInIcon
-        v-if="examine.is_header_shown"
+        v-if="examine.isHeaderShown"
         class="h-5 w-5 stroke-2"
       />
       <ArrowsPointingOutIcon v-else class="h-5 w-5 stroke-2" />
 
-      <template #text v-if="examine.is_header_shown"
+      <template #text v-if="examine.isHeaderShown"
         >Hide Details (<u>b</u>)
       </template>
       <template #text v-else>Show Details (<u>b</u>)</template>
@@ -29,7 +29,7 @@
 
     <!-- Get Next Button -->
     <IconButton
-      v-if="examine.userHasApproverRole && !examine.is_my_current_nr"
+      v-if="examine.userHasApproverRole && !examine.isMyCurrentNr"
       @click="examine.getNextCompany"
       light
       mnemonic="n"
@@ -40,7 +40,7 @@
 
     <!-- Cancel Request Button -->
     <IconButton
-      v-if="examine.canCancel && showButtons"
+      v-if="examine.canCancel && notHistoricalReservedConsumed"
       light
       text="Cancel Request"
       @click="showCancelDialog"
@@ -50,7 +50,7 @@
 
     <!-- Hold Button -->
     <IconButton
-      v-if="examine.is_my_current_nr"
+      v-if="examine.isMyCurrentNr"
       light
       @click="examine.holdRequest"
       mnemonic="h"
@@ -59,7 +59,10 @@
       <template #text><u>H</u>old Request</template>
     </IconButton>
 
-    <div v-if="showReopenAndResetButtons && showButtons" class="space-x-1">
+    <div
+      v-if="showReopenAndResetButtons && notHistoricalReservedConsumed"
+      class="space-x-1"
+    >
       <!-- Reopen (unfurnished) Button -->
       <IconButton
         v-if="examine.furnished === 'N'"
@@ -78,7 +81,7 @@
 
     <!-- Examine Button -->
     <IconButton
-      v-if="examine.canClaim && showButtons"
+      v-if="examine.canClaim && notHistoricalReservedConsumed"
       light
       @click="examine.claimNr"
       mnemonic="x"
@@ -110,28 +113,29 @@ import {
   XMarkIcon,
 } from '@heroicons/vue/24/outline'
 import { Status } from '~/enums/nr-status'
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
 
-const examine = useExamineStore()
+const examine = useExamination()
 const showCancelRequestDialog = ref(false)
 
-const showButtons = computed(
+/** Returns true if the NR is not historical, reserved, or consumed. */
+const notHistoricalReservedConsumed = computed(
   () =>
     ![Status.Historical, Status.ConditionalReserved, Status.Reserved].includes(
-      examine.nr_status
+      examine.nrStatus
     ) && !examine.consumptionDate
 )
 
 const showReopenAndResetButtons = computed(
   () =>
     examine.userHasEditRole &&
-    examine.is_complete &&
-    examine.nr_status !== Status.Cancelled &&
+    examine.isComplete &&
+    examine.nrStatus !== Status.Cancelled &&
     !examine.isApprovedAndExpired
 )
 
 function toggleDetails() {
-  examine.is_header_shown = !examine.is_header_shown
+  examine.isHeaderShown = !examine.isHeaderShown
 }
 
 function showCancelDialog() {

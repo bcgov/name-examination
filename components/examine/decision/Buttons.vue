@@ -7,7 +7,7 @@
       @click="examine.makeDecision(Status.Approved)"
     >
       <CheckIcon class="h-5 w-5 stroke-2" />
-      <template v-if="examine.acceptanceWillBeConditional" #text>
+      <template v-if="examine.consentRequired" #text>
         Conditionally <u>A</u>pprove
       </template>
       <template v-else #text><u>A</u>pprove Name</template>
@@ -25,8 +25,8 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
 import { CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { Status } from '~/enums/nr-status'
-const examine = useExamineStore()
+const examine = useExamination()
 </script>

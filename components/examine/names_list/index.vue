@@ -1,5 +1,5 @@
 <template>
-  <ol v-if="!examine.is_editing" class="list-decimal">
+  <ol v-if="!examine.isEditing" class="list-decimal">
     <li v-for="choice in examine.nameChoices">
       <ExamineNamesListChoice
         :choice="choice"
@@ -14,9 +14,9 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
 import type { NameChoice } from '~/types'
-const examine = useExamineStore()
+const examine = useExamination()
 
 const isCurrent = (choice: number) => examine.currentChoice === choice
 
@@ -25,7 +25,7 @@ const isCurrent = (choice: number) => examine.currentChoice === choice
  * In some older NRs, there is no decision reason text. In these cases we want to display the list of conflicts instead
  */
 function decisionReasonOrConflictList(name: NameChoice): string {
-  if (examine.is_complete) {
+  if (examine.isComplete) {
     if (name.decision_text) {
       return name.decision_text
     } else {

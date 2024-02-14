@@ -4,48 +4,38 @@
       v-model="searchString"
       class="grow"
       placeholder="name"
-      @submit.prevent="onNormalSearchSubmit"
+      @submit.prevent="onSearchSubmit"
       focus-mnemonic="s"
+      :clear="examine.currentName ?? undefined"
+      input-required
     />
     <SearchInput
       v-model="exactSearchString"
       placeholder="exact phrase"
-      @submit.prevent="onExactSearchSubmit"
+      @submit.prevent="onSearchSubmit"
+      clear=""
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
 
-const examine = useExamineStore()
+const examine = useExamination()
 
-const searchString = ref(examine.currentNameObj.name)
+const searchString = ref(examine.currentName ?? '')
 const exactSearchString = ref('')
 
-function onNormalSearchSubmit(_event: Event) {
-  runManualRecipe()
-}
-
-function onExactSearchSubmit(event: Event) {
-  if (exactSearchString.value) {
-    runManualRecipe()
-  } else {
-    event.preventDefault()
-    event.stopImmediatePropagation()
-  }
-}
-
-function runManualRecipe() {
-  examine.resetExaminationArea()
+function onSearchSubmit(_event: Event) {
   examine.runManualRecipe(searchString.value, exactSearchString.value)
 }
 
 watch(
   () => [examine.currentName],
   async (_state) => {
-    searchString.value = examine.currentName
+    searchString.value = examine.currentName ?? ''
     exactSearchString.value = ''
+    examine.runManualRecipe(searchString.value, exactSearchString.value)
   },
   { deep: true }
 )

@@ -7,7 +7,7 @@
     />
 
     <ExamineHeaderRequestTypeInfo
-      v-if="!examine.is_editing || examine.isClosed"
+      v-if="!examine.isEditing || examine.isClosed"
       :jurisdiction="examine.jurisdiction"
       :jurisdiction-number="examine.jurisdictionNumber"
     />
@@ -18,6 +18,6 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
-const examine = useExamineStore()
+import { useExamination } from '~/store/examine'
+const examine = useExamination()
 </script>

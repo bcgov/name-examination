@@ -5,27 +5,29 @@
       <p>BC Corporation</p>
 
       <h3 class="font-bold">Corp Number</h3>
-      <p>{{ conflict['incorp #'] }}</p>
+      <p>{{ data['incorp #'] }}</p>
 
       <h3 class="font-bold">Directors</h3>
       <div class="flex flex-col">
-        <p v-if="isNotAvailable(conflict.directors)">Not Available</p>
-        <p v-else v-for="director in conflict.directors">{{ director }}</p>
+        <p v-if="data.directors === 'Not Available'">Not Available</p>
+        <p v-else v-for="director in data.directors">{{ director }}</p>
       </div>
 
       <h3 class="font-bold">Nature of Business</h3>
-      <p>{{ conflict['nature of business'] }}</p>
+      <p>{{ data['nature of business'] }}</p>
     </div>
 
     <div class="grid basis-1/2 grid-cols-2 overflow-x-auto">
       <h3 class="font-bold">Records Office Delivery Address</h3>
       <div>
-        <p v-if="isNotAvailable(conflict['records office delivery address'])">
+        <p v-if="data['records office delivery address'] === 'Not Available'">
           Not Available
         </p>
         <p
           v-else
-          v-for="addrLine in conflict['records office delivery address']"
+          v-for="addrLine in parseAddress(
+            data['records office delivery address']
+          )"
         >
           {{ addrLine }}
         </p>
@@ -33,7 +35,11 @@
 
       <h3 class="font-bold">Registered Office Delivery Address</h3>
       <div>
-        <p v-for="addrLine in conflict['registered office delivery address']">
+        <p
+          v-for="addrLine in parseAddress(
+            data['registered office delivery address']
+          )"
+        >
           {{ addrLine }}
         </p>
       </div>
@@ -42,11 +48,10 @@
 </template>
 
 <script setup lang="ts">
-import type { BCCorpConflict } from '~/types'
+import type { BCCorporation } from '~/types'
+import { parseAddress } from '~/util'
 
 defineProps<{
-  conflict: BCCorpConflict
+  data: BCCorporation
 }>()
-
-const isNotAvailable = (val: any) => val === 'Not Available'
 </script>

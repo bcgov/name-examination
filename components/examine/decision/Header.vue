@@ -6,7 +6,7 @@
       <input
         class="h-4 w-4"
         type="checkbox"
-        v-model="examine.consentRequiredByUser"
+        v-model="examine.consentRequired"
       />
       <span>Consent</span>
     </label>
@@ -14,6 +14,6 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
-const examine = useExamineStore()
+import { useExamination } from '~/store/examine'
+const examine = useExamination()
 </script>

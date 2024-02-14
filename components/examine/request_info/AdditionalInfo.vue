@@ -6,14 +6,20 @@
       </template>
 
       <template #popup>
-        <EditableTextBox
-          v-if="examine.is_my_current_nr"
-          v-model="info"
-          class="h-72"
-          placeholder="Additional Info..."
-          @submit="saveEdits"
-          @cancel="cancelEdits"
-        />
+        <div v-if="examine.isMyCurrentNr">
+          <EditableTextBox
+            v-model="info"
+            class="h-72"
+            placeholder="Additional Info..."
+            :character-limit="characterLimit"
+            use-popover-buttons
+            @submit="saveAndUpdateEdits"
+            @cancel="cancelEdits"
+          />
+          <p v-if="info.length > characterLimit" class="font-bold text-red-600">
+            {{ characterLimitDisplay }}
+          </p>
+        </div>
         <p v-else>{{ additionalInfoDisplay }}</p>
       </template>
 
@@ -26,17 +32,24 @@
           class="h-72"
           v-model="info"
           placeholder="Additional Info..."
+          :character-limit="characterLimit"
           hide-submit
           hide-cancel
         />
+        <p v-if="info.length > characterLimit" class="font-bold text-red-600">
+          {{ characterLimitDisplay }}
+        </p>
       </template>
     </ExamineRequestInfoExpandable>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
-const examine = useExamineStore()
+import { useExamination } from '~/store/examine'
+const examine = useExamination()
+
+const characterLimit = 150
+const characterLimitDisplay = `Message cut off at ${characterLimit} characters`
 
 const info = ref(examine.additionalInfo)
 
@@ -47,11 +60,21 @@ const additionalInfoDisplay = computed(() =>
 )
 
 function saveEdits() {
-  examine.additionalInfo = info.value
+  examine.additionalInfo = info.value.substring(0, characterLimit)
+  info.value = examine.additionalInfo
+}
+
+async function saveAndUpdateEdits() {
+  saveEdits()
+  await examine.updateRequest()
 }
 
 function cancelEdits() {
-  info.value = examine.additionalInfo
+  syncAdditionalInfo()
+}
+
+function syncAdditionalInfo() {
+  info.value = examine.additionalInfo ?? ''
 }
 
 examine.addEditAction({
@@ -59,4 +82,12 @@ examine.addEditAction({
   update: saveEdits,
   cancel: cancelEdits,
 })
+
+watch(
+  () => [examine.additionalInfo],
+  (_state) => {
+    syncAdditionalInfo()
+  },
+  { deep: true }
+)
 </script>

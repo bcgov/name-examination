@@ -11,7 +11,7 @@
         class="ml-1 h-5 w-5 stroke-2 transition"
       />
     </summary>
-    <div class="p-1">
+    <div v-if="open" class="p-1">
       <slot name="content"></slot>
     </div>
   </details>

@@ -28,17 +28,20 @@
 
       <h3 class="font-bold">Head Office</h3>
       <div>
-        <p v-for="addrLine in conflict['head office']">{{ addrLine }}</p>
+        <p v-for="addrLine in parseAddress(conflict['head office'])">
+          {{ addrLine }}
+        </p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { XproConflict } from '~/types'
+import type { XproCorporation } from '~/types'
+import { parseAddress } from '~/util'
 
 defineProps<{
-  conflict: XproConflict
+  conflict: XproCorporation
 }>()
 
 const isNotAvailable = (val: any) => val === 'Not Available'

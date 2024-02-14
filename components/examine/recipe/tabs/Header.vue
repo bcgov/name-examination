@@ -33,7 +33,7 @@
         class="h-4 w-4"
         type="checkbox"
         id="auto-add"
-        v-model="examine.conflictsAutoAdd"
+        v-model="conflicts.autoAdd"
         :disabled="examine.autoAddDisabled"
       />
       <span>auto add</span>
@@ -44,49 +44,46 @@
 <script setup lang="ts">
 import { DocumentDuplicateIcon } from '@heroicons/vue/24/outline'
 import { TabList } from '@headlessui/vue'
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
+import { useConflicts } from '~/store/examine/conflicts'
 
-const examine = useExamineStore()
+const examine = useExamination()
+const conflicts = useConflicts()
 
 const conflictsIconType = computed(() =>
   [
-    examine.parsedCOBRSConflicts,
-    examine.exactMatchesConflicts,
-    examine.parsedSynonymConflicts,
-    examine.parsedPhoneticConflicts,
+    conflicts.cobrsPhoneticMatches,
+    conflicts.exactMatches,
+    conflicts.synonymMatches,
+    conflicts.phoneticMatches,
   ].some((arr) => arr.length > 0)
     ? 'error'
     : 'ok'
 )
 
 const conditionsIconType = computed(() => {
-  if (examine.conditionsJSON) {
-    let { restricted_words_conditions } = examine.conditionsJSON
-    if (restricted_words_conditions.length > 0) {
-      for (let resWord of restricted_words_conditions) {
-        if (
-          resWord.cnd_info.every((con) => con.allow_use === 'N') ||
-          resWord.cnd_info.every((con) => con.consent_required === 'Y')
-        )
-          return 'error'
-      }
-      return 'warning'
-    }
+  if (examine.conditions.length === 0) return 'ok'
+  if (
+    examine.conditions.every((c) => c.allow_use === 'N') ||
+    examine.conditions.every((c) => c.consent_required === 'Y')
+  ) {
+    return 'error'
+  }
+  if (examine.conditions.length > 0) {
+    return 'warning'
   }
   return 'ok'
 })
 
 const trademarksIconType = computed(() => {
-  return !examine.trademarkInfo || examine.trademarkInfo.names.length === 0
-    ? 'ok'
-    : 'error'
+  return !examine.trademarks || examine.trademarks.length === 0 ? 'ok' : 'error'
 })
 
 const historyIconType = computed(() => {
-  if (!examine.historiesJSON || examine.historiesJSON.names.length === 0) {
+  if (!examine.histories || examine.histories.length === 0) {
     return 'ok'
   }
-  for (let historyItem of examine.historiesJSON.names) {
+  for (let historyItem of examine.histories) {
     if (
       historyItem.name_state_type_cd === 'R' ||
       historyItem.name_state_type_cd === 'REJECTED'

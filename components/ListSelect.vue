@@ -13,6 +13,7 @@
           :class="{
             'hover:bg-gray-100': !disabled,
             'pointer-events-none text-gray-400': disabled,
+            'border-2 border-red-600': errorStyle,
           }"
         >
           <span class="block"><slot>Select</slot></span>
@@ -86,13 +87,15 @@ import {
 import { ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/outline'
 
 type ModelValueType = any
-const { modelValue, options, multiple } = defineProps<{
+defineProps<{
   modelValue: ModelValueType | Array<ModelValueType>
   options: Array<any>
   multiple?: boolean
   disabled?: boolean
   optionsStyle?: string
   optionsDisplay?: (option: ModelValueType) => string
+  /** Style this input to indicate an error, useful to indicate invalid inputs */
+  errorStyle?: boolean
 }>()
 
 const emit = defineEmits<{

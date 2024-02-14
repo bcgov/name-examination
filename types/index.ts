@@ -1,31 +1,17 @@
 import type {
   ClassTypeCode,
+  ConsentFlag,
   EntityTypeCode,
+  PaymentMethod,
+  RefundStatus,
   RequestActionCode,
   RequestTypeCode,
 } from '~/enums/codes'
 import type { Status } from '~/enums/nr-status'
 
-export interface Applicants {
-  firstName: string
-  lastName: string
-  addrLine1: string
-  addrLine2: string
-  addrLine3: string
-  city: string
-  stateProvinceCd: string
-  postalCd: string
-  countryTypeCd: string
-  phoneNumber: string
-  emailAddress: string
-  clientFirstName: string
-  clientLastName: string
-  contact: string
-}
-
 export interface NameChoice {
   choice: number
-  name: string
+  name: string | null
   state: Status
   decision_text: string | null
   conflict1: string | null
@@ -45,34 +31,21 @@ export interface Comment {
   timestamp: string
 }
 
-export interface Conflict {
-  type: 'corp' | 'name'
-  startDate: string
-  nrNumber: string
-  jurisdiction: string
-  text: string
-  invalidRecordInd: boolean
-}
+export type ConflictData = NameRequest | Corporation
 
-export interface NameRequestConflict extends Conflict {
-  applicants: Applicants
-  state: string
-  comments: Array<Comment>
-  names: Array<NameChoice>
-}
-
-export interface CorpConflict extends Conflict {
+export interface Corporation {
   'incorp #': string
   directors: string[] | 'Not Available'
   'nature of business': string
+  jurisdiction: string
 }
 
-export interface BCCorpConflict extends CorpConflict {
+export interface BCCorporation extends Corporation {
   'records office delivery address': string[] | 'Not Available'
   'registered office delivery address': string[]
 }
 
-export interface XproConflict extends CorpConflict {
+export interface XproCorporation extends Corporation {
   'attorney names': string[] | 'Not Available'
   'head office': string[]
 }
@@ -87,7 +60,7 @@ export interface HistoryEntry {
   submit_count: number
 }
 
-export interface History {
+export interface Histories {
   names: Array<HistoryEntry>
   highlighting: string
   response: {
@@ -100,31 +73,51 @@ export interface History {
   }
 }
 
+export enum ConflictSource {
+  Corp = 'CORP',
+  NameRequest = 'NR',
+}
+
 export interface ConflictListItem {
   text: string
   highlightedText: string
   jurisdiction: string
   nrNumber: string
   startDate: string
-  source: 'CORP' | 'NR'
+  source: ConflictSource
 }
 
 export interface ConflictList {
   text: string
   highlightedText: string
-  meta: string
+  meta: string | undefined
   children: Array<ConflictListItem>
 }
 
 export interface Condition {
+  id: number
+  phrase: string
+  text: string
   allow_use: 'Y' | 'N'
   consent_required: 'Y' | 'N'
-  id: number
   instructions: string
-  text: string
-  consent_required_tf: boolean
-  allow_use_tf: boolean
-  phrase: string
+}
+
+export interface ConditionsList {
+  restricted_words_conditions: Array<{
+    cnd_info: Array<{
+      allow_use: 'Y' | 'N'
+      consent_required: 'Y' | 'N'
+      consenting_body: string
+      id: number
+      instructions: string
+      text: string
+    }>
+    word_info: {
+      id: number
+      phrase: string
+    }
+  }>
 }
 
 export interface Macro {
@@ -141,8 +134,21 @@ export interface Trademark {
   status: string
 }
 
-export interface TrademarkApiResponse {
+export interface TrademarksObject {
   names: Array<Trademark>
+  highlighting: {
+    [key: string]: {
+      name?: Array<string>
+    }
+  }
+  response: {
+    maxScore: number
+    name: string
+    numFound: number
+    /** string representing number of rows */
+    rows: string
+    start: number
+  }
 }
 
 export interface RequestType {
@@ -174,7 +180,14 @@ export interface Jurisdiction {
   text: string
 }
 
-export interface Transaction {
+export interface Transactions {
+  response: {
+    count: number
+  }
+  transactions: Array<TransactionItem>
+}
+
+export interface TransactionItem {
   additionalInfo: string
   consentFlag: 'Y' | 'N'
   /** consent date */
@@ -190,4 +203,85 @@ export interface Transaction {
   stateCd: Status
   user_action: string
   user_name: string
+}
+
+export interface Action {
+  URL: string
+  entitiesFilingName: string
+  filingName: string
+  learTemplate?: string
+}
+
+export interface Applicant {
+  addrLine1: string
+  addrLine2: string | null
+  addrLine3: string | null
+  city: string
+  clientFirstName: string | null
+  clientLastName: string | null
+  contact: string
+  countryTypeCd: string
+  declineNotificationInd: any
+  emailAddress: string
+  faxNumber: string | null
+  firstName: string
+  lastName: string
+  middleName: string | null
+  partyId: number
+  phoneNumber: string
+  postalCd: string
+  stateProvinceCd: string
+}
+
+export interface NameRequest {
+  actions: Array<Action>
+  additionalInfo: string
+  applicants: Applicant
+  checkedOutBy: string | null
+  checkedOutDt: string | null
+  comments: Array<Comment>
+  consentFlag: ConsentFlag | null
+  consent_dt: string | null
+  corpNum: string | null
+  entity_type_cd: EntityTypeCode
+  expirationDate: string | null
+  furnished: 'Y' | 'N'
+  hasBeenReset: boolean
+  homeJurisNum: string | null
+  details: unknown | null
+  id: number
+  lastUpdate: string
+  legalType: string
+  names: Array<NameChoice>
+  natureBusinessInfo: string | null
+  notifiedBeforeExpiry: boolean
+  notifiedExpiry: boolean
+  nrNum: string
+  previousNr: string | null
+  previousRequestId: string | null
+  previousStateCd: Status | null
+  priorityCd: 'Y' | 'N'
+  priorityDate: string
+  requestTypeCd: RequestTypeCode
+  request_action_cd: RequestActionCode
+  source: string | null
+  state: Status
+  stateCd: string
+  submitCount: number
+  submittedDate: string
+  submitter_userid: string
+  target: string
+  tradeMark: string | null
+  userId: string
+  xproJurisdiction: string
+}
+
+export interface Payment {
+  sbcPayment: {
+    paid: number
+    refund: number
+    statusCode: RefundStatus
+    paymentMethod: PaymentMethod
+  }
+  refund: number
 }

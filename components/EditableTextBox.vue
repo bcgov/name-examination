@@ -3,8 +3,10 @@
     <div class="flex grow flex-col">
       <textarea
         ref="textArea"
-        class="grow resize-none text-ellipsis rounded-md border border-gray-300 p-2 text-sm outline-none"
-        :class="{ 'border-b-0': characterLimit }"
+        class="grow resize-none text-ellipsis rounded-md border border-gray-300 p-2 text-sm"
+        :class="{
+          'rounded-b-none border-b-0 outline-none': characterLimit,
+        }"
         :placeholder="placeholder"
         :readonly="readonly"
         :value="modelValue"
@@ -20,28 +22,33 @@
     </div>
 
     <div class="flex space-x-1">
-      <IconButton
-        v-if="!hideSubmit"
-        white
-        class="h-7"
-        @click="onSubmit"
-        :mnemonic="submitMnemonic"
-      >
-        <template #text>
-          <slot name="submitText">Save</slot>
-        </template>
-      </IconButton>
-      <IconButton
-        v-if="!hideCancel"
-        white
-        class="h-7"
-        @click="emit('cancel')"
-        :mnemonic="cancelMnemonic"
-      >
-        <template #text>
-          <slot name="cancelText">Cancel</slot>
-        </template>
-      </IconButton>
+      <component :is="usePopoverButtons ? PopoverButton : 'div'">
+        <IconButton
+          v-if="!hideSubmit"
+          white
+          class="h-7"
+          @click="onSubmit"
+          :mnemonic="submitMnemonic"
+        >
+          <template #text>
+            <slot name="submitText">Save</slot>
+          </template>
+        </IconButton>
+      </component>
+
+      <component :is="usePopoverButtons ? PopoverButton : 'div'">
+        <IconButton
+          v-if="!hideCancel"
+          white
+          class="h-7"
+          @click="emit('cancel')"
+          :mnemonic="cancelMnemonic"
+        >
+          <template #text>
+            <slot name="cancelText">Cancel</slot>
+          </template>
+        </IconButton>
+      </component>
     </div>
 
     <p
@@ -54,6 +61,8 @@
 </template>
 
 <script setup lang="ts">
+import { PopoverButton } from '@headlessui/vue'
+
 const { modelValue, characterLimit, textRequired } = defineProps<{
   modelValue: string
   placeholder?: string
@@ -66,6 +75,8 @@ const { modelValue, characterLimit, textRequired } = defineProps<{
   characterLimit?: number
   /** Prevents the user from submitting if the text field is empty. */
   textRequired?: boolean
+  /** Whether to use `PopoverButton`s from HeadlessUI, useful if using text box in a Popover and buttons should close Popover when clicked. */
+  usePopoverButtons?: boolean
 }>()
 
 const showSubmitError = ref(false)
@@ -93,4 +104,8 @@ function onTextAreaInput(event: Event) {
   emit('update:modelValue', text)
   emit('input', event)
 }
+
+onMounted(() => {
+  textArea.value?.focus()
+})
 </script>

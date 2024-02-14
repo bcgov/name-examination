@@ -20,6 +20,14 @@ export function getFormattedDateWithTime(input: string): string {
 
 /**
  * @param input A luxon `DateTime` object
+ * @returns a formatted date, ex: 2023-01-15
+ */
+export function getDateFromDateTime(input: DateTime): string | null {
+  return input.toISODate()
+}
+
+/**
+ * @param input A luxon `DateTime` object
  * @returns a formatted date with time, ex: 2023-01-15, 9:00am
  */
 export function getDateWithTimeFromDateTime(input: DateTime): string {

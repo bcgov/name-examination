@@ -19,12 +19,12 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
 import type { Condition } from '~/types'
 
-const examine = useExamineStore()
+const examine = useExamination()
 
 const options = computed(() =>
-  examine.parseConditions.filter((c) => c.instructions !== '')
+  examine.conditions.filter((c) => c.instructions !== '')
 )
 </script>

@@ -1,5 +1,6 @@
 import type { NameChoice } from '~/types'
 import { getBusiness, getCorporation, getNameRequest } from './namex-api'
+import { Status } from '~/enums/nr-status'
 
 /**
  * Return whether a given string is in a valid NR number format, i.e. NR xxxxxxx
@@ -59,4 +60,60 @@ export async function corpExists(input: string) {
 
 export function sortNameChoices(choices: Array<NameChoice>) {
   choices.sort((n1, n2) => n1.choice - n2.choice)
+}
+
+/** Get a default empty `NameChoice` object. */
+export function getEmptyNameChoice(
+  choiceIndex: number,
+  nameString = ''
+): NameChoice {
+  return {
+    choice: choiceIndex,
+    name: nameString,
+    state: Status.NotExamined,
+    decision_text: null,
+    conflict1: null,
+    conflict2: null,
+    conflict3: null,
+    consumptionDate: null,
+    corpNum: null,
+    conflict1_num: null,
+    conflict2_num: null,
+    conflict3_num: null,
+    comment: null,
+  }
+}
+
+/** Sanitize the given query string to remove special characters. */
+export function sanitizeQuery(query: string, exactMatch = false) {
+  const baseSanitized = query
+    .replace(/(^| )(\$+(\s|$)+)+/g, '$1DOLLAR$3')
+    .replace(/(^| )(¢+(\s|$)+)+/g, '$1CENT$3')
+    .replace(/\$/g, 'S')
+    .replace(/¢/g, 'C')
+    .replace(/[\\\/]/g, ' ')
+    .replace(/(`|~|!|\||\(|\)|\[|\]|\{|\}|:|"|\^|#|%|\?)/g, '')
+  if (exactMatch) {
+    return baseSanitized
+      .replace(' /', '/')
+      .replace(/[\+\-]{2,}/g, '')
+      .replace(/\s[\+\-]$/, '')
+  } else {
+    return baseSanitized.replace(/[&+\-]/, ' ').replace(/,/g, '')
+  }
+}
+
+/** Parse an array of address strings returned from the NameX API into 2-3 lines of addresses. */
+export function parseAddress(lines: Array<string>): Array<string> {
+  const firstTwoLines = lines.slice(0, lines.length - 4)
+  const lastFourLines = lines.slice(lines.length - 4).join(' ')
+  const output = [...firstTwoLines, lastFourLines]
+  if (
+    output[0].toUpperCase() === 'N' &&
+    output[1].toUpperCase() === 'O' &&
+    output[2].toUpperCase() === 'T'
+  ) {
+    return ['Address not', 'available']
+  }
+  return output
 }

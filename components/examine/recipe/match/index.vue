@@ -1,40 +1,67 @@
 <template>
-  <div v-if="conflict.invalidRecordInd">
-    <p v-if="conflict.type === 'corp'">
-      Corporation info could not be retrieved. It isn't in the fdw-registries
-      data.
-    </p>
-    <p v-else-if="conflict.type === 'name'">
-      NR info could not be retrieved. It does not appear to be in the postgres
-      data.
-    </p>
+  <div v-if="isLoading" class="flex items-center justify-center">
+    <LoadingSpinner />
   </div>
-
-  <div v-else>
+  <div v-else-if="conflictData">
     <ExamineRecipeMatchNames
-      v-if="conflict.type === 'name'"
-      :conflict="conflict as NameRequestConflict"
+      v-if="conflict.source === 'NR'"
+      :conflict="(conflictData as NameRequest)"
     />
-    <ExamineRecipeMatchCorp
-      v-else-if="conflict.type === 'corp' && conflict.jurisdiction === 'BC'"
-      :conflict="conflict as BCCorpConflict"
+    <ExamineRecipeMatchBCCorp
+      v-else-if="conflict.source === 'CORP' && (conflictData as Corporation).jurisdiction === 'BC'"
+      :data="(conflictData as BCCorporation)"
     />
     <ExamineRecipeMatchXproCorp
-      v-else-if="conflict.type === 'corp' && conflict.jurisdiction !== 'BC'"
-      :conflict="conflict as XproConflict"
+      v-else
+      :conflict="(conflictData as XproCorporation)"
     />
+  </div>
+  <div v-else>
+    <p>Failed to retrieve conflict data</p>
+    <a
+      class="cursor-pointer text-blue-800 underline"
+      @click="tryToGetConflictData"
+    >
+      Try again
+    </a>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useConflictData } from '~/store/examine/conflict-data'
 import type {
-  BCCorpConflict,
-  Conflict,
-  NameRequestConflict,
-  XproConflict,
+  BCCorporation,
+  ConflictListItem,
+  ConflictData,
+  NameRequest,
+  XproCorporation,
+  Corporation,
 } from '~/types'
 
-defineProps<{
-  conflict: Conflict
+const props = defineProps<{
+  conflict: ConflictListItem
 }>()
+
+const { getConflictData } = useConflictData()
+const conflictData = ref<ConflictData>()
+const isLoading = ref(false)
+
+async function tryToGetConflictData() {
+  isLoading.value = true
+  try {
+    conflictData.value = await getConflictData(props.conflict)
+  } catch (e) {
+    conflictData.value = undefined
+  } finally {
+    isLoading.value = false
+  }
+}
+
+onMounted(async () => {
+  await tryToGetConflictData()
+})
+
+onUnmounted(() => {
+  conflictData.value = undefined
+})
 </script>

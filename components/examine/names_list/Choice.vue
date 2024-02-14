@@ -4,22 +4,16 @@
       <span
         class="mr-2 flex flex-col"
         :class="{
-          'font-bold': current,
-          'text-cyan-500':
-            choice.state === Status.Approved || choice.state === Status.Condition,
+          'font-bold': current || choiceApproved,
+          'text-bcgov-blue3': choiceApproved,
         }"
       >
         {{ choice.name }}
       </span>
 
-      <CheckIcon
-        v-if="
-          choice.state === Status.Approved || choice.state === Status.Condition
-        "
-        class="h-5 w-5 text-lime-600"
-      />
+      <CheckIcon v-if="choiceApproved" class="h-5 w-5 text-lime-600" />
       <XMarkIcon
-        v-else-if="choice.state === 'REJECTED'"
+        v-else-if="choice.state === Status.Rejected"
         class="h-5 w-5 text-red-600"
       />
 
@@ -32,7 +26,12 @@
       />
     </div>
 
-    <span class="max-w-1/2 text-sm">
+    <span
+      class="max-w-1/2 text-sm"
+      :class="{
+        'text-[#1359A0]': choiceApproved,
+      }"
+    >
       {{ choice.decision_text }}
     </span>
   </div>
@@ -41,15 +40,21 @@
 <script setup lang="ts">
 import { CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { Status } from '~/enums/nr-status'
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
 import type { NameChoice } from '~/types'
 
-const examine = useExamineStore()
+const examine = useExamination()
 
-defineProps<{
+const props = defineProps<{
   choice: NameChoice
   decisionText: string
   undoable?: boolean
   current?: boolean
 }>()
+
+const choiceApproved = computed(
+  () =>
+    props.choice.state === Status.Approved ||
+    props.choice.state === Status.Condition
+)
 </script>

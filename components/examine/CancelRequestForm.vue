@@ -17,14 +17,14 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
 
 const emit = defineEmits<{
   submit: [text: string]
   cancel: []
 }>()
 
-const examine = useExamineStore()
+const examine = useExamination()
 
 const comment = ref('')
 const showSubmitError = ref(false)

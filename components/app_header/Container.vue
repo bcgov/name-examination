@@ -1,27 +1,29 @@
 <template id="app-header">
   <nav class="h-16 border-b border-gray-300">
     <div class="flex h-full w-full items-center justify-between">
-      <div class="hidden h-full min-[1558px]:block">
+      <div class="hidden h-full lg:block">
         <nuxt-link :to="Route.Home">
           <img
             src="/images/top-nav.png"
-            class="min-w-8 h-full"
+            class="h-full min-w-8"
             alt="Name Examination"
           />
         </nuxt-link>
       </div>
 
-      <div v-if="authenticated" class="ml-3 flex gap-10 text-bcgov-blue5">
+      <div class="ml-3 flex gap-10 text-bcgov-blue5">
         <AppHeaderNavLink text="Admin" :route="Route.Admin" />
         <AppHeaderNavLink text="Examine Names" :route="Route.Examine" />
         <AppHeaderNavLink text="Search" :route="Route.Search" />
       </div>
 
-      <div v-if="authenticated" class="ml-auto flex items-center">
+      <div class="ml-auto flex items-center">
         <SearchInput
           v-model="searchText"
           class="mx-3"
-          placeholder="NR Number Lookup"
+          placeholder="Search NR Number"
+          input-required
+          @submit.prevent="onSearchSubmit"
         />
 
         <nuxt-link to="/stats" class="mx-3 text-sm text-blue-800 underline">
@@ -29,10 +31,6 @@
         </nuxt-link>
 
         <div class="flex space-x-2 px-3">
-          <ToggleSwitch
-            label="Classify Words"
-            v-model="examineOptions.classifyWords"
-          />
           <ToggleSwitch
             label="Priority Queue"
             v-model="examineOptions.priorityQueue"
@@ -46,27 +44,42 @@
           </a>
         </div>
       </div>
-
-      <div v-else class="mx-5">
-        <IconButton class="font-medium">
-          <ArrowRightOnRectangleIcon class="h-6" />
-          Login
-        </IconButton>
-      </div>
     </div>
   </nav>
 </template>
 
 <script setup lang="ts">
-import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/solid'
-import { useExamineOptionsStore } from '~/store/examine-options'
+import { useExaminationOptions } from '~/store/examine/options'
 import { Route } from '~/enums/routes'
+import { isValidNrFormat, nrExists } from '~/util'
+import { emitter } from '~/util/emitter'
+import { useExamination } from '~/store/examine'
 
 const { $auth, $userProfile } = useNuxtApp()
 
-const authenticated = computed(() => $auth.authenticated)
-
-const examineOptions = useExamineOptionsStore()
+const examine = useExamination()
+const examineOptions = useExaminationOptions()
 
 const searchText = ref('')
+
+async function onSearchSubmit(_: Event) {
+  let nrNumber = searchText.value.trim()
+  if (!nrNumber.startsWith('NR')) {
+    nrNumber = `NR ${nrNumber}`
+  }
+  if (!isValidNrFormat(nrNumber, true)) {
+    emitter.emit('error', {
+      title: 'Invalid Search Term',
+      message: 'Incorrect NR number format',
+    })
+  } else if (!(await nrExists(nrNumber))) {
+    emitter.emit('error', {
+      title: 'NR Not Found',
+      message: 'The requested NR could not be found',
+    })
+  } else {
+    searchText.value = ''
+    await examine.initialize(nrNumber)
+  }
+}
 </script>

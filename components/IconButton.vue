@@ -14,7 +14,7 @@
 
     <!-- User of the component can pass in the text either as a prop or as a template (for custom styled text) -->
     <slot name="text"></slot>
-    <span>{{ text }}</span>
+    <span v-if="text">{{ text }}</span>
   </button>
 </template>
 

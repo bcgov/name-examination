@@ -2,23 +2,23 @@
   <div>
     <h3 class="font-semibold">Conflicts</h3>
     <ListSelect
-      v-model="examine.selectedConflicts"
+      v-model="conflicts.selectedConflicts"
       :options="options"
       multiple
       options-style="!max-h-48"
-      :options-display="(option: Conflict | ConflictListItem) => option.text"
+      :options-display="(option: ConflictListItem) => option.text"
       :disabled="examine.decisionSelectionsDisabled"
-      @change="(_) => examine.syncSelectedAndComparedConflicts()"
+      @change="(_) => conflicts.syncSelectedAndComparedConflicts()"
     >
       <Chips
-        v-if="examine.selectedConflicts.length > 0"
-        v-model="examine.selectedConflicts"
-        :display="(conflict: Conflict) => conflict.text"
-        @chip-removed="examine.syncSelectedAndComparedConflicts()"
+        v-if="conflicts.selectedConflicts.length > 0"
+        v-model="conflicts.selectedConflicts"
+        :display="(conflict: ConflictListItem) => conflict.text"
+        @chip-removed="conflicts.syncSelectedAndComparedConflicts()"
       />
       <template #no-data>
         {{
-          examine.conflictsAutoAdd
+          conflicts.autoAdd
             ? 'No conflicts'
             : 'No conflicts selected (and auto add is off)'
         }}
@@ -28,20 +28,23 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
-import type { Conflict, ConflictListItem } from '~/types'
-const examine = useExamineStore()
+import { useExamination } from '~/store/examine'
+import { useConflicts } from '~/store/examine/conflicts'
+import type { ConflictListItem } from '~/types'
 
-const options = computed<Array<Conflict | ConflictListItem>>(() => {
-  if (!examine.conflictsAutoAdd) {
-    return examine.comparedConflicts
+const examine = useExamination()
+const conflicts = useConflicts()
+
+const options = computed<Array<ConflictListItem>>(() => {
+  if (!conflicts.autoAdd) {
+    return conflicts.comparedConflicts
   }
 
   const allConflicts = [
-    ...examine.exactMatchesConflicts,
-    ...examine.parsedSynonymConflicts.map((c) => c.children).flat(),
-    ...examine.parsedCOBRSConflicts.map((c) => c.children).flat(),
-    ...examine.parsedPhoneticConflicts.map((c) => c.children).flat(),
+    ...conflicts.exactMatches,
+    ...conflicts.synonymMatches.map((c) => c.children).flat(),
+    ...conflicts.cobrsPhoneticMatches.map((c) => c.children).flat(),
+    ...conflicts.phoneticMatches.map((c) => c.children).flat(),
   ]
 
   const seenNRs: Array<string> = []

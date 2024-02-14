@@ -42,7 +42,7 @@
                   class="h-48"
                   v-model="commentText"
                   placeholder="Create a new comment..."
-                  confirm-mnemonic="v"
+                  submit-mnemonic="v"
                   text-required
                   @submit="onSubmit"
                   @cancel="onCancel(close)"
@@ -71,10 +71,10 @@
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 import { ChatBubbleLeftIcon } from '@heroicons/vue/24/outline'
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
 import { parseDate } from '~/util/date'
 
-const examine = useExamineStore()
+const examine = useExamination()
 
 const popoverButton = ref<HTMLButtonElement | null>(null)
 const buttonElem = computed(
@@ -85,7 +85,7 @@ useMnemonic('o', () => buttonElem.value.click())
 const commentText = ref('')
 
 const comments = computed(() =>
-  examine.internalComments.sort(
+  examine.comments.sort(
     (a, b) =>
       parseDate(b.timestamp).toMillis() - parseDate(a.timestamp).toMillis()
   )

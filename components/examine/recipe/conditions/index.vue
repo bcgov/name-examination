@@ -13,10 +13,10 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
-const examine = useExamineStore()
+import { useExamination } from '~/store/examine'
+const examine = useExamination()
 const rows = computed(() =>
-  examine.parseConditions.map((item) => [
+  examine.conditions.map((item) => [
     item.phrase,
     item.allow_use,
     item.consent_required,

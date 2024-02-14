@@ -8,22 +8,14 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
-const examine = useExamineStore()
+import { useExamination } from '~/store/examine'
+const examine = useExamination()
 
 type Row = [name: string, description: string, status: string]
 
-const rows = computed<Array<Row>>(() => {
-  if (examine.trademarksJSON && examine.trademarksJSON.names) {
-    return examine.trademarksJSON.names.map((tm) => [
-      tm.name,
-      tm.description,
-      tm.status,
-    ])
-  } else {
-    return []
-  }
-})
+const rows = computed<Array<Row>>(() =>
+  examine.trademarks.map((tm) => [tm.name, tm.description, tm.status])
+)
 
 /** Return a unique string identifier for a trademark */
 function hashTrademark(trademarkName: string, trademarkDesc: string): string {

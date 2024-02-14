@@ -211,13 +211,27 @@ export enum ClassTypeCode {
   MISC = 'MISC',
 }
 
-export enum RefundState {
+export enum RefundStatus {
+  Refunded = 'REFUNDED',
+  Credited = 'CREDITED',
+  Cancelled = 'CANCELLED',
+  RefundRequested = 'REFUND_REQUESTED',
+}
+
+export enum RefundMessage {
   Requested = 'Refund has been requested',
   NotProcessed = 'Refund not processed',
   Processed = 'Refund request processed',
   Cancelled = 'Payment cancelled',
   Credited = 'Funds have been credited',
   Completed = 'Refund process is completed',
+}
+
+export enum PaymentMethod {
+  Pad = 'PAD',
+  Internal = 'INTERNAL',
+  DirectPay = 'DIRECT_PAY',
+  DrawDown = 'DRAWDOWN',
 }
 
 export enum ConsentFlag {

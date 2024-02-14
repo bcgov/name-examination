@@ -2,81 +2,61 @@
   <Accordion
     :key="conflictItem.nrNumber"
     class="conflict-details rounded-md p-1 open:!bg-sky-100 hover:bg-gray-100"
-    @toggled="onAccordionToggle"
   >
     <template #title>
       <div class="flex w-full items-center gap-x-2">
         <input
           type="checkbox"
-          :disabled="examine.decisionFunctionalityDisabled"
+          :disabled="examine.conflictSelectionDisabled"
           class="h-4 w-4"
           :checked="isChecked"
           @change="e => toggleConflictCheckbox((e.target as HTMLInputElement).checked)"
         />
         <span class="grow" v-html="conflictItem.highlightedText"></span>
-        <div class="space-x-8">
-          <span>{{ conflictItem.nrNumber }}</span>
-          <span>
+        <div class="flex w-52 gap-4">
+          <span class="w-24">{{ conflictItem.nrNumber }}</span>
+          <span class="w-4">
             {{ examine.getShortJurisdiction(conflictItem.jurisdiction) }}
           </span>
-          <span>{{ getFormattedDate(conflictItem.startDate) }}</span>
+          <span class="w-24">
+            {{ getFormattedDate(conflictItem.startDate) }}
+          </span>
         </div>
       </div>
     </template>
     <template #content>
       <div class="flex justify-center">
-        <LoadingSpinner v-if="isLoading" />
-        <ExamineRecipeMatch
-          v-else-if="conflictData"
-          :conflict="conflictData"
-          class="grow"
-        />
+        <ExamineRecipeMatch :conflict="conflictItem" class="grow" />
       </div>
     </template>
   </Accordion>
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
-import type { Conflict, ConflictListItem } from '~/types'
+import { useExamination } from '~/store/examine'
+import { useConflicts } from '~/store/examine/conflicts'
+import type { ConflictListItem } from '~/types'
 import { getFormattedDate } from '~/util/date'
 
-const examine = useExamineStore()
-
-const isLoading = ref(false)
+const examine = useExamination()
+const conflicts = useConflicts()
 
 const { conflictItem } = defineProps<{
   conflictItem: ConflictListItem
 }>()
 
 const isChecked = computed(() => {
-  const conflictsList = examine.conflictsAutoAdd
-    ? examine.selectedConflicts
-    : examine.comparedConflicts
+  const conflictsList = conflicts.autoAdd
+    ? conflicts.selectedConflicts
+    : conflicts.comparedConflicts
   return conflictsList.map((c) => c.nrNumber).includes(conflictItem.nrNumber)
 })
 
-const conflictData = computed<Conflict | undefined>(() =>
-  conflictItem.source === 'CORP'
-    ? examine.corpConflictJSON
-    : conflictItem.source === 'NR'
-    ? examine.namesConflictJSON
-    : undefined
-)
-
-async function onAccordionToggle(isOpen: boolean) {
-  if (isOpen) {
-    isLoading.value = true
-    await examine.getConflictInfo(conflictItem)
-    isLoading.value = false
-  }
-}
-
 function toggleConflictCheckbox(checked: boolean) {
   if (checked) {
-    examine.selectConflict(conflictItem)
+    conflicts.selectConflict(conflictItem)
   } else {
-    examine.deselectConflict(conflictItem)
+    conflicts.deselectConflict(conflictItem)
   }
 }
 </script>

@@ -1,7 +1,11 @@
 <template>
   <ol class="ml-4 basis-1/3 list-decimal space-y-2">
     <li v-for="(_input, i) in nameInputs">
-      <TextInput v-model="nameInputs[i]" @input="clearErrorOnInput(i)" />
+      <TextInput
+        v-model="nameInputs[i]"
+        @input="clearErrorOnInput(i)"
+        :error-style="errorMessage?.choice === i"
+      />
       <span
         v-if="errorMessage && errorMessage.choice === i"
         class="text-sm font-bold text-red-600"
@@ -13,11 +17,11 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
 
-const examine = useExamineStore()
+const examine = useExamination()
 
-const nameInputs = ref(examine.nameChoices.map((nc) => nc.name))
+const nameInputs = ref(examine.nameChoices.map((nc) => nc.name ?? ''))
 
 const errorMessage = ref<{ choice: number; text: string }>()
 
@@ -40,6 +44,16 @@ examine.addEditAction({
       errorMessage.value = {
         choice: 1,
         text: 'To include a 3rd name choice the 2nd name choice is first required',
+      }
+      return false
+    }
+    if (
+      examine.currentChoice &&
+      !nameInputs.value[examine.currentChoice - 1].trim()
+    ) {
+      errorMessage.value = {
+        choice: examine.currentChoice - 1,
+        text: 'Cannot clear currently examining name',
       }
       return false
     }

@@ -1,4 +1,4 @@
-import type { Transaction } from '~/types'
+import type { NameChoice, NameRequest, Transactions } from '~/types'
 
 /**
  * Retrieve the Keycloak session token, refreshing to make it valid if necessary.
@@ -19,12 +19,15 @@ async function getToken(): Promise<string | undefined> {
 
 /**
  * Make an HTTP request to a given Namex API URL.
+ * @param options extra options to pass to the `fetch` call, should not include headers
+ * @param headers header options to pass to the request
  */
-async function callNamexApi(url: URL, options?: object) {
+async function callNamexApi(url: URL, options?: object, headers?: object) {
   const token = await getToken()
   return fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
+      ...headers,
     },
     ...(options ? options : {}),
   })
@@ -63,15 +66,54 @@ export async function getNameRequest(nrNumber: string) {
  */
 export async function patchNameRequest(nrNumber: string, patch: object) {
   const url = getNamexApiUrl(`/requests/${nrNumber}`)
-  return await callNamexApi(url, {
-    method: 'PATCH',
-    body: JSON.stringify(patch),
-  })
+  return callNamexApi(
+    url,
+    {
+      method: 'PATCH',
+      body: JSON.stringify(patch),
+    },
+    { 'content-type': 'application/json' }
+  )
 }
 
-export async function getTransactions(
-  nrNumber: string
-): Promise<Array<Transaction>> {
+export async function postNewComment(nrNumber: string, comment: string) {
+  const url = getNamexApiUrl(`/requests/${nrNumber}/comments`)
+  return callNamexApi(
+    url,
+    {
+      method: 'POST',
+      body: JSON.stringify({ comment }),
+    },
+    { 'content-type': 'application/json' }
+  )
+}
+
+/** Update a name request's data with the given name request object. */
+export async function putNameRequest(nrNumber: string, nrObject: NameRequest) {
+  const url = getNamexApiUrl(`/requests/${nrNumber}`)
+  return callNamexApi(
+    url,
+    {
+      method: 'PUT',
+      body: JSON.stringify(nrObject),
+    },
+    { 'content-type': 'application/json' }
+  )
+}
+
+export async function putNameChoice(nrNumber: string, choice: NameChoice) {
+  const url = getNamexApiUrl(`/requests/${nrNumber}/names/${choice.choice}`)
+  return callNamexApi(
+    url,
+    {
+      method: 'PUT',
+      body: JSON.stringify(choice),
+    },
+    { 'content-type': 'application/json' }
+  )
+}
+
+export async function getTransactions(nrNumber: string): Promise<Transactions> {
   return getNamexObject(getNamexApiUrl(`/events/${nrNumber}`))
 }
 
@@ -79,6 +121,65 @@ export async function getBusiness(corpNum: string) {
   return callNamexApi(getNamexApiUrl(`/businesses/${corpNum}`))
 }
 
+async function postDocuments(resource: string, query: string) {
+  const url = getNamexApiUrl(`/documents:${resource}`)
+  return callNamexApi(
+    url,
+    {
+      method: 'POST',
+      body: JSON.stringify({ type: 'plain_text', content: query }),
+    },
+    { 'content-type': 'application/json' }
+  )
+}
+
+export async function postTrademarks(query: string) {
+  return postDocuments('trademarks', query)
+}
+
+export async function postConditions(query: string) {
+  return postDocuments('restricted_words', query)
+}
+
+export async function postHistories(query: string) {
+  return postDocuments('histories', query)
+}
+
+export async function getDecisionReasons() {
+  return callNamexApi(getNamexApiUrl(`/requests/decisionreasons`))
+}
+
+export async function getExactMatches(query: string) {
+  const url = getNamexApiUrl('/exact-match')
+  url.searchParams.set('query', query)
+  return callNamexApi(url)
+}
+
+export async function getSynonymMatches(query: string, exactPhrase: string) {
+  const url = getNamexApiUrl(`/requests/synonymbucket/${query}/${exactPhrase}`)
+  return callNamexApi(url)
+}
+
+export async function getCobrsPhoneticMatches(query: string) {
+  const url = getNamexApiUrl(`/requests/cobrsphonetics/${query}/*`)
+  return callNamexApi(url)
+}
+
+export async function getPhoneticMatches(query: string) {
+  const url = getNamexApiUrl(`/requests/phonetics/${query}/*`)
+  return callNamexApi(url)
+}
+
+export async function getNextNrNumber(isPriority: boolean) {
+  return callNamexApi(
+    getNamexApiUrl(`/requests/queues/@me/oldest?priorityQueue=${isPriority}`)
+  )
+}
+
 export async function getCorporation(corpNum: string) {
   return callNamexApi(getNamexApiUrl(`/corporations/${corpNum}`))
+}
+
+export async function getPayments(id: number) {
+  return callNamexApi(getNamexApiUrl(`/payments/${id}`))
 }

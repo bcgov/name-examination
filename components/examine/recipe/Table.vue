@@ -26,7 +26,7 @@
         >
           <td v-for="cell in row" class="px-4 py-2">{{ cell }}</td>
         </tr>
-        <tr v-show="selectedRow === index && showSelectedRowHiddenContent">
+        <tr v-if="selectedRow === index && showSelectedRowHiddenContent">
           <td class="p-0" :colspan="columns.length">
             <div :class="{ 'border-0 bg-sky-100': selectedRow === index }">
               <slot :index="index" :row="row"></slot>

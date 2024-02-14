@@ -1,8 +1,11 @@
 <template>
-  <div v-if="histories && applicants" class="flex-col p-4">
+  <div v-if="isLoading" class="flex items-center justify-center">
+    <LoadingSpinner />
+  </div>
+  <div v-else-if="historiesInfo" class="flex-col p-4">
     <div class="flex gap-x-2 text-sm">
       <div class="flex basis-2/3 flex-col">
-        <div class="grid grid-cols-2 gap-y-1 overflow-x-auto">
+        <div v-if="applicants" class="grid grid-cols-2 gap-y-1 overflow-x-auto">
           <h3 class="font-bold">Client</h3>
           <p>
             {{ applicants.clientFirstName }} {{ applicants.clientLastName }}
@@ -44,7 +47,7 @@
           <li v-for="c in conflicts">{{ c }}</li>
         </ol>
 
-        <h3 class="font-bold">Decision</h3>
+        <h3 v-if="decisionText" class="font-bold">Decision</h3>
         <div class="flex flex-col">
           <p>{{ decisionText }}</p>
         </div>
@@ -52,12 +55,12 @@
     </div>
 
     <div
-      v-if="histories.comments && histories.comments.length > 0"
+      v-if="historiesInfo.comments && historiesInfo.comments.length > 0"
       class="mt-2 w-full"
     >
       <h3 class="font-bold">Comments</h3>
       <ExamineCommentsBox
-        :comments="histories.comments"
+        :comments="historiesInfo.comments"
         class="max-h-48 w-full overflow-auto rounded-md border border-gray-400 p-2 children:bg-sky-50"
       />
     </div>
@@ -66,28 +69,35 @@
 </template>
 
 <script setup lang="ts">
-import { useExamineStore } from '~/store/examine'
+import { useExamination } from '~/store/examine'
+import { type NameRequest, type HistoryEntry } from '~/types'
 
-const examine = useExamineStore()
+const props = defineProps<{
+  historyEntry: HistoryEntry
+}>()
 
-const histories = computed(() => examine.historiesInfoJSON)
-const applicants = computed(() => histories.value?.applicants)
+const examine = useExamination()
+
+const isLoading = ref(false)
+
+const historiesInfo = ref<NameRequest>()
+const applicants = computed(() => historiesInfo.value?.applicants)
 
 const nameState = computed(() => {
-  if (histories.value == null) return null
+  if (!historiesInfo.value) return null
 
-  for (const nameChoice of histories.value.names)
-    if (nameChoice.name === histories.value.text) return nameChoice.state
+  for (const nameChoice of historiesInfo.value.names)
+    if (nameChoice.name === props.historyEntry.name) return nameChoice.state
 
   return null
 })
 
 const decisionText = computed(() => {
-  if (histories.value == null) return null
+  if (!historiesInfo.value) return null
 
-  for (const nameChoice of histories.value.names) {
+  for (const nameChoice of historiesInfo.value.names) {
     if (
-      nameChoice.name === histories.value.text &&
+      nameChoice.name === props.historyEntry.name &&
       nameChoice.decision_text != ''
     ) {
       return nameChoice.decision_text
@@ -97,10 +107,10 @@ const decisionText = computed(() => {
 })
 
 const conflicts = computed(() => {
-  if (histories.value == null) return []
+  if (!historiesInfo.value) return []
 
-  for (const nameChoice of histories.value.names)
-    if (nameChoice.name === histories.value.text) {
+  for (const nameChoice of historiesInfo.value.names)
+    if (nameChoice.name === props.historyEntry.name) {
       return [
         nameChoice.conflict1,
         nameChoice.conflict2,
@@ -109,5 +119,15 @@ const conflicts = computed(() => {
     }
 
   return []
+})
+
+onMounted(async () => {
+  isLoading.value = true
+  historiesInfo.value = await examine.getHistoryInfo(props.historyEntry.nr_num)
+  isLoading.value = false
+})
+
+onUnmounted(() => {
+  historiesInfo.value = undefined
 })
 </script>
