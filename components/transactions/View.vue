@@ -1,6 +1,7 @@
 <template>
   <div class="flex flex-col bg-white">
     <TransactionsHeader v-if="nrData" :data="nrData" />
+    <TransactionsItemList />
   </div>
 </template>
 
