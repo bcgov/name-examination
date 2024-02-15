@@ -1,6 +1,8 @@
 <template>
-  <TransactionsView v-if="nrNumber" :nr-number="nrNumber" />
-  <span v-else>Invalid</span>
+  <div class="flex items-center justify-center ">
+    <TransactionsView v-if="nrNumber" :nr-number="nrNumber" class="w-2/3 border-x-2 border-neutral-300" />
+    <span v-else>Invalid</span>
+  </div>
 </template>
 
 <script setup lang="ts">

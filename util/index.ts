@@ -59,7 +59,7 @@ export async function corpExists(input: string) {
 }
 
 export function sortNameChoices(choices: Array<NameChoice>) {
-  choices.sort((n1, n2) => n1.choice - n2.choice)
+  return choices.sort((n1, n2) => n1.choice - n2.choice)
 }
 
 /** Get a default empty `NameChoice` object. */

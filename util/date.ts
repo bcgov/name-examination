@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 
-const TIMESTAMP_FORMAT = 'yyyy-MM-dd, h:mma'
+export const TIMESTAMP_FORMAT = 'yyyy-MM-dd, h:mma'
 
 /**
  * @param input An ISO-formatted date string

@@ -1,6 +1,6 @@
 <template>
-  <div v-if="nrData && transactions">
-    <TransactionsHeader :data="nrData" />
+  <div class="flex flex-col bg-white">
+    <TransactionsHeader v-if="nrData" :data="nrData" />
   </div>
 </template>
 

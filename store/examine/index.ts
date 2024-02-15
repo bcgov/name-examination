@@ -442,7 +442,7 @@ export const useExamination = defineStore('examine', () => {
     resetNameChoice(compName2)
     resetNameChoice(compName3)
 
-    info.names.forEach((nameChoice: NameChoice) =>
+    sortNameChoices(info.names).forEach((nameChoice: NameChoice) =>
       parseIntoNameChoice(nameChoice, nameChoices.value[nameChoice.choice - 1])
     )
 
