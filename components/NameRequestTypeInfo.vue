@@ -1,9 +1,9 @@
 <template>
-  <div class="mx-3 flex flex-col font-bold">
+  <div class="flex flex-col font-bold">
     <p>
       {{ requestTypeText }}
     </p>
-    <p v-if="jurisdiction" class="text-sm">
+    <p v-if="jurisdiction">
       {{ jurisdictionDisplay }}
     </p>
   </div>

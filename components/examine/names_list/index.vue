@@ -1,31 +1,43 @@
 <template>
-  <ol v-if="!examine.isEditing" class="list-decimal">
-    <li v-for="choice in examine.nameChoices">
+  <ol class="list-decimal">
+    <li v-for="choice in choices">
       <ExamineNamesListChoice
         :choice="choice"
         :decision-text="decisionReasonOrConflictList(choice)"
-        :undoable="examine.isUndoable(choice)"
+        :undoable="undoable?.(choice)"
+        :undo="undo"
         :current="isCurrent(choice.choice)"
+        :highlight="highlight"
       />
     </li>
   </ol>
-
-  <ExamineNamesListEditable v-else />
 </template>
 
 <script setup lang="ts">
-import { useExamination } from '~/store/examine'
 import type { NameChoice } from '~/types'
-const examine = useExamination()
 
-const isCurrent = (choice: number) => examine.currentChoice === choice
+const props = defineProps<{
+  choices: Array<NameChoice>
+  /** Number representing the current selected choice (1, 2, 3) */
+  currentChoice?: number
+  /** Whether the NR containing the name choices is complete (e.g. Approved, Rejected...) */
+  complete?: boolean
+  /** Function that checks if a name choice is undoable. Will show an undo button next to the name choice. */
+  undoable?: (choice: NameChoice) => boolean
+  /** Function thats called when a user undos a name choice. */
+  undo?: (choice: NameChoice) => Promise<void>
+  /** Whether to highlight/bolden name choices for being the current name choice or accepted */
+  highlight?: boolean
+}>()
+
+const isCurrent = (choice: number) => props.currentChoice === choice
 
 /**
  * Gets the decision reason(s) whether or not there's anything in the decision text field.
  * In some older NRs, there is no decision reason text. In these cases we want to display the list of conflicts instead
  */
 function decisionReasonOrConflictList(name: NameChoice): string {
-  if (examine.isComplete) {
+  if (props.complete) {
     if (name.decision_text) {
       return name.decision_text
     } else {

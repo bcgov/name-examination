@@ -13,7 +13,7 @@
       </a>
     </div>
 
-    <ExamineHeaderRequestTypeInfo
+    <NameRequestTypeInfo
       v-if="!examine.isEditing || examine.isClosed"
       :request-type-text="examine.requestTypeObject.text"
       :jurisdiction="examine.jurisdiction"

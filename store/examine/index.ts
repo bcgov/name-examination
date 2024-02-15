@@ -454,7 +454,7 @@ export const useExamination = defineStore('examine', () => {
           )
         )
         .at(0) ?? compName1
-    await setCurrentNameChoice(newCurrentNameChoice)
+    setCurrentNameChoice(newCurrentNameChoice)
 
     nrStatus.value = info.state
     previousStateCd.value = info.previousStateCd ?? undefined
@@ -470,7 +470,7 @@ export const useExamination = defineStore('examine', () => {
     if (
       ![Status.InProgress, Status.Hold, Status.Draft].includes(nrStatus.value)
     ) {
-      await setCurrentNameChoice(undefined)
+      setCurrentNameChoice(undefined)
     }
 
     // we keep the original data so that if fields exist that we do not use, we don't lose that
@@ -657,7 +657,7 @@ export const useExamination = defineStore('examine', () => {
   }
 
   /** Attempt to set the given name choice as the current one. Will throw an error if the choice cannot be set. */
-  async function setCurrentNameChoice(choice: NameChoice | undefined) {
+  function setCurrentNameChoice(choice: NameChoice | undefined) {
     if (!choice) {
       currentNameObj.value = undefined
       return
@@ -678,7 +678,7 @@ export const useExamination = defineStore('examine', () => {
   async function examineNextNameChoice() {
     const attempt = async (choice: NameChoice) => {
       try {
-        await setCurrentNameChoice(choice)
+        setCurrentNameChoice(choice)
       } catch (e) {
         throw e
       }

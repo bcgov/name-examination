@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="flex items-center"
-    :class="{ 'text-gray-400': !examine.expiryDate }"
-  >
+  <div class="flex items-center">
     <h2 class="font-bold">Expiry:&nbsp;</h2>
     <span v-if="examine.expiryDate">
       {{ examine.expiryDate }}

@@ -4,8 +4,8 @@
       <span
         class="mr-2 flex flex-col"
         :class="{
-          'font-bold': current || choiceApproved,
-          'text-bcgov-blue3': choiceApproved,
+          'font-bold': (current || choiceApproved) && highlight,
+          'text-bcgov-blue3': choiceApproved && highlight,
         }"
       >
         {{ choice.name }}
@@ -19,7 +19,7 @@
 
       <IconButton
         v-if="undoable"
-        @click="examine.undoNameChoiceDecision(choice)"
+        @click="undo?.(choice)"
         white
         text="Undo Decision"
         class="border-none text-sm text-blue-800"
@@ -40,16 +40,15 @@
 <script setup lang="ts">
 import { CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { Status } from '~/enums/nr-status'
-import { useExamination } from '~/store/examine'
 import type { NameChoice } from '~/types'
-
-const examine = useExamination()
 
 const props = defineProps<{
   choice: NameChoice
   decisionText: string
   undoable?: boolean
+  undo?: (choice: NameChoice) => Promise<void>
   current?: boolean
+  highlight?: boolean
 }>()
 
 const choiceApproved = computed(

@@ -1,6 +1,6 @@
 <template>
   <div v-if="nrData && transactions">
-    <TransactionsHeader :nr-data="nrData"/>
+    <TransactionsHeader :data="nrData" />
   </div>
 </template>
 
