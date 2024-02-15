@@ -635,7 +635,11 @@ export const useExamination = defineStore('examine', () => {
     populateNameChoice(currentNameObj.value)
 
     await pushDecision(currentNameObj.value)
-    await attemptNextNameChoice()
+    if (
+      ![Status.Approved, Status.Condition].includes(currentNameObj.value.state)
+    ) {
+      await attemptNextNameChoice()
+    }
   }
 
   async function makeQuickDecision(decision: Status, decisionText: string) {
@@ -684,7 +688,6 @@ export const useExamination = defineStore('examine', () => {
     } else if (currentChoice.value === 2) {
       await attempt(compName3)
     } else {
-      await updateNRState(Status.Rejected)
       throw new Error('Cannot examine next name choice')
     }
   }
