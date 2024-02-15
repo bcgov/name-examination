@@ -14,6 +14,7 @@ import {
   type NameRequest,
   type HistoryEntry,
   type ConditionsList,
+  type Transactions,
 } from '~/types'
 
 import requestTypes from '~/data/request_types.json'
@@ -702,7 +703,8 @@ export const useExamination = defineStore('examine', () => {
   async function getTransactionsHistory(nrNumber: string) {
     pendingTransactionRequest.value = true
     try {
-      const transactions = await getTransactions(nrNumber)
+      const transactionsResponse = await getTransactions(nrNumber)
+      const transactions = (await transactionsResponse.json()) as Transactions
       transactions.transactions.forEach((t) => sortNameChoices(t.names))
       transactionsData.value = transactions.transactions
     } catch (error) {

@@ -1,7 +1,7 @@
 <template>
   <div class="mx-3 flex flex-col font-bold">
     <p>
-      {{ examine.requestTypeObject.text }}
+      {{ requestTypeText }}
     </p>
     <p v-if="jurisdiction" class="text-sm">
       {{ jurisdictionDisplay }}
@@ -10,20 +10,19 @@
 </template>
 
 <script setup lang="ts">
-import { useExamination } from '~/store/examine'
+import jurisdictionsData from '~/data/jurisdictions.json'
 
 const props = defineProps<{
+  requestTypeText: string
   jurisdiction?: string
   jurisdictionNumber?: string
 }>()
 
-const examine = useExamination()
-
 const jurisdictionDisplay = computed(() => {
   let text = props.jurisdiction
-  if (props.jurisdiction?.length === 2) {
+  if (text?.length === 2) {
     // if the jurisdiction name is two letters, it's likely a code for a province, so get the full name
-    const province = examine.listJurisdictions.find(
+    const province = jurisdictionsData.find(
       (j) => j.value === props.jurisdiction
     )
     if (province) {

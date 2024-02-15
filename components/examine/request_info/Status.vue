@@ -1,12 +1,6 @@
 <template>
   <div class="space-y-1 py-1 text-sm">
-    <div
-      v-if="examine.priority"
-      class="flex items-center font-bold text-red-600"
-    >
-      <StarIcon class="h-4 w-4" />
-      <p>Priority</p>
-    </div>
+    <PriorityLabel v-if="examine.priority" />
 
     <div class="flex items-center">
       <h2 class="font-bold">Status:&nbsp;</h2>
@@ -23,7 +17,6 @@
 </template>
 
 <script setup lang="ts">
-import { StarIcon } from '@heroicons/vue/24/solid'
 import { Status } from '~/enums/nr-status'
 import { useExamination } from '~/store/examine'
 import { usePayments } from '~/store/examine/payments'
