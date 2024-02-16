@@ -1,26 +1,28 @@
 <template>
-  <div class="flex flex-col bg-white">
-    <TransactionsHeader v-if="nrData" :data="nrData" />
-    <TransactionsItemList />
+  <div class="flex h-full flex-col bg-white">
+    <TransactionsHeader
+      class="h-1/4"
+      v-if="transactions.nr"
+      :data="transactions.nr"
+    />
+    <TransactionsEntryList
+      class="h-3/4"
+      :entries="transactions.transactions"
+      :loading="transactions.loadingTransactions"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { type Transactions, type NameRequest } from '~/types'
-import { getNameRequest, getTransactions } from '~/util/namex-api'
+import { useTransactions } from '~/store/transactions'
 
 const props = defineProps<{
   nrNumber: string
 }>()
 
-const nrData = ref<NameRequest>()
-const transactions = ref<Transactions>()
+const transactions = useTransactions()
 
 onMounted(async () => {
-  const nrResponse = await getNameRequest(props.nrNumber)
-  nrData.value = await nrResponse.json()
-
-  const transactionsResponse = await getTransactions(props.nrNumber)
-  transactions.value = await transactionsResponse.json()
+  await transactions.initialize(props.nrNumber)
 })
 </script>

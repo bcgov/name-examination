@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-center">
+  <div class="flex h-screen items-center justify-center">
     <TransactionsView
       v-if="nrNumber"
       :nr-number="nrNumber"
@@ -13,6 +13,8 @@
 const nrNumber = ref()
 
 useHead({ title: 'BC Registry: Name Examination - Transactions' })
+
+definePageMeta({ layout: 'empty' })
 
 onMounted(() => {
   const route = useRoute()

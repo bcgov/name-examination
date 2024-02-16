@@ -184,10 +184,10 @@ export interface Transactions {
   response: {
     count: number
   }
-  transactions: Array<TransactionItem>
+  transactions: Array<TransactionEntry>
 }
 
-export interface TransactionItem {
+export interface TransactionEntry {
   additionalInfo: string
   consentFlag: 'Y' | 'N'
   /** consent date */

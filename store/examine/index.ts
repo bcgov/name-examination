@@ -10,7 +10,7 @@ import {
   type RequestType,
   type RequestTypeRule,
   type Jurisdiction,
-  type TransactionItem,
+  type TransactionEntry,
   type NameRequest,
   type HistoryEntry,
   type ConditionsList,
@@ -215,7 +215,7 @@ export const useExamination = defineStore('examine', () => {
   const consentFlag = ref<ConsentFlag>()
 
   const pendingTransactionRequest = ref<boolean>()
-  const transactionsData = ref<Array<TransactionItem>>()
+  const transactionsData = ref<Array<TransactionEntry>>()
 
   const submittedDate = ref<DateTime>()
   const corpNum = ref<string>()
