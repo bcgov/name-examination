@@ -1,12 +1,10 @@
 <template>
   <div class="flex h-full flex-col bg-white">
     <TransactionsHeader
-      class="h-1/4"
       v-if="transactions.nr"
       :data="transactions.nr"
     />
     <TransactionsEntryList
-      class="h-3/4"
       :entries="transactions.transactions"
       :loading="transactions.loadingTransactions"
     />

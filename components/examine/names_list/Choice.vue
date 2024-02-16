@@ -30,7 +30,7 @@
     <span
       class="max-w-1/2 text-sm"
       :class="{
-        'text-[#1359A0]': choiceApproved,
+        'text-[#1359A0]': choiceApproved && highlight,
       }"
     >
       {{ choice.decision_text }}

@@ -35,10 +35,7 @@
       <span v-else></span>
     </div>
 
-    <div>
-      <span class="font-bold">Names</span>
-      <ExamineNamesList :choices="entry.names" indicate-draft class="px-4" />
-    </div>
+    <TransactionsEntryNamesList :names="entry.names" />
   </div>
 </template>
 
