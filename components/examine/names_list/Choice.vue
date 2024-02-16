@@ -11,10 +11,10 @@
         {{ choice.name }}
       </span>
 
-      <CheckIcon v-if="choiceApproved" class="h-5 w-5 text-lime-600" />
+      <CheckIcon v-if="choiceApproved" class="h-5 w-5 stroke-2 text-lime-600" />
       <XMarkIcon
         v-else-if="choice.state === Status.Rejected"
-        class="h-5 w-5 text-red-600"
+        class="h-5 w-5 stroke-2 text-red-600"
       />
       <span v-else-if="indicateDraft" class="italic">(Draft)</span>
 

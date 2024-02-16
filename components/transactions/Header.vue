@@ -18,7 +18,7 @@
         :jurisdiction-number="data.homeJurisNum || undefined"
       />
     </div>
-    <ExamineNamesList class="pl-4" :choices="data.names" />
+    <ExamineNamesList class="pl-4" :choices="data.names" highlight />
     <TransactionsNRInfo :data="data" class="w-full" />
   </div>
 </template>
