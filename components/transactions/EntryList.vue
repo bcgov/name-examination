@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col">
-    <div class="flex justify-between border-y-2 px-8 py-1">
-      <span class="text-xl font-bold">Transaction History</span>
+    <div class="flex justify-between border-y-2 px-4 py-1">
+      <span class="text-xl font-bold">{{ headerText }}</span>
       <label for="sys-transactions" class="flex items-center space-x-1">
         <input
           class="h-4 w-4"
@@ -9,7 +9,7 @@
           type="checkbox"
           v-model="showSystemTransactions"
         />
-        <span class="mb-0.5">System Transactions</span>
+        <span class="mb-0.5">Show system transactions</span>
       </label>
     </div>
 
@@ -25,7 +25,11 @@
     </div>
 
     <div v-else class="flex flex-col overflow-auto">
-      <TransactionsEntry v-for="entry in entries" :entry="entry" />
+      <TransactionsEntry
+        v-for="(entry, i) in filteredEntries"
+        :entry="entry"
+        :class="{ 'bg-neutral-100': i % 2 == 0 }"
+      />
     </div>
   </div>
 </template>
@@ -33,10 +37,43 @@
 <script setup lang="ts">
 import type { TransactionEntry } from '~/types'
 
-const showSystemTransactions = ref(false)
-
-defineProps<{
+const props = defineProps<{
   entries: Array<TransactionEntry>
   loading?: boolean
 }>()
+
+const DEFAULT_TRANSACTIONS = [
+  'Cancelled in Name Request',
+  'Created NR (Payment Completed)',
+  'Created NR (Unknown)',
+  'Decision',
+  'Edit NR Details (Name Request)',
+  'Edit NR Details (NameX)',
+  'Edit NR Details after Completion',
+  'Marked on Hold',
+  'Reapplied NR (Unknown)',
+  'Reset',
+  'Staff Comment',
+]
+
+const showSystemTransactions = ref(false)
+
+const filteredEntries = computed(() =>
+  showSystemTransactions.value
+    ? props.entries
+    : props.entries.filter((item) =>
+        DEFAULT_TRANSACTIONS.includes(item.user_action)
+      )
+)
+
+const headerText = computed(() => {
+  const baseText = 'Transaction History'
+  const count = filteredEntries.value.length
+  if (count > 0) {
+    const itemsText = `${count} item${count === 1 ? '' : 's'}`
+    return `${baseText} (${itemsText})`
+  } else {
+    return baseText
+  }
+})
 </script>

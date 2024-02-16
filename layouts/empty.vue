@@ -1,1 +1,4 @@
-<template><slot></slot></template>
+<template>
+  <slot></slot>
+  <GlobalErrorDialog />
+</template>

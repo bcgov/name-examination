@@ -34,6 +34,14 @@ export function getDateWithTimeFromDateTime(input: DateTime): string {
   return input.toFormat(TIMESTAMP_FORMAT)
 }
 
+/**
+ * @param input A luxon `DateTime` object
+ * @returns a formatted date with time and timezone, ex: 2023-01-15, 9:00am PST
+ */
+export function getFormattedDateWithTimeAndZone(input: DateTime): string {
+  return input.toFormat(`${TIMESTAMP_FORMAT} ZZZZ`)
+}
+
 /** Parse a date string into a `luxon` `DateTime` object.
  * @param input A date string from a NameX API object (ISO format).
  */

@@ -16,6 +16,7 @@
         v-else-if="choice.state === Status.Rejected"
         class="h-5 w-5 text-red-600"
       />
+      <span v-else-if="indicateDraft" class="italic">(Draft)</span>
 
       <IconButton
         v-if="undoable"
@@ -49,6 +50,7 @@ const props = defineProps<{
   undo?: (choice: NameChoice) => Promise<void>
   current?: boolean
   highlight?: boolean
+  indicateDraft?: boolean
 }>()
 
 const choiceApproved = computed(

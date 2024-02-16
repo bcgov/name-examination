@@ -1,10 +1,21 @@
 import {
+  ConsentFlag,
+  type EntityTypeCode,
+  type RequestActionCode,
+  type RequestTypeCode,
+} from '~/enums/codes'
+import { Status } from '~/enums/nr-status'
+import {
+  type NameChoice,
   type NameRequest,
   type TransactionEntry,
   type Transactions,
 } from '~/types'
 import { emitter } from '~/util/emitter'
 import { getNameRequest, getTransactions } from '~/util/namex-api'
+import { toMappedRequestType } from '~/util/request-type'
+import requestTypes from '~/data/request_types.json'
+import { sortNameChoices } from '~/util'
 
 export const useTransactions = defineStore('transactions', () => {
   const nr = ref<NameRequest>()
@@ -23,6 +34,7 @@ export const useTransactions = defineStore('transactions', () => {
     loadingTransactions.value = true
     const transactionsResponse = await getTransactions(nrNumber)
     const transactionsJson = (await transactionsResponse.json()) as Transactions
+    transactionsJson.transactions.forEach(t => sortNameChoices(t.names))
     transactions.value = transactionsJson.transactions
     loadingTransactions.value = false
   }
@@ -42,5 +54,54 @@ export const useTransactions = defineStore('transactions', () => {
     }
   }
 
-  return { nr, transactions, loadingNr, loadingTransactions, initialize }
+  function getStatusDisplay(status: Status | null, names: Array<NameChoice>) {
+    if (!status) return 'N/A'
+
+    let displayState = status as string
+    if (status === Status.Conditional) {
+      displayState = 'CONDITIONAL APPROVED'
+    } else if (status === Status.Consumed && names && names.length > 0) {
+      const approvedName = names.find((name) =>
+        [Status.Approved, Status.Condition].includes(name.state)
+      )
+      displayState =
+        approvedName?.state === Status.Condition
+          ? 'CONDITIONAL APPROVED'
+          : 'APPROVED'
+      displayState += ` / Used for ${approvedName?.corpNum}`
+    }
+    return displayState
+  }
+
+  function getRequestTypeDisplay(
+    requestType: RequestTypeCode,
+    action: RequestActionCode
+  ) {
+    if (!nr.value) return 'N/A'
+    const mapped = toMappedRequestType(
+      requestType,
+      action,
+      nr.value.entity_type_cd
+    )
+    return requestTypes.find((r) => r.value == mapped)?.text || 'N/A'
+  }
+
+  function getConsentDisplay(date: string | null, consentFlag: ConsentFlag) {
+    return date
+      ? 'Required. Received.'
+      : consentFlag === ConsentFlag.Required
+      ? 'Required. Not yet received.'
+      : 'Not required'
+  }
+
+  return {
+    nr,
+    transactions,
+    loadingNr,
+    loadingTransactions,
+    initialize,
+    getStatusDisplay,
+    getRequestTypeDisplay,
+    getConsentDisplay,
+  }
 })

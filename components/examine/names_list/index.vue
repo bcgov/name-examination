@@ -8,6 +8,7 @@
         :undo="undo"
         :current="isCurrent(choice.choice)"
         :highlight="highlight"
+        :indicate-draft="indicateDraft"
       />
     </li>
   </ol>
@@ -28,6 +29,8 @@ const props = defineProps<{
   undo?: (choice: NameChoice) => Promise<void>
   /** Whether to highlight/bolden name choices for being the current name choice or accepted */
   highlight?: boolean
+  /** Show '(DRAFT)' next to a name choice that has not been examined yet. */
+  indicateDraft?: boolean
 }>()
 
 const isCurrent = (choice: number) => props.currentChoice === choice

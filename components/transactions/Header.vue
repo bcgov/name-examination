@@ -13,7 +13,7 @@
       />
       <NameRequestTypeInfo
         class="!flex-row items-center space-x-2 pl-2 text-xl"
-        :request-type-text="requestTypeText"
+        :request-type-text="requestTypeDisplay"
         :jurisdiction="data.xproJurisdiction"
         :jurisdiction-number="data.homeJurisNum || undefined"
       />
@@ -25,23 +25,22 @@
 
 <script setup lang="ts">
 import type { NameRequest } from '~/types'
-import { toMappedRequestType } from '~/util/request-type'
 import NameRequestTypeInfo from '../NameRequestTypeInfo.vue'
-import requestTypes from '~/data/request_types.json'
+import { useTransactions } from '~/store/transactions'
 
 const { data } = defineProps<{
   data: NameRequest
 }>()
 
+const transactions = useTransactions()
+
 const isPriority = computed(() => data.priorityCd === 'Y')
-const requestType = computed(() =>
-  toMappedRequestType(
-    data.requestTypeCd,
-    data.request_action_cd,
-    data.entity_type_cd
-  )
-)
-const requestTypeText = computed(
-  () => requestTypes.find((r) => r.value == requestType.value)?.text || 'N/A'
+const requestTypeDisplay = computed(() =>
+  transactions.nr
+    ? transactions.getRequestTypeDisplay(
+        transactions.nr.requestTypeCd,
+        transactions.nr.request_action_cd
+      )
+    : 'N/A'
 )
 </script>
