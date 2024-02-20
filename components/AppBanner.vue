@@ -1,5 +1,5 @@
 <template>
-  <NoticeBanner v-if="bannerText" type="info">
+  <NoticeBanner id="app-banner" v-if="bannerText" type="info">
     {{ bannerText }}
   </NoticeBanner>
 </template>

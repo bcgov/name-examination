@@ -4,22 +4,23 @@
       <span
         class="mr-2 flex flex-col"
         :class="{
-          'font-bold': current || choiceApproved,
-          'text-bcgov-blue3': choiceApproved,
+          'font-bold': (current || choiceApproved) && highlight,
+          'text-bcgov-blue3': choiceApproved && highlight,
         }"
       >
         {{ choice.name }}
       </span>
 
-      <CheckIcon v-if="choiceApproved" class="h-5 w-5 text-lime-600" />
+      <CheckIcon v-if="choiceApproved" class="h-5 w-5 stroke-2 text-lime-600" />
       <XMarkIcon
         v-else-if="choice.state === Status.Rejected"
-        class="h-5 w-5 text-red-600"
+        class="h-5 w-5 stroke-2 text-red-600"
       />
+      <span v-else-if="indicateDraft" class="italic">(Draft)</span>
 
       <IconButton
         v-if="undoable"
-        @click="examine.undoNameChoiceDecision(choice)"
+        @click="undo?.(choice)"
         white
         text="Undo Decision"
         class="border-none text-sm text-blue-800"
@@ -29,7 +30,7 @@
     <span
       class="max-w-1/2 text-sm"
       :class="{
-        'text-[#1359A0]': choiceApproved,
+        'text-[#1359A0]': choiceApproved && highlight,
       }"
     >
       {{ choice.decision_text }}
@@ -40,16 +41,16 @@
 <script setup lang="ts">
 import { CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { Status } from '~/enums/nr-status'
-import { useExamination } from '~/store/examine'
 import type { NameChoice } from '~/types'
-
-const examine = useExamination()
 
 const props = defineProps<{
   choice: NameChoice
   decisionText: string
   undoable?: boolean
+  undo?: (choice: NameChoice) => Promise<void>
   current?: boolean
+  highlight?: boolean
+  indicateDraft?: boolean
 }>()
 
 const choiceApproved = computed(

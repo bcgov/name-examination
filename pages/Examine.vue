@@ -21,7 +21,18 @@
     <ExamineRequestInfo />
 
     <div class="flex justify-between p-4">
-      <ExamineNamesList class="ml-4 basis-1/2" />
+      <ExamineNamesList
+        v-if="!examine.isEditing"
+        class="ml-4 basis-1/2"
+        :choices="examine.nameChoices"
+        :current-choice="examine.currentChoice"
+        :complete="examine.isComplete"
+        :undoable="examine.isUndoable"
+        :undo="examine.undoNameChoiceDecision"
+        highlight
+      />
+      <ExamineNamesListEditable v-else />
+
       <ExamineQuickActionButtons v-if="showQuickActionButtons" />
     </div>
 

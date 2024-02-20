@@ -10,10 +10,11 @@ import {
   type RequestType,
   type RequestTypeRule,
   type Jurisdiction,
-  type TransactionItem,
+  type TransactionEntry,
   type NameRequest,
   type HistoryEntry,
   type ConditionsList,
+  type Transactions,
 } from '~/types'
 
 import requestTypes from '~/data/request_types.json'
@@ -214,7 +215,7 @@ export const useExamination = defineStore('examine', () => {
   const consentFlag = ref<ConsentFlag>()
 
   const pendingTransactionRequest = ref<boolean>()
-  const transactionsData = ref<Array<TransactionItem>>()
+  const transactionsData = ref<Array<TransactionEntry>>()
 
   const submittedDate = ref<DateTime>()
   const corpNum = ref<string>()
@@ -441,7 +442,7 @@ export const useExamination = defineStore('examine', () => {
     resetNameChoice(compName2)
     resetNameChoice(compName3)
 
-    info.names.forEach((nameChoice: NameChoice) =>
+    sortNameChoices(info.names).forEach((nameChoice: NameChoice) =>
       parseIntoNameChoice(nameChoice, nameChoices.value[nameChoice.choice - 1])
     )
 
@@ -453,7 +454,7 @@ export const useExamination = defineStore('examine', () => {
           )
         )
         .at(0) ?? compName1
-    await setCurrentNameChoice(newCurrentNameChoice)
+    setCurrentNameChoice(newCurrentNameChoice)
 
     nrStatus.value = info.state
     previousStateCd.value = info.previousStateCd ?? undefined
@@ -469,7 +470,7 @@ export const useExamination = defineStore('examine', () => {
     if (
       ![Status.InProgress, Status.Hold, Status.Draft].includes(nrStatus.value)
     ) {
-      await setCurrentNameChoice(undefined)
+      setCurrentNameChoice(undefined)
     }
 
     // we keep the original data so that if fields exist that we do not use, we don't lose that
@@ -634,7 +635,11 @@ export const useExamination = defineStore('examine', () => {
     populateNameChoice(currentNameObj.value)
 
     await pushDecision(currentNameObj.value)
-    await attemptNextNameChoice()
+    if (
+      ![Status.Approved, Status.Condition].includes(currentNameObj.value.state)
+    ) {
+      await attemptNextNameChoice()
+    }
   }
 
   async function makeQuickDecision(decision: Status, decisionText: string) {
@@ -652,7 +657,7 @@ export const useExamination = defineStore('examine', () => {
   }
 
   /** Attempt to set the given name choice as the current one. Will throw an error if the choice cannot be set. */
-  async function setCurrentNameChoice(choice: NameChoice | undefined) {
+  function setCurrentNameChoice(choice: NameChoice | undefined) {
     if (!choice) {
       currentNameObj.value = undefined
       return
@@ -673,7 +678,7 @@ export const useExamination = defineStore('examine', () => {
   async function examineNextNameChoice() {
     const attempt = async (choice: NameChoice) => {
       try {
-        await setCurrentNameChoice(choice)
+        setCurrentNameChoice(choice)
       } catch (e) {
         throw e
       }
@@ -683,7 +688,6 @@ export const useExamination = defineStore('examine', () => {
     } else if (currentChoice.value === 2) {
       await attempt(compName3)
     } else {
-      await updateNRState(Status.Rejected)
       throw new Error('Cannot examine next name choice')
     }
   }
@@ -702,7 +706,8 @@ export const useExamination = defineStore('examine', () => {
   async function getTransactionsHistory(nrNumber: string) {
     pendingTransactionRequest.value = true
     try {
-      const transactions = await getTransactions(nrNumber)
+      const transactionsResponse = await getTransactions(nrNumber)
+      const transactions = (await transactionsResponse.json()) as Transactions
       transactions.transactions.forEach((t) => sortNameChoices(t.names))
       transactionsData.value = transactions.transactions
     } catch (error) {

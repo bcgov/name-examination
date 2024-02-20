@@ -113,8 +113,8 @@ export async function putNameChoice(nrNumber: string, choice: NameChoice) {
   )
 }
 
-export async function getTransactions(nrNumber: string): Promise<Transactions> {
-  return getNamexObject(getNamexApiUrl(`/events/${nrNumber}`))
+export async function getTransactions(nrNumber: string): Promise<Response> {
+  return callNamexApi(getNamexApiUrl(`/events/${nrNumber}`))
 }
 
 export async function getBusiness(corpNum: string) {

@@ -184,12 +184,12 @@ export interface Transactions {
   response: {
     count: number
   }
-  transactions: Array<TransactionItem>
+  transactions: Array<TransactionEntry>
 }
 
-export interface TransactionItem {
+export interface TransactionEntry {
   additionalInfo: string
-  consentFlag: 'Y' | 'N'
+  consentFlag: ConsentFlag
   /** consent date */
   consent_dt: string | null
   corpNum: string | null
@@ -203,6 +203,7 @@ export interface TransactionItem {
   stateCd: Status
   user_action: string
   user_name: string
+  comment?: string
 }
 
 export interface Action {
@@ -266,7 +267,7 @@ export interface NameRequest {
   request_action_cd: RequestActionCode
   source: string | null
   state: Status
-  stateCd: string
+  stateCd: Status
   submitCount: number
   submittedDate: string
   submitter_userid: string
