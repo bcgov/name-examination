@@ -1,9 +1,6 @@
 <template>
-  <div class="flex h-full flex-col bg-white">
-    <TransactionsHeader
-      v-if="transactions.nr"
-      :data="transactions.nr"
-    />
+  <div class="flex h-full flex-col">
+    <TransactionsHeader v-if="transactions.nr" :data="transactions.nr" />
     <TransactionsEntryList
       :entries="transactions.transactions"
       :loading="transactions.loadingTransactions"

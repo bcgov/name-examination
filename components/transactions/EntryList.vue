@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col">
+  <div class="flex h-full flex-col overflow-y-auto">
     <div class="flex justify-between border-y-2 px-4 py-1">
       <span class="text-xl font-bold">{{ headerText }}</span>
       <label for="sys-transactions" class="flex items-center space-x-1">
@@ -24,7 +24,7 @@
       <span class="text-xl font-bold">No transactions available</span>
     </div>
 
-    <div v-else class="flex flex-col overflow-auto">
+    <div v-else class="flex flex-col overflow-y-auto">
       <TransactionsEntry
         v-for="(entry, i) in filteredEntries"
         :entry="entry"
