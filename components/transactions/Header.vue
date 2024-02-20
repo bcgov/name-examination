@@ -1,5 +1,9 @@
 <template>
-  <div class="flex flex-col space-y-4 p-4">
+  <div v-if="loading" class="flex items-center justify-center">
+    <LoadingSpinner />
+  </div>
+
+  <div v-else class="flex flex-col space-y-4 p-4">
     <div class="flex items-center divide-x-2 divide-gray-300">
       <NRNumber
         :nr-number="data.nrNum"
@@ -30,6 +34,7 @@ import { useTransactions } from '~/store/transactions'
 
 const { data } = defineProps<{
   data: NameRequest
+  loading?: boolean
 }>()
 
 const transactions = useTransactions()
