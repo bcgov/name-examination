@@ -6,6 +6,7 @@
         class="col-span-3"
         :choice="name"
         :decision-text="name.decision_text || ''"
+        indicate-draft
       />
     </div>
   </div>
