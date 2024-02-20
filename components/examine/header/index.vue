@@ -1,13 +1,13 @@
 <template>
   <div class="flex flex-wrap px-4 py-2 text-gray-700">
-    <div class="flex items-center">
+    <div class="mr-1 flex items-center">
       <NRNumber :nr-number="examine.nrNumber" :priority="examine.priority" />
 
       <a
         :href="`/transactions?nr=${examine.nrNumber.split(' ')[1]}`"
         target="_blank"
         rel="noopener noreferrer"
-        class="px-2 text-bcgov-blue5"
+        class="rounded-md p-1 text-bcgov-blue5 transition hover:bg-gray-200"
       >
         <ArrowTopRightOnSquareIcon class="h-6 w-6" />
       </a>
