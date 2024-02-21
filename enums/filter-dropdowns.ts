@@ -35,6 +35,7 @@ enum LastUpdate {
   Yesterday = 'Yesterday',
   Days2 = '2 days',
   Days7 = '7 days',
+  Days30 = '30 days'
 }
 
 export {
