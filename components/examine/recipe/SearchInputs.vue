@@ -35,7 +35,7 @@ watch(
   async (_state) => {
     searchString.value = examine.currentName ?? ''
     exactSearchString.value = ''
-    examine.runManualRecipe(searchString.value, exactSearchString.value)
+    await examine.runManualRecipe(searchString.value, exactSearchString.value)
   },
   { deep: true }
 )

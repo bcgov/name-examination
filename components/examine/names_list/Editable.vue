@@ -18,6 +18,7 @@
 
 <script setup lang="ts">
 import { useExamination } from '~/store/examine'
+import { emitter } from '~/util/emitter'
 
 const examine = useExamination()
 
@@ -61,7 +62,11 @@ examine.addEditAction({
   },
   update() {
     for (const [i, choice] of examine.nameChoices.entries()) {
+      const oldName = choice.name?.slice()
       choice.name = nameInputs.value[i].trim()
+      if (examine.currentChoice === choice.choice && choice.name !== oldName) {
+        examine.runManualRecipe(examine.currentName!, '')
+      }
     }
   },
   cancel() {},
