@@ -562,14 +562,14 @@
   },
   {
     "value": "ULCB",
-    "SHORT_DESC": "B.C. Company",
+    "short_desc": "B.C. Company",
     "text": "B.C. Company - ULC to BC Conversion",
-    "CLASS_TYPE_CD": "CORP",
-    "LEGACY_CD": "ULCB", 
-    "ADDITIONAL_INFO": "",
-    "SOURCE_APPLICATION": "COLIN",
-    "ENTITY_TYPE_CD": "CR",
-    "REQUEST_ACTION_CD": "CNV"
+    "class_type_cd": "CORP",
+    "legacy_cd": "ULCB", 
+    "additional_info": "",
+    "source_application": "COLIN",
+    "entity_type_cd": "CR",
+    "request_action_cd": "CNV"
   },
 {
     "value": "CUL",
