@@ -453,7 +453,7 @@ export const useExamination = defineStore('examine', () => {
             choice.state
           )
         )
-        .at(0) ?? compName1
+        .at(0)
     setCurrentNameChoice(newCurrentNameChoice)
 
     nrStatus.value = info.state
