@@ -34,7 +34,12 @@ import {
   putNameChoice,
   putNameRequest,
 } from '~/util/namex-api'
-import { getEmptyNameChoice, sortNameChoices } from '~/util'
+import {
+  getEmptyNameChoice,
+  isValidNrFormat,
+  nrExists,
+  sortNameChoices,
+} from '~/util'
 import { DateTime } from 'luxon'
 import { fromMappedRequestType } from '~/util/request-type'
 import { getDateFromDateTime, parseDate } from '~/util/date'
@@ -42,6 +47,7 @@ import { useConflicts } from './conflicts'
 import { usePayments } from './payments'
 import { useExaminationOptions } from './options'
 import { Route } from '~/enums/routes'
+import { emitter } from '~/util/emitter'
 
 export const useExamination = defineStore('examine', () => {
   const conflicts = useConflicts()
@@ -245,6 +251,8 @@ export const useExamination = defineStore('examine', () => {
 
   const hasBeenReset = ref<boolean>()
 
+  const initializing = ref(false)
+
   const additionalInfoTransformedTemplate = computed(() => {
     return additional_info_template.value
       ?.split('||')
@@ -446,14 +454,13 @@ export const useExamination = defineStore('examine', () => {
       parseIntoNameChoice(nameChoice, nameChoices.value[nameChoice.choice - 1])
     )
 
-    const newCurrentNameChoice =
-      nameChoices.value
-        .filter((choice) =>
-          [Status.NotExamined, Status.Approved, Status.Condition].includes(
-            choice.state
-          )
+    const newCurrentNameChoice = nameChoices.value
+      .filter((choice) =>
+        [Status.NotExamined, Status.Approved, Status.Condition].includes(
+          choice.state
         )
-        .at(0)
+      )
+      .at(0)
     setCurrentNameChoice(newCurrentNameChoice)
 
     nrStatus.value = info.state
@@ -963,6 +970,7 @@ export const useExamination = defineStore('examine', () => {
   }
 
   async function runManualRecipe(searchQuery: string, exactPhrase: string) {
+    console.log('running manual recipe')
     if (!currentNameObj.value) return
 
     resetExaminationArea()
@@ -1024,17 +1032,54 @@ export const useExamination = defineStore('examine', () => {
     })
   }
 
+  /** Returns `true` if the given NR number is valid. If not, shows an error dialog to the user and returns `false`. */
+  async function checkNrNumber(nrNumber: string) {
+    if (!nrNumber.startsWith('NR')) {
+      nrNumber = `NR ${nrNumber}`
+    }
+    if (!isValidNrFormat(nrNumber, true)) {
+      emitter.emit('error', {
+        title: 'Invalid Search Term',
+        message: 'Incorrect NR number format',
+      })
+      return false
+    } else if (!(await nrExists(nrNumber))) {
+      emitter.emit('error', {
+        title: 'NR Not Found',
+        message: 'The requested NR could not be found',
+      })
+      return false
+    }
+    return true
+  }
+
+  /** Retrieve the next NR in the queue and initialize this store with it. */
+  async function initializeNext() {
+    initializing.value = true
+    const nrNumber = await getpostgrescompNo()
+    await initialize(nrNumber)
+    initializing.value = false
+  }
+
   async function initialize(newNrNumber: string) {
+    initializing.value = true
+    if (!(await checkNrNumber(newNrNumber))) {
+      initializing.value = false
+      throw new Error('Failed to initialize examine store: invalid NR Number')
+    }
     resetValues()
     nrNumber.value = newNrNumber
     await updateRoute()
     await getpostgrescompInfo(newNrNumber)
     await setNewExaminer()
     updateRequestTypeRules(requestTypeObject.value)
+    initializing.value = false
+    await runManualRecipe(currentName.value || '', '')
   }
 
   return {
     initialize,
+    initializeNext,
     updateRoute,
     priority,
     isComplete,
@@ -1115,6 +1160,7 @@ export const useExamination = defineStore('examine', () => {
     conEmail,
     contactName,
     canEdit,
+    initializing,
     otherExaminerInProgress,
     expired,
     isApprovedAndExpired,

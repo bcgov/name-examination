@@ -1,5 +1,12 @@
 <template>
   <div
+    v-if="examine.initializing"
+    class="flex h-3/4 items-center justify-center"
+  >
+    <LoadingSpinner />
+  </div>
+  <div
+    v-else
     class="flex h-full flex-col"
     :class="{ 'bg-gray-100': examine.isEditing }"
   >
@@ -50,6 +57,7 @@
 
 <script setup lang="ts">
 import { Status } from '~/enums/nr-status'
+import { Route } from '~/enums/routes'
 import { useExamination } from '~/store/examine'
 const examine = useExamination()
 
@@ -71,15 +79,21 @@ const reservedOrCondReserved = computed(() =>
 )
 
 onMounted(async () => {
-  const route = useRoute()
-  const nrParam = route.query.nr
-  if (nrParam) {
-    const nrNumber = `NR ${nrParam}`
-    await examine.initialize(nrNumber)
-  } else {
-    if (!examine.nrNumber) {
-      const nrNumber = await examine.getpostgrescompNo()
+  const query = useRoute().query
+  if ('nr' in query) {
+    try {
+      const nrNumber = `NR ${query.nr}`
       await examine.initialize(nrNumber)
+    } catch (e) {
+      await navigateTo(Route.Search)
+    }
+  } else {
+    if (
+      !examine.nrNumber ||
+      examine.isComplete ||
+      [Status.Draft, Status.Hold].includes(examine.nrStatus)
+    ) {
+      await examine.initializeNext()
     } else {
       await examine.updateRoute()
     }
