@@ -106,7 +106,7 @@ export const useExamination = defineStore('examine', () => {
       Status.Consumed,
     ].includes(nrStatus.value)
   )
-  const previousStateCd = ref<Status>()
+  const previousState = ref<Status>()
   const listRequestTypes = ref<Array<RequestType>>(
     requestTypes as Array<RequestType>
   )
@@ -379,7 +379,7 @@ export const useExamination = defineStore('examine', () => {
     data.additionalInfo = additionalInfo.value || ''
     data.comments = comments.value
     data.state = nrStatus.value
-    data.previousStateCd = previousStateCd.value || null
+    data.previousStateCd = previousState.value || null
     data.previousNr = previousNr.value || null
     data.corpNum = corpNum.value || null
     data.furnished = furnished.value
@@ -464,7 +464,7 @@ export const useExamination = defineStore('examine', () => {
     setCurrentNameChoice(newCurrentNameChoice)
 
     nrStatus.value = info.state
-    previousStateCd.value = info.previousStateCd ?? undefined
+    previousState.value = info.previousStateCd ?? undefined
     requestType.value = info.requestTypeCd
 
     consentFlag.value = info.consentFlag ?? undefined
@@ -694,13 +694,12 @@ export const useExamination = defineStore('examine', () => {
     }
   }
 
-  async function updateNRStatePreviousState(
+  async function updateNRStateAndPreviousState(
     nrState: Status,
-    previousState: Status
+    prevState: Status | null
   ) {
-    const patch = { previousStateCd: previousState, state: nrState }
+    const patch = { previousStateCd: prevState, state: nrState }
     await patchNameRequest(nrNumber.value, patch)
-
     await fetchAndLoadNr(nrNumber.value)
     await setNewExaminer()
   }
@@ -736,13 +735,10 @@ export const useExamination = defineStore('examine', () => {
     }
   }
 
+  /** Revert to this NR's previous state if it exists. */
   async function revertToPreviousState() {
-    await patchNameRequest(nrNumber.value, {
-      state: previousStateCd.value,
-      previousStateCd: null,
-    })
-    await fetchAndLoadNr(nrNumber.value)
-    await setNewExaminer()
+    if (previousState.value)
+      return updateNRStateAndPreviousState(previousState.value, null)
   }
 
   /** Runs all edit actions, ensuring all actions have valid internal state before updating the store state.
@@ -763,9 +759,9 @@ export const useExamination = defineStore('examine', () => {
       return
     }
 
-    if (previousStateCd.value === Status.Draft) {
-      nrStatus.value = previousStateCd.value
-      previousStateCd.value = undefined
+    if (previousState.value === Status.Draft) {
+      nrStatus.value = previousState.value
+      previousState.value = undefined
     }
 
     await updateRequest()
@@ -802,7 +798,7 @@ export const useExamination = defineStore('examine', () => {
     if (!isMyCurrentNr.value && !isClosed.value) {
       // track the previous state if it's currently in DRAFT (otherwise do not)
       if (nrStatus.value == Status.Draft) {
-        await updateNRStatePreviousState(Status.InProgress, Status.Draft)
+        await updateNRStateAndPreviousState(Status.InProgress, Status.Draft)
       } else {
         await updateNRState(Status.InProgress)
       }
@@ -835,7 +831,7 @@ export const useExamination = defineStore('examine', () => {
     if (!userHasApproverRole.value) {
       // initialize user in edit mode, with previous state set so NR gets set back to draft
       // when user is done changing name, adding comment, etc.
-      previousStateCd.value = Status.Draft
+      previousState.value = Status.Draft
       isEditing.value = true
     }
   }
@@ -869,7 +865,7 @@ export const useExamination = defineStore('examine', () => {
   }
 
   async function cancelEdits() {
-    if (previousStateCd.value === Status.Draft) {
+    if (previousState.value === Status.Draft) {
       await revertToPreviousState()
     } else {
       await fetchAndLoadNr(nrNumber.value)
@@ -1083,7 +1079,7 @@ export const useExamination = defineStore('examine', () => {
     isHeaderShown,
     nrNumber,
     nrStatus,
-    previousStateCd,
+    previousState,
     listRequestTypes,
     requestType,
     requestTypeObject,
@@ -1168,7 +1164,7 @@ export const useExamination = defineStore('examine', () => {
     fetchAndLoadNr,
     setNewExaminer,
     updateNRState,
-    updateNRStatePreviousState,
+    updateNRStateAndPreviousState,
     revertToPreviousState,
     saveEdits,
     updateRequest,
