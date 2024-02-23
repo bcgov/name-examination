@@ -216,7 +216,12 @@ export const useExamination = defineStore('examine', () => {
   const previousNr = ref<string>()
   const prevNrRequired = ref<boolean>()
 
-  const consumedBy = ref<string>()
+  const consumedBy = computed(
+    () =>
+      nameChoices.value
+        .filter((choice) => choice.consumptionDate && choice.corpNum)
+        .at(0)?.corpNum
+  )
   const consentDate = ref<string>()
   const consentFlag = ref<ConsentFlag>()
 
