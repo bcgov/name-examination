@@ -27,11 +27,13 @@
       </div>
 
       <div class="grid basis-1/3 grid-cols-2 overflow-x-auto">
-        <h3 class="font-bold">Client</h3>
-        <p>{{ applicants.clientFirstName }} {{ applicants.clientLastName }}</p>
+        <h3 class="font-bold" v-if="clientExists">Client</h3>
+        <p v-if="clientExists">
+          {{ applicants.clientFirstName }} {{ applicants.clientLastName }}
+        </p>
 
-        <h3 class="font-bold">Contact</h3>
-        <p>{{ applicants.contact }}</p>
+        <h3 class="font-bold" v-if="applicants.contact">Contact</h3>
+        <p v-if="applicants.contact">{{ applicants.contact }}</p>
 
         <h3 class="font-bold">Name State</h3>
         <p>{{ conflict.state }}</p>
@@ -56,4 +58,8 @@ const { conflict } = defineProps<{
 }>()
 
 const applicants = conflict.applicants
+
+const clientExists = computed(
+  () => applicants.clientFirstName || applicants.clientLastName
+)
 </script>

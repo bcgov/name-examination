@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col font-bold">
+  <div class="flex flex-col justify-center font-bold">
     <p>
       {{ requestTypeText }}
     </p>

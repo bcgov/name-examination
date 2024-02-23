@@ -216,7 +216,9 @@ export const useConflicts = defineStore('conflicts', () => {
 
   async function initialize(searchQuery: string, exactPhrase: string) {
     loading.value = true
+    resetConflictLists()
     exactMatches.value = await retrieveExactMatches(searchQuery)
+    exactMatches.value.forEach(match => selectConflict(match))
     synonymMatches.value = await retrieveSynonymMatches(
       searchQuery,
       exactPhrase
@@ -251,7 +253,7 @@ export const useConflicts = defineStore('conflicts', () => {
   }
 
   function deselectConflict(conflict: ConflictListItem) {
-    const notConflict = (c: ConflictListItem) => c !== conflict
+    const notConflict = (c: ConflictListItem) => c.nrNumber !== conflict.nrNumber
     selectedConflicts.value = selectedConflicts.value.filter(notConflict)
     comparedConflicts.value = comparedConflicts.value.filter(notConflict)
   }
