@@ -238,8 +238,8 @@ export const useConflicts = defineStore('conflicts', () => {
     loading.value = false
   }
 
-  function resetConflictList() {
-    selectedConflicts.value = []
+  function resetConflictLists() {
+    clearSelectedConflicts()
     comparedConflicts.value = []
   }
 
@@ -274,7 +274,7 @@ export const useConflicts = defineStore('conflicts', () => {
     loading,
     resetMatches,
     clearSelectedConflicts,
-    resetConflictList,
+    resetConflictLists,
     selectConflict,
     deselectConflict,
     autoAdd,

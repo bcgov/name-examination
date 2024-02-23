@@ -94,7 +94,7 @@ export const useExamination = defineStore('examine', () => {
   const trademarks = ref<Array<Trademark>>([])
 
   const isEditing = ref<boolean>()
-  const isMakingDecision = ref<boolean>()
+  const isMakingDecision = computed(() => nrStatus.value === Status.InProgress)
   const isHeaderShown = ref<boolean>()
   const nrNumber = ref<string>('')
   const nrStatus = ref(Status.Draft)
@@ -520,10 +520,6 @@ export const useExamination = defineStore('examine', () => {
     furnished.value = info.furnished
     hasBeenReset.value = info.hasBeenReset
 
-    if (nrStatus.value === Status.InProgress) {
-      isMakingDecision.value = true
-    }
-
     await payments.initialize(info.id)
   }
 
@@ -800,8 +796,7 @@ export const useExamination = defineStore('examine', () => {
   }
 
   async function getNextCompany() {
-    resetValues()
-    conflicts.resetConflictList()
+    conflicts.resetConflictLists()
     const nextNr = await getpostgrescompNo()
     await initialize(nextNr)
   }
@@ -820,9 +815,8 @@ export const useExamination = defineStore('examine', () => {
   }
 
   async function holdRequest() {
-    isMakingDecision.value = false
     await updateNRState(Status.Hold)
-    conflicts.resetConflictList()
+    conflicts.resetConflictLists()
   }
 
   function clearSelectedDecisionReasons() {
@@ -838,7 +832,7 @@ export const useExamination = defineStore('examine', () => {
   }
 
   function resetNrDecision() {
-    conflicts.resetConflictList()
+    conflicts.resetConflictLists()
     clearSelectedDecisionReasons()
 
     nrStatus.value = Status.InProgress
@@ -866,7 +860,6 @@ export const useExamination = defineStore('examine', () => {
 
   async function claimNr() {
     await updateNRState(Status.InProgress)
-    isMakingDecision.value = true
   }
 
   async function cancelEdits() {
@@ -917,9 +910,6 @@ export const useExamination = defineStore('examine', () => {
   }
 
   async function updateNRState(state: Status) {
-    if (state === Status.Draft && nrStatus.value === Status.InProgress) {
-      isMakingDecision.value = false
-    }
     nrStatus.value = state
     await patchNameRequest(nrNumber.value, { state: state })
     await getpostgrescompInfo(nrNumber.value)
@@ -928,7 +918,6 @@ export const useExamination = defineStore('examine', () => {
   async function cancelNr(commentText: string) {
     await postComment(commentText)
     resetExaminationArea()
-    isMakingDecision.value = false
     await updateNRState(Status.Cancelled)
   }
 
@@ -960,7 +949,6 @@ export const useExamination = defineStore('examine', () => {
     histories.value = []
     trademarks.value = []
     isEditing.value = false
-    isMakingDecision.value = false
     isHeaderShown.value = false
   }
 
@@ -970,7 +958,6 @@ export const useExamination = defineStore('examine', () => {
   }
 
   async function runManualRecipe(searchQuery: string, exactPhrase: string) {
-    console.log('running manual recipe')
     if (!currentNameObj.value) return
 
     resetExaminationArea()
@@ -1013,7 +1000,7 @@ export const useExamination = defineStore('examine', () => {
   }
 
   function resetExaminationArea() {
-    conflicts.resetConflictList()
+    conflicts.resetConflictLists()
     clearSelectedDecisionReasons()
     conflicts.autoAdd = true
     consentRequired.value = false
@@ -1187,7 +1174,6 @@ export const useExamination = defineStore('examine', () => {
     updateRequestTypeRules,
     setRequestType,
     getpostgrescompNo,
-    resetValues,
     getNextCompany,
     edit,
     holdRequest,

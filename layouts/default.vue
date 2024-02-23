@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen">
+  <div>
     <AppHeaderContainer />
     <AppBanner />
     <GlobalErrorDialog />
