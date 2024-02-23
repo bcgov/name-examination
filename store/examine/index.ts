@@ -439,7 +439,8 @@ export const useExamination = defineStore('examine', () => {
     choice.comment = data.comment
   }
 
-  async function loadCompanyInfo(info: NameRequest) {
+  /** Parse a Name Request object into this store's variables. */
+  async function parseNr(info: NameRequest) {
     if (!info || !info.names || info.names.length === 0) return
 
     consentFlag.value = undefined
@@ -569,7 +570,7 @@ export const useExamination = defineStore('examine', () => {
     currentNameObj.value = nameChoices.value[name.choice - 1]
     resetNameChoice(currentNameObj.value, true)
     await pushCurrentNameChoice()
-    await getpostgrescompInfo(nrNumber.value)
+    await fetchAndLoadNr(nrNumber.value)
   }
 
   /** Populate the currently examining name choice with selected conflicts and decision text. */
@@ -700,7 +701,7 @@ export const useExamination = defineStore('examine', () => {
     const patch = { previousStateCd: previousState, state: nrState }
     await patchNameRequest(nrNumber.value, patch)
 
-    await getpostgrescompInfo(nrNumber.value)
+    await fetchAndLoadNr(nrNumber.value)
     await setNewExaminer()
   }
 
@@ -740,7 +741,7 @@ export const useExamination = defineStore('examine', () => {
       state: previousStateCd.value,
       previousStateCd: null,
     })
-    await getpostgrescompInfo(nrNumber.value)
+    await fetchAndLoadNr(nrNumber.value)
     await setNewExaminer()
   }
 
@@ -792,7 +793,7 @@ export const useExamination = defineStore('examine', () => {
 
   async function getNextCompany() {
     conflicts.resetConflictLists()
-    const nextNr = await getpostgrescompNo()
+    const nextNr = await getNextNrInQueue()
     await initialize(nextNr)
   }
 
@@ -852,7 +853,7 @@ export const useExamination = defineStore('examine', () => {
     // set reset flag so name data is managed between Namex and NRO correctly
     hasBeenReset.value = true
     await updateRequest()
-    await getpostgrescompInfo(nrNumber.value)
+    await fetchAndLoadNr(nrNumber.value)
   }
 
   async function resetNr() {
@@ -860,7 +861,7 @@ export const useExamination = defineStore('examine', () => {
     clearConsent()
     furnished.value = 'N'
     await updateRequest()
-    await getpostgrescompInfo(nrNumber.value)
+    await fetchAndLoadNr(nrNumber.value)
   }
 
   async function claimNr() {
@@ -871,7 +872,7 @@ export const useExamination = defineStore('examine', () => {
     if (previousStateCd.value === Status.Draft) {
       await revertToPreviousState()
     } else {
-      await getpostgrescompInfo(nrNumber.value)
+      await fetchAndLoadNr(nrNumber.value)
     }
     isEditing.value = false
     isHeaderShown.value = false
@@ -917,7 +918,7 @@ export const useExamination = defineStore('examine', () => {
   async function updateNRState(state: Status) {
     nrStatus.value = state
     await patchNameRequest(nrNumber.value, { state: state })
-    await getpostgrescompInfo(nrNumber.value)
+    await fetchAndLoadNr(nrNumber.value)
   }
 
   async function cancelNr(commentText: string) {
@@ -936,7 +937,7 @@ export const useExamination = defineStore('examine', () => {
     const data = await getNrData()
     const response = await putNameRequest(nrNumber.value, data)
     if (response.status === 200) {
-      await loadCompanyInfo(await response.json())
+      await parseNr(await response.json())
     }
   }
 
@@ -957,9 +958,10 @@ export const useExamination = defineStore('examine', () => {
     isHeaderShown.value = false
   }
 
-  async function getpostgrescompInfo(nrNumber: string) {
+  /** Fetches the given NR's data and parses it into this store. */
+  async function fetchAndLoadNr(nrNumber: string) {
     const response = await getNameRequest(nrNumber)
-    await loadCompanyInfo(await response.json())
+    await parseNr(await response.json())
   }
 
   async function runManualRecipe(searchQuery: string, exactPhrase: string) {
@@ -976,7 +978,8 @@ export const useExamination = defineStore('examine', () => {
     await conflicts.initialize(searchQuery, exactPhrase)
   }
 
-  async function getpostgrescompNo(): Promise<string> {
+  /** Retrieves the NR number of the next NR that the user should examine. */
+  async function getNextNrInQueue(): Promise<string> {
     const priorityQueue = useExaminationOptions().priorityQueue
     const response = await getNextNrNumber(priorityQueue)
     const json = await response.json()
@@ -1043,7 +1046,7 @@ export const useExamination = defineStore('examine', () => {
   /** Retrieve the next NR in the queue and initialize this store with it. */
   async function initializeNext() {
     initializing.value = true
-    const nrNumber = await getpostgrescompNo()
+    const nrNumber = await getNextNrInQueue()
     await initialize(nrNumber)
     initializing.value = false
   }
@@ -1057,7 +1060,7 @@ export const useExamination = defineStore('examine', () => {
     resetValues()
     nrNumber.value = newNrNumber
     await updateRoute()
-    await getpostgrescompInfo(newNrNumber)
+    await fetchAndLoadNr(newNrNumber)
     await setNewExaminer()
     updateRequestTypeRules(requestTypeObject.value)
     initializing.value = false
@@ -1162,7 +1165,7 @@ export const useExamination = defineStore('examine', () => {
     makeQuickDecision,
     runManualRecipe,
     resetExaminationArea,
-    getpostgrescompInfo,
+    fetchAndLoadNr,
     setNewExaminer,
     updateNRState,
     updateNRStatePreviousState,
@@ -1172,7 +1175,7 @@ export const useExamination = defineStore('examine', () => {
     cancelEdits,
     updateRequestTypeRules,
     setRequestType,
-    getpostgrescompNo,
+    getNextNrInQueue,
     getNextCompany,
     edit,
     holdRequest,
