@@ -845,13 +845,14 @@ export const useExamination = defineStore('examine', () => {
     const nrResponse = await getNameRequest(nrNumber.value)
     const nrData = (await nrResponse.json()) as NameRequest
     if (nrData.furnished === 'Y') {
+      alert('NR has been furnished, proceeding to reset NR instead.')
       return await resetNr()
     }
-
     resetNrDecision()
     // set reset flag so name data is managed between Namex and NRO correctly
     hasBeenReset.value = true
     await updateRequest()
+    await getpostgrescompInfo(nrNumber.value)
   }
 
   async function resetNr() {
@@ -859,6 +860,7 @@ export const useExamination = defineStore('examine', () => {
     clearConsent()
     furnished.value = 'N'
     await updateRequest()
+    await getpostgrescompInfo(nrNumber.value)
   }
 
   async function claimNr() {
