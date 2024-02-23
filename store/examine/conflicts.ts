@@ -217,15 +217,23 @@ export const useConflicts = defineStore('conflicts', () => {
   async function initialize(searchQuery: string, exactPhrase: string) {
     loading.value = true
     resetConflictLists()
-    exactMatches.value = await retrieveExactMatches(searchQuery)
-    exactMatches.value.forEach(match => selectConflict(match))
-    synonymMatches.value = await retrieveSynonymMatches(
-      searchQuery,
-      exactPhrase
-    )
-    cobrsPhoneticMatches.value = await retrieveCobrsPhoneticMatches(searchQuery)
-    phoneticMatches.value = await retrievePhoneticMatches(searchQuery)
-    loading.value = false
+    try {
+      exactMatches.value = await retrieveExactMatches(searchQuery)
+      exactMatches.value.forEach((match) => selectConflict(match))
+      synonymMatches.value = await retrieveSynonymMatches(
+        searchQuery,
+        exactPhrase
+      )
+      cobrsPhoneticMatches.value = await retrieveCobrsPhoneticMatches(
+        searchQuery
+      )
+      phoneticMatches.value = await retrievePhoneticMatches(searchQuery)
+    } catch (e) {
+      resetMatches()
+      throw e
+    } finally {
+      loading.value = false
+    }
   }
 
   function clearSelectedConflicts() {
@@ -253,7 +261,8 @@ export const useConflicts = defineStore('conflicts', () => {
   }
 
   function deselectConflict(conflict: ConflictListItem) {
-    const notConflict = (c: ConflictListItem) => c.nrNumber !== conflict.nrNumber
+    const notConflict = (c: ConflictListItem) =>
+      c.nrNumber !== conflict.nrNumber
     selectedConflicts.value = selectedConflicts.value.filter(notConflict)
     comparedConflicts.value = comparedConflicts.value.filter(notConflict)
   }

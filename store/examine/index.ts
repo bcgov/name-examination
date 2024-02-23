@@ -965,18 +965,23 @@ export const useExamination = defineStore('examine', () => {
     await parseNr(await response.json())
   }
 
+  /** Fetch and load data for the recipe area (conflicts, trademarks, etc) */
   async function runManualRecipe(searchQuery: string, exactPhrase: string) {
     if (!currentNameObj.value) return
-
     resetExaminationArea()
-
-    trademarks.value = await getTrademarks(searchQuery)
-    histories.value = await getHistories(searchQuery)
-    macros.value = await getMacros()
-    const conditionsJson = await getConditions(searchQuery)
-    conditions.value = parseConditions(conditionsJson)
-
-    await conflicts.initialize(searchQuery, exactPhrase)
+    try {
+      trademarks.value = await getTrademarks(searchQuery)
+      histories.value = await getHistories(searchQuery)
+      macros.value = await getMacros()
+      const conditionsJson = await getConditions(searchQuery)
+      conditions.value = parseConditions(conditionsJson)
+      await conflicts.initialize(searchQuery, exactPhrase)
+    } catch (e) {
+      emitter.emit('error', {
+        title: 'Failed To Load Recipe Area',
+        message: `Data for the recipe area could not be loaded entirely: ${e}`,
+      })
+    }
   }
 
   /** Retrieves the NR number of the next NR that the user should examine. */
