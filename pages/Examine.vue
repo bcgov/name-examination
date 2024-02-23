@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="examine.initializing"
-    class="flex h-3/4 items-center justify-center"
+    class="flex h-[75vh] items-center justify-center"
   >
     <LoadingSpinner />
   </div>
