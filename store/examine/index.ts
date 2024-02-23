@@ -220,7 +220,6 @@ export const useExamination = defineStore('examine', () => {
   const consentDate = ref<string>()
   const consentFlag = ref<ConsentFlag>()
 
-  const pendingTransactionRequest = ref<boolean>()
   const transactionsData = ref<Array<TransactionEntry>>()
 
   const submittedDate = ref<DateTime>()
@@ -508,10 +507,9 @@ export const useExamination = defineStore('examine', () => {
     examiner.value = info.userId
     priority.value = info.priorityCd === 'Y'
 
-    if (info.expirationDate) {
-      const parsedExpirationDate = parseDate(info.expirationDate)
-      expiryDate.value = getDateFromDateTime(parsedExpirationDate) ?? undefined
-    }
+    expiryDate.value = info.expirationDate
+      ? getDateFromDateTime(parseDate(info.expirationDate)) ?? undefined
+      : undefined
 
     submittedDate.value = parseDate(info.submittedDate)
 
@@ -707,7 +705,6 @@ export const useExamination = defineStore('examine', () => {
   }
 
   async function getTransactionsHistory(nrNumber: string) {
-    pendingTransactionRequest.value = true
     try {
       const transactionsResponse = await getTransactions(nrNumber)
       const transactions = (await transactionsResponse.json()) as Transactions
@@ -716,8 +713,6 @@ export const useExamination = defineStore('examine', () => {
     } catch (error) {
       console.error(`Error while retrieving transactions: ${error}`)
       transactionsData.value = undefined
-    } finally {
-      pendingTransactionRequest.value = false
     }
   }
 
@@ -845,6 +840,14 @@ export const useExamination = defineStore('examine', () => {
   }
 
   async function reOpen() {
+    // the NR could have been furnished in the time that it was approved to the time the user presses the Reopen button
+    // double check to see if its furnished, if it is, reset the nr instead
+    const nrResponse = await getNameRequest(nrNumber.value)
+    const nrData = (await nrResponse.json()) as NameRequest
+    if (nrData.furnished === 'Y') {
+      return await resetNr()
+    }
+
     resetNrDecision()
     // set reset flag so name data is managed between Namex and NRO correctly
     hasBeenReset.value = true
@@ -1007,11 +1010,6 @@ export const useExamination = defineStore('examine', () => {
     customerMessageOverride.value = undefined
   }
 
-  async function getHistoryInfo(nrNumber: string): Promise<NameRequest> {
-    const response = await getNameRequest(nrNumber)
-    return response.json()
-  }
-
   async function updateRoute() {
     await navigateTo({
       path: Route.Examine,
@@ -1156,7 +1154,6 @@ export const useExamination = defineStore('examine', () => {
     exactHistoryMatch,
     addEditAction,
     isUndoable,
-    getHistoryInfo,
     getShortJurisdiction,
     makeDecision,
     undoNameChoiceDecision,

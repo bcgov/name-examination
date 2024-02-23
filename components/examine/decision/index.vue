@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col justify-between">
+  <div class="flex flex-col justify-between space-y-4">
     <div class="flex flex-col space-y-2">
       <ExamineDecisionHeader />
 

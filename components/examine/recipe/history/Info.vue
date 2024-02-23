@@ -71,6 +71,7 @@
 <script setup lang="ts">
 import { useExamination } from '~/store/examine'
 import { type NameRequest, type HistoryEntry } from '~/types'
+import { getNameRequest } from '~/util/namex-api';
 
 const props = defineProps<{
   historyEntry: HistoryEntry
@@ -123,7 +124,8 @@ const conflicts = computed(() => {
 
 onMounted(async () => {
   isLoading.value = true
-  historiesInfo.value = await examine.getHistoryInfo(props.historyEntry.nr_num)
+  const nrResponse = await getNameRequest(props.historyEntry.nr_num)
+  historiesInfo.value = await nrResponse.json()
   isLoading.value = false
 })
 
