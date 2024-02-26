@@ -216,14 +216,24 @@ export const useConflicts = defineStore('conflicts', () => {
 
   async function initialize(searchQuery: string, exactPhrase: string) {
     loading.value = true
-    exactMatches.value = await retrieveExactMatches(searchQuery)
-    synonymMatches.value = await retrieveSynonymMatches(
-      searchQuery,
-      exactPhrase
-    )
-    cobrsPhoneticMatches.value = await retrieveCobrsPhoneticMatches(searchQuery)
-    phoneticMatches.value = await retrievePhoneticMatches(searchQuery)
-    loading.value = false
+    resetConflictLists()
+    try {
+      exactMatches.value = await retrieveExactMatches(searchQuery)
+      exactMatches.value.forEach((match) => selectConflict(match))
+      synonymMatches.value = await retrieveSynonymMatches(
+        searchQuery,
+        exactPhrase
+      )
+      cobrsPhoneticMatches.value = await retrieveCobrsPhoneticMatches(
+        searchQuery
+      )
+      phoneticMatches.value = await retrievePhoneticMatches(searchQuery)
+    } catch (e) {
+      resetMatches()
+      throw e
+    } finally {
+      loading.value = false
+    }
   }
 
   function clearSelectedConflicts() {
@@ -238,8 +248,8 @@ export const useConflicts = defineStore('conflicts', () => {
     loading.value = false
   }
 
-  function resetConflictList() {
-    selectedConflicts.value = []
+  function resetConflictLists() {
+    clearSelectedConflicts()
     comparedConflicts.value = []
   }
 
@@ -251,7 +261,8 @@ export const useConflicts = defineStore('conflicts', () => {
   }
 
   function deselectConflict(conflict: ConflictListItem) {
-    const notConflict = (c: ConflictListItem) => c !== conflict
+    const notConflict = (c: ConflictListItem) =>
+      c.nrNumber !== conflict.nrNumber
     selectedConflicts.value = selectedConflicts.value.filter(notConflict)
     comparedConflicts.value = comparedConflicts.value.filter(notConflict)
   }
@@ -274,7 +285,7 @@ export const useConflicts = defineStore('conflicts', () => {
     loading,
     resetMatches,
     clearSelectedConflicts,
-    resetConflictList,
+    resetConflictLists,
     selectConflict,
     deselectConflict,
     autoAdd,

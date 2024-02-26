@@ -76,6 +76,7 @@ export interface Histories {
 export enum ConflictSource {
   Corp = 'CORP',
   NameRequest = 'NR',
+  NRO = 'NRO'
 }
 
 export interface ConflictListItem {

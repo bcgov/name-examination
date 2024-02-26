@@ -15,7 +15,7 @@
 
       <span
         v-if="characterLimit"
-        class="rounded-b-md border border-t-0 border-gray-300 bg-white p-2 text-sm text-gray-500"
+        class="rounded-b-md border border-t-0 border-gray-300 bg-white p-2 text-sm text-gray-600"
       >
         {{ modelValue.length }} / {{ characterLimit }}
       </span>

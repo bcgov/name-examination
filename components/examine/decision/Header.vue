@@ -4,6 +4,7 @@
 
     <label class="ml-auto flex items-center space-x-1" for="consent">
       <input
+        id="consent"
         class="h-4 w-4"
         type="checkbox"
         v-model="examine.consentRequired"

@@ -34,7 +34,12 @@ import {
   putNameChoice,
   putNameRequest,
 } from '~/util/namex-api'
-import { getEmptyNameChoice, sortNameChoices } from '~/util'
+import {
+  getEmptyNameChoice,
+  isValidNrFormat,
+  nrExists,
+  sortNameChoices,
+} from '~/util'
 import { DateTime } from 'luxon'
 import { fromMappedRequestType } from '~/util/request-type'
 import { getDateFromDateTime, parseDate } from '~/util/date'
@@ -42,6 +47,7 @@ import { useConflicts } from './conflicts'
 import { usePayments } from './payments'
 import { useExaminationOptions } from './options'
 import { Route } from '~/enums/routes'
+import { emitter } from '~/util/emitter'
 
 export const useExamination = defineStore('examine', () => {
   const conflicts = useConflicts()
@@ -88,7 +94,7 @@ export const useExamination = defineStore('examine', () => {
   const trademarks = ref<Array<Trademark>>([])
 
   const isEditing = ref<boolean>()
-  const isMakingDecision = ref<boolean>()
+  const isMakingDecision = computed(() => nrStatus.value === Status.InProgress)
   const isHeaderShown = ref<boolean>()
   const nrNumber = ref<string>('')
   const nrStatus = ref(Status.Draft)
@@ -100,7 +106,7 @@ export const useExamination = defineStore('examine', () => {
       Status.Consumed,
     ].includes(nrStatus.value)
   )
-  const previousStateCd = ref<Status>()
+  const previousState = ref<Status>()
   const listRequestTypes = ref<Array<RequestType>>(
     requestTypes as Array<RequestType>
   )
@@ -210,11 +216,15 @@ export const useExamination = defineStore('examine', () => {
   const previousNr = ref<string>()
   const prevNrRequired = ref<boolean>()
 
-  const consumedBy = ref<string>()
+  const consumedBy = computed(
+    () =>
+      nameChoices.value
+        .filter((choice) => choice.consumptionDate && choice.corpNum)
+        .at(0)?.corpNum
+  )
   const consentDate = ref<string>()
   const consentFlag = ref<ConsentFlag>()
 
-  const pendingTransactionRequest = ref<boolean>()
   const transactionsData = ref<Array<TransactionEntry>>()
 
   const submittedDate = ref<DateTime>()
@@ -244,6 +254,8 @@ export const useExamination = defineStore('examine', () => {
   const contactName = ref<string>()
 
   const hasBeenReset = ref<boolean>()
+
+  const initializing = ref(false)
 
   const additionalInfoTransformedTemplate = computed(() => {
     return additional_info_template.value
@@ -372,7 +384,7 @@ export const useExamination = defineStore('examine', () => {
     data.additionalInfo = additionalInfo.value || ''
     data.comments = comments.value
     data.state = nrStatus.value
-    data.previousStateCd = previousStateCd.value || null
+    data.previousStateCd = previousState.value || null
     data.previousNr = previousNr.value || null
     data.corpNum = corpNum.value || null
     data.furnished = furnished.value
@@ -432,7 +444,8 @@ export const useExamination = defineStore('examine', () => {
     choice.comment = data.comment
   }
 
-  async function loadCompanyInfo(info: NameRequest) {
+  /** Parse a Name Request object into this store's variables. */
+  async function parseNr(info: NameRequest) {
     if (!info || !info.names || info.names.length === 0) return
 
     consentFlag.value = undefined
@@ -446,18 +459,17 @@ export const useExamination = defineStore('examine', () => {
       parseIntoNameChoice(nameChoice, nameChoices.value[nameChoice.choice - 1])
     )
 
-    const newCurrentNameChoice =
-      nameChoices.value
-        .filter((choice) =>
-          [Status.NotExamined, Status.Approved, Status.Condition].includes(
-            choice.state
-          )
+    const newCurrentNameChoice = nameChoices.value
+      .filter((choice) =>
+        [Status.NotExamined, Status.Approved, Status.Condition].includes(
+          choice.state
         )
-        .at(0) ?? compName1
+      )
+      .at(0)
     setCurrentNameChoice(newCurrentNameChoice)
 
     nrStatus.value = info.state
-    previousStateCd.value = info.previousStateCd ?? undefined
+    previousState.value = info.previousStateCd ?? undefined
     requestType.value = info.requestTypeCd
 
     consentFlag.value = info.consentFlag ?? undefined
@@ -501,10 +513,9 @@ export const useExamination = defineStore('examine', () => {
     examiner.value = info.userId
     priority.value = info.priorityCd === 'Y'
 
-    if (info.expirationDate) {
-      const parsedExpirationDate = parseDate(info.expirationDate)
-      expiryDate.value = getDateFromDateTime(parsedExpirationDate) ?? undefined
-    }
+    expiryDate.value = info.expirationDate
+      ? getDateFromDateTime(parseDate(info.expirationDate)) ?? undefined
+      : undefined
 
     submittedDate.value = parseDate(info.submittedDate)
 
@@ -512,10 +523,6 @@ export const useExamination = defineStore('examine', () => {
     corpNum.value = info.corpNum ?? undefined
     furnished.value = info.furnished
     hasBeenReset.value = info.hasBeenReset
-
-    if (nrStatus.value === Status.InProgress) {
-      isMakingDecision.value = true
-    }
 
     await payments.initialize(info.id)
   }
@@ -568,7 +575,7 @@ export const useExamination = defineStore('examine', () => {
     currentNameObj.value = nameChoices.value[name.choice - 1]
     resetNameChoice(currentNameObj.value, true)
     await pushCurrentNameChoice()
-    await getpostgrescompInfo(nrNumber.value)
+    await fetchAndLoadNr(nrNumber.value)
   }
 
   /** Populate the currently examining name choice with selected conflicts and decision text. */
@@ -692,19 +699,17 @@ export const useExamination = defineStore('examine', () => {
     }
   }
 
-  async function updateNRStatePreviousState(
+  async function updateNRStateAndPreviousState(
     nrState: Status,
-    previousState: Status
+    prevState: Status | null
   ) {
-    const patch = { previousStateCd: previousState, state: nrState }
+    const patch = { previousStateCd: prevState, state: nrState }
     await patchNameRequest(nrNumber.value, patch)
-
-    await getpostgrescompInfo(nrNumber.value)
+    await fetchAndLoadNr(nrNumber.value)
     await setNewExaminer()
   }
 
   async function getTransactionsHistory(nrNumber: string) {
-    pendingTransactionRequest.value = true
     try {
       const transactionsResponse = await getTransactions(nrNumber)
       const transactions = (await transactionsResponse.json()) as Transactions
@@ -713,8 +718,6 @@ export const useExamination = defineStore('examine', () => {
     } catch (error) {
       console.error(`Error while retrieving transactions: ${error}`)
       transactionsData.value = undefined
-    } finally {
-      pendingTransactionRequest.value = false
     }
   }
 
@@ -737,13 +740,10 @@ export const useExamination = defineStore('examine', () => {
     }
   }
 
+  /** Revert to this NR's previous state if it exists. */
   async function revertToPreviousState() {
-    await patchNameRequest(nrNumber.value, {
-      state: previousStateCd.value,
-      previousStateCd: null,
-    })
-    await getpostgrescompInfo(nrNumber.value)
-    await setNewExaminer()
+    if (previousState.value)
+      return updateNRStateAndPreviousState(previousState.value, null)
   }
 
   /** Runs all edit actions, ensuring all actions have valid internal state before updating the store state.
@@ -764,9 +764,9 @@ export const useExamination = defineStore('examine', () => {
       return
     }
 
-    if (previousStateCd.value === Status.Draft) {
-      nrStatus.value = previousStateCd.value
-      previousStateCd.value = undefined
+    if (previousState.value === Status.Draft) {
+      nrStatus.value = previousState.value
+      previousState.value = undefined
     }
 
     await updateRequest()
@@ -793,9 +793,8 @@ export const useExamination = defineStore('examine', () => {
   }
 
   async function getNextCompany() {
-    resetValues()
-    conflicts.resetConflictList()
-    const nextNr = await getpostgrescompNo()
+    conflicts.resetConflictLists()
+    const nextNr = await getNextNrInQueue()
     await initialize(nextNr)
   }
 
@@ -804,7 +803,7 @@ export const useExamination = defineStore('examine', () => {
     if (!isMyCurrentNr.value && !isClosed.value) {
       // track the previous state if it's currently in DRAFT (otherwise do not)
       if (nrStatus.value == Status.Draft) {
-        await updateNRStatePreviousState(Status.InProgress, Status.Draft)
+        await updateNRStateAndPreviousState(Status.InProgress, Status.Draft)
       } else {
         await updateNRState(Status.InProgress)
       }
@@ -813,9 +812,8 @@ export const useExamination = defineStore('examine', () => {
   }
 
   async function holdRequest() {
-    isMakingDecision.value = false
     await updateNRState(Status.Hold)
-    conflicts.resetConflictList()
+    conflicts.resetConflictLists()
   }
 
   function clearSelectedDecisionReasons() {
@@ -831,23 +829,32 @@ export const useExamination = defineStore('examine', () => {
   }
 
   function resetNrDecision() {
-    conflicts.resetConflictList()
+    conflicts.resetConflictLists()
     clearSelectedDecisionReasons()
 
     nrStatus.value = Status.InProgress
     if (!userHasApproverRole.value) {
       // initialize user in edit mode, with previous state set so NR gets set back to draft
       // when user is done changing name, adding comment, etc.
-      previousStateCd.value = Status.Draft
+      previousState.value = Status.Draft
       isEditing.value = true
     }
   }
 
   async function reOpen() {
+    // the NR could have been furnished in the time that it was approved to the time the user presses the Reopen button
+    // double check to see if its furnished, if it is, reset the nr instead
+    const nrResponse = await getNameRequest(nrNumber.value)
+    const nrData = (await nrResponse.json()) as NameRequest
+    if (nrData.furnished === 'Y') {
+      alert('NR has been furnished, proceeding to reset NR instead.')
+      return await resetNr()
+    }
     resetNrDecision()
     // set reset flag so name data is managed between Namex and NRO correctly
     hasBeenReset.value = true
     await updateRequest()
+    await fetchAndLoadNr(nrNumber.value)
   }
 
   async function resetNr() {
@@ -855,18 +862,18 @@ export const useExamination = defineStore('examine', () => {
     clearConsent()
     furnished.value = 'N'
     await updateRequest()
+    await fetchAndLoadNr(nrNumber.value)
   }
 
   async function claimNr() {
     await updateNRState(Status.InProgress)
-    isMakingDecision.value = true
   }
 
   async function cancelEdits() {
-    if (previousStateCd.value === Status.Draft) {
+    if (previousState.value === Status.Draft) {
       await revertToPreviousState()
     } else {
-      await getpostgrescompInfo(nrNumber.value)
+      await fetchAndLoadNr(nrNumber.value)
     }
     isEditing.value = false
     isHeaderShown.value = false
@@ -910,18 +917,14 @@ export const useExamination = defineStore('examine', () => {
   }
 
   async function updateNRState(state: Status) {
-    if (state === Status.Draft && nrStatus.value === Status.InProgress) {
-      isMakingDecision.value = false
-    }
     nrStatus.value = state
     await patchNameRequest(nrNumber.value, { state: state })
-    await getpostgrescompInfo(nrNumber.value)
+    await fetchAndLoadNr(nrNumber.value)
   }
 
   async function cancelNr(commentText: string) {
     await postComment(commentText)
     resetExaminationArea()
-    isMakingDecision.value = false
     await updateNRState(Status.Cancelled)
   }
 
@@ -935,7 +938,7 @@ export const useExamination = defineStore('examine', () => {
     const data = await getNrData()
     const response = await putNameRequest(nrNumber.value, data)
     if (response.status === 200) {
-      await loadCompanyInfo(await response.json())
+      await parseNr(await response.json())
     }
   }
 
@@ -953,30 +956,36 @@ export const useExamination = defineStore('examine', () => {
     histories.value = []
     trademarks.value = []
     isEditing.value = false
-    isMakingDecision.value = false
     isHeaderShown.value = false
   }
 
-  async function getpostgrescompInfo(nrNumber: string) {
+  /** Fetches the given NR's data and parses it into this store. */
+  async function fetchAndLoadNr(nrNumber: string) {
     const response = await getNameRequest(nrNumber)
-    await loadCompanyInfo(await response.json())
+    await parseNr(await response.json())
   }
 
+  /** Fetch and load data for the recipe area (conflicts, trademarks, etc) */
   async function runManualRecipe(searchQuery: string, exactPhrase: string) {
     if (!currentNameObj.value) return
-
     resetExaminationArea()
-
-    trademarks.value = await getTrademarks(searchQuery)
-    histories.value = await getHistories(searchQuery)
-    macros.value = await getMacros()
-    const conditionsJson = await getConditions(searchQuery)
-    conditions.value = parseConditions(conditionsJson)
-
-    await conflicts.initialize(searchQuery, exactPhrase)
+    try {
+      trademarks.value = await getTrademarks(searchQuery)
+      histories.value = await getHistories(searchQuery)
+      macros.value = await getMacros()
+      const conditionsJson = await getConditions(searchQuery)
+      conditions.value = parseConditions(conditionsJson)
+      await conflicts.initialize(searchQuery, exactPhrase)
+    } catch (e) {
+      emitter.emit('error', {
+        title: 'Failed To Load Recipe Area',
+        message: `Data for the recipe area could not be loaded entirely: ${e}`,
+      })
+    }
   }
 
-  async function getpostgrescompNo(): Promise<string> {
+  /** Retrieves the NR number of the next NR that the user should examine. */
+  async function getNextNrInQueue(): Promise<string> {
     const priorityQueue = useExaminationOptions().priorityQueue
     const response = await getNextNrNumber(priorityQueue)
     const json = await response.json()
@@ -1005,16 +1014,11 @@ export const useExamination = defineStore('examine', () => {
   }
 
   function resetExaminationArea() {
-    conflicts.resetConflictList()
+    conflicts.resetConflictLists()
     clearSelectedDecisionReasons()
     conflicts.autoAdd = true
     consentRequired.value = false
     customerMessageOverride.value = undefined
-  }
-
-  async function getHistoryInfo(nrNumber: string): Promise<NameRequest> {
-    const response = await getNameRequest(nrNumber)
-    return response.json()
   }
 
   async function updateRoute() {
@@ -1024,17 +1028,54 @@ export const useExamination = defineStore('examine', () => {
     })
   }
 
+  /** Returns `true` if the given NR number is valid. If not, shows an error dialog to the user and returns `false`. */
+  async function checkNrNumber(nrNumber: string) {
+    if (!nrNumber.startsWith('NR')) {
+      nrNumber = `NR ${nrNumber}`
+    }
+    if (!isValidNrFormat(nrNumber, true)) {
+      emitter.emit('error', {
+        title: 'Invalid Search Term',
+        message: 'Incorrect NR number format',
+      })
+      return false
+    } else if (!(await nrExists(nrNumber))) {
+      emitter.emit('error', {
+        title: 'NR Not Found',
+        message: 'The requested NR could not be found',
+      })
+      return false
+    }
+    return true
+  }
+
+  /** Retrieve the next NR in the queue and initialize this store with it. */
+  async function initializeNext() {
+    initializing.value = true
+    const nrNumber = await getNextNrInQueue()
+    await initialize(nrNumber)
+    initializing.value = false
+  }
+
   async function initialize(newNrNumber: string) {
+    initializing.value = true
+    if (!(await checkNrNumber(newNrNumber))) {
+      initializing.value = false
+      throw new Error('Failed to initialize examine store: invalid NR Number')
+    }
     resetValues()
     nrNumber.value = newNrNumber
     await updateRoute()
-    await getpostgrescompInfo(newNrNumber)
+    await fetchAndLoadNr(newNrNumber)
     await setNewExaminer()
     updateRequestTypeRules(requestTypeObject.value)
+    initializing.value = false
+    await runManualRecipe(currentName.value || '', '')
   }
 
   return {
     initialize,
+    initializeNext,
     updateRoute,
     priority,
     isComplete,
@@ -1048,7 +1089,7 @@ export const useExamination = defineStore('examine', () => {
     isHeaderShown,
     nrNumber,
     nrStatus,
-    previousStateCd,
+    previousState,
     listRequestTypes,
     requestType,
     requestTypeObject,
@@ -1115,6 +1156,7 @@ export const useExamination = defineStore('examine', () => {
     conEmail,
     contactName,
     canEdit,
+    initializing,
     otherExaminerInProgress,
     expired,
     isApprovedAndExpired,
@@ -1123,25 +1165,23 @@ export const useExamination = defineStore('examine', () => {
     exactHistoryMatch,
     addEditAction,
     isUndoable,
-    getHistoryInfo,
     getShortJurisdiction,
     makeDecision,
     undoNameChoiceDecision,
     makeQuickDecision,
     runManualRecipe,
     resetExaminationArea,
-    getpostgrescompInfo,
+    fetchAndLoadNr,
     setNewExaminer,
     updateNRState,
-    updateNRStatePreviousState,
+    updateNRStateAndPreviousState,
     revertToPreviousState,
     saveEdits,
     updateRequest,
     cancelEdits,
     updateRequestTypeRules,
     setRequestType,
-    getpostgrescompNo,
-    resetValues,
+    getNextNrInQueue,
     getNextCompany,
     edit,
     holdRequest,
