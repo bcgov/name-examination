@@ -65,6 +65,9 @@ const searchText = ref('')
 
 async function onSearchSubmit(_: Event) {
   let nrNumber = searchText.value.trim()
+  if (!nrNumber.startsWith('NR')) {
+    nrNumber = `NR ${nrNumber}`
+  }
   try {
     await examine.initialize(nrNumber)
     searchText.value = ''
