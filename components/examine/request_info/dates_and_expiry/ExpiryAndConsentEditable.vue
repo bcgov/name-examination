@@ -50,6 +50,7 @@
 </template>
 
 <script setup lang="ts">
+import { DateTime } from 'luxon'
 import { ConsentFlag } from '~/enums/codes'
 import { Status } from '~/enums/nr-status'
 import { useExamination } from '~/store/examine'
@@ -78,7 +79,7 @@ const selectedConsentOptionText = computed(() =>
 function setDefaultInputValues() {
   expiry.value = examine.expiryDate
   consentFlag.value = examine.consentFlag
-  consentDate.value = examine.consentDate
+  consentDate.value = examine.consentDate ?? DateTime.now().toISODate()
 }
 
 examine.addEditAction({
