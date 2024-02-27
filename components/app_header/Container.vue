@@ -15,7 +15,7 @@
       </div>
 
       <div class="ml-3 flex gap-10 text-bcgov-blue5">
-        <AppHeaderNavLink text="Admin" :route=adminURL />
+        <AppHeaderNavLink text="Admin" :route=adminURL target="_blank"/>
         <AppHeaderNavLink text="Examine Names" :route="Route.Examine" />
         <AppHeaderNavLink text="Search" :route="Route.Search" />
       </div>
