@@ -460,10 +460,11 @@ export const useExamination = defineStore('examine', () => {
     )
 
     const newCurrentNameChoice = nameChoices.value
-      .filter((choice) =>
-        [Status.NotExamined, Status.Approved, Status.Condition].includes(
-          choice.state
-        )
+      .filter(
+        (choice) =>
+          [Status.NotExamined, Status.Approved, Status.Condition].includes(
+            choice.state
+          ) && choice.name
       )
       .at(0)
     setCurrentNameChoice(newCurrentNameChoice)
@@ -660,7 +661,11 @@ export const useExamination = defineStore('examine', () => {
     }
 
     await pushDecision(currentNameObj.value)
-    await attemptNextNameChoice()
+    if (
+      ![Status.Approved, Status.Condition].includes(currentNameObj.value.state)
+    ) {
+      await attemptNextNameChoice()
+    }
   }
 
   /** Attempt to set the given name choice as the current one. Will throw an error if the choice cannot be set. */
@@ -674,7 +679,7 @@ export const useExamination = defineStore('examine', () => {
       Status.Approved,
       Status.Condition,
     ].includes(choice.state)
-    if (choiceHasAcceptableStatus) {
+    if (choiceHasAcceptableStatus && choice.name) {
       currentNameObj.value = choice
     } else {
       throw new Error(`Name choice ${choice.choice} cannot be examined`)
