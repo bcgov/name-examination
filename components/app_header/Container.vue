@@ -55,6 +55,7 @@
 import { useExaminationOptions } from '~/store/examine/options'
 import { Route } from '~/enums/routes'
 import { useExamination } from '~/store/examine'
+import { emitter } from '~/util/emitter'
 
 const { $auth, $userProfile } = useNuxtApp()
 
@@ -71,6 +72,11 @@ async function onSearchSubmit(_: Event) {
   try {
     await examine.initialize(nrNumber)
     searchText.value = ''
-  } catch (e) {}
+  } catch (e: any) {
+    emitter.emit('error', {
+      title: 'Failed to search NR',
+      message: e,
+    })
+  }
 }
 </script>

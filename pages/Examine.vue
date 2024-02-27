@@ -59,6 +59,7 @@
 import { Status } from '~/enums/nr-status'
 import { Route } from '~/enums/routes'
 import { useExamination } from '~/store/examine'
+import { emitter } from '~/util/emitter'
 const examine = useExamination()
 
 const showQuickActionButtons = computed(
@@ -84,19 +85,23 @@ onMounted(async () => {
     try {
       const nrNumber = `NR ${query.nr}`
       await examine.initialize(nrNumber)
-    } catch (e) {
+    } catch (e: any) {
+      emitter.emit('error', { title: 'Failed to load NR', message: e })
+      await navigateTo(Route.Search)
+    }
+  } else if (
+    !examine.nrNumber ||
+    examine.isComplete ||
+    [Status.Draft, Status.Hold].includes(examine.nrStatus)
+  ) {
+    try {
+      await examine.initializeNext()
+    } catch (e: any) {
+      emitter.emit('error', { title: 'Failed to load next NR', message: e })
       await navigateTo(Route.Search)
     }
   } else {
-    if (
-      !examine.nrNumber ||
-      examine.isComplete ||
-      [Status.Draft, Status.Hold].includes(examine.nrStatus)
-    ) {
-      await examine.initializeNext()
-    } else {
-      await examine.updateRoute()
-    }
+    await examine.updateRoute()
   }
 })
 </script>

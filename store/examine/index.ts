@@ -983,7 +983,7 @@ export const useExamination = defineStore('examine', () => {
       await conflicts.initialize(searchQuery, exactPhrase)
     } catch (e) {
       emitter.emit('error', {
-        title: 'Failed To Load Recipe Area',
+        title: 'Failed to load recipe area',
         message: `Data for the recipe area could not be loaded entirely: ${e}`,
       })
     }
@@ -1033,25 +1033,16 @@ export const useExamination = defineStore('examine', () => {
     })
   }
 
-  /** Returns `true` if the given NR number is valid. If not, shows an error dialog to the user and returns `false`. */
+  /** Checks if the given NR number is valid. If not, throws an error. */
   async function checkNrNumber(nrNumber: string) {
     if (!nrNumber.startsWith('NR')) {
       nrNumber = `NR ${nrNumber}`
     }
     if (!isValidNrFormat(nrNumber, true)) {
-      emitter.emit('error', {
-        title: 'Invalid Search Term',
-        message: 'Incorrect NR number format',
-      })
-      return false
+      throw new Error('Incorrect NR number format')
     } else if (!(await nrExists(nrNumber))) {
-      emitter.emit('error', {
-        title: 'NR Not Found',
-        message: 'The requested NR could not be found',
-      })
-      return false
+      throw new Error('The requested NR could not be found')
     }
-    return true
   }
 
   /** Retrieve the next NR in the queue and initialize this store with it. */
@@ -1064,9 +1055,11 @@ export const useExamination = defineStore('examine', () => {
 
   async function initialize(newNrNumber: string) {
     initializing.value = true
-    if (!(await checkNrNumber(newNrNumber))) {
+    try {
+      await checkNrNumber(newNrNumber)
+    } catch (e) {
       initializing.value = false
-      throw new Error('Failed to initialize examine store: invalid NR Number')
+      throw e
     }
     resetValues()
     nrNumber.value = newNrNumber
