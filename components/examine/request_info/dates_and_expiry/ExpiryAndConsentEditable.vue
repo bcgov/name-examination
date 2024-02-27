@@ -23,9 +23,9 @@
           class="w-1/2"
           v-model="consentFlag"
           :options="consentOptions"
-          :options-display="(option: ConsentFlag) => consentDisplayStrings[option]"
+          :options-display="(option: ConsentFlag | undefined) => option ? consentDisplayStrings[option] : 'Empty'"
         >
-          {{ selectedConsentOptionText ? selectedConsentOptionText : 'Select' }}
+          {{ selectedConsentOptionText ? selectedConsentOptionText : 'Empty' }}
         </ListSelect>
       </div>
 
@@ -64,7 +64,10 @@ const consentDate = ref<string>()
 const expiryDateErrorText = ref('')
 const consentDateErrorText = ref('')
 
-const consentOptions = computed(() => Object.values(ConsentFlag))
+const consentOptions = computed(() => [
+  ...Object.values(ConsentFlag),
+  undefined,
+])
 
 const consentDisplayStrings = {
   [ConsentFlag.Required]: 'Required',
