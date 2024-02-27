@@ -98,7 +98,6 @@ examine.addEditAction({
     examine.expiryDate = expiry.value
 
     if (examine.nrStatus === Status.Conditional) {
-      console.log(consentFlag.value)
       examine.consentFlag = consentFlag.value
     } else {
       examine.consentFlag = undefined

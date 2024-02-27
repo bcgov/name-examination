@@ -128,7 +128,6 @@ export const useSearchStore = defineStore('search', () => {
       const data = await getNamexObject(url)
       return [data.response.numFound, data.nameRequests[0].map(parseRow)]
     } catch (error) {
-      console.log(error)
       return [0, []]
     }
   }
