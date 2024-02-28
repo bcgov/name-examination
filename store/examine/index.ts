@@ -1036,10 +1036,7 @@ export const useExamination = defineStore('examine', () => {
 
   /** Checks if the given NR number is valid. If not, throws an error. */
   async function checkNrNumber(nrNumber: string) {
-    if (!nrNumber.startsWith('NR')) {
-      nrNumber = `NR ${nrNumber}`
-    }
-    if (!isValidNrFormat(nrNumber, true)) {
+    if (!isValidNrFormat(nrNumber)) {
       throw new Error('Incorrect NR number format')
     } else if (!(await nrExists(nrNumber))) {
       throw new Error('The requested NR could not be found')
