@@ -32,6 +32,4 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   nuxtApp.vueApp.provide('remoteConfig', remoteConfig)
   nuxtApp.provide('remoteConfig', remoteConfig)
-
-  console.info(remoteConfig)
 })

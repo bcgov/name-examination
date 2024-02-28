@@ -23,9 +23,9 @@
           class="w-1/2"
           v-model="consentFlag"
           :options="consentOptions"
-          :options-display="(option: ConsentFlag) => consentDisplayStrings[option]"
+          :options-display="(option: ConsentFlag | undefined) => option ? consentDisplayStrings[option] : 'Empty'"
         >
-          {{ selectedConsentOptionText ? selectedConsentOptionText : 'Select' }}
+          {{ selectedConsentOptionText ? selectedConsentOptionText : 'Empty' }}
         </ListSelect>
       </div>
 
@@ -50,6 +50,7 @@
 </template>
 
 <script setup lang="ts">
+import { DateTime } from 'luxon'
 import { ConsentFlag } from '~/enums/codes'
 import { Status } from '~/enums/nr-status'
 import { useExamination } from '~/store/examine'
@@ -63,7 +64,10 @@ const consentDate = ref<string>()
 const expiryDateErrorText = ref('')
 const consentDateErrorText = ref('')
 
-const consentOptions = computed(() => Object.values(ConsentFlag))
+const consentOptions = computed(() => [
+  ...Object.values(ConsentFlag),
+  undefined,
+])
 
 const consentDisplayStrings = {
   [ConsentFlag.Required]: 'Required',
@@ -78,7 +82,7 @@ const selectedConsentOptionText = computed(() =>
 function setDefaultInputValues() {
   expiry.value = examine.expiryDate
   consentFlag.value = examine.consentFlag
-  consentDate.value = examine.consentDate
+  consentDate.value = examine.consentDate ?? DateTime.now().toISODate()
 }
 
 examine.addEditAction({
@@ -98,7 +102,6 @@ examine.addEditAction({
     examine.expiryDate = expiry.value
 
     if (examine.nrStatus === Status.Conditional) {
-      console.log(consentFlag.value)
       examine.consentFlag = consentFlag.value
     } else {
       examine.consentFlag = undefined

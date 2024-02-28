@@ -235,7 +235,7 @@ export enum PaymentMethod {
 }
 
 export enum ConsentFlag {
-  Received = 'R',
   Required = 'Y',
+  Received = 'R',
   Waived = 'N',
 }

@@ -259,6 +259,7 @@ export interface NameRequest {
   notifiedBeforeExpiry: boolean
   notifiedExpiry: boolean
   nrNum: string
+  nwpta: Array<unknown>
   previousNr: string | null
   previousRequestId: string | null
   previousStateCd: Status | null

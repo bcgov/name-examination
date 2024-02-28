@@ -14,7 +14,6 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
       responseMode: 'query',
       pkceMethod: 'S256',
     })
-    console.log(`[Keycloak] User authenticated?: ${authenticated}`)
   } catch (error) {
     console.error('Failed to initialize Keycloak adapter: ', error)
   }
