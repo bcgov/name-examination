@@ -89,11 +89,7 @@ onMounted(async () => {
       emitter.emit('error', { title: 'Failed to load NR', message: e })
       await navigateTo(Route.Search)
     }
-  } else if (
-    !examine.nrNumber ||
-    examine.isComplete ||
-    [Status.Draft, Status.Hold].includes(examine.nrStatus)
-  ) {
+  } else if (!examine.nrNumber || !examine.isMyCurrentNr) {
     try {
       await examine.initializeNext()
     } catch (e: any) {
