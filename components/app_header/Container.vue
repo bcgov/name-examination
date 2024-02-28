@@ -15,7 +15,7 @@
       </div>
 
       <div class="ml-3 flex gap-10 text-bcgov-blue5">
-        <AppHeaderNavLink text="Admin" :route="Route.Admin" />
+        <AppHeaderNavLink text="Admin" :route=adminURL target="_blank"/>
         <AppHeaderNavLink text="Examine Names" :route="Route.Examine" />
         <AppHeaderNavLink text="Search" :route="Route.Search" />
       </div>
@@ -58,6 +58,9 @@ import { useExamination } from '~/store/examine'
 import { emitter } from '~/util/emitter'
 
 const { $auth, $userProfile } = useNuxtApp()
+
+const config = useRuntimeConfig()
+const adminURL = <Route>config.public.namexAdminURL
 
 const examine = useExamination()
 const examineOptions = useExaminationOptions()
