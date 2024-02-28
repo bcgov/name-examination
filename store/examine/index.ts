@@ -392,6 +392,7 @@ export const useExamination = defineStore('examine', () => {
     data.consentFlag = consentFlag.value || null
     data.consent_dt = consentDate.value || null
     data.details = null
+    data.nwpta = []
 
     const toFormattedDate = (dt: DateTime) =>
       dt.toUTC().toFormat('EEE, d MMM yyyy TTT')
