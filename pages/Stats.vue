@@ -55,7 +55,10 @@
             </th>
           </tr>
         </thead>
-        <tbody class="text-sm">
+        <tbody
+          v-if="!isLoading"
+          class="text-sm"
+        >
           <tr
             v-for="(item, index) in statsData"
             :key="index"
@@ -91,7 +94,7 @@
                     <div
                       v-for="(text, j) in name.decision_text"
                       :key="`decision-text-flex-${j}`"
-                      class="flex ft-ital mb-2 ml-4"
+                      class="flex italic mb-2 ml-4"
                     >
                       {{ text }}
                     </div>
@@ -99,7 +102,7 @@
                 </div>
                 <div
                   v-if="item.comments.length > 0"
-                  class="ml-2 mt-1 dk-grey fs-14 fw-600"
+                  class="ml-2 mt-1 font-semibold"
                 >
                   LAST COMMENT
                 </div>
@@ -126,7 +129,7 @@
             </td>
             <td
               :class="getClass(item.stateCd)"
-              style="font-weight: 600"
+              class="font-semibold"
             >
               {{ item.stateCd }}
             </td>
@@ -146,7 +149,7 @@
 </template>
 
 <script>
-import { getPagedStats } from '../store/stats.ts'
+import { useStatsStore } from '~/store/stats.ts'
 import { ref, onMounted } from 'vue'
 
 export default {
@@ -157,6 +160,8 @@ export default {
     const myStats = ref(true)
     const statsData = ref([])
     const isLoading = ref(false)
+
+    const stats = useStatsStore()
 
     const fields = [
       {
@@ -190,9 +195,9 @@ export default {
       try {
         isLoading.value = true
 
-        const jsonData = await getPagedStats(timespan.value, myStats.value)
+        const jsonData = await stats.getPagedStats(timespan.value, myStats.value)
         numRecords.value = jsonData.numRecords
-        statsData.value = jsonData
+        statsData.value = jsonData.nameRequests
 
         isLoading.value = false
       } catch (error) {
