@@ -232,7 +232,7 @@ export const useExamination = defineStore('examine', () => {
   const corpNumRequired = ref<boolean>()
   const expiryDate = ref<string>()
 
-  const additionalInfo = ref<string>('')
+  const additionalInfo = ref<string>()
   const additional_info_template = ref<string>()
   const natureOfBusiness = ref<string>()
 
@@ -447,10 +447,10 @@ export const useExamination = defineStore('examine', () => {
 
   /** Parse a Name Request object into this store's variables. */
   async function parseNr(info: NameRequest) {
-    if (!info || !info.names || info.names.length === 0) return
+    if (!info || !info.names || info.names.length === 0)
+      throw new Error('Cannot parse invalid NR data')
 
-    consentFlag.value = undefined
-    consentDate.value = undefined
+    clearConsent()
 
     resetNameChoice(compName1)
     resetNameChoice(compName2)
@@ -509,7 +509,7 @@ export const useExamination = defineStore('examine', () => {
     jurisdiction.value = info.xproJurisdiction
     jurisdictionNumber.value = info.homeJurisNum ?? undefined
     natureOfBusiness.value = info.natureBusinessInfo ?? undefined
-    additionalInfo.value = info.additionalInfo
+    additionalInfo.value = info.additionalInfo ?? undefined
     comments.value = info.comments
 
     examiner.value = info.userId
@@ -1055,17 +1055,18 @@ export const useExamination = defineStore('examine', () => {
     initializing.value = true
     try {
       await checkNrNumber(newNrNumber)
-    } catch (e) {
+      resetValues()
+      await fetchAndLoadNr(newNrNumber)
+      nrNumber.value = newNrNumber
+      await updateRoute()
+      await setNewExaminer()
+      updateRequestTypeRules(requestTypeObject.value)
       initializing.value = false
+    } catch (e) {
       throw e
+    } finally {
+      initializing.value = false
     }
-    resetValues()
-    nrNumber.value = newNrNumber
-    await updateRoute()
-    await fetchAndLoadNr(newNrNumber)
-    await setNewExaminer()
-    updateRequestTypeRules(requestTypeObject.value)
-    initializing.value = false
     await runManualRecipe(currentName.value || '', '')
   }
 

@@ -237,7 +237,7 @@ export interface Applicant {
 
 export interface NameRequest {
   actions: Array<Action>
-  additionalInfo: string
+  additionalInfo: string | null
   applicants: Applicant
   checkedOutBy: string | null
   checkedOutDt: string | null
