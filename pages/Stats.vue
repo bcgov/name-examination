@@ -20,7 +20,7 @@
           >
           &nbsp;<label for="stats-checkbox" class="font-bold" >My Stats</label>
         </div>
-        <div class="timespan-input  align-baseline">
+        <div class="timespan-input  align-baseline space-x-1">
           <label
             for="timespan"
             class="font-bold align-baseline"
