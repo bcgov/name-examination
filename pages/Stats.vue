@@ -1,7 +1,7 @@
 <template>
   <div
     id="stats-viewer"
-    class="mx-4 mt-4 flex h-[91vh] flex-col"
+    class="mx-4 mt-4 flex h-[91vh] flex-col space-y-1"
   >
     <div class="stats-header">
       <h1 class="text-2xl font-bold text-gray-700">
