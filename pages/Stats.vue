@@ -32,12 +32,9 @@
             type="number"
             style="width: 100px; margin-right: 10px;"
           />
-          <button
-            class="bg-blue-800 text-white font-bold py-2 px-4 rounded"
-            @click="fetchStats"
-          >
+          <IconButton @click="fetchStats">
             Get Stats
-          </button>
+          </IconButton>
         </div>
       </div>
     </div>
