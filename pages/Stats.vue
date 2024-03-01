@@ -12,13 +12,14 @@
       &nbsp;
       <div class="font-semibold text-center">Total Examined Names: {{ numRecords }}</div>
       <div class="flex items-center space-x-2">
-        <div class="checkbox-wrapper">
+        <div class="flex items-center space-x-1">
           <input
             id="stats-checkbox"
+            class="h-4 w-4"
             v-model="myStats"
             type="checkbox"
           >
-          &nbsp;<label for="stats-checkbox" class="font-bold" >My Stats</label>
+          <label for="stats-checkbox" class="font-bold">My Stats</label>
         </div>
         <div class="timespan-input  align-baseline space-x-1">
           <label
