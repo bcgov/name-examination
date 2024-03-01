@@ -75,8 +75,7 @@
                   :key="`names-layout-${i}`"
                 >
                   <div
-                    class="flex fs-14"
-                    style="font-weight: 600"
+                    class="flex font-bold"
                   >
                     {{ i + 1 }}. {{ name.name }}
                       <span class="mx-2" :class="getClass(name.state)">
