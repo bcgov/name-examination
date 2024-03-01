@@ -30,7 +30,7 @@
             ref="numberinput"
             v-model="timespan"
             type="number"
-            style="width: 100px; margin-right: 10px;"
+            class="!w-24"
           />
           <IconButton @click="fetchStats">
             Get Stats
