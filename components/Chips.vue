@@ -2,6 +2,7 @@
   <div class="flex flex-wrap items-center gap-1">
     <div
       v-for="item in modelValue"
+      :key="getKey ? getKey(item) : undefined"
       class="flex h-fit w-fit flex-nowrap items-center space-x-1 rounded-md border border-gray-400 bg-sky-100 p-0.5 px-1 text-sm"
     >
       <span>{{ display ? display(item) : item }}</span>
@@ -21,6 +22,7 @@ import { XMarkIcon } from '@heroicons/vue/24/outline'
 defineProps<{
   modelValue: Array<any>
   display?: (input: any) => string
+  getKey?: (input: any) => string
 }>()
 
 const emit = defineEmits<{

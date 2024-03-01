@@ -14,6 +14,7 @@
         v-if="conflicts.selectedConflicts.length > 0"
         v-model="conflicts.selectedConflicts"
         :display="(conflict: ConflictListItem) => conflict.text"
+        :get-key="(conflict: ConflictListItem) => conflict.nrNumber"
         @chip-removed="conflicts.syncSelectedAndComparedConflicts()"
       />
       <template #no-data>
