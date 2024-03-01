@@ -82,9 +82,7 @@
                         {{ name.state }}
                       </span>
                   </div>
-                  <div
-                    class="layout"
-                    style="font-size: 13px;">
+                  <div class="layout">
                     <div
                       v-for="(text, j) in name.decision_text"
                       :key="`decision-text-flex-${j}`"
