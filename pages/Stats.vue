@@ -65,8 +65,7 @@
               <div class="container-fluid">
                 <div class="layout">
                   <div
-                    class="flex fw-700 fs-15 my-2"
-                    style="font-weight: 600"
+                    class="flex my-2 font-bold"
                   >
                     {{ item.nrNum }}
                   </div>
