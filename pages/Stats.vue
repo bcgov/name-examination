@@ -79,10 +79,9 @@
                     style="font-weight: 600"
                   >
                     {{ i + 1 }}. {{ name.name }}
-                    <span class="mx-2">
-                      <span :class="getClass(name.state)">{{ name.state }}
+                      <span class="mx-2" :class="getClass(name.state)">
+                        {{ name.state }}
                       </span>
-                    </span>
                   </div>
                   <div
                     class="layout"
