@@ -379,7 +379,7 @@ export const useExamination = defineStore('examine', () => {
     data.requestTypeCd = requestType.value
     data.entity_type_cd = entityTypeCd.value
     data.request_action_cd = requestActionCd.value
-    data.xproJurisdiction = jurisdiction.value || ''
+    data.xproJurisdiction = jurisdiction.value || null
     data.natureBusinessInfo = natureOfBusiness.value || data.natureBusinessInfo
     data.additionalInfo = additionalInfo.value || ''
     data.comments = comments.value
@@ -506,7 +506,7 @@ export const useExamination = defineStore('examine', () => {
     conEmail.value = info.applicants.emailAddress
     fax.value = info.applicants.faxNumber ?? undefined
 
-    jurisdiction.value = info.xproJurisdiction
+    jurisdiction.value = info.xproJurisdiction ?? undefined
     jurisdictionNumber.value = info.homeJurisNum ?? undefined
     natureOfBusiness.value = info.natureBusinessInfo ?? undefined
     additionalInfo.value = info.additionalInfo ?? undefined

@@ -276,7 +276,7 @@ export interface NameRequest {
   target: string
   tradeMark: string | null
   userId: string
-  xproJurisdiction: string
+  xproJurisdiction: string | null
 }
 
 export interface Payment {
