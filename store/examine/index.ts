@@ -10,11 +10,9 @@ import {
   type RequestType,
   type RequestTypeRule,
   type Jurisdiction,
-  type TransactionEntry,
   type NameRequest,
   type HistoryEntry,
   type ConditionsList,
-  type Transactions,
 } from '~/types'
 
 import requestTypes from '~/data/request_types.json'
@@ -25,7 +23,6 @@ import {
   getDecisionReasons,
   getNameRequest,
   getNextNrNumber,
-  getTransactions,
   patchNameRequest,
   postConditions,
   postHistories,
@@ -34,12 +31,7 @@ import {
   putNameChoice,
   putNameRequest,
 } from '~/util/namex-api'
-import {
-  getEmptyNameChoice,
-  isValidNrFormat,
-  nrExists,
-  sortNameChoices,
-} from '~/util'
+import { getEmptyNameChoice, isValidNrFormat, sortNameChoices } from '~/util'
 import { DateTime } from 'luxon'
 import { fromMappedRequestType } from '~/util/request-type'
 import { getDateFromDateTime, parseDate } from '~/util/date'
@@ -937,12 +929,16 @@ export const useExamination = defineStore('examine', () => {
    * @throws {Error} if the NR data could not be fetched.
    */
   async function fetchAndLoadNr(nrNumber: string) {
-    const response = await getNameRequest(nrNumber)
-    if (response.ok) {
-      await parseNr(await response.json())
-    } else if (response.status === 404) {
-      throw new Error('NR not found')
-    } else {
+    try {
+      const response = await getNameRequest(nrNumber)
+      if (response.ok) {
+        await parseNr(await response.json())
+      } else if (response.status === 404) {
+        throw new Error('NR not found')
+      } else {
+        throw new Error('Failed to fetch NR data')
+      }
+    } catch (e) {
       throw new Error('Failed to fetch NR data')
     }
   }
@@ -958,14 +954,12 @@ export const useExamination = defineStore('examine', () => {
     resetExaminationArea()
     const errors: Array<Error> = []
     try {
-      throw new Error('trademarks bad')
       trademarks.value = await getTrademarks(searchQuery)
     } catch (e) {
       trademarks.value = []
       errors.push(e as Error)
     }
     try {
-      throw new Error('histories bad')
       histories.value = await getHistories(searchQuery)
     } catch (e) {
       histories.value = []
