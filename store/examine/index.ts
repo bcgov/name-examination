@@ -445,7 +445,9 @@ export const useExamination = defineStore('examine', () => {
     choice.comment = data.comment
   }
 
-  /** Parse a Name Request object into this store's variables. */
+  /** Parse a Name Request object into this store's variables.
+   * @throws {Error} if the NR data is invalid.
+   */
   async function parseNr(info: NameRequest) {
     if (!info || !info.names || info.names.length === 0)
       throw new Error('Cannot parse invalid NR data')
@@ -965,55 +967,65 @@ export const useExamination = defineStore('examine', () => {
     isHeaderShown.value = false
   }
 
-  /** Fetches the given NR's data and parses it into this store. */
+  /** Fetches the given NR's data and parses it into this store.
+   * @throws {Error} if the NR data could not be fetched.
+   */
   async function fetchAndLoadNr(nrNumber: string) {
     const response = await getNameRequest(nrNumber)
-    await parseNr(await response.json())
+    if (response.ok) {
+      await parseNr(await response.json())
+    } else if (response.status === 404) {
+      throw new Error('NR not found')
+    } else {
+      throw new Error('Failed to fetch NR data')
+    }
   }
 
-  /** Fetch and load data for the recipe area (conflicts, trademarks, etc) */
+  /** Fetch and load data for the recipe area (conflicts, trademarks, etc)
+   * @throws {Error} if any part of the recipe data could not be loaded.
+   */
   async function fetchAndLoadRecipeData(
     searchQuery: string,
     exactPhrase: string
   ) {
     if (!currentNameObj.value) return
     resetExaminationArea()
-    const errors = []
+    const errors: Array<Error> = []
     try {
       throw new Error('trademarks bad')
       trademarks.value = await getTrademarks(searchQuery)
     } catch (e) {
       trademarks.value = []
-      errors.push(e)
+      errors.push(e as Error)
     }
     try {
       throw new Error('histories bad')
       histories.value = await getHistories(searchQuery)
     } catch (e) {
       histories.value = []
-      errors.push(e)
+      errors.push(e as Error)
     }
     try {
       macros.value = await getMacros()
     } catch (e) {
       macros.value = []
-      errors.push(e)
+      errors.push(e as Error)
     }
     try {
       const conditionsJson = await getConditions(searchQuery)
       conditions.value = parseConditions(conditionsJson)
     } catch (e) {
       conditions.value = []
-      errors.push(e)
+      errors.push(e as Error)
     }
     try {
       await conflicts.initialize(searchQuery, exactPhrase)
     } catch (e) {
-      errors.push(e)
+      errors.push(e as Error)
     }
     if (errors.length > 0) {
       const message = errors.join('\n')
-      throw message
+      throw new Error(message)
     }
   }
 
@@ -1025,7 +1037,9 @@ export const useExamination = defineStore('examine', () => {
     return json.nameRequest
   }
 
-  function getShortJurisdiction(jurisdiction: string): string {
+  /** Return a two-digit code for the given jurisdiction string.
+   * Returns `undefined` if a code could not be found. */
+  function getShortJurisdiction(jurisdiction: string): string | undefined {
     jurisdiction = jurisdiction.toUpperCase()
     if (jurisdiction.length === 2) return jurisdiction
 
@@ -1042,8 +1056,7 @@ export const useExamination = defineStore('examine', () => {
     if (typeof index === 'number') {
       return listJurisdictions.value[index].value
     }
-
-    return '?'
+    return undefined
   }
 
   function resetExaminationArea() {
@@ -1065,8 +1078,6 @@ export const useExamination = defineStore('examine', () => {
   async function checkNrNumber(nrNumber: string) {
     if (!isValidNrFormat(nrNumber)) {
       throw new Error('Incorrect NR number format')
-    } else if (!(await nrExists(nrNumber))) {
-      throw new Error('The requested NR could not be found')
     }
   }
 
@@ -1091,7 +1102,6 @@ export const useExamination = defineStore('examine', () => {
       await updateRoute()
       await setNewExaminer()
       updateRequestTypeRules(requestTypeObject.value)
-      initializing.value = false
     } catch (e) {
       throw e
     } finally {
@@ -1100,7 +1110,10 @@ export const useExamination = defineStore('examine', () => {
     try {
       await fetchAndLoadRecipeData(currentName.value || '', '')
     } catch (e: any) {
-      emitter.emit('error', { title: 'Failed to load Recipe area', message: e })
+      emitter.emit('error', {
+        title: 'Failed to load Recipe area',
+        message: e.message,
+      })
     }
   }
 
