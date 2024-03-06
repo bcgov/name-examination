@@ -21,7 +21,7 @@ export function isValidNrFormat(
 export async function nrExists(nrNumber: string): Promise<boolean> {
   try {
     const response = await getNameRequest(nrNumber)
-    return response.status === 200
+    return response.ok
   } catch (e) {
     return false
   }
@@ -40,12 +40,12 @@ export function isValidCorpNumFormat(input: string) {
 export async function corpExists(input: string) {
   // query entities for the corp num. if not found, query again from colin
   const businessResponse = await getBusiness(input)
-  if (businessResponse.status === 200) return true
+  if (businessResponse.ok) return true
 
   // ignore corp num prefix 'BC' if applicable to match colin BC corp num format for the validation
   const corpNum = input.replace(/^BC+/i, '')
   const corporationResponse = await getCorporation(corpNum)
-  if (corporationResponse.status === 200) {
+  if (corporationResponse.ok) {
     const responseJson = await corporationResponse.json()
     return !(
       responseJson.incorporated === 'Not Available' &&

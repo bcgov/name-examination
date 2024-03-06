@@ -98,7 +98,7 @@ export const usePayments = defineStore('payments', () => {
 
   async function initialize(id: number) {
     const response = await getPayments(id)
-    if (response.status !== 200) {
+    if (!response.ok) {
       emitter.emit('error', {
         title: 'Payments Error',
         message: 'Failed to get payment data.',

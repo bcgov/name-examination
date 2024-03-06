@@ -874,7 +874,7 @@ export const useExamination = defineStore('examine', () => {
 
   async function getMacros(): Promise<Array<Macro>> {
     const response = await getDecisionReasons()
-    return response.status === 200 ? await response.json() : []
+    return response.ok ? await response.json() : []
   }
 
   function parseConditions(data: ConditionsList): Array<Condition> {
@@ -911,14 +911,14 @@ export const useExamination = defineStore('examine', () => {
   async function updateRequest() {
     const data = await getNrData()
     const response = await putNameRequest(nrNumber.value, data)
-    if (response.status === 200) {
+    if (response.ok) {
       await parseNr(await response.json())
     }
   }
 
   async function postComment(text: string) {
     const response = await postNewComment(nrNumber.value, text)
-    if (response.status === 200) {
+    if (response.ok) {
       comments.value.push(await response.json())
     }
   }
