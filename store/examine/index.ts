@@ -972,21 +972,46 @@ export const useExamination = defineStore('examine', () => {
   }
 
   /** Fetch and load data for the recipe area (conflicts, trademarks, etc) */
-  async function runManualRecipe(searchQuery: string, exactPhrase: string) {
+  async function fetchAndLoadRecipeData(
+    searchQuery: string,
+    exactPhrase: string
+  ) {
     if (!currentNameObj.value) return
     resetExaminationArea()
+    const errors = []
     try {
       trademarks.value = await getTrademarks(searchQuery)
+    } catch (e) {
+      trademarks.value = []
+      errors.push(e)
+    }
+    try {
       histories.value = await getHistories(searchQuery)
+    } catch (e) {
+      histories.value = []
+      errors.push(e)
+    }
+    try {
       macros.value = await getMacros()
+    } catch (e) {
+      macros.value = []
+      errors.push(e)
+    }
+    try {
       const conditionsJson = await getConditions(searchQuery)
       conditions.value = parseConditions(conditionsJson)
+    } catch (e) {
+      conditions.value = []
+      errors.push(e)
+    }
+    try {
       await conflicts.initialize(searchQuery, exactPhrase)
     } catch (e) {
-      emitter.emit('error', {
-        title: 'Failed to load recipe area',
-        message: `Data for the recipe area could not be loaded entirely: ${e}`,
-      })
+      errors.push(e)
+    }
+    if (errors.length > 0) {
+      const message = errors.join('\n')
+      throw message
     }
   }
 
@@ -1067,7 +1092,7 @@ export const useExamination = defineStore('examine', () => {
     } finally {
       initializing.value = false
     }
-    await runManualRecipe(currentName.value || '', '')
+    await fetchAndLoadRecipeData(currentName.value || '', '')
   }
 
   return {
@@ -1166,7 +1191,7 @@ export const useExamination = defineStore('examine', () => {
     makeDecision,
     undoNameChoiceDecision,
     makeQuickDecision,
-    runManualRecipe,
+    fetchAndLoadRecipeData,
     resetExaminationArea,
     fetchAndLoadNr,
     setNewExaminer,
