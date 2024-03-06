@@ -980,12 +980,14 @@ export const useExamination = defineStore('examine', () => {
     resetExaminationArea()
     const errors = []
     try {
+      throw new Error('trademarks bad')
       trademarks.value = await getTrademarks(searchQuery)
     } catch (e) {
       trademarks.value = []
       errors.push(e)
     }
     try {
+      throw new Error('histories bad')
       histories.value = await getHistories(searchQuery)
     } catch (e) {
       histories.value = []
@@ -1076,11 +1078,14 @@ export const useExamination = defineStore('examine', () => {
     initializing.value = false
   }
 
+  /** Initialize this store with the given NR. Throws an error if the NR data cannot be loaded.
+   * If recipe area data cannot be loaded, the error will be captured and an error dialog will be shown.
+   */
   async function initialize(newNrNumber: string) {
     initializing.value = true
+    resetValues()
     try {
       await checkNrNumber(newNrNumber)
-      resetValues()
       await fetchAndLoadNr(newNrNumber)
       nrNumber.value = newNrNumber
       await updateRoute()
@@ -1092,7 +1097,11 @@ export const useExamination = defineStore('examine', () => {
     } finally {
       initializing.value = false
     }
-    await fetchAndLoadRecipeData(currentName.value || '', '')
+    try {
+      await fetchAndLoadRecipeData(currentName.value || '', '')
+    } catch (e: any) {
+      emitter.emit('error', { title: 'Failed to load Recipe area', message: e })
+    }
   }
 
   return {

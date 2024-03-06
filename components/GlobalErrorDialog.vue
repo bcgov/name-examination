@@ -1,14 +1,14 @@
 <template>
-  <PopupDialog panel-style="border-red-600 border-2" :show="showErrorDialog">
+  <PopupDialog :show="showErrorDialog">
     <template #title>
-      <span v-if="errorQueue[0]" class="inline-flex items-center text-red-600">
+      <span v-if="errorQueue[0]" class="inline-flex items-center text-red-600 text-xl">
         <ExclamationTriangleIcon class="mr-2 h-7 w-7 stroke-2" />
         {{ errorQueue[0].title }}
       </span>
     </template>
-    <div v-if="errorQueue[0]" class="flex flex-col space-y-2 rounded-md">
-      <span>{{ errorQueue[0].message }}</span>
-      <IconButton white @click="popError">Close</IconButton>
+    <div v-if="errorQueue[0]" class="flex flex-col space-y-4 rounded-md">
+      <span class="whitespace-pre-wrap">{{ errorQueue[0].message }}</span>
+      <IconButton light @click="popError">Close</IconButton>
     </div>
   </PopupDialog>
 </template>
