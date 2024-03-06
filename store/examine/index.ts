@@ -225,8 +225,6 @@ export const useExamination = defineStore('examine', () => {
   const consentDate = ref<string>()
   const consentFlag = ref<ConsentFlag>()
 
-  const transactionsData = ref<Array<TransactionEntry>>()
-
   const submittedDate = ref<DateTime>()
   const corpNum = ref<string>()
   const corpNumRequired = ref<boolean>()
@@ -714,38 +712,6 @@ export const useExamination = defineStore('examine', () => {
     const patch = { previousStateCd: prevState, state: nrState }
     await patchNameRequest(nrNumber.value, patch)
     await fetchAndLoadNr(nrNumber.value)
-    await setNewExaminer()
-  }
-
-  async function getTransactionsHistory(nrNumber: string) {
-    try {
-      const transactionsResponse = await getTransactions(nrNumber)
-      const transactions = (await transactionsResponse.json()) as Transactions
-      transactions.transactions.forEach((t) => sortNameChoices(t.names))
-      transactionsData.value = transactions.transactions
-    } catch (error) {
-      console.error(`Error while retrieving transactions: ${error}`)
-      transactionsData.value = undefined
-    }
-  }
-
-  async function setNewExaminer() {
-    if (examiner.value?.includes('account')) {
-      await getTransactionsHistory(nrNumber.value)
-      if (transactionsData.value == null) {
-        return
-      }
-
-      for (const transaction of transactionsData.value) {
-        if (
-          transaction.user_name.split('@').at(1)?.includes('idir') &&
-          transaction.user_action.includes('Decision')
-        ) {
-          examiner.value = transaction.user_name
-          break
-        }
-      }
-    }
   }
 
   /** Revert to this NR's previous state if it exists. */
@@ -1100,7 +1066,6 @@ export const useExamination = defineStore('examine', () => {
       await fetchAndLoadNr(newNrNumber)
       nrNumber.value = newNrNumber
       await updateRoute()
-      await setNewExaminer()
       updateRequestTypeRules(requestTypeObject.value)
     } catch (e) {
       throw e
@@ -1172,7 +1137,6 @@ export const useExamination = defineStore('examine', () => {
     jurisdictionNumber,
     consumptionDate,
     consumedBy,
-    transactionsData,
     expiryDate,
     submittedDate,
     corpNum,
@@ -1216,7 +1180,6 @@ export const useExamination = defineStore('examine', () => {
     fetchAndLoadRecipeData,
     resetExaminationArea,
     fetchAndLoadNr,
-    setNewExaminer,
     updateNRState,
     updateNRStateAndPreviousState,
     revertToPreviousState,
