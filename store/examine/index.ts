@@ -565,7 +565,7 @@ export const useExamination = defineStore('examine', () => {
   }
 
   async function undoNameChoiceDecision(name: NameChoice) {
-    resetExaminationArea()
+    resetDecisionArea()
     currentNameObj.value = nameChoices.value[name.choice - 1]
     resetNameChoice(currentNameObj.value, true)
     await pushCurrentNameChoice()
@@ -782,13 +782,6 @@ export const useExamination = defineStore('examine', () => {
     conflicts.resetConflictLists()
   }
 
-  function clearSelectedDecisionReasons() {
-    conflicts.clearSelectedConflicts()
-    selectedConditions.value = []
-    selectedMacros.value = []
-    selectedTrademarks.value = []
-  }
-
   function clearConsent() {
     consentDate.value = undefined
     consentFlag.value = undefined
@@ -890,7 +883,7 @@ export const useExamination = defineStore('examine', () => {
 
   async function cancelNr(commentText: string) {
     await postComment(commentText)
-    resetExaminationArea()
+    resetDecisionArea()
     await updateNRState(Status.Cancelled)
   }
 
@@ -922,14 +915,31 @@ export const useExamination = defineStore('examine', () => {
     }
   }
 
-  function resetValues() {
-    resetExaminationArea()
+  function clearSelectedDecisionReasons() {
+    conflicts.clearSelectedConflicts()
+    selectedConditions.value = []
+    selectedMacros.value = []
+    selectedTrademarks.value = []
+  }
+
+  function resetDecisionArea() {
+    conflicts.resetConflictLists()
+    clearSelectedDecisionReasons()
+    conflicts.autoAdd = true
+    consentRequired.value = false
+    customerMessageOverride.value = undefined
+  }
+
+  function resetHeader() {
+    isEditing.value = false
+    isHeaderShown.value = false
+  }
+
+  function resetRecipeData() {
     conflicts.resetMatches()
     conditions.value = []
     histories.value = []
     trademarks.value = []
-    isEditing.value = false
-    isHeaderShown.value = false
   }
 
   /** Fetches the given NR's data and parses it into this store.
@@ -958,7 +968,7 @@ export const useExamination = defineStore('examine', () => {
     exactPhrase: string
   ) {
     if (!currentNameObj.value) return
-    resetExaminationArea()
+    resetDecisionArea()
     const errors: Array<Error> = []
     try {
       trademarks.value = await getTrademarks(searchQuery)
@@ -1026,18 +1036,11 @@ export const useExamination = defineStore('examine', () => {
     return undefined
   }
 
-  function resetExaminationArea() {
-    conflicts.resetConflictLists()
-    clearSelectedDecisionReasons()
-    conflicts.autoAdd = true
-    consentRequired.value = false
-    customerMessageOverride.value = undefined
-  }
-
-  async function updateRoute() {
+  /** Update the route to the examine page, showing that it's examining the given NR number */
+  async function updateRoute(nrNum: string) {
     await navigateTo({
       path: Route.Examine,
-      query: { nr: nrNumber.value.split(' ')[1] },
+      query: { nr: nrNum.split(' ')[1] },
     })
   }
 
@@ -1061,19 +1064,21 @@ export const useExamination = defineStore('examine', () => {
    */
   async function initialize(newNrNumber: string) {
     initializing.value = true
-    resetValues()
+    resetHeader()
     try {
       await checkNrNumber(newNrNumber)
       await fetchAndLoadNr(newNrNumber)
-      nrNumber.value = newNrNumber
-      await updateRoute()
+      await updateRoute(newNrNumber)
       updateRequestTypeRules(requestTypeObject.value)
+      resetDecisionArea()
+      nrNumber.value = newNrNumber
     } catch (e) {
       throw e
     } finally {
       initializing.value = false
     }
     try {
+      resetRecipeData()
       await fetchAndLoadRecipeData(currentName.value || '', '')
     } catch (e: any) {
       emitter.emit('error', {
@@ -1179,7 +1184,7 @@ export const useExamination = defineStore('examine', () => {
     undoNameChoiceDecision,
     makeQuickDecision,
     fetchAndLoadRecipeData,
-    resetExaminationArea,
+    resetDecisionArea,
     fetchAndLoadNr,
     updateNRState,
     updateNRStateAndPreviousState,

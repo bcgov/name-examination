@@ -78,8 +78,9 @@ function parseNrNumber(input: string) {
 async function onSearchSubmit(_: Event) {
   const nrNumber = parseNrNumber(searchText.value)
   try {
+    if (!nrNumber) throw new Error('Failed to parse NR number from input')
     searchText.value = ''
-    await examine.initialize(nrNumber || '')
+    await examine.initialize(nrNumber)
   } catch (e: any) {
     emitter.emit('error', {
       title: 'Failed to search NR',
