@@ -65,7 +65,7 @@ examine.addEditAction({
       const oldName = choice.name?.slice()
       choice.name = nameInputs.value[i].trim()
       if (examine.currentChoice === choice.choice && choice.name !== oldName) {
-        examine.runManualRecipe(examine.currentName || '', '')
+        examine.fetchAndLoadRecipeData(examine.currentName || '', '')
       }
     }
   },

@@ -10,11 +10,9 @@ import {
   type RequestType,
   type RequestTypeRule,
   type Jurisdiction,
-  type TransactionEntry,
   type NameRequest,
   type HistoryEntry,
   type ConditionsList,
-  type Transactions,
 } from '~/types'
 
 import requestTypes from '~/data/request_types.json'
@@ -25,7 +23,6 @@ import {
   getDecisionReasons,
   getNameRequest,
   getNextNrNumber,
-  getTransactions,
   patchNameRequest,
   postConditions,
   postHistories,
@@ -34,12 +31,7 @@ import {
   putNameChoice,
   putNameRequest,
 } from '~/util/namex-api'
-import {
-  getEmptyNameChoice,
-  isValidNrFormat,
-  nrExists,
-  sortNameChoices,
-} from '~/util'
+import { getEmptyNameChoice, isValidNrFormat, sortNameChoices } from '~/util'
 import { DateTime } from 'luxon'
 import { fromMappedRequestType } from '~/util/request-type'
 import { getDateFromDateTime, parseDate } from '~/util/date'
@@ -225,14 +217,12 @@ export const useExamination = defineStore('examine', () => {
   const consentDate = ref<string>()
   const consentFlag = ref<ConsentFlag>()
 
-  const transactionsData = ref<Array<TransactionEntry>>()
-
   const submittedDate = ref<DateTime>()
   const corpNum = ref<string>()
   const corpNumRequired = ref<boolean>()
   const expiryDate = ref<string>()
 
-  const additionalInfo = ref<string>('')
+  const additionalInfo = ref<string>()
   const additional_info_template = ref<string>()
   const natureOfBusiness = ref<string>()
 
@@ -379,7 +369,7 @@ export const useExamination = defineStore('examine', () => {
     data.requestTypeCd = requestType.value
     data.entity_type_cd = entityTypeCd.value
     data.request_action_cd = requestActionCd.value
-    data.xproJurisdiction = jurisdiction.value || ''
+    data.xproJurisdiction = jurisdiction.value || null
     data.natureBusinessInfo = natureOfBusiness.value || data.natureBusinessInfo
     data.additionalInfo = additionalInfo.value || ''
     data.comments = comments.value
@@ -445,12 +435,14 @@ export const useExamination = defineStore('examine', () => {
     choice.comment = data.comment
   }
 
-  /** Parse a Name Request object into this store's variables. */
+  /** Parse a Name Request object into this store's variables.
+   * @throws {Error} if the NR data is invalid.
+   */
   async function parseNr(info: NameRequest) {
-    if (!info || !info.names || info.names.length === 0) return
+    if (!info || !info.names || info.names.length === 0)
+      throw new Error('Cannot parse invalid NR data')
 
-    consentFlag.value = undefined
-    consentDate.value = undefined
+    clearConsent()
 
     resetNameChoice(compName1)
     resetNameChoice(compName2)
@@ -506,10 +498,10 @@ export const useExamination = defineStore('examine', () => {
     conEmail.value = info.applicants.emailAddress
     fax.value = info.applicants.faxNumber ?? undefined
 
-    jurisdiction.value = info.xproJurisdiction
+    jurisdiction.value = info.xproJurisdiction ?? undefined
     jurisdictionNumber.value = info.homeJurisNum ?? undefined
     natureOfBusiness.value = info.natureBusinessInfo ?? undefined
-    additionalInfo.value = info.additionalInfo
+    additionalInfo.value = info.additionalInfo ?? undefined
     comments.value = info.comments
 
     examiner.value = info.userId
@@ -573,7 +565,7 @@ export const useExamination = defineStore('examine', () => {
   }
 
   async function undoNameChoiceDecision(name: NameChoice) {
-    resetExaminationArea()
+    resetDecisionArea()
     currentNameObj.value = nameChoices.value[name.choice - 1]
     resetNameChoice(currentNameObj.value, true)
     await pushCurrentNameChoice()
@@ -712,38 +704,6 @@ export const useExamination = defineStore('examine', () => {
     const patch = { previousStateCd: prevState, state: nrState }
     await patchNameRequest(nrNumber.value, patch)
     await fetchAndLoadNr(nrNumber.value)
-    await setNewExaminer()
-  }
-
-  async function getTransactionsHistory(nrNumber: string) {
-    try {
-      const transactionsResponse = await getTransactions(nrNumber)
-      const transactions = (await transactionsResponse.json()) as Transactions
-      transactions.transactions.forEach((t) => sortNameChoices(t.names))
-      transactionsData.value = transactions.transactions
-    } catch (error) {
-      console.error(`Error while retrieving transactions: ${error}`)
-      transactionsData.value = undefined
-    }
-  }
-
-  async function setNewExaminer() {
-    if (examiner.value?.includes('account')) {
-      await getTransactionsHistory(nrNumber.value)
-      if (transactionsData.value == null) {
-        return
-      }
-
-      for (const transaction of transactionsData.value) {
-        if (
-          transaction.user_name.split('@').at(1)?.includes('idir') &&
-          transaction.user_action.includes('Decision')
-        ) {
-          examiner.value = transaction.user_name
-          break
-        }
-      }
-    }
   }
 
   /** Revert to this NR's previous state if it exists. */
@@ -820,13 +780,6 @@ export const useExamination = defineStore('examine', () => {
   async function holdRequest() {
     await updateNRState(Status.Hold)
     conflicts.resetConflictLists()
-  }
-
-  function clearSelectedDecisionReasons() {
-    conflicts.clearSelectedConflicts()
-    selectedConditions.value = []
-    selectedMacros.value = []
-    selectedTrademarks.value = []
   }
 
   function clearConsent() {
@@ -906,7 +859,7 @@ export const useExamination = defineStore('examine', () => {
 
   async function getMacros(): Promise<Array<Macro>> {
     const response = await getDecisionReasons()
-    return response.status === 200 ? await response.json() : []
+    return response.ok ? await response.json() : []
   }
 
   function parseConditions(data: ConditionsList): Array<Condition> {
@@ -930,7 +883,7 @@ export const useExamination = defineStore('examine', () => {
 
   async function cancelNr(commentText: string) {
     await postComment(commentText)
-    resetExaminationArea()
+    resetDecisionArea()
     await updateNRState(Status.Cancelled)
   }
 
@@ -943,50 +896,113 @@ export const useExamination = defineStore('examine', () => {
   async function updateRequest() {
     const data = await getNrData()
     const response = await putNameRequest(nrNumber.value, data)
-    if (response.status === 200) {
+    if (response.ok) {
       await parseNr(await response.json())
+    } else {
+      const message = (await response.json()).message
+      emitter.emit('error', {
+        title: `Failed to update NR`,
+        message: `An error occurred while trying to update ${nrNumber.value}\n${message}`,
+      })
+      await fetchAndLoadNr(nrNumber.value)
     }
   }
 
   async function postComment(text: string) {
     const response = await postNewComment(nrNumber.value, text)
-    if (response.status === 200) {
+    if (response.ok) {
       comments.value.push(await response.json())
     }
   }
 
-  function resetValues() {
-    resetExaminationArea()
-    conflicts.resetMatches()
-    conditions.value = []
-    histories.value = []
-    trademarks.value = []
+  function clearSelectedDecisionReasons() {
+    conflicts.clearSelectedConflicts()
+    selectedConditions.value = []
+    selectedMacros.value = []
+    selectedTrademarks.value = []
+  }
+
+  function resetDecisionArea() {
+    conflicts.resetConflictLists()
+    clearSelectedDecisionReasons()
+    conflicts.autoAdd = true
+    consentRequired.value = false
+    customerMessageOverride.value = undefined
+  }
+
+  function resetHeader() {
     isEditing.value = false
     isHeaderShown.value = false
   }
 
-  /** Fetches the given NR's data and parses it into this store. */
-  async function fetchAndLoadNr(nrNumber: string) {
-    const response = await getNameRequest(nrNumber)
-    await parseNr(await response.json())
+  function resetRecipeData() {
+    conflicts.resetMatches()
+    conditions.value = []
+    histories.value = []
+    trademarks.value = []
   }
 
-  /** Fetch and load data for the recipe area (conflicts, trademarks, etc) */
-  async function runManualRecipe(searchQuery: string, exactPhrase: string) {
+  /** Fetches the given NR's data and parses it into this store.
+   * @throws {Error} if the NR data could not be fetched.
+   */
+  async function fetchAndLoadNr(nrNumber: string) {
+    try {
+      const response = await getNameRequest(nrNumber)
+      if (response.ok) {
+        await parseNr(await response.json())
+      } else if (response.status === 404) {
+        throw new Error('NR not found')
+      } else {
+        throw new Error('Failed to fetch NR data')
+      }
+    } catch (e) {
+      throw new Error('Failed to fetch NR data')
+    }
+  }
+
+  /** Fetch and load data for the recipe area (conflicts, trademarks, etc)
+   * @throws {Error} if any part of the recipe data could not be loaded.
+   */
+  async function fetchAndLoadRecipeData(
+    searchQuery: string,
+    exactPhrase: string
+  ) {
     if (!currentNameObj.value) return
-    resetExaminationArea()
+    resetDecisionArea()
+    const errors: Array<Error> = []
     try {
       trademarks.value = await getTrademarks(searchQuery)
+    } catch (e) {
+      trademarks.value = []
+      errors.push(e as Error)
+    }
+    try {
       histories.value = await getHistories(searchQuery)
+    } catch (e) {
+      histories.value = []
+      errors.push(e as Error)
+    }
+    try {
       macros.value = await getMacros()
+    } catch (e) {
+      macros.value = []
+      errors.push(e as Error)
+    }
+    try {
       const conditionsJson = await getConditions(searchQuery)
       conditions.value = parseConditions(conditionsJson)
+    } catch (e) {
+      conditions.value = []
+      errors.push(e as Error)
+    }
+    try {
       await conflicts.initialize(searchQuery, exactPhrase)
     } catch (e) {
-      emitter.emit('error', {
-        title: 'Failed to load recipe area',
-        message: `Data for the recipe area could not be loaded entirely: ${e}`,
-      })
+      errors.push(e as Error)
+    }
+    if (errors.length > 0) {
+      const message = errors.join('\n')
+      throw new Error(message)
     }
   }
 
@@ -998,7 +1014,9 @@ export const useExamination = defineStore('examine', () => {
     return json.nameRequest
   }
 
-  function getShortJurisdiction(jurisdiction: string): string {
+  /** Return a two-digit code for the given jurisdiction string.
+   * Returns `undefined` if a code could not be found. */
+  function getShortJurisdiction(jurisdiction: string): string | undefined {
     jurisdiction = jurisdiction.toUpperCase()
     if (jurisdiction.length === 2) return jurisdiction
 
@@ -1015,34 +1033,21 @@ export const useExamination = defineStore('examine', () => {
     if (typeof index === 'number') {
       return listJurisdictions.value[index].value
     }
-
-    return '?'
+    return undefined
   }
 
-  function resetExaminationArea() {
-    conflicts.resetConflictLists()
-    clearSelectedDecisionReasons()
-    conflicts.autoAdd = true
-    consentRequired.value = false
-    customerMessageOverride.value = undefined
-  }
-
-  async function updateRoute() {
+  /** Update the route to the examine page, showing that it's examining the given NR number */
+  async function updateRoute(nrNum: string) {
     await navigateTo({
       path: Route.Examine,
-      query: { nr: nrNumber.value.split(' ')[1] },
+      query: { nr: nrNum.split(' ')[1] },
     })
   }
 
   /** Checks if the given NR number is valid. If not, throws an error. */
   async function checkNrNumber(nrNumber: string) {
-    if (!nrNumber.startsWith('NR')) {
-      nrNumber = `NR ${nrNumber}`
-    }
-    if (!isValidNrFormat(nrNumber, true)) {
+    if (!isValidNrFormat(nrNumber)) {
       throw new Error('Incorrect NR number format')
-    } else if (!(await nrExists(nrNumber))) {
-      throw new Error('The requested NR could not be found')
     }
   }
 
@@ -1054,22 +1059,33 @@ export const useExamination = defineStore('examine', () => {
     initializing.value = false
   }
 
+  /** Initialize this store with the given NR. Throws an error if the NR data cannot be loaded.
+   * If recipe area data cannot be loaded, the error will be captured and an error dialog will be shown.
+   */
   async function initialize(newNrNumber: string) {
     initializing.value = true
+    resetHeader()
     try {
       await checkNrNumber(newNrNumber)
+      await fetchAndLoadNr(newNrNumber)
+      await updateRoute(newNrNumber)
+      updateRequestTypeRules(requestTypeObject.value)
+      resetDecisionArea()
+      nrNumber.value = newNrNumber
     } catch (e) {
-      initializing.value = false
       throw e
+    } finally {
+      initializing.value = false
     }
-    resetValues()
-    nrNumber.value = newNrNumber
-    await updateRoute()
-    await fetchAndLoadNr(newNrNumber)
-    await setNewExaminer()
-    updateRequestTypeRules(requestTypeObject.value)
-    initializing.value = false
-    await runManualRecipe(currentName.value || '', '')
+    try {
+      resetRecipeData()
+      await fetchAndLoadRecipeData(currentName.value || '', '')
+    } catch (e: any) {
+      emitter.emit('error', {
+        title: 'Failed to load Recipe area',
+        message: e.message,
+      })
+    }
   }
 
   return {
@@ -1127,7 +1143,6 @@ export const useExamination = defineStore('examine', () => {
     jurisdictionNumber,
     consumptionDate,
     consumedBy,
-    transactionsData,
     expiryDate,
     submittedDate,
     corpNum,
@@ -1168,10 +1183,9 @@ export const useExamination = defineStore('examine', () => {
     makeDecision,
     undoNameChoiceDecision,
     makeQuickDecision,
-    runManualRecipe,
-    resetExaminationArea,
+    fetchAndLoadRecipeData,
+    resetDecisionArea,
     fetchAndLoadNr,
-    setNewExaminer,
     updateNRState,
     updateNRStateAndPreviousState,
     revertToPreviousState,

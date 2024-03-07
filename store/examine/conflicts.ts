@@ -27,7 +27,7 @@ export const useConflicts = defineStore('conflicts', () => {
     query = query.charAt(0) === '+' ? query.substring(1) : query
 
     const response = await getExactMatches(query)
-    if (response.status !== 200)
+    if (!response.ok)
       throw new Error('Unable to retrieve exact matches')
 
     return parseExactMatches(await response.json())
@@ -52,7 +52,7 @@ export const useConflicts = defineStore('conflicts', () => {
     exactPhrase = exactPhrase || '*'
 
     const response = await getSynonymMatches(query, exactPhrase)
-    if (response.status !== 200)
+    if (!response.ok)
       throw new Error('Unable to retrieve synonym matches')
 
     return parseSynonymMatches(await response.json())
@@ -167,7 +167,7 @@ export const useConflicts = defineStore('conflicts', () => {
     query = query || '*'
     query = sanitizeQuery(query)
     const response = await getCobrsPhoneticMatches(query)
-    if (response.status !== 200)
+    if (!response.ok)
       throw new Error('Unable to retrieve cobrs phonetic matches')
 
     return parsePhoneticMatches(await response.json())
@@ -179,7 +179,7 @@ export const useConflicts = defineStore('conflicts', () => {
     query = query || '*'
     query = sanitizeQuery(query)
     const response = await getPhoneticMatches(query)
-    if (response.status !== 200)
+    if (!response.ok)
       throw new Error('Unable to retrieve phonetic matches')
 
     return parsePhoneticMatches(await response.json())

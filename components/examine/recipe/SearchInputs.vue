@@ -27,7 +27,7 @@ const searchString = ref(examine.currentName ?? '')
 const exactSearchString = ref('')
 
 function onSearchSubmit(_event: Event) {
-  examine.runManualRecipe(searchString.value, exactSearchString.value)
+  examine.fetchAndLoadRecipeData(searchString.value, exactSearchString.value)
 }
 
 watch(
@@ -35,7 +35,10 @@ watch(
   async (_state) => {
     searchString.value = examine.currentName ?? ''
     exactSearchString.value = ''
-    await examine.runManualRecipe(searchString.value, exactSearchString.value)
+    await examine.fetchAndLoadRecipeData(
+      searchString.value,
+      exactSearchString.value
+    )
   },
   { deep: true }
 )

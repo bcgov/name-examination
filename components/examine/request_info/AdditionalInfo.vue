@@ -51,7 +51,7 @@ const examine = useExamination()
 const characterLimit = 150
 const characterLimitDisplay = `Message cut off at ${characterLimit} characters`
 
-const info = ref(examine.additionalInfo)
+const info = ref(examine.additionalInfo ?? '')
 
 const additionalInfoDisplay = computed(() =>
   [examine.additionalInfoTransformedTemplate, examine.additionalInfo]

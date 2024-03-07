@@ -18,7 +18,7 @@
       <NameRequestTypeInfo
         class="!flex-row items-center space-x-2 pl-2 text-xl"
         :request-type-text="requestTypeDisplay"
-        :jurisdiction="data.xproJurisdiction"
+        :jurisdiction="data.xproJurisdiction || undefined"
         :jurisdiction-number="data.homeJurisNum || undefined"
       />
     </div>

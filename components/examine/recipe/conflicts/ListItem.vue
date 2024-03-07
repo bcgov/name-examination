@@ -12,11 +12,11 @@
           :checked="isChecked"
           @change="e => toggleConflictCheckbox((e.target as HTMLInputElement).checked)"
         />
-        <span class="grow" v-html="conflictItem.highlightedText"></span>
+        <span class="grow truncate" v-html="conflictItem.highlightedText"></span>
         <div class="flex w-52 gap-4">
           <span class="w-24">{{ conflictItem.nrNumber }}</span>
           <span class="w-4">
-            {{ examine.getShortJurisdiction(conflictItem.jurisdiction) }}
+            {{ examine.getShortJurisdiction(conflictItem.jurisdiction) || '?' }}
           </span>
           <span class="w-24">
             {{ getFormattedDate(conflictItem.startDate) }}

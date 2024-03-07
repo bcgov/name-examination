@@ -49,8 +49,8 @@
       "
       class="flex grow flex-col space-x-3 bg-gray-100 p-4 xl:flex-row"
     >
-      <ExamineRecipe class="basis-1/2" />
-      <ExamineDecision v-if="showDecisionPanel" class="basis-1/2" />
+      <ExamineRecipe class="w-1/2" />
+      <ExamineDecision v-if="showDecisionPanel" class="w-1/2" />
     </div>
   </div>
 </template>
@@ -97,7 +97,7 @@ onMounted(async () => {
       await navigateTo(Route.Search)
     }
   } else {
-    await examine.updateRoute()
+    await examine.updateRoute(examine.nrNumber)
   }
 })
 </script>

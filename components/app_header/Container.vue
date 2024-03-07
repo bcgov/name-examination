@@ -15,7 +15,7 @@
       </div>
 
       <div class="ml-3 flex gap-10 text-bcgov-blue5">
-        <AppHeaderNavLink text="Admin" :route=adminURL target="_blank"/>
+        <AppHeaderNavLink text="Admin" :route="adminURL" target="_blank" />
         <AppHeaderNavLink text="Examine Names" :route="Route.Examine" />
         <AppHeaderNavLink text="Search" :route="Route.Search" />
       </div>
@@ -60,21 +60,27 @@ import { emitter } from '~/util/emitter'
 const { $auth, $userProfile } = useNuxtApp()
 
 const config = useRuntimeConfig()
-const adminURL = <Route>config.public.namexAdminURL
+const adminURL = config.public.namexAdminURL
 
 const examine = useExamination()
 const examineOptions = useExaminationOptions()
 
 const searchText = ref('')
 
+/** Parse the input as an NR number, tries to return a string in the form 'NR x' where 'x' is a number. */
+function parseNrNumber(input: string) {
+  const regex = /(^|\D)(\d{7})(\D|$)/ // any 7 digit number not in another number
+  const match = regex.exec(input)?.at(2)
+  if (!match) return undefined
+  return `NR ${match}`
+}
+
 async function onSearchSubmit(_: Event) {
-  let nrNumber = searchText.value.trim()
-  if (!nrNumber.startsWith('NR')) {
-    nrNumber = `NR ${nrNumber}`
-  }
+  const nrNumber = parseNrNumber(searchText.value)
   try {
-    await examine.initialize(nrNumber)
+    if (!nrNumber) throw new Error('Failed to parse NR number from input')
     searchText.value = ''
+    await examine.initialize(nrNumber)
   } catch (e: any) {
     emitter.emit('error', {
       title: 'Failed to search NR',
