@@ -97,7 +97,7 @@ onMounted(async () => {
       await navigateTo(Route.Search)
     }
   } else {
-    await examine.updateRoute()
+    await examine.updateRoute(examine.nrNumber)
   }
 })
 </script>
