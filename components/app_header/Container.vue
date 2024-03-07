@@ -60,7 +60,7 @@ import { emitter } from '~/util/emitter'
 const { $auth, $userProfile } = useNuxtApp()
 
 const config = useRuntimeConfig()
-const adminURL = <Route>config.public.namexAdminURL
+const adminURL = config.public.namexAdminURL
 
 const examine = useExamination()
 const examineOptions = useExaminationOptions()

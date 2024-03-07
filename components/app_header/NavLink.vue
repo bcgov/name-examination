@@ -1,7 +1,7 @@
 <template>
   <nuxt-link :to="route">
     <span
-      class="font-medium transition hover:border-b-2 hover:border-bcgov-blue5 whitespace-nowrap"
+      class="whitespace-nowrap font-medium transition hover:border-b-2 hover:border-bcgov-blue5"
       :class="{
         'border-b-2 border-bcgov-blue5': highlight,
       }"
@@ -12,14 +12,14 @@
 </template>
 
 <script setup lang="ts">
-import { Route } from '~/enums/routes'
-
 const { route } = defineProps<{
   text: string
-  route: Route
+  route: string
 }>()
 
-const highlight = computed(() =>
-  useRoute().path.toString().toLowerCase().startsWith(route.toLowerCase())
+const highlight = computed(
+  () =>
+    route &&
+    useRoute().path.toString().toLowerCase().startsWith(route.toLowerCase())
 )
 </script>
