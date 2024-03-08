@@ -1,3 +1,7 @@
+/** The request type codes that this application uses (retrieved from the request types JSON file)
+ * and the ones that the backend uses are different for some NR types. This file contains utlities for translating
+ * between the two.
+ */
 import {
   RequestTypeCode,
   RequestActionCode,
