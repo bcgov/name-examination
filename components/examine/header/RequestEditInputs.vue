@@ -170,7 +170,7 @@ examine.addEditAction({
     return await validateInputs()
   },
   update() {
-    examine.setRequestType(selectedRequestType.value)
+    examine.requestType = selectedRequestType.value.value
     if (examine.jurisdictionRequired) {
       examine.jurisdiction = jurisdiction.value
     } else {
