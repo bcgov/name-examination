@@ -1,13 +1,13 @@
 <template>
   <div class="flex h-9 space-x-1">
-    <IconButton white class="border-none" @click="quickApprove">
+    <IconButton white class="border-none whitespace-pre" @click="quickApprove">
       <CheckCircleIcon class="h-7 w-7 text-lime-600" />
       <template #text>Quick Approve</template>
     </IconButton>
 
     <IconButton
       white
-      class="border-none"
+      class="border-none whitespace-pre"
       mnemonic="i"
       @click="rejectDistinctive"
     >
@@ -17,7 +17,7 @@
 
     <IconButton
       white
-      class="border-none"
+      class="border-none whitespace-pre"
       mnemonic="e"
       @click="rejectDescriptive"
     >

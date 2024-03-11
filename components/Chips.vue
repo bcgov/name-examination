@@ -5,7 +5,7 @@
       :key="getKey ? getKey(item) : undefined"
       class="flex h-fit w-fit flex-nowrap items-center space-x-1 rounded-md border border-gray-400 bg-sky-100 p-0.5 px-1 text-sm"
     >
-      <span>{{ display ? display(item) : item }}</span>
+      <span class="truncate max-w-xs">{{ display ? display(item) : item }}</span>
       <button
         @click="(event) => onChipRemove(event, modelValue, item)"
         class="rounded hover:bg-sky-200"

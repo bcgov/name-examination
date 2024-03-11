@@ -33,7 +33,7 @@ import {
 } from '~/util/namex-api'
 import { getEmptyNameChoice, isValidNrFormat, sortNameChoices } from '~/util'
 import { DateTime } from 'luxon'
-import { fromMappedRequestType } from '~/util/request-type'
+import { fromMappedRequestType, toMappedRequestType } from '~/util/request-type'
 import { getDateFromDateTime, parseDate } from '~/util/date'
 import { useConflicts } from './conflicts'
 import { usePayments } from './payments'
@@ -104,7 +104,7 @@ export const useExamination = defineStore('examine', () => {
   )
   const requestType = ref<RequestTypeCode>(listRequestTypes.value[0].value)
   const requestTypeObject = computed(
-    () => listRequestTypes.value.find((r) => r.value == requestType.value)!
+    () => findRequestTypeObject(requestType.value)!
   )
   const requestTypeRules = ref<Array<RequestTypeRule>>(
     requestTypeRulesJSON as Array<RequestTypeRule>
@@ -366,9 +366,13 @@ export const useExamination = defineStore('examine', () => {
     })
     data.names = nameChoices.value
 
-    data.requestTypeCd = requestType.value
+    data.requestTypeCd = fromMappedRequestType(
+      requestType.value,
+      requestActionCd.value
+    )
     data.entity_type_cd = entityTypeCd.value
     data.request_action_cd = requestActionCd.value
+
     data.xproJurisdiction = jurisdiction.value || null
     data.natureBusinessInfo = natureOfBusiness.value || data.natureBusinessInfo
     data.additionalInfo = additionalInfo.value || ''
@@ -419,6 +423,11 @@ export const useExamination = defineStore('examine', () => {
     editActions.push(action)
   }
 
+  /** Find a `RequestType` object from a `RequestTypeCode` */
+  function findRequestTypeObject(code: RequestTypeCode) {
+    return listRequestTypes.value.find((r) => r.value == code)
+  }
+
   function parseIntoNameChoice(data: any, choice: NameChoice) {
     choice.choice = data.choice
     choice.name = data.name
@@ -464,7 +473,11 @@ export const useExamination = defineStore('examine', () => {
 
     nrStatus.value = info.state
     previousState.value = info.previousStateCd ?? undefined
-    requestType.value = info.requestTypeCd
+    requestType.value = toMappedRequestType(
+      info.requestTypeCd,
+      info.request_action_cd,
+      info.entity_type_cd
+    )
 
     consentFlag.value = info.consentFlag ?? undefined
     if (info.consent_dt) {
@@ -751,13 +764,6 @@ export const useExamination = defineStore('examine', () => {
     jurisdictionRequired.value = Boolean(rules?.jurisdiction_required)
   }
 
-  function setRequestType(requestTypeObject: RequestType) {
-    requestType.value = fromMappedRequestType(
-      requestTypeObject.value,
-      requestTypeObject.request_action_cd
-    )
-  }
-
   async function getNextCompany() {
     conflicts.resetConflictLists()
     const nextNr = await getNextNrInQueue()
@@ -899,10 +905,9 @@ export const useExamination = defineStore('examine', () => {
     if (response.ok) {
       await parseNr(await response.json())
     } else {
-      const message = (await response.json()).message
       emitter.emit('error', {
         title: `Failed to update NR`,
-        message: `An error occurred while trying to update ${nrNumber.value}\n${message}`,
+        message: `An error occurred while trying to update ${nrNumber.value}`,
       })
       await fetchAndLoadNr(nrNumber.value)
     }
@@ -1193,7 +1198,6 @@ export const useExamination = defineStore('examine', () => {
     updateRequest,
     cancelEdits,
     updateRequestTypeRules,
-    setRequestType,
     getNextNrInQueue,
     getNextCompany,
     edit,
