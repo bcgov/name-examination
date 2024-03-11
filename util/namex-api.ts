@@ -183,3 +183,7 @@ export async function getCorporation(corpNum: string) {
 export async function getPayments(id: number) {
   return callNamexApi(getNamexApiUrl(`/payments/${id}`))
 }
+
+export async function getStats(params: URLSearchParams) {
+  return callNamexApi(getNamexApiUrl('/requests/stats?' + params))
+}

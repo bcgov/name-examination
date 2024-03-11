@@ -18,6 +18,7 @@
         <AppHeaderNavLink text="Admin" :route="adminURL" target="_blank" />
         <AppHeaderNavLink text="Examine Names" :route="Route.Examine" />
         <AppHeaderNavLink text="Search" :route="Route.Search" />
+        <AppHeaderNavLink text="Stats" :route="Route.Stats" />
       </div>
 
       <div class="ml-auto flex items-center">
@@ -28,10 +29,6 @@
           input-required
           @submit.prevent="onSearchSubmit"
         />
-
-        <nuxt-link to="/stats" class="mx-3 text-sm text-blue-800 underline">
-          <a>Stats</a>
-        </nuxt-link>
 
         <div class="flex space-x-2 px-3">
           <ToggleSwitch
