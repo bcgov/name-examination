@@ -4,11 +4,13 @@
       <div
         class="flex w-full items-center justify-between space-x-10 font-bold"
       >
-        <span>{{ conflict.text }}</span>
+        <span class="truncate">{{ conflict.text }}</span>
         <div class="space-x-8">
           <span>{{ conflict.nrNumber }}</span>
           <span>{{ formatJurisdiction(conflict.jurisdiction) }}</span>
-          <span>{{ getFormattedDate(conflict.startDate) }}</span>
+          <span class="whitespace-pre">
+            {{ getFormattedDate(conflict.startDate) }}
+          </span>
         </div>
       </div>
     </template>

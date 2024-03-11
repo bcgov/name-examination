@@ -49,7 +49,7 @@
               <li
                 :class="[
                   active ? 'bg-amber-100 text-amber-900' : 'text-gray-900',
-                  'relative cursor-default select-none py-2 pl-10 pr-4',
+                  'relative w-full cursor-default select-none truncate py-2 pl-10 pr-4',
                 ]"
               >
                 <span>

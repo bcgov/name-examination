@@ -5,7 +5,7 @@
       v-model="conflicts.selectedConflicts"
       :options="options"
       multiple
-      options-style="!max-h-48"
+      options-style="!max-h-48 !max-w-md"
       :options-display="(option: ConflictListItem) => option.text"
       :disabled="examine.decisionSelectionsDisabled"
       @change="(_) => conflicts.syncSelectedAndComparedConflicts()"

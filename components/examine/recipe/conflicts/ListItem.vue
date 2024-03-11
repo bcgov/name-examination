@@ -8,11 +8,14 @@
         <input
           type="checkbox"
           :disabled="examine.conflictSelectionDisabled"
-          class="h-4 w-4"
+          class="max-h-4 min-h-4 min-w-4 max-w-4"
           :checked="isChecked"
           @change="e => toggleConflictCheckbox((e.target as HTMLInputElement).checked)"
         />
-        <span class="grow truncate" v-html="conflictItem.highlightedText"></span>
+        <span
+          class="grow truncate"
+          v-html="conflictItem.highlightedText"
+        ></span>
         <div class="flex w-52 gap-4">
           <span class="w-24">{{ conflictItem.nrNumber }}</span>
           <span class="w-4">
