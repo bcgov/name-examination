@@ -905,10 +905,9 @@ export const useExamination = defineStore('examine', () => {
     if (response.ok) {
       await parseNr(await response.json())
     } else {
-      const message = (await response.json()).message
       emitter.emit('error', {
         title: `Failed to update NR`,
-        message: `An error occurred while trying to update ${nrNumber.value}\n${message}`,
+        message: `An error occurred while trying to update ${nrNumber.value}`,
       })
       await fetchAndLoadNr(nrNumber.value)
     }
