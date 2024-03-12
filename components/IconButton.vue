@@ -1,12 +1,12 @@
 <template>
   <button
-    class="inline-flex items-center justify-center space-x-1 rounded-md border px-2 py-1 transition hover:text-opacity-100 hover:opacity-90 disabled:pointer-events-none disabled:opacity-70"
+    class="inline-flex items-center justify-center space-x-1 rounded-md px-2 py-1 transition hover:text-opacity-100 hover:opacity-90 disabled:pointer-events-none disabled:opacity-70"
     ref="button"
     :class="[
       light
         ? 'bg-bcgov-blue3 text-white'
         : white
-        ? 'border-gray-300 bg-white text-black hover:bg-gray-200'
+        ? 'border border-gray-300 bg-white text-black hover:bg-gray-200'
         : 'bg-bcgov-blue5 text-white',
     ]"
   >
