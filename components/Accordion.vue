@@ -1,7 +1,7 @@
 <template>
   <details :class="{ 'pointer-events-none': disabled }" ref="details">
     <summary
-      class="flex w-full cursor-pointer items-center justify-between rounded-md p-1 text-left text-sm font-medium transition"
+      class="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left text-sm font-medium transition"
       :class="buttonStyle"
     >
       <slot name="title"></slot>

@@ -1,7 +1,7 @@
 <template>
   <input
     type="text"
-    class="w-full rounded-md border border-gray-300 px-2 py-1"
+    class="w-full rounded border border-gray-300 px-2 py-1.5"
     :class="{ 'border-2 border-red-600 outline-red-600': errorStyle }"
     :value="modelValue"
     @input="

@@ -61,7 +61,7 @@
       <h3 class="font-bold">Comments</h3>
       <ExamineCommentsBox
         :comments="historiesInfo.comments"
-        class="max-h-48 w-full overflow-auto rounded-md border border-gray-400 p-2 children:bg-sky-50"
+        class="max-h-48 w-full overflow-auto rounded border border-gray-400 p-2 children:bg-sky-50"
       />
     </div>
   </div>

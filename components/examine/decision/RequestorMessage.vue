@@ -14,7 +14,6 @@
         <IconButton
           v-if="examine.customerMessageOverride"
           white
-          class="h-7"
           text="Clear"
           @click="clearEdits"
         >

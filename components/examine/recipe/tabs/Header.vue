@@ -1,5 +1,5 @@
 <template>
-  <TabList class="flex space-x-1 rounded-md bg-gray-100 p-1">
+  <TabList class="flex space-x-1 rounded bg-gray-100 p-1">
     <ExamineRecipeTabsButton
       class="basis-1/6"
       text="Conflicts"

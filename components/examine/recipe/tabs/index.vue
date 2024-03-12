@@ -5,7 +5,7 @@
 
       <TabPanels
         ref="panels"
-        class="mt-2 h-[29rem] overflow-auto rounded-md border border-gray-300 bg-white"
+        class="mt-2 h-[29rem] overflow-auto rounded border border-gray-300 bg-white"
       >
         <!-- Conflicts tab -->
         <TabPanel class="h-full" ref="conflicts" :unmount="false">

@@ -6,7 +6,7 @@
     >
       <LoadingSpinner />
     </div>
-    <div v-else class="flex w-full flex-col space-y-2 rounded-md bg-white p-2">
+    <div v-else class="flex w-full flex-col space-y-2 rounded bg-white p-2">
       <Accordion open arrow button-style="bg-gray-200 p-2 hover:bg-gray-300">
         <template #title>Exact match</template>
         <template #content>
