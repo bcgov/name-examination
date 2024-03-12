@@ -11,7 +11,7 @@
       mnemonic="i"
       @click="rejectDistinctive"
     >
-      <XCircleIcon class="h-7 w-7 text-bcgov-blue3" />
+      <XCircleIcon class="h-7 w-7 text-red-error" />
       <template #text>Reject D<u>i</u>stinctive</template>
     </IconButton>
 
@@ -21,7 +21,7 @@
       mnemonic="e"
       @click="rejectDescriptive"
     >
-      <XCircleIcon class="h-7 w-7 text-bcgov-blue3" />
+      <XCircleIcon class="h-7 w-7 text-red-error" />
       <template #text>Reject D<u>e</u>scriptive</template>
     </IconButton>
   </div>
