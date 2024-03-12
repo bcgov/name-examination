@@ -14,6 +14,7 @@ module.exports = {
         'bcgov-blue5': '#003366',
         'bcgov-blue8': '#002049',
         'bcgov-gold5': '#fcba19',
+        'red-error': '#d32723'
       },
     },
   },
