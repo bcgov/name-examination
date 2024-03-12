@@ -1,6 +1,4 @@
-# Content v2 Minimal Starter
-
-Look at the [Content documentation](https://content-v2.nuxtjs.org/) to learn more.
+# Name Examination
 
 ## Setup
 
@@ -25,6 +23,7 @@ npm install
 cp .env.example .env
 
 ```
+You will need to fill in the Firebase variables for the project to run.
 
 ## Linting
 
@@ -63,4 +62,4 @@ Locally preview production build:
 pnpm run preview
 ```
 
-Checkout the [deployment documentation](https://v3.nuxtjs.org/docs/deployment) for more information.
+Checkout the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
