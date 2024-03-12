@@ -20,7 +20,7 @@
       />
       <XCircleIcon
         v-if="type === 'error'"
-        class="h-5 w-5 stroke-2 text-red-600"
+        class="h-5 w-5 stroke-2 text-red-error"
       />
       <slot v-if="type === 'custom'"></slot>
     </IconButton>

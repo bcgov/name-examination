@@ -23,7 +23,7 @@
         @click="undo?.(choice)"
         white
         text="Undo Decision"
-        class="border-none text-sm text-blue-800"
+        class="border-none text-sm text-blue-800 !px-1.5"
       />
     </div>
 
