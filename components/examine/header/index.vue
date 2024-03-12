@@ -7,7 +7,7 @@
         :href="`/transactions?nr=${examine.nrNumber.split(' ')[1]}`"
         target="_blank"
         rel="noopener noreferrer"
-        class="rounded-md p-1 text-bcgov-blue5 transition hover:bg-gray-200"
+        class="rounded p-1 text-bcgov-blue5 transition hover:bg-gray-200"
       >
         <ArrowTopRightOnSquareIcon class="h-6 w-6" />
       </a>

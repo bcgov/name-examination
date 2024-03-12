@@ -4,7 +4,7 @@
       <span class="inline-flex items-center font-bold">{{ title }}</span>
       <PopoverButton
         :class="open ? '' : 'text-opacity-90'"
-        class="group ml-auto inline-flex rounded-md border border-gray-300 bg-white px-2 py-1 font-bold transition hover:bg-gray-200"
+        class="group ml-auto inline-flex rounded border border-gray-300 bg-white px-2 py-1 font-bold transition hover:bg-gray-200"
       >
         <PlusIcon
           :class="open ? 'rotate-45' : ''"
@@ -40,7 +40,7 @@
         class="relative z-10 mt-2 max-h-[60vh] w-full max-w-sm overflow-auto px-4 sm:px-0 lg:max-w-3xl"
       >
         <div
-          class="h-full overflow-auto rounded-md border border-gray-400 bg-gray-50 p-3 shadow-xl"
+          class="h-full overflow-auto rounded border border-gray-400 bg-gray-50 p-3 shadow-xl"
         >
           <slot name="expanded"></slot>
         </div>

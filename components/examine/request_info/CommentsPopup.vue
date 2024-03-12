@@ -4,7 +4,7 @@
       <PopoverButton
         ref="popoverButton"
         :class="open ? '' : 'text-opacity-90'"
-        class="group inline-flex w-full items-center space-x-1 rounded-md border border-gray-300 bg-white px-3 py-1 font-bold text-black transition hover:bg-gray-200"
+        class="group inline-flex w-full items-center space-x-2 rounded border border-gray-300 bg-white px-3 py-1.5 font-bold text-black transition hover:bg-gray-200"
       >
         <ChatBubbleLeftIcon class="h-5 w-5" />
         <span class="grow text-left">
@@ -32,7 +32,7 @@
           class="absolute z-10 mt-3 h-fit w-80 max-w-sm transform px-4 sm:px-0 lg:max-w-3xl"
         >
           <div
-            class="h-full overflow-auto rounded-md border border-gray-400 shadow-xl"
+            class="h-full overflow-auto rounded border border-gray-400 shadow-xl"
           >
             <div
               class="flex h-full flex-col space-y-1 divide-y-2 divide-gray-300 bg-gray-100 p-3"

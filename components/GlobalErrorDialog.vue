@@ -6,7 +6,7 @@
         {{ errorQueue[0].title }}
       </span>
     </template>
-    <div v-if="errorQueue[0]" class="flex flex-col space-y-4 rounded-md">
+    <div v-if="errorQueue[0]" class="flex flex-col space-y-4 rounded">
       <span class="whitespace-pre-wrap">{{ errorQueue[0].message }}</span>
       <IconButton light @click="popError">Close</IconButton>
     </div>

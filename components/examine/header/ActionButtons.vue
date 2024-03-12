@@ -1,7 +1,7 @@
 <template>
   <ExamineHeaderEditActionButtons v-if="examine.isEditing" />
 
-  <div v-else class="flex items-center space-x-1">
+  <div v-else class="flex items-center space-x-3">
     <!-- Edit Button -->
     <IconButton
       v-if="examine.canEdit && notHistoricalReservedConsumed"
@@ -9,7 +9,7 @@
       @click="examine.edit"
       mnemonic="d"
     >
-      <PencilSquareIcon class="h-5 w-5 stroke-2" />
+      <PencilSquareIcon class="h-5 w-5" />
       <template #text>E<u>d</u>it Request</template>
     </IconButton>
 
@@ -17,9 +17,9 @@
     <IconButton light @click="toggleDetails" mnemonic="b">
       <ArrowsPointingInIcon
         v-if="examine.isHeaderShown"
-        class="h-5 w-5 stroke-2"
+        class="h-5 w-5"
       />
-      <ArrowsPointingOutIcon v-else class="h-5 w-5 stroke-2" />
+      <ArrowsPointingOutIcon v-else class="h-5 w-5" />
 
       <template #text v-if="examine.isHeaderShown"
         >Hide Details (<u>b</u>)
@@ -34,7 +34,7 @@
       light
       mnemonic="n"
     >
-      <ChevronDoubleRightIcon class="h-5 w-5 stroke-2" />
+      <ChevronDoubleRightIcon class="h-5 w-5" />
       <template #text>Get&nbsp;<u>N</u>ext</template>
     </IconButton>
 
@@ -45,7 +45,7 @@
       text="Cancel Request"
       @click="showCancelDialog"
     >
-      <XMarkIcon class="h-5 w-5 stroke-2" />
+      <XMarkIcon class="h-5 w-5" />
     </IconButton>
 
     <!-- Hold Button -->
@@ -61,7 +61,7 @@
 
     <div
       v-if="showReopenAndResetButtons && notHistoricalReservedConsumed"
-      class="space-x-1"
+      class="space-x-3"
     >
       <!-- Reopen (unfurnished) Button -->
       <IconButton
@@ -70,12 +70,12 @@
         text="Reopen"
         @click="examine.reOpen"
       >
-        <PowerIcon class="h-5 w-5 stroke-2" />
+        <PowerIcon class="h-5 w-5" />
       </IconButton>
 
       <!-- Reset (from furnished) Button -->
       <IconButton v-else @click="examine.resetNr" light text="Reset">
-        <ArrowUturnLeftIcon class="h-5 w-5 stroke-2" />
+        <ArrowUturnLeftIcon class="h-5 w-5" />
       </IconButton>
     </div>
 
@@ -86,7 +86,7 @@
       @click="examine.claimNr"
       mnemonic="x"
     >
-      <DocumentCheckIcon class="h-5 w-5 stroke-2" />
+      <DocumentCheckIcon class="h-5 w-5" />
       <template #text>E<u>x</u>amine</template>
     </IconButton>
 

@@ -11,9 +11,9 @@
         <div
           class="relative cursor-default overflow-hidden text-left sm:text-sm"
         >
-          <ComboboxButton class="flex items-center rounded-md" as="div">
+          <ComboboxButton class="flex items-center rounded" as="div">
             <ComboboxInput
-              class="w-full rounded-md border border-gray-300 py-1.5 pl-2 pr-7 text-sm leading-5 text-gray-900 focus:ring-0"
+              class="w-full rounded border border-gray-300 py-1.5 pl-2 pr-7 text-sm leading-5 text-gray-900 focus:ring-0"
               :displayValue="(item: any) => multiple ? open ? '' : `${modelValue.length} selected` : optionsDisplay(item)"
               @change="query = $event.target.value"
             />
@@ -34,7 +34,7 @@
         >
           <ComboboxOptions
             v-if="filteredOptions.length > 0"
-            class="absolute mt-1 max-h-[60vh] w-full z-30 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            class="absolute mt-1 max-h-[60vh] w-full z-30 overflow-auto rounded bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
             v-slot="{ option }"
           >
             <ComboboxOption
@@ -63,7 +63,7 @@
           </ComboboxOptions>
           <div
             v-else
-            class="absolute mt-1 max-h-[60vh] w-full overflow-auto rounded-md bg-white px-4 py-2 shadow-lg sm:text-sm"
+            class="absolute mt-1 max-h-[60vh] w-full overflow-auto rounded bg-white px-4 py-2 shadow-lg sm:text-sm"
           >
             Nothing found.
           </div>

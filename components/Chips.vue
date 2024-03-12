@@ -3,7 +3,7 @@
     <div
       v-for="item in modelValue"
       :key="getKey ? getKey(item) : undefined"
-      class="flex h-fit w-fit flex-nowrap items-center space-x-1 rounded-md border border-gray-400 bg-sky-100 p-0.5 px-1 text-sm"
+      class="flex h-fit w-fit flex-nowrap items-center space-x-1 rounded border border-gray-400 bg-sky-100 p-0.5 px-1 text-sm"
     >
       <span class="truncate max-w-xs">{{ display ? display(item) : item }}</span>
       <button

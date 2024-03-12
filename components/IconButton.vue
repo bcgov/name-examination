@@ -1,19 +1,19 @@
 <template>
   <button
-    class="inline-flex items-center justify-center space-x-1 rounded-md border px-2 py-1 transition hover:text-opacity-100 hover:opacity-90 disabled:pointer-events-none disabled:opacity-70"
+    class="inline-flex items-center justify-center space-x-2 rounded px-4 py-1.5 transition hover:text-opacity-100 hover:opacity-90 disabled:pointer-events-none disabled:opacity-70"
     ref="button"
     :class="[
       light
         ? 'bg-bcgov-blue3 text-white'
         : white
-        ? 'border-gray-300 bg-white text-black hover:bg-gray-200'
+        ? 'border border-gray-300 bg-white text-black hover:bg-gray-200'
         : 'bg-bcgov-blue5 text-white',
     ]"
   >
     <slot></slot>
 
     <!-- User of the component can pass in the text either as a prop or as a template (for custom styled text) -->
-    <slot name="text"></slot>
+    <span v-if="slots.text"><slot name="text"></slot></span>
     <span v-if="text">{{ text }}</span>
   </button>
 </template>
@@ -28,6 +28,8 @@ const props = defineProps<{
   white?: boolean
   mnemonic?: string
 }>()
+
+const slots = useSlots()
 
 const button = ref<HTMLButtonElement | null>(null)
 

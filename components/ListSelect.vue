@@ -9,7 +9,7 @@
     >
       <div class="relative w-full">
         <ListboxButton
-          class="relative w-full rounded-md border border-gray-300 bg-white py-1.5 pl-3 pr-10 text-left transition sm:text-sm"
+          class="relative w-full rounded border border-gray-300 bg-white py-1.5 pl-3 pr-10 text-left transition sm:text-sm"
           :class="{
             'hover:bg-gray-100': !disabled,
             'pointer-events-none text-gray-400': disabled,
@@ -35,7 +35,7 @@
           enter-to-class="opacity-100"
         >
           <ListboxOptions
-            class="absolute z-20 mt-1 max-h-[50vh] w-fit overflow-auto rounded-md bg-white py-1 text-left text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            class="absolute z-20 mt-1 max-h-[50vh] w-fit overflow-auto rounded bg-white py-1 text-left text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
             :class="optionsStyle"
           >
             <ListboxOption

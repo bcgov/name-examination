@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full overflow-x-auto rounded-md border">
+  <div class="h-full overflow-x-auto rounded border">
     <table class="min-h-fit min-w-full table-auto">
       <thead class="sticky top-0">
         <tr class="h-12 bg-bcgov-blue5 text-left text-sm text-white">
@@ -39,7 +39,7 @@
               type="text"
               :id="column"
               :placeholder="layout[column].text_input"
-              class="w-full rounded-md border p-1.5"
+              class="w-full rounded border p-1.5"
               :value="search.filters[column as FilterKey]"
               @keyup.enter="updateTextInputFilters()"
             />

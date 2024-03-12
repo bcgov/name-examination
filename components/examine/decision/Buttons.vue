@@ -15,6 +15,7 @@
 
     <IconButton
       light
+      class="bg-red-error"
       mnemonic="r"
       @click="examine.makeDecision(Status.Rejected)"
     >

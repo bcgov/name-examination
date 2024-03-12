@@ -3,7 +3,7 @@
     <div class="flex grow flex-col">
       <textarea
         ref="textArea"
-        class="grow resize-none text-ellipsis rounded-md border border-gray-300 p-2 text-sm"
+        class="grow resize-none text-ellipsis rounded border border-gray-300 p-2 text-sm"
         :class="{
           'rounded-b-none border-b-0 outline-none': characterLimit,
         }"
@@ -15,7 +15,7 @@
 
       <span
         v-if="characterLimit"
-        class="rounded-b-md border border-t-0 border-gray-300 bg-white p-2 text-sm text-gray-600"
+        class="rounded-b border border-t-0 border-gray-300 bg-white p-2 text-sm text-gray-600"
       >
         {{ modelValue.length }} / {{ characterLimit }}
       </span>

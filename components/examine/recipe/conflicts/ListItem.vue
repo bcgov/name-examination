@@ -1,7 +1,7 @@
 <template>
   <Accordion
     :key="conflictItem.nrNumber"
-    class="conflict-details rounded-md p-1 open:!bg-sky-100 hover:bg-gray-100"
+    class="conflict-details rounded p-1 open:!bg-sky-100 hover:bg-gray-100"
   >
     <template #title>
       <div class="flex w-full items-center gap-x-2">

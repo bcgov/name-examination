@@ -3,7 +3,7 @@
     :value="modelValue"
     @change="(e) => $emit('update:modelValue', (e.target as HTMLInputElement).value)"
     type="date"
-    class="rounded-md border border-gray-300 px-3 py-1"
+    class="rounded border border-gray-300 px-3 py-1"
     :class="{ 'border-2 border-red-600': errorStyle }"
     :min="minToday ? today : undefined"
   />

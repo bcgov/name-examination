@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-md text-sm">
+  <div class="rounded text-sm">
     <!-- Editable state -->
     <div class="space-y-1" v-if="examine.isEditing">
       <h2 class="font-bold">{{ title }}</h2>
