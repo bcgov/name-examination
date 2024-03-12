@@ -10,7 +10,7 @@
           (Edited)
         </span>
       </h3>
-      <div class="flex space-x-1">
+      <div class="flex h-7 space-x-1">
         <IconButton
           v-if="examine.customerMessageOverride"
           white
@@ -19,7 +19,7 @@
         >
           <BackspaceIcon class="h-5 w-5" />
         </IconButton>
-        <IconButton white class="h-7" text="Edit" @click="showEditDialog()">
+        <IconButton white text="Edit" @click="showEditDialog()">
           <PencilSquareIcon class="h-5 w-5" />
         </IconButton>
       </div>

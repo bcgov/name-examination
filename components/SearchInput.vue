@@ -17,7 +17,7 @@
         type="button"
         @click="onClear"
         white
-        class="absolute right-1 top-[2.5px] border-0 !px-1"
+        class="absolute right-1 top-[2.5px] border-0 !p-1"
         aria-label="Reset search input"
       >
         <ArrowUturnLeftIcon class="h-5 w-5" />
