@@ -19,7 +19,11 @@
         <div class="flex w-52 gap-4">
           <span class="w-24">{{ conflictItem.nrNumber }}</span>
           <span class="w-4">
-            {{ examine.getShortJurisdiction(conflictItem.jurisdiction) || '?' }}
+            {{
+              conflictItem.jurisdiction
+                ? examine.getShortJurisdiction(conflictItem.jurisdiction) || '?'
+                : '?'
+            }}
           </span>
           <span class="w-24">
             {{ getFormattedDate(conflictItem.startDate) }}
