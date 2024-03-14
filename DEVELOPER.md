@@ -1,6 +1,7 @@
 # Developer Documentation
 
 ## Table of Contents
+
 - [VS Code Environment Setup](#vs-code-environment-setup)
 - [Project Structure and Organization](#project-structure-and-organization)
   - [`utils`](#utils)
@@ -78,4 +79,4 @@ Here are some guidelines for contributing to the codebase:
 - Use Vue 3's Composition API for all Vue components
 - Use Setup syntax when creating new Pinia stores
 - Use TypeScript instead of JavaScript
-- Format your code with Prettier before committing them
+- Format your code with Prettier before committing it
