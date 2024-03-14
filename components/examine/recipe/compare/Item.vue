@@ -7,7 +7,13 @@
         <span class="truncate">{{ conflict.text }}</span>
         <div class="space-x-8">
           <span>{{ conflict.nrNumber }}</span>
-          <span>{{ formatJurisdiction(conflict.jurisdiction) }}</span>
+          <span>
+            {{
+              conflict.jurisdiction
+                ? formatJurisdiction(conflict.jurisdiction)
+                : '?'
+            }}
+          </span>
           <span class="whitespace-pre">
             {{ getFormattedDate(conflict.startDate) }}
           </span>

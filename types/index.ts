@@ -82,7 +82,7 @@ export enum ConflictSource {
 export interface ConflictListItem {
   text: string
   highlightedText: string
-  jurisdiction: string
+  jurisdiction: string | undefined
   nrNumber: string
   startDate: string
   source: ConflictSource
