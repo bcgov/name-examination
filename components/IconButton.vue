@@ -24,8 +24,11 @@
  */
 const props = defineProps<{
   text?: string
+  /** Use lighter shade of blue for background color */
   light?: boolean
+  /** Use white background */
   white?: boolean
+  /** Mnemonic letter to trigger this button's onclick event handler */
   mnemonic?: string
 }>()
 

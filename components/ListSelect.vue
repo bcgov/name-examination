@@ -76,7 +76,7 @@
 
 <script setup lang="ts">
 /**
- * A dropdown menu to select list options.
+ * A dropdown menu to select an item from a list of options.
  */
 import {
   Listbox,
@@ -90,9 +90,12 @@ type ModelValueType = any
 defineProps<{
   modelValue: ModelValueType | Array<ModelValueType>
   options: Array<any>
+  /** Whether multiple options can be selected */
   multiple?: boolean
+  /** Whether the component is disabled (can't be clicked, grayed out) */
   disabled?: boolean
   optionsStyle?: string
+  /** Function called for getting a display string for a given option */
   optionsDisplay?: (option: ModelValueType) => string
   /** Style this input to indicate an error, useful to indicate invalid inputs */
   errorStyle?: boolean

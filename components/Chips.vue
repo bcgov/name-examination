@@ -17,11 +17,14 @@
 </template>
 
 <script setup lang="ts">
+/** A grid of small components that represent a list of items that are deletable. */
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 
 defineProps<{
   modelValue: Array<any>
+  /** Function called for retrieving a string to display for an item on a chip */
   display?: (input: any) => string
+  /** Function called for getting a key for a given chip item */
   getKey?: (input: any) => string
 }>()
 

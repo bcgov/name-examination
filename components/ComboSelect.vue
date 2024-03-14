@@ -74,6 +74,7 @@
 </template>
 
 <script setup lang="ts">
+/** Component that lets you select an item from a list of items, and allows the user to search for an item. */
 import { ref, computed } from 'vue'
 import {
   Combobox,
@@ -89,7 +90,9 @@ const { options, multiple } = withDefaults(
   defineProps<{
     modelValue: any
     options: ComputedRef<Array<any>>
+    /** Whether multiple options can be selected */
     multiple?: boolean
+    /** Function called for getting the display string for a given option */
     optionsDisplay?: (option: any) => string
   }>(),
   {

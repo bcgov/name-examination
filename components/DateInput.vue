@@ -10,10 +10,12 @@
 </template>
 
 <script setup lang="ts">
+/** An input for selecting dates */
 import { DateTime } from 'luxon'
 
 defineProps<{
   modelValue: any
+  /** Set the minimum possible date value to today */
   minToday?: boolean
   /** Style this input to show an error */
   errorStyle?: boolean

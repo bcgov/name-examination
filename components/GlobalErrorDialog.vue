@@ -14,6 +14,7 @@
 </template>
 
 <script setup lang="ts">
+/** Listens for errors on the global event bus and displays an error dialog */
 import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
 import type { AppError } from '~/types/errors'
 import { emitter } from '~/util/emitter'

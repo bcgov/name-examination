@@ -61,21 +61,28 @@
 </template>
 
 <script setup lang="ts">
+/** A text box that displays editable text */
 import { PopoverButton } from '@headlessui/vue'
 
 const { modelValue, characterLimit, textRequired } = defineProps<{
   modelValue: string
   placeholder?: string
+  /** Hide the submit button */
   hideSubmit?: boolean
+  /** Hide the cancel button */
   hideCancel?: boolean
+  /** Mnemonic letter for the submit button */
   submitMnemonic?: string
+  /** Mnemonic letter for the cancel button */
   cancelMnemonic?: string
+  /** Set the content to be non-editable (readonly) */
   readonly?: boolean
   /** Display the number of characters in the text area and a character limit. Does not enforce the character limit. */
   characterLimit?: number
   /** Prevents the user from submitting if the text field is empty. */
   textRequired?: boolean
-  /** Whether to use `PopoverButton`s from HeadlessUI, useful if using text box in a Popover and buttons should close Popover when clicked. */
+  /** Whether to use `PopoverButton`s from HeadlessUI for the submit/cancel buttons,
+   *  useful if using text box in a `Popover` and buttons should close `Popover` when clicked. */
   usePopoverButtons?: boolean
 }>()
 
