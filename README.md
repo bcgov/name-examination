@@ -1,13 +1,18 @@
 # Name Examination
 
+Service BC Name Examination System
+
+## Documentation
+
+For further documentation about the project for developers, see the [developer documentation](./DEVELOPER.md).
+
 ## Setup
 
 Make sure to install the dependencies:
 
 ```bash
-# npm
 npm install
-# pnpm
+# or with pnpm:
 pnpm install
 ```
 
@@ -28,6 +33,6 @@ npm run dev
 
 ### Testing
 
-```Vitest
+```bash
 npm run test
 ```
