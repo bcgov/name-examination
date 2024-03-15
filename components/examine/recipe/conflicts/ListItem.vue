@@ -1,7 +1,7 @@
 <template>
   <Accordion
     :key="conflictItem.nrNumber"
-    class="conflict-details rounded p-1 open:!bg-sky-100 hover:bg-gray-100"
+    class="rounded p-1 open:!bg-sky-100 hover:bg-gray-100"
   >
     <template #title>
       <div class="flex w-full items-center gap-x-2">
@@ -11,6 +11,8 @@
           class="max-h-4 min-h-4 min-w-4 max-w-4"
           :checked="isChecked"
           @change="e => toggleConflictCheckbox((e.target as HTMLInputElement).checked)"
+          tabindex="-1"
+          aria-label="Select conflict checkbox"
         />
         <span
           class="grow truncate"
