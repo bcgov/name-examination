@@ -13,7 +13,7 @@
 
 ## VS Code Environment Setup
 
-After following the setup instructions in the [README](./README.md), you should have the project up and running.
+After following the setup instructions in the [README](./README.md), you should have a local dev server up and running.
 
 The following exensions are recommended:
 
@@ -21,7 +21,7 @@ The following exensions are recommended:
 - [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
 - [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
-You can create a basic chrome launch configuration to open a browser window for debugging.
+You can create a basic chrome launch configuration in VS Code to open a browser window for debugging.
 
 ## Project Structure and Organization
 
@@ -37,6 +37,8 @@ Some useful util files:
 - `emitter.ts` - Contains the global event bus for emitting events that other places in the code can listen for. For example, you can emit an error event anywhere in the codebase to show an error dialog to the user.
 - `index.ts` - Contains some random util functions that aren't (but probably should be) organized. There are functions for validating NR and corp numbers here.
 - `namex-api.ts` - Probably the most important util file. Contains functions for interacting with the NameX API. If you need to interact with the API in any way, use one of the functions in here, or create one here if it doesn't exist.
+
+Please check this folder first before creating a generic helper function.
 
 ### `types`
 

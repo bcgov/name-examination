@@ -23,6 +23,9 @@
 </template>
 
 <script setup lang="ts">
+/** A component that displays content in three different states (editable, maximized, minimzed)
+ * depending on the global UI state. If a default template is passed in, it will be used for all states.
+ */
 import { useExamination } from '~/store/examine'
 const examine = useExamination()
 
