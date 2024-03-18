@@ -4,7 +4,8 @@ import { useExamination } from '.'
 /** Handles the focusing of elements in the Examine page */
 export const useExaminationFocus = defineStore('examine-focus', () => {
   /** Array of element ids */
-  const elements = ref<Array<string>>([])
+  const elements = reactive<{ [key: number]: string }>({})
+  const elementCount = computed(() => Object.keys(elements).length)
   const focused = ref(-1)
   const examine = useExamination()
 
@@ -12,11 +13,14 @@ export const useExaminationFocus = defineStore('examine-focus', () => {
     return useRoute().path.toString().toLowerCase()
   }
 
-  /** Register an element to be a part of the focus cycle.
-   */
+  /** Register an element to be a part of the focus cycle. */
   function register(index: number, elementId: string) {
-    if (!elements.value.includes(elementId))
-      elements.value.splice(index, 0, elementId)
+    if (elements[index] && elements[index] !== elementId) {
+      console.warn(
+        `Overwriting previously registered focus item '${elements[index]}' with '${elementId}' at index ${index}`
+      )
+    }
+    elements[index] = elementId
   }
 
   /** Handle an incoming `KeyboardEvent`.
@@ -28,8 +32,8 @@ export const useExaminationFocus = defineStore('examine-focus', () => {
       return
 
     if (event.type === 'keyup') {
-      focused.value = (focused.value + 1) % elements.value.length
-      document.getElementById(elements.value[focused.value])?.focus()
+      focused.value = (focused.value + 1) % elementCount.value
+      document.getElementById(elements[focused.value])?.focus()
     } else if (event.type === 'keydown') {
       event.preventDefault()
     }
