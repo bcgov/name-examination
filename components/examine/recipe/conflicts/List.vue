@@ -1,7 +1,8 @@
 <template>
   <div class="flex flex-col space-y-1">
     <ExamineRecipeConflictsListItem
-      ref="items"
+      class="target-detail"
+      :key="item.nrNumber"
       v-for="item in conflictItems"
       :conflict-item="item"
     />
@@ -16,18 +17,12 @@ defineProps<{
   conflictItems: Array<ConflictListItem>
 }>()
 
-const items = ref<Array<InstanceType<typeof ExamineRecipeConflictsListItem>>>(
-  []
-)
-const itemElements = computed(() =>
-  items.value.map((i) => i.$el as HTMLDetailsElement)
-)
-
 onMounted(() => {
   // close all other list items (which are <details> elements) when one is clicked
-  for (const targetDetail of itemElements.value) {
+  const details = document.getElementsByClassName('target-detail')
+  for (const targetDetail of details) {
     targetDetail.addEventListener('click', () => {
-      for (const detail of itemElements.value) {
+      for (const detail of details) {
         if (detail !== targetDetail) {
           detail.removeAttribute('open')
         }
