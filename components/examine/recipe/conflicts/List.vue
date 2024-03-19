@@ -1,8 +1,7 @@
 <template>
-  <div class="flex flex-col space-y-1" @keyup="handleKeyPress">
+  <div class="flex flex-col space-y-1">
     <ExamineRecipeConflictsListItem
       ref="items"
-      class="conflict-details"
       v-for="item in conflictItems"
       :conflict-item="item"
     />
@@ -20,20 +19,15 @@ defineProps<{
 const items = ref<Array<InstanceType<typeof ExamineRecipeConflictsListItem>>>(
   []
 )
-const focused = ref(0)
-
-function handleKeyPress(event: KeyboardEvent) {
-  console.log(event)
-}
+const itemElements = computed(() =>
+  items.value.map((i) => i.$el as HTMLDetailsElement)
+)
 
 onMounted(() => {
-  const focusedElem = items.value[focused.value].$el as HTMLDetailsElement
-  focusedElem.focus()
   // close all other list items (which are <details> elements) when one is clicked
-  const details = document.getElementsByClassName('conflict-details')
-  for (const targetDetail of details) {
+  for (const targetDetail of itemElements.value) {
     targetDetail.addEventListener('click', () => {
-      for (const detail of details) {
+      for (const detail of itemElements.value) {
         if (detail !== targetDetail) {
           detail.removeAttribute('open')
         }
