@@ -5,6 +5,7 @@
       :open="i === initiallyOpen"
       :arrow="list.children.length > 0"
       :disabled="list.children.length === 0"
+      :button-style="{ 'bg-sky-100': list === focused }"
     >
       <template #title>
         <div class="flex w-full justify-between font-medium">
@@ -20,7 +21,7 @@
         </div>
       </template>
       <template #content>
-        <ExamineRecipeConflictsList :conflict-items="list.children" />
+        <ExamineRecipeConflictsList :conflict-items="list.children" :focused="focused" />
       </template>
     </Accordion>
   </div>
@@ -30,12 +31,14 @@
 /**
  * A conflicts bucket that holds a list of conflict lists
  */
-import type { ConflictList } from '~/types'
+import type { ConflictList, ConflictListItem } from '~/types'
 
 defineProps<{
   conflictLists: Array<ConflictList>
   /** Index of the `ConflictList` that should be open initially. */
   initiallyOpen?: number
+  /** Object that is currently focused in the recipe area */
+  focused?: ConflictListItem | ConflictList
 }>()
 </script>
 

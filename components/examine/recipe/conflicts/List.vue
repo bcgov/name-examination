@@ -1,20 +1,23 @@
 <template>
   <div class="flex flex-col space-y-1">
     <ExamineRecipeConflictsListItem
-      class="target-detail"
-      :key="item.nrNumber"
       v-for="item in conflictItems"
+      :key="item.nrNumber"
       :conflict-item="item"
+      class="target-detail"
+      :class="{ 'bg-sky-100': item === focused }"
     />
   </div>
 </template>
 
 <script setup lang="ts">
 import ExamineRecipeConflictsListItem from '~/components/examine/recipe/conflicts/ListItem.vue'
-import type { ConflictListItem } from '~/types'
+import type { ConflictList, ConflictListItem } from '~/types'
 
-defineProps<{
+const props = defineProps<{
   conflictItems: Array<ConflictListItem>
+  /** Object that is currently focused in the recipe area */
+  focused?: ConflictListItem | ConflictList
 }>()
 
 onMounted(() => {
