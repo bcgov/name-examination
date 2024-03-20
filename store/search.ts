@@ -13,6 +13,7 @@ import { getNamexObject, getNamexApiUrl } from '~/util/namex-api'
 import type { NameChoice } from '~/types'
 import { sortNameChoices } from '~/util'
 import { StatusSearchFilter, type Filters, type Row } from '~/types/search'
+import { ConsentFlag } from '~/enums/codes'
 
 export const defaultFilters = (): Filters => {
   return {
@@ -101,11 +102,13 @@ export const useSearchStore = defineStore('search', () => {
       [SearchColumns.NatureOfBusiness]:
         obj.natureBusinessInfo === null ? '' : obj.natureBusinessInfo,
       [SearchColumns.ConsentRequired]:
-        obj.consentFlag === 'R'
+        obj.consentFlag === ConsentFlag.Received
           ? 'Received'
-          : obj.consentFlag === 'Y'
-          ? 'Yes'
-          : 'No',
+          : obj.consentFlag === ConsentFlag.Required
+          ? 'Required'
+          : obj.consentFlag === ConsentFlag.Waived
+          ? 'Waived'
+          :'No',
       [SearchColumns.Priority]:
         obj.priorityCd === 'Y' ? 'Priority' : 'Standard',
       [SearchColumns.ClientNotification]:

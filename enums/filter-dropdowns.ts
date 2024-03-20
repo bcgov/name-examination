@@ -3,6 +3,7 @@ enum ConsentRequired {
   Yes = 'Yes',
   No = 'No',
   Received = 'Received',
+  Waived = 'Waived'
 }
 
 enum Priority {
