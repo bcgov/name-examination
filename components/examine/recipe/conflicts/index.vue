@@ -21,6 +21,7 @@
             v-if="conflicts.exactMatches.length > 0"
             :conflict-items="conflicts.exactMatches"
             :focused="focused"
+            @selected="(item) => focused = item"
           />
           <span v-else class="p-1">No exact match</span>
         </template>
@@ -34,6 +35,7 @@
             :conflict-lists="conflicts.synonymMatches"
             :initially-open="getFirstOpenListIndex(0)"
             :focused="focused"
+            @selected="(obj) => focused = obj"
           />
           <span v-else class="p-1">No results</span>
         </template>
@@ -48,6 +50,7 @@
             :conflict-lists="conflicts.cobrsPhoneticMatches"
             :initially-open="getFirstOpenListIndex(1)"
             :focused="focused"
+            @selected="(obj) => focused = obj"
           />
           <span v-else class="p-1">No results</span>
         </template>
@@ -62,6 +65,7 @@
             :conflict-lists="conflicts.phoneticMatches"
             :initially-open="getFirstOpenListIndex(2)"
             :focused="focused"
+            @selected="(obj) => focused = obj"
           />
           <span v-else class="p-1">No results</span>
         </template>
@@ -111,7 +115,12 @@ function handleKeyPress(event: KeyboardEvent) {
     delta = 1
   } else if (event.code === 'ArrowUp') {
     delta = -1
-  } else if (event.code === 'Space' && focused.value){
+  } else if (
+    event.code === 'Space' &&
+    focused.value &&
+    'nrNumber' in focused.value
+  ) {
+    conflicts.toggleConflict(focused.value)
     event.preventDefault()
     return
   } else {

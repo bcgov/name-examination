@@ -6,13 +6,14 @@
       :arrow="list.children.length > 0"
       :disabled="list.children.length === 0"
       :button-style="{ 'bg-sky-100': list === focused }"
+      @summary-clicked="$emit('selected', list)"
     >
       <template #title>
         <div class="flex w-full justify-between font-medium">
           <div>
             <span v-html="list.highlightedText"></span>
             <span v-if="list.meta" class="italic">
-              &nbsp;- {{ list.meta.toLowerCase() }}
+              &nbsp;&ndash;&nbsp;{{ list.meta.toLowerCase() }}
             </span>
           </div>
           <span v-if="list.children.length > 0">
@@ -21,7 +22,11 @@
         </div>
       </template>
       <template #content>
-        <ExamineRecipeConflictsList :conflict-items="list.children" :focused="focused" />
+        <ExamineRecipeConflictsList
+          :conflict-items="list.children"
+          :focused="focused"
+          @selected="(item) => $emit('selected', item)"
+        />
       </template>
     </Accordion>
   </div>
@@ -39,6 +44,10 @@ defineProps<{
   initiallyOpen?: number
   /** Object that is currently focused in the recipe area */
   focused?: ConflictListItem | ConflictList
+}>()
+
+defineEmits<{
+  selected: [obj: ConflictListItem | ConflictList]
 }>()
 </script>
 

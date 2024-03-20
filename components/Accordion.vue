@@ -5,8 +5,9 @@
     @toggle="(e: ToggleEvent) => open = e.newState === 'open'"
   >
     <summary
-      class="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left text-sm font-medium transition"
+      class="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left text-sm font-medium transition outline-none"
       :class="buttonStyle"
+      @click="$emit('summaryClicked')"
     >
       <slot name="title"></slot>
       <ChevronDownIcon
@@ -31,5 +32,9 @@ defineProps<{
   arrow?: boolean
   buttonStyle?: any
   disabled?: boolean
+}>()
+
+defineEmits<{
+  summaryClicked: []
 }>()
 </script>
