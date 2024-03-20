@@ -77,9 +77,10 @@
 <script setup lang="ts">
 import { useConflicts } from '~/store/examine/conflicts'
 import { useExaminationFocus } from '~/store/examine/focus'
+import { useExamineRecipe } from '~/store/examine/recipe'
 
 const conflicts = useConflicts()
-const focus = useExaminationFocus()
+const focus = useExamineRecipe()
 
 /** Array of buckets that are not the exact matches bucket */
 const buckets = computed(() => [
@@ -106,6 +107,6 @@ const firstNonEmptyConflictList = computed<[number, number] | undefined>(() => {
 })
 
 onMounted(() => {
-  focus.register(2, 'conflicts-tab')
+  useExaminationFocus().register(2, 'conflicts-tab')
 })
 </script>
