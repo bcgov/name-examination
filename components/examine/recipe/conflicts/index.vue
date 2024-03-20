@@ -74,6 +74,7 @@
 import { useConflicts } from '~/store/examine/conflicts'
 import { useExaminationFocus } from '~/store/examine/focus'
 import type { ConflictList, ConflictListItem } from '~/types'
+
 const conflicts = useConflicts()
 
 /** Array of buckets that are not the exact matches bucket */

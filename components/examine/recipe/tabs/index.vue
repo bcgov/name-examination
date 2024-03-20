@@ -38,6 +38,7 @@
 
 <script setup lang="ts">
 import { TabGroup, TabPanels, TabPanel } from '@headlessui/vue'
+import { useExamineTabs } from '~/store/examine/tabs';
 
 const conflicts = ref<InstanceType<typeof TabPanel>>()
 const conditions = ref<InstanceType<typeof TabPanel>>()
@@ -66,6 +67,7 @@ function setTop(elem: TabElementRef, top: number) {
 }
 
 function onChangeTab(index: number) {
+  useExamineTabs().selectedTabIndex = index
   setTop(panels, scrollPositions[index])
   const panelTop = getTop(panels)
   scrollPositions[lastIndex.value] = panelTop - getTop(tabs[lastIndex.value])

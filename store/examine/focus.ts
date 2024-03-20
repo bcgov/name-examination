@@ -1,5 +1,6 @@
 import { Route } from '~/enums/routes'
 import { useExamination } from '.'
+import { useExamineTabs } from './tabs'
 
 /** Handles the focusing of elements in the Examine page */
 export const useExaminationFocus = defineStore('examine-focus', () => {
@@ -25,13 +26,20 @@ export const useExaminationFocus = defineStore('examine-focus', () => {
    * Will focus the proper element in the focus cycle when the `Tab` key is pressed.
    */
   function handleKeyPress(event: KeyboardEvent) {
+    // if the conflicts tab is not selected, do not handle any key presses
+    if (useExamineTabs().selectedTabIndex !== 0) {
+      return
+    }
+
     const route = useRoute().path.toString().toLowerCase()
     if (route !== Route.Examine || event.code !== 'Tab' || examine.isEditing)
       return
     // handle tab key
     if (event.type === 'keyup') {
       // update the focused element if it was changed through some means other than the tab key
-      const activeElemIndex = elements.value.indexOf(document.activeElement?.id || '')
+      const activeElemIndex = elements.value.indexOf(
+        document.activeElement?.id || ''
+      )
       if (activeElemIndex !== -1) {
         focused.value = activeElemIndex
       }
