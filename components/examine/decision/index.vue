@@ -1,13 +1,13 @@
 <template>
-  <div class="flex flex-col justify-between space-y-4">
-    <div class="flex flex-col space-y-2">
+  <div class="flex flex-col space-y-4">
+    <div class="flex flex-col space-y-2 grow">
       <ExamineDecisionHeader />
 
       <ExamineDecisionConditionsInfo :conditions="examine.conditions" />
 
-      <div class="!mt-4 flex space-x-2">
+      <div class="!mt-4 flex space-x-2 h-[70%]">
         <!-- Layout the combo selects in reverse so they don't overlap each other https://stackoverflow.com/a/77210506 -->
-        <div class="flex basis-1/2 flex-col-reverse gap-y-8">
+        <div class="flex basis-1/2 flex-col-reverse justify-between">
           <ExamineDecisionSelectTrademarks />
           <ExamineDecisionSelectMacros />
           <ExamineDecisionSelectConflicts />
