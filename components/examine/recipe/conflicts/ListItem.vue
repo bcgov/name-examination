@@ -2,6 +2,7 @@
   <Accordion
     :key="conflictItem.nrNumber"
     class="rounded p-1 open:!bg-sky-100 hover:bg-gray-100"
+    :open="open"
   >
     <template #title>
       <div class="flex w-full items-center gap-x-2">
@@ -46,13 +47,30 @@ import { useExamination } from '~/store/examine'
 import { useConflicts } from '~/store/examine/conflicts'
 import type { ConflictListItem } from '~/types'
 import { getFormattedDate } from '~/util/date'
+import { emitter } from '~/util/emitter'
 
 const examine = useExamination()
 const conflicts = useConflicts()
 
-defineProps<{
+const props = defineProps<{
   conflictItem: ConflictListItem
 }>()
+
+const open = ref(false)
+
+emitter.on('expandRecipeObject', (obj) => {
+  if (obj === props.conflictItem) {
+    open.value = true
+  } else {
+    open.value = false
+  }
+})
+
+emitter.on('collapseRecipeObject', (obj) => {
+  if (obj === props.conflictItem) {
+    open.value = false
+  }
+})
 </script>
 
 <style>

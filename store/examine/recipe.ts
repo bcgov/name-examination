@@ -1,5 +1,6 @@
 import type { ConflictList, ConflictListItem } from '~/types'
 import { useConflicts } from './conflicts'
+import { emitter } from '~/util/emitter'
 
 export const useExamineRecipe = defineStore('examine-recipe', () => {
   const conflicts = useConflicts()
@@ -26,12 +27,27 @@ export const useExamineRecipe = defineStore('examine-recipe', () => {
     ]
   )
 
+  const firstConflictItemIndex = computed(() => {
+    for (const [i, obj] of allConflictObjects.value.entries()) {
+      if (isConflictListItem(obj)) {
+        return i
+      }
+    }
+    return 0
+  })
+
+  function isConflictListItem(
+    obj: ConflictListItem | ConflictList
+  ): obj is ConflictListItem {
+    return 'nrNumber' in obj
+  }
+
   function onRecipeFocusIn(_e: FocusEvent) {
     if (savedRecipeFocus.value && !recipeFocus.value) {
       recipeFocus.value = savedRecipeFocus.value
       savedRecipeFocus.value = undefined
     } else {
-      recipeFocus.value = allConflictObjects.value[0]
+      recipeFocus.value = allConflictObjects.value[firstConflictItemIndex.value]
     }
   }
 
@@ -47,10 +63,18 @@ export const useExamineRecipe = defineStore('examine-recipe', () => {
     } else if (event.code === 'ArrowUp') {
       delta = -1
     } else if (event.code === 'ArrowRight') {
+      if (recipeFocus.value)
+        emitter.emit('expandRecipeObject', recipeFocus.value)
+      return
+    } else if (event.code === 'ArrowLeft') {
+      if (recipeFocus.value) {
+        emitter.emit('collapseRecipeObject', recipeFocus.value)
+      }
+      return
     } else if (
       event.code === 'Space' &&
       recipeFocus.value &&
-      'nrNumber' in recipeFocus.value
+      isConflictListItem(recipeFocus.value)
     ) {
       conflicts.toggleConflict(recipeFocus.value)
       event.preventDefault()
@@ -58,8 +82,11 @@ export const useExamineRecipe = defineStore('examine-recipe', () => {
     } else {
       return
     }
+    if (recipeFocus.value) {
+      emitter.emit('collapseRecipeObject', recipeFocus.value)
+    }
 
-    let newIndex = 0
+    let newIndex = firstConflictItemIndex.value
     if (recipeFocus.value) {
       const index = allConflictObjects.value.indexOf(recipeFocus.value)
       newIndex = Math.max(0, (index + delta) % allConflictObjects.value.length)
