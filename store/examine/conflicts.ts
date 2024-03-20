@@ -20,6 +20,22 @@ export const useConflicts = defineStore('conflicts', () => {
   const comparedConflicts = ref<Array<ConflictListItem>>([])
   const autoAdd = ref(true)
 
+  function isConflictSelected(conflict: ConflictListItem) {
+    const conflictsList = autoAdd.value
+      ? selectedConflicts.value
+      : comparedConflicts.value
+    return conflictsList.map((c) => c.nrNumber).includes(conflict.nrNumber)
+  }
+
+  /** If the given conflict is not selected, selects it. Otherwise, deselects it. */
+  function toggleConflict(conflict: ConflictListItem) {
+    if (isConflictSelected(conflict)) {
+      deselectConflict(conflict)
+    } else {
+      selectConflict(conflict)
+    }
+  }
+
   async function retrieveExactMatches(
     query: string
   ): Promise<Array<ConflictListItem>> {
@@ -27,8 +43,7 @@ export const useConflicts = defineStore('conflicts', () => {
     query = query.charAt(0) === '+' ? query.substring(1) : query
 
     const response = await getExactMatches(query)
-    if (!response.ok)
-      throw new Error('Unable to retrieve exact matches')
+    if (!response.ok) throw new Error('Unable to retrieve exact matches')
 
     return parseExactMatches(await response.json())
   }
@@ -52,8 +67,7 @@ export const useConflicts = defineStore('conflicts', () => {
     exactPhrase = exactPhrase || '*'
 
     const response = await getSynonymMatches(query, exactPhrase)
-    if (!response.ok)
-      throw new Error('Unable to retrieve synonym matches')
+    if (!response.ok) throw new Error('Unable to retrieve synonym matches')
 
     return parseSynonymMatches(await response.json())
   }
@@ -179,8 +193,7 @@ export const useConflicts = defineStore('conflicts', () => {
     query = query || '*'
     query = sanitizeQuery(query)
     const response = await getPhoneticMatches(query)
-    if (!response.ok)
-      throw new Error('Unable to retrieve phonetic matches')
+    if (!response.ok) throw new Error('Unable to retrieve phonetic matches')
 
     return parsePhoneticMatches(await response.json())
   }
@@ -283,6 +296,8 @@ export const useConflicts = defineStore('conflicts', () => {
     selectedConflicts,
     comparedConflicts,
     loading,
+    isConflictSelected,
+    toggleConflict,
     resetMatches,
     clearSelectedConflicts,
     resetConflictLists,

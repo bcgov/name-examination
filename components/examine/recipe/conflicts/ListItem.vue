@@ -9,8 +9,8 @@
           type="checkbox"
           :disabled="examine.conflictSelectionDisabled"
           class="max-h-4 min-h-4 min-w-4 max-w-4"
-          :checked="isChecked"
-          @change="e => toggleConflictCheckbox((e.target as HTMLInputElement).checked)"
+          :checked="conflicts.isConflictSelected(conflictItem)"
+          @change="conflicts.toggleConflict(conflictItem)"
           tabindex="-1"
           aria-label="Select conflict checkbox"
         />
@@ -50,24 +50,9 @@ import { getFormattedDate } from '~/util/date'
 const examine = useExamination()
 const conflicts = useConflicts()
 
-const { conflictItem } = defineProps<{
+defineProps<{
   conflictItem: ConflictListItem
 }>()
-
-const isChecked = computed(() => {
-  const conflictsList = conflicts.autoAdd
-    ? conflicts.selectedConflicts
-    : conflicts.comparedConflicts
-  return conflictsList.map((c) => c.nrNumber).includes(conflictItem.nrNumber)
-})
-
-function toggleConflictCheckbox(checked: boolean) {
-  if (checked) {
-    conflicts.selectConflict(conflictItem)
-  } else {
-    conflicts.deselectConflict(conflictItem)
-  }
-}
 </script>
 
 <style>
