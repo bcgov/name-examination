@@ -3,9 +3,9 @@
     id="conflicts-tab"
     class="h-full w-full outline-none"
     tabindex="0"
-    @keydown="handleKeyPress"
-    @focus="onFocusIn"
-    @focusout="onFocusOut"
+    @keydown="focus.handleRecipeKeyPress"
+    @focus="focus.onRecipeFocusIn"
+    @focusout="focus.onRecipeFocusOut"
   >
     <div
       v-if="conflicts.loading"
@@ -20,8 +20,8 @@
           <ExamineRecipeConflictsList
             v-if="conflicts.exactMatches.length > 0"
             :conflict-items="conflicts.exactMatches"
-            :focused="focused"
-            @selected="(item) => focused = item"
+            :focused="focus.recipeFocus"
+            @selected="(item) => (focus.recipeFocus = item)"
           />
           <span v-else class="p-1">No exact match</span>
         </template>
@@ -34,8 +34,8 @@
             v-if="conflicts.synonymMatches.length > 0"
             :conflict-lists="conflicts.synonymMatches"
             :initially-open="getFirstOpenListIndex(0)"
-            :focused="focused"
-            @selected="(obj) => focused = obj"
+            :focused="focus.recipeFocus"
+            @selected="(obj) => (focus.recipeFocus = obj)"
           />
           <span v-else class="p-1">No results</span>
         </template>
@@ -49,8 +49,8 @@
             v-if="conflicts.cobrsPhoneticMatches.length > 0"
             :conflict-lists="conflicts.cobrsPhoneticMatches"
             :initially-open="getFirstOpenListIndex(1)"
-            :focused="focused"
-            @selected="(obj) => focused = obj"
+            :focused="focus.recipeFocus"
+            @selected="(obj) => (focus.recipeFocus = obj)"
           />
           <span v-else class="p-1">No results</span>
         </template>
@@ -64,8 +64,8 @@
             v-if="conflicts.phoneticMatches.length > 0"
             :conflict-lists="conflicts.phoneticMatches"
             :initially-open="getFirstOpenListIndex(2)"
-            :focused="focused"
-            @selected="(obj) => focused = obj"
+            :focused="focus.recipeFocus"
+            @selected="(obj) => (focus.recipeFocus = obj)"
           />
           <span v-else class="p-1">No results</span>
         </template>
@@ -77,9 +77,9 @@
 <script setup lang="ts">
 import { useConflicts } from '~/store/examine/conflicts'
 import { useExaminationFocus } from '~/store/examine/focus'
-import type { ConflictList, ConflictListItem } from '~/types'
 
 const conflicts = useConflicts()
+const focus = useExaminationFocus()
 
 /** Array of buckets that are not the exact matches bucket */
 const buckets = computed(() => [
@@ -87,69 +87,6 @@ const buckets = computed(() => [
   conflicts.cobrsPhoneticMatches,
   conflicts.phoneticMatches,
 ])
-
-/** Return a single array of all non-empty conflict lists and their children in order. */
-function flattenNonEmptyLists(bucket: Array<ConflictList>) {
-  return bucket
-    .filter((b) => b.children.length > 0)
-    .flatMap((list) => [list, ...list.children])
-}
-
-const allConflictObjects = computed<Array<ConflictListItem | ConflictList>>(
-  () => [
-    ...conflicts.exactMatches,
-    ...flattenNonEmptyLists(conflicts.synonymMatches),
-    ...flattenNonEmptyLists(conflicts.cobrsPhoneticMatches),
-    ...flattenNonEmptyLists(conflicts.phoneticMatches),
-  ]
-)
-
-/** Object that was being focused before focus was lost */
-const savedFocus = ref<ConflictListItem | ConflictList>()
-
-const focused = ref<ConflictListItem | ConflictList>()
-
-function handleKeyPress(event: KeyboardEvent) {
-  let delta = 0
-  if (event.code === 'ArrowDown') {
-    delta = 1
-  } else if (event.code === 'ArrowUp') {
-    delta = -1
-  } else if (
-    event.code === 'Space' &&
-    focused.value &&
-    'nrNumber' in focused.value
-  ) {
-    conflicts.toggleConflict(focused.value)
-    event.preventDefault()
-    return
-  } else {
-    return
-  }
-
-  let newIndex = 0
-  if (focused.value) {
-    const index = allConflictObjects.value.indexOf(focused.value)
-    newIndex = (index + delta) % allConflictObjects.value.length
-  }
-  focused.value = allConflictObjects.value[newIndex]
-
-  event.preventDefault()
-}
-
-function onFocusIn(_e: FocusEvent) {
-  if (savedFocus.value && !focused.value) {
-    focused.value = savedFocus.value
-    savedFocus.value = undefined
-  } else {
-    focused.value = allConflictObjects.value[0]
-  }
-}
-
-function onFocusOut(_e: FocusEvent) {
-  savedFocus.value = focused.value
-  focused.value = undefined
-}
 
 /** Returns the index of the conflict list that should be open in the corresponding bucket, or undefined if no lists should be open. */
 function getFirstOpenListIndex(bucketIndex: number) {
@@ -169,7 +106,6 @@ const firstNonEmptyConflictList = computed<[number, number] | undefined>(() => {
 })
 
 onMounted(() => {
-  const focus = useExaminationFocus()
   focus.register(2, 'conflicts-tab')
 })
 </script>
