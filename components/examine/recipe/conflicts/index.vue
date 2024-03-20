@@ -111,6 +111,9 @@ function handleKeyPress(event: KeyboardEvent) {
     delta = 1
   } else if (event.code === 'ArrowUp') {
     delta = -1
+  } else if (event.code === 'Space' && focused.value){
+    event.preventDefault()
+    return
   } else {
     return
   }

@@ -1,6 +1,7 @@
 import { Route } from '~/enums/routes'
 import { useExamination } from '.'
 import { useExamineTabs } from './tabs'
+import { getCircularIndex } from '~/util'
 
 /** Handles the focusing of elements in the Examine page */
 export const useExaminationFocus = defineStore('examine-focus', () => {
@@ -26,14 +27,15 @@ export const useExaminationFocus = defineStore('examine-focus', () => {
    * Will focus the proper element in the focus cycle when the `Tab` key is pressed.
    */
   function handleKeyPress(event: KeyboardEvent) {
-    // if the conflicts tab is not selected, do not handle any key presses
-    if (useExamineTabs().selectedTabIndex !== 0) {
-      return
-    }
-
     const route = useRoute().path.toString().toLowerCase()
-    if (route !== Route.Examine || event.code !== 'Tab' || examine.isEditing)
+    if (
+      route !== Route.Examine ||
+      useExamineTabs().selectedTabIndex !== 0 || // if the conflicts tab is not selected, do not handle any key presses
+      event.code !== 'Tab' ||
+      examine.isEditing
+    )
       return
+
     // handle tab key
     if (event.type === 'keyup') {
       // update the focused element if it was changed through some means other than the tab key
@@ -43,7 +45,8 @@ export const useExaminationFocus = defineStore('examine-focus', () => {
       if (activeElemIndex !== -1) {
         focused.value = activeElemIndex
       }
-      focused.value = (focused.value + 1) % elements.value.length
+      const delta = event.shiftKey ? -1 : 1
+      focused.value = getCircularIndex(focused.value + delta, elements.value.length)
       document.getElementById(elements.value[focused.value])?.focus()
     } else if (event.type === 'keydown') {
       event.preventDefault()
