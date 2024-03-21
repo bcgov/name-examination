@@ -1,6 +1,7 @@
 import type { ConflictList, ConflictListItem } from '~/types'
 import { useConflicts } from './conflicts'
 import { emitter } from '~/util/emitter'
+import { isConflictListItem } from '~/util'
 
 export const useExamineRecipe = defineStore('examine-recipe', () => {
   const conflicts = useConflicts()
@@ -27,6 +28,14 @@ export const useExamineRecipe = defineStore('examine-recipe', () => {
     ]
   )
 
+  const allConflictLists = computed<Array<ConflictList>>(() =>
+    [
+      conflicts.synonymMatches,
+      conflicts.cobrsPhoneticMatches,
+      conflicts.phoneticMatches,
+    ].flat()
+  )
+
   const firstConflictItemIndex = computed(() => {
     for (const [i, obj] of allConflictObjects.value.entries()) {
       if (isConflictListItem(obj)) {
@@ -35,12 +44,6 @@ export const useExamineRecipe = defineStore('examine-recipe', () => {
     }
     return 0
   })
-
-  function isConflictListItem(
-    obj: ConflictListItem | ConflictList
-  ): obj is ConflictListItem {
-    return 'nrNumber' in obj
-  }
 
   function onRecipeFocusIn(_e: FocusEvent) {
     if (savedRecipeFocus.value && !recipeFocus.value) {
@@ -82,7 +85,7 @@ export const useExamineRecipe = defineStore('examine-recipe', () => {
     } else {
       return
     }
-    if (recipeFocus.value) {
+    if (recipeFocus.value && isConflictListItem(recipeFocus.value)) {
       emitter.emit('collapseRecipeObject', recipeFocus.value)
     }
 
@@ -92,6 +95,9 @@ export const useExamineRecipe = defineStore('examine-recipe', () => {
       newIndex = Math.max(0, (index + delta) % allConflictObjects.value.length)
     }
     recipeFocus.value = allConflictObjects.value[newIndex]
+    if (!isConflictListItem(recipeFocus.value)) {
+      emitter.emit('collapseAllConflictLists')
+    }
 
     event.preventDefault()
   }

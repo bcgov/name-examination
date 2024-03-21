@@ -2,7 +2,7 @@
   <div class="flex flex-col">
     <Accordion
       v-for="(list, i) in conflictLists"
-      :open="i === initiallyOpen"
+      :open="openLists.includes(list)"
       :arrow="list.children.length > 0"
       :disabled="list.children.length === 0"
       :button-style="{ 'bg-sky-100': list === focused }"
@@ -37,8 +37,10 @@
  * A conflicts bucket that holds a list of conflict lists
  */
 import type { ConflictList, ConflictListItem } from '~/types'
+import { isConflictListItem } from '~/util'
+import { emitter } from '~/util/emitter'
 
-defineProps<{
+const props = defineProps<{
   conflictLists: Array<ConflictList>
   /** Index of the `ConflictList` that should be open initially. */
   initiallyOpen?: number
@@ -49,6 +51,27 @@ defineProps<{
 defineEmits<{
   selected: [obj: ConflictListItem | ConflictList]
 }>()
+
+const openLists = ref<Array<ConflictList>>([])
+if (props.initiallyOpen) {
+  openLists.value.push(props.conflictLists[props.initiallyOpen])
+}
+
+emitter.on('expandRecipeObject', (obj) => {
+  if (!isConflictListItem(obj)) {
+    openLists.value.push(obj)
+  }
+})
+
+emitter.on('collapseRecipeObject', (obj) => {
+  if (!isConflictListItem(obj)) {
+    openLists.value = openLists.value.filter((x) => x !== obj)
+  }
+})
+
+emitter.on('collapseAllConflictLists', () => {
+  openLists.value = []
+})
 </script>
 
 <style>

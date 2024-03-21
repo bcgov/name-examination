@@ -6,6 +6,7 @@ export type EmitterEvents = {
   error: AppError
   expandRecipeObject: ConflictListItem | ConflictList
   collapseRecipeObject: ConflictListItem | ConflictList
+  collapseAllConflictLists: undefined
 }
 
 export const emitter = mitt<EmitterEvents>()
