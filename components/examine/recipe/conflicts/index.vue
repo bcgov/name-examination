@@ -76,8 +76,8 @@
 
 <script setup lang="ts">
 import { useConflicts } from '~/store/examine/conflicts'
-import { useExaminationFocus } from '~/store/examine/focus'
 import { useExamineRecipe } from '~/store/examine/recipe'
+import { useExaminationTabCyle } from '~/store/examine/tab-cycle';
 
 const conflicts = useConflicts()
 const focus = useExamineRecipe()
@@ -107,6 +107,6 @@ const firstNonEmptyConflictList = computed<[number, number] | undefined>(() => {
 })
 
 onMounted(() => {
-  useExaminationFocus().register(2, 'conflicts-tab')
+  useExaminationTabCyle().register(2, 'conflicts-tab')
 })
-</script>
+</script>~/store/examine/tab-cycle

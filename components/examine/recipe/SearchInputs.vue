@@ -22,10 +22,10 @@
 
 <script setup lang="ts">
 import { useExamination } from '~/store/examine'
-import { useExaminationFocus } from '~/store/examine/focus';
+import { useExaminationTabCyle } from '~/store/examine/tab-cycle'
 
 const examine = useExamination()
-const focus = useExaminationFocus()
+const tabCycle = useExaminationTabCyle()
 
 const NAME_SEARCH_ID = 'nameSearchInput'
 const EXACT_SEARCH_ID = 'exactSearchInput'
@@ -38,8 +38,8 @@ function onSearchSubmit(_event: Event) {
 }
 
 onMounted(() => {
-  focus.register(0, NAME_SEARCH_ID)
-  focus.register(1, EXACT_SEARCH_ID)
+  tabCycle.register(0, NAME_SEARCH_ID)
+  tabCycle.register(1, EXACT_SEARCH_ID)
 })
 
 watch(
