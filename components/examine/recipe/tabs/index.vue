@@ -38,7 +38,6 @@
 
 <script setup lang="ts">
 import { TabGroup, TabPanels, TabPanel } from '@headlessui/vue'
-import { useExamineRecipe } from '~/store/examine/recipe';
 import { emitter } from '~/util/emitter';
 
 const conflicts = ref<InstanceType<typeof TabPanel>>()

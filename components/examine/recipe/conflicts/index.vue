@@ -3,9 +3,9 @@
     id="conflicts-tab"
     class="h-full w-full outline-none"
     tabindex="0"
-    @keydown="focus.handleKeyEvent"
-    @focus="focus.focus"
-    @focusout="focus.unfocus"
+    @keydown="recipe.handleKeyEvent"
+    @focus="recipe.focus"
+    @focusout="recipe.unfocus"
   >
     <div
       v-if="conflicts.loading"
@@ -20,8 +20,7 @@
           <ExamineRecipeConflictsList
             v-if="conflicts.exactMatches.length > 0"
             :conflict-items="conflicts.exactMatches"
-            :focused="focus.focused"
-            @selected="(item) => (focus.focused = item)"
+            @selected="(item) => (recipe.focused = item)"
           />
           <span v-else class="p-1">No exact match</span>
         </template>
@@ -34,8 +33,7 @@
             v-if="conflicts.synonymMatches.length > 0"
             :conflict-lists="conflicts.synonymMatches"
             :initially-open="getFirstOpenListIndex(0)"
-            :focused="focus.focused"
-            @selected="(obj) => (focus.focused = obj)"
+            @selected="(obj) => (recipe.focused = obj)"
           />
           <span v-else class="p-1">No results</span>
         </template>
@@ -49,8 +47,7 @@
             v-if="conflicts.cobrsPhoneticMatches.length > 0"
             :conflict-lists="conflicts.cobrsPhoneticMatches"
             :initially-open="getFirstOpenListIndex(1)"
-            :focused="focus.focused"
-            @selected="(obj) => (focus.focused = obj)"
+            @selected="(obj) => (recipe.focused = obj)"
           />
           <span v-else class="p-1">No results</span>
         </template>
@@ -64,8 +61,7 @@
             v-if="conflicts.phoneticMatches.length > 0"
             :conflict-lists="conflicts.phoneticMatches"
             :initially-open="getFirstOpenListIndex(2)"
-            :focused="focus.focused"
-            @selected="(obj) => (focus.focused = obj)"
+            @selected="(obj) => (recipe.focused = obj)"
           />
           <span v-else class="p-1">No results</span>
         </template>
@@ -76,11 +72,11 @@
 
 <script setup lang="ts">
 import { useConflicts } from '~/store/examine/conflicts'
-import { useExamineRecipe } from '~/store/examine/recipe'
+import { useExaminationRecipe } from '~/store/examine/recipe'
 import { useExaminationTabCyle } from '~/store/examine/tab-cycle';
 
 const conflicts = useConflicts()
-const focus = useExamineRecipe()
+const recipe = useExaminationRecipe()
 
 /** Array of buckets that are not the exact matches bucket */
 const buckets = computed(() => [
@@ -109,4 +105,4 @@ const firstNonEmptyConflictList = computed<[number, number] | undefined>(() => {
 onMounted(() => {
   useExaminationTabCyle().register(2, 'conflicts-tab')
 })
-</script>~/store/examine/tab-cycle
+</script>

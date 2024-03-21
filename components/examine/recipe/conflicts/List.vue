@@ -5,7 +5,7 @@
       :key="item.nrNumber"
       :conflict-item="item"
       class="target-detail"
-      :class="{ '!bg-sky-100': item === focused }"
+      :class="{ '!bg-sky-100': item === recipe.focused }"
       @click="$emit('selected', item)"
     />
   </div>
@@ -13,17 +13,18 @@
 
 <script setup lang="ts">
 import ExamineRecipeConflictsListItem from '~/components/examine/recipe/conflicts/ListItem.vue'
-import type { ConflictList, ConflictListItem } from '~/types'
+import { useExaminationRecipe } from '~/store/examine/recipe'
+import type { ConflictListItem } from '~/types'
 
 defineProps<{
   conflictItems: Array<ConflictListItem>
-  /** Object that is currently focused in the recipe area */
-  focused?: ConflictListItem | ConflictList
 }>()
 
 defineEmits<{
   selected: [conflict: ConflictListItem]
 }>()
+
+const recipe = useExaminationRecipe()
 
 onMounted(() => {
   // close all other list items (which are <details> elements) when one is clicked

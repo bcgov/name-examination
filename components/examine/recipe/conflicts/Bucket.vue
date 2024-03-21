@@ -1,11 +1,11 @@
 <template>
   <div class="flex flex-col">
     <Accordion
-      v-for="(list, i) in conflictLists"
+      v-for="list in conflictLists"
       :open="openLists.includes(list)"
       :arrow="list.children.length > 0"
       :disabled="list.children.length === 0"
-      :button-style="{ 'bg-sky-100': list === focused }"
+      :button-style="{ 'bg-sky-100': list === recipe.focused }"
       @summary-clicked="$emit('selected', list)"
     >
       <template #title>
@@ -24,7 +24,6 @@
       <template #content>
         <ExamineRecipeConflictsList
           :conflict-items="list.children"
-          :focused="focused"
           @selected="(item) => $emit('selected', item)"
         />
       </template>
@@ -36,6 +35,7 @@
 /**
  * A conflicts bucket that holds a list of conflict lists
  */
+import { useExaminationRecipe } from '~/store/examine/recipe';
 import type { ConflictList, ConflictListItem } from '~/types'
 import { isConflictListItem } from '~/util'
 import { emitter } from '~/util/emitter'
@@ -44,15 +44,16 @@ const props = defineProps<{
   conflictLists: Array<ConflictList>
   /** Index of the `ConflictList` that should be open initially. */
   initiallyOpen?: number
-  /** Object that is currently focused in the recipe area */
-  focused?: ConflictListItem | ConflictList
 }>()
 
 defineEmits<{
   selected: [obj: ConflictListItem | ConflictList]
 }>()
 
+const recipe = useExaminationRecipe()
+
 const openLists = ref<Array<ConflictList>>([])
+
 if (props.initiallyOpen) {
   openLists.value.push(props.conflictLists[props.initiallyOpen])
 }

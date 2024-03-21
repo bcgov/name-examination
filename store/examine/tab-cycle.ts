@@ -1,6 +1,6 @@
 import { Route } from '~/enums/routes'
 import { useExamination } from '.'
-import { useExamineRecipe } from './recipe'
+import { useExaminationRecipe } from './recipe'
 import { getCircularIndex } from '~/util'
 
 /** Handles tabbing through elements in the Examine page. */
@@ -28,7 +28,7 @@ export const useExaminationTabCyle = defineStore('examine-tab-cycle', () => {
     const route = useRoute().path.toString().toLowerCase()
     return (
       route === Route.Examine &&
-      useExamineRecipe().currentRecipeTabIndex === 0 && // if the conflicts tab is not selected, do not handle any key presses
+      useExaminationRecipe().currentRecipeTabIndex === 0 && // if the conflicts tab is not selected, do not handle any key presses
       event.code === 'Tab' &&
       !examine.isEditing
     )

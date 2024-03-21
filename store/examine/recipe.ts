@@ -3,7 +3,7 @@ import { useConflicts } from './conflicts'
 import { emitter } from '~/util/emitter'
 import { isConflictListItem } from '~/util'
 
-export const useExamineRecipe = defineStore('examine-recipe', () => {
+export const useExaminationRecipe = defineStore('examine-recipe', () => {
   const conflicts = useConflicts()
 
   /** Index of currently selected tab in the recipe area. */
