@@ -29,6 +29,14 @@ export const useConflicts = defineStore('conflicts', () => {
     ].flat()
   )
 
+  /** The first `ConflictListItem` among every `ConflictList` across all buckets. */
+  const firstConflictItem = computed(() =>
+    lists.value
+      .filter((list) => list.children.length > 0)
+      .at(0)
+      ?.children.at(0)
+  )
+
   function isConflictSelected(conflict: ConflictListItem) {
     const conflictsList = autoAdd.value
       ? selectedConflicts.value
@@ -314,6 +322,7 @@ export const useConflicts = defineStore('conflicts', () => {
     deselectConflict,
     autoAdd,
     lists,
+    firstConflictItem,
     syncSelectedAndComparedConflicts,
   }
 })

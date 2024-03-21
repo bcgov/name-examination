@@ -18,21 +18,13 @@ export const useExamineRecipe = defineStore('examine-recipe', () => {
   const currentListIndex = ref<number>()
   const currentItemIndex = ref<number>()
 
-  /** The first `ConflictListItem` among every `ConflictList` across all buckets. */
-  const firstConflictItem = computed(() =>
-    conflicts.lists
-      .filter((list) => list.children.length > 0)
-      .at(0)
-      ?.children.at(0)
-  )
-
   /** Initialize focus for the entire recipe area */
   function focus() {
     if (savedFocus.value && !focused.value) {
       focused.value = savedFocus.value
       savedFocus.value = undefined
     } else {
-      focused.value = firstConflictItem.value
+      focused.value = conflicts.firstConflictItem
     }
   }
 
