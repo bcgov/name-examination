@@ -3,9 +3,9 @@
     id="conflicts-tab"
     class="h-full w-full outline-none"
     tabindex="0"
-    @keydown="focus.handleRecipeKeyPress"
-    @focus="focus.onRecipeFocusIn"
-    @focusout="focus.onRecipeFocusOut"
+    @keydown="focus.handleKeyEvent"
+    @focus="focus.focus"
+    @focusout="focus.unfocus"
   >
     <div
       v-if="conflicts.loading"
@@ -20,8 +20,8 @@
           <ExamineRecipeConflictsList
             v-if="conflicts.exactMatches.length > 0"
             :conflict-items="conflicts.exactMatches"
-            :focused="focus.recipeFocus"
-            @selected="(item) => (focus.recipeFocus = item)"
+            :focused="focus.focused"
+            @selected="(item) => (focus.focused = item)"
           />
           <span v-else class="p-1">No exact match</span>
         </template>
@@ -34,8 +34,8 @@
             v-if="conflicts.synonymMatches.length > 0"
             :conflict-lists="conflicts.synonymMatches"
             :initially-open="getFirstOpenListIndex(0)"
-            :focused="focus.recipeFocus"
-            @selected="(obj) => (focus.recipeFocus = obj)"
+            :focused="focus.focused"
+            @selected="(obj) => (focus.focused = obj)"
           />
           <span v-else class="p-1">No results</span>
         </template>
@@ -49,8 +49,8 @@
             v-if="conflicts.cobrsPhoneticMatches.length > 0"
             :conflict-lists="conflicts.cobrsPhoneticMatches"
             :initially-open="getFirstOpenListIndex(1)"
-            :focused="focus.recipeFocus"
-            @selected="(obj) => (focus.recipeFocus = obj)"
+            :focused="focus.focused"
+            @selected="(obj) => (focus.focused = obj)"
           />
           <span v-else class="p-1">No results</span>
         </template>
@@ -64,8 +64,8 @@
             v-if="conflicts.phoneticMatches.length > 0"
             :conflict-lists="conflicts.phoneticMatches"
             :initially-open="getFirstOpenListIndex(2)"
-            :focused="focus.recipeFocus"
-            @selected="(obj) => (focus.recipeFocus = obj)"
+            :focused="focus.focused"
+            @selected="(obj) => (focus.focused = obj)"
           />
           <span v-else class="p-1">No results</span>
         </template>

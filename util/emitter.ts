@@ -7,6 +7,7 @@ export type EmitterEvents = {
   expandRecipeObject: ConflictListItem | ConflictList
   collapseRecipeObject: ConflictListItem | ConflictList
   collapseAllConflictLists: undefined
+  recipeTabChanged: number
 }
 
 export const emitter = mitt<EmitterEvents>()

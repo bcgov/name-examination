@@ -39,6 +39,7 @@
 <script setup lang="ts">
 import { TabGroup, TabPanels, TabPanel } from '@headlessui/vue'
 import { useExamineRecipe } from '~/store/examine/recipe';
+import { emitter } from '~/util/emitter';
 
 const conflicts = ref<InstanceType<typeof TabPanel>>()
 const conditions = ref<InstanceType<typeof TabPanel>>()
@@ -67,7 +68,7 @@ function setTop(elem: TabElementRef, top: number) {
 }
 
 function onChangeTab(index: number) {
-  useExamineRecipe().selectedTabIndex = index
+  emitter.emit('recipeTabChanged', index)
   setTop(panels, scrollPositions[index])
   const panelTop = getTop(panels)
   scrollPositions[lastIndex.value] = panelTop - getTop(tabs[lastIndex.value])

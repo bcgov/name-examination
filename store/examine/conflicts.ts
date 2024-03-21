@@ -20,6 +20,15 @@ export const useConflicts = defineStore('conflicts', () => {
   const comparedConflicts = ref<Array<ConflictListItem>>([])
   const autoAdd = ref(true)
 
+  /** Flattened array of every `ConflictList` across all buckets. */
+  const lists = computed<Array<ConflictList>>(() =>
+    [
+      synonymMatches.value,
+      cobrsPhoneticMatches.value,
+      phoneticMatches.value,
+    ].flat()
+  )
+
   function isConflictSelected(conflict: ConflictListItem) {
     const conflictsList = autoAdd.value
       ? selectedConflicts.value
@@ -304,6 +313,7 @@ export const useConflicts = defineStore('conflicts', () => {
     selectConflict,
     deselectConflict,
     autoAdd,
+    lists,
     syncSelectedAndComparedConflicts,
   }
 })

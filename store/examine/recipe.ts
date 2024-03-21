@@ -5,109 +5,104 @@ import { isConflictListItem } from '~/util'
 
 export const useExamineRecipe = defineStore('examine-recipe', () => {
   const conflicts = useConflicts()
-  /** Index of currently selected tab. Updated by UI. */
-  const selectedTabIndex = ref(0)
+
+  /** Index of currently selected tab in the recipe area. */
+  const currentRecipeTabIndex = ref(0)
+
   /** The object which is currently being focused in the recipe area */
-  const recipeFocus = ref<ConflictListItem | ConflictList>()
+  const focused = ref<ConflictListItem | ConflictList>()
+
   /** Object that was being focused before focus was lost */
-  const savedRecipeFocus = ref<ConflictListItem | ConflictList>()
+  const savedFocus = ref<ConflictListItem | ConflictList>()
 
-  /** Return a single array of all non-empty conflict lists and their children in order. */
-  function flattenNonEmptyLists(bucket: Array<ConflictList>) {
-    return bucket
-      .filter((b) => b.children.length > 0)
-      .flatMap((list) => [list, ...list.children])
-  }
+  const currentListIndex = ref<number>()
+  const currentItemIndex = ref<number>()
 
-  const allConflictObjects = computed<Array<ConflictListItem | ConflictList>>(
-    () => [
-      ...conflicts.exactMatches,
-      ...flattenNonEmptyLists(conflicts.synonymMatches),
-      ...flattenNonEmptyLists(conflicts.cobrsPhoneticMatches),
-      ...flattenNonEmptyLists(conflicts.phoneticMatches),
-    ]
+  /** The first `ConflictListItem` among every `ConflictList` across all buckets. */
+  const firstConflictItem = computed(() =>
+    conflicts.lists
+      .filter((list) => list.children.length > 0)
+      .at(0)
+      ?.children.at(0)
   )
 
-  const allConflictLists = computed<Array<ConflictList>>(() =>
-    [
-      conflicts.synonymMatches,
-      conflicts.cobrsPhoneticMatches,
-      conflicts.phoneticMatches,
-    ].flat()
-  )
-
-  const firstConflictItemIndex = computed(() => {
-    for (const [i, obj] of allConflictObjects.value.entries()) {
-      if (isConflictListItem(obj)) {
-        return i
-      }
-    }
-    return 0
-  })
-
-  function onRecipeFocusIn(_e: FocusEvent) {
-    if (savedRecipeFocus.value && !recipeFocus.value) {
-      recipeFocus.value = savedRecipeFocus.value
-      savedRecipeFocus.value = undefined
+  /** Initialize focus for the entire recipe area */
+  function focus() {
+    if (savedFocus.value && !focused.value) {
+      focused.value = savedFocus.value
+      savedFocus.value = undefined
     } else {
-      recipeFocus.value = allConflictObjects.value[firstConflictItemIndex.value]
+      focused.value = firstConflictItem.value
     }
   }
 
-  function onRecipeFocusOut(_e: FocusEvent) {
-    savedRecipeFocus.value = recipeFocus.value
-    recipeFocus.value = undefined
+  /** Unfocus the entire recipe area */
+  function unfocus() {
+    savedFocus.value = focused.value
+    focused.value = undefined
   }
 
-  function handleRecipeKeyPress(event: KeyboardEvent) {
-    let delta = 0
-    if (event.code === 'ArrowDown') {
-      delta = 1
-    } else if (event.code === 'ArrowUp') {
-      delta = -1
-    } else if (event.code === 'ArrowRight') {
-      if (recipeFocus.value)
-        emitter.emit('expandRecipeObject', recipeFocus.value)
-      return
-    } else if (event.code === 'ArrowLeft') {
-      if (recipeFocus.value) {
-        emitter.emit('collapseRecipeObject', recipeFocus.value)
-      }
-      return
-    } else if (
-      event.code === 'Space' &&
-      recipeFocus.value &&
-      isConflictListItem(recipeFocus.value)
-    ) {
-      conflicts.toggleConflict(recipeFocus.value)
-      event.preventDefault()
-      return
-    } else {
-      return
-    }
-    if (recipeFocus.value && isConflictListItem(recipeFocus.value)) {
-      emitter.emit('collapseRecipeObject', recipeFocus.value)
-    }
+  function focusNextObject() {}
 
-    let newIndex = firstConflictItemIndex.value
-    if (recipeFocus.value) {
-      const index = allConflictObjects.value.indexOf(recipeFocus.value)
-      newIndex = Math.max(0, (index + delta) % allConflictObjects.value.length)
-    }
-    recipeFocus.value = allConflictObjects.value[newIndex]
-    if (!isConflictListItem(recipeFocus.value)) {
-      emitter.emit('collapseAllConflictLists')
-    }
+  function focusPreviousObject() {}
 
+  /** Expand the currently focused object. */
+  function expandFocused() {
+    if (focused.value) emitter.emit('expandRecipeObject', focused.value)
+  }
+
+  /** Collapse the currently focused object. */
+  function collapseFocused() {
+    if (focused.value) emitter.emit('collapseRecipeObject', focused.value)
+  }
+
+  /** If the current focused object is a `ConflictListItem`, collapse it. */
+  function collapseFocusedIfConflictItem() {
+    if (focused.value && isConflictListItem(focused.value)) {
+      collapseFocused()
+    }
+  }
+
+  /** Selects the currently focused object if it's a `ConflictListItem`. Otherwise, does nothing. */
+  function selectFocusedConflict() {
+    if (focused.value && isConflictListItem(focused.value)) {
+      conflicts.toggleConflict(focused.value)
+    }
+  }
+
+  /** Handle a keyboard event in the recipe area. */
+  function handleKeyEvent(event: KeyboardEvent) {
+    switch (event.code) {
+      case 'ArrowDown':
+        collapseFocusedIfConflictItem()
+        focusNextObject()
+        break
+      case 'ArrowUp':
+        collapseFocusedIfConflictItem()
+        focusPreviousObject()
+        break
+      case 'ArrowRight':
+        expandFocused()
+        break
+      case 'ArrowLeft':
+        collapseFocused()
+        break
+      case 'Space':
+        selectFocusedConflict()
+        break
+    }
     event.preventDefault()
   }
 
+  emitter.on('recipeTabChanged', (newIndex) => {
+    currentRecipeTabIndex.value = newIndex
+  })
+
   return {
-    selectedTabIndex,
-    recipeFocus,
-    savedRecipeFocus,
-    onRecipeFocusIn,
-    onRecipeFocusOut,
-    handleRecipeKeyPress,
+    currentRecipeTabIndex,
+    focused,
+    focus,
+    unfocus,
+    handleKeyEvent,
   }
 })

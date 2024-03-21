@@ -30,7 +30,7 @@ export const useExaminationFocus = defineStore('examine-focus', () => {
     const route = useRoute().path.toString().toLowerCase()
     if (
       route !== Route.Examine ||
-      useExamineRecipe().selectedTabIndex !== 0 || // if the conflicts tab is not selected, do not handle any key presses
+      useExamineRecipe().currentRecipeTabIndex !== 0 || // if the conflicts tab is not selected, do not handle any key presses
       event.code !== 'Tab' ||
       examine.isEditing
     )
