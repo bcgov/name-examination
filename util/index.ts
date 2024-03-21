@@ -130,3 +130,14 @@ export function isConflictListItem(
 ): obj is ConflictListItem {
   return 'nrNumber' in obj
 }
+
+export function isConflictList(
+  obj: ConflictListItem | ConflictList
+): obj is ConflictList {
+  return !isConflictListItem(obj)
+}
+
+/** Clamp `value` to interval [`min`, `max`] (inclusive) */
+export function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max)
+}

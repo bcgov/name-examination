@@ -3,7 +3,7 @@
     id="conflicts-tab"
     class="h-full w-full outline-none"
     tabindex="0"
-    @keydown="recipe.handleKeyEvent"
+    @keydown="recipe.handleKeyDown"
     @focus="recipe.focus"
     @focusout="recipe.unfocus"
   >
