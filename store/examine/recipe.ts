@@ -4,6 +4,13 @@ import { emitter } from '~/util/emitter'
 import { clamp, isConflictList, isConflictListItem } from '~/util'
 
 export const useExaminationRecipe = defineStore('examine-recipe', () => {
+  const CAPTURED_KEYS = [
+    'ArrowDown',
+    'ArrowUp',
+    'ArrowRight',
+    'ArrowLeft',
+    'Space',
+  ]
   const conflicts = useConflicts()
 
   /** Index of currently selected tab in the recipe area. */
@@ -34,6 +41,22 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     ]
   })
 
+  /** Maps every `ConflictListItem` to its parent `ConflictList` if it exists. */
+  const conflictListMap = computed<
+    Map<ConflictListItem, ConflictList | undefined>
+  >(() => {
+    const map = new Map<ConflictListItem, ConflictList | undefined>()
+    let currentList: ConflictList | undefined = undefined
+    for (const obj of allObjects.value) {
+      if (isConflictList(obj)) {
+        currentList = obj
+      } else {
+        map.set(obj, currentList)
+      }
+    }
+    return map
+  })
+
   const nonEmptyConflictLists = computed<Array<ConflictList>>(
     () =>
       allObjects.value.filter((obj) =>
@@ -57,6 +80,16 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     focused.value = undefined
   }
 
+  function clickObject(obj: ConflictListItem | ConflictList) {
+    focused.value = obj
+    focusedExpanded.value = true
+  }
+
+  /** Get the parent `ConflictList` from the given `ConflictListItem` if it exists. */
+  function getParentConflictList(item: ConflictListItem) {
+    return conflictListMap.value.get(item)
+  }
+
   /** Expand the currently focused object. */
   function expandFocused() {
     if (focused.value) {
@@ -65,12 +98,26 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     }
   }
 
-  /** Collapse the currently focused object. */
+  /** Collapse the currently focused object.
+   * If the focused object is a `ConflictList`, then all other conflict lists will also be collapsed.*/
   function collapseFocused() {
     if (focused.value) {
-      emitter.emit('collapseRecipeObject', focused.value)
+      if (isConflictList(focused.value)) {
+        emitter.emit('collapseAllConflictLists')
+      } else {
+        emitter.emit('collapseRecipeObject', focused.value)
+      }
       focusedExpanded.value = false
     }
+  }
+
+  /** Handle the user requesting the current object to be collapsed. */
+  function handleCollapse() {
+    if (!focused.value) return
+    if (!focusedExpanded.value && isConflictListItem(focused.value)) {
+      focused.value = getParentConflictList(focused.value)
+    }
+    collapseFocused()
   }
 
   /** If the current focused object is a `ConflictListItem`, collapse it. */
@@ -104,17 +151,18 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
       focused.value = conflicts.firstConflictItem
       return
     }
-    if (isConflictList(focused.value) && !focusedExpanded.value) {
+    if (
+      isConflictList(focused.value) &&
+      (!focusedExpanded.value || delta < 0)
+    ) {
       focused.value = getRelativeConflictList(focused.value, delta)
     } else {
       const currIndex = allObjects.value.indexOf(focused.value)
       const maxIndex = allObjects.value.length - 1
       const newIndex = clamp(currIndex + delta, 0, maxIndex)
       focused.value = allObjects.value[newIndex]
-      if (isConflictList(focused.value)) {
-        collapseFocused()
-      }
     }
+    collapseFocused()
   }
 
   /** Handle a keydown keyboard event in the recipe area. */
@@ -130,13 +178,16 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
         expandFocused()
         break
       case 'ArrowLeft':
-        collapseFocused()
+        handleCollapse()
         break
       case 'Space':
         selectFocusedConflict()
         break
     }
-    event.preventDefault()
+    if (CAPTURED_KEYS.includes(event.code)) {
+      event.preventDefault()
+    }
+    console.log(focused.value?.text, focusedExpanded.value)
   }
 
   emitter.on('recipeTabChanged', (newIndex) => {
@@ -149,5 +200,6 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     focus,
     unfocus,
     handleKeyDown,
+    clickObject,
   }
 })

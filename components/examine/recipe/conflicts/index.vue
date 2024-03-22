@@ -20,7 +20,7 @@
           <ExamineRecipeConflictsList
             v-if="conflicts.exactMatches.length > 0"
             :conflict-items="conflicts.exactMatches"
-            @selected="(item) => (recipe.focused = item)"
+            @selected="recipe.clickObject"
           />
           <span v-else class="p-1">No exact match</span>
         </template>
@@ -33,7 +33,7 @@
             v-if="conflicts.synonymMatches.length > 0"
             :conflict-lists="conflicts.synonymMatches"
             :initially-open="getFirstOpenListIndex(0)"
-            @selected="(obj) => (recipe.focused = obj)"
+            @selected="recipe.clickObject"
           />
           <span v-else class="p-1">No results</span>
         </template>
@@ -47,7 +47,7 @@
             v-if="conflicts.cobrsPhoneticMatches.length > 0"
             :conflict-lists="conflicts.cobrsPhoneticMatches"
             :initially-open="getFirstOpenListIndex(1)"
-            @selected="(obj) => (recipe.focused = obj)"
+            @selected="recipe.clickObject"
           />
           <span v-else class="p-1">No results</span>
         </template>
@@ -61,7 +61,7 @@
             v-if="conflicts.phoneticMatches.length > 0"
             :conflict-lists="conflicts.phoneticMatches"
             :initially-open="getFirstOpenListIndex(2)"
-            @selected="(obj) => (recipe.focused = obj)"
+            @selected="recipe.clickObject"
           />
           <span v-else class="p-1">No results</span>
         </template>
