@@ -2,6 +2,7 @@
   <div class="flex flex-col">
     <Accordion
       v-for="list in conflictLists"
+      ref="listElems"
       :open="openLists.includes(list)"
       :arrow="list.children.length > 0"
       :disabled="list.children.length === 0"
@@ -35,9 +36,10 @@
 /**
  * A conflicts bucket that holds a list of conflict lists
  */
-import { useExaminationRecipe } from '~/store/examine/recipe';
+import Accordion from '~/components/Accordion.vue'
+import { useExaminationRecipe } from '~/store/examine/recipe'
 import type { ConflictList, ConflictListItem } from '~/types'
-import { isConflictListItem } from '~/util'
+import { isConflictList, isConflictListItem } from '~/util'
 import { emitter } from '~/util/emitter'
 
 const props = defineProps<{
@@ -52,6 +54,7 @@ defineEmits<{
 
 const recipe = useExaminationRecipe()
 
+const listElems = ref<Array<InstanceType<typeof Accordion>>>([])
 const openLists = ref<Array<ConflictList>>([])
 
 if (props.initiallyOpen) {
@@ -73,6 +76,21 @@ emitter.on('collapseRecipeObject', (obj) => {
 emitter.on('collapseAllConflictLists', () => {
   openLists.value = []
 })
+
+watch(
+  () => [recipe.focused],
+  (_) => {
+    if (recipe.focused && isConflictList(recipe.focused)) {
+      const index = props.conflictLists.indexOf(recipe.focused)
+      if (index !== -1) {
+        listElems.value[index].$el.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+        })
+      }
+    }
+  }
+)
 </script>
 
 <style>
