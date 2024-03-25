@@ -7,7 +7,7 @@
       :arrow="list.children.length > 0"
       :disabled="list.children.length === 0"
       :button-style="{ 'bg-sky-100': list.ui.focused }"
-      @summary-clicked="() => recipe.toggleObject(list)"
+      @summary-clicked="recipe.toggleObject(list)"
       disable-default-open-behaviour
     >
       <template #title>
@@ -48,7 +48,7 @@ const props = defineProps<{
 
 const listElems = ref<Array<InstanceType<typeof Accordion>>>([])
 
-emitter.on('scrollToRecipeObject', (obj) => {
+emitter.on('scrollToConflictObject', (obj) => {
   if (isConflictList(obj) && props.conflictLists.includes(obj)) {
     const index = props.conflictLists.indexOf(obj)
     listElems.value[index].$el.scrollIntoView({

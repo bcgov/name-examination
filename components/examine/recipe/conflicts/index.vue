@@ -4,8 +4,8 @@
     class="h-full w-full outline-none"
     tabindex="0"
     @keydown="recipe.handleKeyDown"
-    @focus="recipe.focus"
-    @focusout="recipe.unfocus"
+    @focus="recipe.focusArea"
+    @focusout="recipe.unfocusArea"
   >
     <div
       v-if="conflicts.loading"

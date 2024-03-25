@@ -5,7 +5,7 @@
     class="rounded p-1 transition-all open:!bg-sky-100 hover:bg-gray-100"
     :open="conflictItem.ui.open"
     :class="{ '!bg-sky-100': conflictItem.ui.focused }"
-    @summary-clicked="() => recipe.toggleObject(conflictItem)"
+    @summary-clicked="recipe.toggleObject(conflictItem)"
     disable-default-open-behaviour
   >
     <template #title>
@@ -65,7 +65,7 @@ const props = defineProps<{
   conflictItem: ConflictListItem
 }>()
 
-emitter.on('scrollToRecipeObject', (obj) => {
+emitter.on('scrollToConflictObject', (obj) => {
   if (obj === props.conflictItem) {
     accordion.value?.$el.scrollIntoView({
       behavior: 'smooth',

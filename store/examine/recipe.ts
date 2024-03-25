@@ -10,7 +10,9 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     'ArrowRight',
     'ArrowLeft',
     'Space',
+    'Enter',
   ]
+
   const conflicts = useConflicts()
 
   /** Index of currently selected tab in the recipe area. */
@@ -47,7 +49,7 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
   })
 
   /** Initialize focus for the entire recipe area */
-  function focus() {
+  function focusArea() {
     if (savedFocus.value && !focused.value) {
       setNewFocus(savedFocus.value)
       savedFocus.value = undefined
@@ -57,12 +59,15 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
   }
 
   /** Unfocus the entire recipe area */
-  function unfocus() {
+  function unfocusArea() {
     savedFocus.value = focused.value
     setNewFocus(undefined)
   }
 
+  /** Toggle a conflict area object between open/close.
+   * This method is usually only called externally when the user clicks a list/item. */
   function toggleObject(obj: ConflictListItem | ConflictList) {
+    focusArea()
     collapseFocusedIfConflictItem()
     setNewFocus(obj)
     if (obj.ui.open) {
@@ -70,11 +75,6 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     } else {
       expandFocused()
     }
-  }
-
-  /** Get the parent `ConflictList` from the given `ConflictListItem` if it exists. */
-  function getParentConflictList(item: ConflictListItem) {
-    return conflictListMap.value.get(item)
   }
 
   /** Expand the currently focused object. */
@@ -85,26 +85,31 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
   }
 
   function collapseAllLists() {
-    conflicts.lists.forEach((list) => (list.ui.open = false))
+    conflicts.nonEmptyLists.forEach((list) => (list.ui.open = false))
+  }
+
+  /** Collapse the given object.
+   * If the focused object is a `ConflictList`, then all other conflict lists will also be collapsed.*/
+  function collapseObject(obj: ConflictListItem | ConflictList) {
+    if (isConflictList(obj)) {
+      collapseAllLists()
+    } else {
+      obj.ui.open = false
+    }
   }
 
   /** Collapse the currently focused object.
    * If the focused object is a `ConflictList`, then all other conflict lists will also be collapsed.*/
   function collapseFocused() {
-    if (focused.value) {
-      if (isConflictList(focused.value)) {
-        collapseAllLists()
-      } else {
-        focused.value.ui.open = false
-      }
-    }
+    if (focused.value) collapseObject(focused.value)
   }
 
   /** Handle the user requesting the current object to be collapsed. */
   function handleCollapse() {
     if (!focused.value) return
     if (!focused.value.ui.open && isConflictListItem(focused.value)) {
-      setNewFocus(getParentConflictList(focused.value))
+      const parentConflictList = conflictListMap.value.get(focused.value)
+      setNewFocus(parentConflictList)
     }
     collapseFocused()
   }
@@ -125,7 +130,7 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
 
   /** Scroll to the focused element */
   function scrollToFocused() {
-    if (focused.value) emitter.emit('scrollToRecipeObject', focused.value)
+    if (focused.value) emitter.emit('scrollToConflictObject', focused.value)
   }
 
   /** Get the next/previous non-empty `ConflictList` (depending on `delta`) relative
@@ -138,7 +143,7 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
   }
 
   function setNewFocus(focus: ConflictList | ConflictListItem | undefined) {
-    if (focused.value && !focused.value.ui.open) {
+    if (focused.value) {
       focused.value.ui.focused = false
     }
     focused.value = focus
@@ -150,11 +155,11 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
   /** Focus a new object relative to the currently focused element.
    * If no object is currently focused, a default item will be selected. */
   function focusRelative(delta: number) {
-    collapseFocusedIfConflictItem()
     if (!focused.value) {
       setNewFocus(conflicts.firstConflictItem)
       return
     }
+    collapseFocusedIfConflictItem()
     if (
       isConflictList(focused.value) &&
       (!focused.value.ui.open || delta < 0)
@@ -210,9 +215,9 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
   return {
     currentRecipeTabIndex,
     focused,
-    focus,
-    unfocus,
-    handleKeyDown,
+    focusArea,
+    unfocusArea,
     toggleObject,
+    handleKeyDown,
   }
 })
