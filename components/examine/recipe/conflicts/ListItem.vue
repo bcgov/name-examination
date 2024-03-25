@@ -3,6 +3,7 @@
     :key="conflictItem.nrNumber"
     class="rounded p-1 open:!bg-sky-100 hover:bg-gray-100 transition-all"
     :open="open"
+    @summary-clicked="onSummaryClick"
     disable-default-open-behaviour
   >
     <template #title>
@@ -57,7 +58,16 @@ const props = defineProps<{
   conflictItem: ConflictListItem
 }>()
 
+const emit = defineEmits<{
+  toggled: [open: boolean]
+}>()
+
 const open = ref(false)
+
+function onSummaryClick() {
+  open.value = !open.value
+  emit('toggled', open.value)
+}
 
 emitter.on('expandRecipeObject', (obj) => {
   if (obj === props.conflictItem) {

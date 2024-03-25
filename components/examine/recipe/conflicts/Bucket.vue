@@ -7,7 +7,7 @@
       :arrow="list.children.length > 0"
       :disabled="list.children.length === 0"
       :button-style="{ 'bg-sky-100': list === recipe.focused }"
-      @summary-clicked="$emit('selected', list)"
+      @summary-clicked="onListSummaryClick(list)"
       disable-default-open-behaviour
     >
       <template #title>
@@ -26,7 +26,7 @@
       <template #content>
         <ExamineRecipeConflictsList
           :conflict-items="list.children"
-          @selected="(item) => $emit('selected', item)"
+          @toggled="(item, open) => $emit('toggled', item, open)"
         />
       </template>
     </Accordion>
@@ -49,14 +49,23 @@ const props = defineProps<{
   initiallyOpen?: number
 }>()
 
-defineEmits<{
-  selected: [obj: ConflictListItem | ConflictList]
+const emit = defineEmits<{
+  toggled: [obj: ConflictListItem | ConflictList, open: boolean]
 }>()
 
 const recipe = useExaminationRecipe()
 
 const listElems = ref<Array<InstanceType<typeof Accordion>>>([])
 const openLists = ref<Array<ConflictList>>([])
+
+function onListSummaryClick(list: ConflictList) {
+  if (openLists.value.includes(list)) {
+    openLists.value = openLists.value.filter((l) => l !== list)
+  } else {
+    openLists.value.push(list)
+  }
+  emit('toggled', list, openLists.value.includes(list))
+}
 
 if (props.initiallyOpen) {
   openLists.value.push(props.conflictLists[props.initiallyOpen])

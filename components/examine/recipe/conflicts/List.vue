@@ -6,7 +6,7 @@
       :key="item.nrNumber"
       :conflict-item="item"
       :class="{ '!bg-sky-100': item === recipe.focused }"
-      @click="$emit('selected', item)"
+      @toggled="(open) => $emit('toggled', item, open)"
     />
   </div>
 </template>
@@ -22,7 +22,7 @@ const props = defineProps<{
 }>()
 
 defineEmits<{
-  selected: [conflict: ConflictListItem]
+  toggled: [conflict: ConflictListItem, open: boolean]
 }>()
 
 const itemElems = ref<
@@ -33,9 +33,11 @@ const recipe = useExaminationRecipe()
 watch(
   () => [recipe.focused],
   (_) => {
+    if (!recipe.focused) return
     if (recipe.focused && isConflictListItem(recipe.focused)) {
       const index = props.conflictItems.indexOf(recipe.focused)
       if (index !== -1) {
+        console.log('scrolling to...', props.conflictItems[index].text)
         itemElems.value[index].$el.scrollIntoView({
           behavior: 'smooth',
           block: 'center',

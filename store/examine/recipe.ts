@@ -66,37 +66,33 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
 
   /** Initialize focus for the entire recipe area */
   function focus() {
-    if (!focused.value) {
-      focused.value = conflicts.firstConflictItem
-    }
-    // if (savedFocus.value && !focused.value) {
-    //   focused.value = savedFocus.value
-    //   savedFocus.value = undefined
-    // } else {
+    // if (!focused.value) {
     //   focused.value = conflicts.firstConflictItem
     // }
+    if (savedFocus.value && !focused.value) {
+      focused.value = savedFocus.value
+      savedFocus.value = undefined
+    } else {
+      focused.value = conflicts.firstConflictItem
+    }
   }
 
   /** Unfocus the entire recipe area */
   function unfocus() {
-    // savedFocus.value = focused.value
-    // focused.value = undefined
+    savedFocus.value = focused.value
+    focused.value = undefined
   }
 
-  function clickObject(obj: ConflictListItem | ConflictList) {
+  function toggleObject(obj: ConflictListItem | ConflictList, open: boolean) {
+    console.log(`object clicked: ${obj.text}`)
     collapseFocusedIfConflictItem()
-    if (focused.value === obj) {
-      focusedExpanded.value = false
-      if (isConflictList(obj)) {
-        emitter.emit('collapseAllConflictLists')
-      } else {
-        emitter.emit('collapseRecipeObject', obj)
-      }
-    } else {
-      focusedExpanded.value = true
-      emitter.emit('expandRecipeObject', obj)
-    }
     focused.value = obj
+    focusedExpanded.value = open
+    if (focusedExpanded.value) {
+      expandFocused()
+    } else {
+      collapseFocused()
+    }
   }
 
   /** Get the parent `ConflictList` from the given `ConflictListItem` if it exists. */
@@ -214,7 +210,7 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
         `Focus changed: ${focused.value?.text} ${focusedExpanded.value}`
       )
       if (focused.value === undefined) {
-        debugger
+        // debugger
       }
     }
   )
@@ -226,6 +222,6 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     focus,
     unfocus,
     handleKeyDown,
-    clickObject,
+    toggleObject,
   }
 })

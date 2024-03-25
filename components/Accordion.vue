@@ -7,7 +7,7 @@
     <summary
       class="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left text-sm font-medium outline-none transition"
       :class="buttonStyle"
-      @click="onSummaryClicked"
+      @click="onSummaryClick"
     >
       <slot name="title"></slot>
       <ChevronDownIcon
@@ -40,8 +40,10 @@ const emit = defineEmits<{
   summaryClicked: []
 }>()
 
-function onSummaryClicked(event: MouseEvent) {
+function onSummaryClick(event: MouseEvent) {
   emit('summaryClicked')
-  if (props.disableDefaultOpenBehaviour) event.preventDefault()
+  if (props.disableDefaultOpenBehaviour) {
+    event.preventDefault()
+  }
 }
 </script>
