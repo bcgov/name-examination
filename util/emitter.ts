@@ -4,9 +4,6 @@ import mitt from 'mitt'
 
 export type EmitterEvents = {
   error: AppError
-  expandRecipeObject: ConflictListItem | ConflictList
-  collapseRecipeObject: ConflictListItem | ConflictList
-  collapseAllConflictLists: undefined
   recipeTabChanged: number
   scrollToRecipeObject: ConflictListItem | ConflictList
 }

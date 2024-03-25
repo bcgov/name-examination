@@ -3,9 +3,9 @@
     :key="conflictItem.nrNumber"
     ref="accordion"
     class="rounded p-1 transition-all open:!bg-sky-100 hover:bg-gray-100"
-    :open="open"
-    @summary-clicked="onSummaryClick"
-    disable-default-open-behaviour
+    :open="conflictItem.ui.open"
+    :class="{ '!bg-sky-100': conflictItem.ui.focused }"
+    @toggle="(e) => recipe.toggleObject(conflictItem, e.newState === 'open')"
   >
     <template #title>
       <div class="flex w-full items-center gap-x-2">
@@ -49,11 +49,13 @@
 import type Accordion from '~/components/Accordion.vue'
 import { useExamination } from '~/store/examine'
 import { useConflicts } from '~/store/examine/conflicts'
+import { useExaminationRecipe } from '~/store/examine/recipe'
 import type { ConflictListItem } from '~/types'
 import { getFormattedDate } from '~/util/date'
 import { emitter } from '~/util/emitter'
 
 const examine = useExamination()
+const recipe = useExaminationRecipe()
 const conflicts = useConflicts()
 
 const accordion = ref<InstanceType<typeof Accordion>>()
@@ -61,31 +63,6 @@ const accordion = ref<InstanceType<typeof Accordion>>()
 const props = defineProps<{
   conflictItem: ConflictListItem
 }>()
-
-const emit = defineEmits<{
-  toggled: [open: boolean]
-}>()
-
-const open = ref(false)
-
-function onSummaryClick() {
-  open.value = !open.value
-  emit('toggled', open.value)
-}
-
-emitter.on('expandRecipeObject', (obj) => {
-  if (obj === props.conflictItem) {
-    open.value = true
-  } else {
-    open.value = false
-  }
-})
-
-emitter.on('collapseRecipeObject', (obj) => {
-  if (obj === props.conflictItem) {
-    open.value = false
-  }
-})
 
 emitter.on('scrollToRecipeObject', (obj) => {
   if (obj === props.conflictItem) {

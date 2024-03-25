@@ -19,9 +19,6 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
   /** The object which is currently being focused in the recipe area */
   const focused = ref<ConflictListItem | ConflictList>()
 
-  /** Whether the focused object is currently expanded. */
-  const focusedExpanded = ref(false)
-
   /** Object that was being focused before focus was lost */
   const savedFocus = ref<ConflictListItem | ConflictList>()
 
@@ -66,32 +63,28 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
 
   /** Initialize focus for the entire recipe area */
   function focus() {
-    // if (!focused.value) {
-    //   focused.value = conflicts.firstConflictItem
-    // }
     if (savedFocus.value && !focused.value) {
-      focused.value = savedFocus.value
+      setNewFocus(savedFocus.value)
       savedFocus.value = undefined
     } else {
-      focused.value = conflicts.firstConflictItem
+      setNewFocus(conflicts.firstConflictItem)
     }
   }
 
   /** Unfocus the entire recipe area */
   function unfocus() {
     savedFocus.value = focused.value
-    focused.value = undefined
+    setNewFocus(undefined)
   }
 
   function toggleObject(obj: ConflictListItem | ConflictList, open: boolean) {
     collapseFocusedIfConflictItem()
-    focused.value = obj
-    focusedExpanded.value = open
-    if (focusedExpanded.value) {
-      expandFocused()
-    } else {
-      collapseFocused()
-    }
+    setNewFocus(obj)
+    // if (open) {
+    //   expandFocused()
+    // } else {
+    //   collapseFocused()
+    // }
   }
 
   /** Get the parent `ConflictList` from the given `ConflictListItem` if it exists. */
@@ -102,9 +95,12 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
   /** Expand the currently focused object. */
   function expandFocused() {
     if (focused.value) {
-      emitter.emit('expandRecipeObject', focused.value)
-      focusedExpanded.value = true
+      focused.value.ui.open = true
     }
+  }
+
+  function collapseAllLists() {
+    conflicts.lists.forEach(list => list.ui.open = false)
   }
 
   /** Collapse the currently focused object.
@@ -112,19 +108,18 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
   function collapseFocused() {
     if (focused.value) {
       if (isConflictList(focused.value)) {
-        emitter.emit('collapseAllConflictLists')
+        collapseAllLists()
       } else {
-        emitter.emit('collapseRecipeObject', focused.value)
+        focused.value.ui.open = false
       }
-      focusedExpanded.value = false
     }
   }
 
   /** Handle the user requesting the current object to be collapsed. */
   function handleCollapse() {
     if (!focused.value) return
-    if (!focusedExpanded.value && isConflictListItem(focused.value)) {
-      focused.value = getParentConflictList(focused.value)
+    if (!focused.value.ui.open && isConflictListItem(focused.value)) {
+      setNewFocus(getParentConflictList(focused.value))
     }
     collapseFocused()
   }
@@ -157,24 +152,35 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     return nonEmptyConflictLists.value[newindex]
   }
 
+  function setNewFocus(focus: ConflictList | ConflictListItem | undefined) {
+    if (focused.value) {
+      focused.value.ui.focused = false
+      focused.value.ui.open = false
+    }
+    focused.value = focus
+    if (focused.value) {
+      focused.value.ui.focused = true
+    }
+  }
+
   /** Focus a new object relative to the currently focused element.
    * If no object is currently focused, a default item will be selected. */
   function focusRelative(delta: number) {
     collapseFocusedIfConflictItem()
     if (!focused.value) {
-      focused.value = conflicts.firstConflictItem
+      setNewFocus(conflicts.firstConflictItem)
       return
     }
     if (
       isConflictList(focused.value) &&
-      (!focusedExpanded.value || delta < 0)
+      (!focused.value.ui.open || delta < 0)
     ) {
-      focused.value = getRelativeConflictList(focused.value, delta)
+      setNewFocus(getRelativeConflictList(focused.value, delta))
     } else {
       const currIndex = allObjects.value.indexOf(focused.value)
       const maxIndex = allObjects.value.length - 1
       const newIndex = clamp(currIndex + delta, 0, maxIndex)
-      focused.value = allObjects.value[newIndex]
+      setNewFocus(allObjects.value[newIndex])
     }
     scrollToFocused()
     collapseFocused()
@@ -212,18 +218,14 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     () => [focused.value],
     (_) => {
       console.log(
-        `Focus changed: ${focused.value?.text} ${focusedExpanded.value}`
+        `Focus changed: ${focused.value?.text} ${focused.value?.ui.open}`
       )
-      if (focused.value === undefined) {
-        // debugger
-      }
     }
   )
 
   return {
     currentRecipeTabIndex,
     focused,
-    focusedExpanded,
     focus,
     unfocus,
     handleKeyDown,

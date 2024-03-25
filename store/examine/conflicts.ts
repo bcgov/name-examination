@@ -29,6 +29,11 @@ export const useConflicts = defineStore('conflicts', () => {
     ].flat()
   )
 
+  /** List of all `ConflictList`s that contain items within them. */
+  const nonEmptyLists = computed(() =>
+    lists.value.filter((list) => list.children.length > 0)
+  )
+
   /** The first `ConflictListItem` among every `ConflictList` across all buckets. */
   const firstConflictItem = computed(() =>
     lists.value
@@ -74,6 +79,10 @@ export const useConflicts = defineStore('conflicts', () => {
         startDate: entry.start_date,
         jurisdiction: entry.jurisdiction,
         source: entry.source,
+        ui: {
+          focused: false,
+          open: false,
+        },
       }
     })
   }
@@ -177,6 +186,10 @@ export const useConflicts = defineStore('conflicts', () => {
           nrNumber: entry.id!,
           startDate: entry.start_date!,
           source: entry.source,
+          ui: {
+            focused: false,
+            open: false,
+          },
         }
         output.at(-1)?.children.push(match)
       } else {
@@ -185,6 +198,10 @@ export const useConflicts = defineStore('conflicts', () => {
           highlightedText: entry.name.trim(),
           meta: entryMeta,
           children: [],
+          ui: {
+            focused: false,
+            open: false,
+          },
         }
         output.push(match)
       }
@@ -226,6 +243,10 @@ export const useConflicts = defineStore('conflicts', () => {
           nrNumber: name_info.id!,
           startDate: name_info.start_date!,
           source: name_info.source,
+          ui: {
+            focused: false,
+            open: false,
+          },
         }
         output.at(-1)?.children.push(conflict)
       } else {
@@ -237,6 +258,10 @@ export const useConflicts = defineStore('conflicts', () => {
           highlightedText: name_info.name,
           meta: undefined,
           children: <Array<ConflictListItem>>[],
+          ui: {
+            focused: false,
+            open: false,
+          },
         }
         output.push(conflictGroup)
       }
@@ -258,6 +283,10 @@ export const useConflicts = defineStore('conflicts', () => {
         searchQuery
       )
       phoneticMatches.value = await retrievePhoneticMatches(searchQuery)
+
+      if (nonEmptyLists.value.length > 0) {
+        nonEmptyLists.value[0].ui.open = true
+      }
     } catch (e) {
       resetMatches()
       throw e

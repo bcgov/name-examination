@@ -3,12 +3,11 @@
     <Accordion
       v-for="list in conflictLists"
       ref="listElems"
-      :open="openLists.includes(list)"
+      :open="list.ui.open"
       :arrow="list.children.length > 0"
       :disabled="list.children.length === 0"
-      :button-style="{ 'bg-sky-100': list === recipe.focused }"
-      @summary-clicked="onListSummaryClick(list)"
-      disable-default-open-behaviour
+      :button-style="{ 'bg-sky-100': list.ui.focused }"
+      @toggle="(e) => recipe.toggleObject(list, e.newState === 'open')"
     >
       <template #title>
         <div class="flex w-full justify-between font-medium">
@@ -24,10 +23,7 @@
         </div>
       </template>
       <template #content>
-        <ExamineRecipeConflictsList
-          :conflict-items="list.children"
-          @toggled="(item, open) => $emit('toggled', item, open)"
-        />
+        <ExamineRecipeConflictsList :conflict-items="list.children" />
       </template>
     </Accordion>
   </div>
@@ -39,49 +35,17 @@
  */
 import Accordion from '~/components/Accordion.vue'
 import { useExaminationRecipe } from '~/store/examine/recipe'
-import type { ConflictList, ConflictListItem } from '~/types'
-import { isConflictList, isConflictListItem } from '~/util'
+import type { ConflictList } from '~/types'
+import { isConflictList } from '~/util'
 import { emitter } from '~/util/emitter'
-
-const props = defineProps<{
-  conflictLists: Array<ConflictList>
-  /** Index of the `ConflictList` that should be open initially. */
-  initiallyOpen?: number
-}>()
-
-const emit = defineEmits<{
-  toggled: [obj: ConflictListItem | ConflictList, open: boolean]
-}>()
 
 const recipe = useExaminationRecipe()
 
+const props = defineProps<{
+  conflictLists: Array<ConflictList>
+}>()
+
 const listElems = ref<Array<InstanceType<typeof Accordion>>>([])
-const openLists = ref<Array<ConflictList>>([])
-
-function onListSummaryClick(list: ConflictList) {
-  if (openLists.value.includes(list)) {
-    openLists.value = openLists.value.filter((l) => l !== list)
-  } else {
-    openLists.value.push(list)
-  }
-  emit('toggled', list, openLists.value.includes(list))
-}
-
-if (props.initiallyOpen) {
-  openLists.value.push(props.conflictLists[props.initiallyOpen])
-}
-
-emitter.on('expandRecipeObject', (obj) => {
-  if (!isConflictListItem(obj)) {
-    openLists.value.push(obj)
-  }
-})
-
-emitter.on('collapseRecipeObject', (obj) => {
-  if (!isConflictListItem(obj)) {
-    openLists.value = openLists.value.filter((x) => x !== obj)
-  }
-})
 
 emitter.on('scrollToRecipeObject', (obj) => {
   if (isConflictList(obj) && props.conflictLists.includes(obj)) {
@@ -91,10 +55,6 @@ emitter.on('scrollToRecipeObject', (obj) => {
       block: 'center',
     })
   }
-})
-
-emitter.on('collapseAllConflictLists', () => {
-  openLists.value = []
 })
 </script>
 
