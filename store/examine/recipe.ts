@@ -79,9 +79,11 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
 
   /** Expand the currently focused object. */
   function expandFocused() {
-    if (focused.value) {
-      focused.value.ui.open = true
+    if (!focused.value) return
+    if (isConflictList(focused.value)) {
+      collapseAllLists()
     }
+    focused.value.ui.open = true
   }
 
   function collapseAllLists() {
@@ -139,6 +141,7 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     const currentIndex = conflicts.nonEmptyLists.indexOf(list)
     const maxIndex = conflicts.nonEmptyLists.length - 1
     const newindex = clamp(currentIndex + delta, 0, maxIndex)
+    console.log(currentIndex, newindex, conflicts.nonEmptyLists[newindex])
     return conflicts.nonEmptyLists[newindex]
   }
 
@@ -206,9 +209,13 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
   watch(
     () => [focused.value],
     (_) => {
-      console.log(
-        `Focus changed: ${focused.value?.text} ${focused.value?.ui.open}`
-      )
+      // console.log(
+      //   `Focus changed: ${focused.value?.text} ${focused.value?.ui.open}`,
+      //   document.activeElement
+      // )
+      if (focused.value === undefined) {
+        console.log('focused is undefined', savedFocus.value)
+      }
     }
   )
 
