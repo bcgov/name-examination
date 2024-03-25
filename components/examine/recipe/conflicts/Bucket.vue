@@ -7,7 +7,8 @@
       :arrow="list.children.length > 0"
       :disabled="list.children.length === 0"
       :button-style="{ 'bg-sky-100': list.ui.focused }"
-      @toggle="(e) => recipe.toggleObject(list, e.newState === 'open')"
+      @summary-clicked="() => recipe.toggleObject(list)"
+      disable-default-open-behaviour
     >
       <template #title>
         <div class="flex w-full justify-between font-medium">

@@ -77,14 +77,14 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     setNewFocus(undefined)
   }
 
-  function toggleObject(obj: ConflictListItem | ConflictList, open: boolean) {
+  function toggleObject(obj: ConflictListItem | ConflictList) {
     collapseFocusedIfConflictItem()
     setNewFocus(obj)
-    // if (open) {
-    //   expandFocused()
-    // } else {
-    //   collapseFocused()
-    // }
+    if (obj.ui.open) {
+      collapseFocused()
+    } else {
+      expandFocused()
+    }
   }
 
   /** Get the parent `ConflictList` from the given `ConflictListItem` if it exists. */
@@ -100,7 +100,7 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
   }
 
   function collapseAllLists() {
-    conflicts.lists.forEach(list => list.ui.open = false)
+    conflicts.lists.forEach((list) => (list.ui.open = false))
   }
 
   /** Collapse the currently focused object.
@@ -153,9 +153,8 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
   }
 
   function setNewFocus(focus: ConflictList | ConflictListItem | undefined) {
-    if (focused.value) {
+    if (focused.value && !focused.value.ui.open) {
       focused.value.ui.focused = false
-      focused.value.ui.open = false
     }
     focused.value = focus
     if (focused.value) {

@@ -7,6 +7,7 @@
     <summary
       class="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left text-sm font-medium outline-none transition"
       :class="buttonStyle"
+      @click="onSummaryClick"
     >
       <slot name="title"></slot>
       <ChevronDownIcon
@@ -27,9 +28,22 @@ import { ChevronDownIcon } from '@heroicons/vue/24/outline'
 const details = ref<HTMLDetailsElement>()
 const open = ref(Boolean(details.value?.open))
 
-defineProps<{
+const props = defineProps<{
   arrow?: boolean
   buttonStyle?: any
   disabled?: boolean
+  /** Disable the default behaviour when the accordion is clicked/toggled. Allows manual control over opening/closing. */
+  disableDefaultOpenBehaviour?: boolean
 }>()
+
+const emit = defineEmits<{
+  summaryClicked: []
+}>()
+
+function onSummaryClick(event: MouseEvent) {
+  emit('summaryClicked')
+  if (props.disableDefaultOpenBehaviour) {
+    event.preventDefault()
+  }
+}
 </script>

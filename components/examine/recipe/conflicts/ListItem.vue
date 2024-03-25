@@ -5,7 +5,8 @@
     class="rounded p-1 transition-all open:!bg-sky-100 hover:bg-gray-100"
     :open="conflictItem.ui.open"
     :class="{ '!bg-sky-100': conflictItem.ui.focused }"
-    @toggle="(e) => recipe.toggleObject(conflictItem, e.newState === 'open')"
+    @summary-clicked="() => recipe.toggleObject(conflictItem)"
+    disable-default-open-behaviour
   >
     <template #title>
       <div class="flex w-full items-center gap-x-2">
