@@ -24,17 +24,9 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
 
   /** Return all non-empty `ConflictList`s and `ConflictListItem`s in one flattened list, in order. */
   const allObjects = computed<Array<ConflictListItem | ConflictList>>(() => {
-    /** Return a single array of all non-empty conflict lists and their children in order. */
-    const flattenNonEmptyLists = (bucket: Array<ConflictList>) => {
-      return bucket
-        .filter((b) => b.children.length > 0)
-        .flatMap((list) => [list, ...list.children])
-    }
     return [
       ...conflicts.exactMatches,
-      ...flattenNonEmptyLists(conflicts.synonymMatches),
-      ...flattenNonEmptyLists(conflicts.cobrsPhoneticMatches),
-      ...flattenNonEmptyLists(conflicts.phoneticMatches),
+      ...conflicts.nonEmptyLists.map((list) => [list, ...list.children]).flat(),
     ]
   })
 
@@ -53,13 +45,6 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     }
     return map
   })
-
-  const nonEmptyConflictLists = computed<Array<ConflictList>>(
-    () =>
-      allObjects.value.filter((obj) =>
-        isConflictList(obj)
-      ) as Array<ConflictList>
-  )
 
   /** Initialize focus for the entire recipe area */
   function focus() {
@@ -146,10 +131,10 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
   /** Get the next/previous non-empty `ConflictList` (depending on `delta`) relative
    * to the given non-empty `ConflictList`. */
   function getRelativeConflictList(list: ConflictList, delta: number) {
-    const currentIndex = nonEmptyConflictLists.value.indexOf(list)
-    const maxIndex = nonEmptyConflictLists.value.length - 1
+    const currentIndex = conflicts.nonEmptyLists.indexOf(list)
+    const maxIndex = conflicts.nonEmptyLists.length - 1
     const newindex = clamp(currentIndex + delta, 0, maxIndex)
-    return nonEmptyConflictLists.value[newindex]
+    return conflicts.nonEmptyLists[newindex]
   }
 
   function setNewFocus(focus: ConflictList | ConflictListItem | undefined) {

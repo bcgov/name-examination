@@ -351,6 +351,7 @@ export const useConflicts = defineStore('conflicts', () => {
     deselectConflict,
     autoAdd,
     lists,
+    nonEmptyLists,
     firstConflictItem,
     syncSelectedAndComparedConflicts,
   }
