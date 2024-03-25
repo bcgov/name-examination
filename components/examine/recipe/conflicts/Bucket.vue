@@ -8,6 +8,7 @@
       :disabled="list.children.length === 0"
       :button-style="{ 'bg-sky-100': list === recipe.focused }"
       @summary-clicked="$emit('selected', list)"
+      disable-default-open-behaviour
     >
       <template #title>
         <div class="flex w-full justify-between font-medium">

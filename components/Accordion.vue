@@ -5,9 +5,9 @@
     @toggle="(e: ToggleEvent) => open = e.newState === 'open'"
   >
     <summary
-      class="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left text-sm font-medium transition outline-none"
+      class="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left text-sm font-medium outline-none transition"
       :class="buttonStyle"
-      @click="$emit('summaryClicked')"
+      @click="onSummaryClicked"
     >
       <slot name="title"></slot>
       <ChevronDownIcon
@@ -28,13 +28,20 @@ import { ChevronDownIcon } from '@heroicons/vue/24/outline'
 const details = ref<HTMLDetailsElement>()
 const open = ref(Boolean(details.value?.open))
 
-defineProps<{
+const props = defineProps<{
   arrow?: boolean
   buttonStyle?: any
   disabled?: boolean
+  /** Disable the default behaviour when the title element is clicked, allowing manual control of opening/closing */
+  disableDefaultOpenBehaviour?: boolean
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   summaryClicked: []
 }>()
+
+function onSummaryClicked(event: MouseEvent) {
+  emit('summaryClicked')
+  if (props.disableDefaultOpenBehaviour) event.preventDefault()
+}
 </script>

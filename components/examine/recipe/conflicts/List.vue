@@ -5,7 +5,6 @@
       ref="itemElems"
       :key="item.nrNumber"
       :conflict-item="item"
-      class="target-detail"
       :class="{ '!bg-sky-100': item === recipe.focused }"
       @click="$emit('selected', item)"
     />
@@ -38,25 +37,11 @@ watch(
       const index = props.conflictItems.indexOf(recipe.focused)
       if (index !== -1) {
         itemElems.value[index].$el.scrollIntoView({
-          behavior: index === 0 ? 'smooth' : 'instant',
+          behavior: 'smooth',
           block: 'center',
         })
       }
     }
   }
 )
-
-onMounted(() => {
-  // close all other list items (which are <details> elements) when one is clicked
-  const details = document.getElementsByClassName('target-detail')
-  for (const targetDetail of details) {
-    targetDetail.addEventListener('click', () => {
-      for (const detail of details) {
-        if (detail !== targetDetail) {
-          detail.removeAttribute('open')
-        }
-      }
-    })
-  }
-})
 </script>

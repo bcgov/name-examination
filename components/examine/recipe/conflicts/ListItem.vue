@@ -1,8 +1,9 @@
 <template>
   <Accordion
     :key="conflictItem.nrNumber"
-    class="rounded p-1 open:!bg-sky-100 hover:bg-gray-100"
+    class="rounded p-1 open:!bg-sky-100 hover:bg-gray-100 transition-all"
     :open="open"
+    disable-default-open-behaviour
   >
     <template #title>
       <div class="flex w-full items-center gap-x-2">
