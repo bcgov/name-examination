@@ -84,7 +84,6 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
   }
 
   function toggleObject(obj: ConflictListItem | ConflictList, open: boolean) {
-    console.log(`object clicked: ${obj.text}`)
     collapseFocusedIfConflictItem()
     focused.value = obj
     focusedExpanded.value = open
@@ -144,6 +143,11 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     }
   }
 
+  /** Scroll to the focused element */
+  function scrollToFocused() {
+    if (focused.value) emitter.emit('scrollToRecipeObject', focused.value)
+  }
+
   /** Get the next/previous non-empty `ConflictList` (depending on `delta`) relative
    * to the given non-empty `ConflictList`. */
   function getRelativeConflictList(list: ConflictList, delta: number) {
@@ -172,6 +176,7 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
       const newIndex = clamp(currIndex + delta, 0, maxIndex)
       focused.value = allObjects.value[newIndex]
     }
+    scrollToFocused()
     collapseFocused()
   }
 

@@ -1,7 +1,8 @@
 <template>
   <Accordion
     :key="conflictItem.nrNumber"
-    class="rounded p-1 open:!bg-sky-100 hover:bg-gray-100 transition-all"
+    ref="accordion"
+    class="rounded p-1 transition-all open:!bg-sky-100 hover:bg-gray-100"
     :open="open"
     @summary-clicked="onSummaryClick"
     disable-default-open-behaviour
@@ -45,6 +46,7 @@
 </template>
 
 <script setup lang="ts">
+import type Accordion from '~/components/Accordion.vue'
 import { useExamination } from '~/store/examine'
 import { useConflicts } from '~/store/examine/conflicts'
 import type { ConflictListItem } from '~/types'
@@ -53,6 +55,8 @@ import { emitter } from '~/util/emitter'
 
 const examine = useExamination()
 const conflicts = useConflicts()
+
+const accordion = ref<InstanceType<typeof Accordion>>()
 
 const props = defineProps<{
   conflictItem: ConflictListItem
@@ -80,6 +84,15 @@ emitter.on('expandRecipeObject', (obj) => {
 emitter.on('collapseRecipeObject', (obj) => {
   if (obj === props.conflictItem) {
     open.value = false
+  }
+})
+
+emitter.on('scrollToRecipeObject', (obj) => {
+  if (obj === props.conflictItem) {
+    accordion.value?.$el.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    })
   }
 })
 </script>

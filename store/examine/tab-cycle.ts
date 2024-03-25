@@ -49,7 +49,9 @@ export const useExaminationTabCyle = defineStore('examine-tab-cycle', () => {
       focused.value + delta,
       elements.value.length
     )
-    document.getElementById(elements.value[focused.value])?.focus()
+    document
+      .getElementById(elements.value[focused.value])
+      ?.focus({ preventScroll: true })
   }
 
   function handleKeyUp(event: KeyboardEvent) {

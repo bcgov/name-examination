@@ -83,24 +83,19 @@ emitter.on('collapseRecipeObject', (obj) => {
   }
 })
 
+emitter.on('scrollToRecipeObject', (obj) => {
+  if (isConflictList(obj) && props.conflictLists.includes(obj)) {
+    const index = props.conflictLists.indexOf(obj)
+    listElems.value[index].$el.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    })
+  }
+})
+
 emitter.on('collapseAllConflictLists', () => {
   openLists.value = []
 })
-
-watch(
-  () => [recipe.focused],
-  (_) => {
-    if (recipe.focused && isConflictList(recipe.focused)) {
-      const index = props.conflictLists.indexOf(recipe.focused)
-      if (index !== -1) {
-        listElems.value[index].$el.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-        })
-      }
-    }
-  }
-)
 </script>
 
 <style>
