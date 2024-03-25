@@ -85,7 +85,12 @@ useMnemonic('o', () => buttonElem.value.click())
 const commentText = ref('')
 
 const comments = computed(() =>
-  examine.comments.sort(
+  examine.comments.map(comment => {
+    return {
+      ...comment,
+      html: comment.comment.replace(/\n/g, '</br>')
+    }
+  }).sort(
     (a, b) =>
       parseDate(b.timestamp).toMillis() - parseDate(a.timestamp).toMillis()
   )
