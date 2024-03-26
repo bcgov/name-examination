@@ -1,4 +1,3 @@
-/* eslint-disable vue/no-v-html */
 <template>
   <div class="flex flex-col space-y-2 overflow-auto">
     <div
