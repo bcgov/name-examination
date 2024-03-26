@@ -53,7 +53,9 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
   /** Initialize focus for the entire recipe area */
   function focusArea() {
     document.getElementById(CONFLICTS_AREA_ID)?.focus({ preventScroll: true })
-    if (savedFocus.value && !focused.value) {
+    if (focused.value) {
+      return
+    } else if (savedFocus.value) {
       setNewFocus(savedFocus.value)
       savedFocus.value = undefined
     } else {
@@ -70,6 +72,7 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
   /** Toggle a conflict area object between open/close.
    * This method is usually only called externally when the user clicks a list/item. */
   function toggleObject(obj: ConflictListItem | ConflictList) {
+    if (savedFocus.value) setNewFocus(savedFocus.value)
     focusArea()
     collapseFocusedIfConflictItem()
     setNewFocus(obj)
