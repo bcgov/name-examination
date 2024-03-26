@@ -7,6 +7,7 @@ import {
   getPhoneticMatches,
   getSynonymMatches,
 } from '~/util/namex-api'
+import { useExaminationRecipe } from './recipe'
 
 export const useConflicts = defineStore('conflicts', () => {
   const exactMatches = ref<Array<ConflictListItem>>([])
@@ -287,6 +288,7 @@ export const useConflicts = defineStore('conflicts', () => {
       if (nonEmptyLists.value.length > 0) {
         nonEmptyLists.value[0].ui.open = true
       }
+      useExaminationRecipe().reset()
     } catch (e) {
       resetMatches()
       throw e

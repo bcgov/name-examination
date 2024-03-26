@@ -206,6 +206,12 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
       event.preventDefault()
     }
   }
+  
+  /** Reset this store's state */
+  function reset() {
+    focused.value = undefined
+    savedFocus.value = undefined
+  }
 
   emitter.on('recipeTabChanged', (newIndex) => {
     currentRecipeTabIndex.value = newIndex
@@ -219,5 +225,6 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     unfocusArea,
     toggleObject,
     handleKeyDown,
+    reset
   }
 })
