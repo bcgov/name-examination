@@ -5,7 +5,7 @@
       class="comments-box-child flex flex-col rounded border border-gray-400 bg-white p-2 text-sm"
       v-for="comment in comments"
     >
-      <p v-html="comment.html" />
+      <p class="whitespace-pre-wrap">{{ comment.comment }}</p>
       <span class="font-bold">
         {{ comment.examiner }}
       </span>
