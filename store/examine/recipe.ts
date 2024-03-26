@@ -13,6 +13,8 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     'Enter',
   ]
 
+  const CONFLICTS_AREA_ID = 'conflicts-tab'
+
   const conflicts = useConflicts()
 
   /** Index of currently selected tab in the recipe area. */
@@ -50,6 +52,7 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
 
   /** Initialize focus for the entire recipe area */
   function focusArea() {
+    document.getElementById(CONFLICTS_AREA_ID)?.focus({ preventScroll: true })
     if (savedFocus.value && !focused.value) {
       setNewFocus(savedFocus.value)
       savedFocus.value = undefined
@@ -140,9 +143,8 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
   function getRelativeConflictList(list: ConflictList, delta: number) {
     const currentIndex = conflicts.nonEmptyLists.indexOf(list)
     const maxIndex = conflicts.nonEmptyLists.length - 1
-    const newindex = clamp(currentIndex + delta, 0, maxIndex)
-    console.log(currentIndex, newindex, conflicts.nonEmptyLists[newindex])
-    return conflicts.nonEmptyLists[newindex]
+    const newIndex = clamp(currentIndex + delta, 0, maxIndex)
+    return conflicts.nonEmptyLists[newIndex]
   }
 
   function setNewFocus(focus: ConflictList | ConflictListItem | undefined) {
@@ -206,20 +208,8 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     currentRecipeTabIndex.value = newIndex
   })
 
-  watch(
-    () => [focused.value],
-    (_) => {
-      // console.log(
-      //   `Focus changed: ${focused.value?.text} ${focused.value?.ui.open}`,
-      //   document.activeElement
-      // )
-      if (focused.value === undefined) {
-        console.log('focused is undefined', savedFocus.value)
-      }
-    }
-  )
-
   return {
+    CONFLICTS_AREA_ID,
     currentRecipeTabIndex,
     focused,
     focusArea,

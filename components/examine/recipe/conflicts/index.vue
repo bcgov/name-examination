@@ -1,6 +1,6 @@
 <template>
   <div
-    id="conflicts-tab"
+    :id="recipe.CONFLICTS_AREA_ID"
     class="h-full w-full outline-none"
     tabindex="0"
     @keydown="recipe.handleKeyDown"
