@@ -1,55 +1,53 @@
 <template>
-  <div class="flex flex-col">
-    <Accordion
-      v-for="list in conflictLists"
-      ref="listElems"
-      :open="list.ui.open"
-      :arrow="list.children.length > 0"
-      :disabled="list.children.length === 0"
-      :button-style="{ 'bg-sky-100': list.ui.focused }"
-      @summary-clicked="recipe.toggleObject(list)"
-      disable-default-open-behaviour
-    >
-      <template #title>
-        <div class="flex w-full justify-between font-medium">
-          <div>
-            <span v-html="list.highlightedText"></span>
-            <span v-if="list.meta" class="italic">
-              &nbsp;&ndash;&nbsp;{{ list.meta.toLowerCase() }}
-            </span>
-          </div>
-          <span v-if="list.children.length > 0">
-            {{ list.children.length }}
-          </span>
-        </div>
-      </template>
-      <template #content>
-        <ExamineRecipeConflictsList :conflict-items="list.children" />
-      </template>
-    </Accordion>
+  <div class="flex flex-col space-y-1">
+    <div class="rounded bg-gray-200 p-2 text-sm font-semibold">
+      {{ title }}
+    </div>
+    <div class="px-1">
+      <div v-if="conflictLists">
+        <ExamineRecipeConflictsList
+          ref="listElems"
+          v-if="conflictLists.length > 0"
+          v-for="list in conflictLists"
+          :key="list.text"
+          :list="list"
+        />
+        <span v-else class="px-1 italic">No results</span>
+      </div>
+      <div v-else-if="conflictItems" class="flex flex-col space-y-1">
+        <ExamineRecipeConflictsListItem
+          v-if="conflictItems.length > 0"
+          v-for="item in conflictItems"
+          :key="item.nrNumber"
+          :conflict-item="item"
+        />
+        <span v-else class="px-1 italic">No results</span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 /**
- * A conflicts bucket that holds a list of conflict lists
+ * A conflicts bucket that displays a list of conflict lists, or a list of conflict items
  */
 import Accordion from '~/components/Accordion.vue'
-import { useExaminationRecipe } from '~/store/examine/recipe'
-import type { ConflictList } from '~/types'
+import type { ConflictList, ConflictListItem } from '~/types'
 import { isConflictList } from '~/util'
 import { emitter } from '~/util/emitter'
 
-const recipe = useExaminationRecipe()
-
 const props = defineProps<{
-  conflictLists: Array<ConflictList>
+  title: string
+  /** If a list of `ConflictList`s is provided, it will be displayed instead of the `ConflictListItems`s */
+  conflictLists?: Array<ConflictList>
+  /** If a list of `ConflictListItem`s is provided, it will be displayed instead of the `ConflictList`s */
+  conflictItems?: Array<ConflictListItem>
 }>()
 
 const listElems = ref<Array<InstanceType<typeof Accordion>>>([])
 
 emitter.on('scrollToConflictObject', (obj) => {
-  if (isConflictList(obj) && props.conflictLists.includes(obj)) {
+  if (isConflictList(obj) && props.conflictLists?.includes(obj)) {
     const index = props.conflictLists.indexOf(obj)
     listElems.value[index].$el.scrollIntoView({
       behavior: 'smooth',
@@ -58,15 +56,3 @@ emitter.on('scrollToConflictObject', (obj) => {
   }
 })
 </script>
-
-<style>
-.stem-highlight {
-  color: #28a745;
-  font-weight: bold;
-}
-
-.synonym-stem-highlight {
-  color: #e0a800;
-  font-weight: bold;
-}
-</style>
