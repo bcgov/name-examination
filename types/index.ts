@@ -29,7 +29,6 @@ export interface Comment {
   comment: string
   examiner: string
   timestamp: string
-  html: string | null
 }
 
 export type ConflictData = NameRequest | Corporation
