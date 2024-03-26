@@ -1,7 +1,12 @@
 <template>
   <Accordion
     :key="conflictItem.nrNumber"
-    class="conflict-details rounded p-1 open:!bg-sky-100 hover:bg-gray-100"
+    ref="accordion"
+    class="rounded p-1 transition-all open:!bg-sky-100 hover:bg-gray-100"
+    :open="conflictItem.ui.open"
+    :class="{ '!bg-sky-100': conflictItem.ui.focused }"
+    @summary-clicked="recipe.toggleObject(conflictItem)"
+    disable-default-open-behaviour
   >
     <template #title>
       <div class="flex w-full items-center gap-x-2">
@@ -9,8 +14,10 @@
           type="checkbox"
           :disabled="examine.conflictSelectionDisabled"
           class="max-h-4 min-h-4 min-w-4 max-w-4"
-          :checked="isChecked"
-          @change="e => toggleConflictCheckbox((e.target as HTMLInputElement).checked)"
+          :checked="conflicts.isConflictSelected(conflictItem)"
+          @change="conflicts.toggleConflict(conflictItem)"
+          tabindex="-1"
+          aria-label="Select conflict checkbox"
         />
         <span
           class="grow truncate"
@@ -40,32 +47,32 @@
 </template>
 
 <script setup lang="ts">
+import type Accordion from '~/components/Accordion.vue'
 import { useExamination } from '~/store/examine'
 import { useConflicts } from '~/store/examine/conflicts'
+import { useExaminationRecipe } from '~/store/examine/recipe'
 import type { ConflictListItem } from '~/types'
 import { getFormattedDate } from '~/util/date'
+import { emitter } from '~/util/emitter'
 
 const examine = useExamination()
+const recipe = useExaminationRecipe()
 const conflicts = useConflicts()
 
-const { conflictItem } = defineProps<{
+const accordion = ref<InstanceType<typeof Accordion>>()
+
+const props = defineProps<{
   conflictItem: ConflictListItem
 }>()
 
-const isChecked = computed(() => {
-  const conflictsList = conflicts.autoAdd
-    ? conflicts.selectedConflicts
-    : conflicts.comparedConflicts
-  return conflictsList.map((c) => c.nrNumber).includes(conflictItem.nrNumber)
-})
-
-function toggleConflictCheckbox(checked: boolean) {
-  if (checked) {
-    conflicts.selectConflict(conflictItem)
-  } else {
-    conflicts.deselectConflict(conflictItem)
+emitter.on('scrollToConflictObject', (obj) => {
+  if (obj === props.conflictItem) {
+    accordion.value?.$el.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    })
   }
-}
+})
 </script>
 
 <style>

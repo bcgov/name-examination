@@ -1,30 +1,45 @@
 <template>
-  <div class="flex flex-col space-y-1">
-    <ExamineRecipeConflictsListItem
-      v-for="item in conflictItems"
-      :conflict-item="item"
-    />
-  </div>
+  <Accordion
+    ref="listElems"
+    :open="list.ui.open"
+    :arrow="list.children.length > 0"
+    :disabled="list.children.length === 0"
+    :button-style="{ 'bg-sky-100': list.ui.focused }"
+    @summary-clicked="recipe.toggleObject(list)"
+    disable-default-open-behaviour
+  >
+    <template #title>
+      <div class="flex w-full justify-between font-medium">
+        <div>
+          <span v-html="list.highlightedText"></span>
+          <span v-if="list.meta" class="italic">
+            &nbsp;&ndash;&nbsp;{{ list.meta.toLowerCase() }}
+          </span>
+        </div>
+        <span v-if="list.children.length > 0">
+          {{ list.children.length }}
+        </span>
+      </div>
+    </template>
+    <template #content>
+      <div class="flex flex-col space-y-1">
+        <ExamineRecipeConflictsListItem
+          v-for="item in list.children"
+          :key="item.nrNumber"
+          :conflict-item="item"
+        />
+      </div>
+    </template>
+  </Accordion>
 </template>
 
 <script setup lang="ts">
-import type { ConflictListItem } from '~/types'
+import { useExaminationRecipe } from '~/store/examine/recipe'
+import type { ConflictList } from '~/types'
 
 defineProps<{
-  conflictItems: Array<ConflictListItem>
+  list: ConflictList
 }>()
 
-onMounted(() => {
-  // close all other list items (which are <details> elements) when one is clicked
-  const details = document.getElementsByClassName('conflict-details')
-  for (const targetDetail of details) {
-    targetDetail.addEventListener('click', () => {
-      for (const detail of details) {
-        if (detail !== targetDetail) {
-          detail.removeAttribute('open')
-        }
-      }
-    })
-  }
-})
+const recipe = useExaminationRecipe()
 </script>

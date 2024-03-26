@@ -7,6 +7,7 @@ import {
   getPhoneticMatches,
   getSynonymMatches,
 } from '~/util/namex-api'
+import { useExaminationRecipe } from './recipe'
 
 export const useConflicts = defineStore('conflicts', () => {
   const exactMatches = ref<Array<ConflictListItem>>([])
@@ -20,6 +21,43 @@ export const useConflicts = defineStore('conflicts', () => {
   const comparedConflicts = ref<Array<ConflictListItem>>([])
   const autoAdd = ref(true)
 
+  /** Flattened array of every `ConflictList` across all buckets. */
+  const lists = computed<Array<ConflictList>>(() =>
+    [
+      synonymMatches.value,
+      cobrsPhoneticMatches.value,
+      phoneticMatches.value,
+    ].flat()
+  )
+
+  /** List of all `ConflictList`s that contain items within them. */
+  const nonEmptyLists = computed(() =>
+    lists.value.filter((list) => list.children.length > 0)
+  )
+
+  /** The first `ConflictListItem` among every `ConflictList` across all buckets. */
+  const firstConflictItem = computed(() =>
+    [...exactMatches.value, ...lists.value.flatMap((list) => list.children)].at(
+      0
+    )
+  )
+
+  function isConflictSelected(conflict: ConflictListItem) {
+    const conflictsList = autoAdd.value
+      ? selectedConflicts.value
+      : comparedConflicts.value
+    return conflictsList.map((c) => c.nrNumber).includes(conflict.nrNumber)
+  }
+
+  /** If the given conflict is not selected, selects it. Otherwise, deselects it. */
+  function toggleConflict(conflict: ConflictListItem) {
+    if (isConflictSelected(conflict)) {
+      deselectConflict(conflict)
+    } else {
+      selectConflict(conflict)
+    }
+  }
+
   async function retrieveExactMatches(
     query: string
   ): Promise<Array<ConflictListItem>> {
@@ -27,8 +65,7 @@ export const useConflicts = defineStore('conflicts', () => {
     query = query.charAt(0) === '+' ? query.substring(1) : query
 
     const response = await getExactMatches(query)
-    if (!response.ok)
-      throw new Error('Unable to retrieve exact matches')
+    if (!response.ok) throw new Error('Unable to retrieve exact matches')
 
     return parseExactMatches(await response.json())
   }
@@ -42,6 +79,10 @@ export const useConflicts = defineStore('conflicts', () => {
         startDate: entry.start_date,
         jurisdiction: entry.jurisdiction,
         source: entry.source,
+        ui: {
+          focused: false,
+          open: false,
+        },
       }
     })
   }
@@ -52,8 +93,7 @@ export const useConflicts = defineStore('conflicts', () => {
     exactPhrase = exactPhrase || '*'
 
     const response = await getSynonymMatches(query, exactPhrase)
-    if (!response.ok)
-      throw new Error('Unable to retrieve synonym matches')
+    if (!response.ok) throw new Error('Unable to retrieve synonym matches')
 
     return parseSynonymMatches(await response.json())
   }
@@ -146,6 +186,10 @@ export const useConflicts = defineStore('conflicts', () => {
           nrNumber: entry.id!,
           startDate: entry.start_date!,
           source: entry.source,
+          ui: {
+            focused: false,
+            open: false,
+          },
         }
         output.at(-1)?.children.push(match)
       } else {
@@ -154,6 +198,10 @@ export const useConflicts = defineStore('conflicts', () => {
           highlightedText: entry.name.trim(),
           meta: entryMeta,
           children: [],
+          ui: {
+            focused: false,
+            open: false,
+          },
         }
         output.push(match)
       }
@@ -179,8 +227,7 @@ export const useConflicts = defineStore('conflicts', () => {
     query = query || '*'
     query = sanitizeQuery(query)
     const response = await getPhoneticMatches(query)
-    if (!response.ok)
-      throw new Error('Unable to retrieve phonetic matches')
+    if (!response.ok) throw new Error('Unable to retrieve phonetic matches')
 
     return parsePhoneticMatches(await response.json())
   }
@@ -196,6 +243,10 @@ export const useConflicts = defineStore('conflicts', () => {
           nrNumber: name_info.id!,
           startDate: name_info.start_date!,
           source: name_info.source,
+          ui: {
+            focused: false,
+            open: false,
+          },
         }
         output.at(-1)?.children.push(conflict)
       } else {
@@ -207,6 +258,10 @@ export const useConflicts = defineStore('conflicts', () => {
           highlightedText: name_info.name,
           meta: undefined,
           children: <Array<ConflictListItem>>[],
+          ui: {
+            focused: false,
+            open: false,
+          },
         }
         output.push(conflictGroup)
       }
@@ -228,6 +283,11 @@ export const useConflicts = defineStore('conflicts', () => {
         searchQuery
       )
       phoneticMatches.value = await retrievePhoneticMatches(searchQuery)
+
+      if (exactMatches.value.length === 0 && nonEmptyLists.value.length > 0) {
+        nonEmptyLists.value[0].ui.open = true
+      }
+      useExaminationRecipe().reset()
     } catch (e) {
       resetMatches()
       throw e
@@ -283,12 +343,17 @@ export const useConflicts = defineStore('conflicts', () => {
     selectedConflicts,
     comparedConflicts,
     loading,
+    isConflictSelected,
+    toggleConflict,
     resetMatches,
     clearSelectedConflicts,
     resetConflictLists,
     selectConflict,
     deselectConflict,
     autoAdd,
+    lists,
+    nonEmptyLists,
+    firstConflictItem,
     syncSelectedAndComparedConflicts,
   }
 })

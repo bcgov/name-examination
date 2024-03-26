@@ -76,7 +76,7 @@ export interface Histories {
 export enum ConflictSource {
   Corp = 'CORP',
   NameRequest = 'NR',
-  NRO = 'NRO'
+  NRO = 'NRO',
 }
 
 export interface ConflictListItem {
@@ -86,6 +86,11 @@ export interface ConflictListItem {
   nrNumber: string
   startDate: string
   source: ConflictSource
+  /** Properties related to how this object is presented in the UI */
+  ui: {
+    focused: boolean
+    open: boolean
+  }
 }
 
 export interface ConflictList {
@@ -93,6 +98,11 @@ export interface ConflictList {
   highlightedText: string
   meta: string | undefined
   children: Array<ConflictListItem>
+  /** Properties related to how this object is presented in the UI */
+  ui: {
+    focused: boolean
+    open: boolean
+  }
 }
 
 export interface Condition {

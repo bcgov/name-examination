@@ -2,6 +2,7 @@
   <form ref="searchForm" class="flex items-center" role="search">
     <div class="relative flex w-full">
       <input
+        :id="inputId"
         ref="searchTextField"
         type="text"
         class="w-full rounded-l border border-gray-300 px-2 py-1 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
@@ -47,6 +48,8 @@ const props = defineProps<{
   clear?: string
   /** Whether the search input is required (non-empty) for submitting. */
   inputRequired?: boolean
+  /** Value for the id attribute for the actual `input` element */
+  inputId?: string
 }>()
 
 const emit = defineEmits<{
@@ -57,10 +60,6 @@ const searchTextField = ref<HTMLInputElement | null>(null)
 const searchForm = ref<HTMLFormElement | null>(null)
 
 const showClear = ref(false)
-
-if (props.focusMnemonic) {
-  useMnemonic(props.focusMnemonic, () => searchTextField.value?.focus())
-}
 
 function onInput(event: Event) {
   const text = (event.target as HTMLInputElement).value
@@ -73,4 +72,10 @@ function onClear() {
   searchForm.value?.requestSubmit()
   showClear.value = false
 }
+
+onMounted(() => {
+  if (props.focusMnemonic) {
+    useMnemonic(props.focusMnemonic, () => searchTextField.value?.focus())
+  }
+})
 </script>

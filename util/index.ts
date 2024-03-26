@@ -1,4 +1,4 @@
-import type { NameChoice } from '~/types'
+import type { ConflictList, ConflictListItem, NameChoice } from '~/types'
 import { getBusiness, getCorporation, getNameRequest } from './namex-api'
 import { Status } from '~/enums/nr-status'
 
@@ -116,4 +116,28 @@ export function parseAddress(lines: Array<string>): Array<string> {
     return ['Address not', 'available']
   }
   return output
+}
+
+/** Get the circular index of `i` in an array of length `n`.
+ */
+export function getCircularIndex(i: number, n: number) {
+  return ((i % n) + n) % n
+}
+
+/** Distinguish a parameter that may be a `ConflictListItem` or a `ConflictList` */
+export function isConflictListItem(
+  obj: ConflictListItem | ConflictList
+): obj is ConflictListItem {
+  return 'nrNumber' in obj
+}
+
+export function isConflictList(
+  obj: ConflictListItem | ConflictList
+): obj is ConflictList {
+  return !isConflictListItem(obj)
+}
+
+/** Clamp `value` to interval [`min`, `max`] (inclusive) */
+export function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max)
 }
