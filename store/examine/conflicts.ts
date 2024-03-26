@@ -37,10 +37,9 @@ export const useConflicts = defineStore('conflicts', () => {
 
   /** The first `ConflictListItem` among every `ConflictList` across all buckets. */
   const firstConflictItem = computed(() =>
-    lists.value
-      .filter((list) => list.children.length > 0)
-      .at(0)
-      ?.children.at(0)
+    [...exactMatches.value, ...lists.value.flatMap((list) => list.children)].at(
+      0
+    )
   )
 
   function isConflictSelected(conflict: ConflictListItem) {
@@ -285,7 +284,7 @@ export const useConflicts = defineStore('conflicts', () => {
       )
       phoneticMatches.value = await retrievePhoneticMatches(searchQuery)
 
-      if (nonEmptyLists.value.length > 0) {
+      if (exactMatches.value.length === 0 && nonEmptyLists.value.length > 0) {
         nonEmptyLists.value[0].ui.open = true
       }
       useExaminationRecipe().reset()
