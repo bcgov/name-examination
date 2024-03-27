@@ -95,6 +95,7 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
       collapseAllLists()
     }
     focused.value.ui.open = true
+    scrollToFocused(true)
   }
 
   function collapseAllLists() {
@@ -126,6 +127,7 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
       setNewFocus(parentConflictList)
     }
     collapseFocused()
+    scrollToFocused()
   }
 
   /** If the current focused object is a `ConflictListItem`, collapse it. */
@@ -142,9 +144,13 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     }
   }
 
-  /** Scroll to the focused element */
-  function scrollToFocused() {
-    if (focused.value) emitter.emit('scrollToConflictObject', focused.value)
+  /** Scroll to the focused element
+   * @param instant whether to scroll to the focused object instantly
+   */
+  function scrollToFocused(instant: boolean = false) {
+    if (focused.value) {
+      emitter.emit('scrollToConflictObject', { obj: focused.value, instant })
+    }
   }
 
   /** Get the next/previous non-empty `ConflictList` or exact match `ConflictListItem` relative

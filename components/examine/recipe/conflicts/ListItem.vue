@@ -65,10 +65,10 @@ const props = defineProps<{
   conflictItem: ConflictListItem
 }>()
 
-emitter.on('scrollToConflictObject', (obj) => {
+emitter.on('scrollToConflictObject', ({obj, instant}) => {
   if (obj === props.conflictItem) {
     accordion.value?.$el.scrollIntoView({
-      behavior: 'smooth',
+      behavior: instant ? 'instant' : 'smooth',
       block: 'center',
     })
   }
