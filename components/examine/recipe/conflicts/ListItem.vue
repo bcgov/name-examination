@@ -1,12 +1,12 @@
 <template>
   <Accordion
+    :open="conflictItem.ui.open"
     :key="conflictItem.nrNumber"
     ref="accordion"
-    class="rounded p-1 transition-all open:!bg-sky-100 hover:bg-gray-100"
-    :open="conflictItem.ui.open"
+    class="rounded p-1 transition-all hover:bg-gray-100"
     :class="{ '!bg-sky-100': conflictItem.ui.focused }"
-    @summary-clicked="recipe.toggleObject(conflictItem)"
-    disable-default-open-behaviour
+    open-style="!bg-sky-100"
+    @title-clicked="recipe.toggleObject(conflictItem)"
   >
     <template #title>
       <div class="flex w-full items-center gap-x-2">

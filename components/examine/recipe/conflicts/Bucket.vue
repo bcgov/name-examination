@@ -49,7 +49,7 @@ const listElems = ref<Array<InstanceType<typeof Accordion>>>([])
 emitter.on('scrollToConflictObject', (obj) => {
   if (isConflictList(obj) && props.conflictLists?.includes(obj)) {
     const index = props.conflictLists.indexOf(obj)
-    listElems.value[index].$el.scrollIntoView({
+    listElems.value[index].$el?.scrollIntoView({
       behavior: 'smooth',
       block: 'center',
     })

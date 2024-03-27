@@ -1,12 +1,10 @@
 <template>
   <Accordion
-    ref="listElems"
     :open="list.ui.open"
     :arrow="list.children.length > 0"
     :disabled="list.children.length === 0"
     :button-style="{ 'bg-sky-100': list.ui.focused }"
-    @summary-clicked="recipe.toggleObject(list)"
-    disable-default-open-behaviour
+    @title-clicked="recipe.toggleObject(list)"
   >
     <template #title>
       <div class="flex w-full justify-between font-medium">

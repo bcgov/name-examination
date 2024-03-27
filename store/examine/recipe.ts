@@ -188,8 +188,8 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
       const newIndex = clamp(currIndex + delta, 0, maxIndex)
       setNewFocus(allObjects.value[newIndex])
     }
-    scrollToFocused()
     collapseFocused()
+    scrollToFocused()
   }
 
   /** Handle a keydown keyboard event in the recipe area. */

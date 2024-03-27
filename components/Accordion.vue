@@ -1,49 +1,50 @@
 <template>
-  <details
-    :class="{ 'pointer-events-none': disabled }"
-    ref="details"
-    @toggle="(e: ToggleEvent) => open = e.newState === 'open'"
-  >
-    <summary
-      class="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left text-sm font-medium outline-none transition"
+  <div :class="[{ 'pointer-events-none': disabled }, isOpen ? openStyle : '']">
+    <button
+      class="flex w-full items-center justify-between rounded p-1 text-left text-sm font-medium outline-none transition"
       :class="buttonStyle"
-      @click="onSummaryClick"
+      @click="onTitleClick"
     >
       <slot name="title"></slot>
       <ChevronDownIcon
         v-if="arrow"
-        :class="open ? 'rotate-180 transform' : ''"
+        :class="isOpen ? 'rotate-180 transform' : ''"
         class="ml-1 h-5 w-5 stroke-2 transition"
       />
-    </summary>
-    <div class="p-1">
-      <slot v-if="open" name="content"></slot>
+    </button>
+    <div v-if="isOpen" class="p-1 transition-height">
+      <slot name="content"></slot>
     </div>
-  </details>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ChevronDownIcon } from '@heroicons/vue/24/outline'
 
-const details = ref<HTMLDetailsElement>()
-const open = ref(Boolean(details.value?.open))
-
 const props = defineProps<{
+  open: boolean
   arrow?: boolean
   buttonStyle?: any
+  /** Tailwind style string for when the accordion is open */
+  openStyle?: string
   disabled?: boolean
-  /** Disable the default behaviour when the accordion is clicked/toggled. Allows manual control over opening/closing. */
-  disableDefaultOpenBehaviour?: boolean
 }>()
+
+const isOpen = ref(props.open)
 
 const emit = defineEmits<{
-  summaryClicked: []
+  titleClicked: []
 }>()
 
-function onSummaryClick(event: MouseEvent) {
-  emit('summaryClicked')
-  if (props.disableDefaultOpenBehaviour) {
-    event.preventDefault()
+watch(
+  () => [props.open],
+  () => {
+    isOpen.value = props.open
   }
+)
+
+function onTitleClick(_e: MouseEvent) {
+  isOpen.value = !isOpen.value
+  emit('titleClicked')
 }
 </script>
