@@ -13,9 +13,10 @@
         <input
           type="checkbox"
           :disabled="examine.conflictSelectionDisabled"
-          class="max-h-4 min-h-4 min-w-4 max-w-4"
+          class="max-h-4 min-h-4 min-w-4 max-w-4 outline-none"
           :checked="conflicts.isConflictSelected(conflictItem)"
           @change="conflicts.toggleConflict(conflictItem)"
+          @click="e => e.stopPropagation()"
           tabindex="-1"
           aria-label="Select conflict checkbox"
         />
