@@ -34,6 +34,11 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     ]
   })
 
+  /** Array of objects that contains all exact matched `ConflictListItem`s as well as all non-empty conflict lists.  */
+  const topLevelObjects = computed<Array<ConflictListItem | ConflictList>>(
+    () => [...conflicts.exactMatches, ...conflicts.nonEmptyLists]
+  )
+
   /** Maps every `ConflictListItem` to its parent `ConflictList` if it exists. */
   const conflictListMap = computed<
     Map<ConflictListItem, ConflictList | undefined>
@@ -116,6 +121,7 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
   function handleCollapse() {
     if (!focused.value) return
     if (!focused.value.ui.open && isConflictListItem(focused.value)) {
+      if (conflicts.exactMatches.includes(focused.value)) return
       const parentConflictList = conflictListMap.value.get(focused.value)
       setNewFocus(parentConflictList)
     }
@@ -141,13 +147,16 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     if (focused.value) emitter.emit('scrollToConflictObject', focused.value)
   }
 
-  /** Get the next/previous non-empty `ConflictList` (depending on `delta`) relative
-   * to the given non-empty `ConflictList`. */
-  function getRelativeConflictList(list: ConflictList, delta: number) {
-    const currentIndex = conflicts.nonEmptyLists.indexOf(list)
-    const maxIndex = conflicts.nonEmptyLists.length - 1
+  /** Get the next/previous non-empty `ConflictList` or exact match `ConflictListItem` relative
+   * to the given conflict object. */
+  function getRelativeTopLevelObject(
+    obj: ConflictList | ConflictListItem,
+    delta: number
+  ) {
+    const currentIndex = topLevelObjects.value.indexOf(obj)
+    const maxIndex = topLevelObjects.value.length - 1
     const newIndex = clamp(currentIndex + delta, 0, maxIndex)
-    return conflicts.nonEmptyLists[newIndex]
+    return topLevelObjects.value[newIndex]
   }
 
   function setNewFocus(focus: ConflictList | ConflictListItem | undefined) {
@@ -172,7 +181,7 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
       isConflictList(focused.value) &&
       (!focused.value.ui.open || delta < 0)
     ) {
-      setNewFocus(getRelativeConflictList(focused.value, delta))
+      setNewFocus(getRelativeTopLevelObject(focused.value, delta))
     } else {
       const currIndex = allObjects.value.indexOf(focused.value)
       const maxIndex = allObjects.value.length - 1
@@ -206,7 +215,7 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
       event.preventDefault()
     }
   }
-  
+
   /** Reset this store's state */
   function reset() {
     focused.value = undefined
@@ -225,6 +234,6 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     unfocusArea,
     toggleObject,
     handleKeyDown,
-    reset
+    reset,
   }
 })
