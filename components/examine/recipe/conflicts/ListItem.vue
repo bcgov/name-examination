@@ -4,7 +4,7 @@
     ref="accordion"
     class="rounded p-1 transition-all hover:bg-gray-100"
     :class="{ '!bg-sky-100': conflictItem.ui.focused || conflictItem.ui.open }"
-    @title-clicked="recipe.toggleObject(conflictItem)"
+    @title-clicked="recipe.clickObject(conflictItem)"
   >
     <template #title>
       <div class="flex w-full items-center gap-x-2">
@@ -14,7 +14,7 @@
           class="max-h-4 min-h-4 min-w-4 max-w-4 outline-none"
           :checked="conflicts.isConflictSelected(conflictItem)"
           @change="conflicts.toggleConflict(conflictItem)"
-          @click="(e) => e.stopPropagation()"
+          @click="onCheckboxClick"
           tabindex="-1"
           aria-label="Select conflict checkbox"
         />
@@ -63,6 +63,11 @@ const accordion = ref<InstanceType<typeof Accordion>>()
 const props = defineProps<{
   conflictItem: ConflictListItem
 }>()
+
+function onCheckboxClick(event: MouseEvent) {
+  recipe.clickObject(props.conflictItem, false)
+  event.stopPropagation()
+}
 
 emitter.on('scrollToConflictObject', ({ obj, instant }) => {
   if (obj === props.conflictItem) {

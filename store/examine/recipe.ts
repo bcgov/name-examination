@@ -74,28 +74,35 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     setNewFocus(undefined)
   }
 
-  /** Toggle a conflict area object between open/close.
-   * This method is usually only called externally when the user clicks a list/item. */
-  function toggleObject(obj: ConflictListItem | ConflictList) {
+  /** Simulate clicking the given conflict object in the conflict area.
+   * This method is usually only called externally when the user clicks a list/item.
+   * @param toggleOpen whether the object should only be focused, or if it's `open` state should be toggled as well. Defaults to `true`. */
+  function clickObject(
+    obj: ConflictListItem | ConflictList,
+    toggleOpen = true
+  ) {
     if (savedFocus.value) setNewFocus(savedFocus.value)
     focusArea()
-    collapseFocusedIfConflictItem()
+    if (obj !== focused.value) collapseFocusedIfConflictItem()
     setNewFocus(obj)
+    if (!toggleOpen) return
     if (obj.ui.open) {
       collapseFocused()
     } else {
-      expandFocused()
+      expandFocused(false)
     }
   }
 
-  /** Expand the currently focused object. */
-  function expandFocused() {
+  /** Expand the currently focused object.
+   * @param scrollInstant whether to scroll to the expanded object instantly. Defaults to `true`.
+   */
+  function expandFocused(scrollInstant = true) {
     if (!focused.value) return
     if (isConflictList(focused.value)) {
       collapseAllLists()
     }
     focused.value.ui.open = true
-    scrollToFocused(true)
+    scrollToFocused(scrollInstant)
   }
 
   function collapseAllLists() {
@@ -238,7 +245,7 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     focused,
     focusArea,
     unfocusArea,
-    toggleObject,
+    clickObject,
     handleKeyDown,
     reset,
   }

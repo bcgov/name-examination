@@ -4,7 +4,7 @@
     :arrow="list.children.length > 0"
     :disabled="list.children.length === 0"
     :button-style="{ 'bg-sky-100': list.ui.focused }"
-    @title-clicked="recipe.toggleObject(list)"
+    @title-clicked="recipe.clickObject(list)"
   >
     <template #title>
       <div class="flex w-full justify-between font-medium">
