@@ -34,6 +34,11 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     ]
   })
 
+  /** Array of objects that contains all exact matched `ConflictListItem`s as well as all non-empty conflict lists.  */
+  const topLevelObjects = computed<Array<ConflictListItem | ConflictList>>(
+    () => [...conflicts.exactMatches, ...conflicts.nonEmptyLists]
+  )
+
   /** Maps every `ConflictListItem` to its parent `ConflictList` if it exists. */
   const conflictListMap = computed<
     Map<ConflictListItem, ConflictList | undefined>
@@ -69,27 +74,35 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     setNewFocus(undefined)
   }
 
-  /** Toggle a conflict area object between open/close.
-   * This method is usually only called externally when the user clicks a list/item. */
-  function toggleObject(obj: ConflictListItem | ConflictList) {
+  /** Simulate clicking the given conflict object in the conflict area.
+   * This method is usually only called externally when the user clicks a list/item.
+   * @param toggleOpen whether the object should only be focused, or if it's `open` state should be toggled as well. Defaults to `true`. */
+  function clickObject(
+    obj: ConflictListItem | ConflictList,
+    toggleOpen = true
+  ) {
     if (savedFocus.value) setNewFocus(savedFocus.value)
     focusArea()
-    collapseFocusedIfConflictItem()
+    if (obj !== focused.value) collapseFocusedIfConflictItem()
     setNewFocus(obj)
+    if (!toggleOpen) return
     if (obj.ui.open) {
       collapseFocused()
     } else {
-      expandFocused()
+      expandFocused(false)
     }
   }
 
-  /** Expand the currently focused object. */
-  function expandFocused() {
+  /** Expand the currently focused object.
+   * @param scrollInstant whether to scroll to the expanded object instantly. Defaults to `true`.
+   */
+  function expandFocused(scrollInstant = true) {
     if (!focused.value) return
     if (isConflictList(focused.value)) {
       collapseAllLists()
     }
     focused.value.ui.open = true
+    scrollToFocused(scrollInstant)
   }
 
   function collapseAllLists() {
@@ -116,10 +129,12 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
   function handleCollapse() {
     if (!focused.value) return
     if (!focused.value.ui.open && isConflictListItem(focused.value)) {
+      if (conflicts.exactMatches.includes(focused.value)) return
       const parentConflictList = conflictListMap.value.get(focused.value)
       setNewFocus(parentConflictList)
     }
     collapseFocused()
+    scrollToFocused()
   }
 
   /** If the current focused object is a `ConflictListItem`, collapse it. */
@@ -136,18 +151,25 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     }
   }
 
-  /** Scroll to the focused element */
-  function scrollToFocused() {
-    if (focused.value) emitter.emit('scrollToConflictObject', focused.value)
+  /** Scroll to the focused element
+   * @param instant whether to scroll to the focused object instantly
+   */
+  function scrollToFocused(instant: boolean = false) {
+    if (focused.value) {
+      emitter.emit('scrollToConflictObject', { obj: focused.value, instant })
+    }
   }
 
-  /** Get the next/previous non-empty `ConflictList` (depending on `delta`) relative
-   * to the given non-empty `ConflictList`. */
-  function getRelativeConflictList(list: ConflictList, delta: number) {
-    const currentIndex = conflicts.nonEmptyLists.indexOf(list)
-    const maxIndex = conflicts.nonEmptyLists.length - 1
+  /** Get the next/previous non-empty `ConflictList` or exact match `ConflictListItem` relative
+   * to the given conflict object. */
+  function getRelativeTopLevelObject(
+    obj: ConflictList | ConflictListItem,
+    delta: number
+  ) {
+    const currentIndex = topLevelObjects.value.indexOf(obj)
+    const maxIndex = topLevelObjects.value.length - 1
     const newIndex = clamp(currentIndex + delta, 0, maxIndex)
-    return conflicts.nonEmptyLists[newIndex]
+    return topLevelObjects.value[newIndex]
   }
 
   function setNewFocus(focus: ConflictList | ConflictListItem | undefined) {
@@ -172,15 +194,15 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
       isConflictList(focused.value) &&
       (!focused.value.ui.open || delta < 0)
     ) {
-      setNewFocus(getRelativeConflictList(focused.value, delta))
+      setNewFocus(getRelativeTopLevelObject(focused.value, delta))
     } else {
       const currIndex = allObjects.value.indexOf(focused.value)
       const maxIndex = allObjects.value.length - 1
       const newIndex = clamp(currIndex + delta, 0, maxIndex)
       setNewFocus(allObjects.value[newIndex])
     }
-    scrollToFocused()
     collapseFocused()
+    scrollToFocused()
   }
 
   /** Handle a keydown keyboard event in the recipe area. */
@@ -206,7 +228,7 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
       event.preventDefault()
     }
   }
-  
+
   /** Reset this store's state */
   function reset() {
     focused.value = undefined
@@ -223,8 +245,8 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     focused,
     focusArea,
     unfocusArea,
-    toggleObject,
+    clickObject,
     handleKeyDown,
-    reset
+    reset,
   }
 })

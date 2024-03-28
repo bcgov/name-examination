@@ -1,21 +1,20 @@
 <template>
   <Accordion
-    :key="conflictItem.nrNumber"
-    ref="accordion"
-    class="rounded p-1 transition-all open:!bg-sky-100 hover:bg-gray-100"
     :open="conflictItem.ui.open"
-    :class="{ '!bg-sky-100': conflictItem.ui.focused }"
-    @summary-clicked="recipe.toggleObject(conflictItem)"
-    disable-default-open-behaviour
+    ref="accordion"
+    class="rounded p-1 transition-all hover:bg-gray-100"
+    :class="{ '!bg-sky-100': conflictItem.ui.focused || conflictItem.ui.open }"
+    @title-clicked="recipe.clickObject(conflictItem)"
   >
     <template #title>
       <div class="flex w-full items-center gap-x-2">
         <input
           type="checkbox"
           :disabled="examine.conflictSelectionDisabled"
-          class="max-h-4 min-h-4 min-w-4 max-w-4"
+          class="max-h-4 min-h-4 min-w-4 max-w-4 outline-none"
           :checked="conflicts.isConflictSelected(conflictItem)"
           @change="conflicts.toggleConflict(conflictItem)"
+          @click="onCheckboxClick"
           tabindex="-1"
           aria-label="Select conflict checkbox"
         />
@@ -65,10 +64,15 @@ const props = defineProps<{
   conflictItem: ConflictListItem
 }>()
 
-emitter.on('scrollToConflictObject', (obj) => {
+function onCheckboxClick(event: MouseEvent) {
+  recipe.clickObject(props.conflictItem, false)
+  event.stopPropagation()
+}
+
+emitter.on('scrollToConflictObject', ({ obj, instant }) => {
   if (obj === props.conflictItem) {
     accordion.value?.$el.scrollIntoView({
-      behavior: 'smooth',
+      behavior: instant ? 'instant' : 'smooth',
       block: 'center',
     })
   }
