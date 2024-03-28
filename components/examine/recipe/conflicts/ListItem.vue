@@ -1,11 +1,9 @@
 <template>
   <Accordion
     :open="conflictItem.ui.open"
-    :key="conflictItem.nrNumber"
     ref="accordion"
     class="rounded p-1 transition-all hover:bg-gray-100"
-    :class="{ '!bg-sky-100': conflictItem.ui.focused }"
-    open-style="!bg-sky-100"
+    :class="{ '!bg-sky-100': conflictItem.ui.focused || conflictItem.ui.open }"
     @title-clicked="recipe.toggleObject(conflictItem)"
   >
     <template #title>
@@ -16,7 +14,7 @@
           class="max-h-4 min-h-4 min-w-4 max-w-4 outline-none"
           :checked="conflicts.isConflictSelected(conflictItem)"
           @change="conflicts.toggleConflict(conflictItem)"
-          @click="e => e.stopPropagation()"
+          @click="(e) => e.stopPropagation()"
           tabindex="-1"
           aria-label="Select conflict checkbox"
         />
@@ -66,7 +64,7 @@ const props = defineProps<{
   conflictItem: ConflictListItem
 }>()
 
-emitter.on('scrollToConflictObject', ({obj, instant}) => {
+emitter.on('scrollToConflictObject', ({ obj, instant }) => {
   if (obj === props.conflictItem) {
     accordion.value?.$el.scrollIntoView({
       behavior: instant ? 'instant' : 'smooth',

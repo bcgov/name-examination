@@ -1,5 +1,5 @@
 <template>
-  <div :class="[{ 'pointer-events-none': disabled }, isOpen ? openStyle : '']">
+  <div :class="{ 'pointer-events-none': disabled }">
     <button
       class="flex w-full items-center justify-between rounded p-1 text-left text-sm font-medium outline-none transition"
       :class="buttonStyle"
@@ -12,7 +12,7 @@
         class="ml-1 h-5 w-5 stroke-2 transition"
       />
     </button>
-    <div v-if="isOpen" class="p-1 transition-height">
+    <div v-if="isOpen" class="p-1">
       <slot name="content"></slot>
     </div>
   </div>
@@ -25,8 +25,6 @@ const props = defineProps<{
   open: boolean
   arrow?: boolean
   buttonStyle?: any
-  /** Tailwind style string for when the accordion is open */
-  openStyle?: string
   disabled?: boolean
 }>()
 

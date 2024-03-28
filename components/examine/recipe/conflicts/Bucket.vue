@@ -46,7 +46,7 @@ const props = defineProps<{
 
 const listElems = ref<Array<InstanceType<typeof Accordion>>>([])
 
-emitter.on('scrollToConflictObject', ({obj, instant}) => {
+emitter.on('scrollToConflictObject', ({ obj, instant }) => {
   if (isConflictList(obj) && props.conflictLists?.includes(obj)) {
     const index = props.conflictLists.indexOf(obj)
     listElems.value[index].$el?.scrollIntoView({
