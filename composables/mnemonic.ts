@@ -5,6 +5,7 @@ export function useMnemonic(letter: string, callback: () => void) {
   function handleKeydown(event: KeyboardEvent) {
     if (event.altKey && event.key === letter.toLowerCase()) {
       callback()
+      event.preventDefault()
     }
   }
 
