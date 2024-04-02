@@ -67,8 +67,8 @@ Nuxt uses the path of the component file to form the name of the component when 
 
 Some folders to highlight:
 
-- `examine/recipe/` - this folder contains components for the _recipe area_ of the Examine page. The recipe area is the place where all the conflicts can be browsed, and where the user can select conflicts for their decision.
-- `examine/request_info/` - this folder contains components for the _request info_ section of the Examine page, which are the 5 cells that contain information about the NR currently being examined.
+- `examine/recipe/` - this folder contains components for the _recipe area_ of the Examine page. The recipe area is the place where all the conflicts, conditions, trademarks, and history can be browsed. It's also where the user can select conflicts for their decision.
+- `examine/request_info/` - this folder contains components for the _request info_ section of the Examine page, which are the 5 cells near the top of the Examine page that contain information about the NR currently being examined.
 
 If a component is generic enough that it can be used anywhere in the application (e.g. a button), then it can go directly under the `components` folder.
 
