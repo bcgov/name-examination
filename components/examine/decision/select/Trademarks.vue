@@ -19,6 +19,7 @@
 </template>
 
 <script setup lang="ts">
+/** A dropdown for selecting trademarks */
 import { useExamination } from '~/store/examine'
 import type { Trademark } from '~/types'
 

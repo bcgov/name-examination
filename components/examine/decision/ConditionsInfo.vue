@@ -11,6 +11,7 @@
 </template>
 
 <script setup lang="ts">
+/** Component that lists conditions in a small banner */
 import type { Condition } from '~/types'
 
 defineProps<{

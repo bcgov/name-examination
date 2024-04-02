@@ -15,6 +15,7 @@
 </template>
 
 <script setup lang="ts">
+/** Decision area header and consent flag checkbox */
 import { useExamination } from '~/store/examine'
 const examine = useExamination()
 </script>
