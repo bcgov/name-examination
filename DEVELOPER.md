@@ -13,7 +13,7 @@
 
 ## VS Code Environment Setup
 
-After following the setup instructions in the [README](./README.md), you should have a local dev server up and running.
+After following the setup instructions in the [README](./README.md#setup), you should have a local dev server up and running.
 
 The following exensions are recommended:
 
