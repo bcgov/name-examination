@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AppHeaderContainer />
+    <AppHeader />
     <AppBanner />
     <GlobalErrorDialog />
     <slot></slot>

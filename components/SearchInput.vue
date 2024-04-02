@@ -34,6 +34,7 @@
 </template>
 
 <script setup lang="ts">
+/** Component for inputting a search query. */
 import {
   ArrowUturnLeftIcon,
   MagnifyingGlassIcon,

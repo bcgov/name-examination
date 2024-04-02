@@ -17,6 +17,7 @@
 </template>
 
 <script setup lang="ts">
+/** Shows a message to the user with a styled banner. */
 import {
   ExclamationTriangleIcon,
   LockClosedIcon,

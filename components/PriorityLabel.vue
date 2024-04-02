@@ -6,8 +6,11 @@
 </template>
 
 <script setup lang="ts">
+/** Component usually used to indicate an NR is a priority. */
 import { StarIcon } from '@heroicons/vue/24/solid'
+
 defineProps<{
+  /** Tailwind style string passed to the label's icon. */
   iconStyle?: string
 }>()
 </script>

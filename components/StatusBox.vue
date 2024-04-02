@@ -6,9 +6,9 @@
     </div>
     <div class="my-6 ml-2">
       Not Examined:
-      <span id="notExamined" class="font-bold">{{
-        status.notExaminedNum
-      }}</span>
+      <span id="notExamined" class="font-bold">
+        {{ status.notExaminedNum }}
+      </span>
     </div>
     <div class="mb-2 ml-2 mt-6">
       Hold: <span id="hold" class="font-bold">{{ status.holdNum }}</span>
@@ -17,6 +17,7 @@
 </template>
 
 <script setup lang="ts">
+/** Component that shows examination status (number of NRs not examined and on Hold) */
 import { useStatusStore } from '~/store/status'
 
 const status = useStatusStore()
