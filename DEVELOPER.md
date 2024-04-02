@@ -20,6 +20,7 @@ The following exensions are recommended:
 - [Vue](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
 - [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
 - [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+- [Goto definition alias](https://marketplace.visualstudio.com/items?itemName=antfu.goto-alias) - allows you to control click a component and go to its file
 
 You can create a basic chrome launch configuration in VS Code to open a browser window for debugging.
 
