@@ -26,6 +26,7 @@
 </template>
 
 <script setup lang="ts">
+/** Save/cancel buttons for the edit request view. */
 import { useExamination } from '~/store/examine'
 import { ArrowPathIcon, CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 

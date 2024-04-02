@@ -28,6 +28,7 @@
 </template>
 
 <script setup lang="ts">
+/** Buttons for quickly approving/rejecting an NR */
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/vue/24/solid'
 import { Status } from '~/enums/nr-status'
 import { useExamination } from '~/store/examine'

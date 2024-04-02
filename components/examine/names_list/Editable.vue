@@ -17,8 +17,8 @@
 </template>
 
 <script setup lang="ts">
+/** Displays a list of editable name choices */
 import { useExamination } from '~/store/examine'
-import { emitter } from '~/util/emitter'
 
 const examine = useExamination()
 

@@ -15,6 +15,7 @@
 </template>
 
 <script setup lang="ts">
+/** Displays a list of name choices */
 import type { NameChoice } from '~/types'
 
 const props = defineProps<{

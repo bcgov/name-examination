@@ -17,6 +17,7 @@
 </template>
 
 <script setup lang="ts">
+/** Compare tab in the recipe area */
 import { useConflicts } from '~/store/examine/conflicts'
 const conflicts = useConflicts()
 </script>

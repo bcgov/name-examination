@@ -28,6 +28,7 @@
 </template>
 
 <script setup lang="ts">
+/** Header for the examination screen, includes the NR number, action buttons, etc. */
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
 import { useExamination } from '~/store/examine'
 const examine = useExamination()

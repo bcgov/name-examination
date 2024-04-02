@@ -39,15 +39,20 @@
 </template>
 
 <script setup lang="ts">
+/** Component for showing a single name choice */
 import { CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { Status } from '~/enums/nr-status'
 import type { NameChoice } from '~/types'
 
 const props = defineProps<{
   choice: NameChoice
+  /** Decision text for this name choice, shown under the name */
   decisionText: string
+  /** Whether this choice is undoable */
   undoable?: boolean
+  /** Function called when the user requests to undo this name choice */
   undo?: (choice: NameChoice) => Promise<void>
+  /** Whether this choice is the current one being examined */
   current?: boolean
   highlight?: boolean
   indicateDraft?: boolean

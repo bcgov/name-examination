@@ -99,6 +99,9 @@
 </template>
 
 <script setup lang="ts">
+/** Buttons for performing various actions in the examination screen, like editing, holding the request, etc.
+ * Changes what buttons are displayed based on variables from the examination store
+ */
 import {
   ArrowUturnLeftIcon,
   ArrowsPointingInIcon,
