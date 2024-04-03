@@ -462,14 +462,16 @@ export const useExamination = defineStore('examine', () => {
     )
 
     const newCurrentNameChoice = nameChoices.value
-      .filter(
-        (choice) =>
-          [Status.NotExamined, Status.Approved, Status.Condition].includes(
-            choice.state
-          ) && choice.name
-      )
-      .at(0)
-    setCurrentNameChoice(newCurrentNameChoice)
+      .filter(({ name, state }) => name && [Status.NotExamined, Status.Approved, Status.Condition].includes(state))[0]
+
+    if (newCurrentNameChoice) {
+      setCurrentNameChoice(newCurrentNameChoice)
+    } else {
+      const validNameChoices = nameChoices.value.filter(choice => choice.name)
+      if (validNameChoices.every(choice => choice.state === Status.Rejected)) {
+        currentNameObj.value = validNameChoices.at(-1)
+      }
+    }
 
     nrStatus.value = info.state
     previousState.value = info.previousStateCd ?? undefined
