@@ -1,16 +1,18 @@
 <template>
   <div class="flex flex-wrap px-4 py-2 text-gray-700">
-    <div class="mr-1 flex items-center">
-      <NRNumber :nr-number="examine.nrNumber" :priority="examine.priority" />
+    <div>
+      <div class="mr-1 flex items-center">
+        <NRNumber :nr-number="examine.nrNumber" :priority="examine.priority" />
 
-      <a
-        :href="`/transactions?nr=${examine.nrNumber.split(' ')[1]}`"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="rounded p-1 text-bcgov-blue5 transition hover:bg-gray-200"
-      >
-        <ArrowTopRightOnSquareIcon class="h-6 w-6" />
-      </a>
+        <a
+          :href="`/transactions?nr=${examine.nrNumber.split(' ')[1]}`"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="h-fit rounded p-1 text-bcgov-blue5 transition hover:bg-gray-200"
+        >
+          <ArrowTopRightOnSquareIcon class="h-6 w-6" />
+        </a>
+      </div>
     </div>
 
     <NameRequestTypeInfo
@@ -21,7 +23,7 @@
     />
     <ExamineHeaderRequestEditInputs v-else class="flex basis-5/12 flex-col" />
 
-    <ExamineHeaderActionButtons v-if="!examine.isEditing"class="ml-auto" />
+    <ExamineHeaderActionButtons v-if="!examine.isEditing" class="ml-auto" />
   </div>
 </template>
 
