@@ -1,7 +1,5 @@
 <template>
-  <ExamineHeaderEditActionButtons v-if="examine.isEditing" />
-
-  <div v-else class="flex items-center space-x-3">
+  <div class="flex items-center space-x-3">
     <!-- Edit Button -->
     <IconButton
       v-if="examine.canEdit && notHistoricalReservedConsumed"
