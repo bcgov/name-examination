@@ -38,7 +38,10 @@
         :undo="examine.undoNameChoiceDecision"
         highlight
       />
-      <ExamineNamesListEditable v-else />
+      <div v-else class="flex w-full justify-between">
+        <ExamineNamesListEditable />
+        <ExamineHeaderEditActionButtons class="basis-1/5 self-start px-4" />
+      </div>
 
       <ExamineQuickActionButtons v-if="showQuickActionButtons" />
     </div>
