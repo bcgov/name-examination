@@ -21,7 +21,7 @@
     />
     <ExamineHeaderRequestEditInputs v-else class="flex basis-5/12 flex-col" />
 
-    <ExamineHeaderActionButtons class="ml-auto" />
+    <ExamineHeaderActionButtons v-if="!examine.isEditing"class="ml-auto" />
   </div>
 </template>
 
