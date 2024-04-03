@@ -469,7 +469,7 @@ export const useExamination = defineStore('examine', () => {
     } else {
       const validNameChoices = nameChoices.value.filter(choice => choice.name)
       if (validNameChoices.every(choice => choice.state === Status.Rejected)) {
-        currentNameObj.value = { ...validNameChoices[validNameChoices.length - 1] }
+        currentNameObj.value = validNameChoices.at(-1)
       }
     }
 
