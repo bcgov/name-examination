@@ -17,6 +17,7 @@
 </template>
 
 <script setup lang="ts">
+/** Form for cancelling an NR */
 import { useExamination } from '~/store/examine'
 
 const emit = defineEmits<{

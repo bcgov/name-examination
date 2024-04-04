@@ -11,7 +11,9 @@
 </template>
 
 <script setup lang="ts">
+/** Generic input component for inputting single-line text. */
 defineProps<{
+  /** Text input's string value */
   modelValue?: string
   /** Style this input as an error, useful to indicate invalid inputs */
   errorStyle?: boolean

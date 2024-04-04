@@ -69,15 +69,12 @@
 </template>
 
 <script setup lang="ts">
-import { useExamination } from '~/store/examine'
 import { type NameRequest, type HistoryEntry } from '~/types'
 import { getNameRequest } from '~/util/namex-api';
 
 const props = defineProps<{
   historyEntry: HistoryEntry
 }>()
-
-const examine = useExamination()
 
 const isLoading = ref(false)
 

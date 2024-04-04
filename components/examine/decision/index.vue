@@ -23,6 +23,7 @@
 </template>
 
 <script setup lang="ts">
+/** The decision area */
 import { useExamination } from '~/store/examine'
 const examine = useExamination()
 </script>

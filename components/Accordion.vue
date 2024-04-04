@@ -19,12 +19,17 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * Component that can show hidden content when clicked.
+ */
 import { ChevronDownIcon } from '@heroicons/vue/24/outline'
 
 const props = defineProps<{
   open: boolean
   arrow?: boolean
+  /** Tailwind class list that is passed to the header/summary element */
   buttonStyle?: any
+  /** Whether the accordion is disabled (can't be clicked) */
   disabled?: boolean
 }>()
 

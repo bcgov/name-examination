@@ -20,9 +20,13 @@
 </template>
 
 <script setup lang="ts">
+/** Input for choosing between an on/off state. */
 import { Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue'
+
 defineProps<{
+  /** Switch's true/false state*/
   modelValue: boolean
+  /** Text shown next to switch */
   label: string
 }>()
 

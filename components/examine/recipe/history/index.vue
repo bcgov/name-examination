@@ -11,6 +11,7 @@
 </template>
 
 <script setup lang="ts">
+/** History tab in the recipe area */
 import { useExamination } from '~/store/examine'
 import { getFormattedDate } from '~/util/date'
 

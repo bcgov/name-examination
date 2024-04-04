@@ -1,66 +1,38 @@
-# Content v2 Minimal Starter
+# Name Examination
 
-Look at the [Content documentation](https://content-v2.nuxtjs.org/) to learn more.
+Service BC Name Examination System
+
+## Documentation
+
+For further documentation about the project for developers, see the [developer documentation](./DEVELOPER.md).
 
 ## Setup
 
 Make sure to install the dependencies:
 
 ```bash
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# npm
 npm install
-
+# or with pnpm:
+pnpm install
 ```
 
-## Setup Environment Variables
+### Setup Environment Variables
 
 ```bash
-
 cp .env.example .env
-
 ```
+**You will need to fill in the Firebase variables for the project to run.**
 
-## Linting
-
-```bash
-pnmp run lint
-```
-
-## Testing
-
-```Vitest
-pnmp run test
-```
-
-```Cyprus
-npx cypress open
-
-## Development Server
+### Development Server
 
 Start the development server on http://localhost:8080
 
 ```bash
-pnpm run dev
+npm run dev
 ```
 
-## Production
-
-Build the application for production:
+### Testing
 
 ```bash
-pnpm run build
+npm run test
 ```
-
-Locally preview production build:
-
-```bash
-pnpm run preview
-```
-
-Checkout the [deployment documentation](https://v3.nuxtjs.org/docs/deployment) for more information.

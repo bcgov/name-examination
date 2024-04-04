@@ -38,6 +38,7 @@
 </template>
 
 <script setup lang="ts">
+/** Conflicts tab in the recipe area */
 import { useConflicts } from '~/store/examine/conflicts'
 import { useExaminationRecipe } from '~/store/examine/recipe'
 import { useExaminationTabCyle } from '~/store/examine/tab-cycle'

@@ -17,6 +17,7 @@
 </template>
 
 <script setup lang="ts">
+/** Form for choosing a date range. */
 const props = defineProps<{
   initialStart: string
   initialEnd: string

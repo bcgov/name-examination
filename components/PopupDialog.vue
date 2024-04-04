@@ -43,6 +43,7 @@
 </template>
 
 <script setup lang="ts">
+/** Generic component for showing given content as a popup to the user. */
 import {
   TransitionRoot,
   TransitionChild,

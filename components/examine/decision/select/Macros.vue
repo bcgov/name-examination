@@ -19,6 +19,7 @@
 </template>
 
 <script setup lang="ts">
+/** A dropdown for selecting macros */
 import { useExamination } from '~/store/examine'
 import type { Macro } from '~/types'
 

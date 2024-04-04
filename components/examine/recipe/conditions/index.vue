@@ -13,6 +13,7 @@
 </template>
 
 <script setup lang="ts">
+/** Conditions tab in the recipe area */
 import { useExamination } from '~/store/examine'
 const examine = useExamination()
 const rows = computed(() =>

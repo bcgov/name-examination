@@ -19,6 +19,7 @@
 </template>
 
 <script setup lang="ts">
+/** A dropdown for selecting conditions */
 import { useExamination } from '~/store/examine'
 import type { Condition } from '~/types'
 

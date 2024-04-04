@@ -10,6 +10,7 @@
 </template>
 
 <script setup lang="ts">
+/** Displays a given request type and jurisdiction (if applicable) */
 import jurisdictionsData from '~/data/jurisdictions.json'
 
 const props = defineProps<{

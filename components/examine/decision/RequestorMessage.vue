@@ -62,6 +62,7 @@
 </template>
 
 <script setup lang="ts">
+/** Component for showing the requestor message, shows a popup dialog when editing it */
 import { useExamination } from '~/store/examine'
 import { BackspaceIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 

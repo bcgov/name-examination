@@ -26,6 +26,7 @@
 </template>
 
 <script setup lang="ts">
+/** Approve/reject buttons for the decision area */
 import { useExamination } from '~/store/examine'
 import { CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { Status } from '~/enums/nr-status'

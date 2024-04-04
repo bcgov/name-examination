@@ -29,6 +29,7 @@
 </template>
 
 <script setup lang="ts">
+/** A dropdown for selecting conflicts */
 import { useExamination } from '~/store/examine'
 import { useConflicts } from '~/store/examine/conflicts'
 import type { ConflictListItem } from '~/types'

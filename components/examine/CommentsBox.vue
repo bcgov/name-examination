@@ -16,8 +16,10 @@
 </template>
 
 <script setup lang="ts">
+/** Component for displaying a list of comments */
 import type { Comment } from '~/types'
 import { getFormattedDateWithTime } from '~/util/date'
+
 defineProps<{
   comments: Array<Comment>
 }>()

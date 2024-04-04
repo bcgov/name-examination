@@ -118,8 +118,7 @@ export function parseAddress(lines: Array<string>): Array<string> {
   return output
 }
 
-/** Get the circular index of `i` in an array of length `n`.
- */
+/** Get the circular index of `i` in an array of length `n` */
 export function getCircularIndex(i: number, n: number) {
   return ((i % n) + n) % n
 }
