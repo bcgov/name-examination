@@ -8,6 +8,7 @@
       options-style="!max-h-48"
       :disabled="examine.decisionSelectionsDisabled"
       multiple
+      close-on-select
     >
       <Chips
         v-if="examine.selectedConditions.length > 0"
