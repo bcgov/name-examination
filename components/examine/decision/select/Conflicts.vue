@@ -5,6 +5,7 @@
       v-model="conflicts.selectedConflicts"
       :options="options"
       multiple
+      close-on-select
       options-style="!max-h-48 !max-w-md"
       :options-display="(option: ConflictListItem) => option.text"
       :disabled="examine.decisionSelectionsDisabled"

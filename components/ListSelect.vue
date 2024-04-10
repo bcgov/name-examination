@@ -93,6 +93,8 @@ const props = defineProps<{
   options: Array<any>
   /** Whether multiple options can be selected */
   multiple?: boolean
+  /** Only applies if `multiple` prop is also passed in. Close the `ListSelect` when an option is [de]selected.*/
+  closeOnSelect?: boolean
   /** Whether the component is disabled (can't be clicked, grayed out) */
   disabled?: boolean
   optionsStyle?: string
@@ -113,7 +115,7 @@ const updateModelValue = (newValue: any) => {
   emit('update:modelValue', newValue)
   emit('change', newValue)
   // close the listbox when an option is selected/deselected even when multiple options can be selected
-  if (props.multiple) {
+  if (props.multiple && props.closeOnSelect) {
     listboxButton.value?.$el.click()
   }
 }

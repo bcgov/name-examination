@@ -3,6 +3,7 @@
     <h3 class="font-semibold">Macros</h3>
     <ListSelect
       multiple
+      close-on-select
       v-model="examine.selectedMacros"
       :disabled="examine.decisionSelectionsDisabled"
       :options="examine.macros"

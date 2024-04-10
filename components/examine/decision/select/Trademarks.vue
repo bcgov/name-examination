@@ -4,6 +4,7 @@
     <ListSelect
       v-model="examine.selectedTrademarks"
       multiple
+      close-on-select
       :options="examine.trademarks"
       options-style="!max-h-40"
       :options-display="displayTrademark"
