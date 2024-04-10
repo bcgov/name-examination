@@ -3,12 +3,12 @@
     <h3 class="font-semibold">Trademarks</h3>
     <ListSelect
       v-model="examine.selectedTrademarks"
-      multiple
-      close-on-select
       :options="examine.trademarks"
       options-style="!max-h-40"
       :options-display="displayTrademark"
       :disabled="examine.decisionSelectionsDisabled"
+      multiple
+      close-on-select
     >
       <Chips
         v-if="examine.selectedTrademarks.length > 0"

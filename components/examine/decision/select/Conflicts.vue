@@ -4,12 +4,12 @@
     <ListSelect
       v-model="conflicts.selectedConflicts"
       :options="options"
-      multiple
-      close-on-select
       options-style="!max-h-48 !max-w-md"
       :options-display="(option: ConflictListItem) => option.text"
       :disabled="examine.decisionSelectionsDisabled"
       @change="(_) => conflicts.syncSelectedAndComparedConflicts()"
+      multiple
+      close-on-select
     >
       <Chips
         v-if="conflicts.selectedConflicts.length > 0"

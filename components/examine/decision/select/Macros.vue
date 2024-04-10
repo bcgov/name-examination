@@ -2,13 +2,13 @@
   <div>
     <h3 class="font-semibold">Macros</h3>
     <ListSelect
-      multiple
-      close-on-select
       v-model="examine.selectedMacros"
       :disabled="examine.decisionSelectionsDisabled"
       :options="examine.macros"
       :options-display="(option: Macro) => option.name"
       options-style="!max-h-48"
+      multiple
+      close-on-select
     >
       <Chips
         v-if="examine.selectedMacros.length > 0"
