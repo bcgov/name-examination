@@ -9,6 +9,7 @@
     >
       <div class="relative w-full">
         <ListboxButton
+          ref="listboxButton"
           class="relative w-full rounded border border-gray-300 bg-white py-1.5 pl-3 pr-10 text-left transition sm:text-sm"
           :class="{
             'hover:bg-gray-100': !disabled,
@@ -87,7 +88,7 @@ import {
 import { ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/outline'
 
 type ModelValueType = any
-defineProps<{
+const props = defineProps<{
   modelValue: ModelValueType | Array<ModelValueType>
   options: Array<any>
   /** Whether multiple options can be selected */
@@ -106,8 +107,14 @@ const emit = defineEmits<{
   (e: 'update:modelValue', newValue: any): void
 }>()
 
+const listboxButton = ref<InstanceType<typeof ListboxButton>>()
+
 const updateModelValue = (newValue: any) => {
   emit('update:modelValue', newValue)
   emit('change', newValue)
+  // close the listbox when an option is selected/deselected even when multiple options can be selected
+  if (props.multiple) {
+    listboxButton.value?.$el.click()
+  }
 }
 </script>
