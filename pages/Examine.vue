@@ -52,8 +52,8 @@
       "
       class="flex grow flex-col space-x-3 bg-gray-100 p-4 2xl:flex-row"
     >
-      <ExamineRecipe class="xl:w-1/2" />
-      <ExamineDecision v-if="showDecisionPanel" class="xl:w-1/2" />
+      <ExamineRecipe class="2xl:w-1/2" />
+      <ExamineDecision v-if="showDecisionPanel" class="2xl:w-1/2" />
     </div>
   </div>
 </template>
