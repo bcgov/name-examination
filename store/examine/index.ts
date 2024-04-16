@@ -652,7 +652,7 @@ export const useExamination = defineStore('examine', () => {
 
     await pushDecision(currentNameObj.value)
     if (
-      ![Status.Approved, Status.Condition].includes(currentNameObj.value.state)
+      ![Status.Approved, Status.Condition].includes(currentNameObj?.value?.state)
     ) {
       await attemptNextNameChoice()
     }
@@ -670,7 +670,7 @@ export const useExamination = defineStore('examine', () => {
 
     await pushDecision(currentNameObj.value)
     if (
-      ![Status.Approved, Status.Condition].includes(currentNameObj.value.state)
+      ![Status.Approved, Status.Condition].includes(currentNameObj?.value?.state)
     ) {
       await attemptNextNameChoice()
     }
