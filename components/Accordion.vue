@@ -1,7 +1,7 @@
 <template>
   <div :class="{ 'pointer-events-none': disabled }">
     <button
-      class="flex w-full items-center justify-between rounded p-1 text-left text-sm font-medium outline-none transition"
+      class="accordion-title flex w-full items-center justify-between rounded p-1 text-left text-sm font-medium outline-none transition"
       :class="buttonStyle"
       @click="onTitleClick"
     >
