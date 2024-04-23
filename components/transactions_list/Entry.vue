@@ -35,7 +35,7 @@
       <span v-else></span>
     </div>
 
-    <TransactionsEntryNamesList :names="entry.names" />
+    <TransactionsListEntryNames :names="entry.names" />
   </div>
 </template>
 

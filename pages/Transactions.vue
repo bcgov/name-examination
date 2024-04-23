@@ -1,24 +1,31 @@
 <template>
   <div class="flex h-screen items-center justify-center">
-    <TransactionsView
-      v-if="nrNumber"
-      :nr-number="nrNumber"
-      class="w-2/3 border-x-2 border-neutral-300"
-    />
-    <span v-else>Invalid</span>
+    <div class="flex h-full w-2/3 flex-col border-x-2 border-neutral-300">
+      <HistoryHeader
+        v-if="transactions.nr"
+        :nr="transactions.nr"
+        :loading="transactions.loadingNr"
+      />
+      <TransactionsList
+        :entries="transactions.transactions"
+        :loading="transactions.loadingTransactions"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const nrNumber = ref()
+import { useTransactions } from '~/store/transactions'
 
 useHead({ title: 'BC Registry: Name Examination - Transactions' })
 
 definePageMeta({ layout: 'empty' })
 
-onMounted(() => {
+const transactions = useTransactions()
+
+onMounted(async () => {
   const route = useRoute()
   const nrParam = route.query.nr as string
-  nrNumber.value = `NR ${nrParam}`
+  await transactions.initialize(`NR ${nrParam}`)
 })
 </script>

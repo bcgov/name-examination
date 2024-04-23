@@ -25,7 +25,7 @@
     </div>
 
     <div v-else class="flex flex-col overflow-y-auto">
-      <TransactionsEntry
+      <TransactionsListEntry
         v-for="(entry, i) in filteredEntries"
         :key="entry.eventDate + entry.user_action + entry.stateCd"
         :entry="entry"
