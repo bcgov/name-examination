@@ -1,9 +1,4 @@
-import {
-  ConsentFlag,
-  type EntityTypeCode,
-  type RequestActionCode,
-  type RequestTypeCode,
-} from '~/enums/codes'
+import { ConsentFlag } from '~/enums/codes'
 import { Status } from '~/enums/nr-status'
 import {
   type NameChoice,
@@ -13,8 +8,6 @@ import {
 } from '~/types'
 import { emitter } from '~/util/emitter'
 import { getNameRequest, getTransactions } from '~/util/namex-api'
-import { toMappedRequestType } from '~/util/request-type'
-import requestTypes from '~/data/request_types.json'
 import { sortNameChoices } from '~/util'
 
 export const useTransactions = defineStore('transactions', () => {
@@ -34,7 +27,7 @@ export const useTransactions = defineStore('transactions', () => {
     loadingTransactions.value = true
     const transactionsResponse = await getTransactions(nrNumber)
     const transactionsJson = (await transactionsResponse.json()) as Transactions
-    transactionsJson.transactions.forEach(t => sortNameChoices(t.names))
+    transactionsJson.transactions.forEach((t) => sortNameChoices(t.names))
     transactions.value = transactionsJson.transactions
     loadingTransactions.value = false
   }
@@ -73,19 +66,6 @@ export const useTransactions = defineStore('transactions', () => {
     return displayState
   }
 
-  function getRequestTypeDisplay(
-    requestType: RequestTypeCode,
-    action: RequestActionCode
-  ) {
-    if (!nr.value) return 'N/A'
-    const mapped = toMappedRequestType(
-      requestType,
-      action,
-      nr.value.entity_type_cd
-    )
-    return requestTypes.find((r) => r.value == mapped)?.text || 'N/A'
-  }
-
   function getConsentDisplay(date: string | null, consentFlag: ConsentFlag) {
     return date
       ? 'Required. Received.'
@@ -101,7 +81,6 @@ export const useTransactions = defineStore('transactions', () => {
     loadingTransactions,
     initialize,
     getStatusDisplay,
-    getRequestTypeDisplay,
     getConsentDisplay,
   }
 })

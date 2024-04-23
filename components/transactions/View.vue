@@ -1,8 +1,8 @@
 <template>
   <div class="flex h-full flex-col">
-    <TransactionsHeader
+    <HistoryHeader
       v-if="transactions.nr"
-      :data="transactions.nr"
+      :nr="transactions.nr"
       :loading="transactions.loadingNr"
     />
     <TransactionsEntryList

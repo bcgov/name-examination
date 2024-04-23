@@ -44,6 +44,7 @@ import { DateTime } from 'luxon'
 import { useTransactions } from '~/store/transactions'
 import type { TransactionEntry } from '~/types'
 import { getFormattedDateWithTimeAndZone, parseDate } from '~/util/date'
+import { getRequestTypeDisplay } from '~/util/request-type'
 
 const { entry } = defineProps<{
   entry: TransactionEntry
@@ -75,10 +76,13 @@ const expiryDate = computed(() => {
 })
 
 const requestTypeDisplay = computed(() =>
-  transactions.getRequestTypeDisplay(
-    entry.requestTypeCd,
-    entry.request_action_cd
-  )
+  transactions.nr
+    ? getRequestTypeDisplay(
+        entry.requestTypeCd,
+        entry.request_action_cd,
+        transactions.nr.entity_type_cd
+      )
+    : 'N/A'
 )
 
 const consentDisplay = computed(() =>
