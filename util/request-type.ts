@@ -7,8 +7,6 @@ import {
   RequestActionCode,
   EntityTypeCode,
 } from '~/enums/codes'
-import type { NameRequest } from '~/types'
-import requestTypes from '~/data/request_types.json'
 
 type RequestTypeMap = { [key in RequestTypeCode]?: RequestTypeCode }
 
@@ -63,16 +61,4 @@ export function fromMappedRequestType(
   const newType = GP_TO_SOLE_PROP_MAP[requestType]
   if (newType) return newType
   return requestType
-}
-
-/** Get a display string based on fields from an NR object.
- * Returns 'N/A' if the request type could not be found.
- */
-export function getRequestTypeDisplay(
-  requestType: RequestTypeCode,
-  action: RequestActionCode,
-  entityType: EntityTypeCode
-) {
-  const mapped = toMappedRequestType(requestType, action, entityType)
-  return requestTypes.find((r) => r.value == mapped)?.text || 'N/A'
 }
