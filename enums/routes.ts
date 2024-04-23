@@ -1,6 +1,8 @@
 export enum Route {
-  Home = '/',  
+  Home = '/',
   Examine = '/examine',
   Search = '/search',
   Stats = '/stats',
+  Transactions = '/transactions',
+  Notifications = '/notifications',
 }

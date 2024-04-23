@@ -5,7 +5,7 @@
         <NRNumber :nr-number="examine.nrNumber" :priority="examine.priority" />
 
         <a
-          :href="`/transactions?nr=${examine.nrNumber.split(' ')[1]}`"
+          :href="`${Route.Transactions}?nr=${examine.nrNumber.split(' ')[1]}`"
           target="_blank"
           rel="noopener noreferrer"
           class="h-fit rounded p-1 text-bcgov-blue5 transition hover:bg-gray-200"
@@ -31,5 +31,6 @@
 /** Header for the examination screen, includes the NR number, action buttons, etc. */
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
 import { useExamination } from '~/store/examine'
+import { Route } from '~/enums/routes'
 const examine = useExamination()
 </script>

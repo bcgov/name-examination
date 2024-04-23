@@ -13,10 +13,7 @@
 
     <!-- Toggle Details Button -->
     <IconButton light @click="toggleDetails" mnemonic="b">
-      <ArrowsPointingInIcon
-        v-if="examine.isHeaderShown"
-        class="h-5 w-5"
-      />
+      <ArrowsPointingInIcon v-if="examine.isHeaderShown" class="h-5 w-5" />
       <ArrowsPointingOutIcon v-else class="h-5 w-5" />
 
       <template #text v-if="examine.isHeaderShown"
@@ -88,6 +85,20 @@
       <template #text>E<u>x</u>amine</template>
     </IconButton>
 
+    <!-- Notification History Button -->
+    <IconButton
+      light
+      @click="
+        navigateTo({
+          path: Route.Notifications,
+          query: { nr: examine.nrNumber.split(' ')[1] },
+        })
+      "
+    >
+      <EnvelopeIcon class="h-5 w-5" />
+      <template #text>Notification History</template>
+    </IconButton>
+
     <PopupDialog :show="showCancelRequestDialog">
       <template #title>Cancel Name Request</template>
       <ExamineCancelRequestForm
@@ -108,12 +119,14 @@ import {
   ArrowsPointingOutIcon,
   ChevronDoubleRightIcon,
   DocumentCheckIcon,
+  EnvelopeIcon,
   PauseIcon,
   PencilSquareIcon,
   PowerIcon,
   XMarkIcon,
 } from '@heroicons/vue/24/outline'
 import { Status } from '~/enums/nr-status'
+import { Route } from '~/enums/routes'
 import { useExamination } from '~/store/examine'
 
 const examine = useExamination()
