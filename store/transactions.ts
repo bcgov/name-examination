@@ -9,14 +9,12 @@ import { sortNameChoices } from '~/util'
 export const useTransactions = defineStore('transactions', () => {
   const nr = ref<NameRequest>()
   const transactions = ref<Array<TransactionEntry>>([])
-  const loadingNr = ref(false)
   const loadingTransactions = ref(false)
 
   async function loadNr(nrNumber: string) {
-    loadingNr.value = true
     const nrResponse = await getNameRequest(nrNumber)
     nr.value = await nrResponse.json()
-    loadingNr.value = false
+    if (nr.value) sortNameChoices(nr.value.names)
   }
 
   async function loadTransactions(nrNumber: string) {
@@ -28,6 +26,7 @@ export const useTransactions = defineStore('transactions', () => {
     loadingTransactions.value = false
   }
 
+  /** Initialize this store with NR and transactions data. */
   async function initialize(nrNumber: string) {
     try {
       await loadNr(nrNumber)
@@ -39,7 +38,6 @@ export const useTransactions = defineStore('transactions', () => {
         throw new Error(`Failed to fetch transactions data`)
       }
     } finally {
-      loadingNr.value = false
       loadingTransactions.value = false
     }
   }
@@ -47,7 +45,6 @@ export const useTransactions = defineStore('transactions', () => {
   return {
     nr,
     transactions,
-    loadingNr,
     loadingTransactions,
     initialize,
   }

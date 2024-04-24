@@ -298,3 +298,18 @@ export interface Payment {
   }
   refund: number
 }
+
+export interface NotificationsResponse {
+  response: {
+    count: number
+  }
+  notifications: Array<Notification>
+}
+
+/** TODO: edit this to reflect what the api returns */
+export interface Notification {
+  status: Status
+  sentDate: string
+  subject: string
+  content: string
+}

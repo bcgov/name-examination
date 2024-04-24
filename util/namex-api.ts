@@ -1,4 +1,10 @@
-import type { NameChoice, NameRequest, Transactions } from '~/types'
+import { Status } from '~/enums/nr-status'
+import type {
+  NameChoice,
+  NameRequest,
+  NotificationsResponse,
+  Transactions,
+} from '~/types'
 
 /**
  * Retrieve the Keycloak session token, refreshing to make it valid if necessary.
@@ -186,4 +192,21 @@ export async function getPayments(id: number) {
 
 export async function getStats(params: URLSearchParams) {
   return callNamexApi(getNamexApiUrl('/requests/stats?' + params))
+}
+
+/** TODO: edit this to call the actual api */
+export async function getNotifications(
+  nrNumber: string
+): Promise<NotificationsResponse> {
+  return {
+    response: { count: 1 },
+    notifications: [
+      {
+        status: Status.Conditional,
+        sentDate: '2023-04-24, 10:10am PST',
+        subject: 'Your NR has been conditionally approved',
+        content: 'here is the content of the email',
+      },
+    ],
+  }
 }
