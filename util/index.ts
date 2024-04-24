@@ -1,6 +1,8 @@
 import type { ConflictList, ConflictListItem, NameChoice } from '~/types'
 import { getBusiness, getCorporation, getNameRequest } from './namex-api'
 import { Status } from '~/enums/nr-status'
+import { Converter } from 'showdown'
+import sanitize from 'sanitize-html'
 
 /**
  * Return whether a given string is in a valid NR number format, i.e. NR xxxxxxx
@@ -139,4 +141,11 @@ export function isConflictList(
 /** Clamp `value` to interval [`min`, `max`] (inclusive) */
 export function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max)
+}
+
+/** Convert a markdown string to HTML. */
+export function mdToHtml(md: string) {
+  const converter = new Converter()
+  converter.setOption('simpleLineBreaks', true)
+  return sanitize(converter.makeHtml(md))
 }
