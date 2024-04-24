@@ -1,17 +1,22 @@
 <template>
-  <h1>Notfications page</h1>
+  <History v-if="nr" :nr="nr">
+    notifications
+  </History>
 </template>
 
 <script setup lang="ts">
-const nrNumber = ref()
+import type { NameRequest } from '~/types'
+import { getNameRequest } from '~/util/namex-api'
 
 useHead({ title: 'BC Registry: Name Examination - Notification History' })
 
 definePageMeta({ layout: 'empty' })
 
-onMounted(() => {
+const nr = ref<NameRequest>()
+
+onMounted(async () => {
   const route = useRoute()
   const nrParam = route.query.nr as string
-  nrNumber.value = `NR ${nrParam}`
+  nr.value = await (await getNameRequest(`NR ${nrParam}`)).json()
 })
 </script>

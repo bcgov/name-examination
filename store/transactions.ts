@@ -3,7 +3,6 @@ import {
   type TransactionEntry,
   type Transactions,
 } from '~/types'
-import { emitter } from '~/util/emitter'
 import { getNameRequest, getTransactions } from '~/util/namex-api'
 import { sortNameChoices } from '~/util'
 
@@ -34,10 +33,11 @@ export const useTransactions = defineStore('transactions', () => {
       await loadNr(nrNumber)
       await loadTransactions(nrNumber)
     } catch (e) {
-      emitter.emit('error', {
-        title: 'Transactions Error',
-        message: 'Failed to retrieve transactions data.',
-      })
+      if (!nr.value) {
+        throw new Error(`Failed to fetch data for ${nrNumber}`)
+      } else {
+        throw new Error(`Failed to fetch transactions data`)
+      }
     } finally {
       loadingNr.value = false
       loadingTransactions.value = false

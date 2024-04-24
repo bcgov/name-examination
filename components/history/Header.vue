@@ -1,9 +1,5 @@
 <template>
-  <div v-if="loading" class="flex items-center justify-center">
-    <LoadingSpinner />
-  </div>
-
-  <div v-else class="flex flex-col space-y-4 p-4">
+  <div class="flex flex-col space-y-4 p-4">
     <div class="flex items-center divide-x-2 divide-gray-300">
       <NRNumber
         :nr-number="nr.nrNum"
@@ -64,7 +60,6 @@ import {
 
 const { nr } = defineProps<{
   nr: NameRequest
-  loading?: boolean
   /** Include the `recipient` field in the NR info of the header. */
   includeRecipient?: boolean
 }>()

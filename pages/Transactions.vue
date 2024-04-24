@@ -1,21 +1,15 @@
 <template>
-  <div class="flex h-screen items-center justify-center">
-    <div class="flex h-full w-2/3 flex-col border-x-2 border-neutral-300">
-      <HistoryHeader
-        v-if="transactions.nr"
-        :nr="transactions.nr"
-        :loading="transactions.loadingNr"
-      />
-      <TransactionsList
-        :entries="transactions.transactions"
-        :loading="transactions.loadingTransactions"
-      />
-    </div>
-  </div>
+  <History v-if="transactions.nr" :nr="transactions.nr">
+    <TransactionsList
+      :entries="transactions.transactions"
+      :loading="transactions.loadingTransactions"
+    />
+  </History>
 </template>
 
 <script setup lang="ts">
 import { useTransactions } from '~/store/transactions'
+import { emitter } from '~/util/emitter'
 
 useHead({ title: 'BC Registry: Name Examination - Transactions' })
 
@@ -26,6 +20,13 @@ const transactions = useTransactions()
 onMounted(async () => {
   const route = useRoute()
   const nrParam = route.query.nr as string
-  await transactions.initialize(`NR ${nrParam}`)
+  try {
+    await transactions.initialize(`NR ${nrParam}`)
+  } catch (e) {
+    emitter.emit('error', {
+      title: 'Failed to load transactions page',
+      message: e as string,
+    })
+  }
 })
 </script>
