@@ -1,7 +1,7 @@
-import { Status } from '~/enums/nr-status'
 import type {
   NameChoice,
   NameRequest,
+  Notification,
   NotificationsResponse,
   Transactions,
 } from '~/types'
@@ -194,55 +194,19 @@ export async function getStats(params: URLSearchParams) {
   return callNamexApi(getNamexApiUrl('/requests/stats?' + params))
 }
 
-/** TODO: edit this to call the actual api */
-export async function getNotifications(
-  nrNumber: string
-): Promise<NotificationsResponse> {
+/** TODO: replace this with an actual API call */
+import mockData from '~/data/emails.mock.json'
+export async function getNotifications(nrNumber: string) {
   return {
-    response: { count: 1 },
-    notifications: [
-      {
-        status: Status.Conditional,
-        sentDate: '2023-04-24, 10:10am PST',
-        subject: 'Your NR has been conditionally approved',
-        content: `# Results of your Name Request
-
-Your Name Request is **approved**. Follow the steps below to complete your application with this name. If the name request expires before the application is completed, a new name request will be required.
-
----
-
-# You\'re not done yet!
-
-Follow these steps to complete your application using this business name:
-
-1. Visit [Forms, fees and information packages page]({{CORP_FORMS_URL}}) and download the appropriate form
-2. Complete and submit the form along with any required documentation and payment
-
----
-
-# Your Name Request Details
-
-**Name Request Number:**
-{{NAMEREQUEST_NUMBER}}
-
-**Name Request Expiry Date and Time:**
-{{EXPIRATION_DATE}}
-
----
-
-# Attached to this Email
-
-The following documents are attached to this email:
-
-* Results of Name Request
-
----
-
-**Business Registry**
-BC Registries and Online Services
-Toll Free: 1-877-370-1033
-Victoria Office: 250-370-1033
-Email: [BCRegistries@gov.bc.ca](BCRegistries@gov.bc.ca)`},
-    ],
+    response: { count: mockData.length },
+    notifications: mockData as Array<Notification>,
   }
+}
+
+/** TODO: edit this function once backend is completed, if necessary */
+export async function postNotification(notificationId: number) {
+  const url = getNamexApiUrl(`/notifications/${notificationId}/resend`)
+  return callNamexApi(url, {
+    method: 'POST',
+  })
 }

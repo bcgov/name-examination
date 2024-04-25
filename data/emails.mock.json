@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "status": "APPROVED",
+    "sentDate": "2024-04-25T18:32:35",
+    "subject": "NR 3209542 - Name Request Results from Corporate Registry",
+    "content": "# Results of your Name Request\n\nYour Name Request is **approved**. Follow the steps below to complete your application with this name. If the name request expires before the application is completed, a new name request will be required.\n\n---\n\n# You're not done yet!\n\nFollow these steps to complete your application using this business name:\n\n1. Visit [Forms, fees and information packages page]({{CORP_FORMS_URL}}) and download the appropriate form\n2. Complete and submit the form along with any required documentation and payment\n\n---\n\n# Your Name Request Details\n\n**Name Request Number:**\n{{NAMEREQUEST_NUMBER}}\n\n**Name Request Expiry Date and Time:**\n{{EXPIRATION_DATE}}\n\n---\n\n# Attached to this Email\n\nThe following documents are attached to this email:\n\n* Results of Name Request\n\n---\n\n**Business Registry**\nBC Registries and Online Services\nToll Free: 1-877-370-1033\nVictoria Office: 250-370-1033\nEmail: [BCRegistries@gov.bc.ca](BCRegistries@gov.bc.ca)"
+  },
+  {
+    "id": 2,
+    "status": "CONDITIONAL",
+    "sentDate": "2024-04-24T16:30:35",
+    "subject": "NR 3209542 - Name Request Results from Corporate Registry",
+    "content": "# Results of your Name Request\n\nYour Name Request is **conditionally approved**. Follow the steps below to complete your application with this name. If the name request expires before the application is completed, a new name request will be required.\n\n---\n\n# Your Next Steps\n\nFollow these steps to complete your application using this business name:\n\n1. Acquire the consent letter\n2. Visit [Forms, fees and information packages page]({{CORP_FORMS_URL}}) and download the appropriate form\n3. Complete and submit the form along with the consent letter and any additional required documentation and payment\n\n---\n\n# Your Name Request Details\n\n**Name Request Number:**\n{{NAMEREQUEST_NUMBER}}\n\n**Name Request Expiry Date and Time:**\n{{EXPIRATION_DATE}}\n\n---\n\n# Attached to this Email\n\nThe following documents are attached to this email:\n\n* Results of Name Request\n\n---\n\n**Business Registry**\nBC Registries and Online Services\nToll Free: 1-877-370-1033\nVictoria Office: 250-370-1033\nEmail: [BCRegistries@gov.bc.ca](BCRegistries@gov.bc.ca)"
+  },
+  {
+    "id": 3,
+    "status": "REJECTED",
+    "sentDate": "2024-04-23T16:30:00",
+    "subject": "NR 3209542 - Name Request Results from Corporate Registry",
+    "content": "# Results of your Name Request\n\nYour Name Request is **rejected**.\n\n---\n\n# Your Next Steps\n\n1. Review the attached Results of Name Request\n2. (Optional) Visit [Name Request]({{NAME_REQUEST_URL}}) to request a new name\n\n---\n\n# Your Name Request Details\n\n**Name Request Number:**\n{{NAMEREQUEST_NUMBER}}\n\n---\n\n# Attached to this Email\n\nThe following documents are attached to this email:\n\n* Results of Name Request\n\n---\n\n**Business Registry**\nBC Registries and Online Services\nToll Free: 1-877-526-1526\nVictoria Office: 250-387-7848\nEmail: [BCRegistries@gov.bc.ca](BCRegistries@gov.bc.ca)"
+  }
+]

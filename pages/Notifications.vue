@@ -1,5 +1,10 @@
 <template>
-  <History v-if="notifications.nr" :nr="notifications.nr" include-recipient>
+  <History
+    v-if="notifications.nr"
+    :nr="notifications.nr"
+    include-recipient
+    include-back-button
+  >
     <NotificationsList
       :entries="notifications.notifications"
       :loading="notifications.loading"

@@ -1,4 +1,7 @@
-import { type NameRequest, type Notification } from '~/types'
+import {
+  type NameRequest,
+  type Notification,
+} from '~/types'
 import { sortNameChoices } from '~/util'
 import { getNameRequest, getNotifications } from '~/util/namex-api'
 
@@ -15,9 +18,12 @@ export const useNotifications = defineStore('notifications', () => {
 
   async function loadNotifications(nrNumber: string) {
     loading.value = true
-    /** TODO: edit this when the return value of `getNotifcations` changes */
-    const notificationsResponse = await getNotifications(nrNumber)
-    notifications.value = notificationsResponse.notifications
+    /** TODO: when getNotifications is updated to actually call the API, edit the code to something like this:
+     * const notificationsResponse = await getNotifications(nrNumber)
+     * const notificationsJson = (await notificationsResponse.json()) as NotificationsResponse
+     */
+    const notificationsJson = await getNotifications(nrNumber)
+    notifications.value = notificationsJson.notifications
     loading.value = false
   }
 

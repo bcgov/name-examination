@@ -306,8 +306,9 @@ export interface NotificationsResponse {
   notifications: Array<Notification>
 }
 
-/** TODO: edit this to reflect what the api returns */
+/** TODO: edit this interface if needed, once the backend is complete */
 export interface Notification {
+  id: number
   status: Status
   sentDate: string
   subject: string

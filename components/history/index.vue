@@ -1,7 +1,7 @@
 <template>
   <div class="flex h-screen items-center justify-center">
     <div class="flex h-full w-2/3 flex-col border-x-2 border-neutral-300">
-      <HistoryHeader :nr="nr" :include-recipient="includeRecipient" />
+      <HistoryHeader :nr="nr" :include-recipient="includeRecipient" :include-back-button="includeBackButton"/>
       <slot></slot>
     </div>
   </div>
@@ -15,5 +15,7 @@ defineProps<{
   nr: NameRequest
   /** Show the `recipient` field in the header. */
   includeRecipient?: boolean
+  /** Include a back button to go back to the examine page. */
+  includeBackButton?: boolean
 }>()
 </script>

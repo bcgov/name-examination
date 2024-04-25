@@ -7,6 +7,7 @@
       <IconButton
         light
         class="col-span-2 row-span-2 h-[2.25rem] w-fit justify-self-end"
+        @click="resendNotification"
       >
         <PaperAirplaneIcon class="h-5 w-5" />
         <template #text>Resend Notification</template>
@@ -31,13 +32,18 @@
 import { PaperAirplaneIcon } from '@heroicons/vue/24/outline'
 import type { Notification } from '~/types'
 import { mdToHtml } from '~/util'
+import { postNotification } from '~/util/namex-api'
 
-defineProps<{
+const props = defineProps<{
   entry: Notification
 }>()
+
+async function resendNotification() {
+  await postNotification(props.entry.id)
+}
 </script>
 
-<style>
+<style scoped>
 h1 {
   font-weight: bold;
   font-size: 1rem;
