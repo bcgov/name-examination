@@ -194,7 +194,7 @@ export async function getStats(params: URLSearchParams) {
   return callNamexApi(getNamexApiUrl('/requests/stats?' + params))
 }
 
-/** TODO: replace this with an actual API call */
+/** TODO: replace this with an actual API call, and delete mock json file */
 import mockData from '~/data/emails.mock.json'
 export async function getNotifications(nrNumber: string) {
   return {
@@ -204,6 +204,7 @@ export async function getNotifications(nrNumber: string) {
 }
 
 /** TODO: edit this function once backend is completed, if necessary */
+/** Post to the notifications endpoint to resend an email with the given notification id */
 export async function postNotification(notificationId: number) {
   const url = getNamexApiUrl(`/notifications/${notificationId}/resend`)
   return callNamexApi(url, {
