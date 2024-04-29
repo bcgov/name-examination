@@ -1,5 +1,7 @@
 <template>
-  <div class="flex flex-col space-y-4 border-y px-8 py-4 text-sm">
+  <div
+    class="transaction-entry flex flex-col space-y-4 border-y px-8 py-4 text-sm"
+  >
     <div class="grid grid-cols-4 gap-y-1">
       <span class="font-bold">Notification Status</span>
       <span>{{ entry.status }}</span>
@@ -21,9 +23,20 @@
 
       <span class="font-bold">Content</span>
       <span
+        ref="contentText"
         v-html="mdToHtml(entry.content)"
-        class="col-span-3 line-clamp-[15] list-inside overflow-auto"
+        class="col-span-3 list-inside overflow-hidden"
+        :class="{ 'line-clamp-[15]': !showFull }"
       ></span>
+
+      <span></span>
+      <button
+        v-if="isTextClamped"
+        class="col-span-3 justify-self-start text-bcgov-blue3"
+        @click="onShowFull"
+      >
+        {{ showFull ? 'hide full content' : 'show full content' }}
+      </button>
     </div>
   </div>
 </template>
@@ -38,29 +51,51 @@ const props = defineProps<{
   entry: Notification
 }>()
 
+const contentText = ref<HTMLSpanElement>()
+const showFull = ref(false)
+const isTextClamped = ref(false)
+
+function onShowFull() {
+  showFull.value = !showFull.value
+}
+
 async function resendNotification() {
   await postNotification(props.entry.id)
 }
+
+onMounted(() => {
+  if (contentText.value) {
+    isTextClamped.value =
+      contentText.value?.scrollHeight > contentText.value?.clientHeight
+    console.log(
+      contentText.value.scrollHeight,
+      contentText.value.clientHeight,
+      isTextClamped.value
+    )
+  }
+})
 </script>
 
-<style scoped>
-h1 {
-  font-weight: bold;
-  font-size: 1rem;
-}
+<style>
+.transaction-entry {
+  h1 {
+    font-weight: bold;
+    font-size: 1rem;
+  }
 
-ul,
-ol {
-  list-style: revert;
-  padding-left: 1rem;
-}
+  ul,
+  ol {
+    list-style: revert;
+    padding-left: 1rem;
+  }
 
-a {
-  color: revert;
-}
+  a {
+    color: revert;
+  }
 
-hr {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
+  hr {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
 }
 </style>
