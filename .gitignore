@@ -151,3 +151,18 @@ dist
 
 # IDEs
 .vscode
+
+# Cypress related files
+**/cypress.env.json
+**/node_modules
+**/videos/
+**/screenshots/
+.vscode
+.eslintrc.json
+**/results/**
+**/downloads/**
+**/mochawesome-report/**
+**/client.json
+**/token.json
+**/local-dev/**
+**/*copy.json
