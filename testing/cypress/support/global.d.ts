@@ -9,5 +9,7 @@ declare namespace Cypress {
     generateUUID(): Chainable<any>;
 
     cleanGC(): Chainable<any>;
+
+    linkChecker(): Chainable<any>;
   }
 }
