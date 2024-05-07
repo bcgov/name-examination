@@ -6,11 +6,11 @@
 describe('Check for Broken Static Links', () => {
   beforeEach(() => {
     cy.setid('default')
-    cy.login(null, null, null, null)
+    cy.login()
   })
 
   afterEach(() => {
-    cy.logout(null)
+    cy.logout()
   })
   it('Check All Static Links', () => {
     // Iterate through all the links on the page

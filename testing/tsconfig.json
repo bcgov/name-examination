@@ -3,7 +3,12 @@
     "target": "es5",
     "lib": ["es5", "dom"],
     "baseUrl": "./",
-    "types": ["cypress", "node", "cypress-real-events", "@testing-library/cypress"],
+    "types": [
+      "cypress",
+      "node",
+      "cypress-real-events",
+      "@testing-library/cypress"
+    ],
     "esModuleInterop": true,
     "resolveJsonModule": true
   },

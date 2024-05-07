@@ -62,4 +62,3 @@ jobs:
         with:
           name: smoke-test-results
           path: testing/mochawesome-report/report.html
-

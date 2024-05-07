@@ -1,5 +1,5 @@
-import { defineConfig } from 'cypress';
-import fs from 'fs';
+import { defineConfig } from 'cypress'
+import fs from 'fs'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -21,27 +21,30 @@ export default defineConfig({
     json: true,
   },
   e2e: {
-    baseUrl: 'https://namex-test.apps.silver.devops.gov.bc.ca/',
-    projectId: 'gctfmh',
+    baseUrl: 'http://localhost:8080/',
+    projectId: '',
     setupNodeEvents(on, config) {
       on('task', {
         checkFileExists(filePath) {
           // Check if the file exists
           if (fs.existsSync(filePath)) {
-            return true;
+            return true
           } else {
-            return false;
+            return false
           }
         },
-      });
+      })
       on('before:browser:launch', (browser, launchOptions) => {
-        if (browser.family === 'chromium' && (browser.name === 'chrome' || browser.name === 'chromium')) {
+        if (
+          browser.family === 'chromium' &&
+          (browser.name === 'chrome' || browser.name === 'chromium')
+        ) {
           // If the browser is Chrome or Chromium, add the flags to expose the `gc` function and disable GPU
-          launchOptions.args.push('--js-flags=--expose-gc');
-          launchOptions.args.push('--disable-gpu');
+          launchOptions.args.push('--js-flags=--expose-gc')
+          launchOptions.args.push('--disable-gpu')
         }
-        return launchOptions;
-      });
+        return launchOptions
+      })
     },
   },
-});
+})

@@ -1,15 +1,20 @@
 declare namespace Cypress {
   interface Chainable<Subject> {
-    login(username: string, password: string, host: string, siteminder: string): Chainable<any>;
+    login(
+      username?: string,
+      password?: string,
+      host?: string,
+      siteminder?: string
+    ): Chainable<any>
 
-    logout(host: string): void;
+    logout(): void
 
-    setid(type: string): Chainable<any>;
+    setid(type: string): Chainable<any>
 
-    generateUUID(): Chainable<any>;
+    generateUUID(): Chainable<any>
 
-    cleanGC(): Chainable<any>;
+    cleanGC(): Chainable<any>
 
-    linkChecker(): Chainable<any>;
+    linkChecker(): Chainable<any>
   }
 }

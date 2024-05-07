@@ -1,9 +1,5 @@
 class HomePage {
-  path: string = '/';
-
-  clickLoginButton() {
-    cy.get('button').contains('Log in').click();
-  }
+  path: string = '/'
 }
 
-export default HomePage;
+export default HomePage
