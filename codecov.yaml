@@ -4,19 +4,20 @@ codecov:
   max_report_age: false
 
 comment:
-  layout: "diff,flags,tree"
+  layout: 'diff,flags,tree'
   behavior: default
   require_changes: true
 
 coverage:
   precision: 2
   round: down
-  range: "70...100"
+  range: '70...100'
   status:
     patch: false
 
 ignore:
-  - "^/tests/**/*" # ignore test harness code
+  - '^/tests/**/*' # ignore test harness code
+  - '^/testing/**/*' # ignore e2e testing code
 
 parsers:
   gcov:
