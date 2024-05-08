@@ -21,7 +21,7 @@ export default defineConfig({
     json: true,
   },
   e2e: {
-    baseUrl: 'https://test.namex.bcregistry.gov.bc.ca/',
+    baseUrl: 'https://dev.namex.bcregistry.gov.bc.ca/',
     projectId: '',
     setupNodeEvents(on, config) {
       on('task', {

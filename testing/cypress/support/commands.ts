@@ -3,6 +3,10 @@
 import 'cypress-plugin-api'
 import 'cypress-real-events'
 import '@testing-library/cypress/add-commands'
+import HomePage from '../pageObjects/homePage'
+import LoginProxy from '../pageObjects/loginProxy'
+let homePage = new HomePage()
+let loginProxy = new LoginProxy()
 
 Cypress.Commands.add(
   'login',
@@ -15,13 +19,8 @@ Cypress.Commands.add(
     // Go to the host
     cy.visit(host || Cypress.env('host'))
 
-    // Validate the login proxy only when we are not targeting a local install
-    if (Cypress.env('host') !== 'http://localhost:3000') {
-      cy.get('#kc-header-wrapper', { timeout: 10000 })
-        .contains('bcregistry')
-        .should('be.visible')
-      cy.get('#social-idir', { timeout: 10000 }).click()
-    }
+    loginProxy.checkLoginProxyPage()
+    loginProxy.chooseIdir()
 
     // Validate siteminder and login
     cy.get('#login-to', { timeout: 10000 })
@@ -41,8 +40,8 @@ Cypress.Commands.add(
 
 Cypress.Commands.add('logout', () => {
   // Make sure you are on page with log out and logout
-  cy.get('#app-header', { timeout: 10000 }).within(() => {
-    cy.contains('a', 'Log Out').click()
+  cy.get(homePage.header, { timeout: 10000 }).within(() => {
+    homePage.logOut()
   })
 })
 

@@ -4,7 +4,7 @@ class LoginProxy {
   idirButton = '#social-idir' // Define the IDIR button selector
   azidirButton = '#social-azureidir'
   headerWrapper = '#kc-header-wrapper'
-  headerText = 'COMMON HOSTED SINGLE SIGN-ON'
+  headerText = 'bcregistry'
 
   /**
    * Check the Login Proxy page.
