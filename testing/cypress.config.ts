@@ -18,7 +18,7 @@ export default defineConfig({
     files: ['./mochawesome-report/*.json'],
     overwrite: false,
     html: true,
-    json: true,
+    json: true
   },
   e2e: {
     baseUrl: 'https://dev.namex.bcregistry.gov.bc.ca/',
