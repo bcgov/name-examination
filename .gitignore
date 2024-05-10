@@ -166,3 +166,4 @@ dist
 **/token.json
 **/local-dev/**
 **/*copy.json
+testing/cypress.config copy.ts

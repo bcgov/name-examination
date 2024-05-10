@@ -5,35 +5,63 @@
 import Utilities from '../appActions/Utilities'
 const util = new Utilities()
 
+/**
+ * Represents the home page of the BC Registry Name Examination application.
+ */
 class HomePage {
-  path: '/'
+  path = '/'
   title = 'BC Registry: Name Examination - Home'
+
+  // Top Level Links
+  adminLinkID = 'a[data-testid="adminLink"]'
+  examineLinkID = 'a[data-testid="examineLink"]'
+  searchLinkID = 'a[data-testid="searchLink"]'
+  statsLinkID = 'a[data-testid="statsLink"]'
+
+  // Link bar
+  searchInputField = 'form[data-testid="searchNRNumberField"] input'
+  searchButton = 'form[data-testid="searchNRNumberField"] button'
+  prioritySwitch = 'div[data-testid="prioritySwitch"] button[role="switch"]'
+  logOut = 'a[data-testid="logOut"]'
+
+  // Search
+  searchTable = '[data-testid="searchTable"]'
+  headerRowStatus = 'th[id="Status"] button'
+  headerRowNRNumber = 'input[type="text"][id="NR Number"]'
+  headerRowApplicantFirstName = 'input[type="text"][id="Applicant First Name"]'
+  headerRowApplicantLastName = 'input[type="text"][id="Applicant Last Name"]'
+  headerRowModifiedBy = 'input[type="text"][id="Modified By"]'
+  headerRowNames = 'input[type="text"][id="Names"]'
+  headerRowConsentRequired = 'th[id="Consent Required"] button'
+  headerRowPriority = 'th[id="Priority"] button'
+  headerRowNotified = 'th[id="Notified"] button'
+  headerRowSubmitted = 'th[id="Notified"] button'
+  headerRowLastUpdate = 'th[id="Last Update"] button'
+  headerRowSubmittedOrder = 'a[id="SubmittedOrder"]'
+
+  // Stats
+  statsTable = '[data-testid="statsTable"]'
 
   // Elements
   header = '#app-header'
-  headlessuiSwitch1 = '#headlessui-switch-1'
-  headlessuiLabel2 = '#headlessui-label-2'
+  nrNumberHeader = 'div[data-testid="nrNumberHeader"]'
+
+  // Status info
   displayDate = 'span#date'
   notExamined = 'span#notExamined'
   hold = 'span#hold'
-
-  // Link bar
-  prioritySwitch = '#headlessui-switch-1'
 
   // Actions
   /**
    * Logs out the user by clicking the "Log Out" link.
    */
-  logOut() {
-    cy.contains('a', 'Log Out').click()
-  }
 
   /**
    * Navigates to the admin page by clicking the "Admin" link.
    */
   adminLink() {
     // Remove the target to stay in the same window for Cypress' sake
-    cy.contains('a', 'Admin').invoke('removeAttr', 'target').click()
+    cy.get(this.adminLinkID).invoke('removeAttr', 'target').click()
     cy.wait(1000)
     cy.url().should('include', 'namex-solr-dev.apps.silver.devops.gov.bc.ca')
     cy.contains('a', 'Login to administration.').click()
@@ -48,7 +76,7 @@ class HomePage {
    * Navigates to the examine names page by clicking the "Examine Names" link.
    */
   examineNamesLink() {
-    cy.contains('a', 'Examine Names').click()
+    cy.get(this.examineLinkID).click()
     cy.wait(1000)
     cy.url().then(($url) => {
       expect($url).to.contain('/examine')
@@ -59,7 +87,7 @@ class HomePage {
    * Navigates to the search page by clicking the "Search" link.
    */
   searchLink() {
-    cy.contains('a', 'Search').click()
+    cy.get(this.searchLinkID).click()
     cy.wait(1000)
     cy.url().then(($url) => {
       expect($url).to.contain('/search')
@@ -70,7 +98,7 @@ class HomePage {
    * Navigates to the stats page by clicking the "Stats" link.
    */
   statsLink() {
-    cy.contains('a', 'Stats').click()
+    cy.get(this.statsLinkID).click()
     cy.wait(1000)
     cy.url().then(($url) => {
       expect($url).to.contain('/stats')
@@ -97,7 +125,7 @@ class HomePage {
   /**
    * Retrieves the status information from the home page.
    *
-   * @returns {void}
+   * @return {void}
    */
   statusInfo() {
     cy.get(this.displayDate).should('exist')

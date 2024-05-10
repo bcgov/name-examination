@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-wrap px-4 py-2 text-gray-700">
     <div>
-      <div class="mr-1 flex items-center">
+      <div class="mr-1 flex items-center" data-testid="nrNumberHeader">
         <NRNumber :nr-number="examine.nrNumber" :priority="examine.priority" />
 
         <a

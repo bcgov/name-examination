@@ -41,7 +41,7 @@
     </div>
 
     <div class="h-full overflow-x-auto rounded border">
-      <table class="min-h-fit min-w-full table-auto">
+      <table class="min-h-fit min-w-full table-auto" data-testid="statsTable" >
         <thead class="sticky top-0">
           <tr class="h-12 bg-bcgov-blue5 text-left text-sm text-white">
             <th

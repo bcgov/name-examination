@@ -1,3 +1,6 @@
+/**
+ * Represents the Login Proxy page object.
+ */
 class LoginProxy {
   path = '/'
 

@@ -1,45 +1,30 @@
 <template>
-  <nav
-    id="app-header"
-    class="sticky top-0 z-50 h-16 border-b border-gray-300 bg-white"
-  >
+  <nav id="app-header" class="sticky top-0 z-50 h-16 border-b border-gray-300 bg-white">
     <div class="flex h-full w-full items-center justify-between">
       <div class="hidden h-full lg:block">
         <nuxt-link :to="Route.Home">
-          <img
-            src="/images/top-nav.png"
-            class="h-full min-w-8"
-            alt="Name Examination"
-          />
+          <img src="/images/top-nav.png" class="h-full min-w-8" alt="Name Examination" />
         </nuxt-link>
       </div>
 
       <div class="ml-3 flex gap-10 text-bcgov-blue5">
-        <AppHeaderNavLink text="Admin" :route="adminURL" target="_blank" />
-        <AppHeaderNavLink text="Examine Names" :route="Route.Examine" />
-        <AppHeaderNavLink text="Search" :route="Route.Search" />
-        <AppHeaderNavLink text="Stats" :route="Route.Stats" />
+        <AppHeaderNavLink text="Admin" :route="adminURL" target="_blank" data-testid="adminLink" />
+        <AppHeaderNavLink text="Examine Names" :route="Route.Examine" data-testid="examineLink" />
+        <AppHeaderNavLink text="Search" :route="Route.Search" data-testid="searchLink" />
+        <AppHeaderNavLink text="Stats" :route="Route.Stats" data-testid="statsLink" />
       </div>
 
       <div class="ml-auto flex items-center">
-        <SearchInput
-          v-model="searchText"
-          class="mx-3"
-          placeholder="Search NR Number"
-          input-required
-          @submit.prevent="onSearchSubmit"
-        />
+        <SearchInput v-model="searchText" class="mx-3" data-testid="searchNRNumberField" placeholder="Search NR Number"
+                     input-required @submit.prevent="onSearchSubmit" />
 
         <div class="flex space-x-2 px-3">
-          <ToggleSwitch
-            label="Priority Queue"
-            v-model="examineOptions.priorityQueue"
-          />
+          <ToggleSwitch label="Priority Queue" data-testid="prioritySwitch" v-model="examineOptions.priorityQueue" />
         </div>
 
         <div class="flex flex-col border-l-2 border-gray-300 px-3">
           <span class="text-sm">{{ $userProfile.username }}</span>
-          <a class="text-sm text-blue-800" href="#" @click="$auth.logout()">
+          <a class="text-sm text-blue-800" href="#" data-testid="logOut" @click="$auth.logout()">
             Log Out
           </a>
         </div>

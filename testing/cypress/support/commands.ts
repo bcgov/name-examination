@@ -41,7 +41,7 @@ Cypress.Commands.add(
 Cypress.Commands.add('logout', () => {
   // Make sure you are on page with log out and logout
   cy.get(homePage.header, { timeout: 10000 }).within(() => {
-    homePage.logOut()
+    cy.get(homePage.logOut).click()
   })
 })
 

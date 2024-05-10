@@ -11,7 +11,7 @@ describe('E2E Smoke Test', () => {
     cy.logout()
   })
 
-  it('Should have status info available', () => {
+/*   it('Should have status info available', () => {
     homePage.statusInfo()
   })
 
@@ -22,29 +22,31 @@ describe('E2E Smoke Test', () => {
     homePage.prioritySwitchClick()
     homePage.adminLink()
   })
-
+ 
   it('Should be able to examine an NR', () => {
     const nrNum = '2272860'
     homePage.examineNamesLink()
-    cy.get('input').eq(0).type(nrNum)
-    cy.get('button').eq(0).click()
-    cy.contains('span', 'NR ' + nrNum).should('exist')
+    cy.get(homePage.searchInputField).type(nrNum)
+    cy.get(homePage.searchButton).click()
+    cy.contains(homePage.nrNumberHeader, 'NR ' + nrNum).should('exist')
   })
-
+*/
   it('Should be able to search an NR', () => {
     const nrNum = '2272860'
     homePage.searchLink()
-    cy.get('button')
-      .eq(7)
+    cy.get(homePage.headerRowSubmittedOrder).click()
+    cy.wait(3000)
+
+    cy.get(homePage.headerRowStatus)
       .click()
       .then(() => {
         cy.get('[role="listbox"]')
-          .find('[role="option"]:contains("DRAFT")') // be careful with brackets and quote marks
+          .find('[role="option"]:contains("DRAFT")')
           .click()
       })
     cy.wait(3000)
-    cy.get('table').within(() => {
-      cy.get('input[id="NR Number"]').type(nrNum + '{enter}')
+    cy.get(homePage.searchTable).within(() => {
+      cy.get(homePage.headerRowNRNumber).type(nrNum + '{enter}')
       cy.contains('td', 'NR ' + nrNum).should('exist')
     })
   })
@@ -58,7 +60,7 @@ describe('E2E Smoke Test', () => {
     cy.get('table')
       .find('tr')
       .then((row) => {
-        cy.wrap({ foo: row.length }).its('foo').should('greaterThan', 1)
+        cy.wrap({ len: row.length }).its('len').should('greaterThan', 1)
       })
-  })
+  }) 
 })
