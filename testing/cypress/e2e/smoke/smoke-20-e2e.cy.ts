@@ -11,7 +11,7 @@ describe('E2E Smoke Test', () => {
     cy.logout()
   })
 
-  /*   it('Should have status info available', () => {
+  it('Should have status info available', () => {
     homePage.statusInfo()
   })
 
@@ -30,7 +30,7 @@ describe('E2E Smoke Test', () => {
     cy.get('button').eq(0).click()
     cy.contains('span', 'NR ' + nrNum).should('exist')
   })
- */
+
   it('Should be able to search an NR', () => {
     const nrNum = '2272860'
     homePage.searchLink()
@@ -49,7 +49,7 @@ describe('E2E Smoke Test', () => {
     })
   })
 
-  it('Should be see the stats', () => {
+  it('Should be able see the stats', () => {
     homePage.statsLink()
     cy.get('#stats-checkbox').click()
     cy.contains('Get Stats').click()
