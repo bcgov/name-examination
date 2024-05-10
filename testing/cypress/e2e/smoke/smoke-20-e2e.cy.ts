@@ -11,7 +11,7 @@ describe('E2E Smoke Test', () => {
     cy.logout()
   })
 
-/*   it('Should have status info available', () => {
+  it('Should have status info available', () => {
     homePage.statusInfo()
   })
 
@@ -30,7 +30,7 @@ describe('E2E Smoke Test', () => {
     cy.get(homePage.searchButton).click()
     cy.contains(homePage.nrNumberHeader, 'NR ' + nrNum).should('exist')
   })
-*/
+
   it('Should be able to search an NR', () => {
     const nrNum = '2272860'
     homePage.searchLink()
