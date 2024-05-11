@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 /** A navigation link that takes you to another page. */
-const { route } = defineProps<{
+defineProps<{
   /** The text that the link should display */
   text: string
   /** The page this link should lead to */
