@@ -13,7 +13,7 @@ describe('E2E Smoke Test', () => {
     cy.cleanGC()
   })
 
-/*   it('Should have status info available', () => {
+  it('Should have status info available', () => {
     homePage.statusInfo()
   })
 
@@ -62,7 +62,7 @@ describe('E2E Smoke Test', () => {
       cy.url().should('include', '/examine?nr=' + nrNum)
     })
   })
- */
+ 
   it('Should be able see the stats', () => {
     homePage.statsLink()
     cy.get(homePage.statsCheckbox).click()

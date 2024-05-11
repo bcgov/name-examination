@@ -5,8 +5,8 @@ import 'cypress-real-events'
 import '@testing-library/cypress/add-commands'
 import HomePage from '../pageObjects/homePage'
 import LoginProxy from '../pageObjects/loginProxy'
-let homePage = new HomePage()
-let loginProxy = new LoginProxy()
+const homePage = new HomePage()
+const loginProxy = new LoginProxy()
 
 Cypress.Commands.add(
   'login',
@@ -17,7 +17,7 @@ Cypress.Commands.add(
     siteminder?: string
   ) => {
     // Go to the host
-    cy.visit(host || Cypress.env('host'))
+    cy.visit(host || '')
 
     loginProxy.checkLoginProxyPage()
     loginProxy.chooseIdir()

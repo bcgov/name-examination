@@ -19,7 +19,6 @@ on:
 env:
   CYPRESS_users: ${{ secrets.CYPRESS_USERS }}
   CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASEURL }}
-  CYPRESS_host: ${{ secrets.CYPRESS_BASEURL }}
   CYPRESS_ENVIRONMENT: ${{ github.base_ref }}
   CYPRESS_loginproxy: ${{ secrets.CYPRESS_LOGINPROXY }}
   CYPRESS_siteminder: ${{ secrets.CYPRESS_SITEMINDER }}
