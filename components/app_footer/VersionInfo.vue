@@ -19,8 +19,10 @@
 </template>
 
 <script setup lang="ts">
+import packageInfo from '~/package.json'
 import { ref } from 'vue'
+
 const showVersionNumbers = ref(false)
-const nameExaminationVersion = 'TO_DO'
+const nameExaminationVersion = packageInfo.version
 const nameXVersion = ref('TO_DO')
 </script>
