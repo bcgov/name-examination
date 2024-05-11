@@ -19,7 +19,7 @@
 defineProps<{
   text: string,
   route: string,
-  target?: string,
-  isLast?: boolean
+  target: string,
+  isLast: boolean
 }>()
 </script>
