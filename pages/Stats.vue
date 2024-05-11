@@ -1,8 +1,5 @@
 <template>
-  <div
-    id="stats-viewer"
-    class="mx-4 mt-4 flex h-[91vh] flex-col space-y-1"
-  >
+  <div id="stats-viewer" class="mx-4 mt-4 flex h-[91vh] flex-col space-y-1">
     <div class="stats-header">
       <h1 class="text-2xl font-bold text-gray-700">
         Statistics
@@ -13,27 +10,13 @@
       <div class="font-semibold text-center">Total Examined Names: {{ numRecords }}</div>
       <div class="flex items-center space-x-2">
         <div class="flex items-center space-x-1">
-          <input
-            id="stats-checkbox"
-            class="h-4 w-4"
-            v-model="myStats"
-            type="checkbox"
-          >
+          <input id="stats-checkbox" class="h-4 w-4" v-model="myStats" type="checkbox">
           <label for="stats-checkbox" class="font-bold">My Stats</label>
         </div>
         <div class="timespan-input  align-baseline space-x-1">
-          <label
-            for="timespan"
-            class="font-bold align-baseline"
-          >Hours:&nbsp;</label>
-          <TextInput
-            id="timespan"
-            ref="numberinput"
-            v-model="timespan"
-            type="number"
-            class="!w-24"
-          />
-          <IconButton @click="fetchStats">
+          <label for="timespan" class="font-bold align-baseline">Hours:&nbsp;</label>
+          <TextInput id="timespan" ref="numberinput" v-model="timespan" type="number" class="!w-24" />
+          <IconButton data-testid="getStats" @click="fetchStats">
             Get Stats
           </IconButton>
         </div>
@@ -41,68 +24,42 @@
     </div>
 
     <div class="h-full overflow-x-auto rounded border">
-      <table class="min-h-fit min-w-full table-auto" data-testid="statsTable" >
+      <table class="min-h-fit min-w-full table-auto" data-testid="statsTable">
         <thead class="sticky top-0">
           <tr class="h-12 bg-bcgov-blue5 text-left text-sm text-white">
-            <th
-              v-for="(header, index) in fields"
-              :key="index"
-              class="border-b border-gray-200 px-2 py-1"
-            >
+            <th v-for="(header, index) in fields" :key="index" class="border-b border-gray-200 px-2 py-1">
               {{ header.label }}
             </th>
           </tr>
         </thead>
-        <tbody
-          v-if="!isLoading"
-          class="text-sm"
-        >
-          <tr
-            v-for="(item, index) in statsData"
-            :key="index"
-            class="align-top transition duration-200 ease-in-out border-b border-gray-300 hover:bg-gray-200"
-          >
+        <tbody v-if="!isLoading" class="text-sm">
+          <tr v-for="(item, index) in statsData" :key="index"
+            class="align-top transition duration-200 ease-in-out border-b border-gray-300 hover:bg-gray-200">
             <td class="whitespace-pre-line border-b border-gray-300 px-2 py-2">
               <div class="container-fluid">
                 <div class="layout">
-                  <div
-                    class="flex my-2 font-bold"
-                  >
+                  <div class="flex my-2 font-bold">
                     {{ item.nrNum }}
                   </div>
                 </div>
-                <div
-                  v-for="(name, i) in item.names"
-                  :key="`names-layout-${i}`"
-                >
-                  <div
-                    class="flex font-bold"
-                  >
+                <div v-for="(name, i) in item.names" :key="`names-layout-${i}`">
+                  <div class="flex font-bold">
                     {{ i + 1 }}. {{ name.name }}
-                      <span class="mx-2" :class="getClass(name.state)">
-                        {{ name.state }}
-                      </span>
+                    <span class="mx-2" :class="getClass(name.state)">
+                      {{ name.state }}
+                    </span>
                   </div>
                   <div class="layout">
-                    <div
-                      v-for="(text, j) in name.decision_text"
-                      :key="`decision-text-flex-${j}`"
-                      class="flex italic mb-2 ml-4"
-                    >
+                    <div v-for="(text, j) in name.decision_text" :key="`decision-text-flex-${j}`"
+                      class="flex italic mb-2 ml-4">
                       {{ text }}
                     </div>
                   </div>
                 </div>
-                <div
-                  v-if="item.comments.length > 0"
-                  class="ml-2 mt-1 font-semibold"
-                >
+                <div v-if="item.comments.length > 0" class="ml-2 mt-1 font-semibold">
                   LAST COMMENT
                 </div>
-                <div
-                  v-if="item.comments.length > 0"
-                  class="dk-grey ml-2 mb-2"
-                >
+                <div v-if="item.comments.length > 0" class="dk-grey ml-2 mb-2">
                   <div class="flex indent-10px">
                     {{ item.comments[0].comment }}
                   </div>
@@ -120,10 +77,7 @@
                 </div>
               </div>
             </td>
-            <td
-              :class="getClass(item.stateCd)"
-              class="font-semibold"
-            >
+            <td :class="getClass(item.stateCd)" class="font-semibold">
               {{ item.stateCd }}
             </td>
             <td>{{ item.lastUpdate }}</td>
@@ -131,9 +85,7 @@
             <td>{{ item.furnished }}</td>
           </tr>
         </tbody>
-        <div
-          class="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 transform"
-        >
+        <div class="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 transform">
           <LoadingSpinner v-if="isLoading" />
         </div>
       </table>
@@ -146,7 +98,7 @@ import { useStatsStore } from '~/store/stats.ts'
 import { ref, onMounted } from 'vue'
 
 export default {
-  setup () {
+  setup() {
     const timespan = ref('24')
     const numberinput = ref(null)
     const numRecords = ref(0)
@@ -208,7 +160,7 @@ export default {
      * @return {string | undefined} Returns the CSS class corresponding to the provided state. 
      * If the state does not match any condition, returns undefined.
      */
-    function getClass (state) {
+    function getClass(state) {
       if (state === 'APPROVED') {
         return 'approved'
       }
@@ -229,7 +181,8 @@ export default {
       numberinput,
       isLoading,
       getClass,
-      fetchStats }
+      fetchStats
+    }
   }
 }
 </script>
@@ -257,12 +210,18 @@ export default {
 }
 
 .custom-button {
-  background-color: #007bff; /* Blue background color */
-  color: #000; /* Black text color */
-  border: 1px solid #000; /* Black border */
-  padding: 8px 16px; /* Adjust padding as needed */
-  border-radius: 4px; /* Rounded corners */
-  cursor: pointer; /* Show pointer cursor on hover */
+  background-color: #007bff;
+  /* Blue background color */
+  color: #000;
+  /* Black text color */
+  border: 1px solid #000;
+  /* Black border */
+  padding: 8px 16px;
+  /* Adjust padding as needed */
+  border-radius: 4px;
+  /* Rounded corners */
+  cursor: pointer;
+  /* Show pointer cursor on hover */
 }
 
 .approved {
@@ -276,5 +235,6 @@ export default {
 .condition {
   color: #fcba19
 }
+
 /* Add more styles as needed */
 </style>

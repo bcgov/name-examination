@@ -35,12 +35,31 @@ class HomePage {
   headerRowConsentRequired = 'th[id="Consent Required"] button'
   headerRowPriority = 'th[id="Priority"] button'
   headerRowNotified = 'th[id="Notified"] button'
-  headerRowSubmitted = 'th[id="Notified"] button'
+  headerRowSubmitted = 'th[id="Submitted"] button'
   headerRowLastUpdate = 'th[id="Last Update"] button'
   headerRowSubmittedOrder = 'a[id="SubmittedOrder"]'
 
+  /**
+   * Selects an option from a dropdown in the header row.
+   *
+   * @param {string} dropDown - The selector for the dropdown element.
+   * @param {string} option - The text of the option to select.
+   */
+  headerRowDropdownSelect (dropDown: string, option: string) {
+    cy.get(dropDown)
+      .click()
+      .then(() => {
+        cy.get('[role="listbox"]')
+          .find(`[role="option"]:contains(${option})`)
+          .eq(0) // Select the first option that matches
+          .click()
+      })
+  }
+
   // Stats
   statsTable = '[data-testid="statsTable"]'
+  statsCheckbox = 'input[id="stats-checkbox"]'
+  getStatsButton = 'button[data-testid="getStats"]'
 
   // Elements
   header = '#app-header'

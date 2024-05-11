@@ -21,7 +21,7 @@ export default defineConfig({
     json: true
   },
   e2e: {
-    baseUrl: 'http://localhost:8080',
+    baseUrl: 'http://localhost:8080/',
     projectId: '',
     setupNodeEvents(on, config) {
       on('task', {
