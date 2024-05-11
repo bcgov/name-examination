@@ -7,45 +7,31 @@
     <nav class="col-span-7 flex justify-between">
       <ul class="p-0 list-none">
         <AppFooterNavLink
-          text="Home"
-          route="/"
-        />
-        <AppFooterNavLink
-          text="Release Notes"
-          route="https://www.release-notes.bcregistry.gov.bc.ca"
-          target="_blank"
-        />
-        <AppFooterNavLink
-          text="Disclaimer"
-          route="https://www2.gov.bc.ca/gov/content/home/disclaimer"
-          target="_blank"
-        />
-        <AppFooterNavLink
-          text="Privacy"
-          route="https://www2.gov.bc.ca/gov/content/home/privacy"
-          target="_blank"
-        />
-        <AppFooterNavLink
-          text="Accessibility"
-          route="https://www2.gov.bc.ca/gov/content/home/accessibility"
-          target="_blank"
-        />
-        <AppFooterNavLink
-          text="Hours of Availability"
-          route="https://www2.gov.bc.ca/gov/content?id=C41D8179671441B2BAA3BDDD3D89C9A9"
-          target="_blank"
-        />
-        <AppFooterNavLink
-          text="Copyright"
-          route="https://www2.gov.bc.ca/gov/content/home/copyright"
-          target="_blank"
+          v-for="(link, index) in links"
+          :key="index"
+          :text="link.text"
+          :route="link.route"
+          :target="link.target || '_blank'"
+          :isLast="index === links.length - 1"
         />
       </ul>
     </nav>
-
     <div class="col-span-3 flex justify-self-end justify-content-end">
       <span class="italic text-bcgov-gold5">A BC Online Application</span>
       <AppFooterVersionInfo />
     </div>
   </footer>
 </template>
+
+<script setup lang="ts">
+const links = [
+  { text: 'Home', route: '/', target: '_self' },
+  { text: 'Release Notes', route: 'https://www.release-notes.bcregistry.gov.bc.ca' },
+  { text: 'Disclaimer', route: 'https://www2.gov.bc.ca/gov/content/home/disclaimer' },
+  { text: 'Privacy', route: 'https://www2.gov.bc.ca/gov/content/home/privacy' },
+  { text: 'Accessibility', route: 'https://www2.gov.bc.ca/gov/content/home/accessibility' },
+  { text: 'Hours of Availability', route: 'https://www2.gov.bc.ca/gov/content?id=C41D8179671441B2BAA3BDDD3D89C9A9' },
+  { text: 'Copyright', route: 'https://www2.gov.bc.ca/gov/content/home/copyright' }
+]
+
+</script>
