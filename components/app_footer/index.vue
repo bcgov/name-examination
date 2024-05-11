@@ -4,6 +4,7 @@
     class="grid grid-cols-10 items-center min-h-[3.5rem] text-[0.9375rem] px-[1rem] xl:pr-[6rem]
            bg-bcgov-blue5 border-t-2 border-bcgov-gold5"
   >
+    <!-- Navigation Links -->
     <nav class="col-span-7 flex justify-between">
       <ul class="p-0 list-none">
         <AppFooterNavLink
@@ -16,6 +17,7 @@
         />
       </ul>
     </nav>
+    <!-- Version Number -->
     <div class="col-span-3 flex justify-self-end justify-content-end">
       <span class="italic text-bcgov-gold5">A BC Online Application</span>
       <AppFooterVersionInfo />
@@ -33,5 +35,4 @@ const links = [
   { text: 'Hours of Availability', route: 'https://www2.gov.bc.ca/gov/content?id=C41D8179671441B2BAA3BDDD3D89C9A9' },
   { text: 'Copyright', route: 'https://www2.gov.bc.ca/gov/content/home/copyright' }
 ]
-
 </script>
