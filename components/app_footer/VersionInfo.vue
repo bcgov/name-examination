@@ -9,8 +9,8 @@
     </button>
     <div
       v-if="showVersionNumbers"
-      class="absolute z-10 w-40 left-0 transform -translate-x-full top-[-3.5rem]
-              px-5 py-5 bg-gray-800 text-white text-xs rounded-lg shadow-lg"
+      class="absolute z-10 w-56 left-0 transform -translate-x-full top-[-3.5rem]
+              px-5 py-3 bg-gray-800 text-white text-xs rounded-lg shadow-lg"
     >
       <div>Name Examination: {{ nameExaminationVersion }}</div>
       <div>NameX: {{ nameXVersion }}</div>
