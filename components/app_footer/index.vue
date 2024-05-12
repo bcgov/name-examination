@@ -1,7 +1,7 @@
 <template>
   <footer
     id="app-footer"
-    class="grid grid-cols-10 items-center min-h-[3.5rem] text-[0.9375rem] px-[1rem] xl:pr-[6rem]
+    class="grid grid-cols-10 items-center min-h-[3.5rem] text-[0.94rem] px-[1rem] xl:pr-[6rem]
            bg-bcgov-blue5 border-t-2 border-bcgov-gold5"
   >
     <!-- Navigation Links -->
@@ -17,6 +17,7 @@
         />
       </ul>
     </nav>
+
     <!-- Version Number -->
     <div class="col-span-3 flex justify-self-end justify-content-end">
       <span class="italic text-bcgov-gold5">A BC Online Application</span>
