@@ -19,10 +19,10 @@
     </nav>
 
     <!-- Version Number -->
-    <div class="col-span-3 flex justify-self-end justify-content-end">
+    <aside class="col-span-3 flex justify-self-end justify-content-end">
       <span class="italic text-bcgov-gold5">A BC Online Application</span>
       <AppFooterVersionInfo />
-    </div>
+    </aside>
   </footer>
 </template>
 
