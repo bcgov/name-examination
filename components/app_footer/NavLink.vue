@@ -1,13 +1,13 @@
 <template>
   <li
     :class="{
-      'inline-block mr-1 xl:mr-2 border-solid border-bcgov-blue3': true,
-      'lg:border-r lg:pr-2': !isLast
+      'inline-block mr-1 lg:pr-2 xl:mr-2': true,
+      'lg:border-r border-solid border-bcgov-blue3': !isLast
     }"
   >
     <nuxt-link
       :to="route"
-      class="block py-1 px-2 text-white no-underline hover:underline xl:px-[0.25rem] xl:px-[0.5rem]"
+      class="px-2 py-1 text-white hover:underline"
       :target="target"
     >
       {{ text }}
