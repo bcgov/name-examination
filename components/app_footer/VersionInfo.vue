@@ -1,5 +1,6 @@
 <template>
   <div class="relative inline-block">
+    <!-- Tooltip Trigger -->
     <button
       class="text-blue-500 pl-4"
       @mouseover="showVersionNumbers = true"
@@ -7,14 +8,19 @@
     >
       Version
     </button>
-    <div
-      v-if="showVersionNumbers"
-      class="absolute z-10 w-56 left-0 transform -translate-x-full top-[-3.5rem]
-              px-5 py-3 bg-gray-800 text-white text-xs rounded-lg shadow-lg"
+
+    <!-- Tooltip Content -->
+    <section
+      v-show="showVersionNumbers"
+      class="absolute z-10 w-56 px-5 py-3 bg-gray-800 rounded-lg -translate-x-full top-[-3.5rem]"
     >
-      <div>Name Examination: {{ nameExaminationVersion }}</div>
-      <div>NameX: {{ nameXVersion }}</div>
-    </div>
+      <div class="text-xs text-white">
+        Name Examination: {{ nameExaminationVersion }}
+      </div>
+      <div class="text-xs text-white">
+        NameX: {{ nameXVersion }}
+      </div>
+    </section>
   </div>
 </template>
 
@@ -23,10 +29,11 @@ import packageInfo from '~/package.json'
 import { ref, onMounted } from 'vue'
 
 const showVersionNumbers = ref(false)
-const nameExaminationVersion = packageInfo.version
+const nameExaminationVersion = ref('')
 const nameXVersion = ref('')
 
 onMounted(async () => {
+  nameExaminationVersion.value = packageInfo.version
   nameXVersion.value = await fetchNameXVersion()
 })
 
