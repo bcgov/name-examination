@@ -6,7 +6,7 @@
       @mouseover="showVersionNumbers = true"
       @mouseleave="showVersionNumbers = false"
     >
-      Version
+      ℹ️
     </button>
 
     <!-- Tooltip Content -->
