@@ -26,7 +26,7 @@ describe('E2E Smoke Test', () => {
   })
 
   it('Should be able to examine an NR', () => {
-    const nrNum = '2272860'
+    const nrNum = '7406481'
     homePage.examineNamesLink()
     cy.get(homePage.searchInputField).type(nrNum)
     cy.get(homePage.searchButton).click()
@@ -34,7 +34,7 @@ describe('E2E Smoke Test', () => {
   })
 
   it('Should be able to search an NR', () => {
-    const nrNum = '2272860'
+    const nrNum = '7406481'
     homePage.searchLink()
     // Change the order of Submitted
     cy.get(homePage.headerRowSubmittedOrder).click()

@@ -26,18 +26,18 @@ class HomePage {
 
   // Search
   searchTable = '[data-testid="searchTable"]'
-  headerRowStatus = 'th[id="Status"] button'
-  headerRowNRNumber = 'input[type="text"][id="NR Number"]'
-  headerRowApplicantFirstName = 'input[type="text"][id="Applicant First Name"]'
-  headerRowApplicantLastName = 'input[type="text"][id="Applicant Last Name"]'
-  headerRowModifiedBy = 'input[type="text"][id="Modified By"]'
-  headerRowNames = 'input[type="text"][id="Names"]'
-  headerRowConsentRequired = 'th[id="Consent Required"] button'
-  headerRowPriority = 'th[id="Priority"] button'
-  headerRowNotified = 'th[id="Notified"] button'
-  headerRowSubmitted = 'th[id="Submitted"] button'
-  headerRowLastUpdate = 'th[id="Last Update"] button'
-  headerRowSubmittedOrder = 'a[id="SubmittedOrder"]'
+  headerRowStatus = 'th[id="status"] button'
+  headerRowNRNumber = '#nrnumber input'
+  headerRowApplicantFirstName = 'input[type="text"][id="applicantfirstname"]'
+  headerRowApplicantLastName = 'input[type="text"][id="applicantnastname"]'
+  headerRowModifiedBy = 'input[type="text"][id="modifiedby"]'
+  headerRowNames = 'input[type="text"][id="names"]'
+  headerRowConsentRequired = 'th[id="consentrequired"] button'
+  headerRowPriority = 'th[id="priority"] button'
+  headerRowNotified = 'th[id="notified"] button'
+  headerRowSubmitted = 'th[id="submitted"] button'
+  headerRowLastUpdate = 'th[id="lastupdate"] button'
+  headerRowSubmittedOrder = 'a[id="submittedOrder"]'
 
   /**
    * Selects an option from a dropdown in the header row.

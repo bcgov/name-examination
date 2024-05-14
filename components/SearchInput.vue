@@ -9,7 +9,7 @@
         :placeholder="placeholder"
         :value="modelValue"
         @input="onInput"
-        autocorrect="off"
+        autocomplete="off"
         :required="inputRequired"
         aria-label="Search"
       />
