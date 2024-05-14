@@ -1,6 +1,6 @@
 <template>
   <ol class="list-decimal">
-    <li v-for="choice in choices">
+    <li v-for="choice in sortedChoices">
       <ExamineNamesListChoice
         :choice="choice"
         :decision-text="decisionReasonOrConflictList(choice)"
@@ -33,6 +33,8 @@ const props = defineProps<{
   /** Show '(DRAFT)' next to a name choice that has not been examined yet. */
   indicateDraft?: boolean
 }>()
+
+const sortedChoices = computed(() => props.choices.sort((a, b) => a.choice - b.choice))
 
 const isCurrent = (choice: number) => props.currentChoice === choice
 
