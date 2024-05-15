@@ -58,7 +58,5 @@ export default defineNuxtConfig({
       keycloakClientId: process.env.NUXT_KEYCLOAK_CLIENTID,
     },
   },
-  ignore: [
-    "testing/**/*.*",
-  ],
+  ignore: ['testing/**/*.*'],
 })

@@ -29,7 +29,7 @@ class HomePage {
   headerRowStatus = 'th[id="status"] button'
   headerRowNRNumber = '#nrnumber input'
   headerRowApplicantFirstName = 'input[type="text"][id="applicantfirstname"]'
-  headerRowApplicantLastName = 'input[type="text"][id="applicantnastname"]'
+  headerRowApplicantLastName = 'input[type="text"][id="applicantlastname"]'
   headerRowModifiedBy = 'input[type="text"][id="modifiedby"]'
   headerRowNames = 'input[type="text"][id="names"]'
   headerRowConsentRequired = 'th[id="consentrequired"] button'
@@ -45,7 +45,7 @@ class HomePage {
    * @param {string} dropDown - The selector for the dropdown element.
    * @param {string} option - The text of the option to select.
    */
-  headerRowDropdownSelect (dropDown: string, option: string) {
+  headerRowDropdownSelect(dropDown: string, option: string) {
     cy.get(dropDown)
       .click()
       .then(() => {

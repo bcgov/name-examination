@@ -38,7 +38,7 @@ class Utilities {
 
   /**
    * Calculates the MD5 hash of the given data.
-   * 
+   *
    * @param data - The data to calculate the MD5 hash for.
    * @return The MD5 hash as a string.
    */
@@ -46,10 +46,9 @@ class Utilities {
     return MD5(data).toString()
   }
 
-
   /**
    * Returns the current date in the format "YYYYMMDD".
-   * 
+   *
    * @return The current date in the format "YYYYMMDD".
    */
   getDate(): string {
