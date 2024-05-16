@@ -2,10 +2,12 @@ steps:
   # install / setup ci
   - name: node:20.5.1
     entrypoint: npm
+    dir: 'app'
     args: ['install']
 
   # setup .env
   - name: 'bash'
+    dir: 'app'
     script: |
       #!/usr/bin/env bash
       cp .env.example .env
@@ -15,6 +17,7 @@ steps:
   #
   - name: node:20.5.1
     entrypoint: npm
+    dir: 'app'
     env:
       - 'NUXT_API_KEY=$_NUXT_API_KEY'
       - 'NUXT_AUTH_DOMAIN=$_NUXT_AUTH_DOMAIN'
