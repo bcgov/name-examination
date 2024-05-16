@@ -50,7 +50,8 @@ const fetchNameXVersion = async (): Promise<string> => {
       throw Error
     }
     const responseJson = await response.json()
-    return responseJson.API
+    const version = responseJson.API.split('/')[1]
+    return version
   } catch (error) {
     console.error('Error fetching data:', error)
     return 'Error'
