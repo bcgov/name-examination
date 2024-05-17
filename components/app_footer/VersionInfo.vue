@@ -37,7 +37,6 @@ onMounted(async () => {
   nameXVersion.value = await fetchNameXVersion()
 })
 
-/* THESE ENDPOINTS ARE NOT WORKING. CORS ISSUE? */
 const fetchNameXVersion = async (): Promise<string> => {
   const devNameXVersionEndpoint = 'https://namex-dev.apps.silver.devops.gov.bc.ca/api/v1/meta/info'
   // const testNameXVersionEndpoint = 'https://namex-test.apps.silver.devops.gov.bc.ca/api/v1/meta/info'
