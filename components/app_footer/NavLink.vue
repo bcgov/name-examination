@@ -1,60 +1,27 @@
 <template>
-  <div class="relative inline-block">
-    <!-- Tooltip Trigger -->
-    <button
-      class="text-blue-500 pl-4"
-      @mouseover="showVersionNumbers = true"
-      @mouseleave="showVersionNumbers = false"
+  <!-- Navigation Link Container -->
+  <li
+    :class="{
+      'inline-block mr-1 lg:pr-2 xl:mr-2': true,
+      'lg:border-r border-solid border-bcgov-blue3': !isLast
+    }"
+  >
+    <!-- Nuxt Navigation Link Text -->
+    <nuxt-link
+      :to="route"
+      class="px-2 py-1 text-white hover:underline"
+      :target="target"
     >
-      ℹ️
-    </button>
-
-    <!-- Tooltip Content -->
-    <section
-      v-show="showVersionNumbers"
-      class="absolute z-10 w-56 px-5 py-3 bg-gray-800 rounded-lg -translate-x-full top-[-3.5rem]"
-    >
-      <div class="text-xs text-white">
-        Name Examination: {{ nameExaminationVersion }}
-      </div>
-      <div class="text-xs text-white">
-        NameX: {{ nameXVersion }}
-      </div>
-    </section>
-  </div>
+      {{ text }}
+    </nuxt-link>
+  </li>
 </template>
 
 <script setup lang="ts">
-import packageInfo from '~/package.json'
-import { ref, onMounted } from 'vue'
-
-const showVersionNumbers = ref(false)
-const nameExaminationVersion = ref('')
-const nameXVersion = ref('')
-
-onMounted(async () => {
-  nameExaminationVersion.value = packageInfo.version
-  nameXVersion.value = await fetchNameXVersion()
-})
-
-const fetchNameXVersion = async (): Promise<string> => {
-  const devNameXVersionEndpoint = 'https://namex-dev.apps.silver.devops.gov.bc.ca/api/v1/meta/info'
-  // const testNameXVersionEndpoint = 'https://namex-test.apps.silver.devops.gov.bc.ca/api/v1/meta/info'
-  // const prodNameXVersionEndpoint = 'https://namex.apps.silver.devops.gov.bc.ca/api/v1/meta/info'
-
-  try {
-    const response = await fetch(devNameXVersionEndpoint)
-    if (!response.ok) {
-      console.error('Failed to fetch:', response.status, response.statusText)
-      throw Error
-    }
-    const responseJson = await response.json()
-    const version = responseJson.API.split('/')[1]
-    return version
-  } catch (error) {
-    console.error('Error fetching data:', error)
-    return 'Error'
-  }
-}
-
+defineProps<{
+  text: string,
+  route: string,
+  target: string,
+  isLast: boolean
+}>()
 </script>
