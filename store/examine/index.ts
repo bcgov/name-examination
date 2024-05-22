@@ -396,9 +396,7 @@ export const useExamination = defineStore('examine', () => {
       )
     }
     if (expiryDate.value) {
-      data.expirationDate = toFormattedDate(
-        parseDate(expiryDate.value).endOf('day')
-      )
+      data.expirationDate = parseDate(expiryDate.value).endOf('day').toISO()
     }
     if (submittedDate.value) {
       const submitDate = toFormattedDate(submittedDate.value)
