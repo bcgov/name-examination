@@ -1,9 +1,11 @@
 <template>
-  <div>
+  <div class="min-h-screen flex flex-col">
     <AppHeader />
     <AppBanner />
     <GlobalErrorDialog />
-    <slot></slot>
+    <main class="flex-grow">
+      <slot></slot>
+    </main>
     <AppFooter />
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <footer
     id="app-footer"
-    class="grid grid-cols-10 items-center min-h-[3.5rem] text-[0.94rem] px-[1rem] xl:pr-[6rem]
+    class="grid grid-cols-10 items-center min-h-[3.5rem] text-[0.94rem] px-[1rem] xl:px-[8rem]
            bg-bcgov-blue5 border-t-2 border-bcgov-gold5"
   >
     <!-- Navigation Links -->
