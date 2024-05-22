@@ -51,6 +51,7 @@ const fetchNameXVersion = async (): Promise<string> => {
     const responseJson = await response.json()
     const fullVersion = responseJson.API.split('/')[1]
     const version = fullVersion.match(/^(\d+\.\d+\.\d+)/)?.[0] || 'Unknown'
+
     return version
   } catch (error) {
     console.error('Error fetching data:', error)
