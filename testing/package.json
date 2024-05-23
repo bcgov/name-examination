@@ -4,7 +4,7 @@
     "@testing-library/cypress": "^10.0.1",
     "@types/crypto-js": "^4.2.2",
     "@types/uuid": "^9.0.8",
-    "cypress": "^13.9.0",
+    "cypress": "^13.10.0",
     "cypress-plugin-api": "^2.10.3",
     "dayjs": "^1.11.10",
     "mochawesome": "^7.1.3",
