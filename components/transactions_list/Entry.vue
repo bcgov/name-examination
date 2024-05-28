@@ -35,7 +35,7 @@
       <span v-else></span>
     </div>
 
-    <TransactionsEntryNamesList :names="entry.names" />
+    <TransactionsListEntryNames :names="entry.names" />
   </div>
 </template>
 
@@ -44,6 +44,11 @@ import { DateTime } from 'luxon'
 import { useTransactions } from '~/store/transactions'
 import type { TransactionEntry } from '~/types'
 import { getFormattedDateWithTimeAndZone, parseDate } from '~/util/date'
+import {
+  getRequestTypeDisplay,
+  getStatusDisplay,
+  getConsentDisplay,
+} from '~/util/display-format'
 
 const { entry } = defineProps<{
   entry: TransactionEntry
@@ -56,7 +61,7 @@ const eventDate = computed(() =>
 )
 
 const statusDisplay = computed(() =>
-  transactions.getStatusDisplay(entry.stateCd, entry.names)
+  getStatusDisplay(entry.stateCd, entry.names)
 )
 
 const expiryDate = computed(() => {
@@ -75,14 +80,17 @@ const expiryDate = computed(() => {
 })
 
 const requestTypeDisplay = computed(() =>
-  transactions.getRequestTypeDisplay(
-    entry.requestTypeCd,
-    entry.request_action_cd
-  )
+  transactions.nr
+    ? getRequestTypeDisplay(
+        entry.requestTypeCd,
+        entry.request_action_cd,
+        transactions.nr.entity_type_cd
+      )
+    : 'N/A'
 )
 
 const consentDisplay = computed(() =>
-  transactions.getConsentDisplay(entry.consent_dt, entry.consentFlag)
+  getConsentDisplay(entry.consent_dt, entry.consentFlag)
 )
 
 const isStaffCommentAction = computed(

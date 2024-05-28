@@ -1,4 +1,10 @@
-import type { NameChoice, NameRequest, Transactions } from '~/types'
+import type {
+  NameChoice,
+  NameRequest,
+  Notification,
+  NotificationsResponse,
+  Transactions,
+} from '~/types'
 
 /**
  * Retrieve the Keycloak session token, refreshing to make it valid if necessary.
@@ -186,4 +192,22 @@ export async function getPayments(id: number) {
 
 export async function getStats(params: URLSearchParams) {
   return callNamexApi(getNamexApiUrl('/requests/stats?' + params))
+}
+
+/** TODO: replace this with an actual API call, and delete mock json file */
+import mockData from '~/data/emails.mock.json'
+export async function getNotifications(nrNumber: string) {
+  return {
+    response: { count: mockData.length },
+    notifications: mockData as Array<Notification>,
+  }
+}
+
+/** TODO: edit this function once backend is completed, if necessary */
+/** Post to the notifications endpoint to resend an email with the given notification id */
+export async function postNotification(notificationId: number) {
+  const url = getNamexApiUrl(`/notifications/${notificationId}/resend`)
+  return callNamexApi(url, {
+    method: 'POST',
+  })
 }

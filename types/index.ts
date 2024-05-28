@@ -298,3 +298,19 @@ export interface Payment {
   }
   refund: number
 }
+
+export interface NotificationsResponse {
+  response: {
+    count: number
+  }
+  notifications: Array<Notification>
+}
+
+/** TODO: edit this interface if needed, once the backend is complete */
+export interface Notification {
+  id: number
+  status: Status
+  sentDate: string
+  subject: string
+  content: string
+}
