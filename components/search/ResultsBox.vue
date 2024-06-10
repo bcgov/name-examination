@@ -50,6 +50,7 @@
               :options="layout[column].dropdown"
               @change="
                 (option) => [
+                  setFilterStatus(column, option),
                   updateTextInputFilters(),
                   checkIfCustomSubmitDateChosen(option),
                 ]
@@ -230,6 +231,11 @@ function checkIfCustomSubmitDateChosen(option: any) {
   if (option == Submitted.Custom) {
     showDateDialog.value = true
   }
+}
+
+// Store filter status into local storage
+function setFilterStatus(column: string, option: string) {
+  window.localStorage.setItem(column, option);
 }
 
 function onDateDialogSubmit(startDate: string, endDate: string) {
