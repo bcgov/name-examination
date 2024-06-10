@@ -1,13 +1,30 @@
+/**
+ * This file contains custom Cypress commands used in the tests.
+ */
+
 /// <reference types="@testing-library/cypress" />
 
+/**
+ * Making common libraries available to the scripts
+ */
 import 'cypress-plugin-api'
 import 'cypress-real-events'
 import '@testing-library/cypress/add-commands'
+
 import HomePage from '../pageObjects/homePage'
 import LoginProxy from '../pageObjects/loginProxy'
+
 const homePage = new HomePage()
 const loginProxy = new LoginProxy()
 
+/**
+ * Custom Cypress command to perform login.
+ *
+ * @param username - The username for login. If not provided, it uses the value from Cypress environment variables.
+ * @param password - The password for login. If not provided, it uses the value from Cypress environment variables.
+ * @param host - The host URL to visit. If not provided, it uses an empty string.
+ * @param siteminder - The Siteminder value. Not used in the code.
+ */
 Cypress.Commands.add(
   'login',
   (
@@ -38,6 +55,9 @@ Cypress.Commands.add(
   }
 )
 
+/**
+ * Custom Cypress command to perform logout.
+ */
 Cypress.Commands.add('logout', () => {
   // Make sure you are on page with log out and logout
   cy.get(homePage.header, { timeout: 10000 }).within(() => {
@@ -45,13 +65,17 @@ Cypress.Commands.add('logout', () => {
   })
 })
 
+/**
+ * Custom Cypress command to set the ID/PW Env vars.
+ *
+ * @param type - The type of ID/PW to set. If not provided, it uses the default type.
+ */
 Cypress.Commands.add('setid', (type: string) => {
   // Set the ID/PW Env vars to default if type not passed in
   if (!type) {
     type = 'default'
   }
   const data = Cypress.env('users')
-
   const foundItem = data.find((item: any) => item.type === type)
   Cypress.env('username', foundItem.username)
   Cypress.env('password', foundItem.password)
@@ -61,6 +85,9 @@ Cypress.Commands.add('setid', (type: string) => {
   }
 })
 
+/**
+ * Custom Cypress command to clean up memory by triggering Garbage Collection.
+ */
 Cypress.Commands.add('cleanGC', () => {
   // Clean up memory by triggering Garbage Collection
   cy.window().then((win) => {
@@ -76,6 +103,9 @@ Cypress.Commands.add('cleanGC', () => {
   })
 })
 
+/**
+ * Custom Cypress command to check all links on the page.
+ */
 Cypress.Commands.add('linkChecker', () => {
   cy.get('a').each((link) => {
     if (

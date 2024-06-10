@@ -26,8 +26,10 @@ describe('Search Results Box Component', () => {
    */
   function getFilterInput(filter: FilterKey) {
     return wrapper
-      .findAll('#' + filter.replace(/ /g, '').toLowerCase())
-      .at(0)
+      .findAll('thead > tr')
+      .at(1)
+      ?.findAll('th')
+      .at(search.selectedColumns.indexOf(filter))
       ?.find('*') // get the first child element of the 'th' element
   }
 
@@ -59,7 +61,8 @@ describe('Search Results Box Component', () => {
     expect(textInput.exists()).toBe(true)
 
     await textInput.setValue(text)
-    expect((textInput.element as HTMLInputElement).value).toBe(text)
+    await textInput.trigger('keyup.enter')
+    expect(search.filters[filter]).toBe(text)
   }
 
   beforeEach(() => {

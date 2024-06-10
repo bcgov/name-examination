@@ -1,9 +1,16 @@
 <template>
-  <nav id="app-header" class="sticky top-0 z-50 h-16 border-b border-gray-300 bg-white">
+  <nav
+    id="app-header"
+    class="sticky top-0 z-50 h-16 border-b border-gray-300 bg-white"
+  >
     <div class="flex h-full w-full items-center justify-between">
       <div class="hidden h-full lg:block">
         <nuxt-link :to="Route.Home">
-          <img src="/images/top-nav.png" class="h-full min-w-8" alt="Name Examination" />
+          <img
+            src="/images/top-nav.png"
+            class="h-full min-w-8"
+            alt="Name Examination"
+          />
         </nuxt-link>
       </div>
 
@@ -15,11 +22,21 @@
       </div>
 
       <div class="ml-auto flex items-center">
-        <SearchInput v-model="searchText" class="mx-3" data-testid="searchNRNumberField" placeholder="Search NR Number"
-                     input-required @submit.prevent="onSearchSubmit" />
+        <SearchInput
+	  v-model="searchText"
+          class="mx-3"
+	  data-testid="searchNRNumberField"
+          placeholder="Search NR Number"
+          input-required
+          @submit.prevent="onSearchSubmit"
+        />
 
         <div class="flex space-x-2 px-3">
-          <ToggleSwitch label="Priority Queue" data-testid="prioritySwitch" v-model="examineOptions.priorityQueue" />
+          <ToggleSwitch
+            label="Priority Queue"
+	    data-testid="prioritySwitch"
+            v-model="examineOptions.priorityQueue"
+          />
         </div>
 
         <div class="flex flex-col border-l-2 border-gray-300 px-3">

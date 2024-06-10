@@ -6,11 +6,10 @@ on:
       smoketest:
         required: true
         description: 'Is this a smoke test?'
-        default: 'false'
+        default: 'true'
       url_parameter:
         required: true
         description: 'Which URL to test?'
-        default: 'false'
       logLevel:
         description: 'Log level'
         required: true

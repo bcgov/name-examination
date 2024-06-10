@@ -9,7 +9,7 @@
 
     <div class="flex items-center">
       <h2 class="font-bold">Examiner:&nbsp;</h2>
-      <p>{{ examine.examiner }}</p>
+      <p>{{ examinerStatus }}</p>
     </div>
 
     <ExamineRequestInfoCommentsPopup />
@@ -23,6 +23,7 @@ import { usePayments } from '~/store/examine/payments'
 
 const examine = useExamination()
 const payments = usePayments()
+const { $userProfile } = useNuxtApp()
 
 const additionalStatus = computed(() => {
   const approvedName = examine.nameChoices.find((name) =>
@@ -45,5 +46,10 @@ const additionalStatus = computed(() => {
   }
 
   return examine.nrStatus
+})
+
+const examinerStatus = computed(() => {
+  const notAssigned = examine.examiner === 'nro_service_account' || examine.examiner === '' || examine.examiner === 'name_request_service_account'
+  return notAssigned ? $userProfile.username : examine.examiner
 })
 </script>

@@ -2,7 +2,7 @@
   <Accordion
     :open="conflictItem.ui.open"
     ref="accordion"
-    class="rounded p-1 transition-all hover:bg-gray-100"
+    class="rounded p-1 transition-all hover:bg-gray-100 selectable"
     :class="{ '!bg-sky-100': conflictItem.ui.focused || conflictItem.ui.open }"
     @title-clicked="recipe.clickObject(conflictItem)"
   >
@@ -88,5 +88,9 @@ emitter.on('scrollToConflictObject', ({ obj, instant }) => {
 .synonym-stem-highlight {
   color: #e0a800;
   font-weight: bold;
+}
+
+.selectable {
+  user-select: text;
 }
 </style>
