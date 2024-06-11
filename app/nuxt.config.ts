@@ -20,7 +20,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'nuxt-vitest',
   ],
-  css: ['@/app/assets/css/main.scss'],
+  css: ['@assets/css/main.scss'],
   typescript: {
     typeCheck: true,
   },
