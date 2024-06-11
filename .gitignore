@@ -32,7 +32,6 @@ MANIFEST
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
-
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
@@ -134,14 +133,11 @@ node_modules
 *.log*
 .nuxt
 .nitro
-.cache
 .output
-.env
 dist
 
 # history
 .history
-
 .npmrc
 .nvmrc
 
@@ -151,3 +147,17 @@ dist
 
 # IDEs
 .vscode
+
+# Cypress related files
+**/cypress.env.json
+**/node_modules
+**/videos/
+**/screenshots/
+**/results/**
+**/downloads/**
+**/mochawesome-report/**
+**/client.json
+**/token.json
+**/local-dev/**
+**/*copy.json
+testing/cypress.config copy.ts
