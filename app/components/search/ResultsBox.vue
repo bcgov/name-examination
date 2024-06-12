@@ -1,6 +1,6 @@
 <template>
   <div class="h-full overflow-x-auto rounded border">
-    <table class="min-h-fit min-w-full table-auto">
+    <table class="min-h-fit min-w-full table-auto" data-testid="searchTable" >
       <thead class="sticky top-0">
         <tr class="h-12 bg-bcgov-blue5 text-left text-sm text-white">
           <th
@@ -10,6 +10,7 @@
           >
             <a
               v-if="layout[column].clickable"
+              :id="column.replace(/ /g,'').toLowerCase() + 'Order'"
               href="#"
               @click="layout[column].clickable.onClick"
               class="flex items-center"
@@ -30,6 +31,7 @@
         <tr ref="filter_inputs">
           <th
             v-for="column in selectedColumns"
+            :id="column.replace(/ /g,'').toLowerCase()"
             :key="column"
             class="whitespace-nowrap bg-sky-100 px-1 py-1 text-sm font-normal"
             :class="'width' in layout[column] ? layout[column].width : 'w-fit'"
@@ -37,7 +39,6 @@
             <input
               v-if="'text_input' in layout[column]"
               type="text"
-              :id="column"
               :placeholder="layout[column].text_input"
               class="w-full rounded border p-1.5"
               :value="search.filters[column as FilterKey]"

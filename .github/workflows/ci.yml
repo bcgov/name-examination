@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - run: "true"
+      - run: 'true'
 
   linting:
     needs: setup-job
@@ -34,11 +34,13 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - uses: pnpm/action-setup@v2
         with:
-            version: 8
+          version: 8
       - name: Install dependencies
+        working-directory: ./app
         run: |
           npm install
       - name: Linting
+        working-directory: ./app
         run: |
           npm run lint
 
@@ -60,18 +62,21 @@ jobs:
         with:
           version: 8
       - name: Install dependencies
+        working-directory: ./app
         run: |
           npm install
       - name: Testing
+        working-directory: ./app
         id: test
         run: |
-          npm run test
+          npm run coverage
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           flags: name-examination-ui
           name: codecov-namex
           fail_ci_if_error: true
+          token: c4c60cf0-440a-4527-bdb8-0ae8b51c62bf
 
   build-check:
     needs: setup-job
@@ -91,9 +96,11 @@ jobs:
         with:
           version: 8
       - name: Install dependencies
+        working-directory: ./app
         run: |
           npm install
       - name: build
+        working-directory: ./app
         id: build
         run: |
           npm run build

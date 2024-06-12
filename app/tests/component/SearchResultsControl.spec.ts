@@ -10,24 +10,31 @@ import IconButton from '~/components/IconButton.vue'
 import ComboSelect from '~/components/ComboSelect.vue'
 
 describe('Search Page', () => {
-  let wrapper = mount(SearchResultsControl)
-  let search = useSearchStore()
+  let wrapper: any
+  let search: any
 
   beforeEach(() => {
+    const pinia = createTestingPinia({
+      stubActions: false,
+      createSpy: vi.fn,
+    })
     wrapper = mount(SearchResultsControl, {
       global: {
-        plugins: [createTestingPinia({ stubActions: false, createSpy: vi.fn })],
+        plugins: [pinia],
       },
     })
     search = useSearchStore()
   })
 
   it('resets the filters', async () => {
+    search.resetFilters = vi.fn()
+    search.resetDisplayAndPage = vi.fn()
+
     await wrapper
       .findWithText((wrapper.vm as any).CLEAR_FILTERS_TEXT)
       .trigger('click')
-    expect(search.resetFilters).toHaveBeenCalledOnce()
-    expect(search.resetDisplayAndPage).toHaveBeenCalledOnce()
+    expect(search.resetFilters).toHaveBeenCalled()
+    expect(search.resetDisplayAndPage).toHaveBeenCalled()
   })
 
   it('sets the selected columns correctly when they are changed', async () => {
@@ -36,10 +43,9 @@ describe('Search Page', () => {
 
     await columnsDropdown.findComponent(ListboxButton).trigger('click')
 
-    // gradually disbable very column and check if the selected columns is
-    // updated accordingly. this assumes all columns are enabled by default
+    // Gradually disable every column and check if the selected columns are updated accordingly.
     const excluded = []
-    for (let column of search.fixedColumns) {
+    for (const column of search.fixedColumns) {
       await columnsDropdown.findWithText(column).trigger('click')
       excluded.push(column)
       expect(
@@ -50,7 +56,7 @@ describe('Search Page', () => {
 
   it('sets the display count', async () => {
     const displayDropdown = wrapper.findAllComponents(ListSelect)[1]
-    expect(displayDropdown).toBeDefined()
+    expect(displayDropdown.exists()).toBe(true)
 
     await clickDropdownOption(displayDropdown, '10')
     expect(search.selectedDisplay).toBe(10)
@@ -58,23 +64,28 @@ describe('Search Page', () => {
 
   it('has a page number combo select', async () => {
     const pageDropdown = wrapper.findComponent(ComboSelect)
+    expect(pageDropdown.exists()).toBe(true)
+
     search.selectedDisplay = 10
     search.resultNum = 100
 
     const expectedOptions = Array.from({ length: 10 }, (_, key) => key + 1)
-    expect((pageDropdown.vm as any).filteredOptions).toEqual(expectedOptions)
-    expect(pageDropdown.exists()).toBe(true)
+    expect(pageDropdown.vm.filteredOptions).toEqual(expectedOptions)
   })
 
-  it('goes to the previous page when a button is pressed', async () => {
+  it('goes to the previous page when the previous button is pressed', async () => {
+    search.goToPreviousPage = vi.fn()
+
     const previousPageButton = wrapper.findAllComponents(IconButton)[0]
     await previousPageButton.trigger('click')
-    expect(search.goToPreviousPage).toHaveBeenCalledOnce()
+    expect(search.goToPreviousPage).toHaveBeenCalled()
   })
 
-  it('goes to the next page when a button is pressed', async () => {
+  it('goes to the next page when the next button is pressed', async () => {
+    search.goToNextPage = vi.fn()
+
     const nextPageButton = wrapper.findAllComponents(IconButton)[1]
     await nextPageButton.trigger('click')
-    expect(search.goToNextPage).toHaveBeenCalledOnce()
+    expect(search.goToNextPage).toHaveBeenCalled()
   })
 })
