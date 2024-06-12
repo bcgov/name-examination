@@ -10,13 +10,13 @@ import IconButton from '~/components/IconButton.vue'
 import ComboSelect from '~/components/ComboSelect.vue'
 
 describe('Search Page', () => {
-  let wrapper
-  let search
+  let wrapper: any
+  let search: any
 
   beforeEach(() => {
     const pinia = createTestingPinia({
       stubActions: false,
-      createSpy: vi.fn
+      createSpy: vi.fn,
     })
     wrapper = mount(SearchResultsControl, {
       global: {
@@ -29,8 +29,10 @@ describe('Search Page', () => {
   it('resets the filters', async () => {
     search.resetFilters = vi.fn()
     search.resetDisplayAndPage = vi.fn()
-    
-    await wrapper.findWithText((wrapper.vm as any).CLEAR_FILTERS_TEXT).trigger('click')
+
+    await wrapper
+      .findWithText((wrapper.vm as any).CLEAR_FILTERS_TEXT)
+      .trigger('click')
     expect(search.resetFilters).toHaveBeenCalled()
     expect(search.resetDisplayAndPage).toHaveBeenCalled()
   })
