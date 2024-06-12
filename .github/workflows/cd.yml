@@ -4,32 +4,28 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'app/**'
   workflow_dispatch:
     inputs:
       environment:
-        description: "Environment"
+        description: 'Environment'
         required: true
         type: choice
         options:
-        - dev
-        - test
-        - sandbox
-        - prod
-      tagname:
-        description: "Specify a previous version (git tag) to deploy"
-        required: false
-        default: ""
+          - dev
+          - test
+          - sandbox
+          - prod
 
 jobs:
   name-examination-ui-cd:
-    permissions:
-      contents: 'write'
-      id-token: 'write'  
-    uses: bcgov/bcregistry-sre/.github/workflows/ui-cd-node20.yaml@main
+    uses: bcgov/bcregistry-sre/.github/workflows/frontend-cd.yaml@main
     with:
-      environment: ${{ inputs.environment }}
-      tagname: ${{ inputs.tagname }}
+      target: ${{ inputs.environment }}
+      node_version: '20.5.1'
+      app_name: 'name-examination-ui'
+      working_directory: 'app'
     secrets:
-      APP_NAME: "name-examination-ui"
-      OP_CONNECT_URL: ${{ secrets.OP_CONNECT_URL }}
-      OP_CONNECT_TOKEN: ${{ secrets.OP_CONNECT_TOKEN }}
+      WORKLOAD_IDENTIFY_POOLS_PROVIDER: ${{ secrets.WORKLOAD_IDENTIFY_POOLS_PROVIDER }}
+      GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
