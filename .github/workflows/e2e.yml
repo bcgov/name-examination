@@ -26,7 +26,6 @@ env:
   CYPRESS_loginproxy: ${{ secrets.CYPRESS_LOGINPROXY }}
   CYPRESS_siteminder: ${{ secrets.CYPRESS_SITEMINDER }}
   CYPRESS_smoketest: ${{inputs.smoketest}}
-  # CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
   smoke-test:
@@ -45,7 +44,7 @@ jobs:
           summary-title: 'E2E Smoke tests'
           wait-on: ${{ secrets.CYPRESS_HOST }}
           wait-on-timeout: 120
-          record: true
+          record: false
           install-command: npm ci
           working-directory: testing
           spec: |
