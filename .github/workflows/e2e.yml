@@ -8,7 +8,7 @@ on:
         description: 'Is this a smoke test?'
         default: 'true'
       url_parameter:
-        required: true
+        required: false
         description: 'Which URL to test?'
       logLevel:
         description: 'Log level'
