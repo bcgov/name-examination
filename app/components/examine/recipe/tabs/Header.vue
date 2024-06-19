@@ -34,6 +34,7 @@
         type="checkbox"
         id="auto-add"
         v-model="conflicts.autoAdd"
+        @change="handleChange"
         :disabled="examine.autoAddDisabled"
       />
       <span>auto add</span>
@@ -61,6 +62,14 @@ const conflictsIconType = computed(() =>
     : 'ok'
 )
 
+/** Handle auto add checkbox event  */
+function handleChange () {
+  if (!conflicts.autoAdd) {
+    conflicts.disableAutoAdd()
+  } else {
+    conflicts.enableAutoAdd()
+  }
+}
 const conditionsIconType = computed(() => {
   if (examine.conditions.length === 0) return 'ok'
   if (

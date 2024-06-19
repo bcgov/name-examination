@@ -19,6 +19,8 @@ export const useConflicts = defineStore('conflicts', () => {
 
   const selectedConflicts = ref<Array<ConflictListItem>>([])
   const comparedConflicts = ref<Array<ConflictListItem>>([])
+  const prevSelectedConflicts = ref<Array<ConflictListItem>>([])
+  const prevComparedConflicts = ref<Array<ConflictListItem>>([])
   const autoAdd = ref(true)
 
   /** Flattened array of every `ConflictList` across all buckets. */
@@ -334,6 +336,30 @@ export const useConflicts = defineStore('conflicts', () => {
     }
   }
 
+  /** Reset selectedConflicts and comparedConflicts and save existing data */
+  function disableAutoAdd () {
+    if (!autoAdd.value) {
+      for (const conflict of selectedConflicts.value) {
+        prevSelectedConflicts.value.push(conflict)
+        prevComparedConflicts.value.push(conflict)
+        const notConflict = (c: ConflictListItem) =>
+          c.nrNumber !== conflict.nrNumber
+        selectedConflicts.value = selectedConflicts.value.filter(notConflict)
+        comparedConflicts.value = comparedConflicts.value.filter(notConflict)
+      }
+    }
+  }
+
+  /** Reassign selectedConflicts and comparedConflicts */
+  function enableAutoAdd () {
+    if (autoAdd.value) {
+      selectedConflicts.value = prevSelectedConflicts.value
+      comparedConflicts.value = prevComparedConflicts.value
+      prevSelectedConflicts.value = []
+      prevComparedConflicts.value = []
+    }
+  }
+
   return {
     initialize,
     exactMatches,
@@ -350,6 +376,8 @@ export const useConflicts = defineStore('conflicts', () => {
     resetConflictLists,
     selectConflict,
     deselectConflict,
+    disableAutoAdd,
+    enableAutoAdd,
     autoAdd,
     lists,
     nonEmptyLists,
