@@ -41,7 +41,7 @@
               type="text"
               :placeholder="layout[column].text_input"
               class="w-full rounded border p-1.5"
-              :value="search.filters[column as FilterKey]"
+              v-model="search.filters[column as FilterKey]"
               @keyup.enter="updateTextInputFilters()"
             />
 
