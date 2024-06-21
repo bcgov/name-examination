@@ -882,7 +882,6 @@ export const useExamination = defineStore('examine', () => {
   }
 
   async function updateNRState(state: Status) {
-    nrStatus.value = state
     await patchNameRequest(nrNumber.value, { state: state })
     await fetchAndLoadNr(nrNumber.value)
   }
