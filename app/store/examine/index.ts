@@ -74,9 +74,7 @@ export const useExamination = defineStore('examine', () => {
   )
   const autoAddDisabled = computed(
     () =>
-      conflictSelectionDisabled.value ||
-      conflicts.selectedConflicts.length > 0 ||
-      conflicts.comparedConflicts.length > 0
+      conflictSelectionDisabled.value
   )
 
   const comments = ref<Array<Comment>>([])
