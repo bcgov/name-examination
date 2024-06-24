@@ -339,9 +339,12 @@ export const useConflicts = defineStore('conflicts', () => {
   /** Reset selectedConflicts and comparedConflicts and save existing data */
   function disableAutoAdd () {
     if (!autoAdd.value) {
+      const initialRun = (prevSelectedConflicts.value.length === 0 && prevComparedConflicts.value.length === 0)
       for (const conflict of selectedConflicts.value) {
-        prevSelectedConflicts.value.push(conflict)
-        prevComparedConflicts.value.push(conflict)
+        if (initialRun) {
+          prevSelectedConflicts.value.push(conflict)
+          prevComparedConflicts.value.push(conflict)
+        }
         const notConflict = (c: ConflictListItem) =>
           c.nrNumber !== conflict.nrNumber
         selectedConflicts.value = selectedConflicts.value.filter(notConflict)
@@ -355,8 +358,6 @@ export const useConflicts = defineStore('conflicts', () => {
     if (autoAdd.value) {
       selectedConflicts.value = prevSelectedConflicts.value
       comparedConflicts.value = prevComparedConflicts.value
-      prevSelectedConflicts.value = []
-      prevComparedConflicts.value = []
     }
   }
 
