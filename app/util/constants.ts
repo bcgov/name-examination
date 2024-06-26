@@ -5,3 +5,6 @@ export enum SessionStorageKeys {
 export enum FeatureFlags {
   NAMEX_BANNER = 'namex_banner',
 }
+
+export const KeyOfPriorityQueue = 'PriorityQueue'
+export const StringOfTrue = 'true'

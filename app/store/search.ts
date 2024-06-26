@@ -11,27 +11,23 @@ import {
 import { getFormattedDateWithTime } from '~/util/date'
 import { getNamexObject, getNamexApiUrl } from '~/util/namex-api'
 import type { NameChoice } from '~/types'
-import { sortNameChoices } from '~/util'
+import { sortNameChoices, getLocalStorageValue } from '~/util'
 import { StatusSearchFilter, type Filters, type Row } from '~/types/search'
 import { ConsentFlag } from '~/enums/codes'
 
 export const defaultFilters = (): Filters => {
-  const getFilterValue = <T>(key: string, defaultValue: T): T => {
-    return (window.localStorage.getItem(key) as T) || defaultValue;
-  };
-  
   return {
-    [SearchColumns.Status]: getFilterValue(SearchColumns.Status, StatusSearchFilter.Hold),
+    [SearchColumns.Status]: getLocalStorageValue(SearchColumns.Status, StatusSearchFilter.Hold),
     [SearchColumns.LastModifiedBy]: '',
     [SearchColumns.NameRequestNumber]: '',
     [SearchColumns.Names]: '',
     [SearchColumns.ApplicantFirstName]: '',
     [SearchColumns.ApplicantLastName]: '',
-    [SearchColumns.ConsentRequired]: getFilterValue(SearchColumns.ConsentRequired, ConsentRequired.All),
-    [SearchColumns.Priority]: getFilterValue(SearchColumns.Priority, Priority.All),
-    [SearchColumns.ClientNotification]: getFilterValue(SearchColumns.ClientNotification, ClientNotification.All),
-    [SearchColumns.Submitted]: getFilterValue(SearchColumns.Submitted, Submitted.All),
-    [SearchColumns.LastUpdate]: getFilterValue(SearchColumns.LastUpdate, LastUpdate.All),
+    [SearchColumns.ConsentRequired]: getLocalStorageValue(SearchColumns.ConsentRequired, ConsentRequired.All),
+    [SearchColumns.Priority]: getLocalStorageValue(SearchColumns.Priority, Priority.All),
+    [SearchColumns.ClientNotification]: getLocalStorageValue(SearchColumns.ClientNotification, ClientNotification.All),
+    [SearchColumns.Submitted]: getLocalStorageValue(SearchColumns.Submitted, Submitted.All),
+    [SearchColumns.LastUpdate]: getLocalStorageValue(SearchColumns.LastUpdate, LastUpdate.All),
   }
 }
 

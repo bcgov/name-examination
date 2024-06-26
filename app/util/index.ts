@@ -140,3 +140,8 @@ export function isConflictList(
 export function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max)
 }
+
+/** Get `value` from local storage using `key` */
+export const getLocalStorageValue = <T>(key: string, defaultValue: T): T => {
+  return (window.localStorage.getItem(key) as T) || defaultValue;
+};
