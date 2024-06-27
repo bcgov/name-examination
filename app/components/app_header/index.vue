@@ -77,7 +77,7 @@
 import { Route } from '~/enums/routes'
 import { useExamination } from '~/store/examine'
 import { emitter } from '~/util/emitter'
-import { KeyOfPriorityQueue, StringOfTrue } from '~/util/constants';
+import { KeyOfPriorityQueue } from '~/util/constants';
 import { getLocalStorageValue } from '~/util';
 
 const { $auth, $userProfile } = useNuxtApp()
@@ -117,6 +117,6 @@ function togglePriorityQueue() {
 }
 
 onMounted(() => {
-  priorityQueue.value = getLocalStorageValue(KeyOfPriorityQueue, StringOfTrue) === StringOfTrue
+  priorityQueue.value = getLocalStorageValue(KeyOfPriorityQueue, 'true') === 'true'
 })
 </script>

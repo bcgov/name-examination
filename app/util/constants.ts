@@ -7,4 +7,3 @@ export enum FeatureFlags {
 }
 
 export const KeyOfPriorityQueue = 'PriorityQueue'
-export const StringOfTrue = 'true'
