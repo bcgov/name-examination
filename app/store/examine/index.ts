@@ -856,7 +856,10 @@ export const useExamination = defineStore('examine', () => {
   }
 
   async function getHistories(query: string) {
-    const response = await postHistories(query)
+    // Remove Special Characters from query string.
+    const cleanedQueryString: string = query.replace(/[^a-zA-Z\. ]/g, "")
+
+    const response = await postHistories(cleanedQueryString)
     const json = (await response.json()) as Histories
     return json.names
   }
