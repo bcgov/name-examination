@@ -94,6 +94,22 @@ export const useTransactions = defineStore('transactions', () => {
       : 'Not required'
   }
 
+  async function getLatestIdir(nrNumber: string) {
+    try {
+      await loadNr(nrNumber)
+      await loadTransactions(nrNumber)
+
+      const latestIdirEntry = transactions.value
+        .filter(entry => entry.user_name.includes('idir'))
+        .sort((a, b) => new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime())
+        [0]
+
+      return latestIdirEntry ? latestIdirEntry.user_name : 'N/A'
+    } catch (error) {
+      return 'N/A'
+    }
+  }
+
   return {
     nr,
     transactions,
@@ -103,5 +119,6 @@ export const useTransactions = defineStore('transactions', () => {
     getStatusDisplay,
     getRequestTypeDisplay,
     getConsentDisplay,
+    getLatestIdir
   }
 })
