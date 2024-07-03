@@ -4,7 +4,7 @@
 
     <div class="flex items-center">
       <h2 class="font-bold">Status:&nbsp;</h2>
-      <p>{{ additionalStatus }}</p>
+      <p>{{ nrStatus }}</p>
     </div>
 
     <div class="flex items-center">
@@ -20,12 +20,14 @@
 import { Status } from '~/enums/nr-status'
 import { useExamination } from '~/store/examine'
 import { usePayments } from '~/store/examine/payments'
+import { useTransactions } from '~/store/transactions'
 
 const examine = useExamination()
 const payments = usePayments()
-const { $userProfile } = useNuxtApp()
+const transactions = useTransactions()
+const examinerStatus = ref(examine.examiner)
 
-const additionalStatus = computed(() => {
+const nrStatus = computed(() => {
   const approvedName = examine.nameChoices.find((name) =>
     [Status.Approved, Status.Condition].includes(name.state)
   )
@@ -48,8 +50,13 @@ const additionalStatus = computed(() => {
   return examine.nrStatus
 })
 
-const examinerStatus = computed(() => {
-  const notAssigned = examine.examiner === 'nro_service_account' || examine.examiner === '' || examine.examiner === 'name_request_service_account'
-  return notAssigned ? $userProfile.username : examine.examiner
+// Find the last Idir that edited the NR in transations
+onMounted(async () => {
+  if (!examinerStatus.value?.includes('idir')) {
+    const lastIdirUpdate = await transactions.getLatestIdir(examine.nrNumber)
+    if (lastIdirUpdate !== 'N/A') {
+      examinerStatus.value = lastIdirUpdate
+    }
+  }
 })
 </script>
