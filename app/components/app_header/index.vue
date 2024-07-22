@@ -52,8 +52,8 @@
           <ToggleSwitch
             label="Priority Queue"
             data-testid="prioritySwitch"
-            @click="togglePriorityQueue"
-            v-model="priorityQueue"
+            :modelValue="queueToggleVal"
+            @update:modelValue="togglePriorityQueue"
           />
         </div>
 
@@ -77,8 +77,7 @@
 import { Route } from '~/enums/routes'
 import { useExamination } from '~/store/examine'
 import { emitter } from '~/util/emitter'
-import { KeyOfPriorityQueue } from '~/util/constants';
-import { getLocalStorageValue } from '~/util';
+import { useExaminationOptions } from '~/store/examine/options'
 
 const { $auth, $userProfile } = useNuxtApp()
 
@@ -88,7 +87,10 @@ const adminURL = config.public.namexAdminURL
 const examine = useExamination()
 
 const searchText = ref('')
-const priorityQueue = ref(true)
+
+const examineOptions = useExaminationOptions()
+const { priorityQueue, updatePriority } = examineOptions
+const queueToggleVal = ref(priorityQueue)
 
 /** Parse the input as an NR number, tries to return a string in the form 'NR x' where 'x' is a number. */
 function parseNrNumber(input: string) {
@@ -112,11 +114,8 @@ async function onSearchSubmit(_: Event) {
   }
 }
 
-function togglePriorityQueue() {
-  window.localStorage.setItem(KeyOfPriorityQueue, String(priorityQueue.value))
+function togglePriorityQueue(newValue: boolean) {
+  queueToggleVal.value = newValue
+  updatePriority(newValue)
 }
-
-onMounted(() => {
-  priorityQueue.value = getLocalStorageValue(KeyOfPriorityQueue, 'true') === 'true'
-})
 </script>
