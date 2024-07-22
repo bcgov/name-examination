@@ -143,5 +143,22 @@ export function clamp(value: number, min: number, max: number): number {
 
 /** Get `value` from local storage using `key` */
 export const getLocalStorageValue = <T>(key: string, defaultValue: T): T => {
-  return (window.localStorage.getItem(key) as T) || defaultValue;
-};
+  const storedValue = window.localStorage.getItem(key)
+  if (storedValue === null) {
+    window.localStorage.setItem(key, JSON.stringify(defaultValue))
+    return defaultValue
+  }
+  try {
+    // Try to parse as JSON first
+    const item = JSON.parse(storedValue) as T
+    return item
+  } catch (error) {
+    // If parsing fails and the type is string, return the stored value directly
+    if (typeof defaultValue === 'string') {
+      return storedValue as unknown as T
+    } else {
+      window.localStorage.setItem(key, JSON.stringify(defaultValue))
+      return defaultValue
+    }
+  }
+}
