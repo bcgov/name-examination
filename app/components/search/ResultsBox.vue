@@ -236,7 +236,7 @@ function checkIfCustomSubmitDateChosen(option: any) {
 
 // Store filter status into local storage
 function setFilterStatus(column: string, option: string) {
-  window.localStorage.setItem(column, option);
+  window.localStorage.setItem(column, JSON.stringify(option));
 }
 
 function onDateDialogSubmit(startDate: string, endDate: string) {
