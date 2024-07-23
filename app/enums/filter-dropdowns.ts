@@ -39,28 +39,10 @@ enum LastUpdate {
   Days30 = '30 days'
 }
 
-enum FilterKey {
-  ConsentRequired = 'consentRequired',
-  Priority = 'priority',
-  ClientNotification = 'clientNotification',
-  Submitted = 'submitted',
-  LastUpdate = 'lastUpdate',
-}
-
-const filterTypeMap = {
-  [FilterKey.ConsentRequired]: ConsentRequired.All,
-  [FilterKey.Priority]: Priority.All,
-  [FilterKey.ClientNotification]: ClientNotification.All,
-  [FilterKey.Submitted]: Submitted.All,
-  [FilterKey.LastUpdate]: LastUpdate.All,
-}
-
 export {
   ConsentRequired,
   Priority,
   ClientNotification,
   Submitted,
   LastUpdate,
-  FilterKey,
-  filterTypeMap
 }
