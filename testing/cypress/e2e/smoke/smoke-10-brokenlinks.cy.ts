@@ -22,11 +22,13 @@ describe('Check for Broken Static Links', () => {
     // Navigate to the next tab
     cy.get(homePage.examineLinkID).should('be.visible').scrollIntoView().click({ force: true })
     cy.wait(200)
+    cy.url().should('include', '/examine')
     cy.linkChecker()
 
     // Navigate to the next tab
     cy.get(homePage.searchLinkID).should('be.visible').scrollIntoView().click({ force: true })
     cy.wait(200)
+    cy.url().should('include', '/search')
     cy.linkChecker()
   })
 })
