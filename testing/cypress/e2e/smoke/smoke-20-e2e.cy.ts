@@ -13,25 +13,25 @@ describe('E2E Smoke Test', () => {
     cy.cleanGC()
   })
 
-  // it('Should have status info available', () => {
-  //   homePage.statusInfo()
-  // })
+  it('Should have status info available', () => {
+    homePage.statusInfo()
+  })
 
-  // it('Should be able to click the links/items in the header', () => {
-  //   // homePage.examineNamesLink()
-  //   homePage.searchLink()
-  //   homePage.statsLink()
-  //   homePage.prioritySwitchClick()
-  //   homePage.adminLink()
-  // })
+  it('Should be able to click the links/items in the header', () => {
+    homePage.examineNamesLink()
+    homePage.searchLink()
+    homePage.statsLink()
+    homePage.prioritySwitchClick()
+    homePage.adminLink()
+  })
 
-  // it('Should be able to examine an NR', () => {
-  //   const nrNum = '3351228'
-  //   homePage.examineNamesLink()
-  //   cy.get(homePage.searchInputField).type(nrNum)
-  //   cy.get(homePage.searchButton).click()
-  //   cy.contains(homePage.nrNumberHeader, nrNum).should('exist')
-  // })
+  it('Should be able to examine an NR', () => {
+    const nrNum = '3351228'
+    homePage.examineNamesLink()
+    cy.get(homePage.searchInputField).type(nrNum)
+    cy.get(homePage.searchButton).click()
+    cy.contains(homePage.nrNumberHeader, nrNum).should('exist')
+  })
 
   it('Should be able to search an NR', () => {
     const nrNum = '3351228'
