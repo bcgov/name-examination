@@ -128,17 +128,21 @@ class HomePage {
    * Toggles the priority switch by clicking on it.
    */
   prioritySwitchClick() {
-    if (cy.get(this.prioritySwitch).invoke('attr', 'aria-checked')) {
-      cy.get(this.prioritySwitch).click()
-      cy.get(this.prioritySwitch)
-        .invoke('attr', 'aria-checked')
-        .should('eq', 'false')
-    } else if (!cy.get(this.prioritySwitch).invoke('attr', 'aria-checked')) {
-      cy.get(this.prioritySwitch).click()
-      cy.get(this.prioritySwitch)
-        .invoke('attr', 'aria-checked')
-        .should('eq', 'true')
-    }
+    cy.get(this.prioritySwitch)
+      .invoke('attr', 'aria-checked')
+      .then((checked) => {
+        cy.get(this.prioritySwitch).click()
+  
+        if (checked === 'true') {
+          cy.get(this.prioritySwitch)
+            .invoke('attr', 'aria-checked')
+            .should('eq', 'false')
+        } else {
+          cy.get(this.prioritySwitch)
+            .invoke('attr', 'aria-checked')
+            .should('eq', 'true')
+        }
+      })
   }
 
   /**
