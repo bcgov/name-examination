@@ -2,6 +2,8 @@
 // This spec checks for broken links on the home page, including the header and footer.
 // It verifies if the specified links are operational.
 // It does not test if the links are correct.
+import HomePage from '../../pageObjects/homePage'
+const homePage = new HomePage()
 
 describe('Check for Broken Static Links', () => {
   beforeEach(() => {
@@ -18,12 +20,12 @@ describe('Check for Broken Static Links', () => {
     cy.linkChecker()
 
     // Navigate to the next tab
-    cy.contains('a', 'Examine Names').should('be.visible').click({ force: true })
+    cy.get(homePage.examineLinkID).should('be.visible').scrollIntoView().click({ force: true })
     cy.wait(200)
     cy.linkChecker()
 
     // Navigate to the next tab
-    cy.contains('a', 'Search').should('be.visible').click({ force: true })
+    cy.get(homePage.searchLinkID).should('be.visible').scrollIntoView().click({ force: true })
     cy.wait(200)
     cy.linkChecker()
   })
