@@ -17,20 +17,18 @@ describe('Check for Broken Static Links', () => {
   it('Check All Static Links', () => {
     // Iterate through all the links on the page
     // If the link has a specified URL, check if the link is operational
-    cy.linkChecker()
+    // cy.linkChecker()
 
     // Navigate to the next tab
-    cy.get(homePage.examineLinkID).should('be.visible').scrollIntoView().click({ force: true })
-    cy.wait(200)
+    cy.log('Attempting to click "Examine Names" link')
+    cy.contains('a', 'Examine Names').should('be.visible').scrollIntoView().click({ force: true })
     cy.url().should('include', '/examine')
-
-    
-    // cy.linkChecker()
+    cy.linkChecker()
 
     // // Navigate to the next tab
-    // cy.get(homePage.searchLinkID).should('be.visible').scrollIntoView().click({ force: true })
-    // cy.wait(200)
-    // cy.url().should('include', '/search')
-    // cy.linkChecker()
+    cy.log('Attempting to click "Searcg" link')
+    cy.contains('a', 'Search').should('be.visible').scrollIntoView().click({ force: true })
+    cy.url().should('include', '/search')
+    cy.linkChecker()
   })
 })
