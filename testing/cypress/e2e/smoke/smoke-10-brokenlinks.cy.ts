@@ -18,11 +18,13 @@ describe('Check for Broken Static Links', () => {
     cy.linkChecker()
 
     // Navigate to the next tab
-    cy.contains('a', 'Examine Names').click()
+    cy.contains('a', 'Examine Names').should('be.visible').click({ force: true })
+    cy.wait(200)
     cy.linkChecker()
 
     // Navigate to the next tab
-    cy.contains('a', 'Search').click()
+    cy.contains('a', 'Search').should('be.visible').click({ force: true })
+    cy.wait(200)
     cy.linkChecker()
   })
 })
