@@ -2,6 +2,7 @@
  * Represents the home page of the BC Registry Name Examination application.
  */
 
+// THIS IS A TEST
 import Utilities from '../appActions/Utilities'
 const util = new Utilities()
 
