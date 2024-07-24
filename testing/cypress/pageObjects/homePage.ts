@@ -12,9 +12,6 @@ class HomePage {
   path = '/'
   title = 'BC Registry: Name Examination - Home'
 
-  // Top level page
-  page = '.flex.min-h-full.items-center.justify-center.p-4.text-center'
-
   // Top Level Links
   adminLinkID = 'a[data-testid="adminLink"]'
   examineLinkID = 'a[data-testid="examineLink"]'
