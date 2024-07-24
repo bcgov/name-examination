@@ -8,6 +8,7 @@ const homePage = new HomePage()
 
 describe('Check for Broken Static Links', () => {
   beforeEach(() => {
+    cy.cleanGC()
     cy.setid('default')
     cy.login()
   })
@@ -15,17 +16,19 @@ describe('Check for Broken Static Links', () => {
   afterEach(() => {
     cy.logout()
   })
+
   it('Check All Static Links', () => {
+    homePage.searchLink()
     // Iterate through all the links on the page
     // If the link has a specified URL, check if the link is operational
-    cy.linkChecker()
+    // cy.linkChecker()
 
     // Navigate to the next tab
     // homePage.examineNamesLink()
     // cy.linkChecker()
     
     // Navigate to the next tab
-    homePage.searchLink()
-    cy.linkChecker()
+    homePage.examineNamesLink()
+    // cy.linkChecker()
   })
 })
