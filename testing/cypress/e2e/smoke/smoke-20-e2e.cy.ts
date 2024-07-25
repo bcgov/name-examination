@@ -31,6 +31,10 @@ describe('E2E Smoke Test', () => {
   
     cy.get(homePage.searchButton).should('be.visible').click({ force: true })
     cy.contains(homePage.nrNumberHeader, nrNum).should('exist')
+    })
+  
+    cy.get(homePage.searchButton).should('be.visible').click({ force: true })
+    cy.contains(homePage.nrNumberHeader, nrNum).should('exist')
   })
 
   it('Should be able to search an NR', () => {
