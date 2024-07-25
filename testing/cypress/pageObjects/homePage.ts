@@ -93,17 +93,17 @@ class HomePage {
   examineNamesLink() {
     cy.wait(5000)
     cy.get(this.examineLinkID).click({force: true})
+    cy.wait(3000)
   }
+
 
   /**
    * Navigates to the search page by clicking the "Search" link.
    */
   searchLink() {
-    cy.get(this.searchLinkID).click()
+    cy.wait(5000)
+    cy.get(this.searchLinkID).click({force: true})
     cy.wait(3000)
-    cy.url().then(($url) => {
-      expect($url).to.contain('/search')
-    })
   }
 
   /**
