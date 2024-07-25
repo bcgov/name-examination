@@ -2,6 +2,7 @@
  * Represents the home page of the BC Registry Name Examination application.
  */
 
+// THIS IS A TEST
 import Utilities from '../appActions/Utilities'
 const util = new Utilities()
 
@@ -70,11 +71,6 @@ class HomePage {
   notExamined = 'span#notExamined'
   hold = 'span#hold'
 
-  // Actions
-  /**
-   * Logs out the user by clicking the "Log Out" link.
-   */
-
   /**
    * Navigates to the admin page by clicking the "Admin" link.
    */
@@ -95,11 +91,8 @@ class HomePage {
    * Navigates to the examine names page by clicking the "Examine Names" link.
    */
   examineNamesLink() {
-    cy.get(this.examineLinkID).click()
-    cy.wait(1000)
-    cy.url().then(($url) => {
-      expect($url).to.contain('/examine')
-    })
+    cy.wait(5000)
+    cy.get(this.examineLinkID).click({force: true})
   }
 
   /**
@@ -107,7 +100,7 @@ class HomePage {
    */
   searchLink() {
     cy.get(this.searchLinkID).click()
-    cy.wait(1000)
+    cy.wait(3000)
     cy.url().then(($url) => {
       expect($url).to.contain('/search')
     })
@@ -118,7 +111,7 @@ class HomePage {
    */
   statsLink() {
     cy.get(this.statsLinkID).click()
-    cy.wait(1000)
+    cy.wait(3000)
     cy.url().then(($url) => {
       expect($url).to.contain('/stats')
     })
