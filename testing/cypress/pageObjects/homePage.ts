@@ -96,7 +96,7 @@ class HomePage {
    */
   examineNamesLink() {
     cy.get(this.examineLinkID).click()
-    cy.wait(1000)
+    cy.wait(3000)
     cy.url().then(($url) => {
       expect($url).to.contain('/examine')
     })
@@ -107,7 +107,7 @@ class HomePage {
    */
   searchLink() {
     cy.get(this.searchLinkID).click()
-    cy.wait(1000)
+    cy.wait(3000)
     cy.url().then(($url) => {
       expect($url).to.contain('/search')
     })
@@ -118,7 +118,7 @@ class HomePage {
    */
   statsLink() {
     cy.get(this.statsLinkID).click()
-    cy.wait(1000)
+    cy.wait(3000)
     cy.url().then(($url) => {
       expect($url).to.contain('/stats')
     })
