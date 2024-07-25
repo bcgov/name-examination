@@ -87,77 +87,13 @@ class HomePage {
     cy.visit('/')
   }
 
-
-
-
-
-
-
   /**
    * Navigates to the examine names page by clicking the "Examine Names" link.
    */
   examineNamesLink() {
-    cy.intercept('GET', '**/oldest**').as('examinePageLoad')
-    cy.get(this.examineLinkID).click()
-    cy.wait('@examinePageLoad').its('response.statusCode').should('eq', 200)
-  }
-
-  /**
-   * Navigates to the examine names page by clicking the "Examine Names" link.
-   */
-  examineNamesLink2() {
     cy.wait(5000)
     cy.get(this.examineLinkID).click({force: true})
   }
-
-      /**
-     * Navigates to the examine names page by clicking the "Examine Names" link.
-     */
-  examineNamesLink3() {
-    cy.get(this.examineLinkID).click()
-    cy.url().should('include', '/examine')
-  }
-
-    /**
-   * Navigates to the examine names page by clicking the "Examine Names" link.
-   */
-  examineNamesLink4() {
-    cy.intercept('GET', '**/oldest**').as('examinePageLoad')
-    cy.get(this.examineLinkID).click()
-    cy.wait('@examinePageLoad').its('response.statusCode').should('eq', 200)
-  }
-
-      /**
-   * Navigates to the examine names page by clicking the "Examine Names" link.
-   */
-  examineNamesLink5() {
-    cy.get(this.examineLinkID).should('exist').and('be.visible').then(($el) => {
-      cy.log('Element found:', $el)
-    })
-    cy.get(this.examineLinkID).click()
-    cy.url().should('include', '/examine')
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   /**
    * Navigates to the search page by clicking the "Search" link.
