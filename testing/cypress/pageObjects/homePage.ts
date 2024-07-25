@@ -71,11 +71,6 @@ class HomePage {
   notExamined = 'span#notExamined'
   hold = 'span#hold'
 
-  // Actions
-  /**
-   * Logs out the user by clicking the "Log Out" link.
-   */
-
   /**
    * Navigates to the admin page by clicking the "Admin" link.
    */
