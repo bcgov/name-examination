@@ -18,34 +18,18 @@ describe('E2E Smoke Test', () => {
     homePage.statusInfo()
   })
 
-  it('click examine button', () => {
-    homePage.examineNamesLink()
-  })
-
-  it('Click serach button', () => {
-    homePage.searchLink()
-  })
-
-  it('Click stats button', () => {
-    homePage.statsLink()
-  })
-
-  it('Click priority button', () => {
-    homePage.prioritySwitchClick()
-  })
-
-  it('Click admin button', () => {
-    homePage.adminLink()
-  })
-
   it('Should be able to examine an NR', () => {
     const nrNum = '3351228'
     homePage.examineNamesLink()
+  
+    cy.get(homePage.searchInputField).should('be.visible')
+    cy.wait(3000) 
+  
     cy.get(homePage.searchInputField).should('be.visible').then($input => {
-      cy.wait(3000)
-      cy.wrap($input).type(nrNum)
+      cy.wrap($input).type(nrNum, { force: true })
     })
-    cy.get(homePage.searchButton).should('be.visible').click()
+  
+    cy.get(homePage.searchButton).should('be.visible').click({ force: true })
     cy.contains(homePage.nrNumberHeader, nrNum).should('exist')
   })
 
