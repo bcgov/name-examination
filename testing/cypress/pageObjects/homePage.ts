@@ -87,6 +87,12 @@ class HomePage {
     cy.visit('/')
   }
 
+
+
+
+
+
+
   /**
    * Navigates to the examine names page by clicking the "Examine Names" link.
    */
@@ -94,6 +100,7 @@ class HomePage {
     cy.wait(5000)
     cy.get(this.examineLinkID).click({force: true})
   }
+
 
   /**
    * Navigates to the search page by clicking the "Search" link.
