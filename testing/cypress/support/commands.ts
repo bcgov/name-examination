@@ -131,5 +131,5 @@ Cypress.Commands.add('linkChecker', () => {
  * Wait for the element to be visible and not covered by any other element
  */
 Cypress.Commands.add('waitForElement', (elementSelector) => {
-  cy.get(elementSelector).should('be.visible').click({ force: true });
+  cy.get(elementSelector, { timeout: 20000 }).should('be.visible').click({ force: true });
 })
