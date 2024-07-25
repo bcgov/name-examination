@@ -30,4 +30,20 @@ describe('Check for Broken Static Links', () => {
     homePage.searchLink()
     cy.linkChecker()
   })
+
+  it('Test1', () => {
+    homePage.examineNamesLink()
+  })
+  it('Test2', () => {
+    homePage.examineNamesLink2()
+  })
+  it('Test3', () => {
+    homePage.examineNamesLink3()
+  })
+  it('Test4', () => {
+    homePage.examineNamesLink4()
+  })
+  it('Test5', () => {
+    homePage.examineNamesLink5()
+  })
 })
