@@ -2,6 +2,7 @@
  * Represents the home page of the BC Registry Name Examination application.
  */
 
+// THIS IS A TEST
 import Utilities from '../appActions/Utilities'
 const util = new Utilities()
 
@@ -70,11 +71,6 @@ class HomePage {
   notExamined = 'span#notExamined'
   hold = 'span#hold'
 
-  // Actions
-  /**
-   * Logs out the user by clicking the "Log Out" link.
-   */
-
   /**
    * Navigates to the admin page by clicking the "Admin" link.
    */
@@ -95,33 +91,28 @@ class HomePage {
    * Navigates to the examine names page by clicking the "Examine Names" link.
    */
   examineNamesLink() {
-    cy.get(this.examineLinkID).click()
-    cy.wait(1000)
-    cy.url().then(($url) => {
-      expect($url).to.contain('/examine')
-    })
+    cy.intercept('GET', '**/oldest**').as('examinePageLoad')
+    cy.waitForElement(this.examineLinkID)
+
+    cy.wait('@examinePageLoad', { timeout: 20000 }).its('response.statusCode').should('eq', 200)
   }
 
   /**
    * Navigates to the search page by clicking the "Search" link.
    */
   searchLink() {
-    cy.get(this.searchLinkID).click()
-    cy.wait(1000)
-    cy.url().then(($url) => {
-      expect($url).to.contain('/search')
-    })
+    cy.intercept('GET', '**/requests**').as('searchPageLoad')
+    cy.waitForElement(this.searchLinkID)
+    cy.wait('@searchPageLoad', { timeout: 20000 }).its('response.statusCode').should('eq', 200)
   }
 
   /**
    * Navigates to the stats page by clicking the "Stats" link.
    */
   statsLink() {
-    cy.get(this.statsLinkID).click()
-    cy.wait(1000)
-    cy.url().then(($url) => {
-      expect($url).to.contain('/stats')
-    })
+    cy.intercept('GET', '**/stats**').as('statsPageLoad')
+    cy.waitForElement(this.statsLinkID)
+    cy.wait('@statsPageLoad', { timeout: 20000 }).its('response.statusCode').should('eq', 200)
   }
 
   /**

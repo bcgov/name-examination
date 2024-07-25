@@ -27,7 +27,7 @@ describe('Check for Broken Static Links', () => {
     cy.linkChecker()
     
     // Navigate to the next tab
-    homePage.examineNamesLink()
+    homePage.searchLink()
     cy.linkChecker()
   })
 })

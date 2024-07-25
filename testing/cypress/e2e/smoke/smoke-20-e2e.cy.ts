@@ -1,6 +1,7 @@
 import HomePage from '../../pageObjects/homePage'
 const homePage = new HomePage()
 
+// CHANGE
 describe('E2E Smoke Test', () => {
   beforeEach(() => {
     cy.cleanGC()
@@ -42,6 +43,7 @@ describe('E2E Smoke Test', () => {
     homePage.examineNamesLink()
     cy.get(homePage.searchInputField).should('be.visible').then($input => {
       cy.wait(3000)
+
       cy.wrap($input).type(nrNum)
     })
     cy.get(homePage.searchButton).should('be.visible').click()
