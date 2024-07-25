@@ -91,11 +91,9 @@ class HomePage {
    * Navigates to the examine names page by clicking the "Examine Names" link.
    */
   examineNamesLink() {
+    cy.intercept('GET', '**/oldest**').as('examinePageLoad')
     cy.get(this.examineLinkID).click()
-    cy.wait(3000)
-    cy.url().then(($url) => {
-      expect($url).to.contain('/examine')
-    })
+    cy.wait('@examinePageLoad').its('response.statusCode').should('eq', 200)
   }
 
   /**
