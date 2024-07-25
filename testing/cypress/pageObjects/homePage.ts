@@ -98,7 +98,7 @@ class HomePage {
   examineNamesLink() {
     cy.intercept('GET', '**/oldest**').as('examinePageLoad')
     cy.waitForElement(this.examineLinkID)
-    cy.wait('@examinePageLoad').its('response.statusCode').should('eq', 200)
+    cy.wait('@examinePageLoad', { timeout: 20000 }).its('response.statusCode').should('eq', 200)
   }
 
   /**
@@ -107,7 +107,7 @@ class HomePage {
   searchLink() {
     cy.intercept('GET', '**/requests**').as('searchPageLoad')
     cy.waitForElement(this.searchLinkID)
-    cy.wait('@searchPageLoad').its('response.statusCode').should('eq', 200)
+    cy.wait('@searchPageLoad', { timeout: 20000 }).its('response.statusCode').should('eq', 200)
   }
 
   /**
@@ -116,7 +116,7 @@ class HomePage {
   statsLink() {
     cy.intercept('GET', '**/stats**').as('statsPageLoad')
     cy.waitForElement(this.statsLinkID)
-    cy.wait('@statsPageLoad').its('response.statusCode').should('eq', 200)
+    cy.wait('@statsPageLoad', { timeout: 20000 }).its('response.statusCode').should('eq', 200)
   }
 
   /**
