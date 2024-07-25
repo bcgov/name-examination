@@ -31,3 +31,5 @@ describe('Check for Broken Static Links', () => {
     cy.linkChecker()
   })
 })
+
+// TEST
