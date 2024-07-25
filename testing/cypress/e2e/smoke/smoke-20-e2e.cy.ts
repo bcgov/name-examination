@@ -22,13 +22,20 @@ describe('E2E Smoke Test', () => {
     const nrNum = '3351228'
     homePage.examineNamesLink()
   
-    cy.get(homePage.searchInputField).should('be.visible')
-    cy.wait(3000) 
+    cy.get('.loading-overlay', { timeout: 10000 }).should('not.exist')
   
+    cy.get(homePage.searchInputField).should('be.visible').then(($input) => {
+      cy.log('Input field is visible:', $input)
+    })
+  
+    cy.wait(3000)
+  
+    cy.screenshot('before-typing-nrNum')
     cy.get(homePage.searchInputField).should('be.visible').then($input => {
       cy.wrap($input).type(nrNum, { force: true })
     })
   
+    cy.screenshot('after-typing-nrNum')
     cy.get(homePage.searchButton).should('be.visible').click({ force: true })
     cy.contains(homePage.nrNumberHeader, nrNum).should('exist')
   })
