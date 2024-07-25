@@ -1,7 +1,6 @@
 import HomePage from '../../pageObjects/homePage'
 const homePage = new HomePage()
 
-// CHANGE
 describe('E2E Smoke Test', () => {
   beforeEach(() => {
     cy.cleanGC()
@@ -29,8 +28,11 @@ describe('E2E Smoke Test', () => {
   it('Should be able to examine an NR', () => {
     const nrNum = '3351228'
     homePage.examineNamesLink()
-    cy.get(homePage.searchInputField).type(nrNum)
-    cy.get(homePage.searchButton).click()
+    cy.get(homePage.searchInputField).should('be.visible').then($input => {
+      cy.wait(500)
+      cy.wrap($input).type(nrNum)
+    })
+    cy.get(homePage.searchButton).should('be.visible').click()
     cy.contains(homePage.nrNumberHeader, nrNum).should('exist')
   })
 
