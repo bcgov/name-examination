@@ -47,3 +47,5 @@ describe('Check for Broken Static Links', () => {
     homePage.examineNamesLink5()
   })
 })
+
+// TEST
