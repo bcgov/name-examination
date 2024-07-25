@@ -126,3 +126,10 @@ Cypress.Commands.add('linkChecker', () => {
     cy.log(link.prop('innerText') + ': ' + link.prop('href'))
   })
 })
+
+/**
+ * Wait for the element to be visible and not covered by any other element
+ */
+Cypress.Commands.add('waitForElement', (elementSelector) => {
+  cy.get(elementSelector, { timeout: 20000 }).should('be.visible').click({ force: true });
+})

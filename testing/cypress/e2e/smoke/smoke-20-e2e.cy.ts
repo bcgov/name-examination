@@ -1,6 +1,7 @@
 import HomePage from '../../pageObjects/homePage'
 const homePage = new HomePage()
 
+// CHANGE
 describe('E2E Smoke Test', () => {
   beforeEach(() => {
     cy.cleanGC()

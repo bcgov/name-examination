@@ -2,6 +2,7 @@
  * Represents the home page of the BC Registry Name Examination application.
  */
 
+// THIS IS A TEST
 import Utilities from '../appActions/Utilities'
 const util = new Utilities()
 
@@ -69,11 +70,6 @@ class HomePage {
   displayDate = 'span#date'
   notExamined = 'span#notExamined'
   hold = 'span#hold'
-
-  // Actions
-  /**
-   * Logs out the user by clicking the "Log Out" link.
-   */
 
   /**
    * Navigates to the admin page by clicking the "Admin" link.
