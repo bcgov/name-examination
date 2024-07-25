@@ -100,7 +100,6 @@ class HomePage {
     cy.waitForElement(this.examineLinkID)
     cy.wait('@examinePageLoad').its('response.statusCode').should('eq', 200)
     cy.url({ timeout: 10000 }).should('include', '/examine')
-
   }
 
   /**
