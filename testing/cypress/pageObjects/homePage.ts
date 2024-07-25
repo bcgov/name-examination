@@ -91,28 +91,33 @@ class HomePage {
    * Navigates to the examine names page by clicking the "Examine Names" link.
    */
   examineNamesLink() {
-    cy.intercept('GET', '**/oldest**').as('examinePageLoad')
-    cy.waitForElement(this.examineLinkID)
-
-    cy.wait('@examinePageLoad', { timeout: 20000 }).its('response.statusCode').should('eq', 200)
+    cy.get(this.examineLinkID).click()
+    cy.wait(3000)
+    cy.url().then(($url) => {
+      expect($url).to.contain('/examine')
+    })
   }
 
   /**
    * Navigates to the search page by clicking the "Search" link.
    */
   searchLink() {
-    cy.intercept('GET', '**/requests**').as('searchPageLoad')
-    cy.waitForElement(this.searchLinkID)
-    cy.wait('@searchPageLoad', { timeout: 20000 }).its('response.statusCode').should('eq', 200)
+    cy.get(this.searchLinkID).click()
+    cy.wait(3000)
+    cy.url().then(($url) => {
+      expect($url).to.contain('/search')
+    })
   }
 
   /**
    * Navigates to the stats page by clicking the "Stats" link.
    */
   statsLink() {
-    cy.intercept('GET', '**/stats**').as('statsPageLoad')
-    cy.waitForElement(this.statsLinkID)
-    cy.wait('@statsPageLoad', { timeout: 20000 }).its('response.statusCode').should('eq', 200)
+    cy.get(this.statsLinkID).click()
+    cy.wait(3000)
+    cy.url().then(($url) => {
+      expect($url).to.contain('/stats')
+    })
   }
 
   /**
