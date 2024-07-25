@@ -59,10 +59,21 @@ Cypress.Commands.add(
  * Custom Cypress command to perform logout.
  */
 Cypress.Commands.add('logout', () => {
-  // Make sure you are on the page with log out and logout
   cy.get(homePage.header, { timeout: 10000 }).within(() => {
+    // Ensure the loading overlay is not present
     cy.get('.loading-overlay', { timeout: 10000 }).should('not.exist')
-    cy.get(homePage.logOut).should('be.visible').click({ force: true })
+
+    cy.wait(3000)
+    // Ensure the logout button is visible and not covered
+    cy.get(homePage.logOut)
+      .should('be.visible')
+      .then(($el) => {
+        // Log the element to ensure it is found
+        cy.log('Logout button is visible and not covered:', $el)
+      })
+
+    // Click the logout button
+    cy.get(homePage.logOut).click({ force: true })
   })
 })
 

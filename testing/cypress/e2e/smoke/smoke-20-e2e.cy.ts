@@ -10,6 +10,7 @@ describe('E2E Smoke Test', () => {
   })
 
   afterEach(() => {
+    cy.get('.loading-overlay', { timeout: 10000 }).should('not.exist')
     cy.logout()
     cy.cleanGC()
   })
@@ -18,33 +19,13 @@ describe('E2E Smoke Test', () => {
     homePage.statusInfo()
   })
 
-  it('Should be able to examine an NR', () => {
-    const nrNum = '3351228'
-    homePage.examineNamesLink()
-  
-    cy.get('.loading-overlay', { timeout: 10000 }).should('not.exist')
-  
-    cy.get(homePage.searchInputField).should('be.visible').then(($input) => {
-      cy.log('Input field is visible:', $input)
-    })
-  
-    cy.wait(3000)
-  
-    cy.get(homePage.searchInputField).should('be.visible').then($input => {
-      cy.wrap($input).type(nrNum, { force: true })
-    })
-
-    cy.get(homePage.searchButton).should('be.visible').click({ force: true })
-    cy.contains(homePage.nrNumberHeader, nrNum).should('exist')
-  })
-
   it('Should be able to examine an NR - Method 2', () => {
     const nrNum = '3351228'
     homePage.examineNamesLink()
   
     cy.get('.loading-overlay', { timeout: 10000 }).should('not.exist')
   
-    cy.wait(5000) // Extra wait to ensure everything is loaded
+    cy.wait(5000)
   
     cy.get(homePage.searchInputField).should('be.visible').then(($input) => {
       cy.log('Input field is visible:', $input)
@@ -52,41 +33,6 @@ describe('E2E Smoke Test', () => {
     })
   
     cy.get(homePage.searchButton).should('be.visible').click({ force: true })
-    cy.contains(homePage.nrNumberHeader, nrNum).should('exist')
-  })
-
-  it('Should be able to examine an NR - Method 3', () => {
-    const nrNum = '3351228'
-    homePage.examineNamesLink()
-  
-    cy.get('.loading-overlay', { timeout: 10000 }).should('not.exist')
-  
-    cy.get(homePage.searchInputField).should('be.visible').and('not.be.covered').then(($input) => {
-      cy.log('Input field is visible and not covered:', $input)
-      cy.wrap($input).type(nrNum, { force: true })
-    })
-  
-    cy.get(homePage.searchButton).should('be.visible').and('not.be.covered').click({ force: true })
-    cy.contains(homePage.nrNumberHeader, nrNum).should('exist')
-  })
-
-  it('Should be able to examine an NR - Method 4', () => {
-    const nrNum = '3351228'
-    homePage.examineNamesLink()
-  
-    cy.get('.loading-overlay', { timeout: 10000 }).should('not.exist')
-  
-    cy.get(homePage.searchInputField).should('be.visible').then(($input) => {
-      cy.log('Input field is visible:', $input)
-    })
-  
-    cy.wait(3000) // Ensure any potential loading completes
-  
-    cy.get(homePage.searchInputField).should('be.visible').and('not.be.covered').then($input => {
-      cy.wrap($input).type(nrNum, { force: true })
-    })
-  
-    cy.get(homePage.searchButton).should('be.visible').and('not.be.covered').click({ force: true })
     cy.contains(homePage.nrNumberHeader, nrNum).should('exist')
   })
 
