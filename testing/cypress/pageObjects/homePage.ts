@@ -96,6 +96,7 @@ class HomePage {
     cy.wait(3000)
   }
 
+
   /**
    * Navigates to the search page by clicking the "Search" link.
    */
