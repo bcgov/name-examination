@@ -59,9 +59,10 @@ Cypress.Commands.add(
  * Custom Cypress command to perform logout.
  */
 Cypress.Commands.add('logout', () => {
-  // Make sure you are on page with log out and logout
+  // Make sure you are on the page with log out and logout
   cy.get(homePage.header, { timeout: 10000 }).within(() => {
-    cy.get(homePage.logOut).click()
+    cy.get('.loading-overlay', { timeout: 10000 }).should('not.exist')
+    cy.get(homePage.logOut).should('be.visible').click({ force: true })
   })
 })
 
