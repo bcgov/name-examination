@@ -20,24 +20,6 @@ describe('Check for Broken Static Links', () => {
   it('Check All Static Links', () => {
     // Iterate through all the links on the page
     // If the link has a specified URL, check if the link is operational
-    cy.log('hello')
-    cy.log('hello')
-    cy.log('hello')
-    cy.log('hello')
-    cy.log('hello')
-    cy.log('hello')
-    cy.log('hello')
-    cy.log('hello')
-    cy.log('hello')
-    cy.log('hello')
-    cy.log('hello')
-    cy.log('hello')
-    cy.log('hello')
-    cy.log('hello')
-    cy.log('hello')
-    cy.log('hello')
-    cy.log('hello')
-    cy.log('hello')
     cy.linkChecker()
 
     // Navigate to the next tab

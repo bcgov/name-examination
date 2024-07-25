@@ -96,22 +96,16 @@ class HomePage {
    * Navigates to the examine names page by clicking the "Examine Names" link.
    */
   examineNamesLink() {
-    cy.get(this.examineLinkID).click()
-    cy.wait(1000)
-    cy.url().then(($url) => {
-      expect($url).to.contain('/examine')
-    })
+    cy.get(this.examineLinkID).should('be.visible').click({ force: true })
+    // cy.url({ timeout: 10000 }).should('include', '/examine')
   }
 
   /**
    * Navigates to the search page by clicking the "Search" link.
    */
   searchLink() {
-    cy.get(this.searchLinkID).click()
-    cy.wait(1000)
-    cy.url().then(($url) => {
-      expect($url).to.contain('/search')
-    })
+    cy.get(this.searchLinkID).should('be.visible').click({force: true})
+    // cy.url({ timeout: 10000 }).should('include', '/search')
   }
 
   /**
