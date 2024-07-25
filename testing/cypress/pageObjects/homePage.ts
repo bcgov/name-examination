@@ -93,6 +93,7 @@ class HomePage {
   examineNamesLink() {
     cy.intercept('GET', '**/oldest**').as('examinePageLoad')
     cy.waitForElement(this.examineLinkID)
+
     cy.wait('@examinePageLoad', { timeout: 20000 }).its('response.statusCode').should('eq', 200)
   }
 
