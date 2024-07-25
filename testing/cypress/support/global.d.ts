@@ -16,5 +16,7 @@ declare namespace Cypress {
     cleanGC(): Chainable<any>
 
     linkChecker(): Chainable<any>
+
+    waitForElement(elementSelector: string): Chainable<any>
   }
 }

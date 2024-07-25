@@ -275,20 +275,20 @@ export const useConflicts = defineStore('conflicts', () => {
     loading.value = true
     resetConflictLists()
     try {
-      exactMatches.value = await retrieveExactMatches(searchQuery)
-      exactMatches.value.forEach((match) => selectConflict(match))
-      synonymMatches.value = await retrieveSynonymMatches(
-        searchQuery,
-        exactPhrase
-      )
-      cobrsPhoneticMatches.value = await retrieveCobrsPhoneticMatches(
-        searchQuery
-      )
-      phoneticMatches.value = await retrievePhoneticMatches(searchQuery)
+      // exactMatches.value = await retrieveExactMatches(searchQuery)
+      // exactMatches.value.forEach((match) => selectConflict(match))
+      // synonymMatches.value = await retrieveSynonymMatches(
+      //   searchQuery,
+      //   exactPhrase
+      // )
+      // cobrsPhoneticMatches.value = await retrieveCobrsPhoneticMatches(
+      //   searchQuery
+      // )
+      // phoneticMatches.value = await retrievePhoneticMatches(searchQuery)
 
-      if (exactMatches.value.length === 0 && nonEmptyLists.value.length > 0) {
-        nonEmptyLists.value[0].ui.open = true
-      }
+      // if (exactMatches.value.length === 0 && nonEmptyLists.value.length > 0) {
+      //   nonEmptyLists.value[0].ui.open = true
+      // }
       useExaminationRecipe().reset()
     } catch (e) {
       resetMatches()
