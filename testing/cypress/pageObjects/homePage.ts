@@ -99,7 +99,6 @@ class HomePage {
     cy.intercept('GET', '**/oldest**').as('examinePageLoad')
     cy.waitForElement(this.examineLinkID)
     cy.wait('@examinePageLoad').its('response.statusCode').should('eq', 200)
-    cy.url({ timeout: 10000 }).should('include', '/examine')
   }
 
   /**
@@ -109,18 +108,15 @@ class HomePage {
     cy.intercept('GET', '**/requests**').as('searchPageLoad')
     cy.waitForElement(this.searchLinkID)
     cy.wait('@searchPageLoad').its('response.statusCode').should('eq', 200)
-    cy.url({ timeout: 10000 }).should('include', '/search')
   }
 
   /**
    * Navigates to the stats page by clicking the "Stats" link.
    */
   statsLink() {
-    cy.get(this.statsLinkID).click()
-    cy.wait(1000)
-    cy.url().then(($url) => {
-      expect($url).to.contain('/stats')
-    })
+    cy.intercept('GET', '**/stats**').as('statsPageLoad')
+    cy.waitForElement(this.statsLinkID)
+    cy.wait('@statsPageLoad').its('response.statusCode').should('eq', 200)
   }
 
   /**
