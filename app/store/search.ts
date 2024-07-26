@@ -6,9 +6,7 @@ import {
   ConsentRequired,
   LastUpdate,
   Priority,
-  Submitted,
-  FilterKey,
-  filterTypeMap
+  Submitted
 } from '~/enums/filter-dropdowns'
 import { getFormattedDateWithTime } from '~/util/date'
 import { getNamexObject, getNamexApiUrl } from '~/util/namex-api'
@@ -25,11 +23,11 @@ export const defaultFilters = (): Filters => {
     [SearchColumns.Names]: '',
     [SearchColumns.ApplicantFirstName]: '',
     [SearchColumns.ApplicantLastName]: '',
-    [SearchColumns.ConsentRequired]: getLocalStorageValue(SearchColumns.ConsentRequired, filterTypeMap[FilterKey.ConsentRequired]),
-    [SearchColumns.Priority]: getLocalStorageValue(SearchColumns.Priority, filterTypeMap[FilterKey.Priority]),
-    [SearchColumns.ClientNotification]: getLocalStorageValue(SearchColumns.ClientNotification, filterTypeMap[FilterKey.ClientNotification]),
-    [SearchColumns.Submitted]: getLocalStorageValue(SearchColumns.Submitted, filterTypeMap[FilterKey.Submitted]),
-    [SearchColumns.LastUpdate]: getLocalStorageValue(SearchColumns.LastUpdate, filterTypeMap[FilterKey.LastUpdate]),
+    [SearchColumns.ConsentRequired]: getLocalStorageValue(SearchColumns.ConsentRequired, ConsentRequired.All),
+    [SearchColumns.Priority]: getLocalStorageValue(SearchColumns.Priority, Priority.All),
+    [SearchColumns.ClientNotification]: getLocalStorageValue(SearchColumns.ClientNotification, ClientNotification.All),
+    [SearchColumns.Submitted]: getLocalStorageValue(SearchColumns.Submitted, Submitted.All),
+    [SearchColumns.LastUpdate]: getLocalStorageValue(SearchColumns.LastUpdate, LastUpdate.All),
   }
 }
 
