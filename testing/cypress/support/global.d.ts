@@ -17,6 +17,6 @@ declare namespace Cypress {
 
     linkChecker(): Chainable<any>
 
-    waitForElement(elementSelector: string): Chainable<any>
+    waitForSpinner(): Chainable<any>
   }
 }

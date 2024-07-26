@@ -51,7 +51,6 @@ Cypress.Commands.add(
       { log: false }
     )
     cy.get('input[name=btnSubmit]', { timeout: 10000 }).click()
-    cy.wait(3000)
   }
 )
 
@@ -60,20 +59,10 @@ Cypress.Commands.add(
  */
 Cypress.Commands.add('logout', () => {
   cy.get(homePage.header, { timeout: 10000 }).within(() => {
-    // Ensure the loading overlay is not present
-    cy.get('.loading-overlay', { timeout: 10000 }).should('not.exist')
-
-    cy.wait(3000)
-    // Ensure the logout button is visible and not covered
-    cy.get(homePage.logOut)
+    cy.waitForSpinner()
+    cy.get(homePage.logOut, { timeout: 10000 })
       .should('be.visible')
-      .then(($el) => {
-        // Log the element to ensure it is found
-        cy.log('Logout button is visible and not covered:', $el)
-      })
-
-    // Click the logout button
-    cy.get(homePage.logOut).click({ force: true })
+      .click({ force: true })
   })
 })
 
@@ -119,7 +108,7 @@ Cypress.Commands.add('cleanGC', () => {
  * Custom Cypress command to check all links on the page.
  */
 Cypress.Commands.add('linkChecker', () => {
-  cy.get('a').each((link) => {
+  cy.get('a', { timeout: 10000 }).each((link) => {
     if (
       link.prop('href') &&
       link.prop('href').startsWith('mailto', 0) === false
@@ -139,9 +128,10 @@ Cypress.Commands.add('linkChecker', () => {
   })
 })
 
+
 /**
- * Wait for the element to be visible and not covered by any other element
+ * Custom Cypress command to wait until loading spinner is gone
  */
-Cypress.Commands.add('waitForElement', (elementSelector) => {
-  cy.get(elementSelector, { timeout: 20000 }).should('be.visible').click({ force: true });
+Cypress.Commands.add('waitForSpinner', () => {
+  cy.get('[data-testid="loadingSpinner"]', { timeout: 10000 }).should('not.exist')
 })

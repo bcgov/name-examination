@@ -20,12 +20,10 @@ describe('Check for Broken Static Links', () => {
     // Iterate through all the links on the page
     // If the link has a specified URL, check if the link is operational
     cy.linkChecker()
-    cy.get('.loading-overlay', { timeout: 10000 }).should('not.exist')
 
     // Navigate to the next tab
     homePage.examineNamesLink()
     cy.linkChecker()
-    cy.get('.loading-overlay', { timeout: 10000 }).should('not.exist')
 
     // Navigate to the next tab
     homePage.searchLink()

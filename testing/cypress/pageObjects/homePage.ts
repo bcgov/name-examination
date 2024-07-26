@@ -2,7 +2,6 @@
  * Represents the home page of the BC Registry Name Examination application.
  */
 
-// THIS IS A TEST
 import Utilities from '../appActions/Utilities'
 const util = new Utilities()
 
@@ -47,7 +46,7 @@ class HomePage {
    * @param {string} option - The text of the option to select.
    */
   headerRowDropdownSelect(dropDown: string, option: string) {
-    cy.get(dropDown)
+    cy.get(dropDown, { timeout: 10000 })
       .click()
       .then(() => {
         cy.get('[role="listbox"]')
@@ -76,51 +75,47 @@ class HomePage {
    */
   adminLink() {
     // Remove the target to stay in the same window for Cypress' sake
-    cy.get(this.adminLinkID).invoke('removeAttr', 'target').click()
-    cy.wait(1000)
-    cy.url().should('include', 'namex-solr-dev.apps.silver.devops.gov.bc.ca')
-    cy.contains('a', 'Login to administration.').click()
-    cy.wait(1000)
-    cy.url().then(($url) => {
+    cy.get(this.adminLinkID, { timeout: 10000 }).should('be.visible').invoke('removeAttr', 'target').click()
+    cy.url({ timeout: 10000 }).should('include', 'namex-solr-dev.apps.silver.devops.gov.bc.ca')
+    cy.contains('a', 'Login to administration.', { timeout: 10000 }).click()
+    cy.url({ timeout: 10000 }).then(($url) => {
       expect($url).to.contain('/admin/synonym')
     })
-    cy.visit('/')
+    cy.visit('/', { timeout: 10000 })
   }
 
   /**
    * Navigates to the examine names page by clicking the "Examine Names" link.
    */
   examineNamesLink() {
-    cy.wait(5000)
-    cy.get(this.examineLinkID).click({force: true})
-    cy.wait(3000)
+    cy.waitForSpinner()
+    cy.get(this.examineLinkID, { timeout: 10000 }).click({ force: true })
+    cy.url().should('include', '/examine', { timeout: 10000 })
   }
 
   /**
    * Navigates to the search page by clicking the "Search" link.
    */
   searchLink() {
-    cy.wait(5000)
-    cy.get(this.searchLinkID).click({force: true})
-    cy.wait(3000)
+    cy.waitForSpinner()
+    cy.get(this.searchLinkID, { timeout: 10000 }).click({ force: true })
+    cy.url().should('include', '/search', { timeout: 10000 })
   }
 
   /**
    * Navigates to the stats page by clicking the "Stats" link.
    */
   statsLink() {
-    cy.get(this.statsLinkID).click()
-    cy.wait(3000)
-    cy.url().then(($url) => {
-      expect($url).to.contain('/stats')
-    })
+    cy.waitForSpinner()
+    cy.get(this.statsLinkID, { timeout: 10000 }).click({ force: true })
+    cy.url().should('include', '/stats', { timeout: 10000 })
   }
 
   /**
    * Toggles the priority switch by clicking on it.
    */
   prioritySwitchClick() {
-    cy.get(this.prioritySwitch)
+    cy.get(this.prioritySwitch, { timeout: 10000 })
       .invoke('attr', 'aria-checked')
       .then((checked) => {
         cy.get(this.prioritySwitch).click()
@@ -143,10 +138,10 @@ class HomePage {
    * @return {void}
    */
   statusInfo() {
-    cy.get(this.displayDate).should('exist')
-    cy.get(this.notExamined).should('exist')
-    cy.get(this.hold).should('exist')
-    cy.get(this.displayDate)
+    cy.get(this.displayDate, { timeout: 10000 }).should('exist')
+    cy.get(this.notExamined, { timeout: 10000 }).should('exist')
+    cy.get(this.hold, { timeout: 10000 }).should('exist')
+    cy.get(this.displayDate, { timeout: 10000 })
       .invoke('text')
       .then(($text) => {
         const date = util.getDate()

@@ -1,16 +1,16 @@
 import HomePage from '../../pageObjects/homePage'
 const homePage = new HomePage()
 
-// CHANGE
 describe('E2E Smoke Test', () => {
   beforeEach(() => {
     cy.cleanGC()
     cy.setid('default')
     cy.login()
+    cy.wait(2000)
   })
 
   afterEach(() => {
-    cy.get('.loading-overlay', { timeout: 10000 }).should('not.exist')
+    cy.wait(2000)
     cy.logout()
     cy.cleanGC()
   })
@@ -19,54 +19,25 @@ describe('E2E Smoke Test', () => {
     homePage.statusInfo()
   })
 
-  it('Should be able to examine an NR - Method 2', () => {
+  it('Should be able to examine an NR', () => {
     const nrNum = '3351228'
     homePage.examineNamesLink()
   
-    cy.get('.loading-overlay', { timeout: 10000 }).should('not.exist')
+    cy.get(homePage.searchInputField, { timeout: 10000 }).should('be.visible')
+      .then(($input) => {
+        cy.wrap($input).type(nrNum, { force: true })}
+      )
   
-    cy.wait(5000)
-  
-    cy.get(homePage.searchInputField).should('be.visible').then(($input) => {
-      cy.log('Input field is visible:', $input)
-      cy.wrap($input).type(nrNum, { force: true })
-    })
-  
-    cy.get(homePage.searchButton).should('be.visible').click({ force: true })
-    cy.contains(homePage.nrNumberHeader, nrNum).should('exist')
+    cy.get(homePage.searchButton, { timeout: 10000 }).should('be.visible').click({ force: true })
+    cy.contains(homePage.nrNumberHeader, nrNum, { timeout: 10000 }).should('exist')
   })
 
-  it('Should be able to examine an NR - Method 5', () => {
-    const nrNum = '3351228'
-    homePage.examineNamesLink()
-  
-    cy.get('.loading-overlay', { timeout: 10000 }).should('not.exist')
-  
-    cy.get(homePage.searchInputField).should('be.visible').then(($input) => {
-      cy.log('Input field is visible:', $input)
-    })
-  
-    cy.wait(3000) // Ensure any potential loading completes
-  
-    cy.get(homePage.searchInputField).should('be.visible').then($input => {
-      cy.log('Input field state before typing:', $input.css('position'))
-      cy.wrap($input).type(nrNum, { force: true })
-    })
-  
-    cy.get(homePage.searchButton).should('be.visible').then($button => {
-      cy.log('Search button state before clicking:', $button.css('position'))
-      cy.wrap($button).click({ force: true })
-    })
-  
-    cy.contains(homePage.nrNumberHeader, nrNum).should('exist')
-  })
-
+ 
   it('Should be able to search an NR', () => {
     const nrNum = '3351228'
     homePage.searchLink()
     // Change the order of Submitted
-    cy.get(homePage.headerRowSubmittedOrder).click()
-    cy.wait(3000)
+    cy.get(homePage.headerRowSubmittedOrder, { timeout: 10000 }).click({ force: true })
 
     // Test all the drop downs
     homePage.headerRowDropdownSelect(homePage.headerRowStatus, 'DRAFT')
@@ -82,8 +53,7 @@ describe('E2E Smoke Test', () => {
     homePage.headerRowDropdownSelect(homePage.headerRowLastUpdate, 'All')
 
     // Search for the NR
-    cy.wait(3000)
-    cy.get(homePage.searchTable).within(() => {
+    cy.get(homePage.searchTable, { timeout: 10000 } ).within(() => {
       cy.get(homePage.headerRowNRNumber).type(nrNum + '{enter}')
       cy.contains('td', 'NR ' + nrNum).should('exist')
       cy.contains('td a', 'NR ' + nrNum).click()
@@ -93,11 +63,10 @@ describe('E2E Smoke Test', () => {
 
   it('Should be able see the stats', () => {
     homePage.statsLink()
-    cy.get(homePage.statsCheckbox).click()
-    cy.get(homePage.getStatsButton).click()
-    cy.wait(3000)
+    cy.get(homePage.statsCheckbox, { timeout: 10000 }).click({ force: true })
+    cy.get(homePage.getStatsButton, { timeout: 10000 }).click({ force: true })
 
-    cy.get(homePage.statsTable).should('exist')
+    cy.get(homePage.statsTable, { timeout: 10000 }).should('exist')
     cy.get(homePage.statsTable)
       .find('tr')
       .then((row) => {
