@@ -27,7 +27,7 @@ describe('E2E Smoke Test', () => {
       .then(($input) => {
         cy.wrap($input).type(nrNum, { force: true })}
       )
-    
+ 
     cy.waitForSpinner()
     cy.get(homePage.searchButton, { timeout: 10000 }).should('be.visible').click({ force: true })
     cy.contains(homePage.nrNumberHeader, nrNum, { timeout: 10000 }).should('exist')
