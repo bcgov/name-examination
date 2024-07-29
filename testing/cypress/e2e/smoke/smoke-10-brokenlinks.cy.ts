@@ -1,4 +1,3 @@
-
 // Cypress Test: Check for Broken Static Links
 // This spec checks for broken links on the home page, including the header and footer.
 // It verifies if the specified links are operational.
@@ -25,9 +24,9 @@ describe('Check for Broken Static Links', () => {
     // Navigate to the next tab
     homePage.examineNamesLink()
     cy.linkChecker()
-    
+
     // Navigate to the next tab
-    homePage.examineNamesLink()
+    homePage.searchLink()
     cy.linkChecker()
   })
 })

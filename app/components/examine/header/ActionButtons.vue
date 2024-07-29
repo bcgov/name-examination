@@ -31,6 +31,7 @@
       @click="examine.getNextCompany"
       light
       mnemonic="n"
+      data-testid="actionNextBtn"
     >
       <ChevronDoubleRightIcon class="h-5 w-5" />
       <template #text>Get&nbsp;<u>N</u>ext</template>
@@ -52,6 +53,7 @@
       light
       @click="examine.holdRequest"
       mnemonic="h"
+      data-testid="actionHoldBtn"
     >
       <PauseIcon class="h-5 w-5 stroke-2" />
       <template #text><u>H</u>old Request</template>
@@ -83,6 +85,7 @@
       light
       @click="examine.claimNr"
       mnemonic="x"
+      data-testid="actionExamineBtn"
     >
       <DocumentCheckIcon class="h-5 w-5" />
       <template #text>E<u>x</u>amine</template>
