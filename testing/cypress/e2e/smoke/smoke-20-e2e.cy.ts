@@ -19,6 +19,14 @@ describe('E2E Smoke Test', () => {
     homePage.statusInfo()
   })
 
+  it('Should be able to click the links/items in the header', () => {
+    homePage.examineNamesLink()
+    homePage.searchLink()
+    homePage.statsLink()
+    homePage.prioritySwitchClick()
+    homePage.adminLink()
+  })
+
   it('Should be able to examine an NR', () => {
     const nrNum = '3351228'
     homePage.examineNamesLink()
