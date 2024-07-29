@@ -12,6 +12,20 @@ class HomePage {
   path = '/'
   title = 'BC Registry: Name Examination - Home'
 
+  // Primary Action Buttons
+  actionHoldBtn = 'button[data-testid="actionHoldBtn"]'
+  actionNextBtn = 'button[data-testid="actionNextBtn"]'
+  actionExamineBtn = 'button[data-testid="actionExamineBtn"]'
+
+  // Quick Decision Buttons
+  quickApproveBtn = 'button[data-testid="quickApproveBtn"]'
+  quickRejectDist = 'button[data-testid="quickRejectDistBtn"]'
+  quickRejecetDesc = 'button[data-testid="quickRejectDescBtn"]'
+
+  // Bottom of page primary approval/ rejection Buttons
+  primaryApproveBtn = 'button[data-testid="primaryApprovalBtn"]'
+  primaryRejectBtn = 'button[data-testid="primaryRejectionBtn"]'
+
   // Top Level Links
   adminLinkID = 'a[data-testid="adminLink"]'
   examineLinkID = 'a[data-testid="examineLink"]'
@@ -91,6 +105,7 @@ class HomePage {
     cy.waitForSpinner()
     cy.get(this.examineLinkID, { timeout: 10000 }).click({ force: true })
     cy.url().should('include', '/examine', { timeout: 10000 })
+    cy.waitForSpinner()
   }
 
   /**
@@ -100,6 +115,7 @@ class HomePage {
     cy.waitForSpinner()
     cy.get(this.searchLinkID, { timeout: 10000 }).click({ force: true })
     cy.url().should('include', '/search', { timeout: 10000 })
+    cy.waitForSpinner()
   }
 
   /**
@@ -109,6 +125,7 @@ class HomePage {
     cy.waitForSpinner()
     cy.get(this.statsLinkID, { timeout: 10000 }).click({ force: true })
     cy.url().should('include', '/stats', { timeout: 10000 })
+    cy.waitForSpinner()
   }
 
   /**
@@ -131,6 +148,28 @@ class HomePage {
         }
       })
   }
+
+
+  prioritySwitchSet(value) {
+    cy.get(this.prioritySwitch, { timeout: 10000 })
+      .invoke('attr', 'aria-checked')
+      .then((checked) => {
+        const shouldBeChecked = value ? 'true' : 'false'
+        
+        if (checked !== shouldBeChecked) {
+          cy.get(this.prioritySwitch)
+            .should('be.visible')
+            .click({ force: true })
+            
+          cy.get(this.prioritySwitch, { timeout: 10000 })
+            .invoke('attr', 'aria-checked')
+            .should('eq', shouldBeChecked)
+        } else {
+          cy.log(`The priority switch is already set to ${value}`)
+        }
+      })
+  }
+
 
   /**
    * Retrieves the status information from the home page.

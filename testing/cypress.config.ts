@@ -2,6 +2,7 @@ import { defineConfig } from 'cypress'
 import fs from 'fs'
 
 export default defineConfig({
+  projectId: 'chruvi',
   chromeWebSecurity: false,
   defaultCommandTimeout: 40000,
   includeShadowDom: true,

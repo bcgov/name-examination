@@ -32,7 +32,6 @@ describe('E2E Smoke Test', () => {
     cy.contains(homePage.nrNumberHeader, nrNum, { timeout: 10000 }).should('exist')
   })
 
- 
   it('Should be able to search an NR', () => {
     const nrNum = '3351228'
     homePage.searchLink()

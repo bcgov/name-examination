@@ -1,6 +1,11 @@
 <template>
   <div class="flex h-9 space-x-1">
-    <IconButton white class="border-none whitespace-pre" @click="quickApprove">
+    <IconButton 
+      white 
+      class="border-none whitespace-pre" 
+      @click="quickApprove"
+      data-testid="quickApproveBtn"
+    >
       <CheckCircleIcon class="h-7 w-7 text-lime-600" />
       <template #text>Quick Approve</template>
     </IconButton>
@@ -10,6 +15,7 @@
       class="border-none whitespace-pre"
       mnemonic="i"
       @click="rejectDistinctive"
+      data-testid="quickRejectDistBtn"
     >
       <XCircleIcon class="h-7 w-7 text-red-error" />
       <template #text>Reject D<u>i</u>stinctive</template>
@@ -20,6 +26,7 @@
       class="border-none whitespace-pre"
       mnemonic="e"
       @click="rejectDescriptive"
+      data-testid="quickRejectDescBtn"
     >
       <XCircleIcon class="h-7 w-7 text-red-error" />
       <template #text>Reject D<u>e</u>scriptive</template>

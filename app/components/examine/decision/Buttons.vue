@@ -5,6 +5,7 @@
       class="bg-lime-600"
       mnemonic="a"
       @click="examine.makeDecision(Status.Approved)"
+      data-testid="primaryApprovalBtn"
     >
       <CheckIcon class="h-5 w-5 stroke-2" />
       <template v-if="examine.consentRequired" #text>
@@ -18,6 +19,7 @@
       class="bg-red-error"
       mnemonic="r"
       @click="examine.makeDecision(Status.Rejected)"
+      data-testid="primaryRejectionBtn"
     >
       <XMarkIcon class="h-5 w-5 stroke-2" />
       <template #text><u>R</u>eject Name</template>
