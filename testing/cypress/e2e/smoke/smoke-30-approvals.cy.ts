@@ -1,7 +1,7 @@
 // Cypress Test: Check for ability to approve NRs
 // This spec checks that NRs can be approved starting from the search table,
 // Examine Names button, and Get Next Button. It also checks the Quck Approve.
-import HomePage from '../../../pageObjects/homePage'
+import HomePage from '../../pageObjects/homePage'
 const homePage = new HomePage()
 
 describe('Check that approving NRs works', () => {

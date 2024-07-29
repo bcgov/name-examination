@@ -1,7 +1,7 @@
 // Cypress Test: Check for ability to put NRs on hold.
 // This spec checks that NRs can be put on hold starting from the search table,
 // Examine Names button, and Get Next Button. 
-import HomePage from '../../../pageObjects/homePage'
+import HomePage from '../../pageObjects/homePage'
 const homePage = new HomePage()
 
 describe('Check that rejecting NRs works', () => {

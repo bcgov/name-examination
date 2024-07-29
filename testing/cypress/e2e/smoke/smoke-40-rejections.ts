@@ -2,7 +2,7 @@
 // This spec checks that NRs can be rejected starting from the search table,
 // Examine Names button, and Get Next Button. It also checks both the 
 // quick reject distinctive and quick reject descriptive buttons.
-import HomePage from '../../../pageObjects/homePage'
+import HomePage from '../../pageObjects/homePage'
 const homePage = new HomePage()
 
 describe('Check that rejecting NRs works', () => {
