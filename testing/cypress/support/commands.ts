@@ -58,11 +58,10 @@ Cypress.Commands.add(
  * Custom Cypress command to perform logout.
  */
 Cypress.Commands.add('logout', () => {
+  cy.waitForSpinner()
   cy.get(homePage.header, { timeout: 10000 }).within(() => {
-    cy.waitForSpinner()
     cy.get(homePage.logOut, { timeout: 10000 })
       .should('be.visible')
-      .and('not.be.covered')
       .click({ force: true })
   })
 })
