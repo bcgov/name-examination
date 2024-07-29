@@ -16,5 +16,11 @@ declare namespace Cypress {
     cleanGC(): Chainable<any>
 
     linkChecker(): Chainable<any>
+
+    waitForSpinner(): Chainable<any>
+
+    examineNR(): Chainable<any>
+
+    verifyNRState(nrNum: string, state: string): Chainable<any>
   }
 }

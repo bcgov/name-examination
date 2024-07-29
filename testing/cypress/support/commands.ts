@@ -51,7 +51,6 @@ Cypress.Commands.add(
       { log: false }
     )
     cy.get('input[name=btnSubmit]', { timeout: 10000 }).click()
-    cy.wait(3000)
   }
 )
 
@@ -59,9 +58,11 @@ Cypress.Commands.add(
  * Custom Cypress command to perform logout.
  */
 Cypress.Commands.add('logout', () => {
-  // Make sure you are on page with log out and logout
   cy.get(homePage.header, { timeout: 10000 }).within(() => {
-    cy.get(homePage.logOut).click()
+    cy.waitForSpinner()
+    cy.get(homePage.logOut, { timeout: 10000 })
+      .should('be.visible')
+      .click({ force: true })
   })
 })
 
@@ -107,7 +108,7 @@ Cypress.Commands.add('cleanGC', () => {
  * Custom Cypress command to check all links on the page.
  */
 Cypress.Commands.add('linkChecker', () => {
-  cy.get('a').each((link) => {
+  cy.get('a', { timeout: 10000 }).each((link) => {
     if (
       link.prop('href') &&
       link.prop('href').startsWith('mailto', 0) === false
@@ -124,5 +125,34 @@ Cypress.Commands.add('linkChecker', () => {
 
     // Log the link text and the url. This is useful for debugging.
     cy.log(link.prop('innerText') + ': ' + link.prop('href'))
+  })
+})
+
+/**
+ * Custom Cypress command to wait until loading spinner is gone
+ */
+Cypress.Commands.add('waitForSpinner', () => {
+  cy.get('[data-testid="loadingSpinner"]', { timeout: 10000 }).should('not.exist')
+})
+
+Cypress.Commands.add('examineNR', () => {
+  cy.wait(1000)
+  cy.get(homePage.nrNumberHeader, { timeout: 10000 })
+    .should('be.visible')
+    .invoke('text')
+    .then((text) => {
+      cy.wrap(text.trim()).as('nrNum')
+    })
+})
+
+Cypress.Commands.add('verifyNRState', (nrNum: string, state: string) => {
+  homePage.searchLink()
+  homePage.headerRowDropdownSelect(homePage.headerRowStatus, state)
+  cy.waitForSpinner()
+
+  cy.get(homePage.searchTable, { timeout: 10000 }).within(() => {
+    cy.get(homePage.headerRowNRNumber).type(nrNum + '{enter}')
+    cy.waitForSpinner()
+    cy.contains('td', String(nrNum)).should('exist')
   })
 })
