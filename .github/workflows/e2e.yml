@@ -63,3 +63,9 @@ jobs:
         with:
           name: smoke-test-results
           path: testing/mochawesome-report/report.html
+      
+      - name: Upload Test Videos
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-videos
+          path: testing/cypress/videos

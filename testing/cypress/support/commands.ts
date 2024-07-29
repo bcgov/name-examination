@@ -60,18 +60,22 @@ Cypress.Commands.add(
 Cypress.Commands.add('logout', () => {
   cy.waitForSpinner()
   cy.get(homePage.header, { timeout: 10000 }).within(() => {
-    cy.log('Checking for log out button visibility')
-    cy.get(homePage.logOut, { timeout: 10000 })
-      .should('be.visible')
-      .then(($el) => {
-        cy.log('Log Out button found:', $el)
-        if ($el.is(':visible')) {
+    const attemptLogout = (retries = 3) => {
+      cy.get(homePage.logOut, { timeout: 10000 })
+        .should('be.visible')
+        .then(($el) => {
           cy.wrap($el).click({ force: true })
-        } else {
-          cy.log('Log Out button is not visible. Attempting force click.')
-          cy.wrap($el).click({ force: true })
-        }
-      })
+          cy.get('body').then(($body) => {
+            if ($body.find(homePage.logOut).length > 0 && retries > 0) {
+              attemptLogout(retries - 1)
+            } else if (retries === 0) {
+              throw new Error('Logout failed after multiple attempts')
+            }
+          })
+        })
+    }
+
+    attemptLogout()
   })
 })
 
