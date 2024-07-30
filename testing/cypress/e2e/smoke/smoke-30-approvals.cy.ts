@@ -23,20 +23,28 @@ describe('Check that approving NRs works', () => {
 
     // Select the first one and store the NR number
     cy.wait(1000)
-    cy.get(homePage.searchTable, { timeout: 10000 }).within(() => {
-      cy.get('tbody tr:first-child td:nth-child(3) a', { timeout: 10000 })
+    cy.get(homePage.searchTable).should('be.visible').within(() => {
+      cy.get('tbody tr:first-child td:nth-child(3) a')
         .should('be.visible')
         .invoke('text')
         .then((text) => {
           cy.wrap(text.trim()).as('nrNum')
         })
-      cy.get('tbody tr:first-child td:nth-child(3) a', { timeout: 10000 }).click();
+      cy.get('tbody tr:first-child td:nth-child(3) a').click();
+    })
+
+    // Examine the NR.
+    cy.get(homePage.actionButtonsContainer).should('be.visible').within(() => {
+      cy.get(homePage.actionExamineBtn).click({ force: true })
     })
 
     // Approve the NR.
-    cy.get(homePage.actionExamineBtn, { timeout: 10000 }).click({ force: true })
-    cy.get(homePage.primaryApproveBtn, { timeout: 10000 }).click({ force: true })
-
+    cy.get(homePage.decisionBox).should('be.visible').within(() => {
+      cy.get(homePage.primaryBtnContainer).should('be.visible').within(() => {
+        cy.get(homePage.primaryApproveBtn).click({ force: true })
+      })
+    })
+    
     // Confirm the NR was approved in the search table.
     cy.get('@nrNum').then((nrNum) => {
       cy.verifyNRState(nrNum.toString(), 'APPROVED')
@@ -48,7 +56,11 @@ describe('Check that approving NRs works', () => {
     // Approve a NR via the Examine Names link
     homePage.examineNamesLink()
     cy.examineNR()
-    cy.get(homePage.primaryApproveBtn, { timeout: 10000 }).click({ force: true })
+    cy.get(homePage.decisionBox).should('be.visible').within(() => {
+      cy.get(homePage.primaryBtnContainer).should('be.visible').within(() => {
+        cy.get(homePage.primaryApproveBtn).click({ force: true })
+      })
+    })
 
     // Confirm the NR was approved in the search table.
     cy.get('@nrNum').then((nrNum) => {
@@ -59,9 +71,13 @@ describe('Check that approving NRs works', () => {
   it('Should be able to approve a NR from the Get Next button', () => {
     // Approve a NR and then press the Get Next button
     homePage.examineNamesLink()
-    cy.get(homePage.primaryApproveBtn, { timeout: 10000 }).click({ force: true })
-    cy.get(homePage.actionNextBtn, {timeout: 10000 }).should('exist')
-    cy.get(homePage.actionNextBtn, {timeout: 10000 }).click({ force: true })
+    cy.get(homePage.decisionBox).should('be.visible').within(() => {
+      cy.get(homePage.primaryBtnContainer).should('be.visible').within(() => {
+        cy.get(homePage.primaryApproveBtn).click({ force: true })
+      })
+    })
+
+    cy.get(homePage.actionNextBtn).should('exist').click({ force: true })
 
     // Store the NR num that is generated
     cy.get(homePage.nrNumberHeader, { timeout: 10000 })
@@ -72,7 +88,11 @@ describe('Check that approving NRs works', () => {
       })
     
     // Approve the NR.
-    cy.get(homePage.primaryApproveBtn, { timeout: 10000 }).click({ force: true })
+    cy.get(homePage.decisionBox).should('be.visible').within(() => {
+      cy.get(homePage.primaryBtnContainer).should('be.visible').within(() => {
+        cy.get(homePage.primaryApproveBtn).click({ force: true })
+      })
+    })
 
     // Confirm it was approved back in the search table.
     cy.get('@nrNum').then((nrNum) => {

@@ -3,7 +3,10 @@
     id="app-header"
     class="sticky top-0 z-50 h-16 border-b border-gray-300 bg-white"
   >
-    <div class="flex h-full w-full items-center justify-between">
+    <div 
+      class="flex h-full w-full items-center justify-between"
+      data-testid="headerContainer"
+    >
       <div class="hidden h-full lg:block">
         <nuxt-link :to="Route.Home">
           <img
@@ -14,7 +17,10 @@
         </nuxt-link>
       </div>
 
-      <div class="text-bcgov-blue5 ml-3 flex gap-10">
+      <div 
+        class="text-bcgov-blue5 ml-3 flex gap-10"
+        data-testid="navLinks"
+      >
         <AppHeaderNavLink
           text="Admin"
           :route="adminURL"
@@ -57,7 +63,10 @@
           />
         </div>
 
-        <div class="flex flex-col border-l-2 border-gray-300 px-3">
+        <div 
+          class="flex flex-col border-l-2 border-gray-300 px-3"
+          data-testid="userProfile"
+        >
           <span class="text-sm">{{ $userProfile.username }}</span>
           <a
             class="text-sm text-blue-800"

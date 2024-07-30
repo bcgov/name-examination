@@ -1,5 +1,8 @@
 <template>
-  <div class="flex items-center space-x-3">
+  <div 
+    class="flex items-center space-x-3"
+    data-testid="actionButtonsContainer"
+  >
     <!-- Edit Button -->
     <IconButton
       v-if="examine.canEdit && notHistoricalReservedConsumed"

@@ -13,6 +13,8 @@ class HomePage {
   title = 'BC Registry: Name Examination - Home'
 
   // Primary Action Buttons
+  decisionBox = 'div[data-testid="decisionBox"]'
+  actionButtonsContainer = 'div[data-testid="actionButtonsContainer"]'
   actionHoldBtn = 'button[data-testid="actionHoldBtn"]'
   actionNextBtn = 'button[data-testid="actionNextBtn"]'
   actionExamineBtn = 'button[data-testid="actionExamineBtn"]'
@@ -23,10 +25,12 @@ class HomePage {
   quickRejecetDesc = 'button[data-testid="quickRejectDescBtn"]'
 
   // Bottom of page primary approval/ rejection Buttons
+  primaryBtnContainer = 'div[data-testid="primaryBtnContainer"]'
   primaryApproveBtn = 'button[data-testid="primaryApprovalBtn"]'
   primaryRejectBtn = 'button[data-testid="primaryRejectionBtn"]'
 
   // Top Level Links
+  navLinks = 'div[data-testid="navLinks"]'
   adminLinkID = 'a[data-testid="adminLink"]'
   examineLinkID = 'a[data-testid="examineLink"]'
   searchLinkID = 'a[data-testid="searchLink"]'
@@ -36,6 +40,7 @@ class HomePage {
   searchInputField = 'form[data-testid="searchNRNumberField"] input'
   searchButton = 'form[data-testid="searchNRNumberField"] button'
   prioritySwitch = 'div[data-testid="prioritySwitch"] button[role="switch"]'
+  userProfile = 'div[data-testid="userProfile"]'
   logOut = 'a[data-testid="logOut"]'
 
   // Search
@@ -60,7 +65,7 @@ class HomePage {
    * @param {string} option - The text of the option to select.
    */
   headerRowDropdownSelect(dropDown: string, option: string) {
-    cy.get(dropDown, { timeout: 10000 })
+    cy.get(dropDown)
       .click()
       .then(() => {
         cy.get('[role="listbox"]')
@@ -77,6 +82,7 @@ class HomePage {
 
   // Elements
   header = '#app-header'
+  headerContainer = 'div[data-testid="headerContainer"]'
   nrNumberHeader = 'div[data-testid="nrNumberHeader"]'
 
   // Status info
@@ -89,13 +95,13 @@ class HomePage {
    */
   adminLink() {
     // Remove the target to stay in the same window for Cypress' sake
-    cy.get(this.adminLinkID, { timeout: 10000 }).should('be.visible').invoke('removeAttr', 'target').click()
-    cy.url({ timeout: 10000 }).should('include', 'namex-solr-dev.apps.silver.devops.gov.bc.ca')
-    cy.contains('a', 'Login to administration.', { timeout: 10000 }).click()
-    cy.url({ timeout: 10000 }).then(($url) => {
+    cy.get(this.adminLinkID).should('be.visible').invoke('removeAttr', 'target').click()
+    cy.url().should('include', 'namex-solr-dev.apps.silver.devops.gov.bc.ca')
+    cy.contains('a', 'Login to administration.').click()
+    cy.url().then(($url) => {
       expect($url).to.contain('/admin/synonym')
     })
-    cy.visit('/', { timeout: 10000 })
+    cy.visit('/')
   }
 
   /**
@@ -103,8 +109,19 @@ class HomePage {
    */
   examineNamesLink() {
     cy.waitForSpinner()
-    cy.get(this.examineLinkID, { timeout: 10000 }).click({ force: true })
-    cy.url().should('include', '/examine', { timeout: 10000 })
+    cy.get(this.header).should('be.visible')
+      .within(() => {
+        cy.get(this.headerContainer).should('be.visible')
+          .within(() => {
+            cy.get(this.navLinks).should('be.visible')
+            .within(() => {
+              cy.get(this.examineLinkID).should('be.visible')
+                .click({ force: true })    
+            })
+          })
+        })
+
+    cy.url().should('include', '/examine')
     cy.waitForSpinner()
   }
 
@@ -113,8 +130,19 @@ class HomePage {
    */
   searchLink() {
     cy.waitForSpinner()
-    cy.get(this.searchLinkID, { timeout: 10000 }).click({ force: true })
-    cy.url().should('include', '/search', { timeout: 10000 })
+    cy.get(this.header).should('be.visible')
+      .within(() => {
+        cy.get(this.headerContainer).should('be.visible')
+          .within(() => {
+            cy.get(this.navLinks).should('be.visible')
+            .within(() => {
+              cy.get(this.searchLinkID).should('be.visible')
+                .click({ force: true })    
+            })
+          })
+        })
+
+    cy.url().should('include', '/search')
     cy.waitForSpinner()
   }
 
@@ -123,8 +151,19 @@ class HomePage {
    */
   statsLink() {
     cy.waitForSpinner()
-    cy.get(this.statsLinkID, { timeout: 10000 }).click({ force: true })
-    cy.url().should('include', '/stats', { timeout: 10000 })
+    cy.get(this.header).should('be.visible')
+      .within(() => {
+        cy.get(this.headerContainer).should('be.visible')
+          .within(() => {
+            cy.get(this.navLinks).should('be.visible')
+            .within(() => {
+              cy.get(this.statsLinkID).should('be.visible')
+                .click({ force: true })    
+            })
+          })
+        })
+
+    cy.url().should('include', '/stats')
     cy.waitForSpinner()
   }
 
@@ -132,7 +171,7 @@ class HomePage {
    * Toggles the priority switch by clicking on it.
    */
   prioritySwitchClick() {
-    cy.get(this.prioritySwitch, { timeout: 10000 })
+    cy.get(this.prioritySwitch)
       .invoke('attr', 'aria-checked')
       .then((checked) => {
         cy.get(this.prioritySwitch).click()
@@ -151,7 +190,7 @@ class HomePage {
 
 
   prioritySwitchSet(value) {
-    cy.get(this.prioritySwitch, { timeout: 10000 })
+    cy.get(this.prioritySwitch)
       .invoke('attr', 'aria-checked')
       .then((checked) => {
         const shouldBeChecked = value ? 'true' : 'false'
@@ -161,7 +200,7 @@ class HomePage {
             .should('be.visible')
             .click({ force: true })
             
-          cy.get(this.prioritySwitch, { timeout: 10000 })
+          cy.get(this.prioritySwitch)
             .invoke('attr', 'aria-checked')
             .should('eq', shouldBeChecked)
         } else {
@@ -177,10 +216,10 @@ class HomePage {
    * @return {void}
    */
   statusInfo() {
-    cy.get(this.displayDate, { timeout: 10000 }).should('exist')
-    cy.get(this.notExamined, { timeout: 10000 }).should('exist')
-    cy.get(this.hold, { timeout: 10000 }).should('exist')
-    cy.get(this.displayDate, { timeout: 10000 })
+    cy.get(this.displayDate).should('exist')
+    cy.get(this.notExamined).should('exist')
+    cy.get(this.hold).should('exist')
+    cy.get(this.displayDate)
       .invoke('text')
       .then(($text) => {
         const date = util.getDate()

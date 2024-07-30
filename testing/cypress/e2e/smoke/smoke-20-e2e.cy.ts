@@ -6,13 +6,10 @@ describe('E2E Smoke Test', () => {
     cy.cleanGC()
     cy.setid('default')
     cy.login()
-    cy.wait(2000)
   })
 
   afterEach(() => {
-    cy.wait(2000)
     cy.logout()
-    cy.cleanGC()
   })
 
   it('Should have status info available', () => {
@@ -31,14 +28,14 @@ describe('E2E Smoke Test', () => {
     const nrNum = '3351228'
     homePage.examineNamesLink()
   
-    cy.get(homePage.searchInputField, { timeout: 10000 }).should('be.visible')
+    cy.get(homePage.searchInputField).should('be.visible')
       .then(($input) => {
         cy.wrap($input).type(nrNum, { force: true })}
       )
     
     cy.waitForSpinner()
-    cy.get(homePage.searchButton, { timeout: 10000 }).should('be.visible').click({ force: true })
-    cy.contains(homePage.nrNumberHeader, nrNum, { timeout: 10000 }).should('exist')
+    cy.get(homePage.searchButton).should('be.visible').click({ force: true })
+    cy.contains(homePage.nrNumberHeader, nrNum).should('exist')
   })
 
   it('Should be able to search an NR', () => {

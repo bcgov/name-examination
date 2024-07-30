@@ -40,17 +40,17 @@ Cypress.Commands.add(
     loginProxy.chooseIdir()
 
     // Validate siteminder and login
-    cy.get('#login-to', { timeout: 10000 })
+    cy.get('#login-to')
       .contains('Log in to ')
       .should('be.visible')
-    cy.get('#user', { timeout: 10000 }).type(
+    cy.get('#user').type(
       username || Cypress.env('username')
     )
-    cy.get('#password', { timeout: 10000 }).type(
+    cy.get('#password').type(
       password || Cypress.env('password'),
       { log: false }
     )
-    cy.get('input[name=btnSubmit]', { timeout: 10000 }).click()
+    cy.get('input[name=btnSubmit]').click()
   }
 )
 
@@ -59,24 +59,17 @@ Cypress.Commands.add(
  */
 Cypress.Commands.add('logout', () => {
   cy.waitForSpinner()
-  cy.get(homePage.header, { timeout: 10000 }).within(() => {
-    const attemptLogout = (retries = 3) => {
-      cy.get(homePage.logOut, { timeout: 10000 })
-        .should('be.visible')
-        .then(($el) => {
-          cy.wrap($el).click({ force: true })
-          cy.get('body').then(($body) => {
-            if ($body.find(homePage.logOut).length > 0 && retries > 0) {
-              attemptLogout(retries - 1)
-            } else if (retries === 0) {
-              throw new Error('Logout failed after multiple attempts')
-            }
-          })
+  cy.get(homePage.header).should('be.visible')
+    .within(() => {
+      cy.get(homePage.headerContainer).should('be.visible')
+        .within(() => {
+          cy.get(homePage.userProfile).should('be.visible')
+            .within(() => {
+              cy.get(homePage.logOut).should('be.visible')
+                .click({ force: true })
+            })
         })
-    }
-
-    attemptLogout()
-  })
+    })
 })
 
 /**

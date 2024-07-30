@@ -1,5 +1,8 @@
 <template>
-  <div class="flex justify-between justify-self-end">
+  <div 
+    class="flex justify-between justify-self-end"
+    data-testid="primaryBtnContainer"
+  >
     <IconButton
       light
       class="bg-lime-600"
