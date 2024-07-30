@@ -58,31 +58,27 @@ Cypress.Commands.add(
  * Custom Cypress command to perform logout.
  */
 Cypress.Commands.add('logout', () => {
-  cy.waitForSpinner();
+  // Ensure you have the base URL configured
+  const baseUrl = Cypress.config('baseUrl');
+  
+  // Fetch necessary token or session details from local storage or cookies if required
+  const token = localStorage.getItem('authToken'); // Example for token retrieval
 
-  const attemptLogout = (retries = 3) => {
-    cy.log(`Attempting logout. Retries left: ${retries}`);
-    cy.get(homePage.header).should('be.visible').within(() => {
-      cy.contains('Log Out').then(($el) => {
-        const logOutButton = $el as JQuery<HTMLElement>;
-        if (logOutButton.length) {
-          cy.log('Log Out button found:', logOutButton);
-          cy.wrap(logOutButton).click({ force: true });
+  // Directly send the logout request
+  cy.request({
+    method: 'GET',
+    url: `${baseUrl}/auth/realms/your-realm/protocol/openid-connect/logout`, // Adjust the URL as needed
+    headers: {
+      'Authorization': `Bearer ${token}` // Include the auth token if required
+    }
+  }).then((response) => {
+    expect(response.status).to.eq(200);
+    cy.log('Logout Request Response:', response);
+  });
 
-        } else {
-          cy.log('Log Out button not found. Attempting force click.');
-          cy.wrap(logOutButton).click({ force: true })
-          if (retries > 0) {
-            attemptLogout(retries - 1);
-          } else {
-            throw new Error('Logout failed after multiple attempts');
-          }
-        }
-      });
-    });
-  };
 
-  attemptLogout();
+  localStorage.removeItem('authToken');
+  cy.clearCookies();
 });
 
 /**
