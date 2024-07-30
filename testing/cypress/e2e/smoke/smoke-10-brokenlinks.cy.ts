@@ -16,15 +16,19 @@ describe('Check for Broken Static Links', () => {
     cy.logout()
   })
 
-  it('Check All Static Links', () => {
+  it('Check All Static Links on Home Page', () => {
     // Iterate through all the links on the page
     // If the link has a specified URL, check if the link is operational
     cy.linkChecker()
+  })
 
+  it('Check All Static Links on Examine Page', () => {
     // Navigate to the next tab
     homePage.examineNamesLink()
     cy.linkChecker()
+  })
 
+  it('Check All Static Links on Search Page', () => {
     // Navigate to the next tab
     homePage.searchLink()
     cy.linkChecker()

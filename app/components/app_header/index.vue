@@ -1,7 +1,7 @@
 <template>
   <nav
     id="app-header"
-    class="sticky top-0 z-50 h-16 border-b border-gray-300 bg-white flex h-full w-full items-center justify-between"
+    class="top-0 border-b border-gray-300 bg-white flex h-full w-full items-center justify-between"
   >
     <div class="hidden h-full lg:block">
       <nuxt-link :to="Route.Home">
