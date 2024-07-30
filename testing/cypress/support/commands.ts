@@ -58,24 +58,32 @@ Cypress.Commands.add(
  * Custom Cypress command to perform logout.
  */
 Cypress.Commands.add('logout', () => {
-  cy.waitForSpinner()
-  cy.waitForSpinner()
-  cy.get(homePage.header).should('be.visible')
-    .within(() => {
-      cy.contains('Log Out').click({ force: true })
-    })
-  // cy.get(homePage.header).should('be.visible')
-  //   .within(() => {
-  //     cy.get(homePage.headerContainer).should('be.visible')
-  //       .within(() => {
-  //         cy.get(homePage.userProfile).should('be.visible')
-  //           .within(() => {
-  //             cy.get(homePage.logOut).should('be.visible')
-  //               .click({ force: true })
-  //           })
-  //       })
-  //   })
-})
+  cy.waitForSpinner();
+
+  const attemptLogout = (retries = 3) => {
+    cy.log(`Attempting logout. Retries left: ${retries}`);
+    cy.get(homePage.header).should('be.visible').within(() => {
+      cy.contains('Log Out').then(($el) => {
+        const logOutButton = $el as JQuery<HTMLElement>;
+        if (logOutButton.length) {
+          cy.log('Log Out button found:', logOutButton);
+          cy.wrap(logOutButton).click({ force: true });
+
+        } else {
+          cy.log('Log Out button not found. Attempting force click.');
+          cy.wrap(logOutButton).click({ force: true })
+          if (retries > 0) {
+            attemptLogout(retries - 1);
+          } else {
+            throw new Error('Logout failed after multiple attempts');
+          }
+        }
+      });
+    });
+  };
+
+  attemptLogout();
+});
 
 /**
  * Custom Cypress command to set the ID/PW Env vars.

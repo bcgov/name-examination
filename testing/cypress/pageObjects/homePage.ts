@@ -111,14 +111,12 @@ class HomePage {
     cy.waitForSpinner()
     cy.get(this.header).should('be.visible')
       .within(() => {
-        cy.get(this.headerContainer).should('be.visible')
+          cy.get(this.navLinks).should('be.visible')
           .within(() => {
-            cy.get(this.navLinks).should('be.visible')
-            .within(() => {
-              cy.get(this.examineLinkID).should('be.visible')
-                .click({ force: true })    
-            })
+            cy.get(this.examineLinkID).should('be.visible')
+              .click({ force: true })    
           })
+          
         })
 
     cy.url().should('include', '/examine')
@@ -132,16 +130,12 @@ class HomePage {
     cy.waitForSpinner()
     cy.get(this.header).should('be.visible')
       .within(() => {
-        cy.get(this.headerContainer).should('be.visible')
+          cy.get(this.navLinks).should('be.visible')
           .within(() => {
-            cy.get(this.navLinks).should('be.visible')
-            .within(() => {
-              cy.get(this.searchLinkID).should('be.visible')
-                .click({ force: true })    
-            })
+            cy.get(this.searchLinkID).should('be.visible')
+              .click({ force: true })    
           })
         })
-
     cy.url().should('include', '/search')
     cy.waitForSpinner()
   }
@@ -153,14 +147,11 @@ class HomePage {
     cy.waitForSpinner()
     cy.get(this.header).should('be.visible')
       .within(() => {
-        cy.get(this.headerContainer).should('be.visible')
+          cy.get(this.navLinks).should('be.visible')
           .within(() => {
-            cy.get(this.navLinks).should('be.visible')
-            .within(() => {
-              cy.get(this.statsLinkID).should('be.visible')
-                .click({ force: true })    
-            })
-          })
+            cy.get(this.statsLinkID).should('be.visible')
+              .click({ force: true })    
+          }) 
         })
 
     cy.url().should('include', '/stats')
