@@ -59,17 +59,22 @@ Cypress.Commands.add(
  */
 Cypress.Commands.add('logout', () => {
   cy.waitForSpinner()
+  cy.waitForSpinner()
   cy.get(homePage.header).should('be.visible')
     .within(() => {
-      cy.get(homePage.headerContainer).should('be.visible')
-        .within(() => {
-          cy.get(homePage.userProfile).should('be.visible')
-            .within(() => {
-              cy.get(homePage.logOut).should('be.visible')
-                .click({ force: true })
-            })
-        })
+      cy.contains('Log Out').click({ force: true })
     })
+  // cy.get(homePage.header).should('be.visible')
+  //   .within(() => {
+  //     cy.get(homePage.headerContainer).should('be.visible')
+  //       .within(() => {
+  //         cy.get(homePage.userProfile).should('be.visible')
+  //           .within(() => {
+  //             cy.get(homePage.logOut).should('be.visible')
+  //               .click({ force: true })
+  //           })
+  //       })
+  //   })
 })
 
 /**

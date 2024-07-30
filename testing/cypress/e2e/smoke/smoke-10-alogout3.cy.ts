@@ -10,6 +10,9 @@ describe('Check for Logout Ability_3', () => {
 
   it('METHOD 3', () => {
     cy.waitForSpinner()
-    cy.contains('Log Out').click({ force: true })
+    cy.get(homePage.header).should('be.visible')
+      .within(() => {
+        cy.contains('Log Out').click({ force: true })
+      })
   })
 })
