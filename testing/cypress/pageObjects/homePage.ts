@@ -82,7 +82,6 @@ class HomePage {
 
   // Elements
   header = '#app-header'
-  headerContainer = 'div[data-testid="headerContainer"]'
   nrNumberHeader = 'div[data-testid="nrNumberHeader"]'
 
   // Status info
