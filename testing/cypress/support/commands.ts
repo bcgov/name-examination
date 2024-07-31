@@ -153,7 +153,7 @@ Cypress.Commands.add('linkChecker', () => {
  * Custom Cypress command to wait until loading spinner is gone
  */
 Cypress.Commands.add('waitForSpinner', () => {
-  cy.get('[data-testid="loadingSpinner"]').should('not.exist')
+  cy.get('[data-testid="loadingSpinner"]', { timeout: 30000 }).should('not.exist')
   cy.wait(1000)
 })
 

@@ -102,8 +102,10 @@ class HomePage {
    * Navigates to the examine names page by clicking the "Examine Names" link.
    */
   examineNamesLink() {
+    cy.intercept('GET', '**/api/v1/requests/NR*').as('getRequest')
     cy.waitForSpinner()
     cy.wait(1000)
+
     cy.get(this.examineLinkID).should('be.visible').click( { force: true })
 
     cy.url().then(($url) => {
@@ -112,6 +114,8 @@ class HomePage {
       }
       cy.url().should('include', '/examine')
     })
+    
+    cy.wait('@getRequest');
     cy.waitForSpinner()
   }
 
