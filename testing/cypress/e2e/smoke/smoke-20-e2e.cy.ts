@@ -38,6 +38,36 @@ describe('E2E Smoke Test', () => {
     cy.contains(homePage.nrNumberHeader, nrNum).should('exist')
   })
 
+  it('Should be able to examine an NR2', () => {
+    const nrNum = '3351228'
+    homePage.examineNamesLink()
+  
+    cy.get(homePage.searchInputField).should('exist')
+      .then(($input) => {
+        cy.wrap($input).type(nrNum, { force: true })}
+      )
+    
+    cy.intercept('GET', '**/api/v1/requests/NR*').as('getRequest')
+    cy.get(homePage.searchButton).should('exist').click({ force: true })
+    cy.wait('@getRequest')
+    cy.contains(homePage.nrNumberHeader, nrNum).should('exist')
+  })
+
+  it('Should be able to examine an NR3', () => {
+    const nrNum = '3351228'
+    homePage.examineNamesLink()
+  
+    cy.get(homePage.searchInputField).should('exist')
+      .then(($input) => {
+        cy.wrap($input).type(nrNum, { force: true })}
+      )
+    
+    cy.waitForSpinner()
+    cy.get(homePage.searchButton).should('exist').click({ force: true })
+    cy.wait(3000)
+    cy.contains(homePage.nrNumberHeader, nrNum).should('exist')
+  })
+
   it('Should be able to search an NR', () => {
     const nrNum = '3351228'
     homePage.searchLink()
