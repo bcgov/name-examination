@@ -10,6 +10,7 @@ describe('E2E Smoke Test', () => {
 
   afterEach(() => {
     cy.logout()
+    cy.cleanGC()
   })
 
   it('Should have status info available', () => {
@@ -44,7 +45,7 @@ describe('E2E Smoke Test', () => {
     const nrNum = '3351228'
     homePage.searchLink()
     // Change the order of Submitted
-    cy.get(homePage.headerRowSubmittedOrder, { timeout: 10000 }).click({ force: true })
+    cy.get(homePage.headerRowSubmittedOrder).click({ force: true })
 
     // Test all the drop downs
     homePage.headerRowDropdownSelect(homePage.headerRowStatus, 'DRAFT')
@@ -60,7 +61,7 @@ describe('E2E Smoke Test', () => {
     homePage.headerRowDropdownSelect(homePage.headerRowLastUpdate, 'All')
 
     // Search for the NR
-    cy.get(homePage.searchTable, { timeout: 10000 } ).within(() => {
+    cy.get(homePage.searchTable).within(() => {
       cy.get(homePage.headerRowNRNumber).type(nrNum + '{enter}')
       cy.contains('td', 'NR ' + nrNum).should('exist')
       cy.contains('td a', 'NR ' + nrNum).click()
@@ -70,10 +71,10 @@ describe('E2E Smoke Test', () => {
 
   it('Should be able see the stats', () => {
     homePage.statsLink()
-    cy.get(homePage.statsCheckbox, { timeout: 10000 }).click({ force: true })
-    cy.get(homePage.getStatsButton, { timeout: 10000 }).click({ force: true })
+    cy.get(homePage.statsCheckbox).click({ force: true })
+    cy.get(homePage.getStatsButton).click({ force: true })
 
-    cy.get(homePage.statsTable, { timeout: 10000 }).should('exist')
+    cy.get(homePage.statsTable).should('exist')
     cy.get(homePage.statsTable)
       .find('tr')
       .then((row) => {

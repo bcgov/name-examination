@@ -13,10 +13,7 @@
       </nuxt-link>
     </div>
 
-    <div 
-      class="text-bcgov-blue5 ml-3 flex gap-10"
-      data-testid="navLinks"
-    >
+    <div class="text-bcgov-blue5 ml-3 flex gap-10">
       <AppHeaderNavLink
         text="Admin"
         :route="adminURL"
@@ -59,10 +56,7 @@
         />
       </div>
 
-      <div 
-        class="flex flex-col border-l-2 border-gray-300 px-3"
-        data-testid="userProfile"
-      >
+      <div class="flex flex-col border-l-2 border-gray-300 px-3">
         <span class="text-sm">{{ $userProfile.username }}</span>
         <a
           class="text-sm text-blue-800"

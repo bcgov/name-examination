@@ -56,16 +56,16 @@ Cypress.Commands.add(
 
 Cypress.Commands.add('bypassLogin', () => {
   cy.session('loginSession', () => {
-    cy.login();
-  });
-});
+    cy.login()
+  })
+})
 
 /**
  * Custom Cypress command to perform logout.
  */
 Cypress.Commands.add('logout', () => {
   // Ensure you have the base URL configured
-  const baseUrl = Cypress.config('baseUrl');
+  const baseUrl = Cypress.config('baseUrl')
   
   // Fetch necessary token or session details from local storage or cookies if required
   const token = localStorage.getItem('authToken'); // Example for token retrieval
@@ -78,14 +78,14 @@ Cypress.Commands.add('logout', () => {
       'Authorization': `Bearer ${token}` // Include the auth token if required
     }
   }).then((response) => {
-    expect(response.status).to.eq(200);
-    cy.log('Logout Request Response:', response);
+    expect(response.status).to.eq(200)
+    cy.log('Logout Request Response:', response)
   });
 
 
-  localStorage.removeItem('authToken');
-  cy.clearCookies();
-});
+  localStorage.removeItem('authToken')
+  cy.clearCookies()
+})
 
 /**
  * Custom Cypress command to set the ID/PW Env vars.
@@ -129,7 +129,7 @@ Cypress.Commands.add('cleanGC', () => {
  * Custom Cypress command to check all links on the page.
  */
 Cypress.Commands.add('linkChecker', () => {
-  cy.get('a', { timeout: 10000 }).each((link) => {
+  cy.get('a').each((link) => {
     if (
       link.prop('href') &&
       link.prop('href').startsWith('mailto', 0) === false

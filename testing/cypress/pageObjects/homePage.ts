@@ -13,8 +13,6 @@ class HomePage {
   title = 'BC Registry: Name Examination - Home'
 
   // Primary Action Buttons
-  decisionBox = 'div[data-testid="decisionBox"]'
-  actionButtonsContainer = 'div[data-testid="actionButtonsContainer"]'
   actionHoldBtn = 'button[data-testid="actionHoldBtn"]'
   actionNextBtn = 'button[data-testid="actionNextBtn"]'
   actionExamineBtn = 'button[data-testid="actionExamineBtn"]'
@@ -25,12 +23,10 @@ class HomePage {
   quickRejecetDesc = 'button[data-testid="quickRejectDescBtn"]'
 
   // Bottom of page primary approval/ rejection Buttons
-  primaryBtnContainer = 'div[data-testid="primaryBtnContainer"]'
   primaryApproveBtn = 'button[data-testid="primaryApprovalBtn"]'
   primaryRejectBtn = 'button[data-testid="primaryRejectionBtn"]'
 
   // Top Level Links
-  navLinks = 'div[data-testid="navLinks"]'
   adminLinkID = 'a[data-testid="adminLink"]'
   examineLinkID = 'a[data-testid="examineLink"]'
   searchLinkID = 'a[data-testid="searchLink"]'
@@ -40,7 +36,6 @@ class HomePage {
   searchInputField = 'form[data-testid="searchNRNumberField"] input'
   searchButton = 'form[data-testid="searchNRNumberField"] button'
   prioritySwitch = 'div[data-testid="prioritySwitch"] button[role="switch"]'
-  userProfile = 'div[data-testid="userProfile"]'
   logOut = 'a[data-testid="logOut"]'
 
   // Search

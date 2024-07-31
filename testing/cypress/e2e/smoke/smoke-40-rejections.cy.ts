@@ -18,13 +18,14 @@ describe('Check that rejecting NRs works', () => {
 
 
   it('Should be able to reject a NR from the Search Table', () => {
+    cy.intercept('GET', '**/api/v1/requests/NR*').as('getRequest')
+
     // Go to the search table and filter by DRAFT.
     homePage.searchLink()
     homePage.headerRowDropdownSelect(homePage.headerRowStatus, 'DRAFT')
 
     // Select the first one and store the NR number
     cy.wait(1000)
-    cy.intercept('GET', '**/api/v1/requests/NR*').as('getRequest')
     cy.get(homePage.searchTable).within(() => {
       cy.get('tbody tr:first-child td:nth-child(3) a')
         .should('be.visible')
@@ -92,7 +93,6 @@ describe('Check that rejecting NRs works', () => {
     cy.intercept('GET', '**/api/v1/requests/NR*').as('getRequest')
     cy.intercept('PATCH', '**/api/v1/requests/NR*').as('patchRequest')
     homePage.examineNamesLink()
-    cy.wait('@getRequest')
 
     // Store the NR
     cy.wait(3000)

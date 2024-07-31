@@ -1,8 +1,5 @@
 <template>
-  <div 
-    class="flex flex-col space-y-4"
-    data-testid="decisionBox"
-  >
+  <div class="flex flex-col space-y-4">
     <div class="flex flex-col space-y-2 grow">
       <ExamineDecisionHeader />
 
