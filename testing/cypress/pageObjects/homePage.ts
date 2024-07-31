@@ -108,13 +108,14 @@ class HomePage {
    */
   examineNamesLink() {
     cy.waitForSpinner()
+    cy.wait(1000)
     cy.get(this.examineLinkID).should('be.visible').click( { force: true })
 
     cy.url().then(($url) => {
       if (!$url.includes('/examine')) {
         cy.get(this.examineLinkID).should('be.visible').click( { force: true })
       }
-      expect($url).to.contain('/examine')
+      cy.url().should('include', '/examine')
     })
     cy.waitForSpinner()
   }
@@ -124,6 +125,7 @@ class HomePage {
    */
   searchLink() {
     cy.waitForSpinner()
+    cy.wait(1000)
     cy.get(this.searchLinkID).should('be.visible').click({ force: true })
 
     cy.url().then(($url) => {
@@ -139,6 +141,7 @@ class HomePage {
    */
   statsLink() {
     cy.waitForSpinner()
+    cy.wait(1000)
     cy.get(this.statsLinkID).should('be.visible').click({ force: true }) 
 
     cy.url().then(($url) => {

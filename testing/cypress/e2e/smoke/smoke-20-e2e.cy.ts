@@ -17,11 +17,11 @@ describe('E2E Smoke Test', () => {
   })
 
   it('Should be able to click the links/items in the header', () => {
-    homePage.examineNamesLink()
     homePage.searchLink()
     homePage.statsLink()
     homePage.prioritySwitchClick()
     homePage.adminLink()
+    homePage.examineNamesLink()
   })
 
   it('Should be able to examine an NR', () => {
