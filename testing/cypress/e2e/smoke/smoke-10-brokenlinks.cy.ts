@@ -18,8 +18,10 @@ describe('Check for Broken Static Links', () => {
 
   it('Check All Static Links', () => {
     cy.linkChecker()
+    cy.wait(3000)
     homePage.examineNamesLink()
     cy.linkChecker()
+    cy.wait(3000)
     homePage.searchLink()
     cy.linkChecker()
   })
@@ -31,13 +33,13 @@ describe('Check for Broken Static Links', () => {
   })
 
   it('Check All Static Links on Examine Page', () => {
-    // Navigate to the next tab
+    // Navigate to the next tab and repeat
     homePage.examineNamesLink()
     cy.linkChecker()
   })
 
   it('Check All Static Links on Search Page', () => {
-    // Navigate to the next tab
+    // Navigate to the next tab and repeat
     homePage.searchLink()
     cy.linkChecker()
   })
