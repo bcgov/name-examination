@@ -12,6 +12,20 @@ class HomePage {
   path = '/'
   title = 'BC Registry: Name Examination - Home'
 
+  // Primary Action Buttons
+  actionHoldBtn = 'button[data-testid="actionHoldBtn"]'
+  actionNextBtn = 'button[data-testid="actionNextBtn"]'
+  actionExamineBtn = 'button[data-testid="actionExamineBtn"]'
+
+  // Quick Decision Buttons
+  quickApproveBtn = 'button[data-testid="quickApproveBtn"]'
+  quickRejectDist = 'button[data-testid="quickRejectDistBtn"]'
+  quickRejecetDesc = 'button[data-testid="quickRejectDescBtn"]'
+
+  // Bottom of page primary approval/ rejection Buttons
+  primaryApproveBtn = 'button[data-testid="primaryApprovalBtn"]'
+  primaryRejectBtn = 'button[data-testid="primaryRejectionBtn"]'
+
   // Top Level Links
   adminLinkID = 'a[data-testid="adminLink"]'
   examineLinkID = 'a[data-testid="examineLink"]'
@@ -70,21 +84,14 @@ class HomePage {
   notExamined = 'span#notExamined'
   hold = 'span#hold'
 
-  // Actions
-  /**
-   * Logs out the user by clicking the "Log Out" link.
-   */
-
   /**
    * Navigates to the admin page by clicking the "Admin" link.
    */
   adminLink() {
     // Remove the target to stay in the same window for Cypress' sake
-    cy.get(this.adminLinkID).invoke('removeAttr', 'target').click()
-    cy.wait(1000)
+    cy.get(this.adminLinkID).should('be.visible').invoke('removeAttr', 'target').click()
     cy.url().should('include', 'namex-solr-dev.apps.silver.devops.gov.bc.ca')
     cy.contains('a', 'Login to administration.').click()
-    cy.wait(1000)
     cy.url().then(($url) => {
       expect($url).to.contain('/admin/synonym')
     })
@@ -95,20 +102,31 @@ class HomePage {
    * Navigates to the examine names page by clicking the "Examine Names" link.
    */
   examineNamesLink() {
-    cy.get(this.examineLinkID).click()
+    cy.waitForSpinner()
     cy.wait(1000)
+    cy.get(this.examineLinkID).should('be.visible').click( { force: true })
+
     cy.url().then(($url) => {
-      expect($url).to.contain('/examine')
+      if (!$url.includes('/examine')) {
+        cy.get(this.examineLinkID).should('be.visible').click( { force: true })
+      }
+      cy.url().should('include', '/examine')
     })
+    cy.waitForSpinner()
   }
 
   /**
    * Navigates to the search page by clicking the "Search" link.
    */
   searchLink() {
-    cy.get(this.searchLinkID).click()
+    cy.waitForSpinner()
     cy.wait(1000)
+    cy.get(this.searchLinkID).should('be.visible').click({ force: true })
+
     cy.url().then(($url) => {
+      if (!$url.includes('/search')) {
+        cy.get(this.searchLinkID).should('be.visible').click( { force: true })
+      }
       expect($url).to.contain('/search')
     })
   }
@@ -117,11 +135,17 @@ class HomePage {
    * Navigates to the stats page by clicking the "Stats" link.
    */
   statsLink() {
-    cy.get(this.statsLinkID).click()
+    cy.waitForSpinner()
     cy.wait(1000)
+    cy.get(this.statsLinkID).should('be.visible').click({ force: true }) 
+
     cy.url().then(($url) => {
+      if (!$url.includes('/stats')) {
+        cy.get(this.statsLinkID).should('be.visible').click( { force: true })
+      }
       expect($url).to.contain('/stats')
     })
+    cy.waitForSpinner()
   }
 
   /**
@@ -144,6 +168,28 @@ class HomePage {
         }
       })
   }
+
+
+  prioritySwitchSet(value) {
+    cy.get(this.prioritySwitch)
+      .invoke('attr', 'aria-checked')
+      .then((checked) => {
+        const shouldBeChecked = value ? 'true' : 'false'
+        
+        if (checked !== shouldBeChecked) {
+          cy.get(this.prioritySwitch)
+            .should('be.visible')
+            .click({ force: true })
+            
+          cy.get(this.prioritySwitch)
+            .invoke('attr', 'aria-checked')
+            .should('eq', shouldBeChecked)
+        } else {
+          cy.log(`The priority switch is already set to ${value}`)
+        }
+      })
+  }
+
 
   /**
    * Retrieves the status information from the home page.

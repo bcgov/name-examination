@@ -40,29 +40,51 @@ Cypress.Commands.add(
     loginProxy.chooseIdir()
 
     // Validate siteminder and login
-    cy.get('#login-to', { timeout: 10000 })
+    cy.get('#login-to')
       .contains('Log in to ')
       .should('be.visible')
-    cy.get('#user', { timeout: 10000 }).type(
+    cy.get('#user').type(
       username || Cypress.env('username')
     )
-    cy.get('#password', { timeout: 10000 }).type(
+    cy.get('#password').type(
       password || Cypress.env('password'),
       { log: false }
     )
-    cy.get('input[name=btnSubmit]', { timeout: 10000 }).click()
-    cy.wait(3000)
+    cy.get('input[name=btnSubmit]').click()
   }
 )
+
+Cypress.Commands.add('bypassLogin', () => {
+  cy.session('loginSession', () => {
+    cy.login()
+  })
+})
 
 /**
  * Custom Cypress command to perform logout.
  */
 Cypress.Commands.add('logout', () => {
-  // Make sure you are on page with log out and logout
-  cy.get(homePage.header, { timeout: 10000 }).within(() => {
-    cy.get(homePage.logOut).click()
-  })
+  // Ensure you have the base URL configured
+  const baseUrl = Cypress.config('baseUrl')
+  
+  // Fetch necessary token or session details from local storage or cookies if required
+  const token = localStorage.getItem('authToken'); // Example for token retrieval
+
+  // Directly send the logout request
+  cy.request({
+    method: 'GET',
+    url: `${baseUrl}/auth/realms/your-realm/protocol/openid-connect/logout`, // Adjust the URL as needed
+    headers: {
+      'Authorization': `Bearer ${token}` // Include the auth token if required
+    }
+  }).then((response) => {
+    expect(response.status).to.eq(200)
+    cy.log('Logout Request Response:', response)
+  });
+
+
+  localStorage.removeItem('authToken')
+  cy.clearCookies()
 })
 
 /**
@@ -124,5 +146,38 @@ Cypress.Commands.add('linkChecker', () => {
 
     // Log the link text and the url. This is useful for debugging.
     cy.log(link.prop('innerText') + ': ' + link.prop('href'))
+  })
+})
+
+/**
+ * Custom Cypress command to wait until loading spinner is gone
+ */
+Cypress.Commands.add('waitForSpinner', () => {
+  cy.get('[data-testid="loadingSpinner"]').should('not.exist')
+  cy.wait(1000)
+})
+
+Cypress.Commands.add('examineNR', () => {
+  cy.wait(10000)
+  cy.get(homePage.nrNumberHeader)
+    .should('exist')
+    .should('be.visible')
+    .invoke('text')
+    .then((text) => {
+      cy.wrap(text.trim()).as('nrNum')
+    })
+  })
+
+
+Cypress.Commands.add('verifyNRState', (nrNum: string, state: string) => {
+  homePage.searchLink()
+  cy.waitForSpinner()
+  homePage.headerRowDropdownSelect(homePage.headerRowStatus, state)
+  cy.waitForSpinner()
+
+  cy.get(homePage.searchTable).within(() => {
+    cy.get(homePage.headerRowNRNumber).type(nrNum + '{enter}')
+    cy.waitForSpinner()
+    cy.contains('td', String(nrNum)).should('exist')
   })
 })

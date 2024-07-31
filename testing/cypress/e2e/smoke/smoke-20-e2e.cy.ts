@@ -18,27 +18,34 @@ describe('E2E Smoke Test', () => {
   })
 
   it('Should be able to click the links/items in the header', () => {
-    homePage.examineNamesLink()
     homePage.searchLink()
     homePage.statsLink()
     homePage.prioritySwitchClick()
     homePage.adminLink()
+    homePage.examineNamesLink()
   })
 
   it('Should be able to examine an NR', () => {
     const nrNum = '3351228'
     homePage.examineNamesLink()
-    cy.get(homePage.searchInputField).type(nrNum)
-    cy.get(homePage.searchButton).click()
+  
+    cy.get(homePage.searchInputField).should('exist')
+      .then(($input) => {
+        cy.wrap($input).type(nrNum, { force: true })}
+      )
+    
+    cy.intercept('GET', '**/api/v1/requests/NR*').as('getRequest')
+    cy.get(homePage.searchButton).should('exist').click({ force: true })
+    cy.wait('@getRequest')
     cy.contains(homePage.nrNumberHeader, nrNum).should('exist')
   })
+  
 
   it('Should be able to search an NR', () => {
     const nrNum = '3351228'
     homePage.searchLink()
     // Change the order of Submitted
-    cy.get(homePage.headerRowSubmittedOrder).click()
-    cy.wait(3000)
+    cy.get(homePage.headerRowSubmittedOrder).click({ force: true })
 
     // Test all the drop downs
     homePage.headerRowDropdownSelect(homePage.headerRowStatus, 'DRAFT')
@@ -54,7 +61,6 @@ describe('E2E Smoke Test', () => {
     homePage.headerRowDropdownSelect(homePage.headerRowLastUpdate, 'All')
 
     // Search for the NR
-    cy.wait(3000)
     cy.get(homePage.searchTable).within(() => {
       cy.get(homePage.headerRowNRNumber).type(nrNum + '{enter}')
       cy.contains('td', 'NR ' + nrNum).should('exist')
@@ -65,9 +71,8 @@ describe('E2E Smoke Test', () => {
 
   it('Should be able see the stats', () => {
     homePage.statsLink()
-    cy.get(homePage.statsCheckbox).click()
-    cy.get(homePage.getStatsButton).click()
-    cy.wait(3000)
+    cy.get(homePage.statsCheckbox).click({ force: true })
+    cy.get(homePage.getStatsButton).click({ force: true })
 
     cy.get(homePage.statsTable).should('exist')
     cy.get(homePage.statsTable)
