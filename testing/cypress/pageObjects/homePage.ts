@@ -110,9 +110,22 @@ class HomePage {
     cy.waitForSpinner()
     cy.get(this.header).should('be.visible')
       .within(() => {
-          cy.get(this.examineLinkID).should('be.visible')
-            .click({ force: true })    
-        })
+        cy.get(this.examineLinkID).should('be.visible')
+          .click({ force: true })
+      })
+    
+    // Check if the URL contains '/examine', retry the click if it doesn't
+    cy.url().then(($url) => {
+      if (!$url.includes('/examine')) {
+        cy.get(this.header).should('be.visible')
+          .within(() => {
+            cy.get(this.examineLinkID).should('be.visible')
+              .click({ force: true })
+          })
+      }
+      expect($url).to.contain('/examine')
+    })
+  
     cy.waitForSpinner()
   }
 
