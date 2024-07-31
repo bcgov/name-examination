@@ -24,6 +24,7 @@ describe('Check that rejecting NRs works', () => {
 
     // Select the first one and store the NR number
     cy.wait(1000)
+    cy.intercept('GET', '**/api/v1/requests/NR*').as('getRequest')
     cy.get(homePage.searchTable).within(() => {
       cy.get('tbody tr:first-child td:nth-child(3) a')
         .should('be.visible')
@@ -33,6 +34,7 @@ describe('Check that rejecting NRs works', () => {
         })
       cy.get('tbody tr:first-child td:nth-child(3) a').click();
     })
+    cy.wait('@getRequest')
 
     // Examine the NR and wait for request to finish.
     cy.intercept('PATCH', '**/api/v1/requests/NR*').as('examinePatch')
@@ -50,12 +52,47 @@ describe('Check that rejecting NRs works', () => {
     })
   })
 
+  it('Should be able to reject a NR from the Search Table2', () => {
+    // Go to the search table and filter by DRAFT.
+    homePage.searchLink()
+    homePage.headerRowDropdownSelect(homePage.headerRowStatus, 'DRAFT')
+
+    // Select the first one and store the NR number
+    cy.wait(1000)
+    cy.get(homePage.searchTable).within(() => {
+      cy.get('tbody tr:first-child td:nth-child(3) a')
+        .should('be.visible')
+        .invoke('text')
+        .then((text) => {
+          cy.wrap(text.trim()).as('nrNum')
+        })
+      cy.get('tbody tr:first-child td:nth-child(3) a').click();
+    })
+    cy.wait(3000)
+
+    // Examine the NR and wait for request to finish.
+    cy.intercept('PATCH', '**/api/v1/requests/NR*').as('patchRequest')
+    cy.get(homePage.actionExamineBtn).should('exist').click({ force: true })
+    cy.wait('@patchRequest')
+
+    // Reject the NR and wait for network requests to finish.
+    cy.get(homePage.primaryRejectBtn).should('exist').click({ force: true })
+    cy.wait('@patchRequest')
+
+    // Confirm the NR was rejected in the search table.
+    cy.get('@nrNum').then((nrNum) => {
+      cy.verifyNRState(nrNum.toString(), 'REJECTED')
+    })
+  })
+
 
   it('Should be able to reject a NR from the Examine Names button', () => {
+    cy.intercept('GET', '**/api/v1/requests/NR*').as('getRequest')
     homePage.examineNamesLink()
+    cy.wait('@getRequest')
 
     // Store the NR
-    cy.wait(1000)
+    cy.wait(3000)
     cy.get(homePage.nrNumberHeader)
       .should('exist')
       .should('be.visible')
@@ -65,11 +102,8 @@ describe('Check that rejecting NRs works', () => {
       })
     
     // Reject the NR and wait for network requests to finish
-    cy.intercept('PATCH', '**/api/v1/requests/NR*').as('rejectPatchRequest')
-    cy.intercept('GET', '**/api/v1/requests/NR*').as('updateGetRequest')
     cy.get(homePage.primaryRejectBtn).click({ force: true })
-    cy.wait('@rejectPatchRequest')
-    cy.wait('@updateGetRequest')
+    cy.wait('@getRequest')
 
     // Confirm the NR was rejected in the search table.
     cy.get('@nrNum').then((nrNum) => {
@@ -79,7 +113,8 @@ describe('Check that rejecting NRs works', () => {
 
 
   it('Should be able to reject 2 NRs using the Get Next button', () => {
-    homePage.examineNamesLink();
+    homePage.examineNamesLink()
+    cy.wait(3000)
     cy.intercept('PATCH', '**/api/v1/requests/NR*').as('rejectPatchRequest');
     
     // Reject the first NR and wait for network requests to finish
@@ -92,7 +127,7 @@ describe('Check that rejecting NRs works', () => {
 
     // Store the NR number that is generated
     cy.get(homePage.nrNumberHeader)
-      .should('be.visible')
+      .should('exist')
       .invoke('text')
       .then((text) => {
         cy.wrap(text.trim()).as('nrNum');

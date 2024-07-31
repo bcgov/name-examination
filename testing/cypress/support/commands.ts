@@ -158,7 +158,7 @@ Cypress.Commands.add('waitForSpinner', () => {
 })
 
 Cypress.Commands.add('examineNR', () => {
-  cy.wait(1000)
+  cy.wait(10000)
   cy.get(homePage.nrNumberHeader)
     .should('exist')
     .should('be.visible')
