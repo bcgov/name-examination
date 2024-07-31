@@ -22,5 +22,7 @@ declare namespace Cypress {
     examineNR(): Chainable<any>
 
     verifyNRState(nrNum: string, state: string): Chainable<any>
+
+    bypassLogin(): Chainable<any>
   }
 }

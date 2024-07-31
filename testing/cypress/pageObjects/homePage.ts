@@ -113,7 +113,7 @@ class HomePage {
           cy.get(this.examineLinkID).should('be.visible')
             .click({ force: true })    
         })
-
+    cy.wait(1000)
     cy.url().should('include', '/examine')
     cy.waitForSpinner()
   }
@@ -126,8 +126,9 @@ class HomePage {
     cy.get(this.header).should('be.visible')
       .within(() => {
           cy.get(this.searchLinkID).should('be.visible')
-            .click({ force: true })    
+            .click({ force: true })  
         })
+    cy.wait(1000)
     cy.url().should('include', '/search')
     cy.waitForSpinner()
   }
@@ -142,6 +143,7 @@ class HomePage {
           cy.get(this.statsLinkID).should('be.visible')
             .click({ force: true })    
         }) 
+    cy.wait(1000)
     cy.url().should('include', '/stats')
     cy.waitForSpinner()
   }

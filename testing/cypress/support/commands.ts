@@ -54,6 +54,12 @@ Cypress.Commands.add(
   }
 )
 
+Cypress.Commands.add('bypassLogin', () => {
+  cy.session('loginSession', () => {
+    cy.login();
+  });
+});
+
 /**
  * Custom Cypress command to perform logout.
  */
@@ -147,25 +153,29 @@ Cypress.Commands.add('linkChecker', () => {
  * Custom Cypress command to wait until loading spinner is gone
  */
 Cypress.Commands.add('waitForSpinner', () => {
-  cy.get('[data-testid="loadingSpinner"]', { timeout: 10000 }).should('not.exist')
+  cy.get('[data-testid="loadingSpinner"]').should('not.exist')
+  cy.wait(1000)
 })
 
 Cypress.Commands.add('examineNR', () => {
   cy.wait(1000)
-  cy.get(homePage.nrNumberHeader, { timeout: 10000 })
+  cy.get(homePage.nrNumberHeader)
+    .should('exist')
     .should('be.visible')
     .invoke('text')
     .then((text) => {
       cy.wrap(text.trim()).as('nrNum')
     })
-})
+  })
+
 
 Cypress.Commands.add('verifyNRState', (nrNum: string, state: string) => {
   homePage.searchLink()
+  cy.waitForSpinner()
   homePage.headerRowDropdownSelect(homePage.headerRowStatus, state)
   cy.waitForSpinner()
 
-  cy.get(homePage.searchTable, { timeout: 10000 }).within(() => {
+  cy.get(homePage.searchTable).within(() => {
     cy.get(homePage.headerRowNRNumber).type(nrNum + '{enter}')
     cy.waitForSpinner()
     cy.contains('td', String(nrNum)).should('exist')
