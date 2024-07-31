@@ -108,24 +108,14 @@ class HomePage {
    */
   examineNamesLink() {
     cy.waitForSpinner()
-    cy.get(this.header).should('be.visible')
-      .within(() => {
-        cy.get(this.examineLinkID).should('be.visible')
-          .click({ force: true })
-      })
-    
-    // Check if the URL contains '/examine', retry the click if it doesn't
+    cy.get(this.examineLinkID).should('be.visible').click( { force: true })
+
     cy.url().then(($url) => {
       if (!$url.includes('/examine')) {
-        cy.get(this.header).should('be.visible')
-          .within(() => {
-            cy.get(this.examineLinkID).should('be.visible')
-              .click({ force: true })
-          })
+        cy.get(this.examineLinkID).should('be.visible').click( { force: true })
       }
       expect($url).to.contain('/examine')
     })
-  
     cy.waitForSpinner()
   }
 
@@ -134,13 +124,14 @@ class HomePage {
    */
   searchLink() {
     cy.waitForSpinner()
-    cy.get(this.header).should('be.visible')
-      .within(() => {
-          cy.get(this.searchLinkID).should('be.visible')
-            .click({ force: true })  
-        })
-    cy.url().should('include', '/search')
-    cy.waitForSpinner()
+    cy.get(this.searchLinkID).should('be.visible').click({ force: true })
+
+    cy.url().then(($url) => {
+      if (!$url.includes('/search')) {
+        cy.get(this.searchLinkID).should('be.visible').click( { force: true })
+      }
+      expect($url).to.contain('/search')
+    })
   }
 
   /**
@@ -148,13 +139,14 @@ class HomePage {
    */
   statsLink() {
     cy.waitForSpinner()
-    cy.get(this.header).should('be.visible')
-        .within(() => {
-          cy.get(this.statsLinkID).should('be.visible')
-            .click({ force: true })    
-        }) 
-    cy.wait(1000)
-    cy.url().should('include', '/stats')
+    cy.get(this.statsLinkID).should('be.visible').click({ force: true }) 
+
+    cy.url().then(($url) => {
+      if (!$url.includes('/stats')) {
+        cy.get(this.statsLinkID).should('be.visible').click( { force: true })
+      }
+      expect($url).to.contain('/stats')
+    })
     cy.waitForSpinner()
   }
 
