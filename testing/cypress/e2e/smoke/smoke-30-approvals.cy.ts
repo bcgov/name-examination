@@ -34,10 +34,10 @@ describe('Check that approving NRs works', () => {
     })
 
     // Examine the NR.
-    cy.get(homePage.actionExamineBtn).click({ force: true })
+    cy.get(homePage.actionExamineBtn).should('be.visible').click({ force: true })
     
     // Approve the NR.
-    cy.get(homePage.primaryApproveBtn).click({ force: true })
+    cy.get(homePage.primaryApproveBtn).should('be.visible').click({ force: true })
     
     // Confirm the NR was approved in the search table.
     cy.get('@nrNum').then((nrNum) => {

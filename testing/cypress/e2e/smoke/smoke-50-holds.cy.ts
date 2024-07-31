@@ -19,6 +19,19 @@ describe('Check that rejecting NRs works', () => {
     homePage.examineNamesLink()
   })
 
+  it('Should be able to press the Examine Names Link 2', () => {
+    cy.waitForSpinner()
+    cy.get(homePage.examineLinkID).should('be.visible').click({ force: true })    
+    cy.waitForSpinner()
+  })
+
+  it('Should be able to press the Examine Names Link 3', () => {
+    cy.waitForSpinner()
+    cy.get(homePage.examineLinkID).should('be.visible').click({ force: true })    
+    cy.waitForSpinner()
+    cy.url().should('include', '/examine')
+  })
+
 
 
 
