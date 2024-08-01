@@ -8,14 +8,16 @@ describe('E2E Smoke Test', () => {
     cy.login()
   })
 
+
   afterEach(() => {
     cy.logout()
-    cy.cleanGC()
   })
+
 
   it('Should have status info available', () => {
     homePage.statusInfo()
   })
+
 
   it('Should be able to click the links/items in the header', () => {
     homePage.searchLink()
@@ -25,29 +27,35 @@ describe('E2E Smoke Test', () => {
     homePage.examineNamesLink()
   })
 
+
   it('Should be able to examine an NR', () => {
+    cy.intercept('GET', '**/api/v1/requests/NR*').as('getRequest')
+
+    // Type the NR in the "Search NR" input field.
     const nrNum = '3351228'
     homePage.examineNamesLink()
-  
     cy.get(homePage.searchInputField).should('exist')
       .then(($input) => {
         cy.wrap($input).type(nrNum, { force: true })}
       )
     
-    cy.intercept('GET', '**/api/v1/requests/NR*').as('getRequest')
+    // Click the search button and wait for the request to complete. 
     cy.get(homePage.searchButton).should('exist').click({ force: true })
-    cy.wait('@getRequest')
+    cy.wait('@getRequest').its('response.statusCode').should('eq', 200)
+
+    // Confirm the NR dislays in the header of the page. 
     cy.contains(homePage.nrNumberHeader, nrNum).should('exist')
   })
   
 
   it('Should be able to search an NR', () => {
     const nrNum = '3351228'
+
+    // Go to the search page and change the submitted order.
     homePage.searchLink()
-    // Change the order of Submitted
     cy.get(homePage.headerRowSubmittedOrder).click({ force: true })
 
-    // Test all the drop downs
+    // Test all the drop downs.
     homePage.headerRowDropdownSelect(homePage.headerRowStatus, 'DRAFT')
     homePage.headerRowDropdownSelect(homePage.headerRowConsentRequired, 'All')
     homePage.headerRowDropdownSelect(homePage.headerRowPriority, 'Standard')
@@ -60,7 +68,7 @@ describe('E2E Smoke Test', () => {
     homePage.headerRowDropdownSelect(homePage.headerRowSubmitted, 'All')
     homePage.headerRowDropdownSelect(homePage.headerRowLastUpdate, 'All')
 
-    // Search for the NR
+    // Search for the NR.
     cy.get(homePage.searchTable).within(() => {
       cy.get(homePage.headerRowNRNumber).type(nrNum + '{enter}')
       cy.contains('td', 'NR ' + nrNum).should('exist')
@@ -68,6 +76,7 @@ describe('E2E Smoke Test', () => {
       cy.url().should('include', '/examine?nr=' + nrNum)
     })
   })
+
 
   it('Should be able see the stats', () => {
     homePage.statsLink()
@@ -81,4 +90,5 @@ describe('E2E Smoke Test', () => {
         cy.wrap({ len: row.length }).its('len').should('greaterThan', 0)
       })
   })
+  
 })

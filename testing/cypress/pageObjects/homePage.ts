@@ -88,7 +88,7 @@ class HomePage {
    * Navigates to the admin page by clicking the "Admin" link.
    */
   adminLink() {
-    // Remove the target to stay in the same window for Cypress' sake
+    // Remove the target to stay in the same window for Cypress' sake.
     cy.get(this.adminLinkID).should('be.visible').invoke('removeAttr', 'target').click()
     cy.url().should('include', 'namex-solr-dev.apps.silver.devops.gov.bc.ca')
     cy.contains('a', 'Login to administration.').click()
@@ -103,9 +103,8 @@ class HomePage {
    */
   examineNamesLink() {
     cy.intercept('GET', '**/api/v1/requests/NR*').as('getRequest')
-    cy.wait(1000)
 
-    // Click the link twice if needed for Cypress' sake
+    // Click the link twice if needed for Cypress' sake.
     cy.get(this.examineLinkID).should('be.visible').click( { force: true } )
     cy.url().then(($url) => {
       if (!$url.includes('/examine')) {
@@ -114,41 +113,43 @@ class HomePage {
     })
     cy.url().should('include', '/examine')
 
-    // Wait for page to be stable
-    // cy.wait('@getRequest')
-    cy.wait(1000)
+    // Wait for the page to be stable.
+    cy.wait('@getRequest')
   }
 
   /**
    * Navigates to the search page by clicking the "Search" link.
    */
   searchLink() {
-    cy.waitForSpinner()
-    cy.wait(1000)
     cy.get(this.searchLinkID).should('be.visible').click({ force: true })
 
+    // Click the link twice if needed for Cypress' sake.
     cy.url().then(($url) => {
       if (!$url.includes('/search')) {
         cy.get(this.searchLinkID).should('be.visible').click( { force: true })
       }
       expect($url).to.contain('/search')
     })
+
+    // Wait for the page to be stable.
+    cy.waitForSpinner()
   }
 
   /**
    * Navigates to the stats page by clicking the "Stats" link.
    */
   statsLink() {
-    cy.waitForSpinner()
-    cy.wait(1000)
     cy.get(this.statsLinkID).should('be.visible').click({ force: true }) 
 
+    // Click the link twice if needed for Cypress' sake.
     cy.url().then(($url) => {
       if (!$url.includes('/stats')) {
         cy.get(this.statsLinkID).should('be.visible').click( { force: true })
       }
       expect($url).to.contain('/stats')
     })
+
+    // Wait for the page to be stable.
     cy.waitForSpinner()
   }
 
@@ -173,8 +174,12 @@ class HomePage {
       })
   }
 
-
-  prioritySwitchSet(value) {
+  /**
+   * Sets the value of the priority queue. 
+   *
+   * @param {boolean} value - The value that the queue will be set to.
+   */
+  prioritySwitchSet(value: boolean) {
     cy.get(this.prioritySwitch)
       .invoke('attr', 'aria-checked')
       .then((checked) => {
@@ -193,7 +198,6 @@ class HomePage {
         }
       })
   }
-
 
   /**
    * Retrieves the status information from the home page.
