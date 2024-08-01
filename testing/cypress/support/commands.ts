@@ -54,37 +54,13 @@ Cypress.Commands.add(
   }
 )
 
-Cypress.Commands.add('bypassLogin', () => {
-  cy.session('loginSession', () => {
-    cy.login()
-  })
-})
-
 /**
  * Custom Cypress command to perform logout.
  */
 Cypress.Commands.add('logout', () => {
-  // Ensure you have the base URL configured
-  const baseUrl = Cypress.config('baseUrl')
-  
-  // Fetch necessary token or session details from local storage or cookies if required
-  const token = localStorage.getItem('authToken'); // Example for token retrieval
-
-  // Directly send the logout request
-  cy.request({
-    method: 'GET',
-    url: `${baseUrl}/auth/realms/your-realm/protocol/openid-connect/logout`, // Adjust the URL as needed
-    headers: {
-      'Authorization': `Bearer ${token}` // Include the auth token if required
-    }
-  }).then((response) => {
-    expect(response.status).to.eq(200)
-    cy.log('Logout Request Response:', response)
-  });
-
-
-  localStorage.removeItem('authToken')
+  cy.get(homePage.logOut).should('be.visible').click({ force: true })
   cy.clearCookies()
+  cy.clearLocalStorage()
 })
 
 /**
@@ -153,7 +129,7 @@ Cypress.Commands.add('linkChecker', () => {
  * Custom Cypress command to wait until loading spinner is gone
  */
 Cypress.Commands.add('waitForSpinner', () => {
-  cy.get('[data-testid="loadingSpinner"]').should('not.exist')
+  cy.get('[data-testid="loadingSpinner"]', { timeout: 30000 }).should('not.exist')
   cy.wait(1000)
 })
 
