@@ -111,10 +111,10 @@ class HomePage {
         cy.get(this.examineLinkID).should('be.visible').click( { force: true } )
       }
     })
-    cy.url().should('include', '/examine')
 
     // Wait for the page to be stable.
     cy.wait('@getRequest').its('response.statusCode').should('eq', 200)
+    cy.url().should('include', '/examine')
   }
 
   /**
@@ -128,11 +128,11 @@ class HomePage {
       if (!$url.includes('/search')) {
         cy.get(this.searchLinkID).should('be.visible').click( { force: true })
       }
-      expect($url).to.contain('/search')
     })
 
     // Wait for the page to be stable.
     cy.waitForSpinner()
+    cy.url().should('include', '/search')
   }
 
   /**
@@ -146,11 +146,11 @@ class HomePage {
       if (!$url.includes('/stats')) {
         cy.get(this.statsLinkID).should('be.visible').click( { force: true })
       }
-      expect($url).to.contain('/stats')
     })
 
     // Wait for the page to be stable.
     cy.waitForSpinner()
+    cy.url().should('include', '/stats')
   }
 
   /**
