@@ -12,9 +12,11 @@ describe('Check for Broken Static Links', () => {
     cy.login()
   })
 
+
   afterEach(() => {
     cy.logout()
   })
+
 
   it('Check All Static Links on Home Page', () => {
     // Iterate through all the links on the page
@@ -22,15 +24,18 @@ describe('Check for Broken Static Links', () => {
     cy.linkChecker()
   })
 
+
   it('Check All Static Links on Examine Page', () => {
     // Navigate to the next tab and repeat
     homePage.examineNamesLink()
     cy.linkChecker()
   })
 
+
   it('Check All Static Links on Search Page', () => {
     // Navigate to the next tab and repeat
     homePage.searchLink()
     cy.linkChecker()
   })
+  
 })

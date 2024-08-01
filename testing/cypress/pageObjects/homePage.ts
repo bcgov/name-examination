@@ -114,7 +114,7 @@ class HomePage {
     cy.url().should('include', '/examine')
 
     // Wait for the page to be stable.
-    cy.wait('@getRequest')
+    cy.wait('@getRequest').its('response.statusCode').should('eq', 200)
   }
 
   /**
