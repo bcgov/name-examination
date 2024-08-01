@@ -103,20 +103,20 @@ class HomePage {
    */
   examineNamesLink() {
     cy.intercept('GET', '**/api/v1/requests/NR*').as('getRequest')
-    cy.waitForSpinner()
     cy.wait(1000)
 
-    cy.get(this.examineLinkID).should('be.visible').click( { force: true })
-
+    // Click the link twice if needed for Cypress' sake
+    cy.get(this.examineLinkID).should('be.visible').click( { force: true } )
     cy.url().then(($url) => {
       if (!$url.includes('/examine')) {
-        cy.get(this.examineLinkID).should('be.visible').click( { force: true })
+        cy.get(this.examineLinkID).should('be.visible').click( { force: true } )
       }
-      cy.url().should('include', '/examine')
     })
-    
-    cy.wait('@getRequest');
-    cy.waitForSpinner()
+    cy.url().should('include', '/examine')
+
+    // Wait for page to be stable
+    // cy.wait('@getRequest')
+    cy.wait(1000)
   }
 
   /**

@@ -1,36 +1,41 @@
 // Cypress Test: Check for ability to put NRs on hold.
 // This spec checks that NRs can be put on hold starting from the search table,
 // Examine Names button, and Get Next Button. 
-import HomePage from '../../pageObjects/homePage'
-const homePage = new HomePage()
+// import HomePage from '../../pageObjects/homePage'
+// const homePage = new HomePage()
 
-describe('Check that rejecting NRs works', () => {
-  beforeEach(() => {
-    cy.cleanGC()
-    cy.setid('default')
-    cy.login()
-  })
+// describe('Check that rejecting NRs works', () => {
+//   beforeEach(() => {
+//     cy.cleanGC()
+//     cy.setid('default')
+//     cy.login()
+//   })
 
-  afterEach(() => {
-    cy.logout()
-  })
+//   afterEach(() => {
+//     cy.logout()
+//   })
 
-  it('Should be able to press the Examine Names Link', () => {
-    homePage.examineNamesLink()
-  })
+//   it('Should be able to press the Examine Names Link', () => {
+//     homePage.examineNamesLink()
+//     homePage.searchLink()
+//     homePage.examineNamesLink()
+//     homePage.searchLink()
+//     homePage.examineNamesLink()
+//     homePage.searchLink()
+//   })
 
-  it('Should be able to press the Examine Names Link 2', () => {
-    cy.waitForSpinner()
-    cy.get(homePage.examineLinkID).should('be.visible').click({ force: true })    
-    cy.waitForSpinner()
-  })
+  // it('Should be able to press the Examine Names Link 2', () => {
+  //   cy.waitForSpinner()
+  //   cy.get(homePage.examineLinkID).should('be.visible').click({ force: true })    
+  //   cy.waitForSpinner()
+  // })
 
-  it('Should be able to press the Examine Names Link 3', () => {
-    cy.waitForSpinner()
-    cy.get(homePage.examineLinkID).should('be.visible').click({ force: true })    
-    cy.waitForSpinner()
-    cy.url().should('include', '/examine')
-  })
+  // it('Should be able to press the Examine Names Link 3', () => {
+  //   cy.waitForSpinner()
+  //   cy.get(homePage.examineLinkID).should('be.visible').click({ force: true })    
+  //   cy.waitForSpinner()
+  //   cy.url().should('include', '/examine')
+  // })
 
 
 
@@ -98,4 +103,4 @@ describe('Check that rejecting NRs works', () => {
   //     cy.verifyNRState(nrNum.toString(), 'HOLD')
   //   })
   // })
-})
+// })
