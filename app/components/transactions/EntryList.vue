@@ -8,6 +8,7 @@
           id="sys-transactions"
           type="checkbox"
           v-model="showSystemTransactions"
+          data-testid="showSystemTransactionsCheckbox"
         />
         <span class="mb-0.5">Show system transactions</span>
       </label>
@@ -30,6 +31,7 @@
         :key="entry.eventDate + entry.user_action + entry.stateCd"
         :entry="entry"
         :class="{ 'bg-neutral-100': i % 2 == 0 }"
+        data-testid="transactionEntry"
       />
     </div>
   </div>

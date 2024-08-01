@@ -6,13 +6,19 @@
       light
       @click="examine.edit"
       mnemonic="d"
+      data-testid="actionEditBtn"
     >
       <PencilSquareIcon class="h-5 w-5" />
       <template #text>E<u>d</u>it Request</template>
     </IconButton>
 
     <!-- Toggle Details Button -->
-    <IconButton light @click="toggleDetails" mnemonic="b">
+    <IconButton 
+      light 
+      @click="toggleDetails" 
+      mnemonic="b"
+      :data-testid="examine.isHeaderShown ? 'actionHideDetailsBtn' : 'actionShowDetailsBtn'"
+    >
       <ArrowsPointingInIcon
         v-if="examine.isHeaderShown"
         class="h-5 w-5"

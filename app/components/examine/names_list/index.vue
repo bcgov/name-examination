@@ -1,6 +1,6 @@
 <template>
   <ol class="list-decimal">
-    <li v-for="choice in sortedChoices">
+    <li v-for="(choice, i) in sortedChoices">
       <ExamineNamesListChoice
         :choice="choice"
         :decision-text="decisionReasonOrConflictList(choice)"
@@ -9,6 +9,7 @@
         :current="isCurrent(choice.choice)"
         :highlight="highlight"
         :indicate-draft="indicateDraft"
+        :testID="`choice${i + 1}`" 
       />
     </li>
   </ol>

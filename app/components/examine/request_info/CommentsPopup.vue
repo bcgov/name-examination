@@ -5,6 +5,7 @@
         ref="popoverButton"
         :class="open ? '' : 'text-opacity-90'"
         class="group inline-flex w-full items-center space-x-2 rounded border border-gray-300 bg-white px-3 py-1.5 font-bold text-black transition hover:bg-gray-200"
+        data-testid="commentsPopupBtn"
       >
         <ChatBubbleLeftIcon class="h-5 w-5" />
         <span class="grow text-left">
@@ -46,6 +47,7 @@
                   text-required
                   @submit="onSubmit"
                   @cancel="onCancel(close)"
+                  testID="commentEditableTxtBox"
                 >
                   <template #submitText>
                     <span>Sa<u>v</u>e</span>

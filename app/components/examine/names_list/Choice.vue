@@ -7,17 +7,19 @@
           'font-bold': (current || choiceApproved) && highlight,
           'text-bcgov-blue3': choiceApproved && highlight,
         }"
+       :data-testid="testID && `${testID}-text`"
       >
         {{ choice.name }}
       </span>
 
-      <CheckIcon v-if="choiceApproved" class="h-5 w-5 stroke-2 text-lime-600" />
-      <XMarkIcon
-        v-else-if="choice.state === Status.Rejected"
-        class="h-5 w-5 stroke-2 text-red-600"
-      />
+      <span v-if="choiceApproved" :data-testid="`${testID}-checkmark`">
+        <CheckIcon class="h-5 w-5 stroke-2 text-lime-600" />
+      </span>
+      <span v-else-if="choice.state === Status.Rejected" :data-testid="`${testID}-xmark`">
+        <XMarkIcon class="h-5 w-5 stroke-2 text-red-600" />
+      </span>
       <span v-else-if="indicateDraft" class="italic">(Draft)</span>
-
+      
       <IconButton
         v-if="undoable"
         @click="undo?.(choice)"
@@ -32,6 +34,7 @@
       :class="{
         'text-[#1359A0]': choiceApproved && highlight,
       }"
+      :data-testid="`${testID}-decisiontxt`"
     >
       {{ choice.decision_text }}
     </span>
@@ -56,6 +59,7 @@ const props = defineProps<{
   current?: boolean
   highlight?: boolean
   indicateDraft?: boolean
+  testID?: string
 }>()
 
 const choiceApproved = computed(

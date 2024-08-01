@@ -4,9 +4,9 @@ import fs from 'fs'
 export default defineConfig({
   projectId: 'chruvi',
   chromeWebSecurity: false,
-  defaultCommandTimeout: 80000,
+  defaultCommandTimeout: 60000,
   includeShadowDom: true,
-  responseTimeout: 80000,
+  responseTimeout: 60000,
   redirectionLimit: 100,
   experimentalStudio: true,
   experimentalMemoryManagement: true,
@@ -22,9 +22,9 @@ export default defineConfig({
     json: true,
   },
   e2e: {
-    baseUrl: 'https://dev.namex.bcregistry.gov.bc.ca',
+    // baseUrl: 'https://dev.namex.bcregistry.gov.bc.ca',
     // baseUrl: 'https://test.namex.bcregistry.gov.bc.ca',
-    // baseUrl: 'http://localhost:8080',
+    baseUrl: 'http://localhost:8080',
     projectId: '',
     setupNodeEvents(on, config) {
       on('task', {

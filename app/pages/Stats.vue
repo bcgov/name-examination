@@ -10,13 +10,26 @@
       <div class="font-semibold text-center">Total Examined Names: {{ numRecords }}</div>
       <div class="flex items-center space-x-2">
         <div class="flex items-center space-x-1">
-          <input id="stats-checkbox" class="h-4 w-4" v-model="myStats" type="checkbox">
+          <input 
+            id="stats-checkbox" 
+            class="h-4 w-4" 
+            v-model="myStats" 
+            type="checkbox"
+            data-testid="statsCheckbox"
+          >
           <label for="stats-checkbox" class="font-bold">My Stats</label>
         </div>
         <div class="timespan-input  align-baseline space-x-1">
           <label for="timespan" class="font-bold align-baseline">Hours:&nbsp;</label>
-          <TextInput id="timespan" ref="numberinput" v-model="timespan" type="number" class="!w-24" />
-          <IconButton @click="fetchStats" data-testid="getStats">
+          <TextInput 
+            id="timespan" 
+            ref="numberinput" 
+            v-model="timespan" 
+            type="number" 
+            class="!w-24" 
+            data-testid="statsHoursInput"
+          />
+          <IconButton @click="fetchStats" data-testid="getStatsBtn">
             Get Stats
           </IconButton>
         </div>
