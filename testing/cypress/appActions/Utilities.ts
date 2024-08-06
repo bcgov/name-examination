@@ -52,10 +52,10 @@ class Utilities {
    * @return The current date in the format "YYYYMMDD".
    */
   getDate(): string {
-    let today = new Date()
+    const today = new Date()
     let dd: any = today.getDate()
-    let mm: any = today.getMonth() + 1 //January is 0!
-    let yyyy = today.getFullYear()
+    let mm: any = today.getMonth() + 1 // January is 0!
+    const yyyy = today.getFullYear()
     if (dd < 10) {
       dd = '0' + dd
     }

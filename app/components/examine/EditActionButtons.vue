@@ -6,6 +6,7 @@
       mnemonic="s"
       @click="save"
       class="w-1/2 whitespace-pre py-1"
+      data-testid="actionSaveBtn"
     >
       <CheckIcon v-if="!savingEdit" class="h-5 w-5 stroke-2" />
       <ArrowPathIcon v-else class="mr-0.5 h-5 w-5 animate-spin stroke-2" />
@@ -18,6 +19,7 @@
       mnemonic="c"
       @click="examine.cancelEdits"
       class="w-1/2 py-1"
+      data-testid="actionCancelBtn"
     >
       <XMarkIcon class="h-5 w-5 stroke-2" />
       <template #text><u>C</u>ancel</template>

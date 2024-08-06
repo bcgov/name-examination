@@ -9,6 +9,7 @@
           target="_blank"
           rel="noopener noreferrer"
           class="h-fit rounded p-1 text-bcgov-blue5 transition hover:bg-gray-200"
+          data-testid="openTransactionsLink"
         >
           <ArrowTopRightOnSquareIcon class="h-6 w-6" />
         </a>

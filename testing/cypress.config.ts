@@ -4,9 +4,9 @@ import fs from 'fs'
 export default defineConfig({
   projectId: 'chruvi',
   chromeWebSecurity: false,
-  defaultCommandTimeout: 80000,
+  defaultCommandTimeout: 60000,
   includeShadowDom: true,
-  responseTimeout: 80000,
+  responseTimeout: 60000,
   redirectionLimit: 100,
   experimentalStudio: true,
   experimentalMemoryManagement: true,

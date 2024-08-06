@@ -5,41 +5,71 @@
       v-model="clientFirstName"
       placeholder="First Name"
       maxlength="200"
+      data-testid="editClientFirstNameTxt"
     />
     <TextInput
       v-model="clientLastName"
       placeholder="Last Name"
       maxlength="200"
+      data-testid="editClientLastNameTxt"
     />
 
     <h3 class="font-bold">Applicant</h3>
-    <TextInput v-model="firstName" placeholder="First Name" maxlength="200" />
-    <TextInput v-model="middleName" placeholder="Middle Name" maxlength="200" />
+    <TextInput 
+      v-model="firstName" 
+      placeholder="First Name" 
+      maxlength="200" 
+      data-testid="editApplicantFirstNameTxt"
+    />
+    <TextInput 
+      v-model="middleName" 
+      placeholder="Middle Name" 
+      maxlength="200" 
+      data-testid="editApplicantMiddleNameTxt"
+    />
     <TextInput
       v-model="lastName"
       placeholder="Last Name"
       maxlength="200"
       :error-style="lastNameErrorText != ''"
       @input="lastNameErrorText = ''"
+      data-testid="editApplicantLastNameTxt"
     />
     <p class="font-bold text-red-600">{{ lastNameErrorText }}</p>
 
     <h3 class="font-bold">Address</h3>
-    <TextInput v-model="addressLine1" placeholder="Line 1" maxlength="200" />
-    <TextInput v-model="addressLine2" placeholder="Line 2" maxlength="200" />
-    <TextInput v-model="addressLine3" placeholder="Line 3" maxlength="200" />
+    <TextInput 
+      v-model="addressLine1" 
+      placeholder="Line 1" 
+      maxlength="200" 
+      data-testid="editApplicantAddressTxt1"
+    />
+    <TextInput 
+      v-model="addressLine2" 
+      placeholder="Line 2" 
+      maxlength="200" 
+      data-testid="editApplicantAddressTxt2"
+    />
+    <TextInput 
+      v-model="addressLine3" 
+      placeholder="Line 3" 
+      maxlength="200" 
+      data-testid="editApplicantAddressTxt3"
+    />
     <div class="flex gap-x-1">
       <TextInput
         v-model="city"
         placeholder="City"
         class="basis-2/3"
         maxlength="200"
+        data-testid="editApplicantCityTxt"
       />
       <TextInput
         v-model="province"
         placeholder="Province"
         class="basis-1/3"
         maxlength="2"
+        data-testid="editApplicantProvinceTxt"
       />
     </div>
 
@@ -49,29 +79,47 @@
         placeholder="Postal Code"
         class="basis-2/3"
         maxlength="20"
+        data-testid="editApplicantPostalCodeTxt"
       />
       <TextInput
         v-model="country"
         placeholder="Country"
         class="basis-1/3"
         maxlength="2"
+        data-testid="editApplicantCountryTxt"
       />
     </div>
 
     <h3 class="font-bold">Phone</h3>
-    <TextInput v-model="phone" placeholder="Phone Number" maxlength="30" />
+    <TextInput 
+      v-model="phone" 
+      placeholder="Phone Number" 
+      maxlength="30" 
+      data-testid="editApplicantPhoneTxt"
+    />
 
     <h3 class="font-bold">Fax</h3>
-    <TextInput v-model="fax" placeholder="Fax Number" maxlength="30" />
+    <TextInput 
+      v-model="fax" 
+      placeholder="Fax Number" 
+      maxlength="30" 
+      data-testid="editApplicantFaxTxt"
+    />
 
     <h3 class="font-bold">Email</h3>
-    <TextInput v-model="conEmail" placeholder="Contact Email" maxlength="75" />
+    <TextInput 
+      v-model="conEmail" 
+      placeholder="Contact Email" 
+      maxlength="75" 
+      data-testid="editApplicantEmailTxt"
+    />
 
     <h3 class="font-bold">Contact</h3>
     <TextInput
       v-model="contactName"
       placeholder="Contact Name"
       maxlength="200"
+      data-testid="editApplicantContactTxt"
     />
   </div>
 </template>

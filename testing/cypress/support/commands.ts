@@ -12,9 +12,11 @@ import 'cypress-real-events'
 import '@testing-library/cypress/add-commands'
 
 import HomePage from '../pageObjects/homePage'
+import SearchPage from '../pageObjects/searchPage'
 import LoginProxy from '../pageObjects/loginProxy'
 
 const homePage = new HomePage()
+const searchPage = new SearchPage()
 const loginProxy = new LoginProxy()
 
 /**
@@ -54,14 +56,25 @@ Cypress.Commands.add(
   }
 )
 
+
 /**
  * Custom Cypress command to perform logout.
  */
 Cypress.Commands.add('logout', () => {
+  // If an error popup panel exists, close it.
+  cy.get('body').then(($body) => {
+    if ($body.find(homePage.popupPanel).length) {
+      cy.get(homePage.popupPanel).find('button').contains('Close').click({ force: true })
+      cy.wait(3000)
+    }
+  })
+
+  // Proceed with logout.
   cy.get(homePage.logOut).should('be.visible').click({ force: true })
   cy.clearCookies()
   cy.clearLocalStorage()
 })
+
 
 /**
  * Custom Cypress command to set the ID/PW Env vars.
@@ -83,6 +96,7 @@ Cypress.Commands.add('setid', (type: string) => {
   }
 })
 
+
 /**
  * Custom Cypress command to clean up memory by triggering Garbage Collection.
  */
@@ -100,6 +114,7 @@ Cypress.Commands.add('cleanGC', () => {
     }
   })
 })
+
 
 /**
  * Custom Cypress command to check all links on the page.
@@ -125,35 +140,58 @@ Cypress.Commands.add('linkChecker', () => {
   })
 })
 
+
 /**
- * Custom Cypress command to wait until loading spinner is gone
+ * Custom Cypress command to wait until loading spinner is gone.
  */
 Cypress.Commands.add('waitForSpinner', () => {
   cy.get('[data-testid="loadingSpinner"]', { timeout: 30000 }).should('not.exist')
-  cy.wait(1000)
 })
 
-Cypress.Commands.add('examineNR', () => {
-  cy.wait(10000)
-  cy.get(homePage.nrNumberHeader)
-    .should('exist')
-    .should('be.visible')
-    .invoke('text')
-    .then((text) => {
-      cy.wrap(text.trim()).as('nrNum')
-    })
+
+/**
+ * Custom Cypress command to verify the contents of an input element's text.
+ *
+ * @param selector - The selector for the text element.
+ * @param expectedText - The text the selected element is to be compared with. .
+ */
+Cypress.Commands.add('verifyTextContent', (selector: string, expectedText: string) => {
+  cy.get(selector).invoke('text').then((text) => {
+    expect(text.trim()).to.eq(expectedText)
   })
+})
 
 
+/**
+ * Custom Cypress command to type the contents of text into an input element.
+ *
+ * @param selector - The selector for the input element.
+ * @param text - The text to type into the input element.
+ */
+Cypress.Commands.add('typeInField', (selector: string, text: string) => {
+  cy.get(selector)
+    .click()
+    .clear()
+    .type(text)
+})
+
+
+/**
+ * Custom Cypress command to verify the state of an NR with a given state.
+ * This command searches the search table with the given state and confirms
+ * the NR exists.
+ *
+ * @param nrNum - The NR number of the NR to verify.
+ * @param state - The state the NR number is to be verified with.
+ */
 Cypress.Commands.add('verifyNRState', (nrNum: string, state: string) => {
   homePage.searchLink()
-  cy.waitForSpinner()
-  homePage.headerRowDropdownSelect(homePage.headerRowStatus, state)
+  searchPage.headerRowDropdownSelect(searchPage.headerRowStatus, state)
   cy.waitForSpinner()
 
-  cy.get(homePage.searchTable).within(() => {
-    cy.get(homePage.headerRowNRNumber).type(nrNum + '{enter}')
+  cy.get(searchPage.searchTable).within(() => {
+    cy.get(searchPage.headerRowNRNumber).type(nrNum + '{enter}')
     cy.waitForSpinner()
-    cy.contains('td', String(nrNum)).should('exist')
+    cy.contains('td', nrNum).should('exist')
   })
 })

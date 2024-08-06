@@ -24,7 +24,7 @@
       </template>
 
       <template #maximized>
-        <p>{{ additionalInfoDisplay }}</p>
+        <p data-testid="additionalInfo">{{ additionalInfoDisplay }}</p>
       </template>
 
       <template #editable>
@@ -35,6 +35,7 @@
           :character-limit="characterLimit"
           hide-submit
           hide-cancel
+          testID="editAdditionalInfoTxtBox"
         />
         <p v-if="info.length > characterLimit" class="font-bold text-red-600">
           {{ characterLimitDisplay }}

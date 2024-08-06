@@ -5,6 +5,7 @@
         v-model="nameInputs[i]"
         @input="clearErrorOnInput(i)"
         :error-style="errorMessage?.choice === i"
+        :data-testid="`editNameChoiceTxt${i + 1}`"
       />
       <span
         v-if="errorMessage && errorMessage.choice === i"

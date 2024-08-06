@@ -16,6 +16,7 @@
             'pointer-events-none text-gray-400': disabled,
             'border-2 border-red-600': errorStyle,
           }"
+          :data-testid="testID"
         >
           <span class="block"><slot>Select</slot></span>
           <span class="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -102,6 +103,7 @@ const props = defineProps<{
   optionsDisplay?: (option: ModelValueType) => string
   /** Style this input to indicate an error, useful to indicate invalid inputs */
   errorStyle?: boolean
+  testID?: string
 }>()
 
 const emit = defineEmits<{

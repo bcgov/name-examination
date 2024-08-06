@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col justify-center font-bold">
-    <p>
+    <p data-testid="nrType">
       {{ requestTypeText }}
     </p>
     <p v-if="jurisdiction">
