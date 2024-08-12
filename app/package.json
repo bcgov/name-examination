@@ -43,7 +43,7 @@
     "happy-dom": "^11.2.0",
     "jsdom": "^22.1.0",
     "launchdarkly-node-server-sdk": "^7.0.1",
-    "nuxt": "3.7.2",
+    "nuxt": "3.12.4",
     "nuxt-vitest": "^0.10.5",
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.3.0",
