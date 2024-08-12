@@ -1,7 +1,7 @@
 <template>
   <div class="flex">
     <h2 class="font-bold">Submit:&nbsp;</h2>
-    <span>
+    <span data-testid="submitDate">
       {{
         examine.submittedDate
           ? getDateWithTimeFromDateTime(examine.submittedDate)
@@ -17,14 +17,14 @@
 
   <div class="flex">
     <h2 class="font-bold">Consumed:&nbsp;</h2>
-    <span>
+    <span data-testid="consumedDate">
       {{ consumptionDateDisplay ? consumptionDateDisplay : 'n/a' }}
     </span>
   </div>
 
   <div class="flex">
     <h2 class="font-bold">Consumed By:&nbsp;</h2>
-    <span>{{ examine.consumedBy ? examine.consumedBy : 'n/a' }}</span>
+    <span data-testid="consumedBy">{{ examine.consumedBy ? examine.consumedBy : 'n/a' }}</span>
   </div>
 </template>
 

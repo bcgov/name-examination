@@ -28,6 +28,7 @@
           >
             <DialogPanel
               class="h-full w-full max-w-xl transform space-y-0 overflow-hidden rounded bg-white p-6 text-left align-middle shadow-xl transition-all"
+              data-testid="popupPanel"
             >
               <DialogTitle as="h3" class="text-lg font-bold text-gray-900">
                 <slot name="title"></slot>

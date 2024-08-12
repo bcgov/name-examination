@@ -1,10 +1,10 @@
 <template>
   <div class="flex items-center">
     <h2 class="font-bold">Expiry:&nbsp;</h2>
-    <span v-if="examine.expiryDate">
+    <span v-if="examine.expiryDate" data-testid="expiryDate">
       {{ examine.expiryDate }}
     </span>
-    <span v-else>n/a</span>
+    <span v-else data-testid="expiryDate">n/a</span>
   </div>
 
   <div v-if="examine.nrStatus === Status.Conditional">

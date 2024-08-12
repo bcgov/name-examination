@@ -6,6 +6,7 @@
       :options-display="(rt: RequestType) => rt.text"
       @change="onRequestTypeChanged"
       aria-label="Name Request Type"
+      testID="editCompanyTypeDropdown"
     >
       {{ selectedRequestType.text }}
     </ListSelect>

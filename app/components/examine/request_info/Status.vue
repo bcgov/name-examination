@@ -4,12 +4,12 @@
 
     <div class="flex items-center">
       <h2 class="font-bold">Status:&nbsp;</h2>
-      <p>{{ nrStatus }}</p>
+      <p data-testid="nrStatus">{{ nrStatus }}</p>
     </div>
 
     <div class="flex items-center">
       <h2 class="font-bold">Examiner:&nbsp;</h2>
-      <p>{{ examinerStatus }}</p>
+      <p data-testid="nrExaminer">{{ examinerStatus }}</p>
     </div>
 
     <ExamineRequestInfoCommentsPopup />

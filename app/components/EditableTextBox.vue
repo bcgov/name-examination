@@ -11,6 +11,7 @@
         :readonly="readonly"
         :value="modelValue"
         @input="onTextAreaInput"
+        :data-testid="testID"
       />
 
       <span
@@ -29,6 +30,7 @@
           class="h-7"
           @click="onSubmit"
           :mnemonic="submitMnemonic"
+          :data-testid="`${testID}-save`"
         >
           <template #text>
             <slot name="submitText">Save</slot>
@@ -43,6 +45,7 @@
           class="h-7"
           @click="emit('cancel')"
           :mnemonic="cancelMnemonic"
+          :data-testid="`${testID}-cancel`"
         >
           <template #text>
             <slot name="cancelText">Cancel</slot>
@@ -84,6 +87,7 @@ const { modelValue, characterLimit, textRequired } = defineProps<{
   /** Whether to use `PopoverButton`s from HeadlessUI for the submit/cancel buttons,
    *  useful if using text box in a `Popover` and buttons should close `Popover` when clicked. */
   usePopoverButtons?: boolean
+  testID?: string
 }>()
 
 const showSubmitError = ref(false)
