@@ -177,7 +177,7 @@ export async function getNextNrNumber(isPriority: boolean) {
 }
 
 export async function getCorporation(corpNum: string) {
-  return callNamexApi(getNamexApiUrl(`/corporations/${corpNum}`))
+  return callNamexApi(getNamexApiUrl(`/colin/${corpNum}`))
 }
 
 export async function getPayments(id: number) {

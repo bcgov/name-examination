@@ -46,11 +46,8 @@ export async function corpExists(input: string) {
   const corpNum = input.replace(/^BC+/i, '')
   const corporationResponse = await getCorporation(corpNum)
   if (corporationResponse.ok) {
-    const responseJson = await corporationResponse.json()
-    return !(
-      responseJson.incorporated === 'Not Available' &&
-      responseJson.directors === 'Not Available'
-    )
+    // the corporation exists
+    return true
   } else if (corporationResponse.status === 404) {
     return false
   } else {
