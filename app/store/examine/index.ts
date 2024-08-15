@@ -817,7 +817,6 @@ export const useExamination = defineStore('examine', () => {
     // set reset flag so name data is managed between Namex and NRO correctly
     hasBeenReset.value = true
     await updateRequest()
-    await fetchAndLoadNr(nrNumber.value)
   }
 
   async function resetNr() {
@@ -825,7 +824,6 @@ export const useExamination = defineStore('examine', () => {
     clearConsent()
     furnished.value = 'N'
     await updateRequest()
-    await fetchAndLoadNr(nrNumber.value)
   }
 
   async function claimNr() {
@@ -900,15 +898,18 @@ export const useExamination = defineStore('examine', () => {
   }
 
   async function updateRequest() {
-    const data = await getNrData()
-    const response = await putNameRequest(nrNumber.value, data)
-    if (response.ok) {
+    try {
+      const data = await getNrData()
+      const response = await putNameRequest(nrNumber.value, data)
+      if (!response.ok) {
+        throw new Error('Failed to update NR')
+      }
       await parseNr(await response.json())
-    } else {
-      emitter.emit('error', {
-        title: `Failed to update NR`,
-        message: `An error occurred while trying to update ${nrNumber.value}`,
-      })
+    } catch {
+        emitter.emit('error', {
+          title: `Failed to update NR`,
+          message: `An error occurred while trying to update ${nrNumber.value}`,
+        })
       await fetchAndLoadNr(nrNumber.value)
     }
   }
