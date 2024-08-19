@@ -11,6 +11,7 @@ class ExaminePage {
   // Header and transactions link
   nrNumberHeader = 'div[data-testid="nrNumberHeader"]'
   openTransactionsLink = 'a[data-testid="openTransactionsLink"]'
+  priorityLabel = 'p[data-testid="priorityLabel"]'
 
   // Action butttons
   actionNextBtn = 'button[data-testid="actionNextBtn"]'
@@ -72,6 +73,9 @@ class ExaminePage {
   // Comments
   commentsPopupBtn = 'button[data-testid="commentsPopupBtn"]'
   commentsContainer = 'div[data-testid="commentsContainer"]'
+
+  // Decision Information
+  consentCheckbox = 'input[data-testid="consentCheckbox"]'
 
   /******** Editing ********/
 
@@ -192,9 +196,9 @@ class ExaminePage {
    * and then waits until the page is stable.
    */
   clickRejectButton() {
-    cy.intercept('PATCH', '**/api/v1/requests/NR*').as('quickRejectPatchRequest')
+    cy.intercept('PUT', '**/api/v1/requests/NR*/names/*').as('rejectPutRequest')
     cy.get(this.primaryRejectBtn).should('be.visible').click({ force: true })
-    cy.wait('@quickRejectPatchRequest').its('response.statusCode').should('eq', 200)
+    cy.wait('@rejectPutRequest').its('response.statusCode').should('eq', 200)
     cy.wait(1000)
   }
 
@@ -203,9 +207,9 @@ class ExaminePage {
    * and then waits until the page is stable.
    */
   clickQuickRejectDistButton() {
-    cy.intercept('PATCH', '**/api/v1/requests/NR*').as('quickRejectDistPatchRequest')
+    cy.intercept('PUT', '**/api/v1/requests/NR*/names/*').as('rejectDistPutRequest')
     cy.get(this.quickRejectDistBtn).click({ force: true })
-    cy.wait('@quickRejectDistPatchRequest').its('response.statusCode').should('eq', 200)
+    cy.wait('@rejectDistPutRequest').its('response.statusCode').should('eq', 200)
     cy.wait(1000)
   }
 
@@ -214,9 +218,9 @@ class ExaminePage {
    * and then waits until the page is stable.
    */
   clickQuickRejectDescButton() {
-    cy.intercept('PATCH', '**/api/v1/requests/NR*').as('quickRejectDescPatchRequest')
+    cy.intercept('PUT', '**/api/v1/requests/NR*/names/*').as('rejectDescPutRequest')
     cy.get(this.quickRejectDescBtn).click({ force: true })
-    cy.wait('@quickRejectDescPatchRequest').its('response.statusCode').should('eq', 200)
+    cy.wait('@rejectDescPutRequest').its('response.statusCode').should('eq', 200)
     cy.wait(1000)
   }
 
@@ -264,6 +268,18 @@ class ExaminePage {
     cy.get(showDetails ? this.actionHideDetailsBtn : this.actionShowDetailsBtn)
       .should('be.visible')
     cy.wait(1000)
+  }
+
+  /**
+  * Toggles the consent checkbox on or off.
+  * @param shouldCheck - If true, the checkbox will be checked; if false, it will be unchecked.
+  */
+  toggleConsentCheckbox(shouldCheck: boolean) {
+    cy.get(this.consentCheckbox).then($checkbox => {
+      if ($checkbox.is(':checked') !== shouldCheck) {
+        cy.wrap($checkbox).click()
+      }
+    })
   }
 }
 

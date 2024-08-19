@@ -8,6 +8,7 @@
         class="h-4 w-4"
         type="checkbox"
         v-model="examine.consentRequired"
+        data-testid="consentCheckbox"
       />
       <span>Consent</span>
     </label>
