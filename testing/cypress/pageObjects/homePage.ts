@@ -12,6 +12,7 @@ class HomePage {
   popupPanel = 'div[data-testid="popupPanel"]'
 
   // Top Level Links
+  homeLinkID = 'a[data-testid="homeLink"]'
   adminLinkID = 'a[data-testid="adminLink"]'
   examineLinkID = 'a[data-testid="examineLink"]'
   searchLinkID = 'a[data-testid="searchLink"]'
@@ -47,6 +48,16 @@ class HomePage {
         cy.log($text)
       })
     }
+
+  /**
+   * Navigates to the home page by clicking the NameX Icon in the header.
+   */
+  homeLink() {
+    cy.intercept('GET', '**/api/v1/requests*').as('homeLinkRequest')
+    cy.get(this.homeLinkID).should('be.visible').click( { force: true } )
+    cy.wait('@homeLinkRequest').its('response.statusCode').should('eq', 200)
+    cy.url().should('eq', Cypress.config().baseUrl + '/')
+  }
 
   /**
    * Navigates to the admin page by clicking the "Admin" link.
