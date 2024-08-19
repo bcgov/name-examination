@@ -192,9 +192,9 @@ class ExaminePage {
    * and then waits until the page is stable.
    */
   clickRejectButton() {
-    cy.intercept('PATCH', '**/api/v1/requests/NR*').as('quickRejectPatchRequest')
+    cy.intercept('PUT', '**/api/v1/requests/NR*/names/*').as('rejectPutRequest')
     cy.get(this.primaryRejectBtn).should('be.visible').click({ force: true })
-    cy.wait('@quickRejectPatchRequest').its('response.statusCode').should('eq', 200)
+    cy.wait('@rejectPutRequest').its('response.statusCode').should('eq', 200)
     cy.wait(1000)
   }
 
@@ -203,9 +203,9 @@ class ExaminePage {
    * and then waits until the page is stable.
    */
   clickQuickRejectDistButton() {
-    cy.intercept('PATCH', '**/api/v1/requests/NR*').as('quickRejectDistPatchRequest')
+    cy.intercept('PUT', '**/api/v1/requests/NR*/names/*').as('rejectDistPutRequest')
     cy.get(this.quickRejectDistBtn).click({ force: true })
-    cy.wait('@quickRejectDistPatchRequest').its('response.statusCode').should('eq', 200)
+    cy.wait('@rejectDistPutRequest').its('response.statusCode').should('eq', 200)
     cy.wait(1000)
   }
 
@@ -214,9 +214,9 @@ class ExaminePage {
    * and then waits until the page is stable.
    */
   clickQuickRejectDescButton() {
-    cy.intercept('PATCH', '**/api/v1/requests/NR*').as('quickRejectDescPatchRequest')
+    cy.intercept('PUT', '**/api/v1/requests/NR*/names/*').as('rejectDescPutRequest')
     cy.get(this.quickRejectDescBtn).click({ force: true })
-    cy.wait('@quickRejectDescPatchRequest').its('response.statusCode').should('eq', 200)
+    cy.wait('@rejectDescPutRequest').its('response.statusCode').should('eq', 200)
     cy.wait(1000)
   }
 
