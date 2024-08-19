@@ -11,6 +11,7 @@ class ExaminePage {
   // Header and transactions link
   nrNumberHeader = 'div[data-testid="nrNumberHeader"]'
   openTransactionsLink = 'a[data-testid="openTransactionsLink"]'
+  priorityLabel = 'p[data-testid="priorityLabel"]'
 
   // Action butttons
   actionNextBtn = 'button[data-testid="actionNextBtn"]'
@@ -72,6 +73,9 @@ class ExaminePage {
   // Comments
   commentsPopupBtn = 'button[data-testid="commentsPopupBtn"]'
   commentsContainer = 'div[data-testid="commentsContainer"]'
+
+  // Decision Information
+  consentCheckbox = 'input[data-testid="consentCheckbox"]'
 
   /******** Editing ********/
 
@@ -264,6 +268,18 @@ class ExaminePage {
     cy.get(showDetails ? this.actionHideDetailsBtn : this.actionShowDetailsBtn)
       .should('be.visible')
     cy.wait(1000)
+  }
+
+  /**
+  * Toggles the consent checkbox on or off.
+  * @param shouldCheck - If true, the checkbox will be checked; if false, it will be unchecked.
+  */
+  toggleConsentCheckbox(shouldCheck: boolean) {
+    cy.get(this.consentCheckbox).then($checkbox => {
+      if ($checkbox.is(':checked') !== shouldCheck) {
+        cy.wrap($checkbox).click()
+      }
+    })
   }
 }
 

@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center font-bold text-red-600">
     <StarIcon :class="iconStyle ?? 'h-4 w-4'" />
-    <p>Priority</p>
+    <p data-testid="priorityLabel">Priority</p>
   </div>
 </template>
 

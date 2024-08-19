@@ -5,7 +5,7 @@
   >
   <div class="flex h-full w-full items-center justify-between">
       <div class="hidden h-full lg:block">
-        <nuxt-link :to="Route.Home">
+        <nuxt-link :to="Route.Home" data-testid="homeLink">
           <img
             src="/images/top-nav.png"
             class="min-w-8 h-full"
