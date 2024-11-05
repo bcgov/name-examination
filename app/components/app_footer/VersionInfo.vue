@@ -38,23 +38,19 @@ onMounted(async () => {
 })
 
 const fetchNameXVersion = async (): Promise<string> => {
-  const devNameXVersionEndpoint = 'https://namex-dev.apps.silver.devops.gov.bc.ca/api/v1/meta/info'
-  // const testNameXVersionEndpoint = 'https://namex-test.apps.silver.devops.gov.bc.ca/api/v1/meta/info'
-  // const prodNameXVersionEndpoint = 'https://namex.apps.silver.devops.gov.bc.ca/api/v1/meta/info'
+  const baseUrl = process.env.NUXT_NAMEX_API_URL || 'https://namex-dev.apps.silver.devops.gov.bc.ca'
+  const versionPath = process.env.NUXT_NAMEX_API_VERSION || '/api/v1'
+  const versionEndpoint = `${baseUrl}${versionPath}/meta/info`
 
   try {
-    const response = await fetch(devNameXVersionEndpoint)
-    if (!response.ok) {
-      console.error('Failed to fetch:', response.status, response.statusText)
-      throw Error
-    }
-    const responseJson = await response.json()
-    const fullVersion = responseJson.API.split('/')[1]
-    const version = fullVersion.match(/^(\d+\.\d+\.\d+)/)?.[0] || 'Unknown'
+    const response = await fetch(versionEndpoint)
+    if (!response.ok) throw new Error(`Fetch failed: ${response.statusText}`)
 
-    return version
+    const { API } = await response.json()
+    return API.match(/\d+\.\d+\.\d+/)?.[0] || 'Unknown'
+
   } catch (error) {
-    console.error('Error fetching data:', error)
+    console.error('Error fetching NameX API version:', error)
     return 'Error'
   }
 }
