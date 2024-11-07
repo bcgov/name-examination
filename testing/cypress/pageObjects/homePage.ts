@@ -40,11 +40,7 @@ class HomePage {
       .invoke('text')
       .then(($text) => {
         const date = util.getDate()
-        const formattedDate = `${date.substring(0, 4)}-${date.substring(
-          4,
-          6
-        )}-${date.substring(6, 8)}`
-        expect($text).to.contain(formattedDate)
+        expect($text.trim()).to.include(date)
         cy.log($text)
       })
     }
