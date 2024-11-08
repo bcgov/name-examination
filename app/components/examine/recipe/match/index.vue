@@ -4,7 +4,7 @@
   </div>
   <div v-else-if="conflictData">
     <ExamineRecipeMatchNames
-      v-if="conflict.source === 'NR' || conflict.source === 'NRO'"
+      v-if="conflict.source === 'NR' || conflict.source === 'NRO' || conflict.source === 'NAMEREQUEST'"
       :conflict="(conflictData as NameRequest)"
     />
     <ExamineRecipeMatchBCCorp
