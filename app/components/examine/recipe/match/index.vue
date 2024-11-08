@@ -4,15 +4,15 @@
   </div>
   <div v-else-if="conflictData">
     <ExamineRecipeMatchNames
-      v-if="conflict.source === ConflictSource.NameRequest || conflict.source === ConflictSource.NRO"
+      v-if="conflict.source === 'NAMEREQUEST' || conflict.source === 'NRO'"
       :conflict="(conflictData as NameRequest)"
     />
     <ExamineRecipeMatchBCCorp
-      v-else-if="conflict.source === ConflictSource.Corp && (conflictData as Corporation).jurisdiction === 'BC'"
+      v-else-if="conflict.source === 'CORP' && (conflictData as Corporation).jurisdiction === 'BC'"
       :data="(conflictData as BCCorporation)"
     />
     <ExamineRecipeMatchXproCorp
-      v-else-if="conflict.source === ConflictSource.Corp && (conflictData as Corporation).jurisdiction !== 'BC'"
+      v-else-if="conflict.source === 'CORP' && (conflictData as Corporation).jurisdiction !== 'BC'"
       :conflict="(conflictData as XproCorporation)"
     />
     <div v-else>Failed to determine conflict info type</div>
