@@ -483,13 +483,6 @@ export const useExamination = defineStore('examine', () => {
       consentDate.value = getDateFromDateTime(parsedConsentDate) ?? undefined
     }
 
-    // if the current state is not INPROGRESS, HOLD, or DRAFT clear any existing name record in currentNameObj
-    if (
-      ![Status.InProgress, Status.Hold, Status.Draft].includes(nrStatus.value)
-    ) {
-      setCurrentNameChoice(undefined)
-    }
-
     // we keep the original data so that if fields exist that we do not use, we don't lose that
     // data when we put new data
     clientFirstName.value = info.applicants.clientFirstName ?? undefined

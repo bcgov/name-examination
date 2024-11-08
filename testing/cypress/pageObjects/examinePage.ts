@@ -176,7 +176,7 @@ class ExaminePage {
   clickApproveButton() {
     cy.intercept('PATCH', '**/api/v1/requests/NR*').as('approvePatchRequest')
     cy.get(this.primaryApproveBtn).should('be.visible').click({ force: true })
-    cy.wait('@approvePatchRequest') // TO_DO: This button is returning a 401
+    cy.wait('@approvePatchRequest').its('response.statusCode').should('eq', 200)
     cy.wait(1000)
   }
 
@@ -187,7 +187,7 @@ class ExaminePage {
   clickQuickApproveButton() {
     cy.intercept('PATCH', '**/api/v1/requests/NR*').as('quickApprovePatchRequest')
     cy.get(this.quickApproveBtn).should('be.visible').click({ force: true })
-    cy.wait('@quickApprovePatchRequest') // TO_DO: This button is returning a 401
+    cy.wait('@quickApprovePatchRequest').its('response.statusCode').should('eq', 200)
     cy.wait(1000)
   }
 
