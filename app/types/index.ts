@@ -34,19 +34,19 @@ export interface Comment {
 export type ConflictData = NameRequest | Corporation
 
 export interface Corporation {
-  'incorp #': string
-  directors: string[] | 'Not Available'
+  'identifier': string
+  directors: string[]
   'nature of business': string
   jurisdiction: string
 }
 
 export interface BCCorporation extends Corporation {
-  'records office delivery address': string[] | 'Not Available'
+  'records office delivery address': string[]
   'registered office delivery address': string[]
 }
 
 export interface XproCorporation extends Corporation {
-  'attorney names': string[] | 'Not Available'
+  'attorney names': string[]
   'head office': string[]
 }
 
