@@ -100,6 +100,16 @@
         "is_cp_nwpta_type": false
     },
     {
+        "request_type": "BECC",
+        "nwpta_required": false,
+        "jurisdiction_required": false,
+        "prev_nr_required": false,
+        "corp_num_required": true,
+        "additional_info_template": "**<corp_num>**",
+        "is_lp_nwpta_type": false,
+        "is_cp_nwpta_type": false
+    },
+    {
         "request_type": "BECR",
         "nwpta_required": false,
         "jurisdiction_required": false,
