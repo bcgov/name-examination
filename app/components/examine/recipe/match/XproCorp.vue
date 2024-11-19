@@ -5,11 +5,11 @@
       <p>XPRO Corporation</p>
 
       <h3 class="font-bold">Corp Number</h3>
-      <p>{{ conflict['incorp #'] }}</p>
+      <p>{{ conflict['identifier'] }}</p>
 
       <h3 class="font-bold">Attorneys</h3>
       <div class="flex flex-col">
-        <p v-if="isNotAvailable(conflict['attorney names'])">Not available</p>
+        <p v-if="!conflict?.['attorney names']?.length">Not available</p>
         <p v-else v-for="attorney in conflict['attorney names']">
           {{ attorney }}
         </p>
@@ -22,12 +22,12 @@
     <div class="grid basis-1/2 grid-cols-2 overflow-x-auto">
       <h3 class="font-bold">Directors</h3>
       <div class="flex flex-col">
-        <p v-if="isNotAvailable(conflict.directors)">Not available</p>
+        <p v-if="!conflict?.directors?.length">Not available</p>
         <p v-else v-for="director in conflict.directors">{{ director }}</p>
       </div>
 
       <h3 class="font-bold">Head Office</h3>
-      <div>
+      <div v-if="conflict['head office']" >
         <p v-for="addrLine in parseAddress(conflict['head office'])">
           {{ addrLine }}
         </p>

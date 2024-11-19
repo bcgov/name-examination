@@ -5,11 +5,11 @@
       <p>BC Corporation</p>
 
       <h3 class="font-bold">Corp Number</h3>
-      <p>{{ data['incorp #'] }}</p>
+      <p>{{ data['identifier'] }}</p>
 
       <h3 class="font-bold">Directors</h3>
       <div class="flex flex-col">
-        <p v-if="data.directors === 'Not Available'">Not Available</p>
+        <p v-if="!data?.directors?.length">Not Available</p>
         <p v-else v-for="director in data.directors">{{ director }}</p>
       </div>
 
@@ -20,7 +20,7 @@
     <div class="grid basis-1/2 grid-cols-2 overflow-x-auto">
       <h3 class="font-bold">Records Office Delivery Address</h3>
       <div>
-        <p v-if="data['records office delivery address'] === 'Not Available'">
+        <p v-if="!data?.['records office delivery address']?.length">
           Not Available
         </p>
         <p
@@ -34,7 +34,7 @@
       </div>
 
       <h3 class="font-bold">Registered Office Delivery Address</h3>
-      <div>
+      <div v-if="data['registered office delivery address']">
         <p
           v-for="addrLine in parseAddress(
             data['registered office delivery address']

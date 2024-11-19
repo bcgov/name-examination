@@ -496,11 +496,22 @@
   },
   {
     "value": "CCV",
-    "short_desc": "CCC - BC to CCC Conversion",
-    "text": "CCC - BC to CCC Conversion",
+    "short_desc": "BC Limited to CCC Conversion",
+    "text": "BC Limited to Community Contribution Company Conversion",
     "class_type_cd": "CORP",
     "legacy_cd": "CN",
     "additional_info": "Change of Name",
+    "source_application": "COLIN",
+    "entity_type_cd": "CC",
+    "request_action_cd": "CNV"
+  },
+  {
+    "value": "BECC",
+    "short_desc": "Benefit Company to CCC Conversion",
+    "text": "Benefit Company to Community Contribution Company Conversion",
+    "class_type_cd": "CORP",
+    "legacy_cd": "BECC",
+    "additional_info": "",
     "source_application": "COLIN",
     "entity_type_cd": "CC",
     "request_action_cd": "CNV"
@@ -552,26 +563,26 @@
   {
     "value": "UC",
     "short_desc": "Unlimited Liability Company ",
-    "text": "BC to Unlimited Liability Company Conversion",
+    "text": "BC Limited to Unlimited Liability Company Conversion",
     "class_type_cd": "CORP",
     "legacy_cd": "UC",
     "additional_info": "",
     "source_application": "COLIN",
-    "entity_type_cd": "UC",
+    "entity_type_cd": "UL",
     "request_action_cd": "CNV"
   },
   {
     "value": "ULCB",
     "short_desc": "B.C. Company",
-    "text": "B.C. Company - ULC to BC Conversion",
+    "text": "Unlimited Liability Company to BC Limited Conversion",
     "class_type_cd": "CORP",
-    "legacy_cd": "ULCB", 
+    "legacy_cd": "ULCB",
     "additional_info": "",
     "source_application": "COLIN",
     "entity_type_cd": "CR",
     "request_action_cd": "CNV"
   },
-{
+  {
     "value": "CUL",
     "short_desc": "Unlimited Liability Company ",
     "text": "Change of Name of Unlimited Liability Company",
@@ -806,7 +817,7 @@
   {
     "value": "BECV",
     "short_desc": "Benefit Company",
-    "text": "BC Benefit Company - BC to Benefit Conversion",
+    "text": "BC Limited to Benefit Company Conversion",
     "class_type_cd": "CORP",
     "legacy_cd": "BECV",
     "additional_info": "",
@@ -817,7 +828,7 @@
   {
     "value": "BECR",
     "short_desc": "Benefit Company",
-    "text": "BC Benefit Company - Benefit to BC Conversion",
+    "text": "Benefit Company to BC Limited Conversion",
     "class_type_cd": "CORP",
     "legacy_cd": "BECR",
     "additional_info": "",
@@ -826,20 +837,9 @@
     "request_action_cd": "CNV"
   },
   {
-    "value": "ULCB",
-    "short_desc": "B.C. Company",
-    "text": "B.C. Company - ULC to BC Conversion",
-    "class_type_cd": "CORP",
-    "legacy_cd": "ULCB", 
-    "additional_info": "",
-    "source_application": "COLIN",
-    "entity_type_cd": "CR",
-    "request_action_cd": "CNV"
-  },
-  {
     "value": "ULBE",
     "short_desc": "BC Benefit Company",
-    "text": "BC Benefit Company - ULC to Benefit Conversion",
+    "text": "Unlimited Liability Company to Benefit Company Conversion",
     "class_type_cd": "CORP",
     "legacy_cd": "ULBE",
     "additional_info": "",

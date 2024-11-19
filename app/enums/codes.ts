@@ -176,6 +176,12 @@ export enum RequestTypeCode {
   BERE = 'BERE',
   /** BC Benefit Company - BC to Benefit Conversion */
   BECV = 'BECV',
+  /** BC Benefit Company - Community Contribution Company Conversion */
+  BECC = 'BECC',
+  /** Unlimited Liability Company - BC Limited Conversion */
+  ULCB = 'ULCB',
+  /** Unlimited Liability Company - Benefit Company Conversion */
+  ULBE = 'ULBE',
   /** BC Benefit Company - Benefit to BC Conversion */
   BECR = 'BECR',
 }

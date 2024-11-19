@@ -5,7 +5,7 @@ import {
   type Corporation,
   type NameRequest,
 } from '~/types'
-import { getCorporation, getNameRequest } from '~/util/namex-api'
+import { getBusiness, getCorporation, getNameRequest } from '~/util/namex-api'
 
 export const useConflictData = defineStore('conflict-data', () => {
   async function getCorpConflict(corpNum: string): Promise<Corporation> {
