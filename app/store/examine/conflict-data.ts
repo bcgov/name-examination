@@ -9,9 +9,9 @@ import { getBusiness, getCorporation, getNameRequest } from '~/util/namex-api'
 
 export const useConflictData = defineStore('conflict-data', () => {
   async function getCorpConflict(corpNum: string): Promise<Corporation> {
-    // search for businsess in BCRS
-    const businessResponse = await getBusiness(corpNum)
-    if (businessResponse.ok) return businessResponse.json()
+    // Currently, the corp number is in the Colin format, so there's no need to search in BCROS.
+    //const businessResponse = await getBusiness(corpNum)
+    //if (businessResponse.ok) return businessResponse.json()
     
     // search for business in COLIN
     const response = await getCorporation(corpNum)
