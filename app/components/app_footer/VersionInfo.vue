@@ -38,8 +38,9 @@ onMounted(async () => {
 })
 
 const fetchNameXVersion = async (): Promise<string> => {
-  const baseUrl = process.env.NUXT_NAMEX_API_URL || 'https://namex-dev.apps.silver.devops.gov.bc.ca'
-  const versionPath = process.env.NUXT_NAMEX_API_VERSION || '/api/v1'
+  const config = useRuntimeConfig()
+  const baseUrl = config.public.namexAPIURL || ''
+  const versionPath = config.public.namexAPIVersion || ''
   const versionEndpoint = `${baseUrl}${versionPath}/meta/info`
 
   try {
