@@ -292,7 +292,9 @@
     "class_type_cd": "CORP",
     "legacy_cd": "SO",
     "additional_info": "",
-    "source_application": ""
+    "source_application": "",
+    "entity_type_cd": "SO",
+    "request_action_cd": "NEW"
   },
   {
     "value": "ASO",
@@ -301,7 +303,9 @@
     "class_type_cd": "CORP",
     "legacy_cd": "SO",
     "additional_info": "Amalgamation",
-    "source_application": ""
+    "source_application": "",
+    "entity_type_cd": "SO",
+    "request_action_cd": "AML"
   },
   {
     "value": "CSO",
@@ -310,7 +314,9 @@
     "class_type_cd": "CORP",
     "legacy_cd": "SO",
     "additional_info": "Change of Name",
-    "source_application": ""
+    "source_application": "",
+    "entity_type_cd": "SO",
+    "request_action_cd": "CHG"
   },
   {
     "value": "RSO",
@@ -319,7 +325,9 @@
     "class_type_cd": "CORP",
     "legacy_cd": "SO",
     "additional_info": "Restoration",
-    "source_application": ""
+    "source_application": "",
+    "entity_type_cd": "SO",
+    "request_action_cd": "REH"
   },
   {
     "value": "CTSO",
@@ -328,7 +336,9 @@
     "class_type_cd": "CORP",
     "legacy_cd": "SO",
     "additional_info": "Continuation In",
-    "source_application": ""
+    "source_application": "",
+    "entity_type_cd": "SO",
+    "request_action_cd": "MVE"
   },
   {
     "value": "XSO",
@@ -337,7 +347,9 @@
     "class_type_cd": "CORP",
     "legacy_cd": "SO",
     "additional_info": "",
-    "source_application": ""
+    "source_application": "",
+    "entity_type_cd": "SO",
+    "request_action_cd": "NEW"
   },
   {
     "value": "XCSO",
@@ -346,7 +358,9 @@
     "class_type_cd": "CORP",
     "legacy_cd": "SO",
     "additional_info": "Change of Name",
-    "source_application": ""
+    "source_application": "",
+    "entity_type_cd": "SO",
+    "request_action_cd": "CHG"
   },
   {
     "value": "XRSO",
@@ -355,7 +369,9 @@
     "class_type_cd": "CORP",
     "legacy_cd": "SO",
     "additional_info": "Restoration",
-    "source_application": ""
+    "source_application": "",
+    "entity_type_cd": "SO",
+    "request_action_cd": "REH"
   },
   {
     "value": "XASO",
@@ -364,7 +380,9 @@
     "class_type_cd": "CORP",
     "legacy_cd": "AS",
     "additional_info": "",
-    "source_application": ""
+    "source_application": "",
+    "entity_type_cd": "SO",
+    "request_action_cd": "ASSUMED"
   },
   {
     "value": "XCASO",
@@ -373,7 +391,9 @@
     "class_type_cd": "CORP",
     "legacy_cd": "AS",
     "additional_info": "",
-    "source_application": ""
+    "source_application": "",
+    "entity_type_cd": "SO",
+    "request_action_cd": "CHG"
   },
   {
     "value": "CSSO",
@@ -382,7 +402,9 @@
     "class_type_cd": "CORP",
     "legacy_cd": "SO",
     "additional_info": "Conversion",
-    "source_application": ""
+    "source_application": "",
+    "entity_type_cd": "SO",
+    "request_action_cd": "CHG"
   },
   {
     "value": "CP",
