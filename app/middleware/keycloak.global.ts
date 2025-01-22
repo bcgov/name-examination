@@ -27,10 +27,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return navigateTo('/error');
   }
  
-
   // Check if the user is a staff member
   const userRoles = $auth.tokenParsed?.realm_access?.roles;
-
   if (!userRoles?.includes('staff')) {
     console.error('Access denied: You are not authorized to use this application.');
     return navigateTo('/error'); // Redirect to an error page or login page
