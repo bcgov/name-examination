@@ -4,3 +4,4 @@
 .gitignore
 .output
 /node_modules/
+./types/keycloak-js.d.ts
