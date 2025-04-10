@@ -31,6 +31,7 @@
       hide-submit
       hide-cancel
       :character-limit="characterLimit"
+      :key="key"
     />
     <span
       v-if="examine.requestorMessage.length > characterLimit"
@@ -66,7 +67,18 @@
 import { useExamination } from '~/store/examine'
 import { BackspaceIcon, PencilSquareIcon } from '@heroicons/vue/24/outline'
 
+let key = ref(0)
 const examine = useExamination()
+
+// we need this work-around to make the text box update its output
+// whenever Requestor Message changes; for some reason, it's not
+// reacting normally
+watch(
+    () => [examine.requestorMessage],
+    async (_state) => {
+      key.value++
+    }
+  )
 
 const characterLimit = 955
 const characterLimitDisplay = `Message cut off at ${characterLimit} characters`
