@@ -199,6 +199,7 @@ export interface Transactions {
 }
 
 export interface TransactionEntry {
+  id: string
   additionalInfo: string
   consentFlag: ConsentFlag
   /** consent date */
@@ -215,6 +216,24 @@ export interface TransactionEntry {
   user_action: string
   user_name: string
   comment?: string
+  option?: string
+  email?: Email
+}
+
+export interface Email {
+  recipients: string
+  content: {
+    subject: string
+    body: string
+    attachments?: Array<EmailAttachment>
+  }
+}
+
+export interface EmailAttachment {
+  fileName: string
+  attachOrder: string
+  fileUrl: string
+  fileBytes: string
 }
 
 export interface Action {
