@@ -103,11 +103,16 @@ function toggleBody() {
 async function onResend() {
   try {
     const response = await resendNotification(entry.id)
-    // Adjust these property names to match your actual API response
-    if (response?.state === 200) {
+    if (response.ok) {
       resendSuccess.value = true
     } else {
-      alert('The notification resend failed: ' + (response?.message || 'Unknown error'))
+      // Try to parse error message from response body
+      let errorMsg = 'Unknown error'
+      try {
+        const data = await response.json()
+        errorMsg = data.message || errorMsg
+      } catch {}
+      alert('The notification resend failed: ' + errorMsg)
     }
   } catch (e) {
     alert('Resend failed!')
