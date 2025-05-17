@@ -3,7 +3,17 @@
     <div class="grid grid-cols-4 gap-y-1">
       <!-- Date/Time -->
       <span class="font-bold">Date/Time</span>
-      <span class="col-span-3">{{ eventDate }}</span>
+      <span v-if="!entry.resend_date"
+            class="col-span-3">
+          {{ eventDate }}
+      </span>
+      <span v-else> 
+          {{ eventDate }}
+      </span>
+      <span v-if="entry.resend_date" class="font-bold"> Resend Date: </span>
+      <span v-if="entry.resend_date">
+          {{ entry.resend_date }}
+      </span>
 
       <span class="font-bold">Notification Type</span>
       <span class="col-span-3">{{ entry.option }}</span>
@@ -61,7 +71,9 @@
           class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50"
         >
           <div class="bg-white p-6 rounded shadow text-center">
-            <div class="mb-4 text-green-600 font-bold">Resend successful!</div>
+            <div class="mb-4 text-black text-lg">
+              The <span class="font-bold">{{ entry.option }}</span> notification has been pushed to the email queue successfully.
+            </div>
             <button
               class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
               @click="resendSuccess = false"

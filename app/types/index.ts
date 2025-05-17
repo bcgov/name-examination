@@ -218,6 +218,7 @@ export interface TransactionEntry {
   comment?: string
   option?: string
   email?: Email
+  resend_date?: string
 }
 
 export interface Email {
