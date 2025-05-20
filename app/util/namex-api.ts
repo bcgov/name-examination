@@ -117,6 +117,17 @@ export async function getTransactions(nrNumber: string): Promise<Response> {
   return callNamexApi(getNamexApiUrl(`/events/${nrNumber}`))
 }
 
+export async function resendNotification(eventId: string): Promise<Response> {
+  const url = getNamexApiUrl(`/events/event/${eventId}`)
+  return callNamexApi(
+    url,
+    {
+      method: 'POST',
+    },
+    { 'content-type': 'application/json' }
+  )
+}
+
 export async function getBusiness(corpNum: string) {
   return callNamexApi(getNamexApiUrl(`/businesses/${corpNum}`))
 }
