@@ -10,7 +10,7 @@ defaults:
 
 jobs:
   setup-job:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04.1
 
     if: github.repository == 'bcgov/name-examination'
 
