@@ -1,4 +1,5 @@
 import type { NameChoice, NameRequest, Transactions } from '~/types'
+import packageInfo from '~/package.json'
 
 /**
  * Retrieve the Keycloak session token, refreshing to make it valid if necessary.
@@ -27,6 +28,7 @@ async function callNamexApi(url: URL, options?: object, headers?: object) {
   return fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
+      'App-Name': packageInfo.name,
       ...headers,
     },
     ...(options ? options : {}),
@@ -186,4 +188,8 @@ export async function getPayments(id: number) {
 
 export async function getStats(params: URLSearchParams) {
   return callNamexApi(getNamexApiUrl('/requests/stats?' + params))
+}
+
+export async function getNamexApiVersion() {
+  return callNamexApi(getNamexApiUrl('/meta/info'))
 }
