@@ -63,7 +63,7 @@
     "@nuxtjs/router": "^1.7.0",
     "@pinia/nuxt": "^0.4.11",
     "dotenv": "^16.3.1",
-    "firebase": "^10.12.2",
+    "firebase": "^10.14.1",
     "flush-promises": "^1.0.2",
     "keycloak-js": "^26.2.0",
     "launchdarkly-js-client-sdk": "^3.1.3",
