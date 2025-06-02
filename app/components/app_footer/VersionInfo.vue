@@ -27,6 +27,7 @@
 <script setup lang="ts">
 import packageInfo from '~/package.json'
 import { ref, onMounted } from 'vue'
+import { getNamexApiVersion } from '~/util/namex-api'
 
 const showVersionNumbers = ref(false)
 const nameExaminationVersion = ref('')
@@ -38,13 +39,8 @@ onMounted(async () => {
 })
 
 const fetchNameXVersion = async (): Promise<string> => {
-  const config = useRuntimeConfig()
-  const baseUrl = config.public.namexAPIURL || ''
-  const versionPath = config.public.namexAPIVersion || ''
-  const versionEndpoint = `${baseUrl}${versionPath}/meta/info`
-
   try {
-    const response = await fetch(versionEndpoint)
+    const response = await getNamexApiVersion()
     if (!response.ok) throw new Error(`Fetch failed: ${response.statusText}`)
 
     const { API } = await response.json()
