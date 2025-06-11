@@ -3,104 +3,17 @@ name: NAME-EXAMINATION UI CI
 on:
   pull_request:
     types: [assigned, synchronize]
+  workflow_dispatch:
 
 defaults:
   run:
     shell: bash
+    working-directory: ./
 
 jobs:
-  setup-job:
-    runs-on: ubuntu-24.04.1
-
-    if: github.repository == 'bcgov/name-examination'
-
-    steps:
-      - uses: actions/checkout@v3
-      - run: 'true'
-
-  linting:
-    needs: setup-job
-    runs-on: ubuntu-20.04
-
-    strategy:
-      matrix:
-        node-version: [20.5.1]
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
-      - name: Install dependencies
-        working-directory: ./app
-        run: |
-          npm install
-      - name: Linting
-        working-directory: ./app
-        run: |
-          npm run lint
-
-  testing-coverage:
-    needs: setup-job
-    runs-on: ubuntu-20.04
-
-    strategy:
-      matrix:
-        node-version: [20.5.1]
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
-      - name: Install dependencies
-        working-directory: ./app
-        run: |
-          npm install
-      - name: Testing
-        working-directory: ./app
-        id: test
-        run: |
-          npm run coverage
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          flags: name-examination-ui
-          name: codecov-namex
-          fail_ci_if_error: true
-          token: c4c60cf0-440a-4527-bdb8-0ae8b51c62bf
-
-  build-check:
-    needs: setup-job
-    runs-on: ubuntu-20.04
-
-    strategy:
-      matrix:
-        node-version: [20.5.1]
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
-      - name: Install dependencies
-        working-directory: ./app
-        run: |
-          npm install
-      - name: build
-        working-directory: ./app
-        id: build
-        run: |
-          npm run build
+  nameexamination-ci:
+    uses: bcgov/bcregistry-sre/.github/workflows/frontend-ci.yaml@main
+    with:
+      app_name: "nameexamination"
+      working_directory: "./app"
+      codecov_flag: ""
