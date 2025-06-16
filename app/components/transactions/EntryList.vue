@@ -1,17 +1,37 @@
 <template>
   <div class="flex h-full flex-col overflow-y-auto">
-    <div class="flex justify-between border-y-2 px-4 py-1">
-      <span class="text-xl font-bold">{{ headerText }}</span>
-      <label for="sys-transactions" class="flex items-center space-x-1">
-        <input
-          class="h-4 w-4"
-          id="sys-transactions"
-          type="checkbox"
-          v-model="showSystemTransactions"
-          data-testid="showSystemTransactionsCheckbox"
-        />
-        <span class="mb-0.5">Show system transactions</span>
-      </label>
+    <!-- Tabs -->
+    <div class="flex space-x-2 border-b mb-2 bg-gray-200 rounded-t">
+      <button
+        class="px-4 py-2 -mb-px border-b-2 rounded-t border border-b-0"
+        :class="selectedFilter === 'default'
+          ? 'border-blue-500 bg-white text-bcgov-blue3 font-bold'
+          : 'border-gray-300 bg-gray-300 text-gray-500'"
+        @click="selectedFilter = 'default'"
+        data-testid="showDefaultTab"
+      >
+        Default
+      </button>
+      <button
+        class="px-4 py-2 -mb-px border-b-2 rounded-t border border-b-0"
+        :class="selectedFilter === 'notifications'
+          ? 'border-blue-500 bg-white text-bcgov-blue3 font-bold'
+          : 'border-gray-300 bg-gray-300 text-gray-500'"
+        @click="selectedFilter = 'notifications'"
+        data-testid="showNotificationsTab"
+      >
+        Notifications
+      </button>
+      <button
+        class="px-4 py-2 -mb-px border-b-2 rounded-t border border-b-0"
+        :class="selectedFilter === 'all'
+          ? 'border-blue-500 bg-white text-bcgov-blue3 font-bold'
+          : 'border-gray-300 bg-gray-300 text-gray-500'"
+        @click="selectedFilter = 'all'"
+        data-testid="showSystemTransactionsTab"
+      >
+        System/All Transactions
+      </button>
     </div>
 
     <div v-if="loading" class="flex items-center justify-center">
@@ -26,13 +46,22 @@
     </div>
 
     <div v-else class="flex flex-col overflow-y-auto">
-      <TransactionsEntry
-        v-for="(entry, i) in filteredEntries"
-        :key="entry.eventDate + entry.user_action + entry.stateCd"
-        :entry="entry"
-        :class="{ 'bg-neutral-100': i % 2 == 0 }"
-        data-testid="transactionEntry"
-      />
+      <template v-for="(entry, i) in filteredEntries" :key="entry.eventDate + entry.user_action + entry.stateCd">
+        <!-- Render TransactionsNotificationEntry if user_action is 'notification' -->
+        <TransactionsNotificationEntry
+          v-if="entry.user_action === 'notification'"
+          :entry="entry"
+          :class="{ 'bg-neutral-100': i % 2 == 0 }"
+          data-testid="notificationEntry"
+        />
+        <!-- Render TransactionsEntry otherwise -->
+        <TransactionsEntry
+          v-else
+          :entry="entry"
+          :class="{ 'bg-neutral-100': i % 2 == 0 }"
+          data-testid="transactionEntry"
+        />
+      </template>
     </div>
   </div>
 </template>
@@ -59,15 +88,20 @@ const DEFAULT_TRANSACTIONS = [
   'Staff Comment',
 ]
 
-const showSystemTransactions = ref(false)
+const selectedFilter = ref<'all' | 'notifications' | 'default'>('default')
 
-const filteredEntries = computed(() =>
-  showSystemTransactions.value
-    ? props.entries
-    : props.entries.filter((item) =>
-        DEFAULT_TRANSACTIONS.includes(item.user_action)
-      )
-)
+const filteredEntries = computed(() => {
+  if (selectedFilter.value === 'all') {
+    return props.entries
+  }
+  if (selectedFilter.value === 'notifications') {
+    return props.entries.filter(item => item.user_action === 'notification')
+  }
+  // default
+  return props.entries.filter((item) =>
+    DEFAULT_TRANSACTIONS.includes(item.user_action)
+  )
+})
 
 const headerText = computed(() => {
   const baseText = 'Transaction History'
