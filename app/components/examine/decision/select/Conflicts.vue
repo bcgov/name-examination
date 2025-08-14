@@ -45,9 +45,7 @@ const options = computed<Array<ConflictListItem>>(() => {
 
   const allConflicts = [
     ...conflicts.exactMatches,
-    ...conflicts.synonymMatches.map((c) => c.children).flat(),
-    ...conflicts.cobrsPhoneticMatches.map((c) => c.children).flat(),
-    ...conflicts.phoneticMatches.map((c) => c.children).flat(),
+    ...conflicts.synonymMatches,
   ]
 
   const seenNRs: Array<string> = []
