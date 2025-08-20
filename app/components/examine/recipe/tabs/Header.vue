@@ -53,10 +53,8 @@ const conflicts = useConflicts()
 
 const conflictsIconType = computed(() =>
   [
-    conflicts.cobrsPhoneticMatches,
     conflicts.exactMatches,
     conflicts.synonymMatches,
-    conflicts.phoneticMatches,
   ].some((arr) => arr.length > 0)
     ? 'error'
     : 'ok'

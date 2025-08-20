@@ -93,18 +93,6 @@ export interface ConflictListItem {
   }
 }
 
-export interface ConflictList {
-  text: string
-  highlightedText: string
-  meta: string | undefined
-  children: Array<ConflictListItem>
-  /** Properties related to how this object is presented in the UI */
-  ui: {
-    focused: boolean
-    open: boolean
-  }
-}
-
 export interface Condition {
   id: number
   phrase: string

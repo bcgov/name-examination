@@ -969,24 +969,25 @@ export const useExamination = defineStore('examine', () => {
     if (!currentNameObj.value) return
     resetDecisionArea()
     const errors: Array<Error> = []
-    try {
-      trademarks.value = await getTrademarks(searchQuery)
-    } catch (e) {
-      trademarks.value = []
-      errors.push(e as Error)
-    }
-    try {
-      histories.value = await getHistories(searchQuery)
-    } catch (e) {
-      histories.value = []
-      errors.push(e as Error)
-    }
-    try {
-      macros.value = await getMacros()
-    } catch (e) {
-      macros.value = []
-      errors.push(e as Error)
-    }
+    /** TO_DO: Something needs to be done about this... */
+    // try {
+    //   trademarks.value = await getTrademarks(searchQuery)
+    // } catch (e) {
+    //   trademarks.value = []
+    //   errors.push(e as Error)
+    // }
+    // try {
+    //   histories.value = await getHistories(searchQuery)
+    // } catch (e) {
+    //   histories.value = []
+    //   errors.push(e as Error)
+    // }
+    // try {
+    //   macros.value = await getMacros()
+    // } catch (e) {
+    //   macros.value = []
+    //   errors.push(e as Error)
+    // }
     try {
       const conditionsJson = await getConditions(searchQuery)
       conditions.value = parseConditions(conditionsJson)

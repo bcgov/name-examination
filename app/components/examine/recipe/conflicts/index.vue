@@ -20,18 +20,8 @@
       />
 
       <ExamineRecipeConflictsBucket
-        title="Exact Word Order + Synonym Match"
-        :conflict-lists="conflicts.synonymMatches"
-      />
-
-      <ExamineRecipeConflictsBucket
-        title="Character Swap Match"
-        :conflict-lists="conflicts.cobrsPhoneticMatches"
-      />
-
-      <ExamineRecipeConflictsBucket
-        title="Phonetic Match (experimental)"
-        :conflict-lists="conflicts.phoneticMatches"
+        title="Possible Conflicts"
+        :conflict-items="conflicts.synonymMatches"
       />
     </div>
   </div>

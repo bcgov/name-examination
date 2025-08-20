@@ -1,7 +1,7 @@
-import type { ConflictList, ConflictListItem } from '~/types'
+import type { ConflictListItem } from '~/types'
 import { useConflicts } from './conflicts'
 import { emitter } from '~/util/emitter'
-import { clamp, isConflictList, isConflictListItem } from '~/util'
+import { clamp, isConflictListItem } from '~/util'
 
 export const useExaminationRecipe = defineStore('examine-recipe', () => {
   const CAPTURED_KEYS = [
@@ -21,39 +21,23 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
   const currentRecipeTabIndex = ref(0)
 
   /** The object which is currently being focused in the recipe area */
-  const focused = ref<ConflictListItem | ConflictList>()
+  const focused = ref<ConflictListItem>()
 
   /** Object that was being focused before focus was lost */
-  const savedFocus = ref<ConflictListItem | ConflictList>()
+  const savedFocus = ref<ConflictListItem>()
 
-  /** Return all non-empty `ConflictList`s and `ConflictListItem`s in one flattened list, in order. */
-  const allObjects = computed<Array<ConflictListItem | ConflictList>>(() => {
+  /** Return all non-empty `ConflictListItem`s in one flattened list, in order. */
+  const allObjects = computed<Array<ConflictListItem>>(() => {
     return [
       ...conflicts.exactMatches,
-      ...conflicts.nonEmptyLists.map((list) => [list, ...list.children]).flat(),
+      ...conflicts.synonymMatches
     ]
   })
 
-  /** Array of objects that contains all exact matched `ConflictListItem`s as well as all non-empty conflict lists.  */
-  const topLevelObjects = computed<Array<ConflictListItem | ConflictList>>(
-    () => [...conflicts.exactMatches, ...conflicts.nonEmptyLists]
+  /** Array of objects that contains all exact matched and synonym matched `ConflictListItem`s. */
+  const topLevelObjects = computed<Array<ConflictListItem>>(
+    () => [...conflicts.exactMatches, ...conflicts.synonymMatches]
   )
-
-  /** Maps every `ConflictListItem` to its parent `ConflictList` if it exists. */
-  const conflictListMap = computed<
-    Map<ConflictListItem, ConflictList | undefined>
-  >(() => {
-    const map = new Map<ConflictListItem, ConflictList | undefined>()
-    let currentList: ConflictList | undefined = undefined
-    for (const obj of allObjects.value) {
-      if (isConflictList(obj)) {
-        currentList = obj
-      } else {
-        map.set(obj, currentList)
-      }
-    }
-    return map
-  })
 
   /** Initialize focus for the entire recipe area */
   function focusArea() {
@@ -78,7 +62,7 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
    * This method is usually only called externally when the user clicks a list/item.
    * @param toggleOpen whether the object should only be focused, or if it's `open` state should be toggled as well. Defaults to `true`. */
   function clickObject(
-    obj: ConflictListItem | ConflictList,
+    obj: ConflictListItem,
     toggleOpen = true
   ) {
     if (savedFocus.value) setNewFocus(savedFocus.value)
@@ -98,25 +82,15 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
    */
   function expandFocused(scrollInstant = true) {
     if (!focused.value) return
-    if (isConflictList(focused.value)) {
-      collapseAllLists()
-    }
     focused.value.ui.open = true
     scrollToFocused(scrollInstant)
   }
 
-  function collapseAllLists() {
-    conflicts.nonEmptyLists.forEach((list) => (list.ui.open = false))
-  }
 
   /** Collapse the given object.
    * If the focused object is a `ConflictList`, then all other conflict lists will also be collapsed.*/
-  function collapseObject(obj: ConflictListItem | ConflictList) {
-    if (isConflictList(obj)) {
-      collapseAllLists()
-    } else {
-      obj.ui.open = false
-    }
+  function collapseObject(obj: ConflictListItem) {
+    obj.ui.open = false
   }
 
   /** Collapse the currently focused object.
@@ -128,11 +102,6 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
   /** Handle the user requesting the current object to be collapsed. */
   function handleCollapse() {
     if (!focused.value) return
-    if (!focused.value.ui.open && isConflictListItem(focused.value)) {
-      if (conflicts.exactMatches.includes(focused.value)) return
-      const parentConflictList = conflictListMap.value.get(focused.value)
-      setNewFocus(parentConflictList)
-    }
     collapseFocused()
     scrollToFocused()
   }
@@ -163,7 +132,7 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
   /** Get the next/previous non-empty `ConflictList` or exact match `ConflictListItem` relative
    * to the given conflict object. */
   function getRelativeTopLevelObject(
-    obj: ConflictList | ConflictListItem,
+    obj: ConflictListItem,
     delta: number
   ) {
     const currentIndex = topLevelObjects.value.indexOf(obj)
@@ -172,7 +141,7 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     return topLevelObjects.value[newIndex]
   }
 
-  function setNewFocus(focus: ConflictList | ConflictListItem | undefined) {
+  function setNewFocus(focus: ConflictListItem | undefined) {
     if (focused.value) {
       focused.value.ui.focused = false
     }
@@ -191,7 +160,6 @@ export const useExaminationRecipe = defineStore('examine-recipe', () => {
     }
     collapseFocusedIfConflictItem()
     if (
-      isConflictList(focused.value) &&
       (!focused.value.ui.open || delta < 0)
     ) {
       setNewFocus(getRelativeTopLevelObject(focused.value, delta))

@@ -1,4 +1,4 @@
-import type { ConflictList, ConflictListItem, NameChoice } from '~/types'
+import type { ConflictListItem, NameChoice } from '~/types'
 import { getBusiness, getCorporation, getNameRequest } from './namex-api'
 import { Status } from '~/enums/nr-status'
 
@@ -120,17 +120,9 @@ export function getCircularIndex(i: number, n: number) {
   return ((i % n) + n) % n
 }
 
-/** Distinguish a parameter that may be a `ConflictListItem` or a `ConflictList` */
-export function isConflictListItem(
-  obj: ConflictListItem | ConflictList
-): obj is ConflictListItem {
+/** Distinguish a parameter that may be a `ConflictListItem` */
+export function isConflictListItem(obj: ConflictListItem): obj is ConflictListItem {
   return 'nrNumber' in obj
-}
-
-export function isConflictList(
-  obj: ConflictListItem | ConflictList
-): obj is ConflictList {
-  return !isConflictListItem(obj)
 }
 
 /** Clamp `value` to interval [`min`, `max`] (inclusive) */
