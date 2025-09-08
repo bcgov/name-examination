@@ -49,34 +49,34 @@
           <tr v-for="(item, index) in statsData" :key="index"
             class="align-top transition duration-200 ease-in-out border-b border-gray-300 hover:bg-gray-200">
             <td class="whitespace-pre-line border-b border-gray-300 px-2 py-2">
-              <div class="container-fluid">
-                <div class="layout">
-                  <div class="flex my-2 font-bold">
+              <span class="container-fluid">
+                <span class="layout">
+                  <span class="flex my-2 font-bold">
                     {{ item.nrNum }}
-                  </div>
-                </div>
-                <div v-for="(name, i) in item.names" :key="`names-layout-${i}`">
-                  <div class="flex font-bold">
+                  </span>
+                </span>
+                <span v-for="(name, i) in item.names" :key="`names-layout-${i}`">
+                  <span class="flex font-bold">
                     {{ i + 1 }}. {{ name.name }}
                     <span class="mx-2" :class="getClass(name.state)">
                       {{ name.state }}
                     </span>
-                  </div>
-                  <div class="layout">
-                    <div v-for="(text, j) in name.decision_text" :key="`decision-text-flex-${j}`"
+                  </span>
+                  <span class="layout">
+                    <span v-for="(text, j) in name.decision_text" :key="`decision-text-flex-${j}`"
                       class="flex italic mb-2 ml-4">
                       {{ text }}
-                    </div>
-                  </div>
-                </div>
-                <div v-if="item.comments.length > 0" class="ml-2 mt-1 font-semibold">
+                    </span>
+                  </span>
+                </span>
+                <span v-if="item.comments.length > 0" class="ml-2 mt-1 font-semibold">
                   LAST COMMENT
-                </div>
-                <div v-if="item.comments.length > 0" class="dk-grey ml-2 mb-2">
-                  <div class="flex indent-10px">
+                </span>
+                <span v-if="item.comments.length > 0" class="dk-grey ml-2 mb-2">
+                  <span class="flex indent-10px">
                     {{ item.comments[0].comment }}
-                  </div>
-                  <div class="flex ft-ital indent-10px">
+                  </span>
+                  <span class="flex ft-ital indent-10px">
                     <template v-if="item.comments[0].examiner">
                       <template v-for="(value, name) in item.comments[0].examiner">
                         -{{ name }}: {{ value }},
@@ -86,9 +86,9 @@
                       <span class="mr-2">–unknown examiner,</span>
                     </template>
                     {{ item.comments[0].timestamp }}
-                  </div>
-                </div>
-              </div>
+                  </span>
+                </span>
+              </span>
             </td>
             <td :class="getClass(item.stateCd)" class="font-semibold">
               {{ item.stateCd }}
@@ -98,10 +98,11 @@
             <td>{{ item.furnished }}</td>
           </tr>
         </tbody>
-        <div class="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 transform">
-          <LoadingSpinner v-if="isLoading" />
-        </div>
       </table>
+      <div class="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 transform">
+        <LoadingSpinner v-if="isLoading" />
+      </div>
+
     </div>
   </div>
 </template>

@@ -50,7 +50,7 @@ export const useConflicts = defineStore('conflicts', () => {
     return exactMatches.map((match) => {
       return {
         text: match.name,
-        highlightedText: 'TO_DO',
+        highlightedText: match.name,
         nrNumber: match.parent_id,
         startDate: match.parent_start_date,
         jurisdiction: match.parent_jurisdiction,
@@ -65,9 +65,10 @@ export const useConflicts = defineStore('conflicts', () => {
 
   function parseSynonymMatches(synonymMatches: Array<any>): Array<ConflictListItem> {
     return synonymMatches.map((match) => {
+      const highlightedName = highlightNameChoices(match)
       return {
         text: match.name,
-        highlightedText: match.name,
+        highlightedText: highlightedName,
         nrNumber: match.parent_id,
         startDate: match.parent_start_date,
         jurisdiction: match.parent_jurisdiction,
@@ -78,6 +79,16 @@ export const useConflicts = defineStore('conflicts', () => {
         },
       }
     })
+  }
+
+  function highlightNameChoices(entry: any): string {
+    let result = entry.name
+    entry.stems.forEach((stem: string | RegExp) => {
+      // Use RegExp for global, case-insensitive replacement
+      const re = new RegExp(stem, 'gi')
+      result = result.replace(re, (match: any) => `<span class="synonym-stem-highlight">${match}</span>`)
+    })
+    return result
   }
 
   async function initialize(searchQuery: string, exactPhrase: string) {

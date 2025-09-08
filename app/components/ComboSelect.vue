@@ -86,19 +86,14 @@ import {
 } from '@headlessui/vue'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 
-const { options, multiple } = withDefaults(
-  defineProps<{
-    modelValue: any
-    options: ComputedRef<Array<any>>
-    /** Whether multiple options can be selected */
-    multiple?: boolean
-    /** Function called for getting the display string for a given option */
-    optionsDisplay?: (option: any) => string
-  }>(),
-  {
-    optionsDisplay: (option: any) => option,
-  }
-)
+const { options, multiple = false, optionsDisplay = (option: any) => option } = defineProps<{
+  modelValue: any
+  options: ComputedRef<Array<any>>
+  /** Whether multiple options can be selected */
+  multiple?: boolean
+  /** Function called for getting the display string for a given option */
+  optionsDisplay?: (option: any) => string
+}>()
 
 const query = ref('')
 const filteredOptions = computed(() =>
