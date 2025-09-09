@@ -860,6 +860,20 @@ export const useExamination = defineStore('examine', () => {
     return response.ok ? await response.json() : []
   }
 
+  function parseHistoryMatches(historyMatches: Array<any>): Array<HistoryEntry> {
+    return historyMatches.map((match) => {
+      return {
+          name: match.name,
+          jurisdiction: match.parent_jurisdiction,
+          nr_num: match.parent_id,
+          start_date: match.parent_start_date,
+          name_state_type_cd: match.parent_type,
+          score: match.score ?? 0,
+          submit_count: match.submit_count ?? 0
+      }
+    })
+  }
+
   function parseConditions(data: ConditionsList): Array<Condition> {
     const conditions = []
     for (const word of data.restricted_words_conditions) {
@@ -996,12 +1010,13 @@ export const useExamination = defineStore('examine', () => {
       errors.push(e as Error)
     }
     try {
-      await conflicts.initialize(searchQuery, exactPhrase)
+      const results = await conflicts.initialize(searchQuery, exactPhrase)
+      histories.value = parseHistoryMatches(results)
     } catch (e) {
       errors.push(e as Error)
     }
     if (errors.length > 0) {
-      const message = errors.join('\n')
+      const message = errors.map(e => e.message).join('\n')
       throw new Error(message)
     }
   }
