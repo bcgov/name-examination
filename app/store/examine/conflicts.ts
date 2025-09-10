@@ -1,6 +1,6 @@
 import type { ConflictListItem } from '~/types'
 import { getConflicts } from '~/util/namex-api'
-import { useExaminationRecipe } from './recipe'
+
 
 export const useConflicts = defineStore('conflicts', () => {
   const exactMatches = ref<Array<ConflictListItem>>([])
@@ -37,13 +37,14 @@ export const useConflicts = defineStore('conflicts', () => {
     }
   }
 
-  async function retrieveConflicts(query: string): Promise<[ConflictListItem[], ConflictListItem[]]> {
+  async function retrieveConflicts(query: string): Promise<[ConflictListItem[], ConflictListItem[], any[]]> {
     const resp = await getConflicts(query)
     if (!resp.ok) throw new Error('Unable to retrieve exact matches')
     const json = await resp.json()
     const exactMatches = parseExactMatches(json?.exactNames || [])
     const similarMatches = parseSynonymMatches(json?.names || [])
-    return [exactMatches, similarMatches]
+    const histories = json?.histories
+    return [exactMatches, similarMatches, histories]
   }
 
   function parseExactMatches(exactMatches: Array<any>): Array<ConflictListItem> {
@@ -95,10 +96,10 @@ export const useConflicts = defineStore('conflicts', () => {
     loading.value = true
     resetConflictLists()
     try {
-      const [exact, synonym] = await retrieveConflicts(searchQuery)
+      const [exact, synonym, histories] = await retrieveConflicts(searchQuery)
       exactMatches.value = exact
       synonymMatches.value = synonym
-      useExaminationRecipe().reset()
+      return histories
     } catch (e) {
       resetMatches()
       throw e
