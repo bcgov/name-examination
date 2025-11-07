@@ -51,19 +51,8 @@ export const useSearchStore = defineStore('search', () => {
   const isLoading = ref(true)
 
   const formattedSearchParams = computed(() => {
-    // build the order string conditionally: only include priority ordering when the
-    // Priority filter is set to "All" or "Priority" (per requirement)
-    const priorityFilter = filters[SearchColumns.Priority] as Priority
-    let order = `submittedDate:${submittedDateOrder.value}`
-    if (
-      priorityFilter === Priority.All ||
-      priorityFilter === Priority.Priority
-    ) {
-      order = `priorityCd:desc,${order}`
-    }
-
-    const params = {
-      order,
+      const params = {
+      order: `submittedDate:${submittedDateOrder.value}`,
       queue:
         filters[SearchColumns.Status] === StatusSearchFilter.All
           ? ''
