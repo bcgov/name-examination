@@ -193,7 +193,7 @@ const layout: ILayout = {
     dropdown: Object.values(Submitted),
     clickable: {
       icon: computed(() =>
-        search.submittedDateOrder === 'asc' ? ArrowDownIcon : ArrowUpIcon
+        search.submittedDateOrder === 'asc' ? ArrowUpIcon : ArrowDownIcon
       ),
       onClick: search.toggleSubmittedDateOrder,
     },

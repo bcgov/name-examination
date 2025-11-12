@@ -51,8 +51,8 @@ export const useSearchStore = defineStore('search', () => {
   const isLoading = ref(true)
 
   const formattedSearchParams = computed(() => {
-    const params = {
-      order: `priorityCd:desc,submittedDate:${submittedDateOrder.value}`,
+      const params = {
+      order: `submittedDate:${submittedDateOrder.value}`,
       queue:
         filters[SearchColumns.Status] === StatusSearchFilter.All
           ? ''
