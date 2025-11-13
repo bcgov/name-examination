@@ -84,21 +84,21 @@ export const useConflicts = defineStore('conflicts', () => {
 
   function highlightNameChoices(entry: any): string {
     let result = entry.name
-    if (entry.highlighting.stems) {
-      entry.highlighting.stems.forEach((stem: string) => {
-        const re = new RegExp(stem, 'gi')
-        result = result.replace(re, (match: any) => `<span class="stem-highlight">${match}</span>`)
-      })
-    }
-
-    if (entry.highlighting.synonyms) {
-      entry.highlighting.synonyms.forEach((synonym: string) => {
-        const re = new RegExp(synonym, 'gi')
-        result = result.replace(re, (match: any) => `<span class="synonym-highlight">${match}</span>`)
-      })
-    }
-
     if (entry.highlighting) {
+      if (entry.highlighting.stems) {
+        entry.highlighting.stems.forEach((stem: string) => {
+          const re = new RegExp(stem, 'gi')
+          result = result.replace(re, (match: any) => `<span class="stem-highlight">${match}</span>`)
+        })
+      }
+
+      if (entry.highlighting.synonyms) {
+        entry.highlighting.synonyms.forEach((synonym: string) => {
+          const re = new RegExp(synonym, 'gi')
+          result = result.replace(re, (match: any) => `<span class="synonym-highlight">${match}</span>`)
+        })
+      }
+
       if (entry.highlighting.exact) {
         entry.highlighting.exact.forEach((exact: string) => {
           const re = new RegExp(exact, 'gi')
