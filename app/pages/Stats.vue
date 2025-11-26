@@ -98,10 +98,11 @@
             <td>{{ item.furnished }}</td>
           </tr>
         </tbody>
-        <div class="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 transform">
-          <LoadingSpinner v-if="isLoading" />
-        </div>
       </table>
+      <div class="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 transform">
+        <LoadingSpinner v-if="isLoading" />
+      </div>
+
     </div>
   </div>
 </template>

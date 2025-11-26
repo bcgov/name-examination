@@ -98,13 +98,11 @@
           </td>
         </tr>
       </tbody>
-
-      <div
-        class="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 transform"
-      >
-        <LoadingSpinner v-if="search.isLoading" />
-      </div>
     </table>
+
+    <div class="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 transform">
+      <LoadingSpinner v-if="search.isLoading" />
+    </div>
 
     <PopupDialog :show="showDateDialog">
       <template #title>Choose a Date Range</template>
