@@ -88,10 +88,16 @@ function setDefaultInputValues() {
 examine.addEditAction({
   validate() {
     let isValid = true
-    if (examine.expiryDate && !expiry.value) {
-      expiryDateErrorText.value = 'Expiry date is required'
-      isValid = false
+    if (examine.expiryDate) {
+      if (expiry.value) {
+        isValid = DateTime.fromISO(expiry.value).startOf('day') >= DateTime.now().startOf('day')
+        expiryDateErrorText.value = isValid ? '' : 'Expiry date must be today or later';
+      } else {
+        expiryDateErrorText.value = 'Expiry date is required'
+        isValid = false
+      }
     }
+
     if (consentFlag.value === ConsentFlag.Received && !consentDate.value) {
       consentDateErrorText.value = 'Consent date is required'
       isValid = false
