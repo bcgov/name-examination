@@ -99,8 +99,9 @@
           </tr>
         </tbody>
       </table>
-      <div class="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 transform">
-        <LoadingSpinner v-if="isLoading" />
+      <div v-if="isLoading"
+           class="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 transform">
+        <LoadingSpinner />
       </div>
 
     </div>
