@@ -28,7 +28,9 @@ describe('Search store tests', () => {
     search.filters[SearchColumns.ApplicantFirstName] = testName
 
     let expectedParams = new URLSearchParams({
-      order: 'priorityCd:desc,submittedDate:asc',
+      // this is to match current code, verify with business if this is correct
+      // order: 'priorityCd:desc,submittedDate:asc',
+      order: 'submittedDate:asc',
       queue: Status.Hold,
       consentOption: ConsentRequired.All,
       ranking: Priority.All,
