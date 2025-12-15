@@ -29,7 +29,6 @@
 <script setup lang="ts">
 const links = [
   { text: 'Home', route: '/', target: '_self' },
-  { text: 'Release Notes', route: 'https://www.release-notes.bcregistry.gov.bc.ca' },
   { text: 'Disclaimer', route: 'https://www2.gov.bc.ca/gov/content/home/disclaimer' },
   { text: 'Privacy', route: 'https://www2.gov.bc.ca/gov/content/home/privacy' },
   { text: 'Accessibility', route: 'https://www2.gov.bc.ca/gov/content/home/accessibility' },
