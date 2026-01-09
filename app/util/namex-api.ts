@@ -29,6 +29,7 @@ async function callNamexApi(url: URL, options?: object, headers?: object) {
     headers: {
       Authorization: `Bearer ${token}`,
       'App-Name': packageInfo.name,
+      'X-Apikey': useRuntimeConfig().public.namexAPIKey || '',
       ...headers,
     },
     ...(options ? options : {}),
@@ -41,9 +42,10 @@ async function callNamexApi(url: URL, options?: object, headers?: object) {
  */
 export function getNamexApiUrl(endpoint: string): URL {
   const config = useRuntimeConfig().public
+  const base = config.namexAPIURL
   return new URL(
-    config.namexAPIVersion + endpoint,
-    config.namexAPIURL as string
+    config.namexAPIVersion.replace(/^\//, '') + endpoint,
+    base.endsWith('/') ? base : base + '/' as string
   )
 }
 

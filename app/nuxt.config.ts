@@ -18,7 +18,6 @@ export default defineNuxtConfig({
     '@nuxt/content',
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
-    'nuxt-vitest',
   ],
   css: ['@/assets/css/main.scss'],
   typescript: {
@@ -50,7 +49,8 @@ export default defineNuxtConfig({
       firebaseAuthDomain: process.env.NUXT_AUTH_DOMAIN,
       firebaseProjectId: process.env.NUXT_PROJECT_ID,
       firebaseAppId: process.env.NUXT_APP_ID,
-      namexAPIURL: process.env.NUXT_NAMEX_API_URL,
+      namexAPIURL: process.env.NUXT_NAMEX_API_GW_URL,
+      namexAPIKey: process.env.NUXT_NAMEX_API_KEY,
       namexAPIVersion: process.env.NUXT_NAMEX_API_VERSION,
       namexAdminURL: process.env.NUXT_NAMEX_ADMIN_URL,
       keycloakAuthUrl: process.env.NUXT_KEYCLOAK_AUTH_URL,
