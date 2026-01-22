@@ -10,10 +10,10 @@
       <div class="font-semibold text-center">Total Examined Names: {{ numRecords }}</div>
       <div class="flex items-center space-x-2">
         <div class="flex items-center space-x-1">
-          <input 
-            id="stats-checkbox" 
-            class="h-4 w-4" 
-            v-model="myStats" 
+          <input
+            id="stats-checkbox"
+            class="h-4 w-4"
+            v-model="myStats"
             type="checkbox"
             data-testid="statsCheckbox"
           >
@@ -21,12 +21,12 @@
         </div>
         <div class="timespan-input  align-baseline space-x-1">
           <label for="timespan" class="font-bold align-baseline">Hours:&nbsp;</label>
-          <TextInput 
-            id="timespan" 
-            ref="numberinput" 
-            v-model="timespan" 
-            type="number" 
-            class="!w-24" 
+          <TextInput
+            id="timespan"
+            ref="numberinput"
+            v-model="timespan"
+            type="number"
+            class="!w-24"
             data-testid="statsHoursInput"
           />
           <IconButton @click="fetchStats" data-testid="getStatsBtn">
@@ -99,8 +99,9 @@
           </tr>
         </tbody>
       </table>
-      <div class="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 transform">
-        <LoadingSpinner v-if="isLoading" />
+      <div v-if="isLoading"
+           class="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 transform">
+        <LoadingSpinner />
       </div>
 
     </div>
@@ -171,7 +172,7 @@ export default {
     /**
      * Determines the CSS class based on the provided state.
      * @param {string} state - The state value used to determine the CSS class.
-     * @return {string | undefined} Returns the CSS class corresponding to the provided state. 
+     * @return {string | undefined} Returns the CSS class corresponding to the provided state.
      * If the state does not match any condition, returns undefined.
      */
     function getClass(state) {

@@ -103,6 +103,11 @@
       <LoadingSpinner v-if="search.isLoading" />
     </div>
 
+    <div v-if="search.isLoading"
+         class="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 transform">
+      <LoadingSpinner />
+    </div>
+
     <PopupDialog :show="showDateDialog">
       <template #title>Choose a Date Range</template>
       <SearchDateForm
@@ -190,7 +195,7 @@ const layout: ILayout = {
     dropdown: Object.values(Submitted),
     clickable: {
       icon: computed(() =>
-        search.submittedDateOrder === 'asc' ? ArrowDownIcon : ArrowUpIcon
+        search.submittedDateOrder === 'asc' ? ArrowUpIcon : ArrowDownIcon
       ),
       onClick: search.toggleSubmittedDateOrder,
     },
