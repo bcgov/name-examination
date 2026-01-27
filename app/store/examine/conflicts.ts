@@ -1,5 +1,6 @@
 import type { ConflictListItem } from '~/types'
 import { getConflicts } from '~/util/namex-api'
+import { highlightWord } from '~/util/html/highlight'
 
 
 export const useConflicts = defineStore('conflicts', () => {
@@ -83,31 +84,44 @@ export const useConflicts = defineStore('conflicts', () => {
   }
 
   function highlightNameChoices(entry: any): string {
-    let result = entry.name
-    if (entry.highlighting) {
-      if (entry.highlighting.stems) {
-        entry.highlighting.stems.forEach((stem: string) => {
-          const re = new RegExp(stem, 'gi')
-          result = result.replace(re, (match: any) => `<span class="stem-highlight">${match}</span>`)
-        })
-      }
+    const name: string = entry?.name ?? ''
+    const highlighting = entry?.highlighting
 
-      if (entry.highlighting.synonyms) {
-        entry.highlighting.synonyms.forEach((synonym: string) => {
-          const re = new RegExp(synonym, 'gi')
-          result = result.replace(re, (match: any) => `<span class="synonym-highlight">${match}</span>`)
-        })
-      }
-
-      if (entry.highlighting.exact) {
-        entry.highlighting.exact.forEach((exact: string) => {
-          const re = new RegExp(exact, 'gi')
-          result = result.replace(re, (match: any) => `<span class="exact-highlight">${match}</span>`)
-        })
-      }
+    // If we have nothing to highlight, keep original text intact
+    if (!name || !highlighting) {
+      return name
     }
 
-    return result
+    // Split into word and whitespace tokens so we preserve spacing exactly
+    const tokens = name.split(/(\s+)/)
+
+    const exactList: string[] = Array.isArray(highlighting.exact) ? highlighting.exact : []
+    const synonymList: string[] = Array.isArray(highlighting.synonyms) ? highlighting.synonyms : []
+    const stemList: string[] = Array.isArray(highlighting.stems) ? highlighting.stems : []
+
+    const applyFirstMatchingCategory = (word: string): string => {
+      // exact > synonym > stem
+      for (const exact of exactList) {
+        const highlighted = highlightWord(exact, word, 'exact-highlight')
+        if (highlighted !== word) return highlighted
+      }
+
+      for (const synonym of synonymList) {
+        const highlighted = highlightWord(synonym, word, 'synonym-highlight')
+        if (highlighted !== word) return highlighted
+      }
+
+      for (const stem of stemList) {
+        const highlighted = highlightWord(stem, word, 'stem-highlight')
+        if (highlighted !== word) return highlighted
+      }
+
+      return word
+    }
+
+    return tokens
+      .map((token) => (token.trim().length === 0 ? token : applyFirstMatchingCategory(token)))
+      .join('')
   }
 
   async function initialize(searchQuery: string, exactPhrase: string) {
@@ -163,7 +177,7 @@ export const useConflicts = defineStore('conflicts', () => {
   }
 
   /** Reset selectedConflicts and comparedConflicts and save existing data */
-  function disableAutoAdd () {
+  function disableAutoAdd() {
     if (!autoAdd.value) {
       const initialRun = (prevSelectedConflicts.value.length === 0 && prevComparedConflicts.value.length === 0)
       for (const conflict of selectedConflicts.value) {
@@ -180,7 +194,7 @@ export const useConflicts = defineStore('conflicts', () => {
   }
 
   /** Reassign selectedConflicts and comparedConflicts */
-  function enableAutoAdd () {
+  function enableAutoAdd() {
     if (autoAdd.value) {
       selectedConflicts.value = prevSelectedConflicts.value
       comparedConflicts.value = prevComparedConflicts.value
@@ -205,6 +219,6 @@ export const useConflicts = defineStore('conflicts', () => {
     enableAutoAdd,
     autoAdd,
     firstConflictItem,
-    syncSelectedAndComparedConflicts,
+    syncSelectedAndComparedConflicts
   }
 })

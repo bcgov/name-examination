@@ -147,6 +147,7 @@ dist
 
 # IDEs
 .vscode
+.idea
 
 # Cypress related files
 **/cypress.env.json
