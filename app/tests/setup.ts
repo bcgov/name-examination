@@ -1,4 +1,13 @@
 import { beforeAll, vi } from 'vitest'
+import { createRouter, createMemoryHistory } from 'vue-router'
+import { config } from '@vue/test-utils'
+
+const router = createRouter({
+  history: createMemoryHistory(),
+  routes: []
+})
+
+config.global.plugins = [router]
 
 beforeAll(() => {
   vi.mock('../util/namex-api', async (importOriginal) => {
