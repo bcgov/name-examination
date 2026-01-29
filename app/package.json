@@ -43,7 +43,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-vue": "^8.7.1",
-    "happy-dom": "^14.12.3",
+    "happy-dom": "^20.4.0",
     "launchdarkly-node-server-sdk": "^7.0.1",
     "nuxt": "3",
     "prettier": "^2.8.8",
