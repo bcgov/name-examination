@@ -21,4 +21,5 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     const allFlags = JSON.stringify(ldClient.allFlags())
     sessionStorage.setItem(SessionStorageKeys.LaunchDarklyFlags, allFlags)
   }
+  return { name: 'launchdarkly-plugin', provide: {} }
 })

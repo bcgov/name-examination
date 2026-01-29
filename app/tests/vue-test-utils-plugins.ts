@@ -15,5 +15,7 @@ const findWithTextPlugin = (wrapper: BaseWrapper<any>) => {
   return { findWithText }
 }
 
-config.plugins.DOMWrapper.install(findWithTextPlugin)
-config.plugins.VueWrapper.install(findWithTextPlugin)
+const pluginOptions = { _name: 'findWithText' }
+
+config.plugins.DOMWrapper.install(findWithTextPlugin, pluginOptions)
+config.plugins.VueWrapper.install(findWithTextPlugin, pluginOptions)

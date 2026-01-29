@@ -32,4 +32,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   nuxtApp.vueApp.provide('remoteConfig', remoteConfig)
   nuxtApp.provide('remoteConfig', remoteConfig)
+
+  return { name: 'firebase-plugin', provide: { analytics, remoteConfig } }
 })
