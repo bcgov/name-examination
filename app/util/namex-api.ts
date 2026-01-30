@@ -43,7 +43,6 @@ async function callNamexApi(url: URL, options?: object, headers?: object) {
 export function getNamexApiUrl(endpoint: string): URL {
   const config = useRuntimeConfig().public
   const base = config.namexAPIURL
-  console.log('-->>> ', base, endpoint)
   return new URL(
     [base, config.namexAPIVersion, endpoint]
       .map(p => p.replace(/^\/+|\/+$/g, ''))
