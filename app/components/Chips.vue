@@ -7,7 +7,7 @@
     >
       <span class="truncate max-w-xs">{{ display ? display(item) : item }}</span>
       <button
-        @click="(event) => onChipRemove(event, modelValue, item)"
+        @click="onChipRemove($event, modelValue, item)"
         class="rounded hover:bg-sky-200"
       >
         <XMarkIcon class="h-4 w-4" />
@@ -35,7 +35,7 @@ const emit = defineEmits<{
 
 // NOTE: The `modelValue` variable from the `defineProps` call above doesn't update properly for some reason.
 // The workaround is to pass the modelValue as a parameter when calling this function from the template.
-function onChipRemove(event: MouseEvent, items: Array<any>, item: any) {
+function onChipRemove(event: MouseEvent, items: unknown[], item: unknown) {
   event.stopPropagation()
   emit(
     'update:modelValue',

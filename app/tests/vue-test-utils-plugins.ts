@@ -1,4 +1,7 @@
 import { BaseWrapper, config, createWrapperError } from '@vue/test-utils'
+import type { DOMWrapper, VueWrapper } from '@vue/test-utils'
+
+type AnyWrapper = DOMWrapper<Element> | VueWrapper
 
 const findWithTextPlugin = (wrapper: BaseWrapper<any>) => {
   /**

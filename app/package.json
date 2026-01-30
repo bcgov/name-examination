@@ -2,6 +2,7 @@
   "name": "name-examination",
   "version": "1.2.50",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "nuxt generate",
     "build-check": "nuxt generate",
@@ -78,6 +79,7 @@
     "vue": "latest"
   },
   "engines": {
-    "node": ">=22 <23"
-  }
+    "node": "^24.0.0"
+  },
+  "packageManager": "pnpm@10.28.2"
 }

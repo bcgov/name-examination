@@ -1,11 +1,11 @@
 import { BaseWrapper, DOMWrapper, VueWrapper } from '@vue/test-utils';
 
 declare module '@vue/test-utils' {
-  export class DOMWrapper {
-    findWithText(text: string): BaseWrapper;
+  interface VueWrapper {
+    findWithText(text: string): DOMWrapper
   }
 
-  export class VueWrapper {
-    findWithText(text: string): BaseWrapper;
+  interface DOMWrapper {
+    findWithText(text: string): DOMWrapper
   }
 }
