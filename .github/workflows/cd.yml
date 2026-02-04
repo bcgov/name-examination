@@ -23,7 +23,7 @@ jobs:
     uses: bcgov/bcregistry-sre/.github/workflows/frontend-cd.yaml@main
     with:
       target: ${{ inputs.environment }}
-      node_version: '24.x'
+      node_version: '24'
       pnpm_version: '10.28.1'
       app_name: 'name-examination-ui'
       working_directory: 'app'
