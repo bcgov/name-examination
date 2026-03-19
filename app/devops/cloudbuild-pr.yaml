@@ -1,6 +1,6 @@
 steps:
   # Install / setup CI
-  - name: node:20.5.1
+  - name: node:24
     entrypoint: npm
     args: ['install']
     dir: app  # <-- ADD THIS
@@ -13,7 +13,7 @@ steps:
     dir: app  # <-- ADD THIS
 
   # Generate the static site
-  - name: node:20.5.1
+  - name: node:24
     entrypoint: npm
     env:
       - 'NUXT_API_KEY=$_NUXT_API_KEY'
