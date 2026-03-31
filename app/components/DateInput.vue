@@ -1,7 +1,7 @@
 <template>
   <input
     :value="modelValue"
-    @change="(e) => $emit('update:modelValue', (e.target as HTMLInputElement).value)"
+    @change="(e: Event) => $emit('update:modelValue', (e.target as HTMLInputElement).value)"
     type="date"
     class="rounded border border-gray-300 px-3 py-1"
     :class="{ 'border-2 border-red-600': errorStyle }"
