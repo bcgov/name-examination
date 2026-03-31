@@ -104,11 +104,6 @@
       <LoadingSpinner />
     </div>
 
-    <div v-if="search.isLoading"
-         class="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 transform">
-      <LoadingSpinner />
-    </div>
-
     <PopupDialog :show="showDateDialog">
       <template #title>Choose a Date Range</template>
       <SearchDateForm
