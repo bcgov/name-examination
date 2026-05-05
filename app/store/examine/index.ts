@@ -34,7 +34,7 @@ import {
 import { getEmptyNameChoice, isValidNrFormat, sortNameChoices } from '~/util'
 import { DateTime } from 'luxon'
 import { fromMappedRequestType, toMappedRequestType } from '~/util/request-type'
-import { getDateFromDateTime, parseDate } from '~/util/date'
+import { getDateFromDateTime, parseDate, utcToPSTIso } from '~/util/date'
 import { useConflicts } from './conflicts'
 import { usePayments } from './payments'
 import { useExaminationOptions } from './options'
@@ -512,7 +512,7 @@ export const useExamination = defineStore('examine', () => {
     priority.value = info.priorityCd === 'Y'
 
     expiryDate.value = info.expirationDate
-      ? getDateFromDateTime(parseDate(info.expirationDate)) ?? undefined
+      ? utcToPSTIso(info.expirationDate).slice(0, 10) ?? undefined
       : undefined
 
     submittedDate.value = parseDate(info.submittedDate)
