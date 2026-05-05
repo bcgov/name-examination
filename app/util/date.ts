@@ -48,3 +48,14 @@ export function getFormattedDateWithTimeAndZone(input: DateTime): string {
 export function parseDate(input: string) {
   return DateTime.fromISO(input)
 }
+
+/** Parse a date string into a `luxon` `DateTime` object.
+ * @param input A date string from a NameX API object (ISO format)
+ */
+export function utcToPSTIso (utcString: string): string {
+  const utcDate = new Date(utcString)
+
+  // subtract 8 hours (in ms)
+  const pstTime = new Date(utcDate.getTime() - 8 * 60 * 60 * 1000)
+  return pstTime.toISOString().replace('Z', '-08:00')
+}
