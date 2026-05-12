@@ -1,6 +1,6 @@
 steps:
   # Install / setup CI
-  - name: node:24
+  - name: node:20.5.1
     entrypoint: npm
     args: ['install']
     dir: app  # <-- ADD THIS
