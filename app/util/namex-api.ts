@@ -164,25 +164,10 @@ export async function getDecisionReasons() {
   return callNamexApi(getNamexApiUrl(`/requests/decisionreasons`))
 }
 
-export async function getExactMatches(query: string) {
-  const url = getNamexApiUrl('/exact-match')
-  url.searchParams.set('query', query)
-  return callNamexApi(url)
-}
-
-export async function getSynonymMatches(query: string, exactPhrase: string) {
-  const url = getNamexApiUrl(`/requests/synonymbucket/${query}/${exactPhrase}`)
-  return callNamexApi(url)
-}
-
-export async function getCobrsPhoneticMatches(query: string) {
-  const url = getNamexApiUrl(`/requests/cobrsphonetics/${query}/*`)
-  return callNamexApi(url)
-}
-
-export async function getPhoneticMatches(query: string) {
-  const url = getNamexApiUrl(`/requests/phonetics/${query}/*`)
-  return callNamexApi(url)
+export async function getPossibleConflicts(name: string): Promise<Response> {
+  return callNamexApi(
+    getNamexApiUrl(`/requests/possible-conflicts/${encodeURIComponent(name)}`)
+  )
 }
 
 export async function getNextNrNumber(isPriority: boolean) {

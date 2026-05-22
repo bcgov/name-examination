@@ -1,12 +1,5 @@
-import type { ConflictList, ConflictListItem } from '~/types'
-import type { ConflictBucket, ExactMatches } from '~/types/conflict-match'
-import { sanitizeQuery } from '~/util'
-import {
-  getCobrsPhoneticMatches,
-  getExactMatches,
-  getPhoneticMatches,
-  getSynonymMatches,
-} from '~/util/namex-api'
+import type { ConflictList, ConflictListItem, ConflictSource } from '~/types'
+import { getPossibleConflicts } from '~/util/namex-api'
 import { useExaminationRecipe } from './recipe'
 
 export const useConflicts = defineStore('conflicts', () => {
@@ -60,231 +53,64 @@ export const useConflicts = defineStore('conflicts', () => {
     }
   }
 
-  async function retrieveExactMatches(
-    query: string
-  ): Promise<Array<ConflictListItem>> {
-    query = sanitizeQuery(query, true)
-    query = query.charAt(0) === '+' ? query.substring(1) : query
-
-    const response = await getExactMatches(query)
-    if (!response.ok) throw new Error('Unable to retrieve exact matches')
-
-    return parseExactMatches(await response.json())
-  }
-
-  function parseExactMatches(bucket: ExactMatches): Array<ConflictListItem> {
-    return bucket.names.map((entry) => {
-      return {
-        text: entry.name,
-        highlightedText: entry.name,
-        nrNumber: entry.id,
-        startDate: entry.start_date,
-        jurisdiction: entry.jurisdiction,
-        source: entry.source,
-        ui: {
-          focused: false,
-          open: false,
-        },
-      }
-    })
-  }
-
-  async function retrieveSynonymMatches(query: string, exactPhrase: string) {
-    query = query || '*'
-    query = sanitizeQuery(query)
-    exactPhrase = exactPhrase || '*'
-
-    const response = await getSynonymMatches(query, exactPhrase)
-    if (!response.ok) throw new Error('Unable to retrieve synonym matches')
-
-    return parseSynonymMatches(await response.json())
-  }
-
-  function parseSynonymMatches(bucket: ConflictBucket): Array<ConflictList> {
-    let synonym_stems: any = null
-    const output: Array<ConflictList> = []
-
-    for (const name of bucket.names) {
-      // remove any empty string stem values - they are not valid
-      name.stems = name.stems.filter((n) => n)
-      const entry = name.name_info
-      const entryMeta = entry.name
-        .substring(entry.name.lastIndexOf('-') + 1)
-        .trim()
-      const wildcardStack = entry.name.lastIndexOf('*') > 0
-
-      if (name.name_info.source) {
-        //stack conflict
-        synonym_stems = name.stems
-      } else {
-        // stack title
-
-        entry.name = entry.name.replace('----', '').toUpperCase()
-        const syn_index = entry.name.indexOf('SYNONYMS:')
-        if (syn_index !== -1) {
-          const last_bracket_indx = entry.name.lastIndexOf(')')
-          const synonym_clause = entry.name.substring(
-            syn_index + 10,
-            last_bracket_indx
-          )
-          const synonym_list = synonym_clause.split(',')
-
-          for (const synonym of synonym_list) {
-            for (const stem of name.stems) {
-              if (synonym.toUpperCase().includes(stem.toUpperCase())) {
-                name.stems.filter((s) => s !== stem)
-              }
-            }
-            entry.name = entry.name.replace(
-              synonym.toUpperCase(),
-              '<span class="synonym-stem-highlight">' +
-                synonym.toUpperCase() +
-                '</span>'
-            )
-          }
-          entry.name = entry.name.replace('SYNONYMS:', '')
-        }
-        entry.name = entry.name.substring(0, entry.name.lastIndexOf('-')).trim()
-      }
-      entry.name = ' ' + entry.name
-
-      for (const name_stem of name.stems) {
-        if (!wildcardStack) {
-          entry.name = entry.name.replace(
-            ' ' + name_stem.toUpperCase(),
-            '<span class="stem-highlight">' +
-              ' ' +
-              name_stem.toUpperCase() +
-              '</span>'
-          )
-        }
-        if (synonym_stems) {
-          if (synonym_stems.indexOf(name_stem.toUpperCase()) != -1) {
-            synonym_stems.splice(
-              synonym_stems.indexOf(name_stem.toUpperCase()),
-              1
-            )
-          }
-
-          for (const synonym_stem of synonym_stems) {
-            entry.name = entry.name.replace(
-              ' ' + synonym_stem.toUpperCase(),
-              '<span class="synonym-stem-highlight">' +
-                ' ' +
-                synonym_stem.toUpperCase() +
-                '</span>'
-            )
-          }
-        }
-      }
-
-      const htmlRegex =
-        /<SPAN CLASS="SYNONYM\-STEM\-HIGHLIGHT">|<SPAN CLASS="STEM\-HIGHLIGHT">|<\/SPAN>/gi
-      if (entry.source) {
-        const match = {
-          text: entry.name.replace(htmlRegex, '').trim(),
-          highlightedText: entry.name.trim(),
-          jurisdiction: entry.jurisdiction!,
-          nrNumber: entry.id!,
-          startDate: entry.start_date!,
-          source: entry.source,
-          ui: {
-            focused: false,
-            open: false,
-          },
-        }
-        output.at(-1)?.children.push(match)
-      } else {
-        const match = {
-          text: entry.name.replace(htmlRegex, '').trim(),
-          highlightedText: entry.name.trim(),
-          meta: entryMeta,
-          children: [],
-          ui: {
-            focused: false,
-            open: false,
-          },
-        }
-        output.push(match)
-      }
+  /** Map a single result from possible-conflicts response to a ConflictListItem */
+  function mapToItem(result: any): ConflictListItem {
+    const source =
+      result.parent_type === 'CORP'
+        ? ('CORP' as unknown as ConflictSource)
+        : ('NAMEREQUEST' as unknown as ConflictSource)
+    return {
+      text: result.name,
+      highlightedText: result.name,
+      nrNumber: result.parent_id,
+      startDate: result.parent_start_date ?? '',
+      jurisdiction: result.parent_jurisdiction ?? undefined,
+      source,
+      ui: { focused: false, open: false },
     }
-    return output
   }
 
-  async function retrieveCobrsPhoneticMatches(
-    query: string
-  ): Promise<Array<ConflictList>> {
-    query = query || '*'
-    query = sanitizeQuery(query)
-    const response = await getCobrsPhoneticMatches(query)
-    if (!response.ok)
-      throw new Error('Unable to retrieve cobrs phonetic matches')
-
-    return parsePhoneticMatches(await response.json())
+  /** Group a flat list of results into ConflictList buckets by a highlight key */
+  function groupIntoLists(
+    results: any[],
+    highlightKey: 'stems' | 'synonyms'
+  ): Array<ConflictList> {
+    if (!results?.length) return []
+    const group: ConflictList = {
+      text: highlightKey === 'stems' ? 'Stem Matches' : 'Synonym Matches',
+      highlightedText: highlightKey === 'stems' ? 'Stem Matches' : 'Synonym Matches',
+      meta: undefined,
+      children: results
+        .filter((r) => r.highlighting?.[highlightKey]?.length > 0)
+        .map(mapToItem),
+      ui: { focused: false, open: false },
+    }
+    return group.children.length > 0 ? [group] : []
   }
 
-  async function retrievePhoneticMatches(
-    query: string
-  ): Promise<Array<ConflictList>> {
-    query = query || '*'
-    query = sanitizeQuery(query)
-    const response = await getPhoneticMatches(query)
-    if (!response.ok) throw new Error('Unable to retrieve phonetic matches')
-
-    return parsePhoneticMatches(await response.json())
-  }
-
-  function parsePhoneticMatches(bucket: ConflictBucket): Array<ConflictList> {
-    const output: Array<ConflictList> = []
-    bucket.names.forEach(({ name_info }) => {
-      if (name_info.source) {
-        const conflict = {
-          text: name_info.name,
-          highlightedText: name_info.name,
-          jurisdiction: name_info.jurisdiction!,
-          nrNumber: name_info.id!,
-          startDate: name_info.start_date!,
-          source: name_info.source,
-          ui: {
-            focused: false,
-            open: false,
-          },
-        }
-        output.at(-1)?.children.push(conflict)
-      } else {
-        name_info.name = name_info.name
-          .replace('----', '')
-          .replace('synonyms:', '')
-        const conflictGroup = {
-          text: name_info.name,
-          highlightedText: name_info.name,
-          meta: undefined,
-          children: <Array<ConflictListItem>>[],
-          ui: {
-            focused: false,
-            open: false,
-          },
-        }
-        output.push(conflictGroup)
-      }
-    })
-    return output
-  }
-
-  async function initialize(searchQuery: string, exactPhrase: string) {
+  async function initialize(searchQuery: string, _exactPhrase: string) {
     loading.value = true
     resetConflictLists()
     try {
-      exactMatches.value = await retrieveExactMatches(searchQuery)
+      const response = await getPossibleConflicts(searchQuery)
+      if (!response.ok) throw new Error('Unable to retrieve possible conflicts')
+
+      const data = await response.json()
+      const results: any[] = data.names ?? []
+      const exact: any[] = data.exactNames ?? []
+
+      // Exact Match bucket
+      exactMatches.value = exact.map(mapToItem)
       exactMatches.value.forEach((match) => selectConflict(match))
-      synonymMatches.value = await retrieveSynonymMatches(
-        searchQuery,
-        exactPhrase
-      )
-      cobrsPhoneticMatches.value = await retrieveCobrsPhoneticMatches(
-        searchQuery
-      )
-      phoneticMatches.value = await retrievePhoneticMatches(searchQuery)
+
+      // Phonetic Match bucket — results with synonym highlights
+      phoneticMatches.value = groupIntoLists(results, 'synonyms')
+
+      // Synonym Match bucket — results with stem highlights
+      synonymMatches.value = groupIntoLists(results, 'stems')
+
+      // Character Swap bucket — empty (COBRS not separated in new API yet)
+      cobrsPhoneticMatches.value = []
 
       if (exactMatches.value.length === 0 && nonEmptyLists.value.length > 0) {
         nonEmptyLists.value[0].ui.open = true
