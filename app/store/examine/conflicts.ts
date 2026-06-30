@@ -125,6 +125,16 @@ export const useConflicts = defineStore('conflicts', () => {
       highlightedText: highlightKey === 'stems' ? 'Stem Matches' : 'Synonym Matches',
       meta: undefined,
       children: results
+        .filter((r) => {
+          const hasSynonyms = r.highlighting?.synonyms?.length > 0
+          const hasStems = r.highlighting?.stems?.length > 0
+
+          if (highlightKey === 'synonyms') {
+            return hasSynonyms
+          } else {
+            return hasStems && !hasSynonyms
+          }
+        })
         .map(mapToItem),
       ui: { focused: false, open: false },
     }
