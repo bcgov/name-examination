@@ -114,7 +114,7 @@ export const useConflicts = defineStore('conflicts', () => {
       .join('')
   }
 
-  /** Group a flat list of results into ConflictList buckets by a highlight key */
+  /** Group all results into ConflictList buckets organized by category (stems/synonyms) */
   function groupIntoLists(
     results: any[],
     highlightKey: 'stems' | 'synonyms'
@@ -125,7 +125,6 @@ export const useConflicts = defineStore('conflicts', () => {
       highlightedText: highlightKey === 'stems' ? 'Stem Matches' : 'Synonym Matches',
       meta: undefined,
       children: results
-        .filter((r) => r.highlighting?.[highlightKey]?.length > 0)
         .map(mapToItem),
       ui: { focused: false, open: false },
     }
