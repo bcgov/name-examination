@@ -114,7 +114,7 @@ export const useConflicts = defineStore('conflicts', () => {
       .join('')
   }
 
-  /** Group all results into ConflictList buckets organized by category (stems/synonyms) */
+  /** Group all results into ConflictList buckets - no filtering, show all results */
   function groupIntoLists(
     results: any[],
     highlightKey: 'stems' | 'synonyms'
@@ -124,18 +124,7 @@ export const useConflicts = defineStore('conflicts', () => {
       text: highlightKey === 'stems' ? 'Stem Matches' : 'Synonym Matches',
       highlightedText: highlightKey === 'stems' ? 'Stem Matches' : 'Synonym Matches',
       meta: undefined,
-      children: results
-        .filter((r) => {
-          const hasSynonyms = r.highlighting?.synonyms?.length > 0
-          const hasStems = r.highlighting?.stems?.length > 0
-
-          if (highlightKey === 'synonyms') {
-            return hasSynonyms
-          } else {
-            return hasStems && !hasSynonyms
-          }
-        })
-        .map(mapToItem),
+      children: results.map(mapToItem),
       ui: { focused: false, open: false },
     }
     return group.children.length > 0 ? [group] : []
