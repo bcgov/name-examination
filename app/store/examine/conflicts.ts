@@ -121,8 +121,8 @@ export const useConflicts = defineStore('conflicts', () => {
   ): Array<ConflictList> {
     if (!results?.length) return []
     const group: ConflictList = {
-      text: highlightKey === 'stems' ? 'Stem Matches' : 'Synonym Matches',
-      highlightedText: highlightKey === 'stems' ? 'Stem Matches' : 'Synonym Matches',
+      text: highlightKey === 'stems' ? 'Exact Word Order + Synonym Match' : 'Phonetic Match (experimental)',
+      highlightedText: highlightKey === 'stems' ? 'Exact Word Order + Synonym Match' : 'Phonetic Match (experimental)',
       meta: undefined,
       children: results
         .filter((r) => {
