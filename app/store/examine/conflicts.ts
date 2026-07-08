@@ -124,7 +124,18 @@ export const useConflicts = defineStore('conflicts', () => {
       text: '',
       highlightedText: '',
       meta: undefined,
-      children: results.map(mapToItem),
+      children: results
+        .filter((r) => {
+          const hasSynonyms = r.highlighting?.synonyms?.length > 0
+          const hasStems = r.highlighting?.stems?.length > 0
+
+          if (highlightKey === 'synonyms') {
+            return hasSynonyms
+          } else {
+            return hasStems && !hasSynonyms
+          }
+        })
+        .map(mapToItem),
       ui: { focused: false, open: false },
     }
     return group.children.length > 0 ? [group] : []
