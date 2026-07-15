@@ -128,11 +128,12 @@ export const useConflicts = defineStore('conflicts', () => {
         .filter((r) => {
           const hasSynonyms = r.highlighting?.synonyms?.length > 0
           const hasStems = r.highlighting?.stems?.length > 0
+          const hasExact = r.highlighting?.exact?.length > 0
 
           if (highlightKey === 'synonyms') {
             return hasSynonyms
           } else {
-            return hasStems && !hasSynonyms
+            return !hasSynonyms && (hasStems || hasExact)
           }
         })
         .map(mapToItem),
