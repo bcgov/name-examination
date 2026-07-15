@@ -80,13 +80,18 @@ emitter.on('scrollToConflictObject', ({ obj, instant }) => {
 </script>
 
 <style>
-.stem-highlight {
-  color: #28a745;
+.exact-highlight {
+  color: #dc2626;
   font-weight: bold;
 }
 
-.synonym-stem-highlight {
+.synonym-highlight {
   color: #e0a800;
+  font-weight: bold;
+}
+
+.stem-highlight {
+  color: #28a745;
   font-weight: bold;
 }
 

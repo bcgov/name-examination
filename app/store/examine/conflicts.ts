@@ -1,5 +1,6 @@
 import type { ConflictList, ConflictListItem, ConflictSource } from '~/types'
 import { getPossibleConflicts } from '~/util/namex-api'
+import { highlightWord } from '~/util/html/highlight'
 import { useExaminationRecipe } from './recipe'
 
 export const useConflicts = defineStore('conflicts', () => {
@@ -59,9 +60,10 @@ export const useConflicts = defineStore('conflicts', () => {
       result.parent_type === 'CORP'
         ? ('CORP' as unknown as ConflictSource)
         : ('NAMEREQUEST' as unknown as ConflictSource)
+    const highlightedName = highlightNameChoices(result)
     return {
       text: result.name,
-      highlightedText: result.name,
+      highlightedText: highlightedName,
       nrNumber: result.parent_id,
       startDate: result.parent_start_date ?? '',
       jurisdiction: result.parent_jurisdiction ?? undefined,
@@ -70,18 +72,70 @@ export const useConflicts = defineStore('conflicts', () => {
     }
   }
 
-  /** Group a flat list of results into ConflictList buckets by a highlight key */
+  /** Apply highlighting to conflict names based on API response data */
+  function highlightNameChoices(entry: any): string {
+    const name: string = entry?.name ?? ''
+    const highlighting = entry?.highlighting
+
+    // If we have nothing to highlight, keep original text intact
+    if (!name || !highlighting) {
+      return name
+    }
+
+    // Split into word and whitespace tokens so we preserve spacing exactly
+    const tokens = name.split(/(\s+)/)
+
+    const exactList: string[] = Array.isArray(highlighting.exact) ? highlighting.exact : []
+    const synonymList: string[] = Array.isArray(highlighting.synonyms) ? highlighting.synonyms : []
+    const stemList: string[] = Array.isArray(highlighting.stems) ? highlighting.stems : []
+
+    const applyFirstMatchingCategory = (word: string): string => {
+      // exact > synonym > stem (priority order)
+      for (const exact of exactList) {
+        const highlighted = highlightWord(exact, word, 'exact-highlight')
+        if (highlighted !== word) return highlighted
+      }
+
+      for (const synonym of synonymList) {
+        const highlighted = highlightWord(synonym, word, 'synonym-highlight')
+        if (highlighted !== word) return highlighted
+      }
+
+      for (const stem of stemList) {
+        const highlighted = highlightWord(stem, word, 'stem-highlight')
+        if (highlighted !== word) return highlighted
+      }
+
+      return word
+    }
+
+    return tokens
+      .map((token) => (token.trim().length === 0 ? token : applyFirstMatchingCategory(token)))
+      .join('')
+  }
+
+  /** Group all results into ConflictList buckets - no filtering, show all results */
   function groupIntoLists(
     results: any[],
     highlightKey: 'stems' | 'synonyms'
   ): Array<ConflictList> {
     if (!results?.length) return []
     const group: ConflictList = {
-      text: highlightKey === 'stems' ? 'Stem Matches' : 'Synonym Matches',
-      highlightedText: highlightKey === 'stems' ? 'Stem Matches' : 'Synonym Matches',
+      text: '',
+      highlightedText: '',
       meta: undefined,
       children: results
-        .filter((r) => r.highlighting?.[highlightKey]?.length > 0)
+        .filter((r) => {
+          const hasSynonyms = r.highlighting?.synonyms?.length > 0
+          const hasStems = r.highlighting?.stems?.length > 0
+          const hasExact = r.highlighting?.exact?.length > 0
+
+          if (highlightKey === 'synonyms') {
+            return hasSynonyms
+          } else {
+            return !hasSynonyms && (hasStems || hasExact)
+          }
+        })
         .map(mapToItem),
       ui: { focused: false, open: false },
     }
