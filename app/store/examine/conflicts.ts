@@ -117,7 +117,7 @@ export const useConflicts = defineStore('conflicts', () => {
   /** Group all results into ConflictList buckets - no filtering, show all results */
   function groupIntoLists(
     results: any[],
-    highlightKey: 'stems' | 'synonyms'
+    highlightKey: 'stems' | 'synonyms' | 'phonetic'
   ): Array<ConflictList> {
     if (!results?.length) return []
     const group: ConflictList = {
@@ -129,11 +129,17 @@ export const useConflicts = defineStore('conflicts', () => {
           const hasSynonyms = r.highlighting?.synonyms?.length > 0
           const hasStems = r.highlighting?.stems?.length > 0
           const hasExact = r.highlighting?.exact?.length > 0
+          const hasPhonetic = r.highlighting?.phonetic?.length > 0
 
-          if (highlightKey === 'synonyms') {
-            return hasSynonyms
+          if (highlightKey === 'phonetic') {
+            // Phonetic Match: Only phonetic (no exact, stems, or synonyms)
+            return hasPhonetic && !hasExact && !hasStems && !hasSynonyms
+          } else if (highlightKey === 'stems') {
+            // Exact Word Order + Synonym Match: stems OR synonyms (no exact or phonetic)
+            return !hasPhonetic && !hasExact && (hasStems || hasSynonyms)
           } else {
-            return !hasSynonyms && (hasStems || hasExact)
+            // Legacy: 'synonyms' key (kept for backward compatibility)
+            return hasSynonyms
           }
         })
         .map(mapToItem),
@@ -158,8 +164,8 @@ export const useConflicts = defineStore('conflicts', () => {
       exactMatches.value = exact.map(mapToItem)
       exactMatches.value.forEach((match) => selectConflict(match))
 
-      // Phonetic Match bucket — results with synonym highlights
-      phoneticMatches.value = groupIntoLists(results, 'synonyms')
+      // Phonetic Match bucket — results with phonetic highlights
+      phoneticMatches.value = groupIntoLists(results, 'phonetic')
 
       // Synonym Match bucket — results with stem highlights
       synonymMatches.value = groupIntoLists(results, 'stems')
