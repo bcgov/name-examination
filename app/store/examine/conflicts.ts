@@ -135,8 +135,8 @@ export const useConflicts = defineStore('conflicts', () => {
             // Phonetic Match: Only phonetic (no exact, stems, or synonyms)
             return hasPhonetic && !hasExact && !hasStems && !hasSynonyms
           } else if (highlightKey === 'stems') {
-            // Exact Word Order + Synonym Match: stems OR synonyms (no exact or phonetic)
-            return !hasPhonetic && !hasExact && (hasStems || hasSynonyms)
+            // Exact Word Order + Synonym Match: stems + synonyms + exact (no phonetic)
+            return !hasPhonetic && (hasStems || hasSynonyms || hasExact)
           } else {
             // Legacy: 'synonyms' key (kept for backward compatibility)
             return hasSynonyms
