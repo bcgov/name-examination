@@ -20,9 +20,9 @@ export const useConflicts = defineStore('conflicts', () => {
   /** Flattened array of every `ConflictList` across all buckets. */
   const lists = computed<Array<ConflictList>>(() =>
     [
-      phoneticMatches.value,
       synonymMatches.value,
       cobrsPhoneticMatches.value,
+      phoneticMatches.value,
     ].flat()
   )
 
