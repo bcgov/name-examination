@@ -114,35 +114,14 @@ export const useConflicts = defineStore('conflicts', () => {
       .join('')
   }
 
-  /** Group all results into ConflictList buckets - no filtering, show all results */
-  function groupIntoLists(
-    results: any[],
-    highlightKey: 'stems' | 'synonyms' | 'phonetic'
-  ): Array<ConflictList> {
+  /** Group results into ConflictList buckets - no filtering, all results pass through */
+  function groupIntoLists(results: any[]): Array<ConflictList> {
     if (!results?.length) return []
     const group: ConflictList = {
       text: '',
       highlightedText: '',
       meta: undefined,
-      children: results
-        .filter((r) => {
-          const hasSynonyms = r.highlighting?.synonyms?.length > 0
-          const hasStems = r.highlighting?.stems?.length > 0
-          const hasExact = r.highlighting?.exact?.length > 0
-          const hasPhonetic = r.highlighting?.phonetic?.length > 0
-
-          if (highlightKey === 'phonetic') {
-            // Phonetic Match: Only phonetic (no exact, stems, or synonyms)
-            return hasPhonetic && !hasExact && !hasStems && !hasSynonyms
-          } else if (highlightKey === 'stems') {
-            // Exact Word Order + Synonym Match: stems + synonyms + exact (phonetic can coexist, stronger type takes priority)
-            return hasExact || hasStems || hasSynonyms
-          } else {
-            // Legacy: 'synonyms' key (kept for backward compatibility)
-            return hasSynonyms
-          }
-        })
-        .map(mapToItem),
+      children: results.map(mapToItem),
       ui: { focused: false, open: false },
     }
     return group.children.length > 0 ? [group] : []
@@ -164,11 +143,31 @@ export const useConflicts = defineStore('conflicts', () => {
       exactMatches.value = exact.map(mapToItem)
       exactMatches.value.forEach((match) => selectConflict(match))
 
-      // Phonetic Match bucket — results with phonetic highlights
-      phoneticMatches.value = groupIntoLists(results, 'phonetic')
+      // Categorize results by highlighting type (NO EXCLUSION - all results pass through)
+      const phoneticOnly = results.filter((r) => {
+        const hasExact = r.highlighting?.exact?.length > 0
+        const hasStems = r.highlighting?.stems?.length > 0
+        const hasSynonyms = r.highlighting?.synonyms?.length > 0
+        const hasPhonetic = r.highlighting?.phonetic?.length > 0
+        // Only phonetic: has phonetic AND no other types
+        return hasPhonetic && !hasExact && !hasStems && !hasSynonyms
+      })
 
-      // Synonym Match bucket — results with stem highlights
-      synonymMatches.value = groupIntoLists(results, 'stems')
+      const stemOrSynonym = results.filter((r) => {
+        const hasExact = r.highlighting?.exact?.length > 0
+        const hasStems = r.highlighting?.stems?.length > 0
+        const hasSynonyms = r.highlighting?.synonyms?.length > 0
+        const hasPhonetic = r.highlighting?.phonetic?.length > 0
+        const hasAnyHighlight = hasExact || hasStems || hasSynonyms || hasPhonetic
+        // Include: has stems/synonyms/exact highlighting OR has no highlighting at all (fallback, Option A)
+        return (hasExact || hasStems || hasSynonyms) || !hasAnyHighlight
+      })
+
+      // Phonetic Match bucket — results with ONLY phonetic highlighting
+      phoneticMatches.value = groupIntoLists(phoneticOnly)
+
+      // Exact Word Order + Synonym Match bucket — results with stems/synonyms/exact OR no highlighting (fallback)
+      synonymMatches.value = groupIntoLists(stemOrSynonym)
 
       // Character Swap bucket — empty (COBRS not separated in new API yet)
       cobrsPhoneticMatches.value = []
