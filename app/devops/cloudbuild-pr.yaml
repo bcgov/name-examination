@@ -6,7 +6,7 @@ steps:
       - -c
       - |
         corepack enable
-        corepack prepare pnpm@10.28.2 --activate
+        corepack prepare pnpm@11.9.0 --activate
         pnpm --version
         pnpm install --frozen-lockfile
     dir: app  # <-- ADD THIS
@@ -30,7 +30,7 @@ steps:
       - -c
       - |
         corepack enable
-        corepack prepare pnpm@10.28.2 --activate
+        corepack prepare pnpm@11.9.0 --activate
         pnpm run build
     dir: app  # <-- ADD THIS
 
