@@ -88,9 +88,10 @@ export const useConflicts = defineStore('conflicts', () => {
     const exactList: string[] = Array.isArray(highlighting.exact) ? highlighting.exact : []
     const synonymList: string[] = Array.isArray(highlighting.synonyms) ? highlighting.synonyms : []
     const stemList: string[] = Array.isArray(highlighting.stems) ? highlighting.stems : []
+    const phoneticList: string[] = Array.isArray(highlighting.phonetic) ? highlighting.phonetic : []
 
     const applyFirstMatchingCategory = (word: string): string => {
-      // exact > synonym > stem (priority order)
+      // exact > synonym > stem > phonetic (paint order; membership is decided separately)
       for (const exact of exactList) {
         const highlighted = highlightWord(exact, word, 'exact-highlight')
         if (highlighted !== word) return highlighted
@@ -103,6 +104,11 @@ export const useConflicts = defineStore('conflicts', () => {
 
       for (const stem of stemList) {
         const highlighted = highlightWord(stem, word, 'stem-highlight')
+        if (highlighted !== word) return highlighted
+      }
+
+      for (const phonetic of phoneticList) {
+        const highlighted = highlightWord(phonetic, word, 'phonetic-highlight')
         if (highlighted !== word) return highlighted
       }
 
