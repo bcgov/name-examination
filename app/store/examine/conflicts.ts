@@ -20,9 +20,9 @@ export const useConflicts = defineStore('conflicts', () => {
   /** Flattened array of every `ConflictList` across all buckets. */
   const lists = computed<Array<ConflictList>>(() =>
     [
+      phoneticMatches.value,
       synonymMatches.value,
       cobrsPhoneticMatches.value,
-      phoneticMatches.value,
     ].flat()
   )
 
@@ -149,31 +149,10 @@ export const useConflicts = defineStore('conflicts', () => {
       exactMatches.value = exact.map(mapToItem)
       exactMatches.value.forEach((match) => selectConflict(match))
 
-      // Categorize results by highlighting type (NO EXCLUSION - all results pass through)
-      const phoneticOnly = results.filter((r) => {
-        const hasExact = r.highlighting?.exact?.length > 0
-        const hasStems = r.highlighting?.stems?.length > 0
-        const hasSynonyms = r.highlighting?.synonyms?.length > 0
-        const hasPhonetic = r.highlighting?.phonetic?.length > 0
-        // Only phonetic: has phonetic AND no other types
-        return hasPhonetic && !hasExact && !hasStems && !hasSynonyms
-      })
-
-      const stemOrSynonym = results.filter((r) => {
-        const hasExact = r.highlighting?.exact?.length > 0
-        const hasStems = r.highlighting?.stems?.length > 0
-        const hasSynonyms = r.highlighting?.synonyms?.length > 0
-        const hasPhonetic = r.highlighting?.phonetic?.length > 0
-        const hasAnyHighlight = hasExact || hasStems || hasSynonyms || hasPhonetic
-        // Include: has stems/synonyms/exact highlighting OR has no highlighting at all (fallback, Option A)
-        return (hasExact || hasStems || hasSynonyms) || !hasAnyHighlight
-      })
-
-      // Phonetic Match bucket — results with ONLY phonetic highlighting
-      phoneticMatches.value = groupIntoLists(phoneticOnly)
-
-      // Exact Word Order + Synonym Match bucket — results with stems/synonyms/exact OR no highlighting (fallback)
-      synonymMatches.value = groupIntoLists(stemOrSynonym)
+      // Phonetic if any word is a sound-alike spelling, even when another word is exact.
+      const hasPhonetic = (r: any) => r.highlighting?.phonetic?.length > 0
+      phoneticMatches.value = groupIntoLists(results.filter(hasPhonetic))
+      synonymMatches.value = groupIntoLists(results.filter((r) => !hasPhonetic(r)))
 
       // Character Swap bucket — empty (COBRS not separated in new API yet)
       cobrsPhoneticMatches.value = []
