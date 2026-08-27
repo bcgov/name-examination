@@ -996,12 +996,12 @@ export const useExamination = defineStore('examine', () => {
     //   histories.value = []
     //   errors.push(e as Error)
     // }
-    // try {
-    //   macros.value = await getMacros()
-    // } catch (e) {
-    //   macros.value = []
-    //   errors.push(e as Error)
-    // }
+    try {
+      macros.value = await getMacros()
+    } catch (e) {
+      macros.value = []
+      errors.push(e as Error)
+    }
     try {
       const conditionsJson = await getConditions(searchQuery)
       conditions.value = parseConditions(conditionsJson)
