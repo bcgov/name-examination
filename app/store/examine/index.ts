@@ -1003,7 +1003,8 @@ export const useExamination = defineStore('examine', () => {
       errors.push(e as Error)
     }
     try {
-      const conditionsJson = await getConditions(searchQuery)
+      const conditionsQuery = searchQuery.trim() || exactPhrase.trim()
+      const conditionsJson = await getConditions(conditionsQuery)
       conditions.value = parseConditions(conditionsJson)
     } catch (e) {
       conditions.value = []

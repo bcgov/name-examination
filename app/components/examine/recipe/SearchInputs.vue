@@ -5,7 +5,7 @@
       v-model="searchString"
       class="grow"
       placeholder="name"
-      @submit.prevent="onSearchSubmit"
+      @submit.prevent="onNameSearchSubmit"
       focus-mnemonic="s"
       :clear="examine.currentName ?? undefined"
       input-required
@@ -14,7 +14,7 @@
       :input-id="EXACT_SEARCH_ID"
       v-model="exactSearchString"
       placeholder="exact phrase"
-      @submit.prevent="onSearchSubmit"
+      @submit.prevent="onExactSearchSubmit"
       clear=""
     />
   </div>
@@ -33,8 +33,14 @@ const EXACT_SEARCH_ID = 'exactSearchInput'
 const searchString = ref(examine.currentName ?? '')
 const exactSearchString = ref('')
 
-function onSearchSubmit(_event: Event) {
-  examine.fetchAndLoadRecipeData(searchString.value, exactSearchString.value)
+function onNameSearchSubmit(_event: Event) {
+  examine.fetchAndLoadRecipeData(searchString.value, '')
+}
+
+function onExactSearchSubmit(_event: Event) {
+  const phrase = exactSearchString.value.trim()
+  if (!phrase) return
+  examine.fetchAndLoadRecipeData('', phrase)
 }
 
 onMounted(() => {
