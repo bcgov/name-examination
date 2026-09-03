@@ -172,10 +172,13 @@ export async function getDecisionReasons() {
   return callNamexApi(getNamexApiUrl(`/requests/decisionreasons`))
 }
 
-export async function getPossibleConflicts(name: string): Promise<Response> {
-  return callNamexApi(
-    getNamexApiUrl(`/requests/possible-conflicts/${encodeURIComponent(name)}`)
-  )
+export async function getPossibleConflicts(name: string, exactPhrase?: string): Promise<Response> {
+  const base = getNamexApiUrl(`/requests/possible-conflicts/${encodeURIComponent(name)}`)
+  const url =
+    exactPhrase?.trim()
+      ? `${base}?exact_phrase=${encodeURIComponent(exactPhrase.trim())}`
+      : base
+  return callNamexApi(url)
 }
 
 export async function getNextNrNumber(isPriority: boolean) {
