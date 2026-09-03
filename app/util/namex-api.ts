@@ -173,10 +173,12 @@ export async function getDecisionReasons() {
 }
 
 export async function getPossibleConflicts(name: string, exactPhrase?: string): Promise<Response> {
-  const url = getNamexApiUrl(`/requests/possible-conflicts/${encodeURIComponent(name)}`)
   const phrase = exactPhrase?.trim()
-  if (phrase) {
-    url.searchParams.set('exact_phrase', phrase)
+  const nameTrim = name?.trim() ?? ''
+  const query = phrase && !nameTrim ? phrase : nameTrim
+  const url = getNamexApiUrl(`/requests/possible-conflicts/${encodeURIComponent(query)}`)
+  if (phrase && !nameTrim) {
+    url.searchParams.set('exact_phrase_only', 'true')
   }
   return callNamexApi(url)
 }
