@@ -1,6 +1,6 @@
 import type { ConflictList, ConflictListItem, ConflictSource } from '~/types'
 import { getPossibleConflicts } from '~/util/namex-api'
-import { highlightWord } from '~/util/html/highlight'
+import { highlightConflictName } from '~/util/html/conflict-highlight'
 import { useExaminationRecipe } from './recipe'
 
 export const useConflicts = defineStore('conflicts', () => {
@@ -55,15 +55,18 @@ export const useConflicts = defineStore('conflicts', () => {
   }
 
   /** Map a single result from possible-conflicts response to a ConflictListItem */
-  function mapToItem(result: any): ConflictListItem {
+  function mapToItem(result: any, searchQuery: string): ConflictListItem {
     const source =
       result.parent_type === 'CORP'
         ? ('CORP' as unknown as ConflictSource)
         : ('NAMEREQUEST' as unknown as ConflictSource)
-    const highlightedName = highlightNameChoices(result)
     return {
       text: result.name,
-      highlightedText: highlightedName,
+      highlightedText: highlightConflictName(
+        result?.name ?? '',
+        result?.highlighting,
+        searchQuery
+      ),
       nrNumber: result.parent_id,
       startDate: result.parent_start_date ?? '',
       jurisdiction: result.parent_jurisdiction ?? undefined,
@@ -72,56 +75,14 @@ export const useConflicts = defineStore('conflicts', () => {
     }
   }
 
-  /** Apply highlighting to conflict names based on API response data */
-  function highlightNameChoices(entry: any): string {
-    const name: string = entry?.name ?? ''
-    const highlighting = entry?.highlighting
-
-    // If we have nothing to highlight, keep original text intact
-    if (!name || !highlighting) {
-      return name
-    }
-
-    // Split into word and whitespace tokens so we preserve spacing exactly
-    const tokens = name.split(/(\s+)/)
-
-    const exactList: string[] = Array.isArray(highlighting.exact) ? highlighting.exact : []
-    const synonymList: string[] = Array.isArray(highlighting.synonyms) ? highlighting.synonyms : []
-    const stemList: string[] = Array.isArray(highlighting.stems) ? highlighting.stems : []
-
-    const applyFirstMatchingCategory = (word: string): string => {
-      // exact > synonym > stem (priority order)
-      for (const exact of exactList) {
-        const highlighted = highlightWord(exact, word, 'exact-highlight')
-        if (highlighted !== word) return highlighted
-      }
-
-      for (const synonym of synonymList) {
-        const highlighted = highlightWord(synonym, word, 'synonym-highlight')
-        if (highlighted !== word) return highlighted
-      }
-
-      for (const stem of stemList) {
-        const highlighted = highlightWord(stem, word, 'stem-highlight')
-        if (highlighted !== word) return highlighted
-      }
-
-      return word
-    }
-
-    return tokens
-      .map((token) => (token.trim().length === 0 ? token : applyFirstMatchingCategory(token)))
-      .join('')
-  }
-
   /** Group results into ConflictList buckets - no filtering, all results pass through */
-  function groupIntoLists(results: any[]): Array<ConflictList> {
+  function groupIntoLists(results: any[], searchQuery: string): Array<ConflictList> {
     if (!results?.length) return []
     const group: ConflictList = {
       text: '',
       highlightedText: '',
       meta: undefined,
-      children: results.map(mapToItem),
+      children: results.map((result) => mapToItem(result, searchQuery)),
       ui: { focused: false, open: false },
     }
     return group.children.length > 0 ? [group] : []
@@ -141,9 +102,10 @@ export const useConflicts = defineStore('conflicts', () => {
       const results: any[] = data.names ?? []
       const exact: any[] = data.exactNames ?? []
       const histories: any[] = data.histories ?? []
+      const paintQuery = searchQuery.trim() || exactPhrase.trim()
 
       // Exact Match bucket
-      exactMatches.value = exact.map(mapToItem)
+      exactMatches.value = exact.map((result) => mapToItem(result, paintQuery))
       exactMatches.value.forEach((match) => selectConflict(match))
 
       // Categorize results by highlighting type (NO EXCLUSION - all results pass through)
@@ -167,10 +129,10 @@ export const useConflicts = defineStore('conflicts', () => {
       })
 
       // Phonetic Match bucket — results with ONLY phonetic highlighting
-      phoneticMatches.value = groupIntoLists(phoneticOnly)
+      phoneticMatches.value = groupIntoLists(phoneticOnly, paintQuery)
 
       // Exact Word Order + Synonym Match bucket — results with stems/synonyms/exact OR no highlighting (fallback)
-      synonymMatches.value = groupIntoLists(stemOrSynonym)
+      synonymMatches.value = groupIntoLists(stemOrSynonym, paintQuery)
 
       // Character Swap bucket — empty (COBRS not separated in new API yet)
       cobrsPhoneticMatches.value = []
