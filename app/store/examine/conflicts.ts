@@ -108,33 +108,40 @@ export const useConflicts = defineStore('conflicts', () => {
       exactMatches.value = exact.map((result) => mapToItem(result, paintQuery))
       exactMatches.value.forEach((match) => selectConflict(match))
 
-      // Categorize results by highlighting type (NO EXCLUSION - all results pass through)
-      const phoneticOnly = results.filter((r) => {
-        const hasExact = r.highlighting?.exact?.length > 0
-        const hasStems = r.highlighting?.stems?.length > 0
-        const hasSynonyms = r.highlighting?.synonyms?.length > 0
-        const hasPhonetic = r.highlighting?.phonetic?.length > 0
-        // Only phonetic: has phonetic AND no other types
-        return hasPhonetic && !hasExact && !hasStems && !hasSynonyms
-      })
+      const hasApiBucket = results.some(
+        (r) => r.bucket === 'synonym' || r.bucket === 'phonetic',
+      )
+      if (hasApiBucket) {
+        synonymMatches.value = groupIntoLists(
+          results.filter((r) => r.bucket === 'synonym'),
+          paintQuery,
+        )
+        phoneticMatches.value = groupIntoLists(
+          results.filter((r) => r.bucket === 'phonetic'),
+          paintQuery,
+        )
+      } else {
+        const phoneticOnly = results.filter((r) => {
+          const hasExact = r.highlighting?.exact?.length > 0
+          const hasStems = r.highlighting?.stems?.length > 0
+          const hasSynonyms = r.highlighting?.synonyms?.length > 0
+          const hasPhonetic = r.highlighting?.phonetic?.length > 0
+          return hasPhonetic && !hasExact && !hasStems && !hasSynonyms
+        })
 
-      const stemOrSynonym = results.filter((r) => {
-        const hasExact = r.highlighting?.exact?.length > 0
-        const hasStems = r.highlighting?.stems?.length > 0
-        const hasSynonyms = r.highlighting?.synonyms?.length > 0
-        const hasPhonetic = r.highlighting?.phonetic?.length > 0
-        const hasAnyHighlight = hasExact || hasStems || hasSynonyms || hasPhonetic
-        // Include: has stems/synonyms/exact highlighting OR has no highlighting at all (fallback, Option A)
-        return (hasExact || hasStems || hasSynonyms) || !hasAnyHighlight
-      })
+        const stemOrSynonym = results.filter((r) => {
+          const hasExact = r.highlighting?.exact?.length > 0
+          const hasStems = r.highlighting?.stems?.length > 0
+          const hasSynonyms = r.highlighting?.synonyms?.length > 0
+          const hasPhonetic = r.highlighting?.phonetic?.length > 0
+          const hasAnyHighlight = hasExact || hasStems || hasSynonyms || hasPhonetic
+          return (hasExact || hasStems || hasSynonyms) || !hasAnyHighlight
+        })
 
-      // Phonetic Match bucket — results with ONLY phonetic highlighting
-      phoneticMatches.value = groupIntoLists(phoneticOnly, paintQuery)
+        phoneticMatches.value = groupIntoLists(phoneticOnly, paintQuery)
+        synonymMatches.value = groupIntoLists(stemOrSynonym, paintQuery)
+      }
 
-      // Exact Word Order + Synonym Match bucket — results with stems/synonyms/exact OR no highlighting (fallback)
-      synonymMatches.value = groupIntoLists(stemOrSynonym, paintQuery)
-
-      // Character Swap bucket — empty (COBRS not separated in new API yet)
       cobrsPhoneticMatches.value = []
 
       if (exactMatches.value.length === 0 && nonEmptyLists.value.length > 0) {
