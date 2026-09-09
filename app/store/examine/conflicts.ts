@@ -92,7 +92,7 @@ export const useConflicts = defineStore('conflicts', () => {
     loading.value = true
     resetConflictLists()
     try {
-      if (!searchQuery.trim() && !exactPhrase.trim()) {
+      if (!searchQuery.trim()) {
         return []
       }
       const response = await getPossibleConflicts(searchQuery, exactPhrase)
