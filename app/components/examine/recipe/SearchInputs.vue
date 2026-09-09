@@ -40,7 +40,7 @@ function onNameSearchSubmit(_event: Event) {
 function onExactSearchSubmit(_event: Event) {
   const phrase = exactSearchString.value.trim()
   if (!phrase) return
-  examine.fetchAndLoadRecipeData('', phrase)
+  examine.fetchAndLoadRecipeData(searchString.value, phrase)
 }
 
 onMounted(() => {
