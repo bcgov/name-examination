@@ -183,6 +183,21 @@ export async function getPossibleConflicts(name: string, exactPhrase?: string): 
   return callNamexApi(url)
 }
 
+export async function conflictSearchErrorMessage(response: Response): Promise<string> {
+  try {
+    const data = await response.json()
+    if (data?.code === 'QUERY_TOO_COMPLEX') {
+      return (
+        data.message ||
+        'This name is too complex for conflict search. Remove a word and try again.'
+      )
+    }
+  } catch {
+    // non-JSON error bodies keep the generic conflicts message
+  }
+  return 'Unable to retrieve possible conflicts'
+}
+
 export async function getNextNrNumber(isPriority: boolean) {
   return callNamexApi(
     getNamexApiUrl(`/requests/queues/@me/oldest?priorityQueue=${isPriority}`)
