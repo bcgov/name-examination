@@ -23,6 +23,7 @@
 <script setup lang="ts">
 import { useExamination } from '~/store/examine'
 import { useExaminationTabCyle } from '~/store/examine/tab-cycle'
+import { emitter } from '~/util/emitter'
 
 const examine = useExamination()
 const tabCycle = useExaminationTabCyle()
@@ -33,14 +34,25 @@ const EXACT_SEARCH_ID = 'exactSearchInput'
 const searchString = ref(examine.currentName ?? '')
 const exactSearchString = ref('')
 
+async function loadRecipe(searchQuery: string, exactPhrase: string) {
+  try {
+    await examine.fetchAndLoadRecipeData(searchQuery, exactPhrase)
+  } catch (e: any) {
+    emitter.emit('error', {
+      title: 'Failed to load Recipe area',
+      message: e.message,
+    })
+  }
+}
+
 function onNameSearchSubmit(_event: Event) {
-  examine.fetchAndLoadRecipeData(searchString.value, '')
+  loadRecipe(searchString.value, '')
 }
 
 function onExactSearchSubmit(_event: Event) {
   const phrase = exactSearchString.value.trim()
   if (!phrase) return
-  examine.fetchAndLoadRecipeData(searchString.value, phrase)
+  loadRecipe(searchString.value, phrase)
 }
 
 onMounted(() => {

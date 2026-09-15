@@ -183,12 +183,24 @@ export async function getPossibleConflicts(name: string, exactPhrase?: string): 
   return callNamexApi(url)
 }
 
+function conflictSearchBody(data: any): any {
+  let body = data?.rootCause ?? data
+  if (typeof body === 'string') {
+    try {
+      body = JSON.parse(body)
+    } catch {
+      return data
+    }
+  }
+  return body
+}
+
 export async function conflictSearchErrorMessage(response: Response): Promise<string> {
   try {
-    const data = await response.json()
-    if (data?.code === 'QUERY_TOO_COMPLEX') {
+    const body = conflictSearchBody(await response.json())
+    if (body?.code === 'QUERY_TOO_COMPLEX') {
       return (
-        data.message ||
+        body.message ||
         'This name is too complex for conflict search. Remove a word and try again.'
       )
     }
