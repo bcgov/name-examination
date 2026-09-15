@@ -1,5 +1,5 @@
 import type { ConflictList, ConflictListItem, ConflictSource } from '~/types'
-import { getPossibleConflicts } from '~/util/namex-api'
+import { conflictSearchErrorMessage, getPossibleConflicts } from '~/util/namex-api'
 import { highlightConflictName } from '~/util/html/conflict-highlight'
 import { useExaminationRecipe } from './recipe'
 
@@ -96,7 +96,7 @@ export const useConflicts = defineStore('conflicts', () => {
         return []
       }
       const response = await getPossibleConflicts(searchQuery, exactPhrase)
-      if (!response.ok) throw new Error('Unable to retrieve possible conflicts')
+      if (!response.ok) throw new Error(await conflictSearchErrorMessage(response))
 
       const data = await response.json()
       const results: any[] = data.names ?? []
