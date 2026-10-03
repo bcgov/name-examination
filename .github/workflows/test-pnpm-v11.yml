@@ -11,6 +11,8 @@ on:
 
 jobs:
   test-pnpm-v11:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     defaults:
       run:
