@@ -95,6 +95,11 @@ emitter.on('scrollToConflictObject', ({ obj, instant }) => {
   font-weight: bold;
 }
 
+.phonetic-highlight {
+  color: #7c3aed;
+  font-weight: bold;
+}
+
 .selectable {
   user-select: text;
 }

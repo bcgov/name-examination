@@ -20,6 +20,11 @@
       />
 
       <ExamineRecipeConflictsBucket
+        title="Phonetic Match (experimental)"
+        :conflict-lists="conflicts.phoneticMatches"
+      />
+
+      <ExamineRecipeConflictsBucket
         title="Exact Word Order + Synonym Match"
         :conflict-lists="conflicts.synonymMatches"
       />
@@ -27,11 +32,6 @@
       <ExamineRecipeConflictsBucket
         title="Character Swap Match"
         :conflict-lists="conflicts.cobrsPhoneticMatches"
-      />
-
-      <ExamineRecipeConflictsBucket
-        title="Phonetic Match (experimental)"
-        :conflict-lists="conflicts.phoneticMatches"
       />
 
     </div>
