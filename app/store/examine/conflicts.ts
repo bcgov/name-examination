@@ -1,6 +1,6 @@
 import type { ConflictList, ConflictListItem, ConflictSource } from '~/types'
-import { getPossibleConflicts } from '~/util/namex-api'
-import { highlightWord } from '~/util/html/highlight'
+import { conflictSearchErrorMessage, getPossibleConflicts } from '~/util/namex-api'
+import { highlightConflictName } from '~/util/html/conflict-highlight'
 import { useExaminationRecipe } from './recipe'
 
 export const useConflicts = defineStore('conflicts', () => {
@@ -55,15 +55,18 @@ export const useConflicts = defineStore('conflicts', () => {
   }
 
   /** Map a single result from possible-conflicts response to a ConflictListItem */
-  function mapToItem(result: any): ConflictListItem {
+  function mapToItem(result: any, searchQuery: string): ConflictListItem {
     const source =
       result.parent_type === 'CORP'
         ? ('CORP' as unknown as ConflictSource)
         : ('NAMEREQUEST' as unknown as ConflictSource)
-    const highlightedName = highlightNameChoices(result)
     return {
       text: result.name,
-      highlightedText: highlightedName,
+      highlightedText: highlightConflictName(
+        result?.name ?? '',
+        result?.highlighting,
+        searchQuery
+      ),
       nrNumber: result.parent_id,
       startDate: result.parent_start_date ?? '',
       jurisdiction: result.parent_jurisdiction ?? undefined,
@@ -72,89 +75,77 @@ export const useConflicts = defineStore('conflicts', () => {
     }
   }
 
-  /** Apply highlighting to conflict names based on API response data */
-  function highlightNameChoices(entry: any): string {
-    const name: string = entry?.name ?? ''
-    const highlighting = entry?.highlighting
-
-    // If we have nothing to highlight, keep original text intact
-    if (!name || !highlighting) {
-      return name
-    }
-
-    // Split into word and whitespace tokens so we preserve spacing exactly
-    const tokens = name.split(/(\s+)/)
-
-    const exactList: string[] = Array.isArray(highlighting.exact) ? highlighting.exact : []
-    const synonymList: string[] = Array.isArray(highlighting.synonyms) ? highlighting.synonyms : []
-    const stemList: string[] = Array.isArray(highlighting.stems) ? highlighting.stems : []
-    const phoneticList: string[] = Array.isArray(highlighting.phonetic) ? highlighting.phonetic : []
-
-    const applyFirstMatchingCategory = (word: string): string => {
-      // exact > synonym > stem > phonetic (paint order; membership is decided separately)
-      for (const exact of exactList) {
-        const highlighted = highlightWord(exact, word, 'exact-highlight')
-        if (highlighted !== word) return highlighted
-      }
-
-      for (const synonym of synonymList) {
-        const highlighted = highlightWord(synonym, word, 'synonym-highlight')
-        if (highlighted !== word) return highlighted
-      }
-
-      for (const stem of stemList) {
-        const highlighted = highlightWord(stem, word, 'stem-highlight')
-        if (highlighted !== word) return highlighted
-      }
-
-      for (const phonetic of phoneticList) {
-        const highlighted = highlightWord(phonetic, word, 'phonetic-highlight')
-        if (highlighted !== word) return highlighted
-      }
-
-      return word
-    }
-
-    return tokens
-      .map((token) => (token.trim().length === 0 ? token : applyFirstMatchingCategory(token)))
-      .join('')
-  }
-
   /** Group results into ConflictList buckets - no filtering, all results pass through */
-  function groupIntoLists(results: any[]): Array<ConflictList> {
+  function groupIntoLists(results: any[], searchQuery: string): Array<ConflictList> {
     if (!results?.length) return []
     const group: ConflictList = {
       text: '',
       highlightedText: '',
       meta: undefined,
-      children: results.map(mapToItem),
+      children: results.map((result) => mapToItem(result, searchQuery)),
       ui: { focused: false, open: false },
     }
     return group.children.length > 0 ? [group] : []
   }
 
-  async function initialize(searchQuery: string, _exactPhrase: string) {
+  async function initialize(
+    searchQuery: string,
+    exactPhrase: string,
+    split?: { distinctive?: string; descriptive?: string },
+  ) {
     loading.value = true
     resetConflictLists()
     try {
-      const response = await getPossibleConflicts(searchQuery)
-      if (!response.ok) throw new Error('Unable to retrieve possible conflicts')
+      if (!searchQuery.trim() && !exactPhrase.trim() && !split?.distinctive?.trim()) {
+        return []
+      }
+      const response = await getPossibleConflicts(searchQuery, exactPhrase, split)
+      if (!response.ok) throw new Error(await conflictSearchErrorMessage(response))
 
       const data = await response.json()
       const results: any[] = data.names ?? []
       const exact: any[] = data.exactNames ?? []
       const histories: any[] = data.histories ?? []
+      const paintQuery = searchQuery.trim() || exactPhrase.trim()
 
       // Exact Match bucket
-      exactMatches.value = exact.map(mapToItem)
+      exactMatches.value = exact.map((result) => mapToItem(result, paintQuery))
       exactMatches.value.forEach((match) => selectConflict(match))
 
-      // Phonetic if any word is a sound-alike spelling, even when another word is exact.
-      const hasPhonetic = (r: any) => r.highlighting?.phonetic?.length > 0
-      phoneticMatches.value = groupIntoLists(results.filter(hasPhonetic))
-      synonymMatches.value = groupIntoLists(results.filter((r) => !hasPhonetic(r)))
+      const hasApiBucket = results.some(
+        (r) => r.bucket === 'synonym' || r.bucket === 'phonetic',
+      )
+      if (hasApiBucket) {
+        synonymMatches.value = groupIntoLists(
+          results.filter((r) => r.bucket === 'synonym'),
+          paintQuery,
+        )
+        phoneticMatches.value = groupIntoLists(
+          results.filter((r) => r.bucket === 'phonetic'),
+          paintQuery,
+        )
+      } else {
+        const phoneticOnly = results.filter((r) => {
+          const hasExact = r.highlighting?.exact?.length > 0
+          const hasStems = r.highlighting?.stems?.length > 0
+          const hasSynonyms = r.highlighting?.synonyms?.length > 0
+          const hasPhonetic = r.highlighting?.phonetic?.length > 0
+          return hasPhonetic && !hasExact && !hasStems && !hasSynonyms
+        })
 
-      // Character Swap bucket — empty (COBRS not separated in new API yet)
+        const stemOrSynonym = results.filter((r) => {
+          const hasExact = r.highlighting?.exact?.length > 0
+          const hasStems = r.highlighting?.stems?.length > 0
+          const hasSynonyms = r.highlighting?.synonyms?.length > 0
+          const hasPhonetic = r.highlighting?.phonetic?.length > 0
+          const hasAnyHighlight = hasExact || hasStems || hasSynonyms || hasPhonetic
+          return (hasExact || hasStems || hasSynonyms) || !hasAnyHighlight
+        })
+
+        phoneticMatches.value = groupIntoLists(phoneticOnly, paintQuery)
+        synonymMatches.value = groupIntoLists(stemOrSynonym, paintQuery)
+      }
+
       cobrsPhoneticMatches.value = []
 
       if (exactMatches.value.length === 0 && nonEmptyLists.value.length > 0) {

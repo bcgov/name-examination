@@ -172,10 +172,58 @@ export async function getDecisionReasons() {
   return callNamexApi(getNamexApiUrl(`/requests/decisionreasons`))
 }
 
-export async function getPossibleConflicts(name: string): Promise<Response> {
-  return callNamexApi(
-    getNamexApiUrl(`/requests/possible-conflicts/${encodeURIComponent(name)}`)
-  )
+export async function getPossibleConflicts(
+  name: string,
+  exactPhrase?: string,
+  split?: { distinctive?: string; descriptive?: string },
+): Promise<Response> {
+  const phrase = exactPhrase?.trim()
+  const nameTrim = name?.trim() ?? ''
+  const distinctive = split?.distinctive?.trim() ?? ''
+  const descriptive = split?.descriptive?.trim() ?? ''
+  const query = distinctive
+    ? [distinctive, descriptive].filter(Boolean).join(' ')
+    : phrase && !nameTrim
+      ? phrase
+      : nameTrim
+  const url = getNamexApiUrl(`/requests/possible-conflicts/${encodeURIComponent(query)}`)
+  if (phrase) {
+    url.searchParams.set('exact_phrase', phrase)
+  }
+  if (distinctive) {
+    url.searchParams.set('distinctive', distinctive)
+  }
+  if (descriptive) {
+    url.searchParams.set('descriptive', descriptive)
+  }
+  return callNamexApi(url)
+}
+
+function conflictSearchBody(data: any): any {
+  let body = data?.rootCause ?? data
+  if (typeof body === 'string') {
+    try {
+      body = JSON.parse(body)
+    } catch {
+      return data
+    }
+  }
+  return body
+}
+
+export async function conflictSearchErrorMessage(response: Response): Promise<string> {
+  try {
+    const body = conflictSearchBody(await response.json())
+    if (body?.code === 'QUERY_TOO_COMPLEX') {
+      return (
+        body.message ||
+        'This name is too complex for conflict search. Remove a word and try again.'
+      )
+    }
+  } catch {
+    // non-JSON error bodies keep the generic conflicts message
+  }
+  return 'Unable to retrieve possible conflicts'
 }
 
 export async function getNextNrNumber(isPriority: boolean) {
