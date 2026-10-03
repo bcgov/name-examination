@@ -88,14 +88,18 @@ export const useConflicts = defineStore('conflicts', () => {
     return group.children.length > 0 ? [group] : []
   }
 
-  async function initialize(searchQuery: string, exactPhrase: string) {
+  async function initialize(
+    searchQuery: string,
+    exactPhrase: string,
+    split?: { distinctive?: string; descriptive?: string },
+  ) {
     loading.value = true
     resetConflictLists()
     try {
-      if (!searchQuery.trim() && !exactPhrase.trim()) {
+      if (!searchQuery.trim() && !exactPhrase.trim() && !split?.distinctive?.trim()) {
         return []
       }
-      const response = await getPossibleConflicts(searchQuery, exactPhrase)
+      const response = await getPossibleConflicts(searchQuery, exactPhrase, split)
       if (!response.ok) throw new Error(await conflictSearchErrorMessage(response))
 
       const data = await response.json()

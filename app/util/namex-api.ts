@@ -172,13 +172,29 @@ export async function getDecisionReasons() {
   return callNamexApi(getNamexApiUrl(`/requests/decisionreasons`))
 }
 
-export async function getPossibleConflicts(name: string, exactPhrase?: string): Promise<Response> {
+export async function getPossibleConflicts(
+  name: string,
+  exactPhrase?: string,
+  split?: { distinctive?: string; descriptive?: string },
+): Promise<Response> {
   const phrase = exactPhrase?.trim()
   const nameTrim = name?.trim() ?? ''
-  const query = phrase && !nameTrim ? phrase : nameTrim
+  const distinctive = split?.distinctive?.trim() ?? ''
+  const descriptive = split?.descriptive?.trim() ?? ''
+  const query = distinctive
+    ? [distinctive, descriptive].filter(Boolean).join(' ')
+    : phrase && !nameTrim
+      ? phrase
+      : nameTrim
   const url = getNamexApiUrl(`/requests/possible-conflicts/${encodeURIComponent(query)}`)
   if (phrase) {
     url.searchParams.set('exact_phrase', phrase)
+  }
+  if (distinctive) {
+    url.searchParams.set('distinctive', distinctive)
+  }
+  if (descriptive) {
+    url.searchParams.set('descriptive', descriptive)
   }
   return callNamexApi(url)
 }

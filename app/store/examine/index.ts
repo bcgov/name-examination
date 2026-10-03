@@ -978,7 +978,8 @@ export const useExamination = defineStore('examine', () => {
    */
   async function fetchAndLoadRecipeData(
     searchQuery: string,
-    exactPhrase: string
+    exactPhrase: string,
+    split?: { distinctive?: string; descriptive?: string },
   ) {
     if (!currentNameObj.value) return
     resetDecisionArea()
@@ -1003,7 +1004,7 @@ export const useExamination = defineStore('examine', () => {
       errors.push(e as Error)
     }
     try {
-      const conditionsQuery = searchQuery.trim() || exactPhrase.trim()
+      const conditionsQuery = (currentName.value || '').trim() || searchQuery.trim() || exactPhrase.trim()
       const conditionsJson = await getConditions(conditionsQuery)
       conditions.value = parseConditions(conditionsJson)
     } catch (e) {
@@ -1011,7 +1012,7 @@ export const useExamination = defineStore('examine', () => {
       errors.push(e as Error)
     }
     try {
-      const results = await conflicts.initialize(searchQuery, exactPhrase)
+      const results = await conflicts.initialize(searchQuery, exactPhrase, split)
       histories.value = parseHistoryMatches(results)
     } catch (e) {
       errors.push(e as Error)
