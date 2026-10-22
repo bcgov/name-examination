@@ -20,6 +20,10 @@ on:
 
 jobs:
   name-examination-ui-cd:
+    permissions:
+      id-token: write
+      contents: write
+
     uses: bcgov/bcregistry-sre/.github/workflows/frontend-cd.yaml@main
     with:
       target: ${{ inputs.environment }}
