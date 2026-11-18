@@ -45,8 +45,7 @@ export const useExamination = defineStore('examine', () => {
   const conflicts = useConflicts()
   const payments = usePayments()
 
-  /** Username of the current user */
-  const userId = ref(useNuxtApp().$userProfile.username)
+  const userId = ref(useNuxtApp().$auth.tokenParsed?.preferred_username)
   const userRoles = ref(useNuxtApp().$auth.realmAccess?.roles ?? [])
 
   const priority = ref<boolean>(false)
