@@ -58,7 +58,7 @@
         </div>
 
         <div class="flex flex-col border-l-2 border-gray-300 px-3">
-          <span class="text-sm">{{ $userProfile.username }}</span>
+          <span class="text-sm">{{ $auth.tokenParsed?.preferred_username }}</span>
           <a
             class="text-sm text-blue-800"
             href="#"
