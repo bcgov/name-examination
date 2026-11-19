@@ -79,7 +79,7 @@ import { useExamination } from '~/store/examine'
 import { emitter } from '~/util/emitter'
 import { useExaminationOptions } from '~/store/examine/options'
 
-const { $auth, $userProfile } = useNuxtApp()
+const { $auth } = useNuxtApp()
 
 const config = useRuntimeConfig()
 const adminURL = config.public.namexAdminURL

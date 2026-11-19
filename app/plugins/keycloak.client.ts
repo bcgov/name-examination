@@ -21,7 +21,6 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
   return {
     provide: {
       auth: keycloak,
-      userProfile: await keycloak.loadUserProfile(),
     },
   }
 })
