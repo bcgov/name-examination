@@ -58,7 +58,7 @@
         </div>
 
         <div class="flex flex-col border-l-2 border-gray-300 px-3">
-          <span class="text-sm">{{ $userProfile.username }}</span>
+          <span class="text-sm">{{ $auth.tokenParsed?.preferred_username }}</span>
           <a
             class="text-sm text-blue-800"
             href="#"
@@ -79,7 +79,7 @@ import { useExamination } from '~/store/examine'
 import { emitter } from '~/util/emitter'
 import { useExaminationOptions } from '~/store/examine/options'
 
-const { $auth, $userProfile } = useNuxtApp()
+const { $auth } = useNuxtApp()
 
 const config = useRuntimeConfig()
 const adminURL = config.public.namexAdminURL
