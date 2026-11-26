@@ -14,6 +14,14 @@
       <LoadingSpinner />
     </div>
     <div v-else class="flex w-full flex-col space-y-2 rounded bg-white p-2">
+      <div v-if="conflicts.search.type" data-testid="search-summary">
+        <p>Search type: <span class="font-bold">{{ conflicts.search.type }}</span></p>
+        <p>Search term: <span class="font-bold">"{{ conflicts.search.term }}"</span></p>
+        <template v-if="conflicts.search.distinctive">
+          <p>Distinctive: <span class="font-bold">"{{ conflicts.search.distinctive }}"</span></p>
+          <p>Descriptive: <span class="font-bold">"{{ conflicts.search.descriptive }}"</span></p>
+        </template>
+      </div>
       <ExamineRecipeConflictsBucket
         title="Exact Match"
         :conflict-items="conflicts.exactMatches"

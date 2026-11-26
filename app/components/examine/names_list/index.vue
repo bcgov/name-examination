@@ -10,6 +10,8 @@
         :highlight="highlight"
         :indicate-draft="indicateDraft"
         :testID="`choice${i + 1}`" 
+        :accesskey="selectable ? String(i + 1) : undefined"
+        @select="emit('select', $event)"
       />
     </li>
   </ol>
@@ -33,6 +35,12 @@ const props = defineProps<{
   highlight?: boolean
   /** Show '(DRAFT)' next to a name choice that has not been examined yet. */
   indicateDraft?: boolean
+  /** Make each name clickable (accesskey 1, 2, 3) and emit `select` with the name. */
+  selectable?: boolean
+}>()
+
+const emit = defineEmits<{
+  (e: 'select', name: string): void
 }>()
 
 const sortedChoices = computed(() => props.choices.sort((a, b) => a.choice - b.choice))

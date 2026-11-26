@@ -10,6 +10,8 @@ export const useConflicts = defineStore('conflicts', () => {
   const phoneticMatches = ref<Array<ConflictList>>([])
 
   const loading = ref(false)
+  /** The last search run, shown above the conflict results. */
+  const search = ref({ type: '', term: '', distinctive: '', descriptive: '' })
 
   const selectedConflicts = ref<Array<ConflictListItem>>([])
   const comparedConflicts = ref<Array<ConflictListItem>>([])
@@ -88,14 +90,19 @@ export const useConflicts = defineStore('conflicts', () => {
     return group.children.length > 0 ? [group] : []
   }
 
-  async function initialize(searchQuery: string, exactPhrase: string) {
+  async function initialize(searchQuery: string, exactPhrase: string, distinctive = '', descriptive = '') {
     loading.value = true
     resetConflictLists()
+    search.value = distinctive.trim()
+      ? { type: 'Distinctive / Descriptive', term: searchQuery.trim(), distinctive: distinctive.trim(), descriptive: descriptive.trim() }
+      : exactPhrase.trim()
+        ? { type: 'Exact Phrase', term: exactPhrase.trim(), distinctive: '', descriptive: '' }
+        : { type: 'Name', term: searchQuery.trim(), distinctive: '', descriptive: '' }
     try {
       if (!searchQuery.trim() && !exactPhrase.trim()) {
         return []
       }
-      const response = await getPossibleConflicts(searchQuery, exactPhrase)
+      const response = await getPossibleConflicts(searchQuery, exactPhrase, distinctive, descriptive)
       if (!response.ok) throw new Error(await conflictSearchErrorMessage(response))
 
       const data = await response.json()
@@ -228,6 +235,7 @@ export const useConflicts = defineStore('conflicts', () => {
     synonymMatches,
     cobrsPhoneticMatches,
     phoneticMatches,
+    search,
     selectedConflicts,
     comparedConflicts,
     loading,

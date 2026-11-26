@@ -37,6 +37,8 @@
         :undoable="examine.isUndoable"
         :undo="examine.undoNameChoiceDecision"
         highlight
+        selectable
+        @select="(name: string) => emitter.emit('fillSearch', name)"
       />
       <div v-else class="flex w-full justify-between">
         <ExamineNamesListEditable />

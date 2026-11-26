@@ -6,6 +6,7 @@ export type EmitterEvents = {
   error: AppError
   recipeTabChanged: number
   scrollToConflictObject: {obj: ConflictList | ConflictListItem, instant: boolean}
+  fillSearch: string
 }
 
 export const emitter = mitt<EmitterEvents>()

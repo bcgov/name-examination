@@ -27,6 +27,7 @@
     <IconButton
       class="rounded-none rounded-r !border border-bcgov-blue5 !p-1.5"
       aria-label="Submit search"
+      :accesskey="submitAccesskey"
     >
       <MagnifyingGlassIcon class="h-5 w-5 stroke-2" />
     </IconButton>
@@ -51,6 +52,8 @@ const props = defineProps<{
   inputRequired?: boolean
   /** Value for the id attribute for the actual `input` element */
   inputId?: string
+  /** HTML accesskey for the submit button. */
+  submitAccesskey?: string
 }>()
 
 const emit = defineEmits<{

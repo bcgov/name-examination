@@ -1,16 +1,21 @@
 <template>
   <div class="flex flex-col">
     <div class="flex items-center">
-      <span
+      <component
+        :is="accesskey ? 'button' : 'span'"
+        :type="accesskey ? 'button' : undefined"
+        :accesskey="accesskey"
         class="mr-2 flex flex-col"
         :class="{
           'font-bold': (current || choiceApproved) && highlight,
           'text-bcgov-blue3': choiceApproved && highlight,
+          'text-left hover:underline': accesskey,
         }"
        :data-testid="testID && `${testID}-text`"
+        @click="accesskey && emit('select', choice.name ?? '')"
       >
         {{ choice.name }}
-      </span>
+      </component>
 
       <span v-if="choiceApproved" :data-testid="`${testID}-checkmark`">
         <CheckIcon class="h-5 w-5 stroke-2 text-lime-600" />
@@ -60,6 +65,12 @@ const props = defineProps<{
   highlight?: boolean
   indicateDraft?: boolean
   testID?: string
+  /** When set, the name is a button with this accesskey that emits `select`. */
+  accesskey?: string
+}>()
+
+const emit = defineEmits<{
+  (e: 'select', name: string): void
 }>()
 
 const choiceApproved = computed(
