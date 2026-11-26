@@ -11,7 +11,7 @@
         :indicate-draft="indicateDraft"
         :testID="`choice${i + 1}`" 
         :accesskey="selectable ? String(i + 1) : undefined"
-        @select="emit('select', $event)"
+        @select="selectedChoice = choice.choice; emit('select', $event)"
       />
     </li>
   </ol>
@@ -45,7 +45,11 @@ const emit = defineEmits<{
 
 const sortedChoices = computed(() => props.choices.sort((a, b) => a.choice - b.choice))
 
-const isCurrent = (choice: number) => props.currentChoice === choice
+/** The name choice last clicked (accesskey 1, 2, 3), until the current choice changes. */
+const selectedChoice = ref<number>()
+watch(() => props.currentChoice, () => (selectedChoice.value = undefined))
+
+const isCurrent = (choice: number) => (selectedChoice.value ?? props.currentChoice) === choice
 
 /**
  * Gets the decision reason(s) whether or not there's anything in the decision text field.
