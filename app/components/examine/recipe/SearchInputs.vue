@@ -94,8 +94,9 @@ const DESCRIPTIVE_SEARCH_ID = 'descriptiveSearchInput'
 
 const searchString = ref(examine.currentName ?? '')
 const exactSearchString = ref('')
-const distinctive = ref('')
-const descriptive = ref('')
+const initialSplit = splitDistinctiveDescriptive(examine.currentName ?? '')
+const distinctive = ref(initialSplit.distinctive)
+const descriptive = ref(initialSplit.descriptive)
 
 async function loadRecipe(
   searchQuery: string,
@@ -177,8 +178,9 @@ watch(
   async (_state) => {
     searchString.value = examine.currentName ?? ''
     exactSearchString.value = ''
-    distinctive.value = ''
-    descriptive.value = ''
+    const split = splitDistinctiveDescriptive(searchString.value)
+    distinctive.value = split.distinctive
+    descriptive.value = split.descriptive
     await examine.fetchAndLoadRecipeData(
       searchString.value,
       exactSearchString.value
